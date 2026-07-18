@@ -1,0 +1,17 @@
+{
+  "_meta": { "lang": "en", "type": "page", "module": "market", "desc": "Market module page texts." },
+  "page.market.label.envCheck": "Env Check",
+  "page.market.label.housekeeping": "Housekeeping",
+  "page.market.label.imgInfo": "Image Info",
+  "page.market.label.businessCard": "Business Card",
+  "page.market.label.wechatId": "WeChat ID",
+  "page.market.label.industry": "Industry",
+  "page.market.label.designCompany": "Design Company",
+  "page.market.label.decorationCompany": "Decoration Company",
+  "page.market.label.proConstruct": "Pro Construction",
+  "page.market.label.softDeco": "Soft Decoration",
+  "page.market.label.constructionEng": "Construction Engineering",
+  "page.market.label.materialFactory": "Material Factory",
+  "page.market.label.eCommerce": "E-Commerce",
+  "page.market.label.equipmentHardware": "Equipment & Hardware"
+}

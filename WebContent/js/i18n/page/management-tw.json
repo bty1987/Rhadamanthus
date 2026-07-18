@@ -1,0 +1,15 @@
+{
+  "_meta": { "lang": "tw", "type": "page", "module": "management", "desc": "管理模組頁面文字。" },
+  "page.management.label.decorUpdate": "裝修滿減資訊更新",
+  "page.management.label.decorLevelModify": "裝修單等級修改",
+  "page.management.label.resetDesignStatus": "重設設計狀態",
+  "page.management.label.quotationStatusModify": "報價狀態修改",
+  "page.management.label.quotationAddFunctionArea": "報價新增功能區",
+  "page.management.label.salesLevelModify": "銷售單等級修改",
+  "page.management.label.salesStatusModify": "銷售單狀態修改",
+  "page.management.label.materialPayTimeModify": "主材款收款時間修改",
+  "page.management.label.engineeringPaymentVerify": "款項驗證",
+  "page.management.label.materialQuota": "主材配額",
+  "page.management.label.salesOrderNo": "銷售單號",
+  "page.management.label.level": "等級"
+}

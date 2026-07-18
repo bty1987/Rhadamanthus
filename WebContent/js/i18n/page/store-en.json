@@ -1,0 +1,16 @@
+{
+  "_meta": { "lang": "en", "type": "page", "module": "store", "desc": "Store module page texts." },
+  "page.store.label.couponValue": "Coupon Value",
+  "page.store.label.couponTitle": "Coupon Title",
+  "page.store.label.couponType": "Coupon Type",
+  "page.store.label.icon": "Icon",
+  "page.store.label.specInfo": "Spec Info",
+  "page.store.label.goodsBrand": "Goods Brand",
+  "page.store.label.goodsBarcode": "Goods Barcode",
+  "page.store.label.goodsTitle": "Goods Title",
+  "page.store.label.priceExplain": "Price Explanation",
+  "page.store.label.image": "Image",
+  "page.store.label.birthday": "Birthday",
+  "page.store.label.male": "Male",
+  "page.store.label.female": "Female"
+}

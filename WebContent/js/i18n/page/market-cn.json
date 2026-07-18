@@ -1,0 +1,17 @@
+{
+  "_meta": { "lang": "cn", "type": "page", "module": "market", "desc": "市场模块页面文本。" },
+  "page.market.label.envCheck": "环保检测",
+  "page.market.label.housekeeping": "家政服务",
+  "page.market.label.imgInfo": "图片信息",
+  "page.market.label.businessCard": "名片",
+  "page.market.label.wechatId": "微信号",
+  "page.market.label.industry": "所在行业",
+  "page.market.label.designCompany": "设计公司",
+  "page.market.label.decorationCompany": "家装公司",
+  "page.market.label.proConstruct": "专业施工",
+  "page.market.label.softDeco": "软装家纺",
+  "page.market.label.constructionEng": "建筑工程",
+  "page.market.label.materialFactory": "建材厂家",
+  "page.market.label.eCommerce": "电子商务",
+  "page.market.label.equipmentHardware": "设备五金"
+}

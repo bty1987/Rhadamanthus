@@ -1,0 +1,15 @@
+{
+  "_meta": { "lang": "en", "type": "page", "module": "management", "desc": "Management module page texts." },
+  "page.management.label.decorUpdate": "Decoration Discount Update",
+  "page.management.label.decorLevelModify": "Decoration Order Level Modify",
+  "page.management.label.resetDesignStatus": "Reset Design Status",
+  "page.management.label.quotationStatusModify": "Quotation Status Modify",
+  "page.management.label.quotationAddFunctionArea": "Quotation Add Function Area",
+  "page.management.label.salesLevelModify": "Sales Order Level Modify",
+  "page.management.label.salesStatusModify": "Sales Order Status Modify",
+  "page.management.label.materialPayTimeModify": "Material Payment Time Modify",
+  "page.management.label.engineeringPaymentVerify": "Engineering Payment Verify",
+  "page.management.label.materialQuota": "Material Quota",
+  "page.management.label.salesOrderNo": "Sales Order No.",
+  "page.management.label.level": "Level"
+}

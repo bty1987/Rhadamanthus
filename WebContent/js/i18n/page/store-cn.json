@@ -1,0 +1,16 @@
+{
+  "_meta": { "lang": "cn", "type": "page", "module": "store", "desc": "门店模块页面文本。" },
+  "page.store.label.couponValue": "劵值",
+  "page.store.label.couponTitle": "劵标题",
+  "page.store.label.couponType": "劵类型",
+  "page.store.label.icon": "图标",
+  "page.store.label.specInfo": "规格信息",
+  "page.store.label.goodsBrand": "商品品牌",
+  "page.store.label.goodsBarcode": "商品条形码",
+  "page.store.label.goodsTitle": "商品标题",
+  "page.store.label.priceExplain": "价格说明",
+  "page.store.label.image": "图片",
+  "page.store.label.birthday": "生日",
+  "page.store.label.male": "男",
+  "page.store.label.female": "女"
+}
