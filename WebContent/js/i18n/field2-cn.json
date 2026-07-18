@@ -134,5 +134,12 @@
   "field2.ph.belongUser": "请输入归属人",
   "field2.ph.couponType": "请选择优惠券种类",
   "field2.ph.couponAmount": "请输入优惠券金额",
-  "field2.ph.orderNo": "请输入装修单号"
+  "field2.ph.orderNo": "请输入装修单号",
+
+  "field2.amount": "金额",
+  "field2.fee": "费用",
+  "field2.rate": "比例",
+  "field2.balanceAmount": "余额",
+  "field2.total": "合计",
+  "field2.subtotal": "小计"
 }

@@ -130,5 +130,12 @@
   "field2.ph.belongUser": "Enter owner",
   "field2.ph.couponType": "Select coupon type",
   "field2.ph.couponAmount": "Enter coupon amount",
-  "field2.ph.orderNo": "Enter decoration order no"
+  "field2.ph.orderNo": "Enter decoration order no",
+
+  "field2.amount": "Amount",
+  "field2.fee": "Fee",
+  "field2.rate": "Rate",
+  "field2.balanceAmount": "Balance",
+  "field2.total": "Total",
+  "field2.subtotal": "Subtotal"
 }

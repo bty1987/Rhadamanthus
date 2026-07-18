@@ -442,6 +442,12 @@ var Searcher = function() {
                 renderViewSwitcher();
 
                 (result.paging.data && result.paging.data.length > 0) ? basicConf.displayFunc(result.paging.data) : emptyData();
+
+                // i18n:列表渲染完成后,扫描 propertyArr 等动态生成的 DOM 翻译。
+                // setTimeout 让出主线程,确保业务方 displayFunc 的 appendTo 完成
+                if (window.i18n && i18n.lang !== 'cn') {
+                    setTimeout(function() { i18n.scan($('body')); }, 100);
+                }
             }, this), null, false);
         },
         /**
@@ -594,6 +600,11 @@ var Searcher = function() {
             renderViewSwitcher();
 
             (result[basicConf.resultName] && result[basicConf.resultName].length > 0) ? basicConf.displayFunc(result[basicConf.resultName]) : emptyData();
+
+            // i18n:列表渲染完成后,扫描 propertyArr 等动态生成的 DOM 翻译
+            if (window.i18n && i18n.lang !== 'cn') {
+                setTimeout(function() { i18n.scan($('body')); }, 100);
+            }
         }, this), null, false);
     };
 
