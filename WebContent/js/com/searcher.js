@@ -124,6 +124,8 @@ var Searcher = function() {
             var $showItem, $valueItem;
 
             var _rlabel = condRule['label'];// 查询条件对应的中文提示
+            // i18n:查询条件 label 透明翻译(命中 messageMap/pageMap 则译,否则原样)
+            if (window.i18n) _rlabel = i18n.tAuto(_rlabel);
             var _rtype = condRule['type'];// 标签类型
 
             var _rname = condRule['submitConfig']['name'];// 向后台提交提交时的参数名
@@ -146,9 +148,13 @@ var Searcher = function() {
                 data && data.length && ($.each(data, function(i, v) {
 
                     if ("object" !== typeof v) {
-                        $('<option></option>').attr("value", v).html(v).appendTo($showItem);
+                        // i18n:select 选项文本翻译(简单值)
+                        var _optText = window.i18n ? i18n.tAuto(v) : v;
+                        $('<option></option>').attr("value", v).html(_optText).appendTo($showItem);
                     } else {
-                        $('<option></option>').attr("value", v[_rkey]).html(v[_rvalue]).appendTo($showItem);
+                        // i18n:select 选项文本翻译(对象值,翻译 valuePath 字段)
+                        var _optText2 = window.i18n ? i18n.tAuto(v[_rvalue]) : v[_rvalue];
+                        $('<option></option>').attr("value", v[_rkey]).html(_optText2).appendTo($showItem);
                     }
                 }));
             };
@@ -1126,7 +1132,9 @@ var Searcher = function() {
                         else
                             info = getElement(v, value.prop.split('.'), value.dataset);
 
-                        $('<strong></strong>').html(value.name + ": ").appendTo($liProperty);
+                        // i18n:line 模式列头 label 透明翻译
+                        var _lname = window.i18n ? i18n.tAuto(value.name) : value.name;
+                        $('<strong></strong>').html(_lname + ": ").appendTo($liProperty);
                         $('<b></b>').html(info).addClass(value.clazz).appendTo($liProperty);
 
                         if (value.click && typeof value.click == "function") {
@@ -1574,7 +1582,9 @@ var Searcher = function() {
                     if (v.prop.toolbar)
                         v.prop.toolbar = "#" + basicConf.$resulter + "tools";
                     var headerTh = $('<th></th>').attr("lay-data", JSON.stringify(v.prop)).appendTo(headerTr);
-                    var headerSpan = $('<span></span>').html(v.prop.name).appendTo(headerTh);
+                    // i18n:table 模式列头透明翻译
+                    var _thname = window.i18n ? i18n.tAuto(v.prop.name) : v.prop.name;
+                    var headerSpan = $('<span></span>').html(_thname).appendTo(headerTh);
                 });
 
                 if (hasLinevent) {

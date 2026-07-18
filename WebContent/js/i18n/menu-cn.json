@@ -1,0 +1,30 @@
+{
+  "_meta": {
+    "lang": "cn",
+    "type": "menu",
+    "desc": "导航菜单翻译表。key=menu.mid.{数据库主键mid} 或 menu.code.{一级菜单英文code}。createMenu 函数按 mid 优先查找,tAuto 兜底通用菜单名。维护:新增菜单时只需补对应 mid 的 key。"
+  },
+
+  "menu.code.system": "系统",
+  "menu.code.approval": "审批",
+  "menu.code.personel": "人事",
+  "menu.code.data": "数据",
+  "menu.code.customer": "客户",
+  "menu.code.house": "房产",
+  "menu.code.decoration": "装修",
+  "menu.code.quotation": "报价",
+  "menu.code.construction": "工程",
+  "menu.code.material": "主材",
+  "menu.code.sales": "销售",
+  "menu.code.production": "生产",
+  "menu.code.inventory": "仓储",
+  "menu.code.payment": "款项",
+  "menu.code.salary": "薪资",
+  "menu.code.information": "信息",
+  "menu.code.balance": "结算",
+  "menu.code.market": "营销",
+  "menu.code.log": "日志",
+  "menu.code.report": "报表",
+  "menu.code.management": "管理",
+  "menu.code.profit": "国补"
+}

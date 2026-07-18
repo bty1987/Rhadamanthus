@@ -1,0 +1,26 @@
+{
+  "_meta": { "lang": "tw", "type": "menu", "desc": "導航選單翻譯表。" },
+
+  "menu.code.system": "系統",
+  "menu.code.approval": "審批",
+  "menu.code.personel": "人事",
+  "menu.code.data": "資料",
+  "menu.code.customer": "客戶",
+  "menu.code.house": "房產",
+  "menu.code.decoration": "裝修",
+  "menu.code.quotation": "報價",
+  "menu.code.construction": "工程",
+  "menu.code.material": "主材",
+  "menu.code.sales": "銷售",
+  "menu.code.production": "生產",
+  "menu.code.inventory": "倉儲",
+  "menu.code.payment": "款項",
+  "menu.code.salary": "薪資",
+  "menu.code.information": "資訊",
+  "menu.code.balance": "結算",
+  "menu.code.market": "行銷",
+  "menu.code.log": "日誌",
+  "menu.code.report": "報表",
+  "menu.code.management": "管理",
+  "menu.code.profit": "國補"
+}

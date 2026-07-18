@@ -1,0 +1,26 @@
+{
+  "_meta": { "lang": "en", "type": "menu", "desc": "Navigation menu translations." },
+
+  "menu.code.system": "System",
+  "menu.code.approval": "Approval",
+  "menu.code.personel": "Personnel",
+  "menu.code.data": "Data",
+  "menu.code.customer": "Customer",
+  "menu.code.house": "Real Estate",
+  "menu.code.decoration": "Decoration",
+  "menu.code.quotation": "Quotation",
+  "menu.code.construction": "Construction",
+  "menu.code.material": "Material",
+  "menu.code.sales": "Sales",
+  "menu.code.production": "Production",
+  "menu.code.inventory": "Inventory",
+  "menu.code.payment": "Payment",
+  "menu.code.salary": "Salary",
+  "menu.code.information": "Information",
+  "menu.code.balance": "Balance",
+  "menu.code.market": "Marketing",
+  "menu.code.log": "Log",
+  "menu.code.report": "Report",
+  "menu.code.management": "Management",
+  "menu.code.profit": "Subsidy"
+}

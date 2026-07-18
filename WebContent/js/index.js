@@ -785,6 +785,24 @@ $(function() {
             });
         });
 
+        // i18n:菜单名翻译。优先级:mid 专表 > 一级菜单的 code > tAuto 反查高频词
+        // mid 是后端 communion.module 主键,稳定唯一;一级菜单有英文 code(如 "approval")
+        var translateMenuName = function(v) {
+            if (!window.i18n) return v.name;
+            // ① 按 mid 查专表(同名菜单可差异化翻译)
+            var midKey = 'menu.mid.' + v.mid;
+            var t = i18n.t(midKey);
+            if (t !== midKey) return t;
+            // ② 一级菜单按英文 code 查(menu.code.approval 等)
+            if (v.module) {
+                var codeKey = 'menu.code.' + v.module;
+                var tc = i18n.t(codeKey);
+                if (tc !== codeKey) return tc;
+            }
+            // ③ 兜底:反查 message/page/field 包的高频词
+            return i18n.tAuto(v.name);
+        };
+
         if (menuArr.level1.length) {
             $.each(menuArr.level1, function(i, v) {
 
@@ -794,7 +812,7 @@ $(function() {
                     'module': v.module,
                 });
                 var $i = $('<i></i>').addClass(v.icon);
-                var $span = $('<span></span>').addClass('menu-text').text(v.name);
+                var $span = $('<span></span>').addClass('menu-text').text(translateMenuName(v));
 
                 $a.append($i).append($span).appendTo($li);
                 menuObj.level1[v.mid] = $li;
@@ -815,7 +833,7 @@ $(function() {
                     'helpKey': v.helpKey
                 });
                 var $i = $('<i></i>').addClass(v.icon);
-                var $span = $('<span></span>').addClass('menu-text').text(v.name);
+                var $span = $('<span></span>').addClass('menu-text').text(translateMenuName(v));
                 $a.append($i).append($span).appendTo($li);
                 menuObj.level2[v.mid] = $li;
 
@@ -843,7 +861,7 @@ $(function() {
                     'helpKey': v.helpKey
                 });
                 var $i = $('<i></i>').addClass(v.icon);
-                var $span = $('<span></span>').addClass('menu-text').text(v.name);
+                var $span = $('<span></span>').addClass('menu-text').text(translateMenuName(v));
 
                 $a.append($i).append($span).appendTo($li);
 
