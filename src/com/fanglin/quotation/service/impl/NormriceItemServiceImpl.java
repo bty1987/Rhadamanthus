@@ -156,6 +156,11 @@ public class NormriceItemServiceImpl implements NormriceItemService {
 			return 0;
 		}
 
+		// 仅"待确认"状态的附加项允许删除, 保护已确认(计入金额)/已驳回记录
+		if (normriceItemPO.getStatus() != NormriceItemPO.STATUS_INIT_INT) {
+			throw new FLException(200063, "附加项状态不可操作");
+		}
+
 		QuotationPO quotationPO = checkQuotationForStatusByEnabled(normriceItemPO.getQid());
 
 		long cnid = normriceItemPO.getConstructionNode().getCnid();
