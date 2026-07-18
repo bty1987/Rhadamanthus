@@ -696,7 +696,7 @@ public class CustomerServiceImpl implements CustomerService {
 		String contentHash = CustomerAccountPO.computeContentHash(no, name, address, phone, bank, bankno);
 
 		// cid + contentHash 查询, 存在则忽略
-		CustomerAccountPO existing = customerAccountDao.queryCustomerAccountByCidAndContentHash(customerPO.getCid(), contentHash);
+		CustomerAccountPO existing = customerAccountDao.queryCustomerAccount(customerPO.getCid(), contentHash);
 		if (existing != null) {
 			return;
 		}
@@ -722,7 +722,7 @@ public class CustomerServiceImpl implements CustomerService {
 			newAccount.setDefaults(CustomerAccountPO.DEFAULTS_YES);
 		} else {
 			// 清除旧默认
-			List<CustomerAccountPO> accounts = customerAccountDao.queryCustomerAccountByCid(customerPO.getCid());
+			List<CustomerAccountPO> accounts = customerAccountDao.queryCustomerAccount(customerPO.getCid());
 			for (CustomerAccountPO account : accounts) {
 				if (account.getDefaults() == CustomerAccountPO.DEFAULTS_YES) {
 					account.setDefaults(CustomerAccountPO.DEFAULTS_NO);

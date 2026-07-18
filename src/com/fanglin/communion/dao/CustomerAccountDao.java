@@ -7,14 +7,14 @@ import com.fanglin.core.dao.Dao;
 
 public interface CustomerAccountDao extends Dao<CustomerAccountPO> {
 
-	public List<CustomerAccountPO> queryCustomerAccountByCid(long cid);
+	public List<CustomerAccountPO> queryCustomerAccount(long cid);
 
-	public CustomerAccountPO queryDefaultCustomerAccount(long cid);
+	public CustomerAccountPO queryCustomerAccountForDefault(long cid);
+
+	public CustomerAccountPO queryCustomerAccount(long cid, String contentHash);
 
 	public CustomerAccountPO queryCustomerAccountByBankno(String bankno);
 
 	public int countCustomerAccountByCid(long cid);
-
-	public CustomerAccountPO queryCustomerAccountByCidAndContentHash(long cid, String contentHash);
 
 }

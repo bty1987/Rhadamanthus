@@ -30,7 +30,7 @@ public class CustomerAccountServiceImpl implements CustomerAccountService {
 	@Override
 	public List<CustomerAccountVO> queryCustomerAccount(CustomerAccountVO customerAccountVO) {
 
-		List<CustomerAccountPO> customerAccountPOs = customerAccountDao.queryCustomerAccountByCid(customerAccountVO.getCid());
+		List<CustomerAccountPO> customerAccountPOs = customerAccountDao.queryCustomerAccount(customerAccountVO.getCid());
 		List<CustomerAccountVO> customerAccountVOs = new ArrayList<CustomerAccountVO>();
 
 		for (CustomerAccountPO customerAccountPO : customerAccountPOs) {
@@ -43,7 +43,7 @@ public class CustomerAccountServiceImpl implements CustomerAccountService {
 	@Override
 	public CustomerAccountVO queryDefaultCustomerAccount(CustomerAccountVO customerAccountVO) {
 
-		CustomerAccountPO customerAccountPO = customerAccountDao.queryDefaultCustomerAccount(customerAccountVO.getCid());
+		CustomerAccountPO customerAccountPO = customerAccountDao.queryCustomerAccountForDefault(customerAccountVO.getCid());
 
 		if (customerAccountPO == null) return null;
 
@@ -134,7 +134,7 @@ public class CustomerAccountServiceImpl implements CustomerAccountService {
 
 		// 如果删除的是默认账户，将同客户下第一个可用账户设为默认
 		if (wasDefault == CustomerAccountPO.DEFAULTS_YES) {
-			List<CustomerAccountPO> remaining = customerAccountDao.queryCustomerAccountByCid(customerAccountPO.getCid());
+			List<CustomerAccountPO> remaining = customerAccountDao.queryCustomerAccount(customerAccountPO.getCid());
 			if (remaining != null && remaining.size() > 0) {
 				remaining.get(0).setDefaults(CustomerAccountPO.DEFAULTS_YES);
 				customerAccountDao.update(remaining.get(0));
@@ -161,7 +161,7 @@ public class CustomerAccountServiceImpl implements CustomerAccountService {
 		long cid = customerAccountPO.getCid();
 
 		// 先清除该客户所有默认
-		List<CustomerAccountPO> allBanks = customerAccountDao.queryCustomerAccountByCid(cid);
+		List<CustomerAccountPO> allBanks = customerAccountDao.queryCustomerAccount(cid);
 		for (CustomerAccountPO bank : allBanks) {
 			if (bank.getDefaults() == CustomerAccountPO.DEFAULTS_YES) {
 				bank.setDefaults(CustomerAccountPO.DEFAULTS_NO);
