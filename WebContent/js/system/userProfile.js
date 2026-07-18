@@ -153,8 +153,9 @@ jQuery(function($) {
         });
     });
 
-    // i18n:语言切换。点击立即落库 userprefer + 当前页面 apply 翻译。
-    // 不跳转刷新(语言切换不应破坏用户当前编辑/操作);主框架顶栏需用户刷新后翻译。
+    // i18n:语言切换。落库 userprefer + 写 localStorage + 提示用户刷新主框架。
+    // 刷新整个主框架(parent)而非当前 iframe,确保所有业务页面的查询条件/列头/表格
+    // 都用新语言重新渲染(searcher 的 tAuto 拦截只在渲染时生效,已渲染的 DOM 不会自动翻译)。
     com.focusPage("#langStyle button").on("click", function() {
 
         var lang = $(this).attr("data-lang");
@@ -163,14 +164,9 @@ jQuery(function($) {
         setLangStyle(lang);
         setUserPrefer("index", "global", "lang", lang);
 
-        if (window.i18n) {
-            // setLang 内部已实现:重载语言包 + 全局 apply + 写 localStorage + 落库 userprefer
-            i18n.setLang(lang, {
-                applyRoot: $('body')
-            });
-        } else {
-            // 兜容:i18n 未加载时直接落库 + 写 localStorage
-            try { window.localStorage && window.localStorage.setItem('rhada.lang', lang); } catch (e) {}
+        // 写 localStorage + 落库 userprefer
+        try { window.localStorage && window.localStorage.setItem('rhada.lang', lang); } catch (e) {}
+        if (window.com && com.post && window.api && api.personel && api.personel.updateUserPrefer) {
             com.post(api.personel.updateUserPrefer, {
                 "userPrefer.module": "index",
                 "userPrefer.page": "global",
@@ -178,6 +174,28 @@ jQuery(function($) {
                 "userPrefer.pvalue": lang
             });
         }
+
+        // 提示并刷新主框架。iframe 内页用 parent.location.reload()。
+        // 先切换 i18n 到新语言,拿新语言的提示文案
+        if (window.i18n) {
+            i18n.setLang(lang, { persist:false, applyRoot:null });
+        }
+        var tipSuccess = (window.i18n) ? i18n.t('msg.opSuccess') : '操作成功';
+        var tipRefresh = (window.i18n) ? i18n.t('msg.langChanged') : '语言已切换,即将刷新页面以完全生效';
+
+        layer.msg(tipSuccess + ', ' + tipRefresh, { icon: 1, time: 1500 }, function() {
+            try {
+                // 优先刷新主框架(让顶栏/菜单/iframe 全部重载)
+                if (window.parent && window.parent !== window) {
+                    window.parent.location.reload();
+                } else {
+                    window.location.reload();
+                }
+            } catch (e) {
+                // 跨域无法访问 parent 时,刷新当前页
+                window.location.reload();
+            }
+        });
     });
 
     com.focusPage("#reset").on("click", function() {
