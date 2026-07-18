@@ -387,7 +387,7 @@ jQuery(function($) {
 
             searcher.doSearch();
 
-        }, null, false);
+        });
     });
 
     // 创建合同
