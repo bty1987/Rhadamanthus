@@ -342,7 +342,7 @@
 
     }
 
-    function openQuotationTagProfile(orderId) {
+    function openQuotationTagProfile(orderId, qid) {
 
         var template = null;
 
@@ -360,7 +360,7 @@
 
         com.popup4page("#layerPopUp", api.index.quotationProfile4detailIndex.url, "报价标签", null, null, function() {
 
-            params.quotation = { orderId: orderId, type: 4, profile: { type: 4 } };
+            params.quotation = { orderId: orderId, qid: qid, type: 4, profile: { type: 4 } };
         });
     }
 
@@ -868,8 +868,9 @@
         handle: function(v) {
 
             var orderId = quotation.pageType != null ? v.decoration.orderId : v.orderId;
+            var qid = v.qid;
 
-            openQuotationTagProfile(orderId);
+            openQuotationTagProfile(orderId, qid);
         }
     };
 

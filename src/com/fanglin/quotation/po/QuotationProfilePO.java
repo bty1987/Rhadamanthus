@@ -44,6 +44,8 @@ public class QuotationProfilePO implements Serializable {
 
 	public static final short TYPE_TAG_INT = 4;
 
+	public static final short TYPE_ADDREDUCE_INT = 5;
+
 	private long qpid;
 
 	private long tid;

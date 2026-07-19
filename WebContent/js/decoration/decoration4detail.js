@@ -1351,9 +1351,17 @@ jQuery(function($) {
             return;
         }
 
+        // 同步预查 quotation.qid, 用于 profile (qid, type) 唯一定位
+        var qid = null;
+        com.post(api.quotation.queryQuotationForDefaultByOrderId, {
+            "quotation.orderId": params.decoration.orderId
+        }, function(res) {
+            qid = res.quotation.qid;
+        }, null, false);
+
         com.popup4page("#layerPopUp4detail", api.index.quotationProfile4detailIndex.url, "交接单", null, null, function() {
 
-            params.quotation = { orderId: params.decoration.orderId, type: 3, profile: { type: 3 } };
+            params.quotation = { orderId: params.decoration.orderId, qid: qid, type: 3, profile: { type: 3 } };
         });
     });
 
@@ -1373,9 +1381,17 @@ jQuery(function($) {
             return;
         }
 
+        // 同步预查 quotation.qid, 用于 profile (qid, type) 唯一定位
+        var qid = null;
+        com.post(api.quotation.queryQuotationForDefaultByOrderId, {
+            "quotation.orderId": params.decoration.orderId
+        }, function(res) {
+            qid = res.quotation.qid;
+        }, null, false);
+
         com.popup4page("#layerPopUp4detail", api.index.quotationProfile4detailIndex.url, "报价标签", null, null, function() {
 
-            params.quotation = { orderId: params.decoration.orderId, type: 4, profile: { type: 4 } };
+            params.quotation = { orderId: params.decoration.orderId, qid: qid, type: 4, profile: { type: 4 } };
         });
     });
 

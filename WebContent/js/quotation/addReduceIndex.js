@@ -242,6 +242,22 @@
         }
     };
 
+    // 增减标签按钮: 以 addreduce.arId 作为 qid, type=5 进入 quotationProfile
+    var btnAddReduceTag = {
+        name: "增减标签",
+        clazz: "btn-purple",
+        handle: function(v) {
+
+            var orderId = v.orderId || (v.decoration && v.decoration.orderId);
+            var arId = v.arId;
+
+            com.popup4page("#layerPopUp", api.index.quotationProfile4detailIndex.url, "增减标签", null, null, function() {
+
+                params.quotation = { orderId: orderId, qid: arId, type: 5, profile: { type: 5 } };
+            });
+        }
+    };
+
     var btnAccount = {
         name: "决算",
         clazz: "btn-pink",
@@ -255,7 +271,7 @@
 
     if (addReduce.pageType == null) {
 
-        var linebtns = [btnMake, viewbtn, submitbtn, cancelbtn, allocationbtn, specialbtn, norefundbtn, affirmbtn, deletebtn, ];
+        var linebtns = [btnMake, viewbtn, submitbtn, cancelbtn, allocationbtn, specialbtn, norefundbtn, affirmbtn, deletebtn, btnAddReduceTag, ];
 
         com.focusPage('#fl-statement').statement("报价", "增减单").show();
         com.focusPage('#decorationInfo').show();

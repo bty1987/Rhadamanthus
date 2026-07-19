@@ -106,7 +106,9 @@ jQuery(function($) {
             params.quotation.v = v;
 
             params.quotation.qpid = v.qpid;
+            params.quotation.qid = v.qid;
             params.quotation.orderId = v.orderId;
+            params.quotation.type = v.type;
 
             com.popup4page("#layerPopUp", api.index.quotationProfile4detailIndex.url, "报价配置: ");
 
