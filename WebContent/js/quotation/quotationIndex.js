@@ -141,11 +141,6 @@
         com.switchPage("/views/decoration/decoration.html");
     });
 
-    com.focusPage('#quotationIndexTagProfileBtn').on('click', function() {
-
-        openQuotationTagProfile(quotation.orderId);
-    });
-
     com.focusPage('#createQuotation').on('click', function() {
 
         quotation.items.keepriceGroup.hide();
