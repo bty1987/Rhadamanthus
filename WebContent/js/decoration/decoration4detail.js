@@ -1267,7 +1267,8 @@ jQuery(function($) {
 
         if (decorationDetail.orderType == constant.decoration().decoration.TYPE_INCLUSIVE_INT) {
 
-            _discountValue = utils.changeThrDecimal(utils.accDiv(utils.accSub(protation.quotePrice, protation.preferPrice), protation.quotePrice));
+            // 折扣 = (报价总额 + 活动金额 - 优惠金额) / (报价总额 + 活动金额)
+            _discountValue = utils.changeThrDecimal(utils.accDiv(utils.accSub(utils.accAdd(protation.quotePrice, protation.activityPrice), protation.preferPrice), utils.accAdd(protation.quotePrice, protation.activityPrice)));
             _manageDiscountValue = utils.changeThrDecimal(utils.accDiv(utils.accSub(protation.managePrice, protation.manageProfit), protation.managePrice));
         } else {
 
