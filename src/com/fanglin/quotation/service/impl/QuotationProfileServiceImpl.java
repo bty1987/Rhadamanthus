@@ -188,6 +188,19 @@ public class QuotationProfileServiceImpl implements QuotationProfileService {
 			throw new FLException(130096, "调研模板不存在");
 		}
 
+		// 防重复: 同 (qid, type) 已存在则直接返回已有 profile, 不再创建
+		// qid 语义随 type 变化: type=4 对应 quotation.qid, type=5 对应 addreduce.arId
+		Long qid = quotationProfileVO.getQid();
+		Short type = quotationProfileVO.getType();
+
+		if (qid != null && type != null) {
+			List<QuotationProfilePO> exists = quotationProfileDao.queryQuotationProfileByQid(qid, type);
+			if (!exists.isEmpty()) {
+				exists.get(0).ptv(quotationProfileVO);
+				return 0;
+			}
+		}
+
 		QuotationProfilePO quotationProfilePO = new QuotationProfilePO();
 
 		UserPO creater = userDao.queryUserByUserId(userId);

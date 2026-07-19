@@ -39,20 +39,10 @@ jQuery(function($) {
             args = {
                 "quotationProfile.qpid": params.quotation.qpid
             }
-        }
-
-        if (params.quotation.qid) {
+        } else if (params.quotation.qid) {
             url = api.quotation.queryQuotationProfileByQid;
             args = {
                 "quotationProfile.qid": params.quotation.qid,
-                "quotationProfile.type": params.quotation.type,
-            }
-        }
-
-        if (params.quotation.orderId) {
-            url = api.quotation.queryQuotationProfileByOrderId;
-            args = {
-                "quotationProfile.orderId": params.quotation.orderId,
                 "quotationProfile.type": params.quotation.type,
             }
         }
@@ -91,8 +81,16 @@ jQuery(function($) {
 
         var template = null;
 
-        // 根据用途 type 选择对应的模板配置 key: 标签(type=4)用独立模板, 其他复用交接模板
-        var templateKey = params.quotation.profile.type == 4 ? "QUOTATION_TAG_PROFILE_TEMPLATE" : "QUOTATION_PROFILE_TEMPLATE";
+        // 根据用途 type 选择对应的模板配置 key: 标签(4)/增减项(5)各自独立模板, 其他复用交接模板
+        var profileType = params.quotation.profile.type;
+        var templateKey;
+        if (profileType == 4) {
+            templateKey = "QUOTATION_TAG_PROFILE_TEMPLATE";
+        } else if (profileType == 5) {
+            templateKey = "QUOTATION_ADDREDUCE_PROFILE_TEMPLATE";
+        } else {
+            templateKey = "QUOTATION_PROFILE_TEMPLATE";
+        }
 
         com.post(api.system.querySystemConfigByKey, {
             "systemConfig.key": templateKey
@@ -108,6 +106,8 @@ jQuery(function($) {
 
         args["quotationProfile.tid"] = template;
         args["quotationProfile.type"] = params.quotation.profile.type;
+        args["quotationProfile.qid"] = params.quotation.qid;
+        args["quotationProfile.orderId"] = params.quotation.orderId;
 
         com.post(api.quotation.makeQuotationProfile, args, function(res) {
 
