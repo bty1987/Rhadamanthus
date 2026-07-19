@@ -122,6 +122,59 @@ $(function() {
         Condition = Condition(api);
         Condition.init('js/condition/');
 
+        // 单点登录:平台状态校验(强制升级/停用等)
+        com._post_(api.home.library, {
+            "api": "system.login.upgrade",
+            "userId": params.userInfo.user.userId,
+        }, function(res) {
+
+            if (res.code != 0) {
+                alert(res.msg);
+
+                window.onbeforeunload = null;
+                com.deleteCookie("authentication");
+
+                if (parent.window.isPC) {
+                    nwRestart();
+                } else {
+                    window.location.href = '/';
+                }
+            }
+        }, null, false);
+
+        // 单点登录:登记当前会话loginTime
+        com._post_(api.home.library, {
+            "userId": params.userInfo.user.userId,
+            "loginTime": window.loginTime,
+            "redis": 0,
+            "api": "system.login.login"
+        });
+
+        // 单点登录:心跳轮询,loginTime被刷新(别处登录)则强制下线
+        interval = setInterval(function() {
+
+            com._post_(api.home.library, {
+                "userId": params.userInfo.user.userId,
+                "redis": 0,
+                "api": "system.login.index",
+                "loginTime": window.loginTime
+            }, function(res) {
+
+                if (res.code != 0) {
+                    alert('登录超时,请重新登录.');
+
+                    window.onbeforeunload = null;
+                    com.deleteCookie("authentication");
+
+                    if (parent.window.isPC) {
+                        nwRestart();
+                    } else {
+                        window.location.href = '/';
+                    }
+                }
+            })
+        }, config.singlePointTime);
+
         $(".user-info-dropmenu .user-name").text(res.userInfo.user.currentName);
         $(".user-info-dropmenu #userId").text(res.userInfo.user.currentName);
         $(".user-name").text(res.userInfo.user.currentName);
