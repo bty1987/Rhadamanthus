@@ -141,6 +141,11 @@
         com.switchPage("/views/decoration/decoration.html");
     });
 
+    com.focusPage('#quotationIndexTagProfileBtn').on('click', function() {
+
+        openQuotationTagProfile(quotation.orderId);
+    });
+
     com.focusPage('#createQuotation').on('click', function() {
 
         quotation.items.keepriceGroup.hide();
@@ -340,6 +345,28 @@
             quotation.decoration = res.decoration;
         }, null, false);
 
+    }
+
+    function openQuotationTagProfile(orderId) {
+
+        var template = null;
+
+        com.post(api.system.querySystemConfigByKey, {
+            "systemConfig.key": "QUOTATION_TAG_PROFILE_TEMPLATE"
+        }, function(res) {
+
+            template = res.systemConfig.value;
+        }, null, false);
+
+        if (!template) {
+            com.showAlert(com.error, "报价标签模板未配置");
+            return;
+        }
+
+        com.popup4page("#layerPopUp", api.index.quotationProfile4detailIndex.url, "报价标签", null, null, function() {
+
+            params.quotation = { orderId: orderId, type: 4, profile: { type: 4 } };
+        });
     }
 
     function drawdecoration(decoration) {
