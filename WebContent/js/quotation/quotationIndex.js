@@ -867,6 +867,17 @@
         }
     };
 
+    var btnQuotationTag = {
+        name: "报价标签",
+        clazz: "btn-purple",
+        handle: function(v) {
+
+            var orderId = quotation.pageType != null ? v.decoration.orderId : v.orderId;
+
+            openQuotationTagProfile(orderId);
+        }
+    };
+
     var btnDecoration = {
         name: "装修单",
         clazz: "btn-info",
@@ -1010,6 +1021,9 @@
 
         if (quotation.pageConfig.pageBtn.contains("btnInfo"))
             cardbtns.push(btnInfo);
+
+        if (quotation.pageConfig.pageBtn.contains("btnQuotationTag"))
+            cardbtns.push(btnQuotationTag);
 
         com.focusPage("#quotationIndexPageContent").removeClass("page-content");
 
