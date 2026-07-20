@@ -19,13 +19,35 @@ import com.fanglin.log.vo.LogVO;
 import com.fanglin.utils.Paging;
 
 public interface LogService {
-	
+
 	public List<LogVO> getAllPageActionLogs(List<Filter> filters);
 
 	public void pageActionLog(Paging paging, List<Filter> filters);
-	
+
 	public int addLog(LogVO logVO);
-	
+
 	public int addActionLog(ActionLogPO actionLogPO);
-	
+
+	/**
+	 * 安全写入 actionLog，永不抛异常。
+	 *
+	 * <p>Phase 1 引入：供 AccessInterceptor 在请求结束时调用。其内部：
+	 * <ol>
+	 *   <li>校验 actionLog.enable 开关，关闭则直接返回；</li>
+	 *   <li>按 actionLog.sampling 采样率决定是否落库；</li>
+	 *   <li>调用 addActionLog(ActionLogPO) 写库，任何异常 catch 后仅打 logger.error，</li>
+	 * </ol>
+	 * 关键约束：本方法绝不能影响主业务事务，故 REQUIRED 传播但内部 try-catch 吞异常。
+	 *
+	 * @param actionLogPO 已填充完整的日志对象
+	 * @return 0=未写（开关关或被采样跳过）；1=已写；-1=写失败（已吞异常）
+	 */
+	public int safeAddActionLog(ActionLogPO actionLogPO);
+
+	/**
+	 * 在 REQUIRES_NEW 事务中执行实际写入。仅供 safeAddActionLog 通过自身代理调用，
+	 * 不直接暴露给业务侧。放接口里是为了让 Spring 代理能拦截到此方法。
+	 */
+	public int doAddInNewTx(ActionLogPO actionLogPO);
+
 }
