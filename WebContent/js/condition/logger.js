@@ -175,6 +175,62 @@ Condition.addupRule("log", {
             op: "eq",
             validate: null
         }
+    },
+
+    // ===== 客户电话查询日志条件（Phase 7）=====
+    "customerPhoneLog-cid": {
+        label: "客户ID",
+        type: "text",
+        submitConfig: { name: "cid", op: "eq", validate: null }
+    },
+    "customerPhoneLog-operateTime": {
+        label: "查询时间",
+        type: "dateRangePicker",
+        submitConfig: { name: "operateTime", op: "between", validate: null }
+    },
+    "customerPhoneLog-operateUserId": {
+        label: "操作人账号",
+        type: "text",
+        submitConfig: { name: "operateUserId", op: "eq", validate: null }
+    },
+
+    // ===== 图纸下载日志条件（Phase 7）=====
+    "decorationPictureLog-orderId": {
+        label: "订单号",
+        type: "text",
+        submitConfig: { name: "orderId", op: "eq", validate: null }
+    },
+    "decorationPictureLog-dpId": {
+        label: "图纸ID",
+        type: "text",
+        submitConfig: { name: "dpId", op: "eq", validate: null }
+    },
+    "decorationPictureLog-operateTime": {
+        label: "下载时间",
+        type: "dateRangePicker",
+        submitConfig: { name: "operateTime", op: "between", validate: null }
+    },
+    "decorationPictureLog-operateUserId": {
+        label: "操作人账号",
+        type: "text",
+        submitConfig: { name: "operateUserId", op: "eq", validate: null }
+    },
+
+    // ===== 金蝶同步日志条件（Phase 7）=====
+    "kingdeeSyncLog-orderId": {
+        label: "订单号",
+        type: "text",
+        submitConfig: { name: "orderId", op: "eq", validate: null }
+    },
+    "kingdeeSyncLog-createTime": {
+        label: "同步时间",
+        type: "dateRangePicker",
+        submitConfig: { name: "createTime", op: "between", validate: null }
+    },
+    "kingdeeSyncLog-type": {
+        label: "款项类型",
+        type: "text",
+        submitConfig: { name: "type", op: "cn", validate: null }
     }
 
 });
