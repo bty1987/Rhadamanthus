@@ -38,7 +38,7 @@ public class NormriceItemDaoImpl extends DaoImpl<NormriceItemPO> implements Norm
 	@Override
 	public int amountNormriceItem(long qid, long cnid) {
 
-		String sql = "select sum(if(atttype = 0, salary, -salary)*if(trannum = 0, 1, num*trannum/1000)) from quotation.normriceitem where qid =:qid and cnid = :cnid and status = :status";
+		String sql = "select sum(if(atttype = 0, salary, -salary)*if(trannum = 0, 1, num/1000*trannum/1000)) from quotation.normriceitem where qid =:qid and cnid = :cnid and status = :status";
 		BigDecimal amount = (BigDecimal) session().createSQLQuery(sql).setLong("qid", qid).setLong("cnid", cnid).setShort("status", NormriceItemPO.STATUS_INIT_INT).uniqueResult();
 
 		return amount == null ? 0 : amount.intValue();
@@ -47,7 +47,7 @@ public class NormriceItemDaoImpl extends DaoImpl<NormriceItemPO> implements Norm
 	@Override
 	public int amountNormriceItemForSalary(long qid, long cnid) {
 
-		String sql = "select sum(if(atttype = 0, salary, -salary)*if(trannum = 0, 1, num*trannum/1000)) from quotation.normriceitem where qid = :qid and cnid = :cnid and ((status = :statusInit and type != :typeQuota) or (status = :statusConfirmed and type = :typeQuota and normtype = :normtypeAdd))";
+		String sql = "select sum(if(atttype = 0, salary, -salary)*if(trannum = 0, 1, num/1000*trannum/1000)) from quotation.normriceitem where qid = :qid and cnid = :cnid and ((status = :statusInit and type != :typeQuota) or (status = :statusConfirmed and type = :typeQuota and normtype = :normtypeAdd))";
 		BigDecimal amount = (BigDecimal) session().createSQLQuery(sql).setLong("qid", qid).setLong("cnid", cnid).setShort("statusInit", NormriceItemPO.STATUS_INIT_INT).setShort("statusConfirmed", NormriceItemPO.STATUS_CONFIRMED_INT).setShort("typeQuota", NormriceItemPO.TYPE_QUOTA_INT).setShort("normtypeAdd", NormriceItemPO.NORMTYPE_ADD_INT).uniqueResult();
 
 		return amount == null ? 0 : amount.intValue();
