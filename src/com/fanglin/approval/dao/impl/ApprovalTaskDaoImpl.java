@@ -90,7 +90,7 @@ public class ApprovalTaskDaoImpl extends DaoImpl<ApprovalTaskPO> implements Appr
 			.add(Restrictions.eq("status", ApprovalTaskPO.STATUS_PENDING_INT))
 			.addOrder(Order.asc("taskId"))
 			.setMaxResults(1)
-			.uniqueResult();
+			.setMaxResults(1).uniqueResult();
 	}
 
 }

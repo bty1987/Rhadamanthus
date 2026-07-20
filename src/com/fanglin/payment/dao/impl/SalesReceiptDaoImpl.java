@@ -15,6 +15,6 @@ public class SalesReceiptDaoImpl  extends DaoImpl<SalesReceiptPO> implements Sal
 	
 	@Override
 	public SalesReceiptPO querySalesReceiptBySrId(long srId) {
-		return (SalesReceiptPO) session().createCriteria(SalesReceiptPO.class).add(Restrictions.eq(SalesReceiptPO.COLUMN_SRID_STR, srId)).uniqueResult();
+		return (SalesReceiptPO) session().createCriteria(SalesReceiptPO.class).add(Restrictions.eq(SalesReceiptPO.COLUMN_SRID_STR, srId)).setMaxResults(1).uniqueResult();
 	}
 }

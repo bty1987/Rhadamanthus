@@ -35,7 +35,7 @@ public class MaterialDepartmentCountDaoImpl extends DaoImpl<MaterialDepartmentCo
 		return (MaterialDepartmentCountPO) session().createCriteria(MaterialDepartmentCountPO.class)
 				.add(Restrictions.eq(MaterialDepartmentCountPO.COLUMN_MATERIALDEPTID_STR, deptId))
 				.add(Restrictions.eq(MaterialDepartmentCountPO.COLUMN_CREATETIME_STR, time))
-				.uniqueResult();
+				.setMaxResults(1).uniqueResult();
 	}
 
 	@Override

@@ -69,7 +69,7 @@ public class SalesDeliveryItemDaoImpl extends DaoImpl<SalesDeliveryItemPO> imple
 
 	@Override
 	public SalesDeliveryItemPO querySalesDeliveryItemBySiid(Long siid) {
-		return (SalesDeliveryItemPO) session().createCriteria(SalesDeliveryItemPO.class).add(Restrictions.eq(SalesDeliveryItemPO.COLUMN_SIID_LONG, siid)).uniqueResult();
+		return (SalesDeliveryItemPO) session().createCriteria(SalesDeliveryItemPO.class).add(Restrictions.eq(SalesDeliveryItemPO.COLUMN_SIID_LONG, siid)).setMaxResults(1).uniqueResult();
 	}
 
 	@Override

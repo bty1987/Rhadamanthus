@@ -33,7 +33,7 @@ public class RoleTaskDaoImpl extends DaoImpl<RoleTaskPO> implements RoleTaskDao 
 
 	@Override
 	public RoleTaskPO queryRoleTask(int rid, Long tid, Integer company) {
-		return (RoleTaskPO) session().createCriteria(RoleTaskPO.class).createAlias("task", "task").add(Restrictions.eq("rid", rid)).add(Restrictions.eq("task.tid", tid)).add(Restrictions.eq("company", company)).uniqueResult();
+		return (RoleTaskPO) session().createCriteria(RoleTaskPO.class).createAlias("task", "task").add(Restrictions.eq("rid", rid)).add(Restrictions.eq("task.tid", tid)).add(Restrictions.eq("company", company)).setMaxResults(1).uniqueResult();
 	}
 
 	@Override

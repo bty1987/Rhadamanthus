@@ -20,7 +20,7 @@ public class CardDaoImpl extends DaoImpl<CardPO> implements CardDao {
 
 	@Override
 	public CardPO queryCardByCuid(long cuid) {
-		return (CardPO) session().createCriteria(CardPO.class).createAlias("cuser", "cuser").add(Restrictions.eq(CardPO.COLUMN_CUID_STR, cuid)).uniqueResult();
+		return (CardPO) session().createCriteria(CardPO.class).createAlias("cuser", "cuser").add(Restrictions.eq(CardPO.COLUMN_CUID_STR, cuid)).setMaxResults(1).uniqueResult();
 	}
 
 	@Override

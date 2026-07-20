@@ -27,7 +27,7 @@ public class WeChatUserInfoDaoImpl extends DaoImpl<WeChatUserInfoPO> implements 
 
 	@Override
 	public WeChatUserInfoPO queryWeChatUserInfoByUnionId(String unionId) {
-		return (WeChatUserInfoPO) session().createCriteria(WeChatUserInfoPO.class).add(Restrictions.eq(WeChatUserInfoPO.COLUMN_UNIONID_STR, unionId)).uniqueResult();
+		return (WeChatUserInfoPO) session().createCriteria(WeChatUserInfoPO.class).add(Restrictions.eq(WeChatUserInfoPO.COLUMN_UNIONID_STR, unionId)).setMaxResults(1).uniqueResult();
 	}
 
 }

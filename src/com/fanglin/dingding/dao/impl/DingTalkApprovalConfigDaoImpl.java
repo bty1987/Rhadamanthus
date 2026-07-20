@@ -24,7 +24,7 @@ public class DingTalkApprovalConfigDaoImpl extends DaoImpl<DingTalkApprovalConfi
 			.add(Restrictions.eq(DingTalkApprovalConfigPO.COLUMN_PROCESSCODE_STR, processCode))
 			.add(Restrictions.eq(DingTalkApprovalConfigPO.COLUMN_ENABLED_STR, (short) 1))
 			.add(Restrictions.eq(DingTalkApprovalConfigPO.COLUMN_TYPE_STR, DingTalkApprovalConfigPO.TYPE_SPECIALIZED))
-			.uniqueResult();
+			.setMaxResults(1).uniqueResult();
 	}
 
 	@Override

@@ -42,7 +42,7 @@ public class ApprovalFormDaoImpl extends DaoImpl<ApprovalFormPO> implements Appr
 		return (ApprovalFormPO) session().createCriteria(ApprovalFormPO.class)
 			.add(Restrictions.eq("flowId", flowId))
 			.add(Restrictions.eq("status", ApprovalFormPO.STATUS_ENABLED_INT))
-			.uniqueResult();
+			.setMaxResults(1).uniqueResult();
 	}
 
 	@Override
@@ -54,7 +54,7 @@ public class ApprovalFormDaoImpl extends DaoImpl<ApprovalFormPO> implements Appr
 				Restrictions.eq("company", company),
 				Restrictions.eq("company", 0)))
 			.addOrder(Order.desc("company"))
-			.uniqueResult();
+			.setMaxResults(1).uniqueResult();
 	}
 
 	public void queryFilterExcute(List<Filter> filters, PagingQuery<ApprovalFormPO> query) {

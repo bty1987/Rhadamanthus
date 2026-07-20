@@ -30,12 +30,12 @@ public class EmemberDaoImpl extends DaoImpl<EmemberPO> implements EmemberDao {
 
 	@Override
 	public EmemberPO queryEmenber(String unionId) {
-		return (EmemberPO) createCriteria(EmemberPO.class).add(Restrictions.eq(EmemberPO.COLUMN_UNIONID_STR, unionId)).add(Restrictions.eq(EmemberPO.COLUMN_STATUS_STR, EmemberPO.STATUS_INIT_INT)).uniqueResult();
+		return (EmemberPO) createCriteria(EmemberPO.class).add(Restrictions.eq(EmemberPO.COLUMN_UNIONID_STR, unionId)).add(Restrictions.eq(EmemberPO.COLUMN_STATUS_STR, EmemberPO.STATUS_INIT_INT)).setMaxResults(1).uniqueResult();
 	}
 
 	@Override
 	public EmemberPO queryEmemberByNo(String no) {
-		return (EmemberPO) createCriteria(EmemberPO.class).add(Restrictions.eq(EmemberPO.COLUMN_NO_STR, no)).add(Restrictions.eq(EmemberPO.COLUMN_STATUS_STR, EmemberPO.STATUS_INIT_INT)).uniqueResult();
+		return (EmemberPO) createCriteria(EmemberPO.class).add(Restrictions.eq(EmemberPO.COLUMN_NO_STR, no)).add(Restrictions.eq(EmemberPO.COLUMN_STATUS_STR, EmemberPO.STATUS_INIT_INT)).setMaxResults(1).uniqueResult();
 	}
 
 	private void queryFilterExcute(PagingQuery<EmemberPO> query, List<Filter> filters) {

@@ -30,7 +30,7 @@ public class WalletDaoImpl extends DaoImpl<WalletPO> implements WalletDao {
 
 	@Override
 	public WalletPO queryWalletByNo(String no) {
-		return (WalletPO) session().createCriteria(WalletPO.class).add(Restrictions.eq("no", no)).uniqueResult();
+		return (WalletPO) session().createCriteria(WalletPO.class).add(Restrictions.eq("no", no)).setMaxResults(1).uniqueResult();
 	}
 
 	@Override

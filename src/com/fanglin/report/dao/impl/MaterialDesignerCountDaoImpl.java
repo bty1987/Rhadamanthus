@@ -36,7 +36,7 @@ public class MaterialDesignerCountDaoImpl extends DaoImpl<MaterialDesignerCountP
 		return (MaterialDesignerCountPO) session().createCriteria(MaterialDesignerCountPO.class)
 				.add(Restrictions.eq(MaterialDesignerCountPO.COLUMN_DESIGNERID_STR, designerId))
 				.add(Restrictions.eq(MaterialDesignerCountPO.COLUMN_CREATETIME_STR, time))
-				.uniqueResult();
+				.setMaxResults(1).uniqueResult();
 	}
 
 	@Override

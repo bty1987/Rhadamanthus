@@ -27,17 +27,17 @@ public class WeChatOpenUnionDaoImpl extends DaoImpl<WeChatOpenUnionPO> implement
 
 	@Override
 	public WeChatOpenUnionPO queryWeChatOpenUnion(String openId) {
-		return (WeChatOpenUnionPO) session().createCriteria(WeChatOpenUnionPO.class).add(Restrictions.eq(WeChatOpenUnionPO.COLUMN_OPENID_STR, openId)).uniqueResult();
+		return (WeChatOpenUnionPO) session().createCriteria(WeChatOpenUnionPO.class).add(Restrictions.eq(WeChatOpenUnionPO.COLUMN_OPENID_STR, openId)).setMaxResults(1).uniqueResult();
 	}
 
 	@Override
 	public WeChatOpenUnionPO queryWeChatOpenUnion(String unionId, short type) {
-		return (WeChatOpenUnionPO) session().createCriteria(WeChatOpenUnionPO.class).add(Restrictions.eq(WeChatOpenUnionPO.COLUMN_UNIONID_STR, unionId)).add(Restrictions.eq(WeChatOpenUnionPO.COLUMN_TYPE_STR, type)).uniqueResult();
+		return (WeChatOpenUnionPO) session().createCriteria(WeChatOpenUnionPO.class).add(Restrictions.eq(WeChatOpenUnionPO.COLUMN_UNIONID_STR, unionId)).add(Restrictions.eq(WeChatOpenUnionPO.COLUMN_TYPE_STR, type)).setMaxResults(1).uniqueResult();
 	}
 
 	@Override
 	public WeChatOpenUnionPO queryWeChatOpenUnion(String unionId, short type, int company) {
-		return (WeChatOpenUnionPO) session().createCriteria(WeChatOpenUnionPO.class).add(Restrictions.eq(WeChatOpenUnionPO.COLUMN_UNIONID_STR, unionId)).add(Restrictions.eq(WeChatOpenUnionPO.COLUMN_TYPE_STR, type)).add(Restrictions.eq(WeChatOpenUnionPO.COLUMN_COMPANY_STR, company)).uniqueResult();
+		return (WeChatOpenUnionPO) session().createCriteria(WeChatOpenUnionPO.class).add(Restrictions.eq(WeChatOpenUnionPO.COLUMN_UNIONID_STR, unionId)).add(Restrictions.eq(WeChatOpenUnionPO.COLUMN_TYPE_STR, type)).add(Restrictions.eq(WeChatOpenUnionPO.COLUMN_COMPANY_STR, company)).setMaxResults(1).uniqueResult();
 	}
 
 }

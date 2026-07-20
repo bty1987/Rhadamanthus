@@ -30,12 +30,12 @@ public class DecorationDaoImpl extends DaoImpl<DecorationPO> implements Decorati
 
 	@Override
 	public DecorationPO queryCusDecorationByOrderId(String orderId, String unionId) {
-		return (DecorationPO) createCriteria(DecorationPO.class).add(Restrictions.eq(DecorationPO.COLUMN_ORDERID_STR, orderId)).add(Restrictions.eq(DecorationPO.COLUMN_UNIONID_STR, unionId)).uniqueResult();
+		return (DecorationPO) createCriteria(DecorationPO.class).add(Restrictions.eq(DecorationPO.COLUMN_ORDERID_STR, orderId)).add(Restrictions.eq(DecorationPO.COLUMN_UNIONID_STR, unionId)).setMaxResults(1).uniqueResult();
 	}
 
 	@Override
 	public DecorationPO queryCusDecorationForDefault(String unionId) {
-		return (DecorationPO) createCriteria(DecorationPO.class).add(Restrictions.eq(DecorationPO.COLUMN_UNIONID_STR, unionId)).add(Restrictions.eq(DecorationPO.COLUMN_DEFAULTFLAG_STR, DecorationPO.DEFAULTFLAG_DEFAULT_SHORT)).uniqueResult();
+		return (DecorationPO) createCriteria(DecorationPO.class).add(Restrictions.eq(DecorationPO.COLUMN_UNIONID_STR, unionId)).add(Restrictions.eq(DecorationPO.COLUMN_DEFAULTFLAG_STR, DecorationPO.DEFAULTFLAG_DEFAULT_SHORT)).setMaxResults(1).uniqueResult();
 	}
 
 	@Override

@@ -48,7 +48,7 @@ public class EpersonDaoImpl extends DaoImpl<EpersonPO> implements EpersonDao{
 	@Override
 	public EpersonPO queryEpersonByEuid(long euid) {
 		
-		return (EpersonPO) session().createCriteria(EpersonPO.class).add(Restrictions.eq(EpersonPO.COLUMN_EUID_STR, euid)).uniqueResult();
+		return (EpersonPO) session().createCriteria(EpersonPO.class).add(Restrictions.eq(EpersonPO.COLUMN_EUID_STR, euid)).setMaxResults(1).uniqueResult();
 	}
 	
 	@SuppressWarnings("unchecked")

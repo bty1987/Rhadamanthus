@@ -70,7 +70,7 @@ public class DecorationMeasureDaoImpl extends DaoImpl<DecorationMeasurePO> imple
 	@Override
 	public DecorationMeasurePO queryDecorationMeasure(String orderId) {
 
-		return (DecorationMeasurePO) session().createCriteria(DecorationMeasurePO.class).add(Restrictions.eq(DecorationMeasurePO.DECORATIONMEASURE_ORDERID_STR, orderId)).uniqueResult();
+		return (DecorationMeasurePO) session().createCriteria(DecorationMeasurePO.class).add(Restrictions.eq(DecorationMeasurePO.DECORATIONMEASURE_ORDERID_STR, orderId)).setMaxResults(1).uniqueResult();
 
 	}
 

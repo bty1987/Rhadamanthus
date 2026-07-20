@@ -95,7 +95,7 @@ public class MaterialDaoImpl extends DaoImpl<MaterialPO> implements MaterialDao 
 
 	@Override
 	public MaterialPO queryMaterialByNo(String msoNo) {
-		return (MaterialPO) session().createCriteria(MaterialPO.class).add(Restrictions.eq(MaterialPO.COLUMN_NO_STR, msoNo)).add(Restrictions.ne(MaterialPO.COLUMN_STATUS_STR, MaterialPO.STATUS_TYPE_DELETE_INT)).uniqueResult();
+		return (MaterialPO) session().createCriteria(MaterialPO.class).add(Restrictions.eq(MaterialPO.COLUMN_NO_STR, msoNo)).add(Restrictions.ne(MaterialPO.COLUMN_STATUS_STR, MaterialPO.STATUS_TYPE_DELETE_INT)).setMaxResults(1).uniqueResult();
 	}
 
 	@Override

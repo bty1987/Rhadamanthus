@@ -40,7 +40,7 @@ public class ApprovalFormDataDaoImpl extends DaoImpl<ApprovalFormDataPO> impleme
 		return (ApprovalFormDataPO) session().createCriteria(ApprovalFormDataPO.class)
 			.add(Restrictions.eq("aid", aid))
 			.add(Restrictions.eq("fieldId", fieldId))
-			.uniqueResult();
+			.setMaxResults(1).uniqueResult();
 	}
 
 }

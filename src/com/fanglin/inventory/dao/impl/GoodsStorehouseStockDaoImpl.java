@@ -44,7 +44,7 @@ public class GoodsStorehouseStockDaoImpl extends DaoImpl<GoodsStorehouseStockPO>
 
 	@Override
 	public GoodsStorehouseStockPO queryGoodsStorehouseStockByShidAGid(long gid, long cid, long fid, long shid) {
-		return (GoodsStorehouseStockPO) session().createCriteria(GoodsStorehouseStockPO.class).createAlias("goods", "goods").createAlias("color", "color").createAlias("format", "format").createAlias("storehouse", "storehouse").add(Restrictions.eq(GoodsStorehouseStockPO.COLUMN_GID_STR, gid)).add(Restrictions.eq(GoodsStorehouseStockPO.COLUMN_CID_STR, cid)).add(Restrictions.eq(GoodsStorehouseStockPO.COLUMN_FID_STR, fid)).add(Restrictions.eq(GoodsStorehouseStockPO.COLUMN_SHID_STR, shid)).uniqueResult();
+		return (GoodsStorehouseStockPO) session().createCriteria(GoodsStorehouseStockPO.class).createAlias("goods", "goods").createAlias("color", "color").createAlias("format", "format").createAlias("storehouse", "storehouse").add(Restrictions.eq(GoodsStorehouseStockPO.COLUMN_GID_STR, gid)).add(Restrictions.eq(GoodsStorehouseStockPO.COLUMN_CID_STR, cid)).add(Restrictions.eq(GoodsStorehouseStockPO.COLUMN_FID_STR, fid)).add(Restrictions.eq(GoodsStorehouseStockPO.COLUMN_SHID_STR, shid)).setMaxResults(1).uniqueResult();
 	}
 
 	@Override

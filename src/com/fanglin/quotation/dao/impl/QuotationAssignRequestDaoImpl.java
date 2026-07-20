@@ -83,17 +83,17 @@ public class QuotationAssignRequestDaoImpl extends DaoImpl<QuotationAssignReques
 
 	@Override
 	public QuotationAssignRequestPO queryQuotationAssignRequestForActive(String orderId) {
-		return (QuotationAssignRequestPO) createCriteria(QuotationAssignRequestPO.class).add(Restrictions.eq("orderId", orderId)).add(Restrictions.lt("status", QuotationAssignRequestPO.STATUS_COMPLETED_INT)).uniqueResult();
+		return (QuotationAssignRequestPO) createCriteria(QuotationAssignRequestPO.class).add(Restrictions.eq("orderId", orderId)).add(Restrictions.lt("status", QuotationAssignRequestPO.STATUS_COMPLETED_INT)).setMaxResults(1).uniqueResult();
 	}
 
 	@Override
 	public QuotationAssignRequestPO queryQuotationAssignRequestForPending(String orderId) {
-		return (QuotationAssignRequestPO) createCriteria(QuotationAssignRequestPO.class).add(Restrictions.eq("orderId", orderId)).add(Restrictions.eq("status", QuotationAssignRequestPO.STATUS_PENDING_INT)).uniqueResult();
+		return (QuotationAssignRequestPO) createCriteria(QuotationAssignRequestPO.class).add(Restrictions.eq("orderId", orderId)).add(Restrictions.eq("status", QuotationAssignRequestPO.STATUS_PENDING_INT)).setMaxResults(1).uniqueResult();
 	}
 
 	@Override
 	public QuotationAssignRequestPO queryQuotationAssignRequestForAssigned(String orderId) {
-		return (QuotationAssignRequestPO) createCriteria(QuotationAssignRequestPO.class).add(Restrictions.eq("orderId", orderId)).add(Restrictions.eq("status", QuotationAssignRequestPO.STATUS_ASSIGNED_INT)).uniqueResult();
+		return (QuotationAssignRequestPO) createCriteria(QuotationAssignRequestPO.class).add(Restrictions.eq("orderId", orderId)).add(Restrictions.eq("status", QuotationAssignRequestPO.STATUS_ASSIGNED_INT)).setMaxResults(1).uniqueResult();
 	}
 
 	@SuppressWarnings("unchecked")

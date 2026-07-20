@@ -52,7 +52,7 @@ public class VoucherDaoImpl extends DaoImpl<VoucherPO> implements VoucherDao {
 	
 	@Override
 	public VoucherPO queryVoucherByVId(long vid) {
-		return (VoucherPO) session().createCriteria(VoucherPO.class).add(Restrictions.eq(VoucherPO.COLUMN_VID_STR, vid)).uniqueResult();
+		return (VoucherPO) session().createCriteria(VoucherPO.class).add(Restrictions.eq(VoucherPO.COLUMN_VID_STR, vid)).setMaxResults(1).uniqueResult();
 	}
 
 	@Override

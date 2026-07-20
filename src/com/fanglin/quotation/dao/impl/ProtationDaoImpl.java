@@ -56,7 +56,7 @@ public class ProtationDaoImpl extends DaoImpl<ProtationPO> implements ProtationD
 
 	@Override
 	public ProtationPO queryProtationForDefaultByOrderId(String orderId) {
-		return (ProtationPO) createCriteria(ProtationPO.class).add(Restrictions.eq("orderId", orderId)).add(Restrictions.eq("defaults", ProtationPO.DEFAULT_DEFAULT_INT)).uniqueResult();
+		return (ProtationPO) createCriteria(ProtationPO.class).add(Restrictions.eq("orderId", orderId)).add(Restrictions.eq("defaults", ProtationPO.DEFAULT_DEFAULT_INT)).setMaxResults(1).uniqueResult();
 	}
 
 	@Override

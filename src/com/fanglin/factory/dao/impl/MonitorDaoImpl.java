@@ -35,7 +35,7 @@ public class MonitorDaoImpl extends DaoImpl<MonitorPO> implements MonitorDao {
 
 	@Override
 	public MonitorPO queryMonitor(String name, String type) {
-		return (MonitorPO) session().createCriteria(MonitorPO.class).add(Restrictions.eq(MonitorPO.COLUMN_NAME_STR, name)).add(Restrictions.eq(MonitorPO.COLUMN_TYPE_STR, type)).uniqueResult();
+		return (MonitorPO) session().createCriteria(MonitorPO.class).add(Restrictions.eq(MonitorPO.COLUMN_NAME_STR, name)).add(Restrictions.eq(MonitorPO.COLUMN_TYPE_STR, type)).setMaxResults(1).uniqueResult();
 	}
 
 }

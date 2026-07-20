@@ -13,7 +13,7 @@ public class PlanParamDaoImpl extends DaoImpl<PlanParamPO> implements PlanParamD
 	@Override
 	public PlanParamPO queryPlanParam(Long pid) {
 		
-		return (PlanParamPO) session().createCriteria(PlanParamPO.class).add(Restrictions.eq("pid", pid)).uniqueResult();
+		return (PlanParamPO) session().createCriteria(PlanParamPO.class).add(Restrictions.eq("pid", pid)).setMaxResults(1).uniqueResult();
 	}
 
 }

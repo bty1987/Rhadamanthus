@@ -37,7 +37,7 @@ public class DecorationAuditDaoImpl extends DaoImpl<DecorationAuditPO> implement
 
 	@Override
 	public DecorationAuditPO queryDecorationAuditByOrderId(String orderId) {
-		return (DecorationAuditPO)createCriteria(DecorationAuditPO.class).add(Restrictions.eq(DecorationAuditPO.COLUMN_ORDERID_STR , orderId)).uniqueResult();
+		return (DecorationAuditPO)createCriteria(DecorationAuditPO.class).add(Restrictions.eq(DecorationAuditPO.COLUMN_ORDERID_STR , orderId)).setMaxResults(1).uniqueResult();
 	}
 
 	private void queryFilterExcute(PagingQuery<?> query,List<Filter> filters) {

@@ -55,7 +55,7 @@ public class UserInfoDaoImpl extends DaoImpl<UserInfoPO> implements UserInfoDao 
 	
 	@Override
 	public UserInfoPO queryUserInfoByUserId(String userId) {
-		return (UserInfoPO) session().createCriteria(UserInfoPO.class).createAlias("user", "user").add(Restrictions.eq("user.userId", userId)).uniqueResult();
+		return (UserInfoPO) session().createCriteria(UserInfoPO.class).createAlias("user", "user").add(Restrictions.eq("user.userId", userId)).setMaxResults(1).uniqueResult();
 	}
 
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {

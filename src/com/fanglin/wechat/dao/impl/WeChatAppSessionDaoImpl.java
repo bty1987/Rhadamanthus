@@ -27,12 +27,12 @@ public class WeChatAppSessionDaoImpl extends DaoImpl<WeChatAppSessionPO> impleme
 
 	@Override
 	public WeChatAppSessionPO queryWeChatAppSessionByCode(String code) {
-		return (WeChatAppSessionPO) session().createCriteria(WeChatAppSessionPO.class).add(Restrictions.eq(WeChatAppSessionPO.COLUMN_CODE_STR, code)).uniqueResult();
+		return (WeChatAppSessionPO) session().createCriteria(WeChatAppSessionPO.class).add(Restrictions.eq(WeChatAppSessionPO.COLUMN_CODE_STR, code)).setMaxResults(1).uniqueResult();
 	}
 
 	@Override
 	public WeChatAppSessionPO queryWeChatAppSessionByOpenid(String openId) {
-		return (WeChatAppSessionPO) session().createCriteria(WeChatAppSessionPO.class).add(Restrictions.eq(WeChatAppSessionPO.COLUMN_OPENID_STR, openId)).uniqueResult();
+		return (WeChatAppSessionPO) session().createCriteria(WeChatAppSessionPO.class).add(Restrictions.eq(WeChatAppSessionPO.COLUMN_OPENID_STR, openId)).setMaxResults(1).uniqueResult();
 	}
 
 	@Override

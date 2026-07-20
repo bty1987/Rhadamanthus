@@ -43,7 +43,7 @@ public class OalesItemDaoImpl extends DaoImpl<OalesItemPO> implements OalesItemD
 	@Override
 	public Long amountOalesItem(long oid) {
 		String hql = "SELECT COALESCE(SUM(i.total), 0) FROM OalesItemPO i WHERE i.oid = :oid";
-		BigDecimal result = (BigDecimal) session().createQuery(hql).setLong("oid", oid).uniqueResult();
+		BigDecimal result = (BigDecimal) session().createQuery(hql).setLong("oid", oid).setMaxResults(1).uniqueResult();
 		return result != null ? result.longValue() : 0L;
 	}
 

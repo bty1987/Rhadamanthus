@@ -16,7 +16,7 @@ public class AdvanceDaoImpl extends DaoImpl<AdvancePaymentPO> implements Advance
 
 	@Override
 	public AdvancePaymentPO queryCusAdvance(String orderId) {
-		return (AdvancePaymentPO) session().createCriteria(AdvancePaymentPO.class).createAlias("decoration", "decoration").add(Restrictions.eq("decoration.orderId", orderId)).uniqueResult();
+		return (AdvancePaymentPO) session().createCriteria(AdvancePaymentPO.class).createAlias("decoration", "decoration").add(Restrictions.eq("decoration.orderId", orderId)).setMaxResults(1).uniqueResult();
 	}
 
 }

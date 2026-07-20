@@ -47,7 +47,7 @@ public class HouseDaoImpl extends DaoImpl<HousePO> implements HouseDao {
 			criteria.add(Restrictions.eq("company", company));
 		}
 
-		return (HousePO) criteria.uniqueResult();
+		return (HousePO) criteria.setMaxResults(1).uniqueResult();
 	}
 
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {

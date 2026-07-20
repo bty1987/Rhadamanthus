@@ -39,7 +39,7 @@ public class ZaterialDesignerDepartmentRankDaoImpl extends DaoImpl<ZaterialDesig
 				.add(Restrictions.eq(ZaterialDesignerDepartmentRankPO.COLUMN_DESIGNERDEPTID_STR, deptId))
 				.add(Restrictions.eq(ZaterialDesignerDepartmentRankPO.COLUMN_COMPANY_STR, company))
 				.add(Restrictions.eq(ZaterialDesignerDepartmentRankPO.COLUMN_STATUS_STR, ZaterialDesignerDepartmentRankPO.STATUS_TYPE_INIT_INT))
-				.uniqueResult();
+				.setMaxResults(1).uniqueResult();
 	}
 
 	@SuppressWarnings("unchecked")

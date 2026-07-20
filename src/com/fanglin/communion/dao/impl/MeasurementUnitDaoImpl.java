@@ -41,12 +41,12 @@ public class MeasurementUnitDaoImpl extends DaoImpl<MeasurementUnitPO> implement
 
 	@Override
 	public MeasurementUnitPO queryMeasurementUnitByName(String name) {
-		return (MeasurementUnitPO) createCriteria(MeasurementUnitPO.class).add(Restrictions.eq(MeasurementUnitPO.COLUMN_NAME_STR, name)).uniqueResult();
+		return (MeasurementUnitPO) createCriteria(MeasurementUnitPO.class).add(Restrictions.eq(MeasurementUnitPO.COLUMN_NAME_STR, name)).setMaxResults(1).uniqueResult();
 	}
 
 	@Override
 	public MeasurementUnitPO queryMeasurementUnitById(int id) {
-		return (MeasurementUnitPO) createCriteria(MeasurementUnitPO.class).add(Restrictions.eq(MeasurementUnitPO.COLUMN_ID_STR, id)).uniqueResult();
+		return (MeasurementUnitPO) createCriteria(MeasurementUnitPO.class).add(Restrictions.eq(MeasurementUnitPO.COLUMN_ID_STR, id)).setMaxResults(1).uniqueResult();
 	}
 
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {

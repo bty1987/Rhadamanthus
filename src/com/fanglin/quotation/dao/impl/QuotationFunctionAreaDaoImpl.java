@@ -36,7 +36,7 @@ public class QuotationFunctionAreaDaoImpl extends DaoImpl<QuotationFunctionAreaP
 
 	@Override
 	public QuotationFunctionAreaPO queryQuotationFunctionAreaForTypeByQuotationId(long quotationId, short type) {
-		return (QuotationFunctionAreaPO) createCriteria(QuotationFunctionAreaPO.class).add(Restrictions.eq("quotation.qid", quotationId)).add(Restrictions.eq("type", type)).uniqueResult();
+		return (QuotationFunctionAreaPO) createCriteria(QuotationFunctionAreaPO.class).add(Restrictions.eq("quotation.qid", quotationId)).add(Restrictions.eq("type", type)).setMaxResults(1).uniqueResult();
 	}
 
 	@Override

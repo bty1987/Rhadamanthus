@@ -16,7 +16,7 @@ public class BackgroundDaoImpl extends DaoImpl<BackgroundPO> implements Backgrou
 
 	@Override
 	public BackgroundPO queryBackgroundByUnionId(String unionId) {
-		return (BackgroundPO) createCriteria(BackgroundPO.class).add(Restrictions.eq(BackgroundPO.COLUMN_UNIONID_STR, unionId)).uniqueResult();
+		return (BackgroundPO) createCriteria(BackgroundPO.class).add(Restrictions.eq(BackgroundPO.COLUMN_UNIONID_STR, unionId)).setMaxResults(1).uniqueResult();
 	}
 
 }

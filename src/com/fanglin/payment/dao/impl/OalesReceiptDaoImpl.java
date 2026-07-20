@@ -16,6 +16,6 @@ public class OalesReceiptDaoImpl  extends DaoImpl<OalesReceiptPO> implements Oal
 	
 	@Override
 	public OalesReceiptPO queryOalesReceipt(long orid) {
-		return (OalesReceiptPO) session().createCriteria(OalesReceiptPO.class).add(Restrictions.eq(OalesReceiptPO.COLUMN_SRID_STR, orid)).uniqueResult();
+		return (OalesReceiptPO) session().createCriteria(OalesReceiptPO.class).add(Restrictions.eq(OalesReceiptPO.COLUMN_SRID_STR, orid)).setMaxResults(1).uniqueResult();
 	}
 }

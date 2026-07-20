@@ -44,7 +44,7 @@ public class ApprovalCustomerOriginDaoImpl extends DaoImpl<ApprovalCustomerOrigi
 
 	@Override
 	public ApprovalCustomerOriginPO queryCustomerOriginByAid(long aid) {
-		return (ApprovalCustomerOriginPO) session().createCriteria(ApprovalCustomerOriginPO.class).add(Restrictions.eq("aid", aid)).uniqueResult();
+		return (ApprovalCustomerOriginPO) session().createCriteria(ApprovalCustomerOriginPO.class).add(Restrictions.eq("aid", aid)).setMaxResults(1).uniqueResult();
 	}
 
 	public static void queryFilterExcute(PagingQuery<?> query, List<Filter> filters, String prefix) throws FLException {

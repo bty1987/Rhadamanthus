@@ -16,7 +16,7 @@ public class ApprovalSalesDaymentDaoImpl extends DaoImpl<ApprovalSalesDaymentPO>
 
 	@Override
 	public ApprovalSalesDaymentPO querySalesDaymentByAid(long aid) {
-		return (ApprovalSalesDaymentPO) session().createCriteria(ApprovalSalesDaymentPO.class).add(Restrictions.eq("aid", aid)).uniqueResult();
+		return (ApprovalSalesDaymentPO) session().createCriteria(ApprovalSalesDaymentPO.class).add(Restrictions.eq("aid", aid)).setMaxResults(1).uniqueResult();
 	}
 
 }

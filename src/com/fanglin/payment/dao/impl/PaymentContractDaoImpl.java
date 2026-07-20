@@ -20,7 +20,7 @@ public class PaymentContractDaoImpl extends DaoImpl<PaymentContractPO> implement
 
 	@Override
 	public PaymentContractPO queryPaymentContract(long rtid, short type) {
-		return (PaymentContractPO) session().createCriteria(PaymentContractPO.class).add(Restrictions.eq("rtid", rtid)).add(Restrictions.eq("paymentType", type)).uniqueResult();
+		return (PaymentContractPO) session().createCriteria(PaymentContractPO.class).add(Restrictions.eq("rtid", rtid)).add(Restrictions.eq("paymentType", type)).setMaxResults(1).uniqueResult();
 	}
 
 	@Override

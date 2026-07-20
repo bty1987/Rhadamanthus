@@ -15,7 +15,7 @@ public class ApprovalSalesDiscountDaoImpl extends DaoImpl<ApprovalSalesDiscountP
 	}
 	@Override
 	public ApprovalSalesDiscountPO queryApprovalSalesDiscountByAId(long aid) {
-		return (ApprovalSalesDiscountPO) session().createCriteria(ApprovalSalesDiscountPO.class).add(Restrictions.eq(ApprovalSalesDiscountPO.COLUMN_AID_STR, aid)).uniqueResult();
+		return (ApprovalSalesDiscountPO) session().createCriteria(ApprovalSalesDiscountPO.class).add(Restrictions.eq(ApprovalSalesDiscountPO.COLUMN_AID_STR, aid)).setMaxResults(1).uniqueResult();
 	}
 
 }

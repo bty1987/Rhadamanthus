@@ -34,7 +34,7 @@ public class MaterialDesignerRankDaoImpl extends DaoImpl<MaterialDesignerRankPO>
 				.add(Restrictions.eq("company", company))
 				.add(Restrictions.eq(MaterialDesignerRankPO.COLUMN_DESIGNERID_STR, designerId))
 				.add(Restrictions.eq(MaterialDesignerRankPO.COLUMN_STATUS_STR, MaterialDesignerRankPO.STATUS_TYPE_INIT_INT))
-				.uniqueResult();
+				.setMaxResults(1).uniqueResult();
 	}
 
 	@SuppressWarnings("unchecked")

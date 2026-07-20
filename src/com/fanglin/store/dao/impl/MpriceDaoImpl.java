@@ -45,7 +45,7 @@ public class MpriceDaoImpl extends DaoImpl<MpricePO> implements MpriceDao {
 
 	@Override
 	public MpricePO queryMpriceByPid(long pid) {
-		return (MpricePO) session().createCriteria(MpricePO.class).add(Restrictions.eq(MpricePO.COLUMN_PID_STR, pid)).uniqueResult();
+		return (MpricePO) session().createCriteria(MpricePO.class).add(Restrictions.eq(MpricePO.COLUMN_PID_STR, pid)).setMaxResults(1).uniqueResult();
 	}
 
 	@Override

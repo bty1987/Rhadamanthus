@@ -35,7 +35,7 @@ public class RuotationDaoImpl extends DaoImpl<RuotationPO> implements RuotationD
 	@Override
 	public RuotationPO queryRuotationByQid(long qid) {
 
-		return (RuotationPO) createCriteria(RuotationPO.class).add(Restrictions.eq("quotation.qid", qid)).uniqueResult();
+		return (RuotationPO) createCriteria(RuotationPO.class).add(Restrictions.eq("quotation.qid", qid)).setMaxResults(1).uniqueResult();
 	}
 
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {

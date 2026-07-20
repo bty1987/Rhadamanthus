@@ -73,7 +73,7 @@ public class DecorationServiceDaoImpl extends DaoImpl<DecorationServicePO> imple
 				.add(Restrictions.eq("status", DecorationServicePO.SERVICESTATUS_INIT_INT))
 				.addOrder(org.hibernate.criterion.Order.desc("createTime"))
 				.setMaxResults(1)
-				.uniqueResult();
+				.setMaxResults(1).uniqueResult();
 	}
 
 	@Override
@@ -83,7 +83,7 @@ public class DecorationServiceDaoImpl extends DaoImpl<DecorationServicePO> imple
 				.add(Restrictions.eq(DecorationServicePO.DECORATION_ORDERID_STR, orderId))
 				.add(Restrictions.eq("type", DecorationServicePO.TYPE_DESIGN_CONFIRM))
 				.setProjection(org.hibernate.criterion.Projections.rowCount())
-				.uniqueResult();
+				.setMaxResults(1).uniqueResult();
 		return count != null ? count.intValue() + 1 : 1;
 	}
 

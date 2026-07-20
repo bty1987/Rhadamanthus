@@ -24,7 +24,7 @@ public class PuotationDaoImpl extends DaoImpl<PuotationPO> implements PuotationD
 
 	@Override
 	public PuotationPO queryPuotationByQid(long qid) {
-		return (PuotationPO) createCriteria(PuotationPO.class).add(Restrictions.eq(PuotationPO.COLUMN_QID_STR, qid)).uniqueResult();
+		return (PuotationPO) createCriteria(PuotationPO.class).add(Restrictions.eq(PuotationPO.COLUMN_QID_STR, qid)).setMaxResults(1).uniqueResult();
 	}
 
 }

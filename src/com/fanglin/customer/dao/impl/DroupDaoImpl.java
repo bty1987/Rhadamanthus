@@ -48,7 +48,7 @@ public class DroupDaoImpl extends DaoImpl<DroupPO> implements DroupDao {
 			query.add(Restrictions.eq(DroupPO.COLUMN_OPENID_STR, openId));
 		}
 
-		return (DroupPO) query.uniqueResult();
+		return (DroupPO) query.setMaxResults(1).uniqueResult();
 	}
 
 	private void queryFilterExecute(PagingQuery<?> query, List<Filter> filters) {

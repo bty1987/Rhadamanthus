@@ -51,7 +51,7 @@ public class EcityDaoImpl extends DaoImpl<EcityPO> implements EcityDao{
 	
 	@Override
 	public EcityPO queryEcityByXandY(Double addX, Double subX, Double addY, Double subY) {
-		return (EcityPO) session().createCriteria(EcityPO.class).add(Restrictions.le(EcityPO.COLUMN_X_STR, addX)).add(Restrictions.ge(EcityPO.COLUMN_X_STR, subX)).add(Restrictions.le(EcityPO.COLUMN_Y_STR, addY)).add(Restrictions.ge(EcityPO.COLUMN_Y_STR, subY)).uniqueResult();
+		return (EcityPO) session().createCriteria(EcityPO.class).add(Restrictions.le(EcityPO.COLUMN_X_STR, addX)).add(Restrictions.ge(EcityPO.COLUMN_X_STR, subX)).add(Restrictions.le(EcityPO.COLUMN_Y_STR, addY)).add(Restrictions.ge(EcityPO.COLUMN_Y_STR, subY)).setMaxResults(1).uniqueResult();
 	}
 	
 	@Override
@@ -62,7 +62,7 @@ public class EcityDaoImpl extends DaoImpl<EcityPO> implements EcityDao{
 
 	@Override
 	public EcityPO queryEcityByCityString(String city) {
-		return (EcityPO) session().createCriteria(EcityPO.class).add(Restrictions.like(EcityPO.COLUMN_CITY_STR, city, MatchMode.START)).uniqueResult();
+		return (EcityPO) session().createCriteria(EcityPO.class).add(Restrictions.like(EcityPO.COLUMN_CITY_STR, city, MatchMode.START)).setMaxResults(1).uniqueResult();
 	}
 
 }

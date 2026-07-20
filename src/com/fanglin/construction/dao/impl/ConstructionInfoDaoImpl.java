@@ -37,12 +37,12 @@ public class ConstructionInfoDaoImpl extends DaoImpl<ConstructionInfoPO> impleme
 
 	@Override
 	public ConstructionInfoPO queryConstructionInfo(long cid) {
-		return (ConstructionInfoPO) session().createCriteria(ConstructionInfoPO.class).add(Restrictions.eq(ConstructionInfoPO.COLUMN_CID_STR, cid)).uniqueResult();
+		return (ConstructionInfoPO) session().createCriteria(ConstructionInfoPO.class).add(Restrictions.eq(ConstructionInfoPO.COLUMN_CID_STR, cid)).setMaxResults(1).uniqueResult();
 	}
 
 	@Override
 	public ConstructionInfoPO queryConstructionInfoByOrderId(String orderId) {
-		return (ConstructionInfoPO) session().createCriteria(ConstructionInfoPO.class).add(Restrictions.eq(ConstructionInfoPO.COLUMN_ORDERID_STR, orderId)).uniqueResult();
+		return (ConstructionInfoPO) session().createCriteria(ConstructionInfoPO.class).add(Restrictions.eq(ConstructionInfoPO.COLUMN_ORDERID_STR, orderId)).setMaxResults(1).uniqueResult();
 	}
 
 	@Override

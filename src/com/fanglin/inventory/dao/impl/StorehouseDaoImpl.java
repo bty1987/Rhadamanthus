@@ -47,7 +47,7 @@ public class StorehouseDaoImpl extends DaoImpl<StorehousePO> implements Storehou
 
 	@Override
 	public StorehousePO queryStroehouseByCode(String code) {
-		return (StorehousePO) session().createCriteria(StorehousePO.class).add(Restrictions.eq(StorehousePO.COLUMN_STATUS_STR, StorehousePO.STATUS_ENABLE_INT)).add(Restrictions.eq(StorehousePO.COLUMN_CODE_STR, code)).uniqueResult();
+		return (StorehousePO) session().createCriteria(StorehousePO.class).add(Restrictions.eq(StorehousePO.COLUMN_STATUS_STR, StorehousePO.STATUS_ENABLE_INT)).add(Restrictions.eq(StorehousePO.COLUMN_CODE_STR, code)).setMaxResults(1).uniqueResult();
 	}
 
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {

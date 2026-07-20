@@ -35,7 +35,7 @@ public class AccountTmpDaoImpl extends DaoImpl<AccountTmpPO> implements AccountT
 
 	@Override
 	public AccountTmpPO queryAccountTmpByAId(long aId) {
-		return (AccountTmpPO) session().createCriteria(AccountTmpPO.class).add(Restrictions.eq(AccountTmpPO.COLUMN_AID_STR, aId)).uniqueResult();
+		return (AccountTmpPO) session().createCriteria(AccountTmpPO.class).add(Restrictions.eq(AccountTmpPO.COLUMN_AID_STR, aId)).setMaxResults(1).uniqueResult();
 	}
 
 }

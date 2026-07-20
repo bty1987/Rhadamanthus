@@ -21,7 +21,7 @@ public class PuotationItemDaoImpl extends DaoImpl<PuotationItemPO> implements Pu
 
 	@Override
 	public PuotationItemPO queryPuotationItemByQiid(long qiid) {
-		return (PuotationItemPO) createCriteria(PuotationItemPO.class).add(Restrictions.eq(PuotationItemPO.COLUMN_QIID_STR, qiid)).uniqueResult();
+		return (PuotationItemPO) createCriteria(PuotationItemPO.class).add(Restrictions.eq(PuotationItemPO.COLUMN_QIID_STR, qiid)).setMaxResults(1).uniqueResult();
 	}
 
 	@Override

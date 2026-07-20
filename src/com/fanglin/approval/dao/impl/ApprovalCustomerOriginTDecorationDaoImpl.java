@@ -32,7 +32,7 @@ public class ApprovalCustomerOriginTDecorationDaoImpl extends DaoImpl<ApprovalCu
 
 	@Override
 	public ApprovalCustomerOriginTDecorationPO queryCustomerOriginTDecorationByAid(long aid) {
-		return (ApprovalCustomerOriginTDecorationPO) session().createCriteria(ApprovalCustomerOriginTDecorationPO.class).createAlias("approval", "approval").add(Restrictions.eq("approval.aid", aid)).uniqueResult();
+		return (ApprovalCustomerOriginTDecorationPO) session().createCriteria(ApprovalCustomerOriginTDecorationPO.class).createAlias("approval", "approval").add(Restrictions.eq("approval.aid", aid)).setMaxResults(1).uniqueResult();
 	}
 
 	public static void queryFilterExcute(PagingQuery<?> query, List<Filter> filters, String prefix) throws FLException {

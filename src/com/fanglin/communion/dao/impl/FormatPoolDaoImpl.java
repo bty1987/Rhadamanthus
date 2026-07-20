@@ -43,7 +43,7 @@ public class FormatPoolDaoImpl extends DaoImpl<FormatPoolPO> implements FormatPo
 
 	@Override
 	public FormatPoolPO queryFormatPoolByInfo(long gpid, String info) {
-		return (FormatPoolPO) session().createCriteria(FormatPoolPO.class).createAlias("goodsPool", "goodsPool").add(Restrictions.eq(FormatPoolPO.COLUMN_GPID_STR, gpid)).add(Restrictions.eq(FormatPoolPO.COLUMN_INFO_STR, info)).uniqueResult();
+		return (FormatPoolPO) session().createCriteria(FormatPoolPO.class).createAlias("goodsPool", "goodsPool").add(Restrictions.eq(FormatPoolPO.COLUMN_GPID_STR, gpid)).add(Restrictions.eq(FormatPoolPO.COLUMN_INFO_STR, info)).setMaxResults(1).uniqueResult();
 	}
 
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {

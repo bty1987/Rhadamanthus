@@ -49,7 +49,7 @@ public class BalanceDaoImpl extends DaoImpl<BalancePO> implements BalanceDao {
 
 	@Override
 	public BalancePO queryBalance(String no) {
-		return (BalancePO) session().createCriteria(BalancePO.class).add(Restrictions.eq("no", no)).uniqueResult();
+		return (BalancePO) session().createCriteria(BalancePO.class).add(Restrictions.eq("no", no)).setMaxResults(1).uniqueResult();
 	}
 
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) throws FLException {

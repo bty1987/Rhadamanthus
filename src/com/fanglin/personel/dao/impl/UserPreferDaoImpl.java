@@ -19,7 +19,7 @@ public class UserPreferDaoImpl extends DaoImpl<UserPreferPO> implements UserPref
 
     @Override
     public UserPreferPO queryUserPrefer(String userId, String module, String page, String pkey, int company) {
-        return (UserPreferPO) createCriteria(UserPreferPO.class).add(Restrictions.eq(UserPreferPO.COLUMN_USERID_STR, userId)).add(Restrictions.eq(UserPreferPO.COLUMN_MODULE_STR, module)).add(Restrictions.eq(UserPreferPO.COLUMN_PAGE_STR, page)).add(Restrictions.eq(UserPreferPO.COLUMN_PKEY_STR, pkey)).add(Restrictions.eq(UserPreferPO.COLUMN_COMPANY_STR, company)).uniqueResult();
+        return (UserPreferPO) createCriteria(UserPreferPO.class).add(Restrictions.eq(UserPreferPO.COLUMN_USERID_STR, userId)).add(Restrictions.eq(UserPreferPO.COLUMN_MODULE_STR, module)).add(Restrictions.eq(UserPreferPO.COLUMN_PAGE_STR, page)).add(Restrictions.eq(UserPreferPO.COLUMN_PKEY_STR, pkey)).add(Restrictions.eq(UserPreferPO.COLUMN_COMPANY_STR, company)).setMaxResults(1).uniqueResult();
     }
 
     @Override

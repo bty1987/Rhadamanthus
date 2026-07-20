@@ -32,7 +32,7 @@ public class ApprovalSalesRefundDaoImpl extends DaoImpl<ApprovalSalesRefundPO> i
 
 	@Override
 	public ApprovalSalesRefundPO queryApprovalSalesRefundByAId(long aId) {
-		return (ApprovalSalesRefundPO) session().createCriteria(ApprovalSalesRefundPO.class).add(Restrictions.eq(ApprovalSalesRefundPO.COLUMN_AID_STR, aId)).uniqueResult();
+		return (ApprovalSalesRefundPO) session().createCriteria(ApprovalSalesRefundPO.class).add(Restrictions.eq(ApprovalSalesRefundPO.COLUMN_AID_STR, aId)).setMaxResults(1).uniqueResult();
 	}
 
 	public static void queryFilterExcute(PagingQuery<?> query, List<Filter> filters, String prefix) throws FLException {

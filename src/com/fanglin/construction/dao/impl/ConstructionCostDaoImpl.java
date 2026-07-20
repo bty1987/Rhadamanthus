@@ -40,7 +40,7 @@ public class ConstructionCostDaoImpl extends DaoImpl<ConstructionCostPO> impleme
 
 	@Override
 	public ConstructionCostPO queryConstructionCost(int area, int company) {
-		return (ConstructionCostPO) session().createCriteria(ConstructionCostPO.class).add(Restrictions.eq("company", company)).add(Restrictions.lt("areaLeft", area)).add(Restrictions.ge("areaRight", area)).add(Restrictions.eq("status", ConstructionCostPO.STATUS_INIT_SHORT)).uniqueResult();
+		return (ConstructionCostPO) session().createCriteria(ConstructionCostPO.class).add(Restrictions.eq("company", company)).add(Restrictions.lt("areaLeft", area)).add(Restrictions.ge("areaRight", area)).add(Restrictions.eq("status", ConstructionCostPO.STATUS_INIT_SHORT)).setMaxResults(1).uniqueResult();
 	}
 
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {

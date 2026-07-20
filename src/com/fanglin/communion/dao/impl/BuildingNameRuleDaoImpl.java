@@ -45,7 +45,7 @@ public class BuildingNameRuleDaoImpl extends DaoImpl<BuildingNameRulePO> impleme
 				.createCriteria(BuildingNameRulePO.class)
 				.add(Restrictions.eq("rule", rule))
 				.setMaxResults(1)
-				.uniqueResult();
+				.setMaxResults(1).uniqueResult();
 	}
 
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {

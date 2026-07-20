@@ -42,7 +42,7 @@ public class ColorPoolDaoImpl extends DaoImpl<ColorPoolPO> implements ColorPoolD
 
 	@Override
 	public ColorPoolPO queryColorPoolByName(long gpid, String name) {
-		return (ColorPoolPO) session().createCriteria(ColorPoolPO.class).createAlias("goodsPool", "goodsPool").add(Restrictions.eq(ColorPoolPO.COLUMN_GPID_STR, gpid)).add(Restrictions.eq(ColorPoolPO.COLUMN_NAME_STR, name)).uniqueResult();
+		return (ColorPoolPO) session().createCriteria(ColorPoolPO.class).createAlias("goodsPool", "goodsPool").add(Restrictions.eq(ColorPoolPO.COLUMN_GPID_STR, gpid)).add(Restrictions.eq(ColorPoolPO.COLUMN_NAME_STR, name)).setMaxResults(1).uniqueResult();
 	}
 
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {

@@ -44,14 +44,14 @@ public class BuildingDaoImpl extends DaoImpl<BuildingPO> implements BuildingDao 
 	@Override
 	public BuildingPO queryBuildingByHsid(Long hsid) {
 		
-		return (BuildingPO)session().createCriteria(BuildingPO.class).add(Restrictions.eq(BuildingPO.COLUMN_HSID_STR, hsid)).uniqueResult();
+		return (BuildingPO)session().createCriteria(BuildingPO.class).add(Restrictions.eq(BuildingPO.COLUMN_HSID_STR, hsid)).setMaxResults(1).uniqueResult();
 		
 	}
 
 	@Override
 	public BuildingPO queryBuildingByCsid(Long csid) {
 		
-		return (BuildingPO)session().createCriteria(BuildingPO.class).add(Restrictions.eq(BuildingPO.COLUMN_CSID_STR, csid)).uniqueResult();
+		return (BuildingPO)session().createCriteria(BuildingPO.class).add(Restrictions.eq(BuildingPO.COLUMN_CSID_STR, csid)).setMaxResults(1).uniqueResult();
 		
 	}
 

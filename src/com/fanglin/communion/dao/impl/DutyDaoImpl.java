@@ -77,7 +77,7 @@ public class DutyDaoImpl extends DaoImpl<DutyPO> implements DutyDao {
 
 	@Override
 	public DutyPO queryDutyByName(String name) {
-		return (DutyPO) session().createCriteria(DutyPO.class).add(Restrictions.eq(DutyPO.COLUMN_NAME_STR, name)).uniqueResult();
+		return (DutyPO) session().createCriteria(DutyPO.class).add(Restrictions.eq(DutyPO.COLUMN_NAME_STR, name)).setMaxResults(1).uniqueResult();
 	}
 
 	@Override
@@ -87,13 +87,13 @@ public class DutyDaoImpl extends DaoImpl<DutyPO> implements DutyDao {
 		}
 		return (DutyPO) session().createCriteria(DutyPO.class)
 				.add(Restrictions.eq(DutyPO.COLUMN_CODE_STR, code.trim()))
-				.uniqueResult();
+				.setMaxResults(1).uniqueResult();
 	}
 
 	@Override
 	public String queryMaxDutyCode() {
 		String hql = "SELECT MAX(d.code) FROM DutyPO d WHERE d.code LIKE 'D%'";
-		return (String) session().createQuery(hql).uniqueResult();
+		return (String) session().createQuery(hql).setMaxResults(1).uniqueResult();
 	}
 
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {

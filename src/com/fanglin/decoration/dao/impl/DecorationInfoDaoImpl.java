@@ -21,7 +21,7 @@ public class DecorationInfoDaoImpl extends DaoImpl<DecorationInfoPO> implements 
 	@Override
 	public DecorationInfoPO queryDecorationInfoByOrderId(String orderId) {
 
-		return (DecorationInfoPO) session().createCriteria(DecorationInfoPO.class).add(Restrictions.eq("orderId", orderId)).uniqueResult();
+		return (DecorationInfoPO) session().createCriteria(DecorationInfoPO.class).add(Restrictions.eq("orderId", orderId)).setMaxResults(1).uniqueResult();
 	}
 
 	@Override

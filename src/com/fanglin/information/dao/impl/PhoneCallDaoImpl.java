@@ -30,12 +30,12 @@ public class PhoneCallDaoImpl extends DaoImpl<PhoneCallPO> implements PhoneCallD
 	
 	@Override
 	public PhoneCallPO queryPhoneCallByCallBackId(String callBackId){
-		return (PhoneCallPO) createCriteria(PhoneCallPO.class).add(Restrictions.eq("callbackId", callBackId)).uniqueResult();
+		return (PhoneCallPO) createCriteria(PhoneCallPO.class).add(Restrictions.eq("callbackId", callBackId)).setMaxResults(1).uniqueResult();
 	}
 	
 	@Override
 	public PhoneCallPO queryPhoneCallByCallerACallee(String caller,String callee){
-		return (PhoneCallPO) createCriteria(PhoneCallPO.class).add(Restrictions.eq("caller", caller)).add(Restrictions.eq("callee", callee)).add(Restrictions.eq("stopReason", PhoneCallPO.PHONECALLPO_STOPREASON_STR)).uniqueResult();
+		return (PhoneCallPO) createCriteria(PhoneCallPO.class).add(Restrictions.eq("caller", caller)).add(Restrictions.eq("callee", callee)).add(Restrictions.eq("stopReason", PhoneCallPO.PHONECALLPO_STOPREASON_STR)).setMaxResults(1).uniqueResult();
 	}
 	
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters){

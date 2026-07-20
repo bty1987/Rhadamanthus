@@ -286,7 +286,7 @@ public class DecorationDaoImpl extends DaoImpl<DecorationPO> implements Decorati
 
 	@Override
 	public DecorationPO queryDecorationByOrderId(String orderId) {
-		return (DecorationPO) session().createCriteria(DecorationPO.class).add(Restrictions.eq("orderId", orderId)).uniqueResult();
+		return (DecorationPO) session().createCriteria(DecorationPO.class).add(Restrictions.eq("orderId", orderId)).setMaxResults(1).uniqueResult();
 	}
 
 	@Override

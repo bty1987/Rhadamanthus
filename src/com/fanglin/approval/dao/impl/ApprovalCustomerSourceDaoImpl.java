@@ -33,7 +33,7 @@ public class ApprovalCustomerSourceDaoImpl extends DaoImpl<ApprovalCustomerSourc
 
 	@Override
 	public ApprovalCustomerSourcePO queryApprovalCustomerSourceByAid(long aid) {
-		return (ApprovalCustomerSourcePO) session().createCriteria(ApprovalCustomerSourcePO.class).add(Restrictions.eq("aid", aid)).uniqueResult();
+		return (ApprovalCustomerSourcePO) session().createCriteria(ApprovalCustomerSourcePO.class).add(Restrictions.eq("aid", aid)).setMaxResults(1).uniqueResult();
 	}
 
 	public static void queryFilterExcute(PagingQuery<?> query, List<Filter> filters, String prefix) throws FLException {

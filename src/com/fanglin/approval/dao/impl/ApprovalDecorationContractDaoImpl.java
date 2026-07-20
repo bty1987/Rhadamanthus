@@ -12,7 +12,7 @@ public class ApprovalDecorationContractDaoImpl extends DaoImpl<ApprovalDecoratio
 
 	@Override
 	public ApprovalDecorationContractPO queryApprovalDecorationContractByAid(long aid) {
-		return (ApprovalDecorationContractPO) session().createCriteria(ApprovalDecorationContractPO.class).add(Restrictions.eq(ApprovalDecorationContractPO.COLUMN_AID_STR, aid)).uniqueResult();
+		return (ApprovalDecorationContractPO) session().createCriteria(ApprovalDecorationContractPO.class).add(Restrictions.eq(ApprovalDecorationContractPO.COLUMN_AID_STR, aid)).setMaxResults(1).uniqueResult();
 	}
 
 }

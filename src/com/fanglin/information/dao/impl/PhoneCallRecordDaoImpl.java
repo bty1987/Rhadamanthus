@@ -16,6 +16,6 @@ public class PhoneCallRecordDaoImpl extends DaoImpl<PhoneCallRecordPO> implement
 
 	@Override
 	public PhoneCallRecordPO queryPhoneCallRecord(long pcId) {
-		return (PhoneCallRecordPO) session().createCriteria(PhoneCallRecordPO.class).add(Restrictions.eq("pcid", pcId)).uniqueResult();
+		return (PhoneCallRecordPO) session().createCriteria(PhoneCallRecordPO.class).add(Restrictions.eq("pcid", pcId)).setMaxResults(1).uniqueResult();
 	}
 }

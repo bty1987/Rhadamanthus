@@ -21,6 +21,6 @@ public class DecorationAuditRecordDaoImpl extends DaoImpl<DecorationAuditRecordP
 	}
 	@Override
 	public DecorationAuditRecordPO queryDecorationAuditRecordByArid(long arid) {
-		return (DecorationAuditRecordPO) session().createCriteria(DecorationAuditRecordPO.class).add(Restrictions.eq(DecorationAuditRecordPO.COLUMN_ARIF_LONG, arid)).uniqueResult();
+		return (DecorationAuditRecordPO) session().createCriteria(DecorationAuditRecordPO.class).add(Restrictions.eq(DecorationAuditRecordPO.COLUMN_ARIF_LONG, arid)).setMaxResults(1).uniqueResult();
 	}
 }

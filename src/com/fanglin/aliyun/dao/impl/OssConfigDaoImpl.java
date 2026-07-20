@@ -17,7 +17,7 @@ public class OssConfigDaoImpl extends DaoImpl<OssConfigPO> implements OssConfigD
 	@Override
 	public OssConfigPO querySignature(String accessKeyId, String endpoint, String bucket, String dir) {
 
-		return (OssConfigPO) session().createCriteria(OssConfigPO.class).add(Restrictions.eq("accessKeyId", accessKeyId)).add(Restrictions.eq("endpoint", endpoint)).add(Restrictions.eq("bucket", bucket)).add(Restrictions.eq("dir", dir)).uniqueResult();
+		return (OssConfigPO) session().createCriteria(OssConfigPO.class).add(Restrictions.eq("accessKeyId", accessKeyId)).add(Restrictions.eq("endpoint", endpoint)).add(Restrictions.eq("bucket", bucket)).add(Restrictions.eq("dir", dir)).setMaxResults(1).uniqueResult();
 	}
 
 }

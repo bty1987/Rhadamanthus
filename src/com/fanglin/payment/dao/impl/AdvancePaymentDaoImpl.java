@@ -43,7 +43,7 @@ public class AdvancePaymentDaoImpl extends DaoImpl<AdvancePaymentPO> implements 
 
 	@Override
 	public AdvancePaymentPO queryAdvancePaymentByOrderId(String orderId) {
-		return (AdvancePaymentPO) session().createCriteria(AdvancePaymentPO.class).createAlias("decoration", "decoration").add(Restrictions.eq("decoration.orderId", orderId)).uniqueResult();
+		return (AdvancePaymentPO) session().createCriteria(AdvancePaymentPO.class).createAlias("decoration", "decoration").add(Restrictions.eq("decoration.orderId", orderId)).setMaxResults(1).uniqueResult();
 	}
 
 	// 按款项类型映射余额列名(白名单, 防注入)

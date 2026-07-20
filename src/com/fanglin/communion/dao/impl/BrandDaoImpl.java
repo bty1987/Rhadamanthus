@@ -74,17 +74,17 @@ public class BrandDaoImpl extends DaoImpl<BrandPO> implements BrandDao {
 
 	@Override
 	public BrandPO queryBrandByBid(long bid) {
-		return (BrandPO) session().createCriteria(BrandPO.class).add(Restrictions.eq(BrandPO.COLUMN_BID_INT, bid)).uniqueResult();
+		return (BrandPO) session().createCriteria(BrandPO.class).add(Restrictions.eq(BrandPO.COLUMN_BID_INT, bid)).setMaxResults(1).uniqueResult();
 	}
 
 	@Override
 	public BrandPO queryBrandByNo(String no) {
-		return (BrandPO) session().createCriteria(BrandPO.class).add(Restrictions.eq(BrandPO.COLUMN_NO_STR, no)).uniqueResult();
+		return (BrandPO) session().createCriteria(BrandPO.class).add(Restrictions.eq(BrandPO.COLUMN_NO_STR, no)).setMaxResults(1).uniqueResult();
 	}
 
 	@Override
 	public BrandPO queryBrand(String kino) {
-		return (BrandPO) session().createCriteria(BrandPO.class).add(Restrictions.eq(BrandPO.COLUMN_KINO_STR, kino)).uniqueResult();
+		return (BrandPO) session().createCriteria(BrandPO.class).add(Restrictions.eq(BrandPO.COLUMN_KINO_STR, kino)).setMaxResults(1).uniqueResult();
 	}
 
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {

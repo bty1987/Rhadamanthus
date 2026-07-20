@@ -36,7 +36,7 @@ public class MaterialDesignerRegionCountDaoImpl extends DaoImpl<MaterialDesigner
 		return (MaterialDesignerRegionCountPO) session().createCriteria(MaterialDesignerRegionCountPO.class)
 				.add(Restrictions.eq(MaterialDesignerRegionCountPO.COLUMN_DESIGNERREGIONID_STR, regionId))
 				.add(Restrictions.eq(MaterialDesignerRegionCountPO.COLUMN_CREATETIME_STR, time))
-				.uniqueResult();
+				.setMaxResults(1).uniqueResult();
 	}
 
 	@SuppressWarnings("unchecked")

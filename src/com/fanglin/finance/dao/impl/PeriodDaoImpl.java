@@ -48,7 +48,7 @@ public class PeriodDaoImpl extends DaoImpl<PeriodPO> implements PeriodDao {
 
 	@Override
 	public PeriodPO queryPeriodByPeriod(String period) throws FLException {
-		return (PeriodPO) session().createCriteria(PeriodPO.class).add(Restrictions.eq(PeriodPO.COLUMN_PERIOD_STR, period)).uniqueResult();
+		return (PeriodPO) session().createCriteria(PeriodPO.class).add(Restrictions.eq(PeriodPO.COLUMN_PERIOD_STR, period)).setMaxResults(1).uniqueResult();
 	}
 	
 }

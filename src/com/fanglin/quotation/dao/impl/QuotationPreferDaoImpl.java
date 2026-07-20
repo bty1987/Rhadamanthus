@@ -16,7 +16,7 @@ public class QuotationPreferDaoImpl extends DaoImpl<QuotationPreferPO> implement
 
 	@Override
 	public QuotationPreferPO queryQuotationPreferByQid(long qid) {
-		return (QuotationPreferPO) createCriteria(QuotationPreferPO.class).add(Restrictions.eq("qid", qid)).uniqueResult();
+		return (QuotationPreferPO) createCriteria(QuotationPreferPO.class).add(Restrictions.eq("qid", qid)).setMaxResults(1).uniqueResult();
 	}
 
 }

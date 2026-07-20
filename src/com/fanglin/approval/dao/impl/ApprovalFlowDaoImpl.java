@@ -46,7 +46,7 @@ public class ApprovalFlowDaoImpl extends DaoImpl<ApprovalFlowPO> implements Appr
 				Restrictions.eq("company", company),
 				Restrictions.eq("company", 0)))
 			.addOrder(Order.desc("company"))
-			.uniqueResult();
+			.setMaxResults(1).uniqueResult();
 	}
 
 	@Override
@@ -56,7 +56,7 @@ public class ApprovalFlowDaoImpl extends DaoImpl<ApprovalFlowPO> implements Appr
 			.add(Restrictions.eq("code", code))
 			.add(Restrictions.eq("company", company))
 			.add(Restrictions.eq("version", version))
-			.uniqueResult();
+			.setMaxResults(1).uniqueResult();
 	}
 
 	public void queryFilterExcute(List<Filter> filters, PagingQuery<ApprovalFlowPO> query) {

@@ -58,7 +58,7 @@ public class RecruitmentDaoImpl extends DaoImpl<RecruitmentPO> implements Recrui
 	@Override
 	public RecruitmentPO queryRecruitmentByRid(long rid) {
 
-		return (RecruitmentPO) session().createCriteria(RecruitmentPO.class).add(Restrictions.eq("rid", rid)).uniqueResult();
+		return (RecruitmentPO) session().createCriteria(RecruitmentPO.class).add(Restrictions.eq("rid", rid)).setMaxResults(1).uniqueResult();
 
 	}
 
@@ -75,6 +75,6 @@ public class RecruitmentDaoImpl extends DaoImpl<RecruitmentPO> implements Recrui
 			session.add(Restrictions.eq("phone", phone));
 		}
 
-		return (RecruitmentPO) session.uniqueResult();
+		return (RecruitmentPO) session.setMaxResults(1).uniqueResult();
 	}
 }

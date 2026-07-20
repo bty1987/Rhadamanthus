@@ -24,17 +24,17 @@ public class CustomerAccountDaoImpl extends DaoImpl<CustomerAccountPO> implement
 
 	@Override
 	public CustomerAccountPO queryCustomerAccount(long cid, String contentHash) {
-		return (CustomerAccountPO) session().createCriteria(CustomerAccountPO.class).add(Restrictions.eq(CustomerAccountPO.COLUMN_CID_STR, cid)).add(Restrictions.eq(CustomerAccountPO.COLUMN_STATUS_STR, CustomerAccountPO.STATUS_ENABLE)).add(Restrictions.eq(CustomerAccountPO.COLUMN_CONTENTHASH_STR, contentHash)).uniqueResult();
+		return (CustomerAccountPO) session().createCriteria(CustomerAccountPO.class).add(Restrictions.eq(CustomerAccountPO.COLUMN_CID_STR, cid)).add(Restrictions.eq(CustomerAccountPO.COLUMN_STATUS_STR, CustomerAccountPO.STATUS_ENABLE)).add(Restrictions.eq(CustomerAccountPO.COLUMN_CONTENTHASH_STR, contentHash)).setMaxResults(1).uniqueResult();
 	}
 
 	@Override
 	public CustomerAccountPO queryCustomerAccountForDefault(long cid) {
-		return (CustomerAccountPO) session().createCriteria(CustomerAccountPO.class).add(Restrictions.eq(CustomerAccountPO.COLUMN_CID_STR, cid)).add(Restrictions.eq(CustomerAccountPO.COLUMN_STATUS_STR, CustomerAccountPO.STATUS_ENABLE)).add(Restrictions.eq(CustomerAccountPO.COLUMN_DEFAULTS_STR, CustomerAccountPO.DEFAULTS_YES)).uniqueResult();
+		return (CustomerAccountPO) session().createCriteria(CustomerAccountPO.class).add(Restrictions.eq(CustomerAccountPO.COLUMN_CID_STR, cid)).add(Restrictions.eq(CustomerAccountPO.COLUMN_STATUS_STR, CustomerAccountPO.STATUS_ENABLE)).add(Restrictions.eq(CustomerAccountPO.COLUMN_DEFAULTS_STR, CustomerAccountPO.DEFAULTS_YES)).setMaxResults(1).uniqueResult();
 	}
 
 	@Override
 	public CustomerAccountPO queryCustomerAccountByBankno(String bankno) {
-		return (CustomerAccountPO) session().createCriteria(CustomerAccountPO.class).add(Restrictions.eq(CustomerAccountPO.COLUMN_BANKNO_STR, bankno)).add(Restrictions.eq(CustomerAccountPO.COLUMN_STATUS_STR, CustomerAccountPO.STATUS_ENABLE)).uniqueResult();
+		return (CustomerAccountPO) session().createCriteria(CustomerAccountPO.class).add(Restrictions.eq(CustomerAccountPO.COLUMN_BANKNO_STR, bankno)).add(Restrictions.eq(CustomerAccountPO.COLUMN_STATUS_STR, CustomerAccountPO.STATUS_ENABLE)).setMaxResults(1).uniqueResult();
 	}
 
 	@Override

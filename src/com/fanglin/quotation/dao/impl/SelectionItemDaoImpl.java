@@ -99,22 +99,22 @@ public class SelectionItemDaoImpl extends DaoImpl<SelectionItemPO> implements Se
 
 	@Override
 	public SelectionItemPO querySelectionItem(long sid, long areaId, long quoteId, short type) {
-		return (SelectionItemPO) session().createCriteria(SelectionItemPO.class).add(Restrictions.eq(SelectionItemPO.COLUMN_SID_STR, sid)).add(Restrictions.eq(SelectionItemPO.COLUMN_AREAID_STR, areaId)).add(Restrictions.eq(SelectionItemPO.COLUMN_QUOTEID_STR, quoteId)).add(Restrictions.eq(SelectionItemPO.COLUMN_TYPE_STR, type)).uniqueResult();
+		return (SelectionItemPO) session().createCriteria(SelectionItemPO.class).add(Restrictions.eq(SelectionItemPO.COLUMN_SID_STR, sid)).add(Restrictions.eq(SelectionItemPO.COLUMN_AREAID_STR, areaId)).add(Restrictions.eq(SelectionItemPO.COLUMN_QUOTEID_STR, quoteId)).add(Restrictions.eq(SelectionItemPO.COLUMN_TYPE_STR, type)).setMaxResults(1).uniqueResult();
 	}
 
 	@Override
 	public SelectionItemPO querySelectionItem(String orderId, long areaId, long quoteId, short type) {
-		return (SelectionItemPO) session().createCriteria(SelectionItemPO.class).add(Restrictions.eq(SelectionItemPO.COLUMN_ORDERID_STR, orderId)).add(Restrictions.eq(SelectionItemPO.COLUMN_AREAID_STR, areaId)).add(Restrictions.eq(SelectionItemPO.COLUMN_QUOTEID_STR, quoteId)).add(Restrictions.eq(SelectionItemPO.COLUMN_TYPE_STR, type)).uniqueResult();
+		return (SelectionItemPO) session().createCriteria(SelectionItemPO.class).add(Restrictions.eq(SelectionItemPO.COLUMN_ORDERID_STR, orderId)).add(Restrictions.eq(SelectionItemPO.COLUMN_AREAID_STR, areaId)).add(Restrictions.eq(SelectionItemPO.COLUMN_QUOTEID_STR, quoteId)).add(Restrictions.eq(SelectionItemPO.COLUMN_TYPE_STR, type)).setMaxResults(1).uniqueResult();
 	}
 
 	@Override
 	public SelectionItemPO querySelectionItem(long sid, long areaId, long quoteId, List<Short> types) {
-		return (SelectionItemPO) session().createCriteria(SelectionItemPO.class).add(Restrictions.eq(SelectionItemPO.COLUMN_SID_STR, sid)).add(Restrictions.eq(SelectionItemPO.COLUMN_AREAID_STR, areaId)).add(Restrictions.eq(SelectionItemPO.COLUMN_QUOTEID_STR, quoteId)).add(Restrictions.in(SelectionItemPO.COLUMN_TYPE_STR, types)).uniqueResult();
+		return (SelectionItemPO) session().createCriteria(SelectionItemPO.class).add(Restrictions.eq(SelectionItemPO.COLUMN_SID_STR, sid)).add(Restrictions.eq(SelectionItemPO.COLUMN_AREAID_STR, areaId)).add(Restrictions.eq(SelectionItemPO.COLUMN_QUOTEID_STR, quoteId)).add(Restrictions.in(SelectionItemPO.COLUMN_TYPE_STR, types)).setMaxResults(1).uniqueResult();
 	}
 
 	@Override
 	public SelectionItemPO querySelectionItem(String orderId, long areaId, long quoteId, List<Short> types) {
-		return (SelectionItemPO) session().createCriteria(SelectionItemPO.class).add(Restrictions.eq(SelectionItemPO.COLUMN_ORDERID_STR, orderId)).add(Restrictions.eq(SelectionItemPO.COLUMN_AREAID_STR, areaId)).add(Restrictions.eq(SelectionItemPO.COLUMN_QUOTEID_STR, quoteId)).add(Restrictions.in(SelectionItemPO.COLUMN_TYPE_STR, types)).uniqueResult();
+		return (SelectionItemPO) session().createCriteria(SelectionItemPO.class).add(Restrictions.eq(SelectionItemPO.COLUMN_ORDERID_STR, orderId)).add(Restrictions.eq(SelectionItemPO.COLUMN_AREAID_STR, areaId)).add(Restrictions.eq(SelectionItemPO.COLUMN_QUOTEID_STR, quoteId)).add(Restrictions.in(SelectionItemPO.COLUMN_TYPE_STR, types)).setMaxResults(1).uniqueResult();
 	}
 
 	@Override

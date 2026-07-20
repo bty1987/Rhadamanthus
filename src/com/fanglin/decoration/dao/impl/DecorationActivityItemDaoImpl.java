@@ -97,7 +97,7 @@ public class DecorationActivityItemDaoImpl extends DaoImpl<DecorationActivityIte
 
 		sqlQuery.setParameterList("state", states);
 
-		BigDecimal amount = (BigDecimal) sqlQuery.uniqueResult();
+		BigDecimal amount = (BigDecimal) sqlQuery.setMaxResults(1).uniqueResult();
 
 		return Arith.div(amount.longValue(), 1000000);
 	}
@@ -145,7 +145,7 @@ public class DecorationActivityItemDaoImpl extends DaoImpl<DecorationActivityIte
 			sqlQuery.setShort("isPayment", isPayment);
 		}
 
-		BigDecimal amount = (BigDecimal) sqlQuery.uniqueResult();
+		BigDecimal amount = (BigDecimal) sqlQuery.setMaxResults(1).uniqueResult();
 
 		return Arith.div(amount.longValue(), 1000000);
 	}
@@ -204,7 +204,7 @@ public class DecorationActivityItemDaoImpl extends DaoImpl<DecorationActivityIte
 		}
 
 		// COUNT(*) 返回 BigInteger 或 Long
-		Object result = sqlQuery.uniqueResult();
+		Object result = sqlQuery.setMaxResults(1).uniqueResult();
 		if (result == null) {
 			return 0L;
 		}

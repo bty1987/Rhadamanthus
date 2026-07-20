@@ -34,7 +34,7 @@ public class StorehouseStockDaoImpl extends DaoImpl<StorehouseStockPO> implement
 
 	@Override
 	public StorehouseStockPO queryStorehouseStockByShidAMonth(long shid, String month) {
-		return (StorehouseStockPO) session().createCriteria(StorehouseStockPO.class).createAlias("storehouse", "storehouse").add(Restrictions.eq(StorehouseStockPO.COLUMN_SHID_STR, shid)).add(Restrictions.eq(StorehouseStockPO.COLUMN_MONTH_STR, month)).uniqueResult();
+		return (StorehouseStockPO) session().createCriteria(StorehouseStockPO.class).createAlias("storehouse", "storehouse").add(Restrictions.eq(StorehouseStockPO.COLUMN_SHID_STR, shid)).add(Restrictions.eq(StorehouseStockPO.COLUMN_MONTH_STR, month)).setMaxResults(1).uniqueResult();
 	}
 
 }

@@ -27,7 +27,7 @@ public class ApprovalMaterialFullPaymentDaoImpl extends DaoImpl<ApprovalMaterial
 
 	@Override
 	public ApprovalMaterialFullPaymentPO queryApprovalMaterialFullPaymentByAId(long aId) {
-		return (ApprovalMaterialFullPaymentPO) session().createCriteria(ApprovalMaterialFullPaymentPO.class).add(Restrictions.eq(ApprovalMaterialFullPaymentPO.COLUMN_AID_STR, aId)).uniqueResult();
+		return (ApprovalMaterialFullPaymentPO) session().createCriteria(ApprovalMaterialFullPaymentPO.class).add(Restrictions.eq(ApprovalMaterialFullPaymentPO.COLUMN_AID_STR, aId)).setMaxResults(1).uniqueResult();
 	}
 
 }
