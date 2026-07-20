@@ -46,12 +46,12 @@ public class RoleOperationDaoImpl extends DaoImpl<RoleOperationPO> implements Ro
 
 	@Override
 	public RoleOperationPO queryRoleOperation(String operation, int rid, Integer company) {
-		return (RoleOperationPO) session().createCriteria(RoleOperationPO.class).createAlias("operation", "operation").add(Restrictions.eq("rid", rid)).add(Restrictions.eq("operation.operation", operation)).add(Restrictions.eq("operation.status", OperationPO.STATUS_ENABLE_INT)).add(Restrictions.eq("company", company)).uniqueResult();
+		return (RoleOperationPO) session().createCriteria(RoleOperationPO.class).createAlias("operation", "operation").add(Restrictions.eq("rid", rid)).add(Restrictions.eq("operation.operation", operation)).add(Restrictions.eq("operation.status", OperationPO.STATUS_ENABLE_INT)).add(Restrictions.eq("company", company)).setMaxResults(1).uniqueResult();
 	}
 
 	@Override
 	public RoleOperationPO queryRoleOperation(int rid, int oid, Integer company) {
-		return (RoleOperationPO) session().createCriteria(RoleOperationPO.class).createAlias("operation", "operation").add(Restrictions.eq("rid", rid)).add(Restrictions.eq("operation.oid", oid)).add(Restrictions.eq("company", company)).uniqueResult();
+		return (RoleOperationPO) session().createCriteria(RoleOperationPO.class).createAlias("operation", "operation").add(Restrictions.eq("rid", rid)).add(Restrictions.eq("operation.oid", oid)).add(Restrictions.eq("company", company)).setMaxResults(1).uniqueResult();
 	}
 
 	@Override

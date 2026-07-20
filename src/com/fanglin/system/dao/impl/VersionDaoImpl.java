@@ -47,7 +47,7 @@ public class VersionDaoImpl extends DaoImpl<VersionPO> implements VersionDao{
 	
 	@Override
 	public VersionPO queryVersionByNo(String no) {
-		return (VersionPO) session().createCriteria(VersionPO.class).add(Restrictions.eq(VersionPO.COLUMN_NO_STR,no)).uniqueResult();
+		return (VersionPO) session().createCriteria(VersionPO.class).add(Restrictions.eq(VersionPO.COLUMN_NO_STR,no)).setMaxResults(1).uniqueResult();
 	}
 	
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {

@@ -51,17 +51,17 @@ public class SystemConfigDaoImpl extends DaoImpl<SystemConfigPO> implements Syst
 
 	@Override
 	public SystemConfigPO querySystemConfig(String key) {
-		return (SystemConfigPO) createCriteria(SystemConfigPO.class).add(Restrictions.eq(SystemConfigPO.COLUMN_KEY_STR, key)).uniqueResult();
+		return (SystemConfigPO) createCriteria(SystemConfigPO.class).add(Restrictions.eq(SystemConfigPO.COLUMN_KEY_STR, key)).setMaxResults(1).uniqueResult();
 	}
 
 	@Override
 	public SystemConfigPO querySystemConfig(String key, int company) {
-		return (SystemConfigPO) createCriteria(SystemConfigPO.class).add(Restrictions.eq(SystemConfigPO.COLUMN_KEY_STR, key)).add(Restrictions.eq(SystemConfigPO.COLUMN_COMPANY_STR, company)).uniqueResult();
+		return (SystemConfigPO) createCriteria(SystemConfigPO.class).add(Restrictions.eq(SystemConfigPO.COLUMN_KEY_STR, key)).add(Restrictions.eq(SystemConfigPO.COLUMN_COMPANY_STR, company)).setMaxResults(1).uniqueResult();
 	}
 
 	@Override
 	public SystemConfigPO querySystemConfigById(long scid) {
-		return (SystemConfigPO) createCriteria(SystemConfigPO.class).add(Restrictions.eq(SystemConfigPO.COLUMN_SCID_STR, scid)).uniqueResult();
+		return (SystemConfigPO) createCriteria(SystemConfigPO.class).add(Restrictions.eq(SystemConfigPO.COLUMN_SCID_STR, scid)).setMaxResults(1).uniqueResult();
 	}
 
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) throws FLException {
