@@ -47,7 +47,7 @@ public class OperationDaoImpl extends DaoImpl<OperationPO> implements OperationD
 
 	@Override
 	public OperationPO queryOperationByOperation(String operation) {
-		return (OperationPO) session().createCriteria(OperationPO.class).add(Restrictions.eq(OperationPO.COLUMN_OPERATION_STR, operation)).add(Restrictions.eq(OperationPO.COLUMN_STATUS_STR, OperationPO.STATUS_ENABLE_INT)).uniqueResult();
+		return (OperationPO) session().createCriteria(OperationPO.class).add(Restrictions.eq(OperationPO.COLUMN_OPERATION_STR, operation)).add(Restrictions.eq(OperationPO.COLUMN_STATUS_STR, OperationPO.STATUS_ENABLE_INT)).setMaxResults(1).uniqueResult();
 	}
 
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {
