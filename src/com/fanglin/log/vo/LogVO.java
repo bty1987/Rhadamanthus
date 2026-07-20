@@ -25,22 +25,34 @@ public class LogVO implements Serializable {
 	private static final long serialVersionUID = -7114740524313501162L;
 
 	private String createUserId;
-	
+
 	private String CreateUserName;
-	
+
 	private String duty;
-	
+
 	private String roleId;
-	
+
 	private String roleName;
-	
+
 	private long runTime;
-	
+
 	private String actionName ;
-	
+
 	private String uuid;
-	
+
 	private Timestamp createTime;
+
+	// ===== Phase 1 扩展字段（与 ActionLogPO 对应）=====
+	private String ip;
+	private Integer companyId;
+	private String moduleId;
+	private String operateType;
+	private String businessId;
+	private String params;
+	private Short resultState;
+	private Integer errorCode;
+	private String errorMsg;
+	private String traceId;
 	
 	public LogVO(){
 	}
@@ -134,5 +146,85 @@ public class LogVO implements Serializable {
 
 	public long getRunTime(){
 		return this.runTime;
+	}
+
+	public String getIp(){
+		return ip;
+	}
+
+	public void setIp(String ip){
+		this.ip = ip;
+	}
+
+	public Integer getCompanyId(){
+		return companyId;
+	}
+
+	public void setCompanyId(Integer companyId){
+		this.companyId = companyId;
+	}
+
+	public String getModuleId(){
+		return moduleId;
+	}
+
+	public void setModuleId(String moduleId){
+		this.moduleId = moduleId;
+	}
+
+	public String getOperateType(){
+		return operateType;
+	}
+
+	public void setOperateType(String operateType){
+		this.operateType = operateType;
+	}
+
+	public String getBusinessId(){
+		return businessId;
+	}
+
+	public void setBusinessId(String businessId){
+		this.businessId = businessId;
+	}
+
+	public String getParams(){
+		return params;
+	}
+
+	public void setParams(String params){
+		this.params = params;
+	}
+
+	public Short getResultState(){
+		return resultState;
+	}
+
+	public void setResultState(Short resultState){
+		this.resultState = resultState;
+	}
+
+	public Integer getErrorCode(){
+		return errorCode;
+	}
+
+	public void setErrorCode(Integer errorCode){
+		this.errorCode = errorCode;
+	}
+
+	public String getErrorMsg(){
+		return errorMsg;
+	}
+
+	public void setErrorMsg(String errorMsg){
+		this.errorMsg = errorMsg;
+	}
+
+	public String getTraceId(){
+		return traceId;
+	}
+
+	public void setTraceId(String traceId){
+		this.traceId = traceId;
 	}
 }
