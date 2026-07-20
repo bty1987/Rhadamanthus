@@ -71,6 +71,9 @@ $(function() {
     drawInfo("customerUserRuleInfo", "资源", "header-color-orange", customerUserRule.customerUserRuleInfo);
     drawInfo("weightInfo", "权重", "header-color-green", customerUserRule.weightInfo);
 
+    // 获取页面控制参数(按公司差异化配置), 必须在 searcher.base 之前声明, 否则 pageConfig 为 undefined
+    var pageConfig = customerPage.getConfig("customerUserRule");
+
     var searcher = new Searcher();
 
     searcher.base("condList", "pagenation", "resultList", pageConfig.apiPage || api.customer.pageCustomerUserRule);
@@ -119,9 +122,6 @@ $(function() {
     }]);
 
     searcher.history(customerUserRule.depage + "customerUserRulePostData");
-
-    // 获取页面控制参数(按公司差异化配置)
-    var pageConfig = customerPage.getConfig("customerUserRule");
 
     // pageBtn 配置为空时, 所有按钮按原逻辑显示; 否则需在 pageBtn 中存在
     function btnVisible(key) {
