@@ -30,7 +30,7 @@ public class GroupDaoImpl extends DaoImpl<GroupPO> implements GroupDao {
 
 	@Override
 	public GroupPO queryGroup(String opengid) {
-		return (GroupPO) createCriteria(GroupPO.class).add(Restrictions.eq(GroupPO.COLUMN_OPENGID_STR, opengid)).uniqueResult();
+		return (GroupPO) createCriteria(GroupPO.class).add(Restrictions.eq(GroupPO.COLUMN_OPENGID_STR, opengid)).setMaxResults(1).uniqueResult();
 	}
 
 	private void queryFilterExcute(PagingQuery<GroupPO> query, List<Filter> filters) {

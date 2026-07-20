@@ -27,7 +27,7 @@ public class WeChatOpenAccessTokenDaoImpl extends DaoImpl<WeChatOpenAccessTokenP
 
 	@Override
 	public WeChatOpenAccessTokenPO queryOpenAccessToken(String code) {
-		return (WeChatOpenAccessTokenPO) session().createCriteria(WeChatOpenAccessTokenPO.class).add(Restrictions.eq(WeChatOpenAccessTokenPO.COLUMN_CODE_STR, code)).uniqueResult();
+		return (WeChatOpenAccessTokenPO) session().createCriteria(WeChatOpenAccessTokenPO.class).add(Restrictions.eq(WeChatOpenAccessTokenPO.COLUMN_CODE_STR, code)).setMaxResults(1).uniqueResult();
 	}
 
 	@Override

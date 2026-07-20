@@ -86,12 +86,12 @@ public class DecorationPaymentDaoImpl extends DaoImpl<DecorationPaymentPO> imple
 
 	@Override
 	public DecorationPaymentPO queryDecorationPayment(String orderId, String paymentType) {
-		return (DecorationPaymentPO) session().createCriteria(DecorationPaymentPO.class).createAlias("decoration", "decoration").add(Restrictions.eq("decoration.orderId", orderId)).add(Restrictions.eq("paymentType", paymentType)).uniqueResult();
+		return (DecorationPaymentPO) session().createCriteria(DecorationPaymentPO.class).createAlias("decoration", "decoration").add(Restrictions.eq("decoration.orderId", orderId)).add(Restrictions.eq("paymentType", paymentType)).setMaxResults(1).uniqueResult();
 	}
 
 	@Override
 	public DecorationPaymentPO queryDecorationPayment(String orderId, short sort) {
-		return (DecorationPaymentPO) session().createCriteria(DecorationPaymentPO.class).createAlias("decoration", "decoration").add(Restrictions.eq("decoration.orderId", orderId)).add(Restrictions.eq("sort", sort)).add(Restrictions.eq("oneType", DecorationPaymentPO.ONETYPE_ADD_INT)).add(Restrictions.eq("twoType", DecorationPaymentPO.TWOTYPE_DEAL_INT)).uniqueResult();
+		return (DecorationPaymentPO) session().createCriteria(DecorationPaymentPO.class).createAlias("decoration", "decoration").add(Restrictions.eq("decoration.orderId", orderId)).add(Restrictions.eq("sort", sort)).add(Restrictions.eq("oneType", DecorationPaymentPO.ONETYPE_ADD_INT)).add(Restrictions.eq("twoType", DecorationPaymentPO.TWOTYPE_DEAL_INT)).setMaxResults(1).uniqueResult();
 	}
 
 	@Override

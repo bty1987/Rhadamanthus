@@ -68,7 +68,7 @@ public class CustomerPhoneDaoImpl extends DaoImpl<CustomerPhonePO> implements Cu
 
 	@Override
 	public CustomerPhonePO queryCustomerPhone(Long cid, String phone) {
-		return (CustomerPhonePO) session().createCriteria(CustomerPhonePO.class).add(Restrictions.eq("phone", phone)).add(Restrictions.eq("cid", cid)).uniqueResult();
+		return (CustomerPhonePO) session().createCriteria(CustomerPhonePO.class).add(Restrictions.eq("phone", phone)).add(Restrictions.eq("cid", cid)).setMaxResults(1).uniqueResult();
 	}
 
 	@Override

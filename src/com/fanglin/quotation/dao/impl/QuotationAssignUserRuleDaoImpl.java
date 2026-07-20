@@ -49,7 +49,7 @@ public class QuotationAssignUserRuleDaoImpl extends DaoImpl<QuotationAssignUserR
 
 	@Override
 	public QuotationAssignUserRulePO queryQuotationAssignUserRuleByUserId(String userId) throws FLException {
-		return (QuotationAssignUserRulePO) createCriteria(QuotationAssignUserRulePO.class).createAlias("user", "user").add(Restrictions.eq("user.userId", userId)).uniqueResult();
+		return (QuotationAssignUserRulePO) createCriteria(QuotationAssignUserRulePO.class).createAlias("user", "user").add(Restrictions.eq("user.userId", userId)).setMaxResults(1).uniqueResult();
 	}
 
 	@Override

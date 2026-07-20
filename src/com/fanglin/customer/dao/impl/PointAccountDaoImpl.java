@@ -27,12 +27,12 @@ public class PointAccountDaoImpl extends DaoImpl<PointAccountPO> implements Poin
 
 	@Override
 	public PointAccountPO queryPointAccount(long cid) {
-		return (PointAccountPO) session().createCriteria(PointAccountPO.class).add(Restrictions.eq(PointAccountPO.COLUMN_CID_STR, cid)).uniqueResult();
+		return (PointAccountPO) session().createCriteria(PointAccountPO.class).add(Restrictions.eq(PointAccountPO.COLUMN_CID_STR, cid)).setMaxResults(1).uniqueResult();
 	}
 
 	@Override
 	public PointAccountPO queryPointAccountByOrderId(String orderId) {
-		return (PointAccountPO) session().createCriteria(PointAccountPO.class).add(Restrictions.eq(PointAccountPO.COLUMN_ORDERID_STR, orderId)).uniqueResult();
+		return (PointAccountPO) session().createCriteria(PointAccountPO.class).add(Restrictions.eq(PointAccountPO.COLUMN_ORDERID_STR, orderId)).setMaxResults(1).uniqueResult();
 	}
 
 	@Override

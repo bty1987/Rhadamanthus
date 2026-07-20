@@ -30,7 +30,7 @@ public class DecorationRankDaoImpl extends DaoImpl<DecorationRankPO> implements 
 
 	@Override
 	public DecorationRankPO queryDecorationRankForInitByDesignerId(String designerId, int company) {
-		return (DecorationRankPO) session().createCriteria(DecorationRankPO.class).add(Restrictions.eq("company", company)).add(Restrictions.eq(DecorationRankPO.COLUMN_STATUS_STR, DecorationRankPO.STATUS_TYPE_INIT_INT)).uniqueResult();
+		return (DecorationRankPO) session().createCriteria(DecorationRankPO.class).add(Restrictions.eq("company", company)).add(Restrictions.eq(DecorationRankPO.COLUMN_STATUS_STR, DecorationRankPO.STATUS_TYPE_INIT_INT)).setMaxResults(1).uniqueResult();
 	}
 
 	@Override

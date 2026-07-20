@@ -52,7 +52,7 @@ public class QuotationDaoImpl extends DaoImpl<QuotationPO> implements QuotationD
 
 	@Override
 	public QuotationPO queryQuotationForDefaultByOrderId(String orderId) {
-		return (QuotationPO) createCriteria(QuotationPO.class).add(Restrictions.eq("orderId", orderId)).add(Restrictions.eq("defaults", QuotationPO.DEFAULTS_DEFAULT_INT)).uniqueResult();
+		return (QuotationPO) createCriteria(QuotationPO.class).add(Restrictions.eq("orderId", orderId)).add(Restrictions.eq("defaults", QuotationPO.DEFAULTS_DEFAULT_INT)).setMaxResults(1).uniqueResult();
 	}
 
 	@Override

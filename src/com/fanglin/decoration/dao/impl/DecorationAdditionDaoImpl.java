@@ -17,7 +17,7 @@ public class DecorationAdditionDaoImpl extends DaoImpl<DecorationAdditionPO> imp
 	@Override
 	public DecorationAdditionPO queryDecorationAdditionByOrderId(String orderId) {
 
-		return (DecorationAdditionPO) session().createCriteria(DecorationAdditionPO.class).add(Restrictions.eq(DecorationAdditionPO.DECORATION_ORDERID_STR, orderId)).uniqueResult();
+		return (DecorationAdditionPO) session().createCriteria(DecorationAdditionPO.class).add(Restrictions.eq(DecorationAdditionPO.DECORATION_ORDERID_STR, orderId)).setMaxResults(1).uniqueResult();
 	}
 
 }

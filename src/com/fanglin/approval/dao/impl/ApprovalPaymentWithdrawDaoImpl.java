@@ -16,7 +16,7 @@ public class ApprovalPaymentWithdrawDaoImpl extends DaoImpl<ApprovalPaymentWithd
 
 	@Override
 	public ApprovalPaymentWithdrawPO queryApprovalPaymentWithdrawByAId(long aId) {
-		return (ApprovalPaymentWithdrawPO) session().createCriteria(ApprovalPaymentWithdrawPO.class).add(Restrictions.eq(ApprovalPaymentWithdrawPO.COLUMN_AID_STR, aId)).uniqueResult();
+		return (ApprovalPaymentWithdrawPO) session().createCriteria(ApprovalPaymentWithdrawPO.class).add(Restrictions.eq(ApprovalPaymentWithdrawPO.COLUMN_AID_STR, aId)).setMaxResults(1).uniqueResult();
 	}
 
 }

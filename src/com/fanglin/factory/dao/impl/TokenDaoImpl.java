@@ -27,7 +27,7 @@ public class TokenDaoImpl extends DaoImpl<TokenPO> implements TokenDao {
 	
 	@Override
 	public TokenPO queryTokenByKey(String key) {
-		return (TokenPO) session().createCriteria(TokenPO.class).add(Restrictions.eq(TokenPO.COLUMN_KEY_STR, key)).add(Restrictions.eq(TokenPO.COLUMN_STATUS_STR, TokenPO.STATUS_ENABLE_INT)).uniqueResult();
+		return (TokenPO) session().createCriteria(TokenPO.class).add(Restrictions.eq(TokenPO.COLUMN_KEY_STR, key)).add(Restrictions.eq(TokenPO.COLUMN_STATUS_STR, TokenPO.STATUS_ENABLE_INT)).setMaxResults(1).uniqueResult();
 	}
 
 }

@@ -100,12 +100,12 @@ public class DepartmentDaoImpl extends DaoImpl<DepartmentPO> implements Departme
 	@Override
 	public DepartmentPO queryDepartmentByNo(String no) {
 
-		return (DepartmentPO) session().createCriteria(DepartmentPO.class).add(Restrictions.eq("no", no)).uniqueResult();
+		return (DepartmentPO) session().createCriteria(DepartmentPO.class).add(Restrictions.eq("no", no)).setMaxResults(1).uniqueResult();
 	}
 
 	@Override
 	public DepartmentPO queryDepartment(String name, Integer companyId) {
-		return (DepartmentPO) session().createCriteria(DepartmentPO.class).add(Restrictions.eq("name", name)).add(Restrictions.eq("company", companyId)).uniqueResult();
+		return (DepartmentPO) session().createCriteria(DepartmentPO.class).add(Restrictions.eq("name", name)).add(Restrictions.eq("company", companyId)).setMaxResults(1).uniqueResult();
 	}
 
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {

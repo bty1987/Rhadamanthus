@@ -32,7 +32,7 @@ public class WorkerBalanceDaoImpl extends DaoImpl<WorkerBalancePO> implements Wo
 
 	@Override
 	public WorkerBalancePO queryWorkerBalance(int uid, int company) {
-		return (WorkerBalancePO) session().createCriteria(WorkerBalancePO.class).createAlias("user", "user").add(Restrictions.eq(WorkerBalancePO.COLUMN_UID_STR, uid)).add(Restrictions.eq("company", company)).uniqueResult();
+		return (WorkerBalancePO) session().createCriteria(WorkerBalancePO.class).createAlias("user", "user").add(Restrictions.eq(WorkerBalancePO.COLUMN_UID_STR, uid)).add(Restrictions.eq("company", company)).setMaxResults(1).uniqueResult();
 	}
 
 	private void queryFilterExcuteForWorker(PagingQuery<?> query, List<Filter> filters) {

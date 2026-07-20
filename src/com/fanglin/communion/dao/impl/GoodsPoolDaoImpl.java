@@ -94,12 +94,12 @@ public class GoodsPoolDaoImpl extends DaoImpl<GoodsPoolPO> implements GoodsPoolD
 
 	@Override
 	public GoodsPoolPO queryGoodsPoolByNo(String no) {
-		return (GoodsPoolPO) session().createCriteria(GoodsPoolPO.class).add(Restrictions.eq(GoodsPoolPO.COLUMN_STATUS_STR, GoodsPoolPO.STATUS_ENABLE_INT)).add(Restrictions.eq(GoodsPoolPO.COLUMN_NO_STR, no)).uniqueResult();
+		return (GoodsPoolPO) session().createCriteria(GoodsPoolPO.class).add(Restrictions.eq(GoodsPoolPO.COLUMN_STATUS_STR, GoodsPoolPO.STATUS_ENABLE_INT)).add(Restrictions.eq(GoodsPoolPO.COLUMN_NO_STR, no)).setMaxResults(1).uniqueResult();
 	}
 
 	@Override
 	public GoodsPoolPO queryGoodsPoolByBarcode(String barcode) {
-		return (GoodsPoolPO) session().createCriteria(GoodsPoolPO.class).add(Restrictions.eq(GoodsPoolPO.COLUMN_STATUS_STR, GoodsPoolPO.STATUS_ENABLE_INT)).add(Restrictions.eq(GoodsPoolPO.COLUMN_BARCODE_STR, barcode)).uniqueResult();
+		return (GoodsPoolPO) session().createCriteria(GoodsPoolPO.class).add(Restrictions.eq(GoodsPoolPO.COLUMN_STATUS_STR, GoodsPoolPO.STATUS_ENABLE_INT)).add(Restrictions.eq(GoodsPoolPO.COLUMN_BARCODE_STR, barcode)).setMaxResults(1).uniqueResult();
 	}
 
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {

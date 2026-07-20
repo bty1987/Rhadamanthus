@@ -48,7 +48,7 @@ public class ProcessDaoImpl extends DaoImpl<ProcessPO> implements ProcessDao {
 
 	@Override
 	public ProcessPO queryProcess(String no) {
-		return (ProcessPO) session().createCriteria(ProcessPO.class).add(Restrictions.eq("no", no)).uniqueResult();
+		return (ProcessPO) session().createCriteria(ProcessPO.class).add(Restrictions.eq("no", no)).setMaxResults(1).uniqueResult();
 	}
 
 	@Override

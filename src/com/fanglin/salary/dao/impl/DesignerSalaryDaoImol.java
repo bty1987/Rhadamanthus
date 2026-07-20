@@ -31,7 +31,7 @@ public class DesignerSalaryDaoImol extends DaoImpl<DesignerSalaryPO> implements 
 
 	@Override
 	public DesignerSalaryPO queryDesignerSalaryByDuid(long duid) {
-		return (DesignerSalaryPO) session().createCriteria(DesignerSalaryPO.class).add(Restrictions.eq(DesignerSalaryPO.COLUMN_DUID_STR, duid)).uniqueResult();
+		return (DesignerSalaryPO) session().createCriteria(DesignerSalaryPO.class).add(Restrictions.eq(DesignerSalaryPO.COLUMN_DUID_STR, duid)).setMaxResults(1).uniqueResult();
 	}
 
 	@Override

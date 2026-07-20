@@ -40,7 +40,7 @@ public class ZaterialDesignerRankDaoImpl extends DaoImpl<ZaterialDesignerRankPO>
 				.add(Restrictions.eq(ZaterialDesignerRankPO.COLUMN_DESIGNERID_STR, designerId))
 				.add(Restrictions.eq(ZaterialDesignerRankPO.COLUMN_COMPANY_STR, company))
 				.add(Restrictions.eq(ZaterialDesignerRankPO.COLUMN_STATUS_STR, ZaterialDesignerRankPO.STATUS_TYPE_INIT_INT))
-				.uniqueResult();
+				.setMaxResults(1).uniqueResult();
 	}
 
 	@SuppressWarnings("unchecked")

@@ -35,12 +35,12 @@ public class BuildingHouseDaoImpl extends DaoImpl<BuildingHousePO> implements Bu
 
 	@Override
 	public BuildingHousePO queryBuildingHouseByNo(String no) {
-		return (BuildingHousePO) session().createCriteria(BuildingHousePO.class).add(Restrictions.eq(BuildingHousePO.COLUMN_NO_STR, no)).uniqueResult();
+		return (BuildingHousePO) session().createCriteria(BuildingHousePO.class).add(Restrictions.eq(BuildingHousePO.COLUMN_NO_STR, no)).setMaxResults(1).uniqueResult();
 	}
 
 	@Override
 	public BuildingHousePO checkBuildingHouse(Long hid, Short type) {
-		return (BuildingHousePO) session().createCriteria(BuildingHousePO.class).add(Restrictions.eq(BuildingHousePO.COLUMN_HID_STR, hid)).add(Restrictions.eq(BuildingHousePO.COLUMN_TYPE_STR, type)).uniqueResult();
+		return (BuildingHousePO) session().createCriteria(BuildingHousePO.class).add(Restrictions.eq(BuildingHousePO.COLUMN_HID_STR, hid)).add(Restrictions.eq(BuildingHousePO.COLUMN_TYPE_STR, type)).setMaxResults(1).uniqueResult();
 	}
 
 	@Override

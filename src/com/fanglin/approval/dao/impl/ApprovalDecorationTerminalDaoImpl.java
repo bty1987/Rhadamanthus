@@ -16,7 +16,7 @@ public class ApprovalDecorationTerminalDaoImpl extends DaoImpl<ApprovalDecoratio
 
 	@Override
 	public ApprovalDecorationTerminalPO queryApprovalDecorationTerminalByAId(long aid) {
-		return (ApprovalDecorationTerminalPO) session().createCriteria(ApprovalDecorationTerminalPO.class).add(Restrictions.eq(ApprovalDecorationTerminalPO.COLUMN_AID_STR, aid)).uniqueResult();
+		return (ApprovalDecorationTerminalPO) session().createCriteria(ApprovalDecorationTerminalPO.class).add(Restrictions.eq(ApprovalDecorationTerminalPO.COLUMN_AID_STR, aid)).setMaxResults(1).uniqueResult();
 	}
 
 }

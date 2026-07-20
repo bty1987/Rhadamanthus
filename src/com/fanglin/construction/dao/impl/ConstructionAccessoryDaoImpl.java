@@ -34,7 +34,7 @@ public class ConstructionAccessoryDaoImpl extends DaoImpl<ConstructionAccessoryP
 	@Override
 	public ConstructionAccessoryPO queryConstructionAccessory(long cid, long gid) {
 		
-		return (ConstructionAccessoryPO) session().createCriteria(ConstructionAccessoryPO.class).createAlias("aoods", "aoods").createAlias("aoods.goods", "goods").add(Restrictions.eq("cid", cid)).add(Restrictions.eq("goods.gid", gid)).uniqueResult();
+		return (ConstructionAccessoryPO) session().createCriteria(ConstructionAccessoryPO.class).createAlias("aoods", "aoods").createAlias("aoods.goods", "goods").add(Restrictions.eq("cid", cid)).add(Restrictions.eq("goods.gid", gid)).setMaxResults(1).uniqueResult();
 	}	
 
 	@Override

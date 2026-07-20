@@ -30,12 +30,12 @@ public class QuotationFunctionAreaItemDaoImpl extends DaoImpl<QuotationFunctionA
 
 	@Override
 	public QuotationFunctionAreaItemPO queryQuotationFunctionAreaItemByQfaiId(Class<?> clazz, long qfaiId) {
-		return (QuotationFunctionAreaItemPO) session().createCriteria(clazz).add(Restrictions.eq("qfaiId", qfaiId)).uniqueResult();
+		return (QuotationFunctionAreaItemPO) session().createCriteria(clazz).add(Restrictions.eq("qfaiId", qfaiId)).setMaxResults(1).uniqueResult();
 	}
 
 	@Override
 	public QuotationFunctionAreaItemPO queryQuotationFunctionAreaItemForTypeByQuotationFunctionAreaId(Class<?> clazz, Long quotationFunctionAreaId, Short type) {
-		return (QuotationFunctionAreaItemPO) session().createCriteria(clazz).add(Restrictions.eq("quotationFunctionArea.qfaId", quotationFunctionAreaId)).add(Restrictions.eq("type", type)).uniqueResult();
+		return (QuotationFunctionAreaItemPO) session().createCriteria(clazz).add(Restrictions.eq("quotationFunctionArea.qfaId", quotationFunctionAreaId)).add(Restrictions.eq("type", type)).setMaxResults(1).uniqueResult();
 	}
 
 	@Override
@@ -46,7 +46,7 @@ public class QuotationFunctionAreaItemDaoImpl extends DaoImpl<QuotationFunctionA
 
 	@Override
 	public QuotationFunctionAreaItemPO queryQuotationFunctionAreaItemByQuotationIdAType(Class<?> clazz, long qId, short type) {
-		return (QuotationFunctionAreaItemPO) session().createCriteria(clazz).add(Restrictions.eq("type", type)).createAlias("quotationFunctionArea", "quotationFunctionArea").add(Restrictions.eq("quotationFunctionArea.qfaId", qId)).uniqueResult();
+		return (QuotationFunctionAreaItemPO) session().createCriteria(clazz).add(Restrictions.eq("type", type)).createAlias("quotationFunctionArea", "quotationFunctionArea").add(Restrictions.eq("quotationFunctionArea.qfaId", qId)).setMaxResults(1).uniqueResult();
 	}
 
 	@Override

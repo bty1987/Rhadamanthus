@@ -34,7 +34,7 @@ public class ProductionDaoImpl extends DaoImpl<ProductionPO> implements Producti
 
 	@Override
 	public ProductionPO queryProductionByPno(String pno) {
-		return (ProductionPO) session().createCriteria(ProductionPO.class).add(Restrictions.eq("pno", pno)).uniqueResult();
+		return (ProductionPO) session().createCriteria(ProductionPO.class).add(Restrictions.eq("pno", pno)).setMaxResults(1).uniqueResult();
 	}
 
 	private void queryFilterExcute(PagingQuery<ProductionPO> query, List<Filter> filters) {

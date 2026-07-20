@@ -34,7 +34,7 @@ public class ProductionPlanDaoImpl extends DaoImpl<ProductionPlanPO> implements 
 
 	@Override
 	public ProductionPlanPO queryProductionPlanByNo(String no) {
-		return (ProductionPlanPO) session().createCriteria(ProductionPlanPO.class).add(Restrictions.eq(ProductionPlanPO.COLUMN_NO_STR, no)).uniqueResult();
+		return (ProductionPlanPO) session().createCriteria(ProductionPlanPO.class).add(Restrictions.eq(ProductionPlanPO.COLUMN_NO_STR, no)).setMaxResults(1).uniqueResult();
 	}
 
 	@Override

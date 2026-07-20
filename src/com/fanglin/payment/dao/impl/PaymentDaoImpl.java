@@ -94,7 +94,7 @@ public class PaymentDaoImpl extends DaoImpl<PaymentPO> implements PaymentDao {
 
 	@Override
 	public PaymentDO queryPaymentByReceiptId(long arId) {
-		return (PaymentDO) session().createCriteria(PaymentDO.class).createAlias("advanceReceipt", "advanceReceipt").add(Restrictions.eq("advanceReceipt.arId", arId)).uniqueResult();
+		return (PaymentDO) session().createCriteria(PaymentDO.class).createAlias("advanceReceipt", "advanceReceipt").add(Restrictions.eq("advanceReceipt.arId", arId)).setMaxResults(1).uniqueResult();
 	}
 
 	@Override

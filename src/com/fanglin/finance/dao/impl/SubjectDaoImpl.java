@@ -61,7 +61,7 @@ public class SubjectDaoImpl extends DaoImpl<SubjectPO> implements SubjectDao {
 
 	@Override
 	public SubjectPO querySubjectByCode(String code) {
-		return (SubjectPO) session().createCriteria(SubjectPO.class).add(Restrictions.eq(SubjectPO.COLUMN_CODE_STR, code)).uniqueResult();
+		return (SubjectPO) session().createCriteria(SubjectPO.class).add(Restrictions.eq(SubjectPO.COLUMN_CODE_STR, code)).setMaxResults(1).uniqueResult();
 	}
 	
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters){

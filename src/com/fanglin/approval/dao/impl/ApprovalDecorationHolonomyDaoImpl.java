@@ -16,7 +16,7 @@ public class ApprovalDecorationHolonomyDaoImpl extends DaoImpl<ApprovalDecoratio
 
 	@Override
 	public ApprovalDecorationHolonomyPO queryApprovalDecorationHolonomyByAId(long aId) {
-		return (ApprovalDecorationHolonomyPO) session().createCriteria(ApprovalDecorationHolonomyPO.class).add(Restrictions.eq("aid", aId)).uniqueResult();
+		return (ApprovalDecorationHolonomyPO) session().createCriteria(ApprovalDecorationHolonomyPO.class).add(Restrictions.eq("aid", aId)).setMaxResults(1).uniqueResult();
 	}
 	
 }

@@ -27,7 +27,7 @@ public class ApprovalDecorationHouseDaoImpl extends DaoImpl<ApprovalDecorationHo
 
 	@Override
 	public ApprovalDecorationHousePO queryApprovalDecorationHouseByAId(long aId) {
-		return (ApprovalDecorationHousePO) session().createCriteria(ApprovalDecorationHousePO.class).add(Restrictions.eq(ApprovalDecorationHousePO.COLUMN_AID_STR, aId)).uniqueResult();
+		return (ApprovalDecorationHousePO) session().createCriteria(ApprovalDecorationHousePO.class).add(Restrictions.eq(ApprovalDecorationHousePO.COLUMN_AID_STR, aId)).setMaxResults(1).uniqueResult();
 	}
 
 }

@@ -35,7 +35,7 @@ public class PurchaseDaoImpl extends DaoImpl<PurchasePO> implements PurchaseDao 
 
 	@Override
 	public PurchasePO queryPurchaseByPid(long pid) {
-		return (PurchasePO) session().createCriteria(PurchasePO.class).add(Restrictions.eq(PurchasePO.COLUMN_PID_STR, pid)).uniqueResult();
+		return (PurchasePO) session().createCriteria(PurchasePO.class).add(Restrictions.eq(PurchasePO.COLUMN_PID_STR, pid)).setMaxResults(1).uniqueResult();
 	}
 
 	private void queryFilterExecute(PagingQuery<?> query, List<Filter> filters) {

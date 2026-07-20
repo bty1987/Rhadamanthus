@@ -25,7 +25,7 @@ public class ProductionWorkFlowDaoImpl extends DaoImpl<ProductionWorkFlowPO> imp
 
 	@Override
 	public ProductionWorkFlowPO queryProductionWorkFlowByPwpidAWfid(long pwpid, long wfid) {
-		return (ProductionWorkFlowPO) session().createCriteria(ProductionWorkFlowPO.class).add(Restrictions.eq(ProductionWorkFlowPO.COLUMN_PWPID_STR, pwpid)).add(Restrictions.eq(ProductionWorkFlowPO.COLUMN_WORKFLOW_STR, wfid)).uniqueResult();
+		return (ProductionWorkFlowPO) session().createCriteria(ProductionWorkFlowPO.class).add(Restrictions.eq(ProductionWorkFlowPO.COLUMN_PWPID_STR, pwpid)).add(Restrictions.eq(ProductionWorkFlowPO.COLUMN_WORKFLOW_STR, wfid)).setMaxResults(1).uniqueResult();
 	}
 
 	@Override

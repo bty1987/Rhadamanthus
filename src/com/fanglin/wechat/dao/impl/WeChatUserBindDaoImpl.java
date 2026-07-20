@@ -30,7 +30,7 @@ public class WeChatUserBindDaoImpl extends DaoImpl<WeChatUserBindPO> implements 
 
 	@Override
 	public WeChatUserBindPO queryWeChatUserBind(String unionId) {
-		return (WeChatUserBindPO) session().createCriteria(WeChatUserBindPO.class).add(Restrictions.eq(WeChatUserBindPO.COLUMN_UNIONID_STR, unionId)).uniqueResult();
+		return (WeChatUserBindPO) session().createCriteria(WeChatUserBindPO.class).add(Restrictions.eq(WeChatUserBindPO.COLUMN_UNIONID_STR, unionId)).setMaxResults(1).uniqueResult();
 	}
 
 	@Override

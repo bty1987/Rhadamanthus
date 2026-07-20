@@ -30,7 +30,7 @@ public class MuserDaoImpl extends DaoImpl<MuserPO> implements MuserDao {
 
 	@Override
 	public MuserPO queryMuserByUnionId(String unionId) {
-		return (MuserPO) session().createCriteria(MuserPO.class).add(Restrictions.eq(MuserPO.COLUMN_UNIONID_STR, unionId)).uniqueResult();
+		return (MuserPO) session().createCriteria(MuserPO.class).add(Restrictions.eq(MuserPO.COLUMN_UNIONID_STR, unionId)).setMaxResults(1).uniqueResult();
 	}
 
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {

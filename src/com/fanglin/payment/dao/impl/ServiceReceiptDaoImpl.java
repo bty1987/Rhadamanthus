@@ -15,6 +15,6 @@ public class ServiceReceiptDaoImpl extends DaoImpl<ServiceReceiptPO> implements 
 	
 	@Override
 	public ServiceReceiptPO queryServiceReceiptBySrId(long srId) {
-		return (ServiceReceiptPO) session().createCriteria(ServiceReceiptPO.class).add(Restrictions.eq(ServiceReceiptPO.COLUMN_SRID_STR, srId)).uniqueResult();
+		return (ServiceReceiptPO) session().createCriteria(ServiceReceiptPO.class).add(Restrictions.eq(ServiceReceiptPO.COLUMN_SRID_STR, srId)).setMaxResults(1).uniqueResult();
 	}
 }

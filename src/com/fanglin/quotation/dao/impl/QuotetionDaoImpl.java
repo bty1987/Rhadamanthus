@@ -26,7 +26,7 @@ public class QuotetionDaoImpl extends DaoImpl<QuotetionPO> implements QuotetionD
 
 	@Override
 	public QuotetionPO queryQuotetionByNo(String no) {
-		return (QuotetionPO) createCriteria(QuotetionPO.class).add(Restrictions.eq("no", no)).uniqueResult();
+		return (QuotetionPO) createCriteria(QuotetionPO.class).add(Restrictions.eq("no", no)).setMaxResults(1).uniqueResult();
 	}
 
 	@Override

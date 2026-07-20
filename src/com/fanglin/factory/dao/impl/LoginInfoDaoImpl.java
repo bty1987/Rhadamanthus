@@ -27,7 +27,7 @@ public class LoginInfoDaoImpl extends DaoImpl<LoginInfoPO> implements LoginInfoD
 
 	@Override
 	public LoginInfoPO queryLoginInfoByLoginFlag(String loginFlag) {
-		return (LoginInfoPO) session().createCriteria(LoginInfoPO.class).add(Restrictions.eq(LoginInfoPO.COLUMN_LOGINFLAG_STR, loginFlag)).uniqueResult();
+		return (LoginInfoPO) session().createCriteria(LoginInfoPO.class).add(Restrictions.eq(LoginInfoPO.COLUMN_LOGINFLAG_STR, loginFlag)).setMaxResults(1).uniqueResult();
 	}
 
 	@Override

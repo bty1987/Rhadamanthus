@@ -29,7 +29,7 @@ public class DecorationHolonomyDaoImpl extends DaoImpl<DecorationHolonomyPO> imp
 
 	@Override
 	public DecorationHolonomyPO queryDecorationHolonomyByOrderId(String orderId) {
-		return (DecorationHolonomyPO) session().createCriteria(DecorationHolonomyPO.class).add(Restrictions.eq("decoration.orderId", orderId)).uniqueResult();
+		return (DecorationHolonomyPO) session().createCriteria(DecorationHolonomyPO.class).add(Restrictions.eq("decoration.orderId", orderId)).setMaxResults(1).uniqueResult();
 	}
 
 	private void queryFilterExcute(Paging paging, List<Filter> filters, PagingQuery<DecorationHolonomyPO> query) throws FLException {

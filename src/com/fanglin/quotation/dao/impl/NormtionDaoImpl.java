@@ -37,7 +37,7 @@ public class NormtionDaoImpl extends DaoImpl<NormtionPO> implements NormtionDao 
 
 	@Override
 	public NormtionPO queryNormtion(long qid) {
-		return (NormtionPO) createCriteria(NormtionPO.class).add(Restrictions.eq("qid", qid)).uniqueResult();
+		return (NormtionPO) createCriteria(NormtionPO.class).add(Restrictions.eq("qid", qid)).setMaxResults(1).uniqueResult();
 	}
 
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {

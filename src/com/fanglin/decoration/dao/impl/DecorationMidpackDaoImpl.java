@@ -16,7 +16,7 @@ public class DecorationMidpackDaoImpl extends DaoImpl<DecorationMidpackPO>  impl
 
 	@Override
 	public DecorationMidpackPO queryDecorationMidpack(String orderId) {
-		return (DecorationMidpackPO) session().createCriteria(DecorationMidpackPO.class).add(Restrictions.eq("decoration.orderId", orderId)).uniqueResult();
+		return (DecorationMidpackPO) session().createCriteria(DecorationMidpackPO.class).add(Restrictions.eq("decoration.orderId", orderId)).setMaxResults(1).uniqueResult();
 	}
 
 }

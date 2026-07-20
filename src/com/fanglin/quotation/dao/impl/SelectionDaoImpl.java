@@ -35,7 +35,7 @@ public class SelectionDaoImpl extends DaoImpl<SelectionPO> implements SelectionD
 
 	@Override
 	public SelectionPO querySelectionByQid(long qid) {
-		return (SelectionPO) createCriteria(SelectionPO.class).add(Restrictions.eq(SelectionPO.COLUMN_QID_STR, qid)).uniqueResult();
+		return (SelectionPO) createCriteria(SelectionPO.class).add(Restrictions.eq(SelectionPO.COLUMN_QID_STR, qid)).setMaxResults(1).uniqueResult();
 	}
 
 	@Override
@@ -49,7 +49,7 @@ public class SelectionDaoImpl extends DaoImpl<SelectionPO> implements SelectionD
 
 	@Override
 	public SelectionPO querySelectionByOrderId(String orderId) {
-		return (SelectionPO) createCriteria(SelectionPO.class).add(Restrictions.eq(SelectionPO.COLUMN_ORDERID_STR, orderId)).uniqueResult();
+		return (SelectionPO) createCriteria(SelectionPO.class).add(Restrictions.eq(SelectionPO.COLUMN_ORDERID_STR, orderId)).setMaxResults(1).uniqueResult();
 	}
 
 	@Override

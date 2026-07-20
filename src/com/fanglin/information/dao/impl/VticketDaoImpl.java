@@ -32,7 +32,7 @@ public class VticketDaoImpl extends DaoImpl<VticketPO> implements VticketDao {
 
 	@Override
 	public VticketPO queryVticketByTno(String tno) {
-		return (VticketPO) session().createCriteria(VticketPO.class).add(Restrictions.eq(VticketPO.COLUMN_TNO_STR, tno)).add(Restrictions.eq(VticketPO.COLUMN_EXPIRE_STR, VticketPO.EXPIRE_INIT_INT)).uniqueResult();
+		return (VticketPO) session().createCriteria(VticketPO.class).add(Restrictions.eq(VticketPO.COLUMN_TNO_STR, tno)).add(Restrictions.eq(VticketPO.COLUMN_EXPIRE_STR, VticketPO.EXPIRE_INIT_INT)).setMaxResults(1).uniqueResult();
 	}
 
 	@Override

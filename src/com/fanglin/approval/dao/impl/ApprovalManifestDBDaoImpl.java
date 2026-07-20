@@ -15,7 +15,7 @@ public class ApprovalManifestDBDaoImpl extends DaoImpl<ApprovalManifestDBPO>impl
 	}
 	@Override
 	public ApprovalManifestDBPO queryApprovalManifestDBByAId(long aid) {
-		return (ApprovalManifestDBPO) session().createCriteria(ApprovalManifestDBPO.class).add(Restrictions.eq(ApprovalManifestDBPO.COLUMN_AID_STR, aid)).uniqueResult();
+		return (ApprovalManifestDBPO) session().createCriteria(ApprovalManifestDBPO.class).add(Restrictions.eq(ApprovalManifestDBPO.COLUMN_AID_STR, aid)).setMaxResults(1).uniqueResult();
 	}
 
 }

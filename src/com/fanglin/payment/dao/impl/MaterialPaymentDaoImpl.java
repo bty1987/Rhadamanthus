@@ -142,7 +142,7 @@ public class MaterialPaymentDaoImpl extends DaoImpl<MaterialPaymentPO> implement
 
 	@Override
 	public MaterialPaymentPO queryMaterialPaymentByMsoNoAType(String msoNo, Short paymentType) {
-		return (MaterialPaymentPO) session().createCriteria(MaterialPaymentPO.class).createAlias("material", "material").add(Restrictions.eq(MaterialPaymentPO.COLUMN_NO_STR, msoNo)).add(Restrictions.eq(MaterialPaymentPO.COLUMN_PAYMENTTYPE_STR, paymentType)).uniqueResult();
+		return (MaterialPaymentPO) session().createCriteria(MaterialPaymentPO.class).createAlias("material", "material").add(Restrictions.eq(MaterialPaymentPO.COLUMN_NO_STR, msoNo)).add(Restrictions.eq(MaterialPaymentPO.COLUMN_PAYMENTTYPE_STR, paymentType)).setMaxResults(1).uniqueResult();
 	}
 
 	@Override

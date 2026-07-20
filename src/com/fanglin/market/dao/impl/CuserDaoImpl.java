@@ -16,7 +16,7 @@ public class CuserDaoImpl extends DaoImpl<CuserPO> implements CuserDao {
 
 	@Override
 	public CuserPO queryCuserByUnionId(String unionId) {
-		return (CuserPO) session().createCriteria(CuserPO.class).add(Restrictions.eq(CuserPO.COLUMN_UNIONID_STR, unionId)).uniqueResult();
+		return (CuserPO) session().createCriteria(CuserPO.class).add(Restrictions.eq(CuserPO.COLUMN_UNIONID_STR, unionId)).setMaxResults(1).uniqueResult();
 	}
 
 }

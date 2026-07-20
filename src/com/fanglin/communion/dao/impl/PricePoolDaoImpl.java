@@ -44,7 +44,7 @@ public class PricePoolDaoImpl extends DaoImpl<PricePoolPO> implements PricePoolD
 
 	@Override
 	public PricePoolPO queryPricePoolByPpid(long ppid) {
-		return (PricePoolPO) session().createCriteria(PricePoolPO.class).add(Restrictions.eq(PricePoolPO.COLUMN_PPID_STR, ppid)).uniqueResult();
+		return (PricePoolPO) session().createCriteria(PricePoolPO.class).add(Restrictions.eq(PricePoolPO.COLUMN_PPID_STR, ppid)).setMaxResults(1).uniqueResult();
 	}
 
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {

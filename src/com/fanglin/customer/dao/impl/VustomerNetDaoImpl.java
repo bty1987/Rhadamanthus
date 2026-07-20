@@ -29,7 +29,7 @@ public class VustomerNetDaoImpl extends DaoImpl<VustomerNetPO> implements Vustom
 
 	@Override
 	public VustomerNetPO queryVustomerNet(String unionId, String netunionId) {
-		return (VustomerNetPO) session().createCriteria(VustomerNetPO.class).add(Restrictions.eq(VustomerNetPO.COLUMN_UNIONID_STR, unionId)).add(Restrictions.eq(VustomerNetPO.COLUMN_NETUNIONID_STR, netunionId)).uniqueResult();
+		return (VustomerNetPO) session().createCriteria(VustomerNetPO.class).add(Restrictions.eq(VustomerNetPO.COLUMN_UNIONID_STR, unionId)).add(Restrictions.eq(VustomerNetPO.COLUMN_NETUNIONID_STR, netunionId)).setMaxResults(1).uniqueResult();
 	}
 
 }

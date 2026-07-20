@@ -46,12 +46,12 @@ public class BuildingCustomerDaoImpl extends DaoImpl<BuildingCustomerPO> impleme
 
 	@Override
 	public BuildingCustomerPO queryBuildingCustomerByNo(String no) {
-		return (BuildingCustomerPO) session().createCriteria(BuildingCustomerPO.class).add(Restrictions.eq(BuildingCustomerPO.COLUMN_NO_STR, no)).uniqueResult();
+		return (BuildingCustomerPO) session().createCriteria(BuildingCustomerPO.class).add(Restrictions.eq(BuildingCustomerPO.COLUMN_NO_STR, no)).setMaxResults(1).uniqueResult();
 	}
 
 	@Override
 	public BuildingCustomerPO checkBuildingCustomer(Long cid, Short type) {
-		return (BuildingCustomerPO) session().createCriteria(BuildingCustomerPO.class).add(Restrictions.eq(BuildingCustomerPO.COLUMN_CID_STR, cid)).add(Restrictions.eq(BuildingCustomerPO.COLUMN_TYPE_STR, type)).uniqueResult();
+		return (BuildingCustomerPO) session().createCriteria(BuildingCustomerPO.class).add(Restrictions.eq(BuildingCustomerPO.COLUMN_CID_STR, cid)).add(Restrictions.eq(BuildingCustomerPO.COLUMN_TYPE_STR, type)).setMaxResults(1).uniqueResult();
 	}
 
 	@Override

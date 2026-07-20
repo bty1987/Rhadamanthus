@@ -12,7 +12,7 @@ public class ApprovalQuotationPreferDaoImpl extends DaoImpl<ApprovalQuotationPre
 
 	@Override
 	public ApprovalQuotationPreferPO queryApprovalQuotationPreferByAid(long aId) {
-		return (ApprovalQuotationPreferPO) session().createCriteria(ApprovalQuotationPreferPO.class).add(Restrictions.eq(ApprovalQuotationPreferPO.COLUMN_AID_STR, aId)).uniqueResult();
+		return (ApprovalQuotationPreferPO) session().createCriteria(ApprovalQuotationPreferPO.class).add(Restrictions.eq(ApprovalQuotationPreferPO.COLUMN_AID_STR, aId)).setMaxResults(1).uniqueResult();
 	}
 
 }

@@ -37,7 +37,7 @@ public class ConstructionPlanDaoImpl extends DaoImpl<ConstructionPlanPO> impleme
 
 	@Override
 	public ConstructionPlanPO queryConstructionPlan(String orderId, int sort) {
-		return (ConstructionPlanPO) session().createCriteria(ConstructionPlanPO.class).add(Restrictions.eq(ConstructionPlanPO.COLUMN_ORDERID_STR, orderId)).add(Restrictions.eq("sort", sort)).addOrder(Order.asc("sort")).uniqueResult();
+		return (ConstructionPlanPO) session().createCriteria(ConstructionPlanPO.class).add(Restrictions.eq(ConstructionPlanPO.COLUMN_ORDERID_STR, orderId)).add(Restrictions.eq("sort", sort)).addOrder(Order.asc("sort")).setMaxResults(1).uniqueResult();
 	}
 
 	@Override

@@ -34,7 +34,7 @@ public class SalesProfileDaoImpl extends DaoImpl<SalesProfilePO> implements Sale
 
 	@Override
 	public SalesProfilePO querySalesProfileByOrderId(String orderId) {
-		return (SalesProfilePO) session().createCriteria(SalesProfilePO.class).add(Restrictions.eq("orderId", orderId)).uniqueResult();
+		return (SalesProfilePO) session().createCriteria(SalesProfilePO.class).add(Restrictions.eq("orderId", orderId)).setMaxResults(1).uniqueResult();
 	}
 
 	private void queryFilterExecute(PagingQuery<?> query, List<Filter> filters) {

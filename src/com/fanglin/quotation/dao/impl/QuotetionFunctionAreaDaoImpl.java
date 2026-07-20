@@ -25,7 +25,7 @@ public class QuotetionFunctionAreaDaoImpl extends DaoImpl<QuotetionFunctionAreaP
 
 	@Override
 	public QuotetionFunctionAreaPO queryQuotetionFunctionAreaForTypeByQuotetionId(long qid, short type) {
-		return (QuotetionFunctionAreaPO) createCriteria(QuotetionFunctionAreaPO.class).add(Restrictions.eq("qid", qid)).add(Restrictions.eq("type", type)).uniqueResult();
+		return (QuotetionFunctionAreaPO) createCriteria(QuotetionFunctionAreaPO.class).add(Restrictions.eq("qid", qid)).add(Restrictions.eq("type", type)).setMaxResults(1).uniqueResult();
 	}
 
 	@Override

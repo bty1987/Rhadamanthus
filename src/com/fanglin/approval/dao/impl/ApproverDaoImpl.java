@@ -54,7 +54,7 @@ public class ApproverDaoImpl extends DaoImpl<ApproverPO> implements ApproverDao 
 
 	@Override
 	public ApproverPO queryApprovalByType(String userId, short type, int company) {
-		return (ApproverPO) session().createCriteria(ApproverPO.class).createAlias("user", "user").add(Restrictions.eq("user.userId", userId)).add(Restrictions.eq("type", type)).add(Restrictions.eq("company", company)).uniqueResult();
+		return (ApproverPO) session().createCriteria(ApproverPO.class).createAlias("user", "user").add(Restrictions.eq("user.userId", userId)).add(Restrictions.eq("type", type)).add(Restrictions.eq("company", company)).setMaxResults(1).uniqueResult();
 	}
 
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {

@@ -28,7 +28,7 @@ public class AcceptanceDaoImpl extends DaoImpl<AcceptancePO> implements Acceptan
 	@Override
 	public AcceptancePO queryAcceptanceByOrderId(String orderId){
 		
-		return (AcceptancePO) session().createCriteria(AcceptancePO.class).add(Restrictions.eq(AcceptancePO.COLUMN_ORDERID_STR, orderId)).uniqueResult();
+		return (AcceptancePO) session().createCriteria(AcceptancePO.class).add(Restrictions.eq(AcceptancePO.COLUMN_ORDERID_STR, orderId)).setMaxResults(1).uniqueResult();
 		
 	}
 

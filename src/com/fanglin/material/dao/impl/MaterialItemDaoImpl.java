@@ -49,7 +49,7 @@ public class MaterialItemDaoImpl extends DaoImpl<MaterialItemPO> implements Mate
 
 	@Override
 	public MaterialItemPO queryMaterialItemByMiid(long miid) {
-		return (MaterialItemPO) session().createCriteria(MaterialItemPO.class).add(Restrictions.eq(MaterialItemPO.COLUMN_MIID_STR, miid)).uniqueResult();
+		return (MaterialItemPO) session().createCriteria(MaterialItemPO.class).add(Restrictions.eq(MaterialItemPO.COLUMN_MIID_STR, miid)).setMaxResults(1).uniqueResult();
 	}
 
 	@Override

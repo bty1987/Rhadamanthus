@@ -71,7 +71,7 @@ public class DecorationActivityDaoImpl extends DaoImpl<DecorationActivityPO> imp
 			sqlQuery.setShort("isPayment", isPayment);
 		}
 
-		BigDecimal amount = (BigDecimal) sqlQuery.uniqueResult();
+		BigDecimal amount = (BigDecimal) sqlQuery.setMaxResults(1).uniqueResult();
 
 		return Arith.div(amount.longValue(), 1000000);
 	}

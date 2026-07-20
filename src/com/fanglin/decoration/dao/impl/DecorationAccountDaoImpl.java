@@ -36,7 +36,7 @@ public class DecorationAccountDaoImpl extends DaoImpl<DecorationAccountPO> imple
 	@Override
 	public DecorationAccountPO queryDecorationAccount(String orderId) {
 
-		return (DecorationAccountPO) session().createCriteria(DecorationAccountPO.class).add(Restrictions.eq(DecorationAccountPO.DECORATIONACCOUNT_ORDERID_STR, orderId)).uniqueResult();
+		return (DecorationAccountPO) session().createCriteria(DecorationAccountPO.class).add(Restrictions.eq(DecorationAccountPO.DECORATIONACCOUNT_ORDERID_STR, orderId)).setMaxResults(1).uniqueResult();
 
 	}
 

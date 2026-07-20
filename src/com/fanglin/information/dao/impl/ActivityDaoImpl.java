@@ -51,7 +51,7 @@ public class ActivityDaoImpl extends DaoImpl<ActivityPO> implements ActivityDao 
 
 	@Override
 	public ActivityPO queryActivityForDefault(int company,short type) {
-		return (ActivityPO) session().createCriteria(ActivityPO.class).add(Restrictions.eq("company", company)).add(Restrictions.eq(ActivityPO.COLUMN_DEFAULTS_STR, ActivityPO.DEFAULTS_DEFAULT_INT)).add(Restrictions.eq(ActivityPO.COLUMN_STATUS_STR, ActivityPO.STATUS_VALID_INT)).add(Restrictions.eq(ActivityPO.COLUMN_TYPE_STR, type)).uniqueResult();
+		return (ActivityPO) session().createCriteria(ActivityPO.class).add(Restrictions.eq("company", company)).add(Restrictions.eq(ActivityPO.COLUMN_DEFAULTS_STR, ActivityPO.DEFAULTS_DEFAULT_INT)).add(Restrictions.eq(ActivityPO.COLUMN_STATUS_STR, ActivityPO.STATUS_VALID_INT)).add(Restrictions.eq(ActivityPO.COLUMN_TYPE_STR, type)).setMaxResults(1).uniqueResult();
 	}
 
 	@Override

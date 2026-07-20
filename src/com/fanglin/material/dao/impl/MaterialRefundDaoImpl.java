@@ -68,7 +68,7 @@ public class MaterialRefundDaoImpl extends DaoImpl<MaterialRefundPO> implements 
 	public MaterialRefundPO queryMaterialRefundByMiid(long miid){
 		return (MaterialRefundPO) session().createCriteria(MaterialRefundPO.class)
 				.add(Restrictions.eq(MaterialRefundPO.COLUMN_MSOIID_STR, miid))
-				.uniqueResult();
+				.setMaxResults(1).uniqueResult();
 	}
 
 	@Override

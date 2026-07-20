@@ -112,7 +112,7 @@ public class ApprovalDaoImpl extends DaoImpl<ApprovalPO> implements ApprovalDao 
 
 	@Override
 	public ApprovalPO queryApprovalByProcessinstanceid(String processinstanceid) {
-		return (ApprovalPO) session().createCriteria(ApprovalPO.class).add(Restrictions.eq(ApprovalPO.COLUMN_PROCESSINSTANCEID_STR, processinstanceid)).uniqueResult();
+		return (ApprovalPO) session().createCriteria(ApprovalPO.class).add(Restrictions.eq(ApprovalPO.COLUMN_PROCESSINSTANCEID_STR, processinstanceid)).setMaxResults(1).uniqueResult();
 	}
 
 	@Override

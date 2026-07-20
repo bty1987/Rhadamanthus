@@ -110,17 +110,17 @@ public class UserDaoImpl extends DaoImpl<UserPO> implements UserDao {
 
 	@Override
 	public UserPO queryUserByLoginId(String loginId) {
-		return (UserPO) createCriteria(UserPO.class).add(Restrictions.or(Restrictions.eq("loginId", loginId), Restrictions.eq("userId", loginId))).uniqueResult();
+		return (UserPO) createCriteria(UserPO.class).add(Restrictions.or(Restrictions.eq("loginId", loginId), Restrictions.eq("userId", loginId))).setMaxResults(1).uniqueResult();
 	}
 
 	@Override
 	public UserPO queryUserByUserId(String userId) {
-		return (UserPO) session().createCriteria(UserPO.class).add(Restrictions.eq("userId", userId)).uniqueResult();
+		return (UserPO) session().createCriteria(UserPO.class).add(Restrictions.eq("userId", userId)).setMaxResults(1).uniqueResult();
 	}
 
 	@Override
 	public UserPO queryUserByOldUserId(String oldUserId) {
-		return (UserPO) createCriteria(UserPO.class).add(Restrictions.eq("oldUserId", oldUserId)).uniqueResult();
+		return (UserPO) createCriteria(UserPO.class).add(Restrictions.eq("oldUserId", oldUserId)).setMaxResults(1).uniqueResult();
 	}
 
 	@Override

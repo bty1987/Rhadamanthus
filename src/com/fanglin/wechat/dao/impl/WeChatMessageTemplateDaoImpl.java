@@ -27,12 +27,12 @@ public class WeChatMessageTemplateDaoImpl extends DaoImpl<WeChatMessageTemplateP
 
 	@Override
 	public WeChatMessageTemplatePO queryMessageTemplate(String name, short type) {
-		return (WeChatMessageTemplatePO) session().createCriteria(WeChatMessageTemplatePO.class).add(Restrictions.eq(WeChatMessageTemplatePO.COLUMN_NAME_STR, name)).add(Restrictions.eq(WeChatMessageTemplatePO.COLUMN_TYPE_STR, type)).uniqueResult();
+		return (WeChatMessageTemplatePO) session().createCriteria(WeChatMessageTemplatePO.class).add(Restrictions.eq(WeChatMessageTemplatePO.COLUMN_NAME_STR, name)).add(Restrictions.eq(WeChatMessageTemplatePO.COLUMN_TYPE_STR, type)).setMaxResults(1).uniqueResult();
 	}
 
 	@Override
 	public WeChatMessageTemplatePO queryMessageTemplate(String name, short type, int company) {
-		return (WeChatMessageTemplatePO) session().createCriteria(WeChatMessageTemplatePO.class).add(Restrictions.eq(WeChatMessageTemplatePO.COLUMN_NAME_STR, name)).add(Restrictions.eq(WeChatMessageTemplatePO.COLUMN_TYPE_STR, type)).add(Restrictions.eq(WeChatMessageTemplatePO.COLUMN_COMPANY_STR, company)).uniqueResult();
+		return (WeChatMessageTemplatePO) session().createCriteria(WeChatMessageTemplatePO.class).add(Restrictions.eq(WeChatMessageTemplatePO.COLUMN_NAME_STR, name)).add(Restrictions.eq(WeChatMessageTemplatePO.COLUMN_TYPE_STR, type)).add(Restrictions.eq(WeChatMessageTemplatePO.COLUMN_COMPANY_STR, company)).setMaxResults(1).uniqueResult();
 	}
 
 }

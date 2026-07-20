@@ -34,7 +34,7 @@ public class MaterialDesignerDepartmentRankDaoImpl extends DaoImpl<MaterialDesig
 				.add(Restrictions.eq("company", company))
 				.add(Restrictions.eq(MaterialDesignerDepartmentRankPO.COLUMN_DESIGNERDEPTID_STR, deptId))
 				.add(Restrictions.eq(MaterialDesignerDepartmentRankPO.COLUMN_STATUS_STR, MaterialDesignerDepartmentRankPO.STATUS_TYPE_INIT_INT))
-				.uniqueResult();
+				.setMaxResults(1).uniqueResult();
 	}
 
 	@Override

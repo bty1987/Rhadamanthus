@@ -62,12 +62,12 @@ public class ConstructionDaoImpl extends DaoImpl<ConstructionPO> implements Cons
 
 	@Override
 	public ConstructionPO queryConstructionByOrderId(String orderId) {
-		return (ConstructionPO) session().createCriteria(ConstructionPO.class).add(Restrictions.eq(ConstructionPO.COLUMN_ORDERID_STR, orderId)).uniqueResult();
+		return (ConstructionPO) session().createCriteria(ConstructionPO.class).add(Restrictions.eq(ConstructionPO.COLUMN_ORDERID_STR, orderId)).setMaxResults(1).uniqueResult();
 	}
 
 	@Override
 	public ConstructionPO queryConstructionByCid(long cid) {
-		return (ConstructionPO) session().createCriteria(ConstructionPO.class).add(Restrictions.eq(ConstructionPO.COLUMN_CID_STR, cid)).uniqueResult();
+		return (ConstructionPO) session().createCriteria(ConstructionPO.class).add(Restrictions.eq(ConstructionPO.COLUMN_CID_STR, cid)).setMaxResults(1).uniqueResult();
 	}
 
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) throws FLException {

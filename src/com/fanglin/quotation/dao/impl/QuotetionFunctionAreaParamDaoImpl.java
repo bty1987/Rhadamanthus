@@ -18,7 +18,7 @@ public class QuotetionFunctionAreaParamDaoImpl extends DaoImpl<QuotetionFunction
 
 	@Override
 	public QuotetionFunctionAreaParamPO queryQuotetionFunctionAreaParam(Long qfaid) {
-		return (QuotetionFunctionAreaParamPO) session().createCriteria(QuotetionFunctionAreaParamPO.class).add(Restrictions.eq("qfaId", qfaid)).uniqueResult();
+		return (QuotetionFunctionAreaParamPO) session().createCriteria(QuotetionFunctionAreaParamPO.class).add(Restrictions.eq("qfaId", qfaid)).setMaxResults(1).uniqueResult();
 	}
 
 	@Override

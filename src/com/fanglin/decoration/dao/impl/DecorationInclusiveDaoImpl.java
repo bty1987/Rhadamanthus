@@ -28,7 +28,7 @@ public class DecorationInclusiveDaoImpl extends DaoImpl<DecorationInclusivePO> i
 	
 	@Override
 	public DecorationInclusivePO queryDecorationInclusiveByOrderId(String orderId) {
-		return (DecorationInclusivePO) session().createCriteria(DecorationInclusivePO.class).add(Restrictions.eq("decoration.orderId",orderId)).uniqueResult();
+		return (DecorationInclusivePO) session().createCriteria(DecorationInclusivePO.class).add(Restrictions.eq("decoration.orderId",orderId)).setMaxResults(1).uniqueResult();
 	}
 
 	private void queryFilterExcute(Paging paging,List<Filter> filters,PagingQuery<DecorationInclusivePO> query){

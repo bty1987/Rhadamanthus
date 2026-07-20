@@ -30,7 +30,7 @@ public class DecorationRegionRankDaoImpl extends DaoImpl<DecorationRegionRankPO>
 
 	@Override
 	public DecorationRegionRankPO queryDecorationRegionRankForInitByRegionId(String regionId, int company) {
-		return (DecorationRegionRankPO) session().createCriteria(DecorationRegionRankPO.class).add(Restrictions.eq("company", company)).add(Restrictions.eq(DecorationRegionRankPO.COLUMN_STATUS_STR, DecorationRegionRankPO.STATUS_TYPE_INIT_INT)).uniqueResult();
+		return (DecorationRegionRankPO) session().createCriteria(DecorationRegionRankPO.class).add(Restrictions.eq("company", company)).add(Restrictions.eq(DecorationRegionRankPO.COLUMN_STATUS_STR, DecorationRegionRankPO.STATUS_TYPE_INIT_INT)).setMaxResults(1).uniqueResult();
 	}
 
 	@Override

@@ -31,7 +31,7 @@ public class DecorationDepartmentRankDaoImpl extends DaoImpl<DecorationDepartmen
 	@Override
 	public DecorationDepartmentRankPO queryDecorationDepartmentRankForInitByDeptId(String deptId, int company) {
 
-		return (DecorationDepartmentRankPO) session().createCriteria(DecorationDepartmentRankPO.class).add(Restrictions.eq("company", company)).add(Restrictions.eq(DecorationDepartmentRankPO.COLUMN_STATUS_STR, DecorationDepartmentRankPO.STATUS_TYPE_INIT_INT)).uniqueResult();
+		return (DecorationDepartmentRankPO) session().createCriteria(DecorationDepartmentRankPO.class).add(Restrictions.eq("company", company)).add(Restrictions.eq(DecorationDepartmentRankPO.COLUMN_STATUS_STR, DecorationDepartmentRankPO.STATUS_TYPE_INIT_INT)).setMaxResults(1).uniqueResult();
 	}
 
 	@Override

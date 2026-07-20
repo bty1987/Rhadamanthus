@@ -53,7 +53,7 @@ public class ConstructerDaoImpl extends DaoImpl<ConstructerPO> implements Constr
 	@Override
 	public ConstructerPO queryConstructerByCrid(long crid) {
 
-		return (ConstructerPO) session().createCriteria(ConstructerPO.class).add(Restrictions.eq(ConstructerPO.COLUMN_CRID_STR, crid)).uniqueResult();
+		return (ConstructerPO) session().createCriteria(ConstructerPO.class).add(Restrictions.eq(ConstructerPO.COLUMN_CRID_STR, crid)).setMaxResults(1).uniqueResult();
 	}
 
 	@Override

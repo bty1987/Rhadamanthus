@@ -164,7 +164,7 @@ public class SalesDaoImpl extends DaoImpl<SalesPO> implements SalesDao {
 
 	@Override
 	public SalesPO querySalesByNo(String no) {
-		return (SalesPO) createCriteria(SalesPO.class).add(Restrictions.eq(SalesPO.COLUMN_NO_STR, no)).uniqueResult();
+		return (SalesPO) createCriteria(SalesPO.class).add(Restrictions.eq(SalesPO.COLUMN_NO_STR, no)).setMaxResults(1).uniqueResult();
 	}
 
 	@Override

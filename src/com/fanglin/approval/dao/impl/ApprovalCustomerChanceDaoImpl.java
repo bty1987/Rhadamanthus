@@ -16,7 +16,7 @@ public class ApprovalCustomerChanceDaoImpl extends DaoImpl<ApprovalCustomerChanc
 
 	@Override
 	public ApprovalCustomerChancePO queryCustomerChanceByAid(long aid) {
-		return (ApprovalCustomerChancePO) session().createCriteria(ApprovalCustomerChancePO.class).add(Restrictions.eq("aid", aid)).uniqueResult();
+		return (ApprovalCustomerChancePO) session().createCriteria(ApprovalCustomerChancePO.class).add(Restrictions.eq("aid", aid)).setMaxResults(1).uniqueResult();
 	}
 
 }

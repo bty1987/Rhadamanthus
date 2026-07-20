@@ -36,7 +36,7 @@ public class DecorationBalanceDaoImpl extends DaoImpl<DecorationBalancePO> imple
 	@Override
 	public DecorationBalancePO queryDecorationBalance(Long doid) {
 
-		return (DecorationBalancePO) session().createCriteria(DecorationBalancePO.class).createAlias("decoration", "decoration").add(Restrictions.eq(DecorationBalancePO.COLUMN_DOID_STR, doid)).uniqueResult();
+		return (DecorationBalancePO) session().createCriteria(DecorationBalancePO.class).createAlias("decoration", "decoration").add(Restrictions.eq(DecorationBalancePO.COLUMN_DOID_STR, doid)).setMaxResults(1).uniqueResult();
 	}
 
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) throws FLException {

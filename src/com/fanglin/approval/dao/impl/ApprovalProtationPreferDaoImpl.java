@@ -27,7 +27,7 @@ public class ApprovalProtationPreferDaoImpl extends DaoImpl<ApprovalProtationPre
 
 	@Override
 	public ApprovalProtationPreferPO queryApprovalProtationPreferByAId(long aId) {
-		return (ApprovalProtationPreferPO) session().createCriteria(ApprovalProtationPreferPO.class).add(Restrictions.eq(ApprovalProtationPreferPO.COLUMN_AID_STR, aId)).uniqueResult();
+		return (ApprovalProtationPreferPO) session().createCriteria(ApprovalProtationPreferPO.class).add(Restrictions.eq(ApprovalProtationPreferPO.COLUMN_AID_STR, aId)).setMaxResults(1).uniqueResult();
 	}
 
 }

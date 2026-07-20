@@ -34,7 +34,7 @@ public class MaterialDesignerRegionRankDaoImpl extends DaoImpl<MaterialDesignerR
 				.add(Restrictions.eq("company", company))
 				.add(Restrictions.eq(MaterialDesignerRegionRankPO.COLUMN_DESIGNERREGIONID_STR, regionId))
 				.add(Restrictions.eq(MaterialDesignerRegionRankPO.COLUMN_STATUS_STR, MaterialDesignerRegionRankPO.STATUS_TYPE_INIT_INT))
-				.uniqueResult();
+				.setMaxResults(1).uniqueResult();
 	}
 
 	@Override

@@ -34,7 +34,7 @@ public class DepartmentTypeDaoImpl extends DaoImpl<DepartmentTypePO> implements 
 
 	@Override
 	public DepartmentTypePO queryDepartmentTypeByName(String name) {
-		return (DepartmentTypePO) session().createCriteria(DepartmentTypePO.class).add(Restrictions.eq("name", name)).uniqueResult();
+		return (DepartmentTypePO) session().createCriteria(DepartmentTypePO.class).add(Restrictions.eq("name", name)).setMaxResults(1).uniqueResult();
 	}
 
 }

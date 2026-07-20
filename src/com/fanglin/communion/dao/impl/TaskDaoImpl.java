@@ -32,7 +32,7 @@ public class TaskDaoImpl extends DaoImpl<TaskPO> implements TaskDao {
 
 	@Override
 	public TaskPO queryTaskByName(String name) {
-		return (TaskPO) session().createCriteria(TaskPO.class).add(Restrictions.eq(TaskPO.COLUMN_NAME_STR, name)).uniqueResult();
+		return (TaskPO) session().createCriteria(TaskPO.class).add(Restrictions.eq(TaskPO.COLUMN_NAME_STR, name)).setMaxResults(1).uniqueResult();
 	}
 
 	@Override
@@ -43,7 +43,7 @@ public class TaskDaoImpl extends DaoImpl<TaskPO> implements TaskDao {
 
 	@Override
 	public TaskPO queryTaskByKeyWord(String keyWord) {
-		return (TaskPO) session().createCriteria(TaskPO.class).add(Restrictions.eq(TaskPO.COLUMN_STATUS_STR, TaskPO.STATUS_ENABLE_INT)).add(Restrictions.eq(TaskPO.COLUMN_KEYWORD_STR, keyWord)).uniqueResult();
+		return (TaskPO) session().createCriteria(TaskPO.class).add(Restrictions.eq(TaskPO.COLUMN_STATUS_STR, TaskPO.STATUS_ENABLE_INT)).add(Restrictions.eq(TaskPO.COLUMN_KEYWORD_STR, keyWord)).setMaxResults(1).uniqueResult();
 	}
 
 	private void queryFilterExecute(PagingQuery<?> query, List<Filter> filters) {

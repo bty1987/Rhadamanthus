@@ -27,7 +27,7 @@ public class ApprovalDecorationCustomerDaoImpl extends DaoImpl<ApprovalDecoratio
 
 	@Override
 	public ApprovalDecorationCustomerPO queryApprovalDecorationCustomerByAId(long aId) {
-		return (ApprovalDecorationCustomerPO) session().createCriteria(ApprovalDecorationCustomerPO.class).add(Restrictions.eq(ApprovalDecorationCustomerPO.COLUMN_AID_STR, aId)).uniqueResult();
+		return (ApprovalDecorationCustomerPO) session().createCriteria(ApprovalDecorationCustomerPO.class).add(Restrictions.eq(ApprovalDecorationCustomerPO.COLUMN_AID_STR, aId)).setMaxResults(1).uniqueResult();
 	}
 
 }
