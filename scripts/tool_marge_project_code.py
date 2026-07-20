@@ -56,6 +56,14 @@ testenv = "E:\\Svn\\TI\\"
 #   source  : Athena 多模块仓内的源子目录(相对 path)
 #   target  : Athena 仓内的前台聚合目标子目录(相对 path)
 #   workspace: Rhadamanthus 工作区内对应的子目录(相对 workspace);后台模块为 None
+#   files   : (可选) 文件名白名单,仅对共享目录(condition/api/utils)生效。
+#             共享目录被多个模块重复声明指向同一 workspace 路径,
+#             issue(R→A) 方向若不做过滤,一个模块的文件会被回写到所有声明
+#             该共享目录的模块(产生垃圾文件)。声明 files 后,issue 方向
+#             仅当当前文件名 ∈ files 才回写到该模块的 source 目录;
+#             未声明 files 的映射保持原行为(向后兼容)。
+#             公共文件(common.js/ds.js/log.js 等)不在任何业务模块的 files 内,
+#             由顶层直连映射(99.Foreground/js/api 等)统一回写到聚合层。
 # ============================================================================
 
 infos = [
@@ -63,81 +71,81 @@ infos = [
     {"source": "01.Decoration\\Foreground\\views\\decoration\\", "target": "99.Foreground\\views\\decoration\\", "workspace": "WebContent\\views\\decoration\\"},
     {"source": "01.Decoration\\Foreground\\js\\contract\\", "target": "99.Foreground\\js\\contract", "workspace": "WebContent\\js\\contract\\"},
     {"source": "01.Decoration\\Foreground\\views\\contract\\", "target": "99.Foreground\\views\\contract\\", "workspace": "WebContent\\views\\contract\\"},
-    {"source": "01.Decoration\\Foreground\\js\\api\\", "target": "99.Foreground\\js\\api\\", "workspace": "WebContent\\js\\api"},
-    {"source": "01.Decoration\\Foreground\\js\\condition\\", "target": "99.Foreground\\js\\condition\\", "workspace": "WebContent\\js\\condition\\"},
-    {"source": "01.Decoration\\Foreground\\js\\utils\\", "target": "99.Foreground\\js\\utils", "workspace": "WebContent\\js\\utils\\"},
+    {"source": "01.Decoration\\Foreground\\js\\api\\", "target": "99.Foreground\\js\\api\\", "workspace": "WebContent\\js\\api", "files": ["decoration.js", "contract.js"]},
+    {"source": "01.Decoration\\Foreground\\js\\condition\\", "target": "99.Foreground\\js\\condition\\", "workspace": "WebContent\\js\\condition\\", "files": ["decoration.js"]},
+    {"source": "01.Decoration\\Foreground\\js\\utils\\", "target": "99.Foreground\\js\\utils", "workspace": "WebContent\\js\\utils\\", "files": ["decorationUtils.js", "decorationPageUtils.js"]},
     {"source": "01.Decoration\\Background\\decoration\\", "target": "src\\com\\fanglin\\decoration\\"},
 
     {"source": "02.Material\\Foreground\\js\\material\\", "target": "99.Foreground\\js\\material\\", "workspace": "WebContent\\js\\material\\"},
     {"source": "02.Material\\Foreground\\views\\material\\", "target": "99.Foreground\\views\\material\\", "workspace": "WebContent\\views\\material\\"},
-    {"source": "02.Material\\Foreground\\js\\utils\\", "target": "99.Foreground\\js\\utils", "workspace": "WebContent\\js\\utils\\"},
+    {"source": "02.Material\\Foreground\\js\\utils\\", "target": "99.Foreground\\js\\utils", "workspace": "WebContent\\js\\utils\\", "files": ["materialUtils.js"]},
     {"source": "02.Material\\Background\\material\\", "target": "src\\com\\fanglin\\material\\"},
 
     {"source": "03.Quotation\\Foreground\\js\\quotation\\", "target": "99.Foreground\\js\\quotation\\", "workspace": "WebContent\\js\\quotation\\"},
     {"source": "03.Quotation\\Foreground\\views\\quotation\\", "target": "99.Foreground\\views\\quotation\\", "workspace": "WebContent\\views\\quotation\\"},
-    {"source": "03.Quotation\\Foreground\\js\\api\\", "target": "99.Foreground\\js\\api\\", "workspace": "WebContent\\js\\api"},
-    {"source": "03.Quotation\\Foreground\\js\\condition\\", "target": "99.Foreground\\js\\condition\\", "workspace": "WebContent\\js\\condition\\"},
-    {"source": "03.Quotation\\Foreground\\js\\utils\\", "target": "99.Foreground\\js\\utils\\", "workspace": "WebContent\\js\\utils\\"},
-    {"source": "03.Quotation\\Foreground\\ds\\", "target": "99.Foreground\\ds\\", "workspace": "WebContent\\ds\\"},
+    {"source": "03.Quotation\\Foreground\\js\\api\\", "target": "99.Foreground\\js\\api\\", "workspace": "WebContent\\js\\api", "files": ["quotation.js"]},
+    {"source": "03.Quotation\\Foreground\\js\\condition\\", "target": "99.Foreground\\js\\condition\\", "workspace": "WebContent\\js\\condition\\", "files": ["quotation.js"]},
+    {"source": "03.Quotation\\Foreground\\js\\utils\\", "target": "99.Foreground\\js\\utils\\", "workspace": "WebContent\\js\\utils\\", "files": ["quotationUtils.js"]},
+    {"source": "03.Quotation\\Foreground\\ds\\", "target": "99.Foreground\\ds\\", "workspace": "WebContent\\ds\\", "files": ["quotation.json"]},
     {"source": "03.Quotation\\Background\\quotation\\", "target": "src\\com\\fanglin\\quotation\\"},
 
-    {"source": "04.Construction\\Foreground\\js\\api\\", "target": "99.Foreground\\js\\api\\", "workspace": "WebContent\\js\\api\\"},
-    {"source": "04.Construction\\Foreground\\js\\condition\\", "target": "99.Foreground\\js\\condition\\", "workspace": "WebContent\\js\\condition\\"},
+    {"source": "04.Construction\\Foreground\\js\\api\\", "target": "99.Foreground\\js\\api\\", "workspace": "WebContent\\js\\api\\", "files": ["construction.js"]},
+    {"source": "04.Construction\\Foreground\\js\\condition\\", "target": "99.Foreground\\js\\condition\\", "workspace": "WebContent\\js\\condition\\", "files": ["construction.js"]},
     {"source": "04.Construction\\Foreground\\js\\construction\\", "target": "99.Foreground\\js\\construction\\", "workspace": "WebContent\\js\\construction\\"},
-    {"source": "04.Construction\\Foreground\\ds\\", "target": "99.Foreground\\ds\\", "workspace": "WebContent\\ds\\"},
+    {"source": "04.Construction\\Foreground\\ds\\", "target": "99.Foreground\\ds\\", "workspace": "WebContent\\ds\\", "files": ["construction.json"]},
     {"source": "04.Construction\\Foreground\\views\\", "target": "99.Foreground\\views\\construction\\", "workspace": "WebContent\\views\\construction\\"},
     {"source": "04.Construction\\Background\\construction\\", "target": "src\\com\\fanglin\\construction\\"},
 
-    {"source": "05.Information\\Foreground\\js\\api\\", "target": "99.Foreground\\js\\api\\", "workspace": "WebContent\\js\\api\\"},
-    {"source": "05.Information\\Foreground\\js\\condition\\", "target": "99.Foreground\\js\\condition\\", "workspace": "WebContent\\js\\condition\\"},
+    {"source": "05.Information\\Foreground\\js\\api\\", "target": "99.Foreground\\js\\api\\", "workspace": "WebContent\\js\\api\\", "files": ["information.js"]},
+    {"source": "05.Information\\Foreground\\js\\condition\\", "target": "99.Foreground\\js\\condition\\", "workspace": "WebContent\\js\\condition\\", "files": ["information.js"]},
     {"source": "05.Information\\Foreground\\js\\information\\", "target": "99.Foreground\\js\\information\\", "workspace": "WebContent\\js\\information\\"},
-    {"source": "05.Information\\Foreground\\ds\\", "target": "99.Foreground\\ds\\", "workspace": "WebContent\\ds\\"},
+    {"source": "05.Information\\Foreground\\ds\\", "target": "99.Foreground\\ds\\", "workspace": "WebContent\\ds\\", "files": ["information.json"]},
     {"source": "05.Information\\Foreground\\views", "target": "99.Foreground\\views\\information", "workspace": "WebContent\\views\\information"},
     {"source": "05.Information\\Background\\", "target": "src\\com\\fanglin\\information\\"},
 
-    {"source": "07.Data\\Foreground\\js\\api\\", "target": "99.Foreground\\js\\api\\", "workspace": "WebContent\\js\\api\\"},
-    {"source": "07.Data\\Foreground\\js\\condition\\", "target": "99.Foreground\\js\\condition", "workspace": "WebContent\\js\\condition\\"},
+    {"source": "07.Data\\Foreground\\js\\api\\", "target": "99.Foreground\\js\\api\\", "workspace": "WebContent\\js\\api\\", "files": ["data.js"]},
+    {"source": "07.Data\\Foreground\\js\\condition\\", "target": "99.Foreground\\js\\condition", "workspace": "WebContent\\js\\condition\\", "files": ["data.js"]},
     {"source": "07.Data\\Foreground\\js\\data", "target": "99.Foreground\\js\\data\\", "workspace": "WebContent\\js\\data\\"},
-    {"source": "07.Data\\Foreground\\ds\\", "target": "99.Foreground\\ds\\", "workspace": "WebContent\\ds\\"},
+    {"source": "07.Data\\Foreground\\ds\\", "target": "99.Foreground\\ds\\", "workspace": "WebContent\\ds\\", "files": ["data.json"]},
     {"source": "07.Data\\Foreground\\views\\", "target": "99.Foreground\\views\\data", "workspace": "WebContent\\views\\data\\"},
     {"source": "07.Data\\Background\\data\\", "target": "src\\com\\fanglin\\data\\"},
 
-    {"source": "08.Inventory\\Foreground\\js\\api\\", "target": "99.Foreground\\js\\api\\", "workspace": "WebContent\\js\\api\\"},
-    {"source": "08.Inventory\\Foreground\\js\\condition\\", "target": "99.Foreground\\js\\condition\\", "workspace": "WebContent\\js\\condition\\"},
+    {"source": "08.Inventory\\Foreground\\js\\api\\", "target": "99.Foreground\\js\\api\\", "workspace": "WebContent\\js\\api\\", "files": ["inventory.js"]},
+    {"source": "08.Inventory\\Foreground\\js\\condition\\", "target": "99.Foreground\\js\\condition\\", "workspace": "WebContent\\js\\condition\\", "files": ["inventory.js"]},
     {"source": "08.Inventory\\Foreground\\js\\manifest\\", "target": "99.Foreground\\js\\manifest\\", "workspace": "WebContent\\js\\manifest\\"},
-    {"source": "08.Inventory\\Foreground\\ds\\", "target": "99.Foreground\\ds\\", "workspace": "WebContent\\ds\\"},
+    {"source": "08.Inventory\\Foreground\\ds\\", "target": "99.Foreground\\ds\\", "workspace": "WebContent\\ds\\", "files": ["manifest.json"]},
     {"source": "08.Inventory\\Foreground\\views\\manifest\\", "target": "99.Foreground\\views\\manifest\\", "workspace": "WebContent\\views\\manifest\\"},
     {"source": "08.Inventory\\Background\\", "target": "src\\com\\fanglin\\inventory\\"},
 
-    {"source": "09.Approval\\Foreground\\js\\api\\", "target": "99.Foreground\\js\\api\\", "workspace": "WebContent\\js\\api\\"},
-    {"source": "09.Approval\\Foreground\\js\\condition\\", "target": "99.Foreground\\js\\condition\\", "workspace": "WebContent\\js\\condition\\"},
+    {"source": "09.Approval\\Foreground\\js\\api\\", "target": "99.Foreground\\js\\api\\", "workspace": "WebContent\\js\\api\\", "files": ["approval.js"]},
+    {"source": "09.Approval\\Foreground\\js\\condition\\", "target": "99.Foreground\\js\\condition\\", "workspace": "WebContent\\js\\condition\\", "files": ["approval.js"]},
     {"source": "09.Approval\\Foreground\\js\\approval\\", "target": "99.Foreground\\js\\approval\\", "workspace": "WebContent\\js\\approval\\"},
-    {"source": "09.Approval\\Foreground\\js\\utils\\", "target": "99.Foreground\\js\\utils\\", "workspace": "WebContent\\js\\utils\\"},
-    {"source": "09.Approval\\Foreground\\ds\\", "target": "99.Foreground\\ds\\", "workspace": "WebContent\\ds\\"},
+    {"source": "09.Approval\\Foreground\\js\\utils\\", "target": "99.Foreground\\js\\utils\\", "workspace": "WebContent\\js\\utils\\", "files": ["approvalUtils.js"]},
+    {"source": "09.Approval\\Foreground\\ds\\", "target": "99.Foreground\\ds\\", "workspace": "WebContent\\ds\\", "files": ["approval.json"]},
     {"source": "09.Approval\\Foreground\\views\\", "target": "99.Foreground\\views\\approval\\", "workspace": "WebContent\\views\\approval\\"},
     {"source": "09.Approval\\Background\\", "target": "src\\com\\fanglin\\approval\\"},
 
-    {"source": "10.Salary\\Foreground\\js\\api\\", "target": "99.Foreground\\js\\api\\", "workspace": "WebContent\\js\\api\\"},
-    {"source": "10.Salary\\Foreground\\js\\condition\\", "target": "99.Foreground\\js\\condition\\", "workspace": "WebContent\\js\\condition\\"},
+    {"source": "10.Salary\\Foreground\\js\\api\\", "target": "99.Foreground\\js\\api\\", "workspace": "WebContent\\js\\api\\", "files": ["salary.js"]},
+    {"source": "10.Salary\\Foreground\\js\\condition\\", "target": "99.Foreground\\js\\condition\\", "workspace": "WebContent\\js\\condition\\", "files": ["salary.js"]},
     {"source": "10.Salary\\Foreground\\js\\salary\\", "target": "99.Foreground\\js\\salary\\", "workspace": "WebContent\\js\\salary\\"},
-    {"source": "10.Salary\\Foreground\\ds\\", "target": "99.Foreground\\ds\\", "workspace": "WebContent\\ds\\"},
+    {"source": "10.Salary\\Foreground\\ds\\", "target": "99.Foreground\\ds\\", "workspace": "WebContent\\ds\\", "files": ["salary.json"]},
     {"source": "10.Salary\\Foreground\\views\\", "target": "99.Foreground\\views\\salary\\", "workspace": "WebContent\\views\\salary\\"},
     {"source": "10.Salary\\Background\\salary\\", "target": "src\\com\\fanglin\\salary\\"},
 
-    {"source": "11.Payment\\Foreground\\js\\api\\", "target": "99.Foreground\\js\\api\\", "workspace": "WebContent\\js\\api\\"},
-    {"source": "11.Payment\\Foreground\\js\\condition\\", "target": "99.Foreground\\js\\condition\\", "workspace": "WebContent\\js\\condition\\"},
+    {"source": "11.Payment\\Foreground\\js\\api\\", "target": "99.Foreground\\js\\api\\", "workspace": "WebContent\\js\\api\\", "files": ["payment.js"]},
+    {"source": "11.Payment\\Foreground\\js\\condition\\", "target": "99.Foreground\\js\\condition\\", "workspace": "WebContent\\js\\condition\\", "files": ["payment.js"]},
     {"source": "11.Payment\\Foreground\\js\\payment\\", "target": "99.Foreground\\js\\payment\\", "workspace": "WebContent\\js\\payment\\"},
-    {"source": "11.Payment\\Foreground\\js\\utils\\", "target": "99.Foreground\\js\\utils", "workspace": "WebContent\\js\\utils\\"},
-    {"source": "11.Payment\\Foreground\\ds\\", "target": "99.Foreground\\ds\\", "workspace": "WebContent\\ds\\"},
+    {"source": "11.Payment\\Foreground\\js\\utils\\", "target": "99.Foreground\\js\\utils", "workspace": "WebContent\\js\\utils\\", "files": ["paymentUtils.js"]},
+    {"source": "11.Payment\\Foreground\\ds\\", "target": "99.Foreground\\ds\\", "workspace": "WebContent\\ds\\", "files": ["payment.json"]},
     {"source": "11.Payment\\Foreground\\views\\payment\\", "target": "99.Foreground\\views\\payment\\", "workspace": "WebContent\\views\\payment\\"},
     {"source": "11.Payment\\Background\\payment\\", "target": "src\\com\\fanglin\\payment\\"},
 
-    {"source": "12.Personnel\\Foreground\\js\\api\\", "target": "99.Foreground\\js\\api\\", "workspace": "WebContent\\js\\api\\"},
-    {"source": "12.Personnel\\Foreground\\js\\condition\\", "target": "99.Foreground\\js\\condition\\", "workspace": "WebContent\\js\\condition\\"},
-    {"source": "12.Personnel\\Foreground\\js\\personel\\", "target": "99.Foreground\\js\\personnel\\", "workspace": "WebContent\\js\\personnel\\"},
-    {"source": "12.Personnel\\Foreground\\js\\contract\\", "target": "99.Foreground\\js\\contract", "workspace": "WebContent\\js\\contract\\"},
-    {"source": "12.Personnel\\Foreground\\js\\utils\\", "target": "99.Foreground\\js\\utils\\", "workspace": "WebContent\\js\\utils\\"},
-    {"source": "12.Personnel\\Foreground\\ds\\", "target": "99.Foreground\\ds\\", "workspace": "WebContent\\ds\\"},
+    {"source": "12.Personnel\\Foreground\\js\\api\\", "target": "99.Foreground\\js\\api\\", "workspace": "WebContent\\js\\api\\", "files": ["personel.js"]},
+    {"source": "12.Personnel\\Foreground\\js\\condition\\", "target": "99.Foreground\\js\\condition\\", "workspace": "WebContent\\js\\condition\\", "files": ["personel.js"]},
+    {"source": "12.Personnel\\Foreground\\js\\personel\\", "target": "99.Foreground\\js\\personel\\", "workspace": "WebContent\\js\\personel\\"},
+    {"source": "12.Personnel\\Foreground\\js\\contract\\", "target": "99.Foreground\\js\\contract", "workspace": "WebContent\\js\\contract\\", "files": ["contract.js"]},
+    {"source": "12.Personnel\\Foreground\\js\\utils\\", "target": "99.Foreground\\js\\utils\\", "workspace": "WebContent\\js\\utils\\", "files": ["userUtils.js"]},
+    {"source": "12.Personnel\\Foreground\\ds\\", "target": "99.Foreground\\ds\\", "workspace": "WebContent\\ds\\", "files": ["personel.json"]},
     {"source": "12.Personnel\\Foreground\\views\\personel\\", "target": "99.Foreground\\views\\personnel", "workspace": "WebContent\\views\\personnel"},
     {"source": "12.Personnel\\Foreground\\views\\contract\\", "target": "99.Foreground\\views\\contract\\", "workspace": "WebContent\\views\\contract\\"},
     {"source": "12.Personnel\\Background\\personel\\", "target": "src\\com\\fanglin\\personel\\"},
@@ -148,11 +156,11 @@ infos = [
 
     {"source": "15.Right\\Background\\", "target": "src\\com\\fanglin\\right\\"},
 
-    {"source": "16.Production\\Foreground\\js\\api\\", "target": "99.Foreground\\js\\api\\", "workspace": "WebContent\\js\\api\\"},
-    {"source": "16.Production\\Foreground\\js\\condition\\", "target": "99.Foreground\\js\\condition\\", "workspace": "WebContent\\js\\condition\\"},
+    {"source": "16.Production\\Foreground\\js\\api\\", "target": "99.Foreground\\js\\api\\", "workspace": "WebContent\\js\\api\\", "files": ["production.js"]},
+    {"source": "16.Production\\Foreground\\js\\condition\\", "target": "99.Foreground\\js\\condition\\", "workspace": "WebContent\\js\\condition\\", "files": ["production.js"]},
     {"source": "16.Production\\Foreground\\js\\production\\", "target": "99.Foreground\\js\\production\\", "workspace": "WebContent\\js\\production\\"},
-    {"source": "16.Production\\Foreground\\js\\utils\\", "target": "99.Foreground\\js\\utils", "workspace": "WebContent\\js\\utils"},
-    {"source": "16.Production\\Foreground\\ds\\", "target": "99.Foreground\\ds\\", "workspace": "WebContent\\ds\\"},
+    {"source": "16.Production\\Foreground\\js\\utils\\", "target": "99.Foreground\\js\\utils", "workspace": "WebContent\\js\\utils", "files": ["productionUtils.js", "productionPageUtils.js"]},
+    {"source": "16.Production\\Foreground\\ds\\", "target": "99.Foreground\\ds\\", "workspace": "WebContent\\ds\\", "files": ["production.json"]},
     {"source": "16.Production\\Foreground\\views\\", "target": "99.Foreground\\views\\production\\", "workspace": "WebContent\\views\\production\\"},
     {"source": "16.Production\\Background\\", "target": "src\\com\\fanglin\\production\\"},
 
@@ -160,62 +168,62 @@ infos = [
 
     {"source": "18.Export\\Background\\", "target": "src\\com\\fanglin\\exports\\"},
 
-    {"source": "19.System\\Foreground\\js\\api\\", "target": "99.Foreground\\js\\api\\", "workspace": "WebContent\\js\\api\\"},
-    {"source": "19.System\\Foreground\\js\\condition\\", "target": "99.Foreground\\js\\condition\\", "workspace": "WebContent\\js\\condition\\"},
+    {"source": "19.System\\Foreground\\js\\api\\", "target": "99.Foreground\\js\\api\\", "workspace": "WebContent\\js\\api\\", "files": ["system.js"]},
+    {"source": "19.System\\Foreground\\js\\condition\\", "target": "99.Foreground\\js\\condition\\", "workspace": "WebContent\\js\\condition\\", "files": ["system.js"]},
     {"source": "19.System\\Foreground\\js\\system\\", "target": "99.Foreground\\js\\system\\", "workspace": "WebContent\\js\\system\\"},
-    {"source": "19.System\\Foreground\\ds\\", "target": "99.Foreground\\ds\\", "workspace": "WebContent\\ds\\"},
+    {"source": "19.System\\Foreground\\ds\\", "target": "99.Foreground\\ds\\", "workspace": "WebContent\\ds\\", "files": ["system.json"]},
     {"source": "19.System\\Foreground\\views\\", "target": "99.Foreground\\views\\system", "workspace": "WebContent\\views\\system\\"},
     {"source": "19.System\\Background\\", "target": "src\\com\\fanglin\\system\\"},
 
     {"source": "20.Building\\Foreground\\js\\building\\", "target": "99.Foreground\\js\\building", "workspace": "WebContent\\js\\building\\"},
-    {"source": "20.Building\\Foreground\\js\\api\\", "target": "99.Foreground\\js\\api", "workspace": "WebContent\\js\\api\\"},
-    {"source": "20.Building\\Foreground\\js\\condition", "target": "99.Foreground\\js\\condition", "workspace": "WebContent\\js\\condition\\"},
-    {"source": "20.Building\\Foreground\\ds\\", "target": "99.Foreground\\ds\\", "workspace": "WebContent\\ds\\"},
+    {"source": "20.Building\\Foreground\\js\\api\\", "target": "99.Foreground\\js\\api", "workspace": "WebContent\\js\\api\\", "files": ["building.js"]},
+    {"source": "20.Building\\Foreground\\js\\condition", "target": "99.Foreground\\js\\condition", "workspace": "WebContent\\js\\condition\\", "files": ["building.js"]},
+    {"source": "20.Building\\Foreground\\ds\\", "target": "99.Foreground\\ds\\", "workspace": "WebContent\\ds\\", "files": ["building.json"]},
     {"source": "20.Building\\Foreground\\views\\building", "target": "99.Foreground\\views\\building", "workspace": "WebContent\\views\\building"},
     {"source": "20.Building\\Background\\building", "target": "src\\com\\fanglin\\building\\"},
 
-    {"source": "21.Sales\\Foreground\\js\\api\\", "target": "99.Foreground\\js\\api\\", "workspace": "WebContent\\js\\api\\"},
-    {"source": "21.Sales\\Foreground\\js\\condition\\", "target": "99.Foreground\\js\\condition\\", "workspace": "WebContent\\js\\condition\\"},
+    {"source": "21.Sales\\Foreground\\js\\api\\", "target": "99.Foreground\\js\\api\\", "workspace": "WebContent\\js\\api\\", "files": ["sales.js"]},
+    {"source": "21.Sales\\Foreground\\js\\condition\\", "target": "99.Foreground\\js\\condition\\", "workspace": "WebContent\\js\\condition\\", "files": ["sales.js"]},
     {"source": "21.Sales\\Foreground\\js\\sales\\", "target": "99.Foreground\\js\\sales\\", "workspace": "WebContent\\js\\sales\\"},
-    {"source": "21.Sales\\Foreground\\js\\utils\\", "target": "99.Foreground\\js\\utils\\", "workspace": "WebContent\\js\\utils\\"},
-    {"source": "21.Sales\\Foreground\\ds\\", "target": "99.Foreground\\ds\\", "workspace": "WebContent\\ds\\"},
+    {"source": "21.Sales\\Foreground\\js\\utils\\", "target": "99.Foreground\\js\\utils\\", "workspace": "WebContent\\js\\utils\\", "files": ["salesUtils.js", "salesPageUtils.js"]},
+    {"source": "21.Sales\\Foreground\\ds\\", "target": "99.Foreground\\ds\\", "workspace": "WebContent\\ds\\", "files": ["sales.json"]},
     {"source": "21.Sales\\Foreground\\views\\sales\\", "target": "99.Foreground\\views\\sales", "workspace": "WebContent\\views\\sales\\"},
     {"source": "21.Sales\\Background\\", "target": "src\\com\\fanglin\\sales\\"},
 
-    {"source": "22.Report\\Foreground\\js\\api\\", "target": "99.Foreground\\js\\api\\", "workspace": "WebContent\\js\\api\\"},
-    {"source": "22.Report\\Foreground\\js\\condition\\", "target": "99.Foreground\\js\\condition\\", "workspace": "WebContent\\js\\condition\\"},
+    {"source": "22.Report\\Foreground\\js\\api\\", "target": "99.Foreground\\js\\api\\", "workspace": "WebContent\\js\\api\\", "files": ["report.js"]},
+    {"source": "22.Report\\Foreground\\js\\condition\\", "target": "99.Foreground\\js\\condition\\", "workspace": "WebContent\\js\\condition\\", "files": ["report.js"]},
     {"source": "22.Report\\Foreground\\js\\report\\", "target": "99.Foreground\\js\\report\\", "workspace": "WebContent\\js\\report\\"},
-    {"source": "22.Report\\Foreground\\ds\\", "target": "99.Foreground\\ds\\", "workspace": "WebContent\\ds\\"},
+    {"source": "22.Report\\Foreground\\ds\\", "target": "99.Foreground\\ds\\", "workspace": "WebContent\\ds\\", "files": ["report.json"]},
     {"source": "22.Report\\Foreground\\views\\", "target": "99.Foreground\\views\\report\\", "workspace": "WebContent\\views\\report\\"},
     {"source": "22.Report\\Background\\", "target": "src\\com\\fanglin\\report\\"},
 
     {"source": "23.Communion\\Background\\communion\\", "target": "src\\com\\fanglin\\communion\\"},
 
-    {"source": "24.Store\\Foreground\\js\\api\\", "target": "99.Foreground\\js\\api\\", "workspace": "WebContent\\js\\api\\"},
-    {"source": "24.Store\\Foreground\\js\\condition\\", "target": "99.Foreground\\js\\condition\\", "workspace": "WebContent\\js\\condition\\"},
+    {"source": "24.Store\\Foreground\\js\\api\\", "target": "99.Foreground\\js\\api\\", "workspace": "WebContent\\js\\api\\", "files": ["store.js"]},
+    {"source": "24.Store\\Foreground\\js\\condition\\", "target": "99.Foreground\\js\\condition\\", "workspace": "WebContent\\js\\condition\\", "files": ["store.js"]},
     {"source": "24.Store\\Foreground\\js\\store\\", "target": "99.Foreground\\js\\store\\", "workspace": "WebContent\\js\\store\\"},
-    {"source": "24.Store\\Foreground\\ds\\", "target": "99.Foreground\\ds\\", "workspace": "WebContent\\ds\\"},
+    {"source": "24.Store\\Foreground\\ds\\", "target": "99.Foreground\\ds\\", "workspace": "WebContent\\ds\\", "files": ["store.json"]},
     {"source": "24.Store\\Foreground\\views\\store\\", "target": "99.Foreground\\views\\store\\", "workspace": "WebContent\\views\\store\\"},
     {"source": "24.Store\\Background\\store\\", "target": "src\\com\\fanglin\\store\\"},
 
     {"source": "25.Customer\\Foreground\\js\\customer\\", "target": "99.Foreground\\js\\customer\\", "workspace": "WebContent\\js\\customer\\"},
-    {"source": "25.Customer\\Foreground\\js\\api\\", "target": "99.Foreground\\js\\api\\", "workspace": "WebContent\\js\\api\\"},
-    {"source": "25.Customer\\Foreground\\js\\condition\\", "target": "99.Foreground\\js\\condition\\", "workspace": "WebContent\\js\\condition\\"},
-    {"source": "25.Customer\\Foreground\\ds\\", "target": "99.Foreground\\ds\\", "workspace": "WebContent\\ds\\"},
+    {"source": "25.Customer\\Foreground\\js\\api\\", "target": "99.Foreground\\js\\api\\", "workspace": "WebContent\\js\\api\\", "files": ["customer.js"]},
+    {"source": "25.Customer\\Foreground\\js\\condition\\", "target": "99.Foreground\\js\\condition\\", "workspace": "WebContent\\js\\condition\\", "files": ["customer.js"]},
+    {"source": "25.Customer\\Foreground\\ds\\", "target": "99.Foreground\\ds\\", "workspace": "WebContent\\ds\\", "files": ["customer.json"]},
     {"source": "25.Customer\\Foreground\\views\\customer\\", "target": "99.Foreground\\views\\customer\\", "workspace": "WebContent\\views\\customer\\"},
     {"source": "25.Customer\\Background\\", "target": "src\\com\\fanglin\\customer\\"},
 
-    {"source": "26.Market\\Foreground\\js\\api\\", "target": "99.Foreground\\js\\api\\", "workspace": "WebContent\\js\\api\\"},
-    {"source": "26.Market\\Foreground\\js\\condition\\", "target": "99.Foreground\\js\\condition\\", "workspace": "WebContent\\js\\condition\\"},
+    {"source": "26.Market\\Foreground\\js\\api\\", "target": "99.Foreground\\js\\api\\", "workspace": "WebContent\\js\\api\\", "files": ["market.js"]},
+    {"source": "26.Market\\Foreground\\js\\condition\\", "target": "99.Foreground\\js\\condition\\", "workspace": "WebContent\\js\\condition\\", "files": ["market.js"]},
     {"source": "26.Market\\Foreground\\js\\market", "target": "99.Foreground\\js\\market", "workspace": "WebContent\\js\\market"},
-    {"source": "26.Market\\Foreground\\ds\\", "target": "99.Foreground\\ds\\", "workspace": "WebContent\\ds\\"},
+    {"source": "26.Market\\Foreground\\ds\\", "target": "99.Foreground\\ds\\", "workspace": "WebContent\\ds\\", "files": ["market.json"]},
     {"source": "26.Market\\Foreground\\views\\market", "target": "99.Foreground\\views\\market", "workspace": "WebContent\\views\\market"},
     {"source": "26.Market\\Background\\market", "target": "src\\com\\fanglin\\market\\"},
 
     {"source": "27.Balance\\Foreground\\js\\balance\\", "target": "99.Foreground\\js\\balance\\", "workspace": "WebContent\\js\\balance\\"},
-    {"source": "27.Balance\\Foreground\\js\\api\\", "target": "99.Foreground\\js\\api\\", "workspace": "WebContent\\js\\api\\"},
-    {"source": "27.Balance\\Foreground\\js\\condition\\", "target": "99.Foreground\\js\\condition\\", "workspace": "WebContent\\js\\condition\\"},
-    {"source": "27.Balance\\Foreground\\ds\\", "target": "99.Foreground\\ds\\", "workspace": "WebContent\\ds\\"},
+    {"source": "27.Balance\\Foreground\\js\\api\\", "target": "99.Foreground\\js\\api\\", "workspace": "WebContent\\js\\api\\", "files": ["balance.js"]},
+    {"source": "27.Balance\\Foreground\\js\\condition\\", "target": "99.Foreground\\js\\condition\\", "workspace": "WebContent\\js\\condition\\", "files": ["balance.js"]},
+    {"source": "27.Balance\\Foreground\\ds\\", "target": "99.Foreground\\ds\\", "workspace": "WebContent\\ds\\", "files": ["balance.json"]},
     {"source": "27.Balance\\Foreground\\views\\balance\\", "target": "99.Foreground\\views\\balance\\", "workspace": "WebContent\\views\\balance\\"},
     {"source": "27.Balance\\Background\\balance\\", "target": "src\\com\\fanglin\\balance\\"},
 
@@ -426,6 +434,16 @@ def resolve_pairs(relpath, direction):
                 relative = _strip_prefix_case(relpath, target)
                 if relative == "":
                     continue
+
+                # 共享目录(condition/api/utils)按文件名归属模块:
+                # 若 info 声明了 files 白名单,且当前文件不在白名单内,跳过该 info。
+                # 避免 Athena 各模块目录下残留的同名旧文件互相覆盖 workspace。
+                files = info.get("files")
+                if files:
+                    rel_first = relative.split("/")[0].lstrip("\\").strip()
+                    if rel_first not in files:
+                        continue
+
                 ath_src = source if source else target
                 from_abs = os.path.join(path, to_ospath(ath_src), to_ospath(relative))
                 to_abs = os.path.join(workspace, to_ospath(ws_side), to_ospath(relative))
@@ -438,6 +456,16 @@ def resolve_pairs(relpath, direction):
             relative = _strip_prefix_case(relpath, ws_side)
             if relative == "":
                 continue
+
+            # 共享目录(condition/api/utils)按文件名归属模块:
+            # 若 info 声明了 files 白名单,且当前文件不在白名单内,跳过该 info。
+            # 避免一个模块的文件被回写到所有声明了同共享目录的模块。
+            files = info.get("files")
+            if files:
+                rel_first = relative.split("/")[0].lstrip("\\").strip()
+                if rel_first not in files:
+                    continue
+
             from_abs = os.path.join(workspace, to_ospath(ws_side), to_ospath(relative))
 
             if is_direct:
