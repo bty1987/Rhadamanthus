@@ -33,8 +33,12 @@ public class LoginLogDaoImpl extends DaoImpl<LoginLogPO> implements LoginLogDao 
 	@Override
 	public void delteBeforLoginTime(Timestamp beforeTime) {
 
-		Query query = session().createQuery("delete LoginLogPO l where l.loginTime=?");
-		query.setTimestamp(0, beforeTime);
+		// Phase 4.4 修复：原代码漏写 executeUpdate()，删除语句从未执行，
+		// 导致 loginLog 表的 30 天清理从未生效（recordLoginLogDay 配置形同虚设）。
+		// 现补上 executeUpdate()，使 HQL delete 真正提交到数据库。
+		Query query = session().createQuery("delete LoginLogPO l where l.loginTime < :beforeTime");
+		query.setTimestamp("beforeTime", beforeTime);
+		query.executeUpdate();
 	}
 
 	@Override

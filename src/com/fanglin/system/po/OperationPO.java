@@ -33,6 +33,18 @@ public class OperationPO implements java.io.Serializable {
 
 	public static final short THROUGH_COMMUNION_INT = 4;
 
+	// ===== Phase 5: 日志记录策略常量 =====
+	/** 永不记录：心跳/健康检查/日志自身产生的接口 */
+	public static final short LOGFLAG_NONE_INT = 0;
+
+	/** 始终记录：覆盖 skipQuery，如敏感数据查询 queryCustomerByPhone */
+	public static final short LOGFLAG_ALWAYS_INT = 1;
+
+	/** 自动：走全局 skipQuery 规则（默认值，存量兼容） */
+	public static final short LOGFLAG_AUTO_INT = 2;
+
+	public static final String COLUMN_LOGFLAG_STR = "logFlag";
+
 	private int oid;
 
 	private ModulePO module;
@@ -48,6 +60,8 @@ public class OperationPO implements java.io.Serializable {
 	private short through;
 
 	private short type;
+
+	private short logFlag = LOGFLAG_AUTO_INT;
 
 	public OperationPO() {
 		super();
@@ -136,6 +150,15 @@ public class OperationPO implements java.io.Serializable {
 
 	public void setType(short type) {
 		this.type = type;
+	}
+
+	@Column(name = "logFlag")
+	public short getLogFlag() {
+		return logFlag;
+	}
+
+	public void setLogFlag(short logFlag) {
+		this.logFlag = logFlag;
 	}
 
 }

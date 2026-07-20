@@ -2,19 +2,22 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:context="http://www.springframework.org/schema/context"
 	xmlns:p="http://www.springframework.org/schema/p" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:task="http://www.springframework.org/schema/task"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xmlns:mongo="http://www.springframework.org/schema/data/mongo"  
-	xsi:schemaLocation="http://www.springframework.org/schema/beans 
-	http://www.springframework.org/schema/beans/spring-beans.xsd  
-   http://www.springframework.org/schema/context 
-   http://www.springframework.org/schema/context/spring-context.xsd  
-   http://www.springframework.org/schema/aop 
-   http://www.springframework.org/schema/aop/spring-aop.xsd  
-   http://www.springframework.org/schema/tx 
-   http://www.springframework.org/schema/tx/spring-tx.xsd 
-   http://www.springframework.org/schema/data/mongo  
-   http://www.springframework.org/schema/data/mongo/spring-mongo.xsd 
-   http://www.springframework.org/schema/data/repository 
+	xmlns:mongo="http://www.springframework.org/schema/data/mongo"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans.xsd
+   http://www.springframework.org/schema/context
+   http://www.springframework.org/schema/context/spring-context.xsd
+   http://www.springframework.org/schema/aop
+   http://www.springframework.org/schema/aop/spring-aop.xsd
+   http://www.springframework.org/schema/tx
+   http://www.springframework.org/schema/tx/spring-tx.xsd
+   http://www.springframework.org/schema/task
+   http://www.springframework.org/schema/task/spring-task.xsd
+   http://www.springframework.org/schema/data/mongo
+   http://www.springframework.org/schema/data/mongo/spring-mongo.xsd
+   http://www.springframework.org/schema/data/repository
    http://www.springframework.org/schema/data/repository/spring-repository-1.8.xsd"
 	default-autowire="byName">
 
@@ -82,8 +85,11 @@
         </property>
     </bean>
 
-    <tx:annotation-driven transaction-manager="txManager" proxy-target-class="true" />
-	
+	<tx:annotation-driven transaction-manager="txManager" proxy-target-class="true" />
+
+	<!-- Phase 4: 启用 Spring 调度，支持 @Scheduled 注解（项目首次引入） -->
+	<task:annotation-driven />
+
 	<!-- 自动扫描所有注解该路径 -->
 	<context:component-scan base-package="com.fanglin" />
 

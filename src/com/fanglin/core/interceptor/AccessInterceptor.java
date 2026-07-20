@@ -76,10 +76,17 @@ public class AccessInterceptor extends AbstractInterceptor {
 		long startTime = System.currentTimeMillis();
 		Authentication authenticationRef = null; // 解密后的 Authentication 引用，供 recorder 使用
 		Throwable caughtException = null;        // 拦截器捕获的异常（用于区分 fail/error）
+		// Phase 5: operation.logFlag 引用，用数组包装以便在 try 块内赋值、finally 块内读取
+		// （Java 的 final 局部变量约束：lambda/匿名类要求，这里只是普通局部变量也不影响）
+		Short[] logFlagHolder = new Short[]{ null };
 
 			try {
 
 				OperationVO operationVO = operationService.checkOperation(new OperationVO(actionName));
+
+				// Phase 5: 把 operation 的 logFlag 记录下来，供 finally 块 recorder 判断用
+				// 通过引用捕获（在 finally 块里读取，避免与 operationVO 的作用域冲突）
+				logFlagHolder[0] = operationVO != null ? operationVO.getLogFlag() : null;
 
 				if (operationVO.getThrough() != null && operationVO.getThrough() == OperationPO.THROUGH_PASS_INT) {
 					invocation.invoke();
@@ -224,7 +231,8 @@ public class AccessInterceptor extends AbstractInterceptor {
 					long endTime = System.currentTimeMillis();
 					Object errCode = stack.findValue("errorCode");
 					Object errMsg = stack.findValue("errorMsg");
-					recorder().record(request, actionName, authenticationRef, startTime, endTime, errCode, errMsg, caughtException);
+					// Phase 5: 把 operation.logFlag 传给 recorder，由它按优先级链判断是否记录
+					recorder().record(request, actionName, authenticationRef, startTime, endTime, errCode, errMsg, caughtException, logFlagHolder[0]);
 				} catch (Throwable t) {
 					logger.error("[actionLog] intercept record failed action={}", actionName, t);
 				}
