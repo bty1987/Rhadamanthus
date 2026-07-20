@@ -6,5 +6,7 @@ $.extend(api.index, {
 
 $.extend(api, {log: {
     pageActionLog: {url: "pageActionLog.do"},
+    pageActionLogWithHistory: {url: "pageActionLogWithHistory.do"},
     pageLoginLog: {url: "pageLoginLog.do", demo: true}
 }});
+

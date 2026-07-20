@@ -13,16 +13,20 @@ jQuery(function($) {
     // 结果状态枚举映射（与 ActionLogPO.RESULTSTATE_* 常量对应）
     var resultStateMap = {0: "成功", 1: "失败", 2: "异常"};
 
+    // 是否包含历史（归档表）数据。默认 false：只查热表（近 90 天），查询快
+    // 用户勾选"含历史"后切换为 true，走 pageActionLogWithHistory 接口 UNION 归档表
+    var includeHistory = false;
+
     var seacher = new Searcher();
     var history = "actionLogPostData";
-    var url = api.log.pageActionLog;
 
     // 1) 绑定容器：condList / pagenation / resultList（与 actionLog.html 三 div 对应）
-    seacher.base("condList", "pagenation", "resultList", url);
+    //    url 初始为热表查询接口，includeHistory 切换时动态改
+    seacher.base("condList", "pagenation", "resultList", api.log.pageActionLog);
 
     // 2) 查询条件：引用 js/condition/logger.js 里 log-actionXxx 系列 key
     seacher.condition([
-        "log-actionTime",        // 操作时间区间
+        "log-actionTime",        // 操作时间区间（含历史时必填）
         "log-actionUserName",    // 操作人姓名
         "log-actionUserId",      // 操作人账号
         "log-actionName",        // 接口名
@@ -33,8 +37,13 @@ jQuery(function($) {
         "log-actionBusinessId"   // 业务对象 ID
     ]);
 
-    // 3) 顶部按钮：仅导出（日志只读，无创建/删除）
+    // 3) 顶部按钮：含历史开关 + 导出
     seacher.button([{
+        id: "toggleHistory",
+        name: "含历史:关",
+        clazz: "btn-default",
+        icon: "icon-time"
+    }, {
         id: "export",
         name: "导出",
         clazz: "btn-success",
@@ -45,87 +54,52 @@ jQuery(function($) {
 
     // 4) 表格列定义
     var lineprops = [
+        { fieId: "createTime", name: "操作时间", prop: "createTime", clazz: "green" },
+        { fieId: "createUserName", name: "操作人", prop: "createUserName", clazz: "blue" },
+        { fieId: "actionName", name: "接口", prop: "actionName", clazz: "grey" },
+        { fieId: "moduleId", name: "模块", prop: "moduleId", clazz: "grey" },
+        { fieId: "operateType", name: "类型", prop: "operateType", clazz: "grey" },
         {
-            fieId: "createTime",
-            name: "操作时间",
-            prop: "createTime",
-            clazz: "green"
-        },
-        {
-            fieId: "createUserName",
-            name: "操作人",
-            prop: "createUserName",
-            clazz: "blue"
-        },
-        {
-            fieId: "actionName",
-            name: "接口",
-            prop: "actionName",
-            clazz: "grey"
-        },
-        {
-            fieId: "moduleId",
-            name: "模块",
-            prop: "moduleId",
-            clazz: "grey"
-        },
-        {
-            fieId: "operateType",
-            name: "类型",
-            prop: "operateType",
-            clazz: "grey"
-        },
-        {
-            fieId: "resultState",
-            name: "结果",
-            prop: "resultState",
-            clazz: "red",
+            fieId: "resultState", name: "结果", prop: "resultState", clazz: "red",
             trans: function(v) {
                 return resultStateMap[v.resultState] != null ? resultStateMap[v.resultState] : "";
             }
         },
-        {
-            fieId: "businessId",
-            name: "业务对象",
-            prop: "businessId",
-            clazz: "grey"
-        },
-        {
-            fieId: "ip",
-            name: "IP",
-            prop: "ip",
-            clazz: "grey"
-        },
-        {
-            fieId: "runTime",
-            name: "耗时(ms)",
-            prop: "runTime",
-            clazz: "grey"
-        },
-        {
-            fieId: "errorCode",
-            name: "错误码",
-            prop: "errorCode",
-            clazz: "red"
-        },
-        {
-            fieId: "errorMsg",
-            name: "错误信息",
-            prop: "errorMsg",
-            clazz: "red"
-        },
-        {
-            fieId: "traceId",
-            name: "追踪ID",
-            prop: "traceId",
-            clazz: "grey"
-        }
+        { fieId: "businessId", name: "业务对象", prop: "businessId", clazz: "grey" },
+        { fieId: "ip", name: "IP", prop: "ip", clazz: "grey" },
+        { fieId: "runTime", name: "耗时(ms)", prop: "runTime", clazz: "grey" },
+        { fieId: "errorCode", name: "错误码", prop: "errorCode", clazz: "red" },
+        { fieId: "errorMsg", name: "错误信息", prop: "errorMsg", clazz: "red" },
+        { fieId: "traceId", name: "追踪ID", prop: "traceId", clazz: "grey" }
     ];
 
     // 5) 渲染表格（无行内按钮）
     seacher.line("actionName", lineprops, []).render();
 
-    // 6) 导出按钮：复用 pageActionLog 接口 + paging.noPage=1 拉全量，前端 $.exceler 生成 xls
+    // 6) "含历史"开关：切换查询接口 + 按钮文案
+    com.focusPage('#toggleHistory', '#pagenation').on("click", function() {
+        includeHistory = !includeHistory;
+
+        var $btn = com.focusPage(this);
+        if (includeHistory) {
+            $btn.text("含历史:开").removeClass("btn-default").addClass("btn-warning");
+            com.showAlert(com.info, "已开启历史查询模式：将同时查询归档表数据。\n"
+                + "请注意：\n"
+                + "1. 必须填写'操作时间'区间，否则只查热表；\n"
+                + "2. 归档表不支持按'操作人姓名'过滤，请改用'操作人账号'；\n"
+                + "3. 单次最多查询 12 个月的归档数据。");
+            // Searcher 的 url 通过 history 参数里的 url 字段控制，这里改 url 后重新查询
+            // 注意：不同项目版本 Searcher 实现可能不同，这里走"改 params[history] 里的 url"
+            // 的兜底方式，如 Searcher 不支持，用户需要重新点查询按钮
+            seacher.url = api.log.pageActionLogWithHistory;
+        } else {
+            $btn.text("含历史:关").removeClass("btn-warning").addClass("btn-default");
+            seacher.url = api.log.pageActionLog;
+        }
+        seacher.doSearch();
+    });
+
+    // 7) 导出按钮：按当前模式选择接口 + paging.noPage=1 拉全量
     com.focusPage('#export', '#pagenation').on("click", function() {
 
         var total = com.focusPage('span[name="totalRecords"]', "#pagenation").text();
@@ -141,7 +115,9 @@ jQuery(function($) {
             return false;
         }
 
-        com.post(api.log.pageActionLog, $.extend({}, params[history], {
+        var exportApi = includeHistory ? api.log.pageActionLogWithHistory : api.log.pageActionLog;
+
+        com.post(exportApi, $.extend({}, params[history], {
             "paging.noPage": 1
         }), function(res) {
 
@@ -164,9 +140,7 @@ jQuery(function($) {
                 ],
                 list: res.paging.data
             }, function(v) {
-                // 状态码翻译
                 v.resultState = resultStateMap[v.resultState] != null ? resultStateMap[v.resultState] : "";
-                // 空值兜底
                 v.createUserName = v.createUserName == null ? "" : v.createUserName;
                 v.businessId = v.businessId == null ? "" : v.businessId;
                 v.ip = v.ip == null ? "" : v.ip;

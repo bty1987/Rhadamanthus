@@ -136,13 +136,150 @@ public class LogServiceImpl implements LogService {
 	public void pageActionLog(Paging paging, List<Filter> filters){
 		List<LogVO> logVOs = new ArrayList<LogVO>();
 		List<ActionLogPO> actionLogPOs = actionLogDao.getPageActionLogPOs(paging, filters);
-		
+
 		for(ActionLogPO actionLogPO: actionLogPOs){
 			LogVO logVO = changeActionLogPOToVO(actionLogPO);
 			logVOs.add(logVO);
 		}
-		
+
 		paging.setData(logVOs);
+	}
+
+	/**
+	 * Phase 4.3: 历史查询（热表 + 归档表 UNION ALL）。
+	 *
+	 * <p>归档表是物理分表，按月命名 actionlog_yyyymm。本方法：
+	 * <ol>
+	 *   <li>从 filters 中提取 createTime 时间范围（必填）；</li>
+	 *   <li>计算涉及的归档月份列表（仅限 cutoffTime 之前、且 actionLog.archiveLookupMaxMonths
+	 *       配置的上限内，防止单次查太多表）；</li>
+	 *   <li>委托 DAO 执行 UNION ALL 查询；</li>
+	 *   <li>PO -> VO 转换；createUserPO 在归档表里可能不存在（被清理），做 null 兜底。</li>
+	 * </ol>
+	 */
+	@Override
+	public void pageActionLogWithHistory(Paging paging, List<Filter> filters){
+		// 1. 提取 createTime 时间范围
+		String[] timeRange = extractCreateTimeRange(filters);
+		if (timeRange == null){
+			// 无时间范围：直接走热表查询（不扫归档表，避免全表扫）
+			pageActionLog(paging, filters);
+			return;
+		}
+
+		// 2. 计算涉及的归档月份列表
+		List<String> archiveMonths = computeArchiveMonths(timeRange[0], timeRange[1]);
+
+		// 3. UNION ALL 查询
+		List<ActionLogPO> actionLogPOs = actionLogDao.getPageActionLogPOsWithHistory(archiveMonths, paging, filters);
+		long total = actionLogDao.countActionLogPOsWithHistory(archiveMonths, filters);
+		paging.setTotalRecords((int) Math.min(total, Integer.MAX_VALUE));
+
+		List<LogVO> logVOs = new ArrayList<LogVO>();
+		for (ActionLogPO po : actionLogPOs){
+			logVOs.add(changeActionLogPOToVOWithHistory(po));
+		}
+		paging.setData(logVOs);
+	}
+
+	/** 从 filters 里提取 createTime between 的 [start, end]。 */
+	private String[] extractCreateTimeRange(List<Filter> filters){
+		if (filters == null) return null;
+		for (Filter f : filters){
+			if (f != null && "createTime".equals(f.getField()) && "between".equals(f.getOp())
+					&& org.apache.commons.lang3.StringUtils.isNotEmpty(f.getData())){
+				String[] parts = f.getData().split(",");
+				if (parts.length == 2) return parts;
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * 根据时间范围计算涉及的归档月份列表。
+	 *
+	 * <p>归档表是"过去某月"的数据，热表是"近 90 天"的。如果用户查的时间范围
+	 * 全部在热表窗口内（如最近 7 天），archiveMonths 为空，UNION 退化为单表查询。
+	 *
+	 * <p>上限约束：最多扫 actionLog.archiveLookupMaxMonths（默认 12）个归档月表，
+	 * 防止恶意大范围查询拖垮 DB。
+	 */
+	private List<String> computeArchiveMonths(String startStr, String endStr){
+		List<String> months = new ArrayList<String>();
+		try {
+			java.util.Calendar start = parseToMonthStart(startStr);
+			java.util.Calendar end = parseToMonthStart(endStr);
+
+			// 热表窗口：now - retentionDays（默认 90 天）
+			int retentionDays = SystemConfig.getInt("actionLog.retentionDays", 90);
+			java.util.Calendar hotWindowStart = java.util.Calendar.getInstance();
+			hotWindowStart.add(java.util.Calendar.DAY_OF_MONTH, -retentionDays);
+			// 截断到月初
+			hotWindowStart.set(java.util.Calendar.DAY_OF_MONTH, 1);
+			hotWindowStart.set(java.util.Calendar.HOUR_OF_DAY, 0);
+			hotWindowStart.set(java.util.Calendar.MINUTE, 0);
+			hotWindowStart.set(java.util.Calendar.SECOND, 0);
+			hotWindowStart.set(java.util.Calendar.MILLISECOND, 0);
+
+			int maxMonths = SystemConfig.getInt("actionLog.archiveLookupMaxMonths", 12);
+
+			java.util.Calendar cur = (java.util.Calendar) start.clone();
+			// 截断到月初
+			cur.set(java.util.Calendar.DAY_OF_MONTH, 1);
+			cur.set(java.util.Calendar.HOUR_OF_DAY, 0);
+			cur.set(java.util.Calendar.MINUTE, 0);
+			cur.set(java.util.Calendar.SECOND, 0);
+			cur.set(java.util.Calendar.MILLISECOND, 0);
+
+			while (!cur.after(end) && months.size() < maxMonths){
+				// 只把"早于热表窗口"的月份纳入归档查询
+				if (cur.before(hotWindowStart)){
+					String ym = String.format("%04d%02d", cur.get(java.util.Calendar.YEAR), cur.get(java.util.Calendar.MONTH) + 1);
+					months.add(ym);
+				}
+				cur.add(java.util.Calendar.MONTH, 1);
+			}
+		} catch (Throwable t) {
+			// 时间解析失败：返回空，退化为热表查询
+		}
+		return months;
+	}
+
+	private java.util.Calendar parseToMonthStart(String s){
+		String trimmed = s == null ? "" : s.trim();
+		if (trimmed.length() <= 10) trimmed = trimmed + " 00:00:00";
+		java.util.Calendar c = java.util.Calendar.getInstance();
+		c.setTime(java.sql.Timestamp.valueOf(trimmed));
+		return c;
+	}
+
+	/** 历史查询时 PO->VO 转换，createUserPO 可能为 null（归档表关联用户已删）。 */
+	private LogVO changeActionLogPOToVOWithHistory(ActionLogPO po){
+		LogVO vo = new LogVO();
+		BeanUtil.copyProperties(po, vo);
+		if (po.getCreateUserPO() != null){
+			vo.setCreateUserId(po.getCreateUserPO().getUserId());
+			vo.setCreateUserName(po.getCreateUserPO().getCurrentName());
+			if (po.getCreateUserPO().getDuty() != null) vo.setDuty(po.getCreateUserPO().getDuty().getName());
+			if (po.getCreateUserPO().getRole() != null){
+				vo.setRoleId(po.getCreateUserPO().getRole().getNo());
+				vo.setRoleName(po.getCreateUserPO().getRole().getName());
+			}
+		} else {
+			// 归档表用户已被删除的兜底：仅展示 createUserId（PO 里已有）
+			vo.setCreateUserName("[用户已删除]");
+		}
+		vo.setIp(po.getIp());
+		vo.setCompanyId(po.getCompanyId());
+		vo.setModuleId(po.getModuleId());
+		vo.setOperateType(po.getOperateType());
+		vo.setBusinessId(po.getBusinessId());
+		vo.setParams(po.getParams());
+		vo.setResultState(po.getResultState());
+		vo.setErrorCode(po.getErrorCode());
+		vo.setErrorMsg(po.getErrorMsg());
+		vo.setTraceId(po.getTraceId());
+		return vo;
 	}
 
 	@Override

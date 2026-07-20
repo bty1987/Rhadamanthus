@@ -37,9 +37,22 @@ public class LogAction extends BaseExportAction {
 	
 	@Action(value = "pageActionLog", results = { @Result(name = "success", type = "json" , params={"ignoreHierarchy","false"}) }, params = {"contentType", "text/html" } )
 	public String pageActionLog(){
-		
-		logService.pageActionLog(getPaging(), getFilters());	
-		
+
+		logService.pageActionLog(getPaging(), getFilters());
+
+		return SUCCESS;
+	}
+
+	/**
+	 * Phase 4.3: 含历史的操作日志查询（热表 + 归档表 UNION）。
+	 *
+	 * <p>前端"含历史"开关勾选时调用此接口。要求 filters 含 createTime between 条件。
+	 */
+	@Action(value = "pageActionLogWithHistory", results = { @Result(name = "success", type = "json" , params={"ignoreHierarchy","false"}) }, params = {"contentType", "text/html" } )
+	public String pageActionLogWithHistory(){
+
+		logService.pageActionLogWithHistory(getPaging(), getFilters());
+
 		return SUCCESS;
 	}
 	

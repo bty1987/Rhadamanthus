@@ -32,6 +32,7 @@ import org.slf4j.LoggerFactory;
 import com.fanglin.core.vo.Authentication;
 import com.fanglin.log.context.ActionLogContext;
 import com.fanglin.log.po.ActionLogPO;
+import com.fanglin.system.po.OperationPO;
 import com.fanglin.log.service.LogService;
 import com.fanglin.log.utils.ParamSanitizer;
 import com.fanglin.personel.dao.UserDao;
@@ -72,15 +73,38 @@ public class ActionLogRecorder {
 	 * @param errorCode     ValueStack 中的 errorCode（null 表示无错误）
 	 * @param errorMsg      ValueStack 中的 errorMsg
 	 * @param exception     拦截器捕获的异常（用于区分 fail/error）
+	 * @param logFlag       operation.logFlag（0=NONE 1=ALWAYS 2=AUTO），null 视为 AUTO
 	 */
 	public void record(HttpServletRequest request, String actionName, Authentication authentication,
-			long startTime, long endTime, Object errorCode, Object errorMsg, Throwable exception){
+			long startTime, long endTime, Object errorCode, Object errorMsg, Throwable exception, Short logFlag){
 
 		// 先清理 ThreadLocal（即便下面失败也要清，避免泄漏）
 		ActionLogContext.Holder ctx = ActionLogContext.current();
 		try {
-			// 开关关闭直接返回，不组装 PO
+			// 优先级 1：全局总开关（紧急熔断用）
 			if (!SystemConfig.getBoolean("actionLog.enable", true)) return;
+
+			// logFlag 为 null 时兜底为 AUTO（operation 查不到/未登记的情况）
+			short flag = logFlag != null ? logFlag : OperationPO.LOGFLAG_AUTO_INT;
+
+			// 优先级 2：NONE 绝对不记录（即使业务侧主动绑定也不记录）
+			if (flag == OperationPO.LOGFLAG_NONE_INT) return;
+
+			// 优先级 3：ALWAYS 始终记录（覆盖 AUTO 的 QUERY 过滤）
+			if (flag == OperationPO.LOGFLAG_ALWAYS_INT) {
+				ActionLogPO po = buildPO(request, actionName, authentication, startTime, endTime, errorCode, errorMsg, exception, ctx);
+				if (po == null) return;
+				logService.safeAddActionLog(po);
+				return;
+			}
+
+			// 优先级 4+5+6：AUTO 模式（flag == LOGFLAG_AUTO_INT）
+			// QUERY 类只读操作默认不写库（数据量控制），由 actionLog.skipQuery 全局开关控制
+			// 豁免：业务侧通过 ActionLogContext.bind 明确绑定的，即使 QUERY 类也强制写
+			// 如需精确控制单个接口，请改 operation.logFlag 为 NONE 或 ALWAYS
+			if (ctx == null && SystemConfig.getBoolean("actionLog.skipQuery", true) && isQueryAction(actionName)){
+				return;
+			}
 
 			ActionLogPO po = buildPO(request, actionName, authentication, startTime, endTime, errorCode, errorMsg, exception, ctx);
 			if (po == null) return;
@@ -91,6 +115,20 @@ public class ActionLogRecorder {
 		} finally {
 			ActionLogContext.clear();
 		}
+	}
+
+	/**
+	 * 判断是否 QUERY 类只读操作（pageXXX / queryXXX / getXXX / countXXX / amountXXX / listXXX）。
+	 *
+	 * <p>Phase 4.1 引入：这类操作审计价值低但调用量占 80%+，默认不写库，
+	 * 数据量从 ~7300 万/年降到 ~730 万/年。判断依据 actionName 前缀，
+	 * 与 inferOperateType 保持一致。
+	 */
+	private boolean isQueryAction(String actionName){
+		if (actionName == null) return false;
+		String lower = actionName.toLowerCase();
+		return lower.startsWith("page") || lower.startsWith("query") || lower.startsWith("get")
+				|| lower.startsWith("count") || lower.startsWith("amount") || lower.startsWith("list");
 	}
 
 	private ActionLogPO buildPO(HttpServletRequest request, String actionName, Authentication authentication,

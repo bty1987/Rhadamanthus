@@ -18,6 +18,8 @@ public class OperationVO implements java.io.Serializable {
 
 	private Short type;
 
+	private Short logFlag;
+
 	public OperationVO(Integer oid) {
 		super();
 		this.oid = oid;
@@ -91,6 +93,14 @@ public class OperationVO implements java.io.Serializable {
 
 	public void setType(Short type) {
 		this.type = type;
+	}
+
+	public Short getLogFlag() {
+		return logFlag;
+	}
+
+	public void setLogFlag(Short logFlag) {
+		this.logFlag = logFlag;
 	}
 
 }

@@ -6,6 +6,7 @@ $(function() {
             name: com.focusPage('#name', "#addOperation"),
             operation: com.focusPage('#operation', "#addOperation"),
             type: com.focusPage("#type", "#addOperation"),
+            logFlag: com.focusPage("#logFlag", "#addOperation"),
             module: com.focusPage('#module', "#addOperation"),
         },
 
@@ -109,6 +110,15 @@ $(function() {
         },
         clazz: "grey",
     }, {
+        field: "logFlag",
+        name: "日志记录",
+        prop: function(v) {
+
+            // 0=不记录 1=始终记录 2=自动（默认，走 skipQuery 规则）
+            return v.logFlag == 0 ? "不记录" : v.logFlag == 1 ? "始终记录" : "自动"
+        },
+        clazz: "grey"
+    }, {
         field: "operation",
         name: "操作",
         prop: "operation",
@@ -126,6 +136,8 @@ $(function() {
             operations.items.name.val(v.name);
             operations.items.operation.val(v.operation);
             operations.items.type.val(v.type);
+            // logFlag 回填：null/undefined 兜底为 2（AUTO）
+            operations.items.logFlag.val(v.logFlag == null ? 2 : v.logFlag);
 
             if (v.module) {
                 com.updateTypeahead("module", v.module.mid, v.module.name);
@@ -160,6 +172,9 @@ $(function() {
 
         operations.oid = null;
 
+        // 新增时默认 logFlag = 2（AUTO，跟随全局规则）
+        operations.items.logFlag.val(2);
+
         com.focusPage('#addOperation').modal("show");
     });
 
@@ -176,7 +191,8 @@ $(function() {
             "operation.operation": operations.items.operation.val(),
             "operation.module.mid": com.typeahead("module"),
             "operation.system": config.system,
-            "operation.type": operations.items.type.val()
+            "operation.type": operations.items.type.val(),
+            "operation.logFlag": operations.items.logFlag.val()
         };
 
         if (operations.oid) {

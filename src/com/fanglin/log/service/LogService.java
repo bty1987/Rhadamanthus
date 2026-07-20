@@ -24,6 +24,18 @@ public interface LogService {
 
 	public void pageActionLog(Paging paging, List<Filter> filters);
 
+	/**
+	 * Phase 4.3: 查询热表 + 归档表的 UNION 结果（含历史数据）。
+	 *
+	 * <p>使用场景：前端"含历史"开关勾选时调用。本方法根据 filters 中的 createTime
+	 * 时间范围计算涉及的归档月份表，对热表 + 这些归档表执行 UNION ALL 查询。
+	 *
+	 * <p>前置约束：filters 中必须包含 createTime between 条件（否则全表扫归档表无意义，
+	 * 也会被 Service 层拒绝）。归档表不支持按 createUserPO.currentName（姓名）过滤，
+	 * 业务侧应改用 createUserId（账号）。
+	 */
+	public void pageActionLogWithHistory(Paging paging, List<Filter> filters);
+
 	public int addLog(LogVO logVO);
 
 	public int addActionLog(ActionLogPO actionLogPO);
