@@ -863,7 +863,7 @@ Condition.addupRule("quotation", {
         label: "装修单号",
         type: "text",
         submitConfig: {
-            name: "orderId",
+            name: "decoration.orderId",
             op: "eq",
             validate: {
                 "reg": /^[A-Z0-9]*$/,
@@ -875,7 +875,7 @@ Condition.addupRule("quotation", {
         label: "设计师",
         type: "autofill",
         submitConfig: {
-            name: "designerId",
+            name: "decoration.designer.userId",
             op: "eq",
             validate: null
         },
@@ -894,7 +894,7 @@ Condition.addupRule("quotation", {
         label: "楼盘",
         type: "autofill",
         submitConfig: {
-            name: "villageId",
+            name: "decoration.village.no",
             op: "eq ",
             validate: null
         },
@@ -910,7 +910,7 @@ Condition.addupRule("quotation", {
         label: "楼号",
         type: "text",
         submitConfig: {
-            name: "houseNumber",
+            name: "decoration.house.houseNumber",
             op: "cn",
             validate: null
         }
@@ -919,7 +919,7 @@ Condition.addupRule("quotation", {
         label: "面积",
         type: "text",
         submitConfig: {
-            name: "buildArea",
+            name: "decoration.houseArea",
             op: "eq",
             validate: {
                 "reg": /^[A-Z0-9]*$/,
@@ -931,7 +931,7 @@ Condition.addupRule("quotation", {
         label: "客户确认",
         type: "select",
         submitConfig: {
-            name: "type",
+            name: "isAffirm",
             op: "eq",
             validate: null
         },

@@ -121,7 +121,7 @@ public class AddReduceServiceImpl implements AddReduceService {
 	public void pageAddReduce(Paging paging, List<Filter> filters, AddReduceVO addReduceVO, List<Short> statuses, Integer company) throws FLException {
 
 		if (addReduceVO != null && addReduceVO.getOrderId() != null) {
-			filters.add(new Filter(AddReducePO.COLUMN_ORDERID_STR, addReduceVO.getOrderId(), "eq"));
+			filters.add(new Filter("decoration.orderId", addReduceVO.getOrderId(), "eq"));
 		}
 
 		if (addReduceVO != null && addReduceVO.getStatus() != null) {
