@@ -231,6 +231,7 @@ infos = [
     {"source": "99.Foreground\\js\\api\\", "target": "WebContent\\js\\api\\"},
     {"source": "99.Foreground\\js\\com\\", "target": "WebContent\\js\\com\\"},
     {"source": "99.Foreground\\js\\condition\\", "target": "WebContent\\js\\condition\\"},
+    {"source": "99.Foreground\\js\\i18n\\", "target": "WebContent\\js\\i18n\\"},
     {"source": "99.Foreground\\js\\utils\\", "target": "WebContent\\js\\utils\\"},
     {"source": "99.Foreground\\ds", "target": "WebContent\\ds"},
 
