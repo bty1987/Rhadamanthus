@@ -693,7 +693,7 @@ jQuery(function($) {
             }
         }, null, false);
 
-        // 品牌关联表厂商(brandSupplier), 按 uid 去重追加
+        // 品牌关联表厂商(brandSupplier)
         com.post(api.communion.queryBrandSupplier, {
             "brandSupplier.brand.bid": v.bid
         }, function(res) {
@@ -701,18 +701,7 @@ jQuery(function($) {
             $.each(res.brandSuppliers || [], function(i, brandSupplier) {
 
                 if (brandSupplier.supplier) {
-
-                    var exists = false;
-                    for ( var j = 0; j < balanceSales.suppliers.length; j++) {
-                        if (balanceSales.suppliers[j].uid == brandSupplier.supplier.uid) {
-                            exists = true;
-                            break;
-                        }
-                    }
-
-                    if (!exists) {
-                        balanceSales.suppliers.push(brandSupplier.supplier);
-                    }
+                    balanceSales.suppliers.push(brandSupplier.supplier);
                 }
             });
         }, null, false);
