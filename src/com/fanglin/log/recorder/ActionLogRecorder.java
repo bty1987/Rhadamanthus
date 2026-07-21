@@ -93,8 +93,10 @@ public class ActionLogRecorder {
 			//   只有 ALWAYS(1) 才无条件记录
 			if (flag != OperationPO.LOGFLAG_ALWAYS_INT) {
 				// 例外：业务侧通过 ActionLogContext.bind 明确绑定的，即使 AUTO/NONE 也强制记录
-				// （NONE 的"绝对不记录"语义已被废弃，统一让位给业务侧主动绑定）
-				if (ctx == null) return;
+				// 注意：AccessInterceptor 在请求开始时调了 begin()，ctx 永远不为 null（是空 Holder），
+				// 所以必须判断 ctx 是否真正 bind 了数据（module/businessId/operateType 任一非空），
+				// 否则所有 AUTO 接口都会因为 ctx != null 被误记录
+				if (!isBound(ctx)) return;
 			}
 
 			ActionLogPO po = buildPO(request, actionName, authentication, startTime, endTime, errorCode, errorMsg, exception, ctx);
@@ -106,6 +108,20 @@ public class ActionLogRecorder {
 		} finally {
 			ActionLogContext.clear();
 		}
+	}
+
+	/**
+	 * 判断业务侧是否通过 ActionLogContext.bind 真正绑定了数据。
+	 *
+	 * <p>AccessInterceptor 在请求开始时调了 begin()，ThreadLocal 里的 Holder 一定存在
+	 * （但所有字段为 null）。只有业务侧调过 bind 才会填充字段。本方法用于区分
+	 * "空 Holder"（业务侧没 bind）和"有数据的 Holder"（业务侧主动审计）。
+	 *
+	 * <p>判断标准：module/businessId/operateType 任一非 null 即视为已绑定。
+	 */
+	private boolean isBound(ActionLogContext.Holder ctx){
+		if (ctx == null) return false;
+		return ctx.getModule() != null || ctx.getBusinessId() != null || ctx.getOperateType() != null;
 	}
 
 	/**
