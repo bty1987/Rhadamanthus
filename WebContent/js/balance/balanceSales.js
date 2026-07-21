@@ -680,6 +680,20 @@ jQuery(function($) {
 
         if (!v || !v.bid) return false;
 
+        // 品牌自带厂商(brand.ocuid 对应 user), 默认选中
+        var defaultUid = null;
+
+        com.post(api.data.queryBrandByBid, {
+            "brand.bid": v.bid
+        }, function(res) {
+
+            if (res.brand.supplier != null && res.brand.supplier.uid != null) {
+                balanceSales.suppliers.push(res.brand.supplier);
+                defaultUid = res.brand.supplier.uid;
+            }
+        }, null, false);
+
+        // 品牌关联表厂商(brandSupplier), 按 uid 去重追加
         com.post(api.communion.queryBrandSupplier, {
             "brandSupplier.brand.bid": v.bid
         }, function(res) {
@@ -687,11 +701,26 @@ jQuery(function($) {
             $.each(res.brandSuppliers || [], function(i, brandSupplier) {
 
                 if (brandSupplier.supplier) {
-                    balanceSales.suppliers.push(brandSupplier.supplier);
+
+                    var exists = false;
+                    for ( var j = 0; j < balanceSales.suppliers.length; j++) {
+                        if (balanceSales.suppliers[j].uid == brandSupplier.supplier.uid) {
+                            exists = true;
+                            break;
+                        }
+                    }
+
+                    if (!exists) {
+                        balanceSales.suppliers.push(brandSupplier.supplier);
+                    }
                 }
             });
         }, null, false);
 
         balanceSales.items.supplier.bindData(balanceSales.suppliers, "uid", "currentName");
+
+        if (defaultUid != null) {
+            balanceSales.items.supplier.val(defaultUid);
+        }
     }
 });
