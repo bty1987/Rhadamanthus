@@ -42,6 +42,8 @@ import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.FormatUtil;
 import com.fanglin.utils.Paging;
 
+import com.fanglin.log.context.ActionLogContext;
+
 @Service("balanceSalesService")
 @Transactional(readOnly = true)
 public class BalanceSalesServiceImpl implements BalanceSalesService {
@@ -272,6 +274,9 @@ public class BalanceSalesServiceImpl implements BalanceSalesService {
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public int updateBalanceSales(BalanceSalesVO balanceSales) throws FLException {
+
+		// P0-1a: 绑定业务上下文（结算销售含金额，必须审计）
+		ActionLogContext.bind("balance", String.valueOf(balanceSales.getBsid()), "UPDATE");
 
 		BalanceSalesPO balanceSalesPO = balanceSalesDao.get(balanceSales.getBsid());
 

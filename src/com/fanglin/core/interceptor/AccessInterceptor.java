@@ -80,6 +80,10 @@ public class AccessInterceptor extends AbstractInterceptor {
 		// （Java 的 final 局部变量约束：lambda/匿名类要求，这里只是普通局部变量也不影响）
 		Short[] logFlagHolder = new Short[]{ null };
 
+		// P2-7: 显式初始化 ActionLogContext（供业务侧 bind 调用填充 businessId 等）
+		// 即便业务侧没 bind，recorder 的 finally 块也会 clear，避免 ThreadLocal 泄漏
+		com.fanglin.log.context.ActionLogContext.begin();
+
 			try {
 
 				OperationVO operationVO = operationService.checkOperation(new OperationVO(actionName));
@@ -89,7 +93,7 @@ public class AccessInterceptor extends AbstractInterceptor {
 				logFlagHolder[0] = operationVO != null ? operationVO.getLogFlag() : null;
 
 				if (operationVO.getThrough() != null && operationVO.getThrough() == OperationPO.THROUGH_PASS_INT) {
-					invocation.invoke();
+					return invocation.invoke();
 				} else if (operationVO.getThrough() != null && operationVO.getThrough() == OperationPO.THROUGH_COMMON_INT) {
 
 					if ($authentication == null) {
@@ -125,7 +129,7 @@ public class AccessInterceptor extends AbstractInterceptor {
 					// throw new FLException(-2, "无操作权限");
 					// }
 
-					invocation.invoke();
+					return invocation.invoke();
 
 				} else if (request.getHeader("x-ddpaas-signature") != null && operationVO.getThrough() != null && operationVO.getThrough() == OperationPO.THROUGH_DINGTALK_INT) {
 
@@ -145,7 +149,7 @@ public class AccessInterceptor extends AbstractInterceptor {
 
 					request.setAttribute("authentication", AESHelper.encrypt(authentication.getAuthenticationStr(), SystemConfig.getString("encryptKey"), SystemConfig.getString("encryptIv")));
 
-					invocation.invoke();
+					return invocation.invoke();
 
 				} else {
 
@@ -191,26 +195,25 @@ public class AccessInterceptor extends AbstractInterceptor {
 
 						operationService.fillRoleOperationByOperation(authentication.getUserId(), authentication.getRoleId(), authentication.getCompany(), actionName);
 
-						if (operationService.checkOperation(authentication.getUserId(), actionName, authentication.getRollcall())) {
-							invocation.invoke();
-						} else {
-							throw new FLException(-2, "无操作权限");
-						}
+					if (operationService.checkOperation(authentication.getUserId(), actionName, authentication.getRollcall())) {
+						return invocation.invoke();
 					} else {
-						throw new FLException(110005, "登陆超时");
+						throw new FLException(-2, "无操作权限");
 					}
-
-					Timestamp endTime = DateUtil.getDateToTimestamp(new Date());
-
-					if ((Integer) stack.findValue("errorCode") != null) {
-
-						Long runTime = endTime.getTime() - authStartTime.getTime();
-
-						if (runTime > 5000) {
-							LogUtils.logging(logger, actionName, runTime, ip);
-						}
-					}
+				} else {
+					throw new FLException(110005, "登陆超时");
 				}
+
+				// 以下代码已不可达（所有路径都 return 或 throw）
+				// 原慢接口日志逻辑保留注释作为历史参考
+				// Timestamp endTime = DateUtil.getDateToTimestamp(new Date());
+				// if ((Integer) stack.findValue("errorCode") != null) {
+				// 	Long runTime = endTime.getTime() - authStartTime.getTime();
+				// 	if (runTime > 5000) {
+				// 		LogUtils.logging(logger, actionName, runTime, ip);
+				// 	}
+				// }
+			}
 			} catch (LockAcquisitionException e) {
 				caughtException = e;
 				stack.setValue("errorCode", "-2");

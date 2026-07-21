@@ -118,18 +118,48 @@ public class ActionLogRecorder {
 	}
 
 	/**
-	 * 判断是否 QUERY 类只读操作（pageXXX / queryXXX / getXXX / countXXX / amountXXX / listXXX）。
+	 * 判断是否 QUERY 类只读操作。
 	 *
-	 * <p>Phase 4.1 引入：这类操作审计价值低但调用量占 80%+，默认不写库，
-	 * 数据量从 ~7300 万/年降到 ~730 万/年。判断依据 actionName 前缀，
-	 * 与 inferOperateType 保持一致。
+	 * <p>Phase 4.1 引入，P1-4 扩展：这类操作审计价值低但调用量占 80%+，
+	 * 默认不写库。判断依据 actionName 前缀，覆盖项目实际使用的所有只读动词。
+	 *
+	 * <p>覆盖的前缀（按 METHOD_NAMING_CONVENTION.md 动词清单 + 项目统计）：
+	 * page / query / get / count / amount / list / check / show / view /
+	 * read / fetch / find / verify / search / has / exist / is
+	 *
+	 * <p>注意：check 既可能是查询（checkAvailable）也可能是动作（checkIn），
+	 * 这里偏向"只读"判定，业务侧可通过 ActionLogContext.bind 强制记录。
 	 */
 	private boolean isQueryAction(String actionName){
 		if (actionName == null) return false;
 		String lower = actionName.toLowerCase();
 		return lower.startsWith("page") || lower.startsWith("query") || lower.startsWith("get")
-				|| lower.startsWith("count") || lower.startsWith("amount") || lower.startsWith("list");
+				|| lower.startsWith("count") || lower.startsWith("amount") || lower.startsWith("list")
+				|| lower.startsWith("check") || lower.startsWith("show") || lower.startsWith("view")
+				|| lower.startsWith("read") || lower.startsWith("fetch") || lower.startsWith("find")
+				|| lower.startsWith("verify") || lower.startsWith("search") || lower.startsWith("has")
+				|| lower.startsWith("exist") || lower.startsWith("is");
 	}
+
+	/** 已知业务模块字典（小写），用于从 actionName 反查 moduleId。 */
+	private static final String[] KNOWN_MODULES = {
+		"decoration", "quotation", "construction", "customer", "balance", "payment",
+		"material", "sales", "personel", "system", "approval", "information",
+		"communion", "production", "inventory", "salary", "building", "store",
+		"market", "report", "finance", "kingdee", "data"
+	};
+
+	/** 已知 CRUD + 业务动词前缀（小写），用于从 actionName 切除前缀得到对象段。 */
+	private static final String[] KNOWN_VERBS = {
+		"page", "query", "add", "update", "delete", "cancel", "submit", "confirm",
+		"approve", "affirm", "export", "import", "get", "count", "amount",
+		"enable", "disable", "make", "send", "finish", "create", "change",
+		"handle", "lock", "unlock", "bind", "unbind", "sign", "refund", "reject",
+		"receive", "copy", "discount", "close", "reset", "adopt", "agree",
+		"check", "show", "view", "read", "fetch", "find", "verify", "search",
+		"begin", "end", "affix", "abate", "delive", "compute", "stat",
+		"login", "logout", "dogin", "down", "upload"
+	};
 
 	private ActionLogPO buildPO(HttpServletRequest request, String actionName, Authentication authentication,
 			long startTime, long endTime, Object errorCode, Object errorMsg, Throwable exception,
@@ -209,42 +239,98 @@ public class ActionLogRecorder {
 	}
 
 	/**
-	 * 从 actionName 推断模块名（兜底逻辑）。
-	 * 项目命名约定见 METHOD_NAMING_CONVENTION.md：动词+对象+By条件...
-	 * 如 pageDecoration / addCustomer / updateQuotation
-	 * 取第一个动词之后的驼峰分段作为模块名。
+	 * 从 actionName 推断模块名（兜底逻辑，P1-4 改造）。
+	 *
+	 * <p>原实现按动词前缀切第一个驼峰段，对 updateDecorationForPayScale 这种
+	 * 多段驼峰会返回 decoratitionforpayscale，导致前端模块筛选失效。
+	 *
+	 * <p>新实现用"模块字典反查"：先切除已知动词前缀，再在剩余字符串里
+	 * 查找已知模块名（KNOWN_MODULES），返回最长匹配。例如：
+	 * <ul>
+	 *   <li>pageDecoration → 切除 page → 剩余 Decoration → 匹配 decoration</li>
+	 *   <li>updateDecorationForPayScale → 切除 update → 剩余 DecorationForPayScale → 匹配 decoration</li>
+	 *   <li>addCustomerPhone → 切除 add → 剩余 CustomerPhone → 匹配 customer</li>
+	 * </ul>
 	 */
 	private String inferModule(String actionName){
 		if (actionName == null || actionName.length() == 0) return null;
 
-		// 常见动词前缀（与命名规范一致）
-		String[] verbs = {"page", "query", "add", "update", "delete", "cancel", "submit", "confirm", "approve", "affirm", "export", "import", "get", "count", "amount", "enable", "disable"};
 		String lower = actionName.toLowerCase();
-		for (String v : verbs){
+		String residual = actionName;
+
+		// 第一步：切除已知动词前缀（最长匹配，避免 addCustomer 里 add 误切）
+		String matchedVerb = null;
+		for (String v : KNOWN_VERBS){
 			if (lower.startsWith(v) && actionName.length() > v.length()){
 				char next = actionName.charAt(v.length());
 				if (next >= 'A' && next <= 'Z'){
-					// 取动词后到下一个大写或末尾作为模块名
-					return actionName.substring(v.length()).toLowerCase();
+					if (matchedVerb == null || v.length() > matchedVerb.length()){
+						matchedVerb = v;
+					}
 				}
 			}
 		}
-		return null;
+		if (matchedVerb != null){
+			residual = actionName.substring(matchedVerb.length());
+		}
+
+		// 第二步：在剩余字符串里查找已知模块名（最长匹配优先）
+		String residualLower = residual.toLowerCase();
+		String bestMatch = null;
+		for (String module : KNOWN_MODULES){
+			if (residualLower.startsWith(module.toLowerCase())){
+				if (bestMatch == null || module.length() > bestMatch.length()){
+					bestMatch = module;
+				}
+			}
+		}
+		return bestMatch;
 	}
 
 	/**
-	 * 从 actionName 推断操作类型（兜底逻辑）。
+	 * 从 actionName 推断操作类型（兜底逻辑，P1-4 扩展）。
+	 *
+	 * <p>覆盖项目 METHOD_NAMING_CONVENTION.md 里的所有动词分类，
+	 * 映射到 ActionLogPO.operateType 的标准枚举（ADD/UPDATE/DELETE/QUERY/EXPORT/LOGIN/OTHER）。
 	 */
 	private String inferOperateType(String actionName){
 		if (actionName == null) return null;
 		String lower = actionName.toLowerCase();
-		if (lower.startsWith("add") || lower.startsWith("create") || lower.startsWith("save")) return "ADD";
-		if (lower.startsWith("update") || lower.startsWith("edit") || lower.startsWith("modify")) return "UPDATE";
-		if (lower.startsWith("delete") || lower.startsWith("remove")) return "DELETE";
-		if (lower.startsWith("export")) return "EXPORT";
-		if (lower.startsWith("import")) return "IMPORT";
-		if (lower.startsWith("page") || lower.startsWith("query") || lower.startsWith("get") || lower.startsWith("count") || lower.startsWith("amount")) return "QUERY";
+
+		// ADD：新增类
+		if (lower.startsWith("add") || lower.startsWith("create") || lower.startsWith("save")
+				|| lower.startsWith("make") || lower.startsWith("send") || lower.startsWith("copy")
+				|| lower.startsWith("affix") || lower.startsWith("bind")) return "ADD";
+
+		// UPDATE：修改类
+		if (lower.startsWith("update") || lower.startsWith("edit") || lower.startsWith("modify")
+				|| lower.startsWith("change") || lower.startsWith("handle") || lower.startsWith("reset")
+				|| lower.startsWith("adopt") || lower.startsWith("agree") || lower.startsWith("confirm")
+				|| lower.startsWith("approve") || lower.startsWith("affirm") || lower.startsWith("submit")
+				|| lower.startsWith("sign") || lower.startsWith("finish") || lower.startsWith("begin")
+				|| lower.startsWith("end") || lower.startsWith("enable") || lower.startsWith("disable")
+				|| lower.startsWith("lock") || lower.startsWith("unlock") || lower.startsWith("discount")
+				|| lower.startsWith("abate") || lower.startsWith("close")) return "UPDATE";
+
+		// DELETE：删除类
+		if (lower.startsWith("delete") || lower.startsWith("remove") || lower.startsWith("unbind")) return "DELETE";
+
+		// EXPORT/IMPORT
+		if (lower.startsWith("export") || lower.startsWith("download")) return "EXPORT";
+		if (lower.startsWith("import") || lower.startsWith("upload")) return "IMPORT";
+
+		// QUERY：查询类（与 isQueryAction 保持一致）
+		if (lower.startsWith("page") || lower.startsWith("query") || lower.startsWith("get")
+				|| lower.startsWith("count") || lower.startsWith("amount") || lower.startsWith("list")
+				|| lower.startsWith("check") || lower.startsWith("show") || lower.startsWith("view")
+				|| lower.startsWith("read") || lower.startsWith("fetch") || lower.startsWith("find")
+				|| lower.startsWith("verify") || lower.startsWith("search") || lower.startsWith("has")
+				|| lower.startsWith("exist") || lower.startsWith("is")) return "QUERY";
+
+		// LOGIN
 		if (lower.startsWith("login") || lower.startsWith("logout") || lower.startsWith("dogin")) return "LOGIN";
+
+		// 业务动作（cancel/reject/receive/refund/delive）归类为 OTHER
 		return "OTHER";
 	}
 

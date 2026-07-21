@@ -88,13 +88,12 @@ jQuery(function($) {
                 + "1. 必须填写'操作时间'区间，否则只查热表；\n"
                 + "2. 归档表不支持按'操作人姓名'过滤，请改用'操作人账号'；\n"
                 + "3. 单次最多查询 12 个月的归档数据。");
-            // Searcher 的 url 通过 history 参数里的 url 字段控制，这里改 url 后重新查询
-            // 注意：不同项目版本 Searcher 实现可能不同，这里走"改 params[history] 里的 url"
-            // 的兜底方式，如 Searcher 不支持，用户需要重新点查询按钮
-            seacher.url = api.log.pageActionLogWithHistory;
+            // P1-2 修复：原 seacher.url = X 只改对象属性，不改 Searcher 闭包内的 basicConf.url
+            // 正确方式：用 searcher.set({url: newUrl}) 触发 $.extend 合并到 basicConf
+            seacher.set({url: api.log.pageActionLogWithHistory});
         } else {
             $btn.text("含历史:关").removeClass("btn-warning").addClass("btn-default");
-            seacher.url = api.log.pageActionLog;
+            seacher.set({url: api.log.pageActionLog});
         }
         seacher.doSearch();
     });

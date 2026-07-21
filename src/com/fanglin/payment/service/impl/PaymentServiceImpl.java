@@ -62,6 +62,8 @@ import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.Paging;
 
+import com.fanglin.log.context.ActionLogContext;
+
 @Service("paymentService")
 @Transactional(readOnly = true)
 public class PaymentServiceImpl implements PaymentService {
@@ -635,6 +637,9 @@ public class PaymentServiceImpl implements PaymentService {
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public int updatePayment(PaymentVO paymentVO) throws FLException {
+
+		// P0-1a: 绑定业务上下文（款项金额是高敏感字段，必须审计）
+		ActionLogContext.bind("payment", String.valueOf(paymentVO.getPid()), "UPDATE");
 
 		long realMoney = 0;
 

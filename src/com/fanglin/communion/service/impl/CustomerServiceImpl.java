@@ -39,6 +39,7 @@ import com.fanglin.fadada.signature.Signature;
 import com.fanglin.information.dao.MessageQueuingDao;
 import com.fanglin.information.po.MessageCueuingPO;
 import com.fanglin.information.po.MessageQueuingPO;
+import com.fanglin.log.context.ActionLogContext;
 import com.fanglin.log.service.CustomerLogService;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.utils.BeanUtil;
@@ -346,6 +347,9 @@ public class CustomerServiceImpl implements CustomerService {
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public int updateCustomer(CustomerVO customerVO) throws FLException {
+
+		// P0-1a: 绑定业务上下文，让 actionLog 记录"谁改了哪个客户"
+		ActionLogContext.bind("customer", String.valueOf(customerVO.getCid()), "UPDATE");
 
 		CustomerPO customerPO = customerDao.get(customerVO.getCid());
 
