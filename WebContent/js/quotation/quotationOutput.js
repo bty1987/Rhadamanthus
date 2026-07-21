@@ -483,11 +483,12 @@ function printCustomerTable(subtype, orderType) {
     return contentHtml;
 }
 
-function printWorkTable(workType) {
+function printWorkTable(workType, merge) {
 
     var index = 0;
     var contentHtml = '';
 
+    // 合并模式: 按工种内项目去重(忽略功能区), 同 quotationItemId 的项目累加 num
     function mergeWorkItems(items) {
 
         var mergeItems = [];
@@ -507,6 +508,40 @@ function printWorkTable(workType) {
         });
 
         return mergeItems;
+    }
+
+    // 拆分模式: 按功能区聚合(同功能区同项目仍累加 num, 仅合并重复项), 返回 [{areaName, items}]
+    function groupItemsByArea(items) {
+
+        var groups = [];
+        var groupMap = {};
+
+        $.each(items, function(j, qv) {
+
+            var areaName = qv.areaName || "未分类";
+
+            if (!groupMap[areaName]) {
+                groupMap[areaName] = {
+                    areaName: areaName,
+                    mergeMap: {},
+                    items: []
+                };
+                groups.push(groupMap[areaName]);
+            }
+
+            var group = groupMap[areaName];
+            var itemKey = qv.quotationItemId && qv.quotationItemId != 0 ? qv.quotationItemId : [qv.itemName, qv.typestr, qv.measurementUnit].join('-');
+            var key = [qv.suptype, itemKey].join('-');
+
+            if (group.mergeMap[key]) {
+                group.mergeMap[key].num = utils.changeThrDecimal(utils.accAdd(group.mergeMap[key].num, qv.num));
+            } else {
+                group.mergeMap[key] = $.extend({}, qv);
+                group.items.push(group.mergeMap[key]);
+            }
+        });
+
+        return groups;
     }
 
     contentHtml += '<table style="font-size: 12px" width="100%" bgcolor="#000000" border="1" cellpadding="1" cellspacing="0">';
@@ -533,6 +568,7 @@ function printWorkTable(workType) {
 
         var itemIndex = 0;
 
+        // 工种行: 深灰底, 占整行
         contentHtml += '<tr bgcolor="#CCCCCC">';
         contentHtml += '<td colspan="1">';
         contentHtml += '<div align="center">' + utils.getBigNumber(index + 1) + '</div></td>';
@@ -542,18 +578,44 @@ function printWorkTable(workType) {
         contentHtml += '</td>';
         contentHtml += '</tr>';
 
-        $.each(mergeWorkItems(v), function(j, qv) {
+        if (merge) {
+            // 合并模式: 工种下直接列项目
+            $.each(mergeWorkItems(v), function(j, qv) {
 
-            contentHtml += '<tr bgcolor="#FFFFFF">';
-            contentHtml += '<td width="8%" align="center">' + (itemIndex + 1) + '</td>';
-            contentHtml += '<td width="52%" align="center">' + qv.itemName + "(" + qv.typestr + ")" + '</td>';
-            contentHtml += '<td width="10%" align="center">' + qv.measurementUnit + '</td>';
-            contentHtml += '<td width="10%" align="center">' + qv.num + '</td>';
-            contentHtml += '<td width="10%" align="center"></td>';
-            contentHtml += '<td width="10%" align="left"></td>';
-            contentHtml += '</tr>';
-            itemIndex++;
-        });
+                contentHtml += '<tr bgcolor="#FFFFFF">';
+                contentHtml += '<td width="8%" align="center">' + (itemIndex + 1) + '</td>';
+                contentHtml += '<td width="52%" align="center">' + qv.itemName + "(" + qv.typestr + ")" + '</td>';
+                contentHtml += '<td width="10%" align="center">' + qv.measurementUnit + '</td>';
+                contentHtml += '<td width="10%" align="center">' + qv.num + '</td>';
+                contentHtml += '<td width="10%" align="center"></td>';
+                contentHtml += '<td width="10%" align="left"></td>';
+                contentHtml += '</tr>';
+                itemIndex++;
+            });
+        } else {
+            // 拆分模式: 工种下按功能区分小节, 每小节带浅灰功能区头
+            $.each(groupItemsByArea(v), function(g, group) {
+
+                contentHtml += '<tr bgcolor="#EEEEEE">';
+                contentHtml += '<td colspan="6" style="padding-left: 12px;">';
+                contentHtml += '<div align="left"><b>[' + group.areaName + ']</b></div>';
+                contentHtml += '</td>';
+                contentHtml += '</tr>';
+
+                $.each(group.items, function(j, qv) {
+
+                    contentHtml += '<tr bgcolor="#FFFFFF">';
+                    contentHtml += '<td width="8%" align="center">' + (itemIndex + 1) + '</td>';
+                    contentHtml += '<td width="52%" align="center">' + qv.itemName + "(" + qv.typestr + ")" + '</td>';
+                    contentHtml += '<td width="10%" align="center">' + qv.measurementUnit + '</td>';
+                    contentHtml += '<td width="10%" align="center">' + qv.num + '</td>';
+                    contentHtml += '<td width="10%" align="center"></td>';
+                    contentHtml += '<td width="10%" align="left"></td>';
+                    contentHtml += '</tr>';
+                    itemIndex++;
+                });
+            });
+        }
 
         index++;
     });
@@ -769,11 +831,11 @@ jQuery(function($) {
 
     quotationUtils.quotationDetail.TotalPrice = quotationUtils.quotationTotal();
 
-    generatePrintPage(printConf.layout, printConf.itemtype, printConf.workType, params.company.drganization.name, quotationUtils.quotationDetail.quotation.decoration.type, printConf.showType);
+    generatePrintPage(printConf.layout, printConf.itemtype, printConf.workType, params.company.drganization.name, quotationUtils.quotationDetail.quotation.decoration.type, printConf.showType, printConf.merge);
 
 });
 
-function generatePrintPage(type, subtype, workType, company, orderType, showType) {
+function generatePrintPage(type, subtype, workType, company, orderType, showType, merge) {
 
     var html = "";
 
@@ -788,7 +850,8 @@ function generatePrintPage(type, subtype, workType, company, orderType, showType
         html += printCustomerTable(subtype, orderType);
     } else if (type == "4") {
         html += printHeader(company + "工种项目单");
-        html += printWorkTable(workType);
+        // merge !== false 兼容老入口(未传 merge 的历史书签/工种详情页"打印"按钮)默认走合并模式
+        html += printWorkTable(workType, merge !== false);
     } else if (type == "5") {
         html += printHeader(company + "定额工费项目单");
         html += printNormrice(workType);
