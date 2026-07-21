@@ -52,6 +52,14 @@ public class NormaddAction extends BaseListAction{
 		return SUCCESS;
 	}
 	
+	@Action(value = "updateNormadd", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateNormadd() throws FLException {
+
+		normaddService.updateNormadd(normadd);
+
+		return SUCCESS;
+	}
+
 	@Action(value = "updateNormaddForStatus", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String updateNormaddForStatus() throws FLException {
 

@@ -27,6 +27,9 @@ jQuery(function($) {
 
     normadd.modals.addModal.on("hide.bs.modal", function() {
 
+        normadd.naid = null;
+        normadd.items.name.prop("readonly", false);
+
         com.cleanTypeahead(normadd.items.name);
         com.cleanItems(normadd.items);
         com.clearValidator();
@@ -90,6 +93,11 @@ jQuery(function($) {
                     });
                 }
             },
+            edit: {
+                name: "编辑",
+                clazz: "btn-info",
+                handle: function(v) { editData(v); }
+            },
             delete: {
                 name: "删除",
                 clazz: "btn-yellow",
@@ -123,8 +131,29 @@ jQuery(function($) {
 
     com.focusPage('#normaddBtn').click(function() {
 
+        normadd.naid = null;
+        normadd.items.name.prop("readonly", false);
+        com.focusPage("#myModalLabe2").text("添加");
+
         normadd.modals.addModal.modal("show");
     });
+
+    function editData(v) {
+
+        normadd.naid = v.naid;
+
+        // name 只读: 回填显示值 + 标记 typeahead key + 锁定输入
+        com.updateTypeahead(normadd.items.name, v.name, v.name);
+        normadd.items.name.prop("readonly", true);
+
+        normadd.items.node.val(v.constructionNode.cnid);
+        normadd.items.unit.val(v.unit);
+        normadd.items.price.val(v.price);
+
+        com.focusPage("#myModalLabe2").text("编辑");
+
+        normadd.modals.addModal.modal("show");
+    }
 
     function saveData() {
 
@@ -133,21 +162,29 @@ jQuery(function($) {
         }
         ;
 
-        var name = com.typeahead(normadd.items.name, "", true);
-        if (!name) {
-            com.showTips("name", "请从下拉列表中选择名称", "right");
-            return false;
-        }
-
+        var url = api.data.addNormadd;
         var options = {
-            'normadd.name': name,
             "normadd.constructionNode.cnid": normadd.items.node.val(),
             'normadd.unit': normadd.items.unit.val(),
             'normadd.price': normadd.items.price.val(),
-
         };
 
-        com.post(api.data.addNormadd, options, function(res) {
+        if (normadd.naid) {
+
+            url = api.data.updateNormadd;
+            options["normadd.naid"] = normadd.naid;
+        } else {
+
+            var name = com.typeahead(normadd.items.name, "", true);
+            if (!name) {
+                com.showTips("name", "请从下拉列表中选择名称", "right");
+                return false;
+            }
+
+            options['normadd.name'] = name;
+        }
+
+        com.post(url, options, function(res) {
 
             com.closePopup();
             com.showAlert(com.info, "操作成功");

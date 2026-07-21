@@ -102,6 +102,24 @@ public class NormaddServiceImpl implements NormaddService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
+	public int updateNormadd(NormaddVO normaddVO) {
+
+		NormaddPO normaddPO = normaddDao.get(normaddVO.getNaid());
+
+		if (normaddPO != null) {
+
+			normaddPO.getConstructionNode().setCnid(normaddVO.getConstructionNode().getCnid());
+			normaddPO.setUnit(normaddVO.getUnit());
+			normaddPO.setPrice(normaddVO.getPrice());
+
+			normaddDao.update(normaddPO);
+		}
+
+		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
 	public int updateNormaddForStatus(NormaddVO normaddVO) {
 
 		NormaddPO normaddPO = normaddDao.get(normaddVO.getNaid());
