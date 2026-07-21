@@ -72,6 +72,9 @@ class Exporter(Util):
             dc.name AS '装修公司',
             sc.name AS '销售公司',
             pc.name AS '款项公司',
+            smu.userId AS '业务员编号',
+            smu.currentName AS '业务员',
+            smd.alias AS '业务部',
             s.comment AS '备注'
         """
 
@@ -104,6 +107,8 @@ class Exporter(Util):
                 LEFT JOIN communion.company pc ON s.pompany = pc.cid
                 LEFT JOIN communion.brand b ON s.bid = b.bid
                 LEFT JOIN communion.brand sb_b ON sb.bid = sb_b.bid
+                LEFT JOIN communion.user smu ON d.smuid = smu.uid
+                LEFT JOIN communion.department smd ON smu.deptid = smd.did
             WHERE
                 %s
         """
@@ -161,7 +166,7 @@ class Exporter(Util):
             "主材导购", "方案设计编号", "方案设计", "销售类型", "品类", "品牌", "结算品牌", "渠道编号", "渠道", "劵", "抹零",
             "厂商抹零", "总价", "实收额", "补贴", "补款时间", "预结值", "预结时间", "结算值", "结算时间", "结算类型",
             "装修类型", "签单时间", "预结算人", "结算人", "内决时间", "决算时间", "金蝶编号", "金蝶名称", "装修公司",
-            "销售公司", "款项公司", "备注"
+            "销售公司", "款项公司", "业务员编号", "业务员", "业务部", "备注"
         ]
 
         sql = self.sqler(form, timetype, type, args, int(company))
