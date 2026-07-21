@@ -27,6 +27,7 @@
 | `migrate-constants/` | 常量数据化迁移（data.json → communion.constant） | 5 |
 | `misc/` | 零散单文件模块（审批、支付、企业微信、用户偏好、分公司种子） | 6 |
 | `log/` | 日志模块（actionLog 扩展、loginLog 扩展、业务日志新表、operation.logFlag、归档模板） | 5 |
+| `system/` | 拦截器合并迁移（login/common 接口登记到 operation 表 + type 分组标签） | 2 |
 | `reports/` | 非迁移脚本（报表查询、视图、示例数据） | 3 |
 
 ---
@@ -107,6 +108,17 @@ database_security_implementation.sql   → 综合加固脚本（4阶段，可独
                                     （SMALLINT NOT NULL DEFAULT 2，接口级日志控制依赖此字段）
 50_actionlog_archive_template.sql → 按月归档的月表建表模板（含存储过程批量建表）
                                     （依赖 actionlog 表结构，放最后）
+```
+
+### system/ — 拦截器合并迁移（login/common → base）
+```
+10_register_migrated_actions.sql       → 登记原 login/common 包 186 个接口到 communion.operation
+                                          表（through=1 放行, type=0, status=0, system=1）
+                                          幂等：仅插入不存在的记录，可重复执行
+20_mark_migrated_actions_type1.sql     → 给已登记的 186 个迁移接口打 type=1 分组标签
+                                          （依赖 10_register 先执行）
+                                          幂等：UPDATE 天然幂等
+                                          用途：后续按 type=1 批量收紧 through 关闸
 ```
 
 ### migrate-constants/ — 常量数据化迁移
