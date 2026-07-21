@@ -111,7 +111,7 @@ public class LogServiceImpl implements LogService {
 		if (sampling < 100 && ThreadLocalRandom.current().nextInt(100) >= sampling) return 0;
 
 		try {
-			return selfLogService.doAddInNewTx(actionLogPO);
+			return selfLogService.addActionLogInNewTransaction(actionLogPO);
 		} catch (Throwable t) {
 			// 关键：吞掉所有异常，绝不影响主业务
 			logger.error("[actionLog] write failed action={} user={}", actionLogPO.getActionName(), actionLogPO.getCreateUserPO() == null ? null : actionLogPO.getCreateUserPO().getUserId(), t);
@@ -128,7 +128,7 @@ public class LogServiceImpl implements LogService {
 	 */
 	@Override
 	@Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
-	public int doAddInNewTx(ActionLogPO actionLogPO){
+	public int addActionLogInNewTransaction(ActionLogPO actionLogPO){
 		return addActionLog(actionLogPO);
 	}
 	

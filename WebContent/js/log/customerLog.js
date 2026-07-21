@@ -7,14 +7,14 @@
 jQuery(function($) {
 
     var seacher = new Searcher();
-    var history = "customerPhoneLogPostData";
+    var history = "customerLogPostData";
 
-    seacher.base("condList", "pagenation", "resultList", api.log.pageCustomerPhoneLog);
+    seacher.base("condList", "pagenation", "resultList", api.log.pageCustomerLog);
 
     seacher.condition([
-        "log-customerPhoneLog-cid",
-        "log-customerPhoneLog-operateTime",
-        "log-customerPhoneLog-operateUserId"
+        "log-customerLog-cid",
+        "log-customerLog-operateTime",
+        "log-customerLog-operateUserId"
     ]);
 
     seacher.button([]);

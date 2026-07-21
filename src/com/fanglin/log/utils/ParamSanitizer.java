@@ -120,7 +120,7 @@ public final class ParamSanitizer {
 	 * 例：13812345678 -> 138****5678
 	 *     110101199001011234 -> 110***********1234
 	 */
-	private static String maskPartial(String value){
+	public static String maskPartial(String value){
 		int len = value.length();
 		if (len <= 7) return MASK; // 太短直接全掩码，避免泄露
 		StringBuilder sb = new StringBuilder(len);
@@ -133,6 +133,37 @@ public final class ParamSanitizer {
 	private static String truncate(String s, int maxLen){
 		if (maxLen <= 0 || s == null || s.length() <= maxLen) return s;
 		return s.substring(0, maxLen) + "...[truncated]";
+	}
+
+	/**
+	 * 登录账号脱敏（Phase 8 新增）。
+	 *
+	 * <p>loginId 可能是手机号（11 位数字）或用户名（字母数字）：
+	 * <ul>
+	 *   <li>手机号（11 位纯数字）：保留前 3 后 4，中间打码。例：13812345678 → 138****5678</li>
+	 *   <li>用户名（非手机号）：原样返回（用户名本身不是个人信息，无需脱敏）</li>
+	 *   <li>null/空：原样返回</li>
+	 * </ul>
+	 *
+	 * <p>设计权衡：登录日志表可被运维查询，手机号属于个人信息，
+	 * 必须脱敏落库以满足合规要求。用户名通常是工号/拼音，不属于敏感信息。
+	 */
+	public static String maskLoginId(String loginId){
+		if (loginId == null || loginId.length() == 0) return loginId;
+		// 判断是否手机号：11 位纯数字，1 开头
+		if (loginId.length() == 11 && loginId.startsWith("1")){
+			boolean allDigit = true;
+			for (int i = 0; i < 11; i++){
+				if (!Character.isDigit(loginId.charAt(i))){
+					allDigit = false;
+					break;
+				}
+			}
+			if (allDigit){
+				return loginId.substring(0, 3) + "****" + loginId.substring(7);
+			}
+		}
+		return loginId;
 	}
 
 }

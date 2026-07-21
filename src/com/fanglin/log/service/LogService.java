@@ -60,6 +60,6 @@ public interface LogService {
 	 * 在 REQUIRES_NEW 事务中执行实际写入。仅供 safeAddActionLog 通过自身代理调用，
 	 * 不直接暴露给业务侧。放接口里是为了让 Spring 代理能拦截到此方法。
 	 */
-	public int doAddInNewTx(ActionLogPO actionLogPO);
+	public int addActionLogInNewTransaction(ActionLogPO actionLogPO);
 
 }

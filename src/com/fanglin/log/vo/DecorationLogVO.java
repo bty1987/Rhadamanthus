@@ -1,5 +1,5 @@
 /**
- * @File Name		: DecorationPictureLogVO.java
+ * @File Name		: DecorationLogVO.java
  * @Package 		: com.fanglin.log.vo
  * @Version			: 1.0
  * @Date			: 2026-07-20
@@ -13,7 +13,7 @@ import java.sql.Timestamp;
 
 import org.apache.struts2.json.annotations.JSON;
 
-public class DecorationPictureLogVO implements Serializable {
+public class DecorationLogVO implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 

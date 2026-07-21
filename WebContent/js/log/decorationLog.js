@@ -7,15 +7,15 @@
 jQuery(function($) {
 
     var seacher = new Searcher();
-    var history = "decorationPictureLogPostData";
+    var history = "decorationLogPostData";
 
-    seacher.base("condList", "pagenation", "resultList", api.log.pageDecorationPictureLog);
+    seacher.base("condList", "pagenation", "resultList", api.log.pageDecorationLog);
 
     seacher.condition([
-        "log-decorationPictureLog-orderId",
-        "log-decorationPictureLog-dpId",
-        "log-decorationPictureLog-operateTime",
-        "log-decorationPictureLog-operateUserId"
+        "log-decorationLog-orderId",
+        "log-decorationLog-dpId",
+        "log-decorationLog-operateTime",
+        "log-decorationLog-operateUserId"
     ]);
 
     seacher.button([]);

@@ -13,7 +13,7 @@ import com.fanglin.decoration.po.DecorationPicturePO;
 import com.fanglin.decoration.po.DecorationPictureRecordPO;
 import com.fanglin.decoration.service.DecorationPictureRecordService;
 import com.fanglin.decoration.vo.DecorationPictureVO;
-import com.fanglin.log.service.DecorationPictureLogService;
+import com.fanglin.log.service.DecorationLogService;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.utils.DateUtil;
@@ -32,7 +32,7 @@ public class DecorationPictureRecordServiceImpl implements DecorationPictureReco
 	private DecorationPictureRecordDao decorationPictureRecordDao;
 
 	@Autowired
-	private DecorationPictureLogService decorationPictureLogService;
+	private DecorationLogService decorationLogService;
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
@@ -56,7 +56,7 @@ public class DecorationPictureRecordServiceImpl implements DecorationPictureReco
 		decorationPictureRecordDao.save(decorationPictureRecordPO);
 
 		// Phase 7: 同时写入 log 模块的统一图纸下载日志表（双写过渡期）
-		decorationPictureLogService.addDecorationPictureLog(DecorationPicturePO.getDpId(), DecorationPicturePO.getOrderId(), userId);
+		decorationLogService.addDecorationLog(DecorationPicturePO.getDpId(), DecorationPicturePO.getOrderId(), userId);
 
 		String path = DecorationPicturePO.getPath();
 

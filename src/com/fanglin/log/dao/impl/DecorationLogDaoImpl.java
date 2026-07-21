@@ -7,20 +7,20 @@ import org.springframework.stereotype.Repository;
 
 import com.fanglin.core.dao.impl.DaoImpl;
 import com.fanglin.core.vo.Filter;
-import com.fanglin.log.dao.DecorationPictureLogDao;
-import com.fanglin.log.po.DecorationPictureLogPO;
+import com.fanglin.log.dao.DecorationLogDao;
+import com.fanglin.log.po.DecorationLogPO;
 import com.fanglin.utils.Paging;
 
-@Repository("decorationPictureLogDao")
-public class DecorationPictureLogDaoImpl extends DaoImpl<DecorationPictureLogPO> implements DecorationPictureLogDao {
+@Repository("decorationLogDao")
+public class DecorationLogDaoImpl extends DaoImpl<DecorationLogPO> implements DecorationLogDao {
 
-	public DecorationPictureLogDaoImpl(){
-		super(DecorationPictureLogPO.class);
+	public DecorationLogDaoImpl(){
+		super(DecorationLogPO.class);
 	}
 
 	@Override
-	public List<DecorationPictureLogPO> pageDecorationPictureLog(Paging paging, List<Filter> filters){
-		PagingQuery<DecorationPictureLogPO> query = pagingQuery(paging, DecorationPictureLogPO.class);
+	public List<DecorationLogPO> pageDecorationLog(Paging paging, List<Filter> filters){
+		PagingQuery<DecorationLogPO> query = pagingQuery(paging, DecorationLogPO.class);
 
 		queryFilterExcute(query, filters);
 

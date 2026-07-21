@@ -4,6 +4,7 @@ import java.sql.Timestamp;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
+import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
@@ -48,6 +49,29 @@ public class LoginLogDaoImpl extends DaoImpl<LoginLogPO> implements LoginLogDao 
 		return session().createCriteria(LoginLogPO.class).add(Restrictions.eq("loginId", loginId)).add(Restrictions.ge("loginTime", start)).add(Restrictions.le("loginTime", end)).addOrder(Order.desc("loginTime")).list();
 	}
 
+	/**
+	 * Phase 8: 悲观锁查询，用于防爆破逻辑串行化。
+	 *
+	 * <p>使用 Criteria 的 setLockMode(LockMode.PESSIMISTIC_WRITE) 对记录加行锁，
+	 * 等价于 SELECT ... FOR UPDATE。并发的登录请求会阻塞在此查询上，
+	 * 直到前一个事务提交，从而保证防爆破检查的原子性。
+	 */
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<LoginLogPO> getLoginLogForUpdateByLoginId(String loginId, Timestamp start, Timestamp end){
+
+		Criteria criteria = session().createCriteria(LoginLogPO.class)
+				.add(Restrictions.eq("loginId", loginId))
+				.add(Restrictions.ge("loginTime", start))
+				.add(Restrictions.le("loginTime", end))
+				.addOrder(Order.desc("loginTime"));
+
+		// 行锁：PESSIMISTIC_WRITE 等价于 SELECT ... FOR UPDATE
+		criteria.setLockMode(org.hibernate.LockMode.PESSIMISTIC_WRITE);
+
+		return criteria.list();
+	}
+
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {
 
 		if (filters == null)
@@ -72,6 +96,15 @@ public class LoginLogDaoImpl extends DaoImpl<LoginLogPO> implements LoginLogDao 
 				query.timeranges("loginTime", data);
 			} else if ("loginTime".equals(field)) {
 				query.add(query.getCriterion("loginTime", data, op));
+			} else if ("operateType".equals(field)) {
+				// Phase 8: 登录方式过滤
+				query.add(query.getCriterion("operateType", data, op));
+			} else if ("resultState".equals(field)) {
+				// Phase 8: 结果状态过滤
+				query.add(query.getCriterion("resultState", Short.valueOf(data), op));
+			} else if ("companyId".equals(field)) {
+				// Phase 8: 公司过滤
+				query.add(query.getCriterion("companyId", Integer.valueOf(data), op));
 			}
 		}
 	}
