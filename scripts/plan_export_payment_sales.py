@@ -78,6 +78,9 @@ class Exporter(Util):
             spc.name AS `款项公司`,
             b.kino AS `金蝶编号`,
             b.kiname AS `金蝶名称`,
+            smu.userId AS `业务员编号`,
+            smu.currentName AS `业务员`,
+            smd.alias AS `业务部`,
             s.comment AS `销售备注`,
             sr.comment AS `备注`
         """
@@ -108,6 +111,8 @@ class Exporter(Util):
                 LEFT JOIN communion.company spc ON sp.company = spc.cid
                 LEFT JOIN communion.user cuid ON sp.cuid = cuid.uid
                 LEFT JOIN communion.brand b ON s.bid = b.bid
+                LEFT JOIN communion.user smu ON d.smuid = smu.uid
+                LEFT JOIN communion.department smd ON smu.deptid = smd.did
             WHERE
                 s.type = 0 AND 
                 sr.%s >= '%s 00:00:00' AND
@@ -155,7 +160,7 @@ class Exporter(Util):
             "设计师部编号", "设计师部", "设计师分区编号", "设计师设计分区", "品类", "品牌", "总价", "优惠券", "券信息", "收款人", 
             "收款时间", "款项类型", "状态", "金额", "定金", "厂商抹零", "抹零", "现金", "现金信息", "刷卡", 
             "刷卡信息", "转账", "转账银行", "分期", "分期银行", "对公", "对公银行", "预付款", "预付款类型", "收款劵值", 
-            "收款劵", "创建人", "订单状态", "款项公司", "金蝶编号", "金蝶名称", "销售备注", "款项备注"
+            "收款劵", "创建人", "订单状态", "款项公司", "金蝶编号", "金蝶名称", "业务员编号", "业务员", "业务部", "销售备注", "款项备注"
         ]
     
         self.getDBCursor(self.host, self.username, self.password, self.charset)

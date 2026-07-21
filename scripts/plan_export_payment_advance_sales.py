@@ -60,6 +60,9 @@ class Exporter(Util):
             communion.kv('decoration', 'decoration', 'status', d.status) AS 'status',
             dc.name,
             pc.name,
+            smu.userId,
+            smu.currentName,
+            smd.alias,
             r.comment
         """
 
@@ -85,6 +88,8 @@ class Exporter(Util):
                 LEFT JOIN communion.user cu ON r.cluid = cu.uid
                 LEFT JOIN communion.company dc ON d.company = dc.cid
                 LEFT JOIN communion.company pc ON p.company = pc.cid
+                LEFT JOIN communion.user smu ON d.smuid = smu.uid
+                LEFT JOIN communion.department smd ON smu.deptid = smd.did
             WHERE
                 r.%s >= '%s 00:00:00' AND 
                 r.%s <= '%s 23:59:59' 
@@ -152,7 +157,7 @@ class Exporter(Util):
                 "装修单号", "装修单等级", "装修单类型", "城市", "城区", "楼盘地址", "客户", "设计师编号", "设计师", "签约设计分区编号", 
                 "签约设计分区", "签约设计部编号", "签约设计部", "设计师分区编号", "设计师分区", "设计师部编号", "设计师部", "方案设计编号", "方案设计", "收款人", 
                 "收款时间", "金额", "类型", "预付款类型", "状态", "现金", "现金信息", "刷卡", "刷卡信息", "转账", 
-                "转账银行", "分期", "分期银行", "对公", "对公银行", "签单时间", "订单状态", "装修单公司", "款项公司", "备注"
+                "转账银行", "分期", "分期银行", "对公", "对公银行", "签单时间", "订单状态", "装修单公司", "款项公司", "业务员编号", "业务员", "业务部", "备注"
             ]
 
             self.createTableHead(sheet, tableHead)
