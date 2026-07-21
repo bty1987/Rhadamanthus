@@ -26,6 +26,7 @@
 | `village/` | 楼盘模块 | 2 |
 | `migrate-constants/` | 常量数据化迁移（data.json → communion.constant） | 5 |
 | `misc/` | 零散单文件模块（审批、支付、企业微信、用户偏好、分公司种子） | 6 |
+| `log/` | 日志模块（actionLog 扩展、loginLog 扩展、业务日志新表、operation.logFlag、归档模板） | 5 |
 | `reports/` | 非迁移脚本（报表查询、视图、示例数据） | 3 |
 
 ---
@@ -90,6 +91,22 @@ database_security_implementation.sql   → 综合加固脚本（4阶段，可独
 ```
 10_create_information_messagequeuing.sql → 建表
 20_add_messagequeuing_orderid.sql        → 加 orderId 列
+```
+
+### log/ — 日志模块（actionLog 扩展 + 登录日志 + 业务日志 + 接口级控制 + 归档）
+```
+10_actionlog_extend.sql          → actionLog 表加 10 字段（ip/companyId/moduleId/operateType/
+                                    businessId/params/resultState/errorCode/errorMsg/traceId）
+                                    + 4 个查询索引（actionLog 基础设施，最先执行）
+20_loginlog_extend.sql           → loginLog 表加 6 字段（operateType/resultState/errorCode/
+                                    errorMsg/companyId/traceId）+ 2 复合索引
+30_businesslog_tables.sql        → 建 3 张业务日志新表（log.customerPhoneLog /
+                                    log.decorationPictureLog / log.kingdeeSyncLog）
+                                    含历史数据迁移 INSERT（默认注释，按需启用）
+40_operation_add_logflag.sql     → communion.operation 表加 logFlag 字段
+                                    （SMALLINT NOT NULL DEFAULT 2，接口级日志控制依赖此字段）
+50_actionlog_archive_template.sql → 按月归档的月表建表模板（含存储过程批量建表）
+                                    （依赖 actionlog 表结构，放最后）
 ```
 
 ### migrate-constants/ — 常量数据化迁移
