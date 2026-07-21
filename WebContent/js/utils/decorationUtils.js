@@ -2719,6 +2719,15 @@ var decorationUtils = {
             com.focusPage('input[name="type"]:checked', '#printQuotationModal #types').prop("checked", false);
             com.focusPage('input[name="itemtype"]:checked', '#printQuotationModal #itemtypes').prop("checked", false);
 
+            // 工种合并选项仅在 layout=4(工种) 时显示, 切换时恢复默认勾选
+            var $workTypeMergeGroup = com.focusPage('#workTypeMergeGroup', '#printQuotationModal');
+            if (layout.val() == 4) {
+                $workTypeMergeGroup.show();
+                com.focusPage('input[name="workTypeMerge"]', '#printQuotationModal').prop("checked", true);
+            } else {
+                $workTypeMergeGroup.hide();
+            }
+
             if (layout.val() == 1) {
                 com.focusPage('input[value="1"]', '#printQuotationModal #types').prop("checked", true);
                 com.focusPage('input[value="2"]', '#printQuotationModal #types').prop("checked", true);
@@ -2749,7 +2758,8 @@ var decorationUtils = {
                 "type": 0,
                 "itemtype": [],
                 "calType": com.focusPage('input[name="calType"]:checked', '#printQuotationModal').val(),
-                "workType": ""
+                "workType": "",
+                "merge": com.focusPage('input[name="workTypeMerge"]:checked', '#printQuotationModal').length > 0
             };
 
             var $types = com.focusPage('input[name="type"]:checked', '#printQuotationModal #types');
