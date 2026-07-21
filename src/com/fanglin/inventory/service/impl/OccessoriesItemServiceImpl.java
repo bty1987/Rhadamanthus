@@ -56,6 +56,7 @@ public class OccessoriesItemServiceImpl implements OccessoriesItemService {
 		if (occessoriesItemVO == null) return 0;
 
 		if (occessoriesVO.getDecoration() == null) return 0;
+		if (occessoriesItemVO.getNid() == null) return 0;
 
 		int amount = occessoriesItemDao.amountOccessoriesItem(occessoriesVO.getDecoration().getOrderId(), occessoriesItemVO.getNid());
 

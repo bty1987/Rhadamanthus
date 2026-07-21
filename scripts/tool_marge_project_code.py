@@ -235,6 +235,12 @@ infos = [
     {"source": "33.Seiya\\Background\\", "target": "src\\com\\fanglin\\seiya\\"},
     {"source": "34.Aliyun\\Background\\", "target": "src\\com\\fanglin\\aliyun\\"},
     {"source": "35.Elecsign\\Background\\", "target": "src\\com\\fanglin\\elecsign\\"},
+    
+    {"source": "36.Log\\Foreground\\js\\log\\", "target": "99.Foreground\\js\\log\\", "workspace": "WebContent\\js\\log\\"},
+    {"source": "36.Log\\Foreground\\js\\api\\", "target": "99.Foreground\\js\\api\\", "workspace": "WebContent\\js\\api\\", "files": ["log.js"]},
+    {"source": "36.Log\\Foreground\\js\\condition\\", "target": "99.Foreground\\js\\condition\\", "workspace": "WebContent\\js\\condition\\", "files": ["log.js"]},
+    {"source": "36.Log\\Foreground\\views\\log\\", "target": "99.Foreground\\views\\log\\", "workspace": "WebContent\\views\\log\\"},
+    {"source": "36.Log\\Background\\log\\", "target": "src\\com\\fanglin\\log\\"},
 
     {"source": "99.Foreground\\js\\api\\", "target": "WebContent\\js\\api\\"},
     {"source": "99.Foreground\\js\\com\\", "target": "WebContent\\js\\com\\"},
