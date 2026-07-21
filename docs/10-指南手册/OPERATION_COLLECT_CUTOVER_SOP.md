@@ -13,7 +13,9 @@
 | 字段 | 值 | 含义 |
 |------|-----|------|
 | `through` | **1** = 放行收集（PASS），**0** = 强制校验 | 关闸开关（每个接口独立） |
-| `type` | 0 = 走校验，1/2 = 内部短路放行 | 自动创建的记录恒为 0 |
+| `type` | **接口分组标签**：0 = 默认/未分组，1 = login/common→base 迁移组（详见第八章） | 自动创建的记录恒为 0 |
+
+> ⚠️ **type 字段语义变更说明（2026-07）**：历史上 `type` 曾作为"鉴权档位"使用（`OperationServiceImpl.checkOperation` 里误用 `getType()` 比对 `THROUGH_*` 常量），已于本次改造修正为 `getThrough()`。此后 **type 仅作分组标签**，不承担鉴权语义；鉴权档位完全由 `through` 字段决定。打标签不会影响接口鉴权行为。
 | `status` | 0 = 启用，1 = 禁用 | |
 | `operation` | 接口名（如 `queryDecorationByOrderId`） | 对应 `.do` 的 actionName |
 
@@ -346,3 +348,30 @@ source dbs/operation_register_migrated_actions.sql;
 ```
 
 回滚即时生效，operation 表登记的数据无害，无需清理。旧 package 定义和拦截器类均保留。
+
+### type=1 分组标签（批量关闸辅助）
+
+迁移组的 186 个接口除了登记 `through=1` 外，再额外打 `type=1` 标签，便于后续按组批量操作 through：
+
+```sql
+-- 打标签（幂等，脚本：dbs/operation_mark_migrated_actions_type1.sql）
+UPDATE communion.operation SET type = 1 WHERE operation IN (... 186个接口名 ...);
+```
+
+**前置依赖**：`OperationServiceImpl.checkOperation` 已修复 `getType()→getThrough()`。否则 type=1 会被误读为 THROUGH_PASS_INT 短路放行，关闸关不掉。
+
+**后续批量关闸**（按组操作）：
+
+```sql
+-- 整组关闸：把迁移组所有 still through=1 的接口关闸
+UPDATE communion.operation SET through = 0
+WHERE type = 1 AND through = 1 AND status = 0;
+
+-- 整组回滚：把迁移组全部恢复放行
+UPDATE communion.operation SET through = 1 WHERE type = 1;
+
+-- 单接口关闸（建议同时清标签，避免后续误归到迁移组）
+UPDATE communion.operation SET through = 0, type = 0 WHERE operation = 'xxx';
+```
+
+**为什么需要标签**：收集期结束后，operation 表会混入大量自动登记的接口（影子收集），无法仅凭 `through=1` 区分"迁移组放行"和"普通接口放行中"。`type=1` 让迁移组始终可识别、可整组操作。
