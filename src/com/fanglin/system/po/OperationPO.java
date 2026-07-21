@@ -33,14 +33,14 @@ public class OperationPO implements java.io.Serializable {
 
 	public static final short THROUGH_COMMUNION_INT = 4;
 
-	// ===== Phase 5: 日志记录策略常量 =====
-	/** 永不记录：心跳/健康检查/日志自身产生的接口 */
+	// ===== Phase 5: 日志记录策略常量（三态语义）=====
+	/** 不记录：与 AUTO 等价，语义上表示"运维主动关闭某接口的日志" */
 	public static final short LOGFLAG_NONE_INT = 0;
 
-	/** 始终记录：覆盖 skipQuery，如敏感数据查询 queryCustomerByPhone */
+	/** 始终记录：无条件写入 actionLog（敏感操作、关键写接口建议设为 1） */
 	public static final short LOGFLAG_ALWAYS_INT = 1;
 
-	/** 自动：走全局 skipQuery 规则（默认值，存量兼容） */
+	/** 自动（默认）：不自动记录，仅当业务侧 ActionLogContext.bind 时才记录 */
 	public static final short LOGFLAG_AUTO_INT = 2;
 
 	public static final String COLUMN_LOGFLAG_STR = "logFlag";
