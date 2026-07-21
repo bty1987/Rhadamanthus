@@ -37,6 +37,7 @@ import com.fanglin.communion.po.CustomerPhonePO;
 import com.fanglin.communion.po.DepartmentPO;
 import com.fanglin.communion.po.DepartmentPartnerPO;
 import com.fanglin.communion.po.HousePO;
+import com.fanglin.log.context.ActionLogContext;
 import com.fanglin.communion.po.ServiceNodePO;
 import com.fanglin.communion.vo.CustomerVO;
 import com.fanglin.core.interceptor.FLException;
@@ -1274,6 +1275,9 @@ public class DecorationServiceImpl implements DecorationService {
 	@Transactional(rollbackFor = Exception.class)
 	public void changeDecorationForOrderId(String oldOrderId, String newOrderId, String userId) throws FLException {
 
+		// P0-1a: 绑定业务上下文（改单号是高风险操作，必须审计）
+		ActionLogContext.bind("decoration", oldOrderId + "->" + newOrderId, "UPDATE");
+
 		DecorationPO decorationPO;
 
 		decorationPO = decorationDao.queryDecorationByOrderId(newOrderId);
@@ -1385,6 +1389,9 @@ public class DecorationServiceImpl implements DecorationService {
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public void changeDecorationForStatus(DecorationVO decorationVO, String userId) throws FLException {
+
+		// P0-1a: 绑定业务上下文，让 actionLog 记录"谁改了哪个订单的状态"
+		ActionLogContext.bind("decoration", decorationVO.getOrderId(), "UPDATE");
 
 		String orderId = decorationVO.getOrderId();
 		Short status = decorationVO.getStatus();

@@ -56,7 +56,10 @@ public class ActionLogArchiveJob {
 
 		try {
 			int retentionDays = SystemConfig.getInt("actionLog.retentionDays", 90);
-			long cutoffMillis = System.currentTimeMillis() - retentionDays * 24L * 60 * 60 * 1000;
+			// P1-3 安全冗余：cutoffTime 往前推 1 天，避免归档边界（月末 23:59:59）的
+			// 并发写入数据在 INSERT...SELECT 和 DELETE 之间丢失。多保留的 1 天数据
+			// 下个月归档时会再次尝试（computeMonthsToArchive 的 lookbackMonths 已覆盖）
+			long cutoffMillis = System.currentTimeMillis() - (retentionDays + 1) * 24L * 60 * 60 * 1000;
 			Timestamp cutoffTime = DateUtil.getDateToTimestamp(new Date(cutoffMillis));
 
 			int total = actionLogArchiveService.archiveBefore(cutoffTime);

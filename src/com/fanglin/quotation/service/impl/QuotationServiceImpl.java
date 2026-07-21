@@ -74,6 +74,7 @@ import com.fanglin.quotation.po.QuotetionPO;
 import com.fanglin.quotation.po.SelectionItemPO;
 import com.fanglin.quotation.service.NormtionService;
 import com.fanglin.quotation.service.QuotationService;
+import com.fanglin.log.context.ActionLogContext;
 import com.fanglin.quotation.service.SelectionService;
 import com.fanglin.quotation.vo.NormtionVO;
 import com.fanglin.quotation.vo.QuotationVO;
@@ -393,6 +394,9 @@ public class QuotationServiceImpl implements QuotationService {
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public int updateQuotation(QuotationVO quotationVO) throws FLException {
+
+		// P0-1a: 绑定业务上下文（按 qid 绑定，便于按报价查询变更）
+		ActionLogContext.bind("quotation", String.valueOf(quotationVO.getQid()), "UPDATE");
 
 		QuotationPO quotationPO = checkQuotationForStatusByEnabled(quotationVO.getQid());
 

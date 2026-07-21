@@ -34,7 +34,7 @@ CREATE TABLE IF NOT EXISTS `customerPhoneLog` (
   KEY `idx_cid_time` (`cid`, `operateTime`),
   KEY `idx_operateUserId_time` (`operateUserId`, `operateTime`),
   KEY `idx_operateTime` (`operateTime`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8_general-ci ROW_FORMAT=Compact COMMENT='客户电话查询日志（迁移自communion.customerrecord）';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci ROW_FORMAT=Compact COMMENT='客户电话查询日志（迁移自communion.customerrecord）';
 
 
 -- ---------------------------------------------------------------------
@@ -53,7 +53,7 @@ CREATE TABLE IF NOT EXISTS `decorationPictureLog` (
   KEY `idx_dpId_time` (`dpId`, `operateTime`),
   KEY `idx_orderId_time` (`orderId`, `operateTime`),
   KEY `idx_operateUserId_time` (`operateUserId`, `operateTime`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8-general-ci ROW_FORMAT=Compact COMMENT='图纸下载日志（迁移自decoration.decorationpicturerecord）';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci ROW_FORMAT=Compact COMMENT='图纸下载日志（迁移自decoration.decorationpicturerecord）';
 
 
 -- ---------------------------------------------------------------------
@@ -75,7 +75,7 @@ CREATE TABLE IF NOT EXISTS `kingdeeSyncLog` (
   KEY `idx_orderId_time` (`orderId`, `createTime`),
   KEY `idx_rtid` (`rtid`),
   KEY `idx_createTime` (`createTime`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8-general-ci ROW_FORMAT=Compact COMMENT='金蝶同步日志（迁移自platform.kingdeeRecord）';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci ROW_FORMAT=Compact COMMENT='金蝶同步日志（迁移自platform.kingdeeRecord）';
 
 
 -- =====================================================================

