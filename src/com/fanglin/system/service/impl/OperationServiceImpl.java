@@ -255,8 +255,11 @@ public class OperationServiceImpl implements OperationService {
 		OperationPO operationPO = operationDao.queryOperationByOperation(operation);
 
 		if (operationPO == null) return true;
-		if (operationPO.getType() == OperationPO.THROUGH_COMMON_INT) return true;
-		if (operationPO.getType() == OperationPO.THROUGH_PASS_INT) return true;
+		// 修复: 历史代码误用 getType() 比对 THROUGH_* 常量,正确应为 getThrough()
+		// type 字段现作为「接口分组标签」(如 type=1 标记 login/common→base 迁移组),
+		// 不再承担鉴权档位语义,避免后续按 type 标签批量关闸 through=0 时被误短路放行
+		if (operationPO.getThrough() == OperationPO.THROUGH_COMMON_INT) return true;
+		if (operationPO.getThrough() == OperationPO.THROUGH_PASS_INT) return true;
 
 		List<UserRolePO> userRolePOs = userRoleDao.queryUserRole(userPO.getUid());
 
