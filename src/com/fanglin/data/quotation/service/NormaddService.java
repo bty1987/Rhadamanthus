@@ -13,7 +13,9 @@ public interface NormaddService {
 	public List<NormaddVO> queryNormadd(NormaddVO normaddVO, int company);
 	
 	public int addNormadd(NormaddVO normaddVO, int company);
-	
+
+	public int updateNormadd(NormaddVO normaddVO);
+
 	public int updateNormaddForStatus(NormaddVO normaddVO);
 	
 	public int deleteNormadd(NormaddVO normaddVO);

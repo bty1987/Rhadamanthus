@@ -1872,6 +1872,13 @@ $.extend(api, {
         updateNormaddForStatus: {
             url: "updateNormaddForStatus.do"
         },
+        updateNormadd: {
+            url: "updateNormadd.do",
+            type: "update",
+            tranargs: {
+                args: ["normadd.price"]
+            }
+        },
         deleteNormadd: {
             url: "deleteNormadd.do"
         },
