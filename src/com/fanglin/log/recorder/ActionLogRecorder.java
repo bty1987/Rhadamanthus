@@ -87,23 +87,14 @@ public class ActionLogRecorder {
 			// logFlag 为 null 时兜底为 AUTO（operation 查不到/未登记的情况）
 			short flag = logFlag != null ? logFlag : OperationPO.LOGFLAG_AUTO_INT;
 
-			// 优先级 2：NONE 绝对不记录（即使业务侧主动绑定也不记录）
-			if (flag == OperationPO.LOGFLAG_NONE_INT) return;
-
-			// 优先级 3：ALWAYS 始终记录（覆盖 AUTO 的 QUERY 过滤）
-			if (flag == OperationPO.LOGFLAG_ALWAYS_INT) {
-				ActionLogPO po = buildPO(request, actionName, authentication, startTime, endTime, errorCode, errorMsg, exception, ctx);
-				if (po == null) return;
-				logService.safeAddActionLog(po);
-				return;
-			}
-
-			// 优先级 4+5+6：AUTO 模式（flag == LOGFLAG_AUTO_INT）
-			// QUERY 类只读操作默认不写库（数据量控制），由 actionLog.skipQuery 全局开关控制
-			// 豁免：业务侧通过 ActionLogContext.bind 明确绑定的，即使 QUERY 类也强制写
-			// 如需精确控制单个接口，请改 operation.logFlag 为 NONE 或 ALWAYS
-			if (ctx == null && SystemConfig.getBoolean("actionLog.skipQuery", true) && isQueryAction(actionName)){
-				return;
+			// 优先级 2：NONE 和 AUTO 都不自动记录
+			//   NONE(0)  = 明确不记录（运维主动关闭某接口的日志）
+			//   AUTO(2)  = 默认不记录（存量 operation 默认值，只有业务侧 bind 才记录）
+			//   只有 ALWAYS(1) 才无条件记录
+			if (flag != OperationPO.LOGFLAG_ALWAYS_INT) {
+				// 例外：业务侧通过 ActionLogContext.bind 明确绑定的，即使 AUTO/NONE 也强制记录
+				// （NONE 的"绝对不记录"语义已被废弃，统一让位给业务侧主动绑定）
+				if (ctx == null) return;
 			}
 
 			ActionLogPO po = buildPO(request, actionName, authentication, startTime, endTime, errorCode, errorMsg, exception, ctx);
@@ -118,18 +109,13 @@ public class ActionLogRecorder {
 	}
 
 	/**
-	 * 判断是否 QUERY 类只读操作。
+	 * 判断是否 QUERY 类只读操作（已弃用，保留供未来按需启用）。
 	 *
-	 * <p>Phase 4.1 引入，P1-4 扩展：这类操作审计价值低但调用量占 80%+，
-	 * 默认不写库。判断依据 actionName 前缀，覆盖项目实际使用的所有只读动词。
-	 *
-	 * <p>覆盖的前缀（按 METHOD_NAMING_CONVENTION.md 动词清单 + 项目统计）：
-	 * page / query / get / count / amount / list / check / show / view /
-	 * read / fetch / find / verify / search / has / exist / is
-	 *
-	 * <p>注意：check 既可能是查询（checkAvailable）也可能是动作（checkIn），
-	 * 这里偏向"只读"判定，业务侧可通过 ActionLogContext.bind 强制记录。
+	 * <p>历史：Phase 4.1 引入用于 AUTO 模式跳过 QUERY 类。
+	 * 当前：AUTO 模式语义改为"不记录"，QUERY 类无需特殊判断。
+	 * 保留方法供未来如需"按操作类型精细过滤"时复用。
 	 */
+	@SuppressWarnings("unused")
 	private boolean isQueryAction(String actionName){
 		if (actionName == null) return false;
 		String lower = actionName.toLowerCase();
