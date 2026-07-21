@@ -120,6 +120,10 @@ public class LoginAction extends BaseListAction {
 		String securityCode = request.getParameter("securityCode");
 		String ip = IPUtil.getIpAddr(request);
 
+		// Phase 8: 统一登录日志上下文（含 operateType/resultState 等新字段）
+		LoginLogVO loginLogVO = new LoginLogVO(loginId, ip, DateUtil.getDateToTimestamp(new Date()));
+		loginLogVO.setOperateType(com.fanglin.log.po.LoginLogPO.OPERATETYPE_PASSWORD);
+
 		try {
 
 			if (SystemConfig.getString("disable") != null && !SystemConfig.getString("disable").equals(loginId)) {
@@ -132,8 +136,7 @@ public class LoginAction extends BaseListAction {
 				throw new FLException(110001, "验证码错误");
 			}
 
-			LoginLogVO loginLogVO = new LoginLogVO(loginId, ip, DateUtil.getDateToTimestamp(new Date()));
-
+			// Phase 8: 预检查防爆破（快速拒绝已锁定用户，避免消耗 DB 查询）
 			int times = loginLogService.isCanLogin(loginLogVO);
 			if (times == -1) {
 				throw new FLException(110003, "密码输入错误次数过多,拒绝登陆");
@@ -172,12 +175,9 @@ public class LoginAction extends BaseListAction {
 			// ===== 挑战-响应认证结束 =====
 
 			if (user == null) {
-
-				String errorMessage = String.format("用户名或者密码错误,还可以尝试%s次输入", String.valueOf((times - 1)));
-
-				loginLogVO.setSuccessFlag(0);
-				loginLogService.addLoginLog(loginLogVO);
-
+				// Phase 8: 原子化写入失败日志（FOR UPDATE 串行化，防并发爆破）
+				int remain = loginLogService.recordLogin(loginLogVO, false, 110002, "用户名或者密码错误");
+				String errorMessage = String.format("用户名或者密码错误,还可以尝试%s次输入", String.valueOf(remain));
 				throw new FLException(110002, errorMessage);
 			}
 
@@ -191,16 +191,30 @@ public class LoginAction extends BaseListAction {
 
 			authentication = AESHelper.encrypt(authenticationUtil.getAuthenticationStr(), SystemConfig.getString("encryptKey"), SystemConfig.getString("encryptIv"));
 
-			loginLogVO.setSuccessFlag(1);
-
-			loginLogService.addLoginLog(loginLogVO);
+			// Phase 8: 原子化写入成功日志（同时写 successFlag=1 和 resultState=0）
+			loginLogVO.setCompanyId(Integer.parseInt(user.getCompanys()));
+			loginLogService.recordLogin(loginLogVO, true, null, null);
 		} catch (FLException e) {
 			setErrorCode(e.getCode());
 			setErrorMsg(e.getErrorMessage());
+
+			// Phase 8: FLException 也记录到登录日志（除已记录的 110002/110004 外）
+			// 避免重复记录：110002 已在上方 recordLogin 记录
+			if (e.getCode() != 110002 && e.getCode() != 110003){
+				try {
+					loginLogService.recordLogin(loginLogVO, false, e.getCode(), e.getErrorMessage());
+				} catch (Throwable ignore) { }
+			}
 		} catch (Exception e) {
 
 			setErrorCode(110000);
 			setErrorMsg("系统繁忙,请稍后重试");
+
+			// Phase 8: 系统异常也记录到登录日志（resultState=2 异常）
+			try {
+				loginLogVO.setResultState(com.fanglin.log.po.LoginLogPO.RESULTSTATE_ERROR);
+				loginLogService.recordLogin(loginLogVO, false, 110000, "系统繁忙,请稍后重试");
+			} catch (Throwable ignore) { }
 
 			LogUtils.logging(logger, e, "doLogin", "common", ip);
 		}
@@ -219,8 +233,14 @@ public class LoginAction extends BaseListAction {
 	@Action(value = "requestAuthCode", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String requestAuthCode() throws FLException {
 
+		String userId = request.getParameter("userId");
+		String ip = IPUtil.getIpAddr(request);
+
+		// Phase 8: 补登录日志（原代码完全不记录验证码登录路径）
+		LoginLogVO loginLogVO = new LoginLogVO(userId, ip, DateUtil.getDateToTimestamp(new Date()));
+		loginLogVO.setOperateType(com.fanglin.log.po.LoginLogPO.OPERATETYPE_AUTHCODE);
+
 		try {
-			String userId = request.getParameter("userId");
 			String code = request.getParameter("code");
 			String secret = request.getParameter("secret");
 
@@ -229,12 +249,22 @@ public class LoginAction extends BaseListAction {
 			}
 
 			setAuthentication(loginService.requestAuthCode(userId, code, secret));
+
+			// 成功
+			loginLogService.recordLogin(loginLogVO, true, null, null);
 		} catch (FLException e) {
 			setErrorCode(e.getCode());
 			setErrorMsg(e.getErrorMessage());
+			try {
+				loginLogService.recordLogin(loginLogVO, false, e.getCode(), e.getErrorMessage());
+			} catch (Throwable ignore) { }
 		} catch (Exception e) {
 			setErrorCode(110000);
 			setErrorMsg("系统繁忙,请稍后重试");
+			try {
+				loginLogVO.setResultState(com.fanglin.log.po.LoginLogPO.RESULTSTATE_ERROR);
+				loginLogService.recordLogin(loginLogVO, false, 110000, "系统繁忙,请稍后重试");
+			} catch (Throwable ignore) { }
 
 			LogUtils.logging(logger, e, "requestAuthCode", "common");
 		}
@@ -245,8 +275,14 @@ public class LoginAction extends BaseListAction {
 	@Action(value = "phoneAuthCode", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String phoneAuthCode() throws FLException {
 
+		String userId = request.getParameter("userId");
+		String ip = IPUtil.getIpAddr(request);
+
+		// Phase 8: 补登录日志（原代码完全不记录手机验证码登录路径）
+		LoginLogVO loginLogVO = new LoginLogVO(userId, ip, DateUtil.getDateToTimestamp(new Date()));
+		loginLogVO.setOperateType(com.fanglin.log.po.LoginLogPO.OPERATETYPE_PHONE);
+
 		try {
-			String userId = request.getParameter("userId");
 			String phone = request.getParameter("phone");
 			String code = request.getParameter("code");
 			String secret = request.getParameter("secret");
@@ -256,12 +292,22 @@ public class LoginAction extends BaseListAction {
 			}
 
 			setAuthentication(loginService.phoneAuthCode(userId, phone, code, secret));
+
+			// 成功
+			loginLogService.recordLogin(loginLogVO, true, null, null);
 		} catch (FLException e) {
 			setErrorCode(e.getCode());
 			setErrorMsg(e.getErrorMessage());
+			try {
+				loginLogService.recordLogin(loginLogVO, false, e.getCode(), e.getErrorMessage());
+			} catch (Throwable ignore) { }
 		} catch (Exception e) {
 			setErrorCode(110000);
 			setErrorMsg("系统繁忙,请稍后重试");
+			try {
+				loginLogVO.setResultState(com.fanglin.log.po.LoginLogPO.RESULTSTATE_ERROR);
+				loginLogService.recordLogin(loginLogVO, false, 110000, "系统繁忙,请稍后重试");
+			} catch (Throwable ignore) { }
 
 			LogUtils.logging(logger, e, "requestAuthCode", "common");
 		}

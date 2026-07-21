@@ -46,6 +46,6 @@ public interface ActionLogArchiveDao {
 	 * @param rangeEnd   时间段结束（不含）
 	 * @return 实际删除行数
 	 */
-	int deleteArchivedRange(Timestamp rangeStart, Timestamp rangeEnd);
+	int deleteActionLogByTimeRange(Timestamp rangeStart, Timestamp rangeEnd);
 
 }

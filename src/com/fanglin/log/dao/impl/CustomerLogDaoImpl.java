@@ -7,20 +7,20 @@ import org.springframework.stereotype.Repository;
 
 import com.fanglin.core.dao.impl.DaoImpl;
 import com.fanglin.core.vo.Filter;
-import com.fanglin.log.dao.CustomerPhoneLogDao;
-import com.fanglin.log.po.CustomerPhoneLogPO;
+import com.fanglin.log.dao.CustomerLogDao;
+import com.fanglin.log.po.CustomerLogPO;
 import com.fanglin.utils.Paging;
 
-@Repository("customerPhoneLogDao")
-public class CustomerPhoneLogDaoImpl extends DaoImpl<CustomerPhoneLogPO> implements CustomerPhoneLogDao {
+@Repository("customerLogDao")
+public class CustomerLogDaoImpl extends DaoImpl<CustomerLogPO> implements CustomerLogDao {
 
-	public CustomerPhoneLogDaoImpl(){
-		super(CustomerPhoneLogPO.class);
+	public CustomerLogDaoImpl(){
+		super(CustomerLogPO.class);
 	}
 
 	@Override
-	public List<CustomerPhoneLogPO> pageCustomerPhoneLog(Paging paging, List<Filter> filters){
-		PagingQuery<CustomerPhoneLogPO> query = pagingQuery(paging, CustomerPhoneLogPO.class);
+	public List<CustomerLogPO> pageCustomerLog(Paging paging, List<Filter> filters){
+		PagingQuery<CustomerLogPO> query = pagingQuery(paging, CustomerLogPO.class);
 
 		queryFilterExcute(query, filters);
 

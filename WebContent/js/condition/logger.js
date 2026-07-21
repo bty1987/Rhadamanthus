@@ -49,6 +49,38 @@ Condition.addupRule("log", {
         }
     },
 
+    // ===== loginLog 扩展条件（Phase 8）=====
+    "loginOperateType": {
+        label: "登录方式",
+        type: "select",
+        submitConfig: { name: "operateType", op: "eq", validate: null },
+        dataSource: {
+            url: null, postData: null,
+            listPath: [
+                {key: "PASSWORD", value: "密码"},
+                {key: "AUTHCODE", value: "验证码"},
+                {key: "PHONE", value: "手机验证码"},
+                {key: "CHANGE", value: "切换公司"},
+                {key: "UPDATE", value: "刷新令牌"}
+            ],
+            keyPath: "key", valuePath: "value"
+        }
+    },
+    "loginResultState": {
+        label: "结果(三态)",
+        type: "select",
+        submitConfig: { name: "resultState", op: "eq", validate: null },
+        dataSource: {
+            url: null, postData: null,
+            listPath: [
+                {key: "0", value: "成功"},
+                {key: "1", value: "失败"},
+                {key: "2", value: "异常"}
+            ],
+            keyPath: "key", valuePath: "value"
+        }
+    },
+
     // ===== actionLog 专用条件（Phase 2）=====
     "actionUserId": {
         label: "操作人账号",
@@ -178,39 +210,39 @@ Condition.addupRule("log", {
     },
 
     // ===== 客户电话查询日志条件（Phase 7）=====
-    "customerPhoneLog-cid": {
+    "customerLog-cid": {
         label: "客户ID",
         type: "text",
         submitConfig: { name: "cid", op: "eq", validate: null }
     },
-    "customerPhoneLog-operateTime": {
+    "customerLog-operateTime": {
         label: "查询时间",
         type: "dateRangePicker",
         submitConfig: { name: "operateTime", op: "between", validate: null }
     },
-    "customerPhoneLog-operateUserId": {
+    "customerLog-operateUserId": {
         label: "操作人账号",
         type: "text",
         submitConfig: { name: "operateUserId", op: "eq", validate: null }
     },
 
     // ===== 图纸下载日志条件（Phase 7）=====
-    "decorationPictureLog-orderId": {
+    "decorationLog-orderId": {
         label: "订单号",
         type: "text",
         submitConfig: { name: "orderId", op: "eq", validate: null }
     },
-    "decorationPictureLog-dpId": {
+    "decorationLog-dpId": {
         label: "图纸ID",
         type: "text",
         submitConfig: { name: "dpId", op: "eq", validate: null }
     },
-    "decorationPictureLog-operateTime": {
+    "decorationLog-operateTime": {
         label: "下载时间",
         type: "dateRangePicker",
         submitConfig: { name: "operateTime", op: "between", validate: null }
     },
-    "decorationPictureLog-operateUserId": {
+    "decorationLog-operateUserId": {
         label: "操作人账号",
         type: "text",
         submitConfig: { name: "operateUserId", op: "eq", validate: null }

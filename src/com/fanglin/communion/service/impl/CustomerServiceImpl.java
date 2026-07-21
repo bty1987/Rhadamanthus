@@ -39,7 +39,7 @@ import com.fanglin.fadada.signature.Signature;
 import com.fanglin.information.dao.MessageQueuingDao;
 import com.fanglin.information.po.MessageCueuingPO;
 import com.fanglin.information.po.MessageQueuingPO;
-import com.fanglin.log.service.CustomerPhoneLogService;
+import com.fanglin.log.service.CustomerLogService;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
@@ -64,7 +64,7 @@ public class CustomerServiceImpl implements CustomerService {
 	private CustomerRecordDao customerRecordDao;
 
 	@Autowired
-	private CustomerPhoneLogService customerPhoneLogService;
+	private CustomerLogService customerLogService;
 
 	@Autowired
 	private MessageQueuingDao messageQueuingDao;
@@ -157,7 +157,7 @@ public class CustomerServiceImpl implements CustomerService {
 
 		// Phase 7: 同时写入 log 模块的统一客户电话查询日志表（双写过渡期）
 		// 后续废弃原表后可移除上面那行 customerRecordDao.save
-		customerPhoneLogService.addCustomerPhoneLog(customerPO.getCid(), customerPhoneVO.getCpid(), userId, null);
+		customerLogService.addCustomerLog(customerPO.getCid(), customerPhoneVO.getCpid(), userId, null);
 
 		return customerVO;
 	}

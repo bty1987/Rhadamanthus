@@ -1,5 +1,5 @@
 /**
- * @File Name		: DecorationPictureLogPO.java
+ * @File Name		: DecorationLogPO.java
  * @Package 		: com.fanglin.log.po
  * @Version			: 1.0
  * @Date			: 2026-07-20
@@ -27,8 +27,8 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "decorationPictureLog", catalog = "log")
-public class DecorationPictureLogPO implements Serializable {
+@Table(name = "decorationLog", catalog = "log")
+public class DecorationLogPO implements Serializable {
 
 	private static final long serialVersionUID = -6002560128126657762L;
 
@@ -47,7 +47,7 @@ public class DecorationPictureLogPO implements Serializable {
 	private String ip;
 	private Integer companyId;
 
-	public DecorationPictureLogPO(){
+	public DecorationLogPO(){
 		super();
 	}
 

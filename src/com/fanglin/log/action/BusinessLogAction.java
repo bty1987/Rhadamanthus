@@ -20,8 +20,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
 import com.fanglin.core.action.BaseListAction;
-import com.fanglin.log.service.CustomerPhoneLogService;
-import com.fanglin.log.service.DecorationPictureLogService;
+import com.fanglin.log.service.CustomerLogService;
+import com.fanglin.log.service.DecorationLogService;
 import com.fanglin.log.service.KingdeeSyncLogService;
 
 @ParentPackage("base")
@@ -32,23 +32,23 @@ public class BusinessLogAction extends BaseListAction {
 	private static final long serialVersionUID = 1L;
 
 	@Autowired
-	private CustomerPhoneLogService customerPhoneLogService;
+	private CustomerLogService customerLogService;
 
 	@Autowired
-	private DecorationPictureLogService decorationPictureLogService;
+	private DecorationLogService decorationLogService;
 
 	@Autowired
 	private KingdeeSyncLogService kingdeeSyncLogService;
 
-	@Action(value = "pageCustomerPhoneLog", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false"}) }, params = {"contentType", "text/html"})
-	public String pageCustomerPhoneLog(){
-		customerPhoneLogService.pageCustomerPhoneLog(getPaging(), getFilters());
+	@Action(value = "pageCustomerLog", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false"}) }, params = {"contentType", "text/html"})
+	public String pageCustomerLog(){
+		customerLogService.pageCustomerLog(getPaging(), getFilters());
 		return SUCCESS;
 	}
 
-	@Action(value = "pageDecorationPictureLog", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false"}) }, params = {"contentType", "text/html"})
-	public String pageDecorationPictureLog(){
-		decorationPictureLogService.pageDecorationPictureLog(getPaging(), getFilters());
+	@Action(value = "pageDecorationLog", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false"}) }, params = {"contentType", "text/html"})
+	public String pageDecorationLog(){
+		decorationLogService.pageDecorationLog(getPaging(), getFilters());
 		return SUCCESS;
 	}
 

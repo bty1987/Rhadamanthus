@@ -118,7 +118,7 @@ public class ActionLogArchiveServiceImpl implements ActionLogArchiveService {
 		}
 
 		// DELETE 热表（同事务，INSERT 回滚时 DELETE 也回滚）
-		int deleted = actionLogArchiveDao.deleteArchivedRange(mr.start, mr.end);
+		int deleted = actionLogArchiveDao.deleteActionLogByTimeRange(mr.start, mr.end);
 		logger.info("[actionLog-archive] month={} deleted={}", mr.ym, deleted);
 
 		return deleted;

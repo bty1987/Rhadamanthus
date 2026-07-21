@@ -1,5 +1,5 @@
 /**
- * @File Name		: CustomerPhoneLogPO.java
+ * @File Name		: CustomerLogPO.java
  * @Package 		: com.fanglin.log.po
  * @Version			: 1.0
  * @Date			: 2026-07-20
@@ -26,8 +26,8 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "customerPhoneLog", catalog = "log")
-public class CustomerPhoneLogPO implements Serializable {
+@Table(name = "customerLog", catalog = "log")
+public class CustomerLogPO implements Serializable {
 
 	private static final long serialVersionUID = 3256551141185259683L;
 
@@ -53,11 +53,11 @@ public class CustomerPhoneLogPO implements Serializable {
 	private String ip;
 	private Integer companyId;
 
-	public CustomerPhoneLogPO(){
+	public CustomerLogPO(){
 		super();
 	}
 
-	public CustomerPhoneLogPO(long cid, long cpid, short type, String operateUserId, Timestamp operateTime){
+	public CustomerLogPO(long cid, long cpid, short type, String operateUserId, Timestamp operateTime){
 		super();
 		this.cid = cid;
 		this.cpid = cpid;

@@ -55,7 +55,7 @@ public class ActionLogArchiveDaoImpl extends GenericDaoImpl implements ActionLog
 	}
 
 	@Override
-	public int deleteArchivedRange(Timestamp rangeStart, Timestamp rangeEnd){
+	public int deleteActionLogByTimeRange(Timestamp rangeStart, Timestamp rangeEnd){
 		String sql = "DELETE FROM log.actionlog WHERE createTime >= :start AND createTime < :end";
 		return session().createSQLQuery(sql)
 				.setTimestamp("start", rangeStart)
