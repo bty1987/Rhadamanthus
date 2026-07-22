@@ -21,7 +21,6 @@ package com.fanglin.log.service.impl;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -52,7 +51,7 @@ public class ActionLogArchiveServiceImpl implements ActionLogArchiveService {
 	private ActionLogArchiveService selfArchiveService;
 
 	@Override
-	public int archiveBefore(Timestamp cutoffTime){
+	public int archiveBefore(Timestamp cutoffTime) {
 
 		// 归档总开关
 		if (!SystemConfig.getBoolean("actionLog.archiveEnabled", true)) return -1;
@@ -61,13 +60,13 @@ public class ActionLogArchiveServiceImpl implements ActionLogArchiveService {
 
 		// 计算需要归档的月份列表：从最早数据所在月到 cutoffTime 所在月的前一个月
 		List<MonthRange> months = computeMonthsToArchive(cutoffTime);
-		if (months.isEmpty()){
+		if (months.isEmpty()) {
 			logger.info("[actionLog-archive] no months to archive, cutoff={}", cutoffTime);
 			return 0;
 		}
 
 		int totalArchived = 0;
-		for (MonthRange mr : months){
+		for (MonthRange mr : months) {
 			try {
 				// 关键：通过自身代理调用，REQUIRES_NEW 才能生效
 				int n = selfArchiveService.archiveOneMonth(mr);
@@ -87,18 +86,17 @@ public class ActionLogArchiveServiceImpl implements ActionLogArchiveService {
 	 */
 	@Override
 	@Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
-	public int archiveOneMonth(MonthRange mr){
+	public int archiveOneMonth(MonthRange mr) {
 
 		// 白名单校验（防注入，即便上游已校验也二次兜底）
-		if (!MONTH_PATTERN.matcher(mr.ym).matches()){
+		if (!MONTH_PATTERN.matcher(mr.ym).matches()) {
 			logger.warn("[actionLog-archive] invalid month format, skip: {}", mr.ym);
 			return 0;
 		}
 
 		// 检查归档表存在
-		if (!actionLogArchiveDao.archiveTableExists(mr.ym)){
-			logger.warn("[actionLog-archive] archive table log.actionlog_{} not exists, skip. "
-					+ "DBA please create it: CREATE TABLE actionlog_{} LIKE actionlog;", mr.ym, mr.ym);
+		if (!actionLogArchiveDao.archiveTableExists(mr.ym)) {
+			logger.warn("[actionLog-archive] archive table log.actionlog_{} not exists, skip. " + "DBA please create it: CREATE TABLE actionlog_{} LIKE actionlog;", mr.ym, mr.ym);
 			return 0;
 		}
 
@@ -112,7 +110,7 @@ public class ActionLogArchiveServiceImpl implements ActionLogArchiveService {
 
 		// 二次校验：归档表里的数据量是否与预估一致（防 INSERT 部分成功）
 		// 注意：这里不强制相等，只要 inserted > 0 就继续 DELETE
-		if (inserted <= 0){
+		if (inserted <= 0) {
 			logger.warn("[actionLog-archive] month={} inserted=0, skip delete", mr.ym);
 			return 0;
 		}
@@ -126,11 +124,11 @@ public class ActionLogArchiveServiceImpl implements ActionLogArchiveService {
 
 	/**
 	 * 计算需要归档的月份列表。
-	 *
-	 * <p>策略：找热表中最旧记录所在月（保守起见从 cutoffTime 所在月往前推 12 个月），
-	 * 一直枚举到 cutoffTime 所在月的前一个月。每个月生成 MonthRange（月份起始/结束时间）。
+	 * 
+	 * <p>
+	 * 策略：找热表中最旧记录所在月（保守起见从 cutoffTime 所在月往前推 12 个月）， 一直枚举到 cutoffTime 所在月的前一个月。每个月生成 MonthRange（月份起始/结束时间）。
 	 */
-	private List<MonthRange> computeMonthsToArchive(Timestamp cutoffTime){
+	private List<MonthRange> computeMonthsToArchive(Timestamp cutoffTime) {
 		List<MonthRange> list = new ArrayList<MonthRange>();
 
 		// cutoffTime 所在月的"月初"
@@ -152,7 +150,7 @@ public class ActionLogArchiveServiceImpl implements ActionLogArchiveService {
 		// 从 cutoffTime 月的上一个月开始往前推
 		cal.add(Calendar.MONTH, -1);
 
-		for (int i = 0; i < lookbackMonths; i++){
+		for (int i = 0; i < lookbackMonths; i++) {
 			Timestamp start = new Timestamp(cal.getTimeInMillis());
 			String ym = String.format("%04d%02d", cal.get(Calendar.YEAR), cal.get(Calendar.MONTH) + 1);
 
@@ -172,11 +170,11 @@ public class ActionLogArchiveServiceImpl implements ActionLogArchiveService {
 	 * 月份归档范围。
 	 */
 	public static class MonthRange {
-		public final String ym;       // yyyyMM
+		public final String ym; // yyyyMM
 		public final Timestamp start; // 月初（含）
-		public final Timestamp end;   // 下月初（不含）
+		public final Timestamp end; // 下月初（不含）
 
-		public MonthRange(String ym, Timestamp start, Timestamp end){
+		public MonthRange(String ym, Timestamp start, Timestamp end) {
 			this.ym = ym;
 			this.start = start;
 			this.end = end;
