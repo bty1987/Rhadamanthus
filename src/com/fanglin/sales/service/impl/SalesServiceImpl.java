@@ -33,6 +33,7 @@ import com.fanglin.data.po.FormatPO;
 import com.fanglin.data.po.GoodsPO;
 import com.fanglin.data.po.GoodsPackagePO;
 import com.fanglin.decoration.dao.DecorationDao;
+import com.fanglin.decoration.po.DecorationAccountStatusPO;
 import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.decoration.service.DecorationAccountStatusService;
 import com.fanglin.information.dao.ActivityDao;
@@ -366,7 +367,7 @@ public class SalesServiceImpl implements SalesService {
 
 		salesDao.save(salesPO);
 
-		decorationAccountStatusService.updateDecorationAccountStatus(salesPO.getOrderId());
+		decorationAccountStatusService.updateDecorationAccountStatus(salesPO.getOrderId(), DecorationAccountStatusPO.TYPE_SALES_INT);
 
 		SalesItemPO salesItemPO;
 
@@ -579,7 +580,7 @@ public class SalesServiceImpl implements SalesService {
 
 		salesDao.update(salesPO);
 
-		decorationAccountStatusService.updateDecorationAccountStatus(salesPO.getOrderId());
+		decorationAccountStatusService.updateDecorationAccountStatus(salesPO.getOrderId(), DecorationAccountStatusPO.TYPE_SALES_INT);
 
 		return 0;
 	}
@@ -769,7 +770,7 @@ public class SalesServiceImpl implements SalesService {
 
 		salesDao.update(salesPO);
 
-		decorationAccountStatusService.updateDecorationAccountStatus(salesPO.getOrderId());
+		decorationAccountStatusService.updateDecorationAccountStatus(salesPO.getOrderId(), DecorationAccountStatusPO.TYPE_SALES_INT);
 
 		return 0;
 	}
@@ -804,7 +805,7 @@ public class SalesServiceImpl implements SalesService {
 
 		salesDao.update(salesPO);
 
-		decorationAccountStatusService.updateDecorationAccountStatus(salesPO.getOrderId());
+		decorationAccountStatusService.updateDecorationAccountStatus(salesPO.getOrderId(), DecorationAccountStatusPO.TYPE_SALES_INT);
 
 		return 0;
 	}

@@ -8,10 +8,10 @@ public interface DecorationAccountStatusService {
 
 	public DecorationAccountStatusVO queryDecorationAccountStatusByOrderId(DecorationAccountStatusVO decorationAccountStatusVO);
 
-	public DecorationAccountStatusPO makeDecorationAccountStatus(String orderId) throws FLException;
+	public DecorationAccountStatusPO updateDecorationAccountStatus(String orderId) throws FLException;
 
-	public void updateDecorationAccountStatus(String orderId) throws FLException;
+	public void updateDecorationAccountStatus(String orderId, short type) throws FLException;
 
-	public void checkDecorationAccountStatusForMake(String orderId, int company) throws FLException;
+	public void checkDecorationAccountStatus(String orderId, int company) throws FLException;
 
 }

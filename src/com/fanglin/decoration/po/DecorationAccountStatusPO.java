@@ -25,6 +25,18 @@ public class DecorationAccountStatusPO implements Serializable {
 
 	public static final short STATUS_UNCHECK_INT = 2;
 
+	public static final short TYPE_SIGN_INT = 0;
+
+	public static final short TYPE_SALES_INT = 1;
+
+	public static final short TYPE_CONSTRUCTION_INT = 2;
+
+	public static final short TYPE_SELECTION_INT = 3;
+
+	public static final short TYPE_DECORATION_PAYMENT_INT = 4;
+
+	public static final short TYPE_SALES_PAYMENT_INT = 5;
+
 	private long dasid;
 
 	private String orderId;

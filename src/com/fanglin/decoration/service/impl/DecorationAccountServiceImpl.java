@@ -187,9 +187,9 @@ public class DecorationAccountServiceImpl implements DecorationAccountService {
 			decorationAccountDao.merge(decorationAccountPO);
 		}
 
-		DecorationAccountStatusPO decorationAccountStatusPO = decorationAccountStatusService.makeDecorationAccountStatus(decorationPO.getOrderId());
+		DecorationAccountStatusPO decorationAccountStatusPO = decorationAccountStatusService.updateDecorationAccountStatus(decorationPO.getOrderId());
 
-		decorationAccountStatusService.checkDecorationAccountStatusForMake(decorationPO.getOrderId(), decorationAccountStatusPO.getCompany());
+		decorationAccountStatusService.checkDecorationAccountStatus(decorationPO.getOrderId(), decorationAccountStatusPO.getCompany());
 
 		if (approvalDao.countApprovalForInitByOrderId(decorationPO.getOrderId()) > 0) {
 			throw new FLException(140037, "订单存在未处理审批项");

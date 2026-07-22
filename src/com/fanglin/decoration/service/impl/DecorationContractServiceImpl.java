@@ -42,6 +42,7 @@ import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.dao.DecorationOperateDao;
 import com.fanglin.decoration.po.DecorationActivityItemPO;
 import com.fanglin.decoration.po.DecorationActivityPO;
+import com.fanglin.decoration.po.DecorationAccountStatusPO;
 import com.fanglin.decoration.po.DecorationAdditionPO;
 import com.fanglin.decoration.po.DecorationBelongPO;
 import com.fanglin.decoration.po.DecorationContractPO;
@@ -608,7 +609,7 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 
 		decorationDao.update(decorationPO);
 
-		decorationAccountStatusService.updateDecorationAccountStatus(orderId);
+		decorationAccountStatusService.updateDecorationAccountStatus(orderId, DecorationAccountStatusPO.TYPE_SIGN_INT);
 
 		constructionInfoPO.setInitDesignTime(DateUtil.getDateToTimestamp(new Date()));
 
