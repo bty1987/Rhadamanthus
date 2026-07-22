@@ -241,6 +241,8 @@ infos = [
     {"source": "36.Log\\Foreground\\js\\condition\\", "target": "99.Foreground\\js\\condition\\", "workspace": "WebContent\\js\\condition\\", "files": ["log.js"]},
     {"source": "36.Log\\Foreground\\views\\log\\", "target": "99.Foreground\\views\\log\\", "workspace": "WebContent\\views\\log\\"},
     {"source": "36.Log\\Background\\log\\", "target": "src\\com\\fanglin\\log\\"},
+    
+    {"source": "37.Wecom\\Background\\", "target": "src\\com\\fanglin\\wecom\\"},
 
     {"source": "99.Foreground\\js\\api\\", "target": "WebContent\\js\\api\\"},
     {"source": "99.Foreground\\js\\com\\", "target": "WebContent\\js\\com\\"},
