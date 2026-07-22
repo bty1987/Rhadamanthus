@@ -12,7 +12,6 @@ import com.fanglin.construction.po.ConstructionSchedulePO;
 import com.fanglin.core.dao.impl.DaoImpl;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
-import com.fanglin.data.po.ConstructionNodePO;
 import com.fanglin.utils.Paging;
 
 @Repository("constructionScheduleDao")
@@ -38,12 +37,6 @@ public class ConstructionScheduleDaoImpl extends DaoImpl<ConstructionSchedulePO>
 	@SuppressWarnings("unchecked")
 	public List<ConstructionSchedulePO> queryConstructionScheduleByOrderId(String orderId) {
 		return session().createCriteria(ConstructionSchedulePO.class).add(Restrictions.eq(ConstructionSchedulePO.COLUMN_ORDERID_STR, orderId)).list();
-	}
-
-	@Override
-	@SuppressWarnings("unchecked")
-	public List<ConstructionSchedulePO> queryConstructionScheduleForAccountByOrderId(String orderId) {
-		return session().createCriteria(ConstructionSchedulePO.class).createAlias("node", "node").add(Restrictions.eq(ConstructionSchedulePO.COLUMN_ORDERID_STR, orderId)).add(Restrictions.eq("node.account", ConstructionNodePO.ACCOUNT_VALID_INT)).list();
 	}
 
 	@Override
