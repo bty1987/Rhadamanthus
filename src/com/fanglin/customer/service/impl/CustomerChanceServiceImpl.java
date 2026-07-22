@@ -46,6 +46,7 @@ import com.fanglin.customer.service.CustomerChanceService;
 import com.fanglin.customer.service.CustomerSourceService;
 import com.fanglin.customer.vo.CustomerChanceVO;
 import com.fanglin.customer.vo.CustomerSourceVO;
+import com.fanglin.data.common.dao.DecorationBusitypeDao;
 import com.fanglin.data.common.vo.DecorationBusitypeVO;
 import com.fanglin.data.po.DecorationBusitypePO;
 import com.fanglin.decoration.dao.DecorationDao;
@@ -109,6 +110,9 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 
 	@Autowired
 	private DecorationDao decorationDao;
+
+	@Autowired
+	private DecorationBusitypeDao decorationBusitypeDao;
 
 	@Autowired
 	private CustomerDao customerDao;
@@ -528,7 +532,21 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 		customerChancePO.setIssuer(issuer);
 		customerChancePO.setIssueTime(DateUtil.getDateToTimestamp(new Date()));
 
-		customerChancePO.setBusitype(new DecorationBusitypePO(customerChanceVO.getBusitype().getDbid()));
+		DecorationBusitypePO busitypePO = null;
+
+		if (customerChanceVO != null && customerChanceVO.getBusitype() != null && customerChanceVO.getBusitype().getDbid() != null) {
+			busitypePO = decorationBusitypeDao.get(customerChanceVO.getBusitype().getDbid());
+		}
+
+		if (busitypePO == null) {
+			busitypePO = customerChancePO.getBusitype();
+		}
+
+		if (busitypePO == null) {
+			busitypePO = customerChancePO.getSource().getBusitype();
+		}
+
+		customerChancePO.setBusitype(busitypePO);
 
 		DepartmentPO region = null;
 
