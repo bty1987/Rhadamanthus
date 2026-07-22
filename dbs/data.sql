@@ -194,6 +194,7 @@ CREATE TABLE `constructionnode` (
   `kino` varchar(32) NULL,
   `kiname` varchar(32) NULL,
   `mark` tinyint(1) NULL DEFAULT 0,
+  `account` tinyint(1) NOT NULL DEFAULT 0 COMMENT '决算标识, 0:否, 1:是',
   `status` tinyint(1) NOT NULL DEFAULT 0 COMMENT '0: 启用, 1: 禁用',
   `company` int(11) NOT NULL,
   PRIMARY KEY (`cnid`),

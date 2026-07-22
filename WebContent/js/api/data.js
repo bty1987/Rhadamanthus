@@ -622,7 +622,7 @@ $.extend(api, {
             type: "query",
             tranargs: [{
                 result: "paging-data",
-                args: ["precheck", "postcheck", "stacheck", "fincheck", "timeLimit", "salaryLimit", "accessoryLimit"]
+                args: ["precheck", "postcheck", "stacheck", "fincheck", "timeLimit", "salaryLimit", "accessoryLimit", "account"]
             }]
         },
         queryConstructionNode: {
@@ -630,7 +630,7 @@ $.extend(api, {
             type: "query",
             tranargs: [{
                 result: "constructionNodes",
-                args: ["precheck", "postcheck", "stacheck", "fincheck", "timeLimit", "salaryLimit", "accessoryLimit"]
+                args: ["precheck", "postcheck", "stacheck", "fincheck", "timeLimit", "salaryLimit", "accessoryLimit", "account"]
             }]
         },
         queryConstructionNodeByCnid: {
@@ -638,7 +638,7 @@ $.extend(api, {
             type: "query",
             tranargs: [{
                 result: "constructionNodes",
-                args: ["precheck", "postcheck", "stacheck", "fincheck", "timeLimit", "salaryLimit", "accessoryLimit"]
+                args: ["precheck", "postcheck", "stacheck", "fincheck", "timeLimit", "salaryLimit", "accessoryLimit", "account"]
             }]
         },
         queryConstructionNodeByOrderId: {
@@ -646,21 +646,21 @@ $.extend(api, {
             type: "query",
             tranargs: [{
                 result: "constructionNodes",
-                args: ["precheck", "postcheck", "stacheck", "fincheck", "timeLimit", "salaryLimit", "accessoryLimit"]
+                args: ["precheck", "postcheck", "stacheck", "fincheck", "timeLimit", "salaryLimit", "accessoryLimit", "account"]
             }]
         },
         addConstructionNode: {
             url: "addConstructionNode.do",
             type: "update",
             tranargs: {
-                args: ["constructionNode.precheck", "constructionNode.postcheck", "constructionNode.stacheck", "constructionNode.fincheck", "constructionNode.timeLimit", "constructionNode.salaryLimit", "constructionNode.accessoryLimit"]
+                args: ["constructionNode.precheck", "constructionNode.postcheck", "constructionNode.stacheck", "constructionNode.fincheck", "constructionNode.timeLimit", "constructionNode.salaryLimit", "constructionNode.accessoryLimit", "constructionNode.account"]
             }
         },
         updateConstructionNode: {
             url: "updateConstructionNode.do",
             type: "update",
             tranargs: {
-                args: ["constructionNode.precheck", "constructionNode.postcheck", "constructionNode.stacheck", "constructionNode.fincheck", "constructionNode.timeLimit", "constructionNode.salaryLimit", "constructionNode.accessoryLimit"]
+                args: ["constructionNode.precheck", "constructionNode.postcheck", "constructionNode.stacheck", "constructionNode.fincheck", "constructionNode.timeLimit", "constructionNode.salaryLimit", "constructionNode.accessoryLimit", "constructionNode.account"]
             }
         },
         updateConstructionNodeForStatus: {

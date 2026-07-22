@@ -50,6 +50,8 @@ public class ConstructionNodeVO implements Serializable {
 
 	private Short mark;
 
+	private Short account;
+
 	private Short status;
 
 	private Integer company;
@@ -230,6 +232,14 @@ public class ConstructionNodeVO implements Serializable {
 
 	public void setMark(Short mark) {
 		this.mark = mark;
+	}
+
+	public Short getAccount() {
+		return account;
+	}
+
+	public void setAccount(Short account) {
+		this.account = account;
 	}
 
 	public Integer getCompany() {

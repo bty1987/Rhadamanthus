@@ -184,6 +184,16 @@ public class SalesDaoImpl extends DaoImpl<SalesPO> implements SalesDao {
 	}
 
 	@Override
+	public int countSalesForUnfinishByOrderId(String orderId) {
+
+		String sql = "SELECT count(*) FROM sales.sales where orderId = :orderId and status not in :statuses";
+
+		BigInteger count = (BigInteger) session().createSQLQuery(sql).setString("orderId", orderId).setParameterList("statuses", Arrays.asList(SalesPO.STATUS_END_SHORT, SalesPO.STATUS_WAST_SHORT, SalesPO.STATUS_ALLBACK_SHORT)).uniqueResult();
+
+		return count == null ? 0 : count.intValue();
+	}
+
+	@Override
 	public long amountSales(String orderId, short type) {
 
 		String sql = "select sum(s.amount) from sales.sales s where s.orderId = :orderId and s.type = :type and status in :status and balanceStatus = :balanceStatus";

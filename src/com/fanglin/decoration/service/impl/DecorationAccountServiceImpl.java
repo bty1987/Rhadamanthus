@@ -19,9 +19,12 @@ import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.dao.DecorationOperateDao;
 import com.fanglin.decoration.dao.impl.DecorationAccountDaoImpl;
 import com.fanglin.decoration.po.DecorationAccountPO;
+import com.fanglin.decoration.po.DecorationAccountStatusPO;
 import com.fanglin.decoration.po.DecorationOperatePO;
 import com.fanglin.decoration.po.DecorationPO;
+import com.fanglin.decoration.service.DecorationAccountStatusService;
 import com.fanglin.decoration.service.DecorationAccountService;
+import com.fanglin.decoration.vo.DecorationAccountStatusVO;
 import com.fanglin.decoration.vo.DecorationAccountVO;
 import com.fanglin.decoration.vo.DecorationVO;
 import com.fanglin.information.po.MessageQueuingPO;
@@ -56,6 +59,9 @@ public class DecorationAccountServiceImpl implements DecorationAccountService {
 	private DecorationPaymentDao decorationPaymentDao;
 
 	@Autowired
+	private DecorationAccountStatusService decorationAccountStatusService;
+
+	@Autowired
 	private UserDao userDao;
 
 	@Autowired
@@ -83,11 +89,18 @@ public class DecorationAccountServiceImpl implements DecorationAccountService {
 			DecorationAccountVO decorationAccountVO = new DecorationAccountVO();
 
 			decorationAccountVO.setDecoration(new DecorationVO());
+			decorationAccountVO.setAccountStatus(new DecorationAccountStatusVO());
 
-			BeanUtil.copyProperties(decorationAccountPO, decorationAccountVO, Arrays.asList("decoration"));
+			BeanUtil.copyProperties(decorationAccountPO, decorationAccountVO, Arrays.asList("decoration", "accountStatus"));
 
 			if (decorationAccountPO.getDecoration() != null) {
 				decorationAccountPO.getDecoration().ptvcascade(decorationAccountVO.getDecoration());
+			}
+
+			if (decorationAccountPO.getAccountStatus() != null) {
+				BeanUtil.copyProperties(decorationAccountPO.getAccountStatus(), decorationAccountVO.getAccountStatus());
+			} else {
+				decorationAccountVO.setAccountStatus(null);
 			}
 
 			decorationAccountVOs.add(decorationAccountVO);
@@ -103,7 +116,12 @@ public class DecorationAccountServiceImpl implements DecorationAccountService {
 
 		decorationAccountVO = new DecorationAccountVO();
 
-		BeanUtil.copyProperties(decorationAccountPO, decorationAccountVO, Arrays.asList("decoration"));
+		BeanUtil.copyProperties(decorationAccountPO, decorationAccountVO, Arrays.asList("decoration", "accountStatus"));
+
+		if (decorationAccountPO.getAccountStatus() != null) {
+			decorationAccountVO.setAccountStatus(new DecorationAccountStatusVO());
+			BeanUtil.copyProperties(decorationAccountPO.getAccountStatus(), decorationAccountVO.getAccountStatus());
+		}
 
 		return decorationAccountVO;
 	}
@@ -127,12 +145,12 @@ public class DecorationAccountServiceImpl implements DecorationAccountService {
 		if (decorationAccountPO == null) {
 
 				decorationAccountPO = new DecorationAccountPO();
-				BeanUtil.copyProperties(decorationAccountVO, decorationAccountPO, Arrays.asList("decoration"));
+				BeanUtil.copyProperties(decorationAccountVO, decorationAccountPO, Arrays.asList("decoration", "accountStatus"));
 
 				decorationAccountDao.merge(decorationAccountPO);
 			} else {
 
-				BeanUtil.copyProperties(decorationAccountVO, decorationAccountPO, Arrays.asList("decoration"));
+				BeanUtil.copyProperties(decorationAccountVO, decorationAccountPO, Arrays.asList("decoration", "accountStatus"));
 
 				decorationAccountDao.update(decorationAccountPO);
 		}
@@ -169,9 +187,9 @@ public class DecorationAccountServiceImpl implements DecorationAccountService {
 			decorationAccountDao.merge(decorationAccountPO);
 		}
 
-		if (decorationPO.getPaySacle() < 99) {
-			throw new FLException(120018, "装修款比例不足");
-		}
+		DecorationAccountStatusPO decorationAccountStatusPO = decorationAccountStatusService.makeDecorationAccountStatus(decorationPO.getOrderId());
+
+		decorationAccountStatusService.checkDecorationAccountStatusForMake(decorationPO.getOrderId(), decorationAccountStatusPO.getCompany());
 
 		if (approvalDao.countApprovalForInitByOrderId(decorationPO.getOrderId()) > 0) {
 			throw new FLException(140037, "订单存在未处理审批项");

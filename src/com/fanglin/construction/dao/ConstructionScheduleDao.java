@@ -14,6 +14,7 @@ public interface ConstructionScheduleDao extends Dao<ConstructionSchedulePO> {
 	public List<ConstructionScheduleDO> pageConstructionSchedule(Paging paging, List<Filter> filters, Integer company) throws FLException;
 
 	public List<ConstructionSchedulePO> queryConstructionScheduleByOrderId(String orderId);
+	public List<ConstructionSchedulePO> queryConstructionScheduleForAccountByOrderId(String orderId);
 
 	public List<ConstructionSchedulePO> queryConstructionScheduleByCid(long cid);
 

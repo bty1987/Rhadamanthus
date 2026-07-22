@@ -21,6 +21,7 @@ import com.fanglin.decoration.po.DecorationHolonomyPO;
 import com.fanglin.decoration.po.DecorationMidpackPO;
 import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.decoration.service.DecorationAdditionService;
+import com.fanglin.decoration.service.DecorationAccountStatusService;
 import com.fanglin.decoration.vo.DecorationAdditionVO;
 import com.fanglin.decoration.vo.DecorationVO;
 import com.fanglin.payment.dao.AdvancePaymentDao;
@@ -65,6 +66,9 @@ public class DecorationAdditionServiceImpl implements DecorationAdditionService 
 
 	@Autowired
 	private DecorationHolonomyDao decorationHolonomyDao;
+
+	@Autowired
+	private DecorationAccountStatusService decorationAccountStatusService;
 
 	@Autowired
 	private ConstructionNodeDao constructionNodeDao;
@@ -188,6 +192,8 @@ public class DecorationAdditionServiceImpl implements DecorationAdditionService 
 		decorationPO.setPaySacle((short) (payScale > 100 ? 100 : payScale));
 
 		decorationDao.update(decorationPO);
+
+		decorationAccountStatusService.updateDecorationAccountStatus(decorationPO.getOrderId());
 	}
 
 	@Override
@@ -251,6 +257,8 @@ public class DecorationAdditionServiceImpl implements DecorationAdditionService 
 		decorationPO.setSaleScale((short) (saleScale > 100 ? 100 : saleScale));
 
 		decorationDao.update(decorationPO);
+
+		decorationAccountStatusService.updateDecorationAccountStatus(decorationPO.getOrderId());
 
 	}
 }

@@ -44,6 +44,8 @@ public interface SelectionItemDao extends Dao<SelectionItemPO> {
 
 	public int countSelectionItem(String orderId, List<Short> statuses);
 
+	public int countSelectionItemForUnfinishByOrderId(String orderId);
+
 	public int countSelectionItemForNum(String orderId, long areaId, long quoteId);
 
 	public int updateSelectionItem(long areaId, short type, short newtype);

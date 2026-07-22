@@ -34,6 +34,7 @@ import com.fanglin.data.po.GoodsPO;
 import com.fanglin.data.po.GoodsPackagePO;
 import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.po.DecorationPO;
+import com.fanglin.decoration.service.DecorationAccountStatusService;
 import com.fanglin.information.dao.ActivityDao;
 import com.fanglin.information.po.ActivityPO;
 import com.fanglin.payment.dao.SalesPaymentDao;
@@ -86,6 +87,9 @@ public class SalesServiceImpl implements SalesService {
 
 	@Autowired
 	private SalesReceiptDao salesReceiptDao;
+
+	@Autowired
+	private DecorationAccountStatusService decorationAccountStatusService;
 
 	@Autowired
 	private UserDao userDao;
@@ -362,6 +366,8 @@ public class SalesServiceImpl implements SalesService {
 
 		salesDao.save(salesPO);
 
+		decorationAccountStatusService.updateDecorationAccountStatus(salesPO.getOrderId());
+
 		SalesItemPO salesItemPO;
 
 		long total = 0l;
@@ -573,6 +579,8 @@ public class SalesServiceImpl implements SalesService {
 
 		salesDao.update(salesPO);
 
+		decorationAccountStatusService.updateDecorationAccountStatus(salesPO.getOrderId());
+
 		return 0;
 	}
 
@@ -761,6 +769,8 @@ public class SalesServiceImpl implements SalesService {
 
 		salesDao.update(salesPO);
 
+		decorationAccountStatusService.updateDecorationAccountStatus(salesPO.getOrderId());
+
 		return 0;
 	}
 
@@ -793,6 +803,8 @@ public class SalesServiceImpl implements SalesService {
 		salesPO.setFinisher(finisher);
 
 		salesDao.update(salesPO);
+
+		decorationAccountStatusService.updateDecorationAccountStatus(salesPO.getOrderId());
 
 		return 0;
 	}

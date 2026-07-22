@@ -2,6 +2,7 @@ package com.fanglin.quotation.dao.impl;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.Arrays;
 import java.util.List;
 
 import org.hibernate.criterion.Restrictions;
@@ -196,6 +197,15 @@ public class SelectionItemDaoImpl extends DaoImpl<SelectionItemPO> implements Se
 
 		String sql = "SELECT count(*) FROM quotation.selectionitem WHERE orderId = :orderId AND status in :statuses";
 		BigInteger count = (BigInteger) session().createSQLQuery(sql).setString(SelectionItemPO.COLUMN_ORDERID_STR, orderId).setParameterList("statuses", statuses).uniqueResult();
+
+		return count == null ? 0 : count.intValue();
+	}
+
+	@Override
+	public int countSelectionItemForUnfinishByOrderId(String orderId) {
+
+		String sql = "SELECT count(*) FROM quotation.selectionitem WHERE orderId = :orderId AND status not in :statuses";
+		BigInteger count = (BigInteger) session().createSQLQuery(sql).setString(SelectionItemPO.COLUMN_ORDERID_STR, orderId).setParameterList("statuses", Arrays.asList(SelectionItemPO.STATUS_FINISH_SHORT, SelectionItemPO.STATUS_REVIEW_SHORT, SelectionItemPO.STATUS_BALANCE_SHORT, SelectionItemPO.STATUS_DISABLE_SHORT)).uniqueResult();
 
 		return count == null ? 0 : count.intValue();
 	}
