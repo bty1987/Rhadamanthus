@@ -22,6 +22,7 @@ import com.fanglin.data.po.GoodsPO;
 import com.fanglin.data.po.QuotationItemPO;
 import com.fanglin.data.po.SoodsPO;
 import com.fanglin.data.quotation.dao.QuotationItemDao;
+import com.fanglin.decoration.service.DecorationAccountStatusService;
 import com.fanglin.decoration.vo.DecorationVO;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
@@ -76,6 +77,9 @@ public class SelectionItemServiceImpl implements SelectionItemService {
 
 	@Autowired
 	private SoodsDao soodsDao;
+
+	@Autowired
+	private DecorationAccountStatusService decorationAccountStatusService;
 
 	@Autowired
 	private UserDao userDao;
@@ -277,6 +281,8 @@ public class SelectionItemServiceImpl implements SelectionItemService {
 
 		selectionDao.update(selectionPO);
 
+		decorationAccountStatusService.updateDecorationAccountStatus(selectionPO.getOrderId());
+
 		selectionItemPO.ptv(selectionItemVO);
 
 		return 0;
@@ -366,6 +372,8 @@ public class SelectionItemServiceImpl implements SelectionItemService {
 			}
 
 			selectionItemDao.update(selectionItemPO);
+
+			updateDecorationAccountStatusForSelection(selectionItemPO);
 		}
 
 		return 0;
@@ -414,6 +422,8 @@ public class SelectionItemServiceImpl implements SelectionItemService {
 			}
 
 			selectionItemDao.update(selectionItemPO);
+
+			updateDecorationAccountStatusForSelection(selectionItemPO);
 		}
 
 		return 0;
@@ -458,6 +468,8 @@ public class SelectionItemServiceImpl implements SelectionItemService {
 			}
 
 			selectionItemDao.update(selectionItemPO);
+
+			updateDecorationAccountStatusForSelection(selectionItemPO);
 		}
 
 		return 0;
@@ -514,6 +526,8 @@ public class SelectionItemServiceImpl implements SelectionItemService {
 			}
 
 			selectionItemDao.update(selectionItemPO);
+
+			updateDecorationAccountStatusForSelection(selectionItemPO);
 		}
 
 		return 0;
@@ -558,6 +572,8 @@ public class SelectionItemServiceImpl implements SelectionItemService {
 			}
 
 			selectionItemDao.update(selectionItemPO);
+
+			updateDecorationAccountStatusForSelection(selectionItemPO);
 		}
 
 		return 0;
@@ -602,6 +618,8 @@ public class SelectionItemServiceImpl implements SelectionItemService {
 			}
 
 			selectionItemDao.update(selectionItemPO);
+
+			updateDecorationAccountStatusForSelection(selectionItemPO);
 		}
 
 		return 0;
@@ -688,6 +706,8 @@ public class SelectionItemServiceImpl implements SelectionItemService {
 
 		selectionItemDao.save(selectionItemPO);
 
+		decorationAccountStatusService.updateDecorationAccountStatus(selectionItemPO.getOrderId());
+
 		return 0;
 	}
 
@@ -717,6 +737,8 @@ public class SelectionItemServiceImpl implements SelectionItemService {
 
 		selectionItemDao.delete(selectionItemPO);
 
+		decorationAccountStatusService.updateDecorationAccountStatus(selectionItemPO.getOrderId());
+
 		updateSelectionTotal(selectionItemPO, selectionItemPO.getNum());
 
 		return 0;
@@ -739,6 +761,8 @@ public class SelectionItemServiceImpl implements SelectionItemService {
 		selectionItemPO.setStatus(SelectionItemPO.STATUS_DISABLE_SHORT);
 
 		selectionItemDao.update(selectionItemPO);
+
+		updateDecorationAccountStatusForSelection(selectionItemPO);
 
 		updateSelectionTotal(selectionItemPO, selectionItemPO.getNum());
 
@@ -766,6 +790,8 @@ public class SelectionItemServiceImpl implements SelectionItemService {
 		selectionItemPO.setStatus(SelectionItemPO.STATUS_FINISH_SHORT);
 
 		selectionItemDao.update(selectionItemPO);
+
+		updateDecorationAccountStatusForSelection(selectionItemPO);
 
 		return 0;
 	}
@@ -843,6 +869,13 @@ public class SelectionItemServiceImpl implements SelectionItemService {
 		selectionPO.setTotal(Arith.sub(addTotal, subTotal));
 
 		selectionDao.update(selectionPO);
+	}
+
+	private void updateDecorationAccountStatusForSelection(SelectionItemPO selectionItemPO) throws FLException {
+
+		if (!Arrays.asList(SelectionItemPO.STATUS_FINISH_SHORT, SelectionItemPO.STATUS_REVIEW_SHORT, SelectionItemPO.STATUS_BALANCE_SHORT, SelectionItemPO.STATUS_DISABLE_SHORT).contains(selectionItemPO.getStatus())) return;
+
+		decorationAccountStatusService.updateDecorationAccountStatus(selectionItemPO.getOrderId());
 	}
 
 	private void checkSelectionItem(SelectionItemPO selectionItemPO, List<SelectionItemStatusRightPO> rights, Short status, UserPO userPO) {

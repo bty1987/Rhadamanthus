@@ -11,6 +11,8 @@ public class DecorationAccountVO implements Serializable {
 
 	private DecorationVO decoration;
 
+	private DecorationAccountStatusVO accountStatus;
+
 	private String name;
 
 	private String orderId;
@@ -78,6 +80,14 @@ public class DecorationAccountVO implements Serializable {
 
 	public void setDecoration(DecorationVO decoration) {
 		this.decoration = decoration;
+	}
+
+	public DecorationAccountStatusVO getAccountStatus() {
+		return accountStatus;
+	}
+
+	public void setAccountStatus(DecorationAccountStatusVO accountStatus) {
+		this.accountStatus = accountStatus;
 	}
 
 	public String getName() {

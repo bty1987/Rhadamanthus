@@ -48,6 +48,7 @@ import com.fanglin.decoration.po.DecorationContractPO;
 import com.fanglin.decoration.po.DecorationContractRecordPO;
 import com.fanglin.decoration.po.DecorationOperatePO;
 import com.fanglin.decoration.po.DecorationPO;
+import com.fanglin.decoration.service.DecorationAccountStatusService;
 import com.fanglin.decoration.service.DecorationContractService;
 import com.fanglin.decoration.vo.DecorationContractVO;
 import com.fanglin.decoration.vo.DecorationVO;
@@ -125,6 +126,9 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 
 	@Autowired
 	private DecorationService decorationService;
+
+	@Autowired
+	private DecorationAccountStatusService decorationAccountStatusService;
 
 	@Autowired
 	private SystemConfigDao systemConfigDao;
@@ -603,6 +607,8 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 		}
 
 		decorationDao.update(decorationPO);
+
+		decorationAccountStatusService.updateDecorationAccountStatus(orderId);
 
 		constructionInfoPO.setInitDesignTime(DateUtil.getDateToTimestamp(new Date()));
 

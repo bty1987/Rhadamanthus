@@ -22,6 +22,11 @@ $(function() {
             0: "初始",
             1: "确认"
         },
+        status: {
+            0: "未通过",
+            1: "通过",
+            2: "不验证"
+        },
         itemType: {
             0: "预签",
             1: "报价",
@@ -216,6 +221,58 @@ $(function() {
         name: "备注",
         prop: "comment",
         clazz: "grey"
+    }, {
+        type: "newline"
+    }, {
+        fieId: "accountStatus.status",
+        name: "决算指标",
+        prop: function(v) {
+            return statusName(v, "status");
+        },
+        clazz: "red"
+    }, {
+        fieId: "accountStatus.signStatus",
+        name: "签约",
+        prop: function(v) {
+            return statusName(v, "signStatus");
+        },
+        clazz: "red"
+    }, {
+        fieId: "accountStatus.salesStatus",
+        name: "销售完结",
+        prop: function(v) {
+            return statusName(v, "salesStatus") + unfinishText(v, "salesUnfinish");
+        },
+        clazz: "red"
+    }, {
+        fieId: "accountStatus.constructionStatus",
+        name: "工程节点",
+        prop: function(v) {
+            var name = v.accountStatus && v.accountStatus.constructionName ? "(" + v.accountStatus.constructionName + ")" : "";
+            return statusName(v, "constructionStatus") + name;
+        },
+        clazz: "red"
+    }, {
+        fieId: "accountStatus.selectionStatus",
+        name: "选材完结",
+        prop: function(v) {
+            return statusName(v, "selectionStatus") + unfinishText(v, "selectionUnfinish");
+        },
+        clazz: "red"
+    }, {
+        fieId: "accountStatus.decorationPaymentStatus",
+        name: "装修款比例",
+        prop: function(v) {
+            return statusName(v, "decorationPaymentStatus") + scaleText(v, "decorationPaymentScale", "decorationPaymentTarget");
+        },
+        clazz: "red"
+    }, {
+        fieId: "accountStatus.salesPaymentStatus",
+        name: "销售比例",
+        prop: function(v) {
+            return statusName(v, "salesPaymentStatus") + scaleText(v, "salesPaymentScale", "salesPaymentTarget");
+        },
+        clazz: "red"
     }];
 
     var linebtns = [{
@@ -272,6 +329,29 @@ $(function() {
     }];
 
     searcher.line("orderId", lineprops, linebtns).render();
+
+    function statusName(v, field) {
+
+        if (!v.accountStatus) return "";
+
+        var status = v.accountStatus[field];
+
+        return decorationAccount.status[status] == null ? status : decorationAccount.status[status];
+    }
+
+    function scaleText(v, scaleField, targetField) {
+
+        if (!v.accountStatus) return "";
+
+        return "(" + (v.accountStatus[scaleField] == null ? 0 : v.accountStatus[scaleField]) + "/" + (v.accountStatus[targetField] == null ? 0 : v.accountStatus[targetField]) + ")";
+    }
+
+    function unfinishText(v, field) {
+
+        if (!v.accountStatus) return "";
+
+        return "(" + (v.accountStatus[field] == null ? 0 : v.accountStatus[field]) + ")";
+    }
 
     function viewDecorationAccount(v) {
 

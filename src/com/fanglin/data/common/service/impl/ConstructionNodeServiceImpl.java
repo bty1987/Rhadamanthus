@@ -121,6 +121,7 @@ public class ConstructionNodeServiceImpl implements ConstructionNodeService {
 		constructionNodePO.setKiname(constructionNodeVO.getKiname());
 		constructionNodePO.setTimeLimit(0);
 		constructionNodePO.setMark(constructionNodeVO.getMark());
+		constructionNodePO.setAccount(constructionNodeVO.getAccount() == null ? ConstructionNodePO.ACCOUNT_INVALID_INT : constructionNodeVO.getAccount());
 		constructionNodePO.setAccessoryLimit(constructionNodeVO.getAccessoryLimit());
 		constructionNodePO.setSalaryLimit(constructionNodeVO.getSalaryLimit());
 
@@ -158,6 +159,7 @@ public class ConstructionNodeServiceImpl implements ConstructionNodeService {
 
 		constructionNodePO.setTimeLimit(constructionNodeVO.getTimeLimit());
 		constructionNodePO.setMark(constructionNodeVO.getMark());
+		constructionNodePO.setAccount(constructionNodeVO.getAccount() == null ? ConstructionNodePO.ACCOUNT_INVALID_INT : constructionNodeVO.getAccount());
 
 		constructionNodePO.setStartSurvey(null);
 		constructionNodePO.setEndSurvey(null);

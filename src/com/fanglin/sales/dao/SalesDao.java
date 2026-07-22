@@ -34,6 +34,8 @@ public interface SalesDao extends Dao<SalesPO> {
 
 	public int countSalesByOrderId(String orderId, short status);
 
+	public int countSalesForUnfinishByOrderId(String orderId);
+
 	public long amountSales(String orderId, short type);
 
 }

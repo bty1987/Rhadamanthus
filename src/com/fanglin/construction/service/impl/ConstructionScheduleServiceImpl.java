@@ -30,6 +30,7 @@ import com.fanglin.data.common.vo.ConstructionNodeVO;
 import com.fanglin.data.po.ConstructionNodePO;
 import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.po.DecorationPO;
+import com.fanglin.decoration.service.DecorationAccountStatusService;
 import com.fanglin.decoration.vo.DecorationVO;
 import com.fanglin.information.dao.MessageQueuingDao;
 import com.fanglin.information.po.MessagePO;
@@ -70,6 +71,9 @@ public class ConstructionScheduleServiceImpl implements ConstructionScheduleServ
 
 	@Autowired
 	private MessageQueuingDao messageQueuingDao;
+
+	@Autowired
+	private DecorationAccountStatusService decorationAccountStatusService;
 
 	@Override
 	public void pageConstructionSchedule(Paging paging, List<Filter> filters, Integer company) throws FLException {
@@ -345,6 +349,10 @@ public class ConstructionScheduleServiceImpl implements ConstructionScheduleServ
 		messageService.sendMessage(constructionPO.getSupervisor().getUserId(), decorationPO.getCreater().getUserId(), content, MessagePO.TYPE_SEND_CONSTRUCTION_INT, decorationPO.getCompany());
 
 		constructionScheduleVO.setEndTime(constructionSchedulePO.getEndTime());
+
+		if (constructionNodePO.getAccount() == ConstructionNodePO.ACCOUNT_VALID_INT) {
+			decorationAccountStatusService.updateDecorationAccountStatus(decorationPO.getOrderId());
+		}
 
 		// 生成消息队列数据
 		messageQueuingDao.save(new MessageQueuingPO().init(decorationPO.getOrderId(), "finishConstructionSchedule", "{\"orderId\":\"" + decorationPO.getOrderId() + "\",\"cnid\":\"" + constructionSchedulePO.getNode().getCnid() + "\",\"status\":\"2\",\"userId\":\"" + userId + "\",\"event\":\"PROJECT_NODE_STATUS_CHANGED\"" + (decorationPO.getBusitype() != null ? ",\"busiTypeName\":\"" + decorationPO.getBusitype().getName() + "\"" : "") + "}"));

@@ -30,6 +30,7 @@ jQuery(function($) {
             kino: com.focusPage("#kino", "#updateModal"),
             kiname: com.focusPage("#kiname", "#updateModal"),
             mark: com.focusPage("#mark", "#updateModal"),
+            account: com.focusPage("#account", "#updateModal"),
             accessoryLimit: com.focusPage("#accessoryLimit", "#updateModal"),
             salaryLimit: com.focusPage("#salaryLimit", "#updateModal"),
         },
@@ -39,6 +40,11 @@ jQuery(function($) {
             1: "禁用"
         },
 
+        account: {
+            0: "否",
+            1: "是"
+        },
+
         editFlg: false,
     };
 
@@ -46,6 +52,7 @@ jQuery(function($) {
     constructionNode.items.proset.bindData(constant.data().constructionNode.proset.datas, "key", "value");
 
     constructionNode.items.mark.bindData(constant.data().constructionNode.mark.datas, "key", "value");
+    constructionNode.items.account.bindData([{"key": 0, "value": "否"}, {"key": 1, "value": "是"}], "key", "value");
 
     constructionNode.modals.updateModal.on('show.bs.hide', function(e) {
 
@@ -160,6 +167,12 @@ jQuery(function($) {
         clazz: "red",
         dataset: constant.data().constructionNode.mark.keys
     }, {
+        field: "account",
+        name: "决算标识",
+        prop: "account",
+        clazz: "red",
+        dataset: constructionNode.account
+    }, {
         fieId: "kino",
         name: "金蝶编号",
         prop: "kino",
@@ -197,6 +210,7 @@ jQuery(function($) {
             constructionNode.items.kino.val(v.kino);
             constructionNode.items.kiname.val(v.kiname);
             constructionNode.items.mark.val(v.mark);
+            constructionNode.items.account.val(v.account);
             constructionNode.items.accessoryLimit.val(v.accessoryLimit);
             constructionNode.items.salaryLimit.val(v.salaryLimit);
             constructionNode.modals.updateModal.modal("show");
@@ -236,6 +250,7 @@ jQuery(function($) {
             "constructionNode.process": constructionNode.items.process.val(),
             "constructionNode.proset": constructionNode.items.proset.val(),
             "constructionNode.mark": constructionNode.items.mark.val(),
+            "constructionNode.account": constructionNode.items.account.val(),
             "constructionNode.accessoryLimit": constructionNode.items.accessoryLimit.val(),
             "constructionNode.salaryLimit": constructionNode.items.salaryLimit.val(),
             "constructionNode.timeLimit": constructionNode.items.timeLimit.val()

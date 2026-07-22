@@ -21,6 +21,7 @@ import com.fanglin.core.vo.Filter;
 import com.fanglin.customer.service.DecorationService;
 import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.po.DecorationPO;
+import com.fanglin.decoration.service.DecorationAccountStatusService;
 import com.fanglin.decoration.service.DecorationAdditionService;
 import com.fanglin.decoration.vo.DecorationVO;
 import com.fanglin.payment.dao.AdvancePaymentDao;
@@ -101,6 +102,9 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 
 	@Autowired
 	private DecorationAdditionService decorationAdditionService;
+
+	@Autowired
+	private DecorationAccountStatusService decorationAccountStatusService;
 
 	@Autowired
 	private SalesActivityService salesActivityService;
@@ -1108,6 +1112,8 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 		salesPO.setDepositpayStatus(SalesPO.DESPOSITPAYSTATUS_INIT_SHORT);
 		salesPO.setStatus(SalesPO.STATUS_WAST_SHORT);
 		salesDao.update(salesPO);
+
+		decorationAccountStatusService.updateDecorationAccountStatus(salesPO.getOrderId());
 
 		salesPaymentDao.save(salesPaymentPO);
 

@@ -30,6 +30,8 @@ public class DecorationAccountPO implements Serializable {
 
 	private DecorationPO decoration;
 
+	private DecorationAccountStatusPO accountStatus;
+
 	private String orderId;
 
 	private String name;
@@ -93,6 +95,16 @@ public class DecorationAccountPO implements Serializable {
 
 	public void setDecoration(DecorationPO decoration) {
 		this.decoration = decoration;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "orderId", referencedColumnName = "orderId", insertable = false, updatable = false)
+	public DecorationAccountStatusPO getAccountStatus() {
+		return accountStatus;
+	}
+
+	public void setAccountStatus(DecorationAccountStatusPO accountStatus) {
+		this.accountStatus = accountStatus;
 	}
 
 	@Column(name = "name")

@@ -35,6 +35,10 @@ public class ConstructionNodePO implements Serializable {
 
 	public static final short MARK_FINISH_INT = 2;
 
+	public static final short ACCOUNT_INVALID_INT = 0;
+
+	public static final short ACCOUNT_VALID_INT = 1;
+
 	private long cnid;
 
 	private String name;
@@ -72,6 +76,8 @@ public class ConstructionNodePO implements Serializable {
 	private String kiname;
 
 	private short mark;
+
+	private short account;
 
 	private short status;
 
@@ -245,6 +251,15 @@ public class ConstructionNodePO implements Serializable {
 
 	public void setMark(short mark) {
 		this.mark = mark;
+	}
+
+	@Column(name = "account")
+	public short getAccount() {
+		return account;
+	}
+
+	public void setAccount(short account) {
+		this.account = account;
 	}
 
 	@Column(name = "status")

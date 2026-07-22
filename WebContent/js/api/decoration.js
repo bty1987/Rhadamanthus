@@ -839,6 +839,9 @@ $.extend(api, {
                 result: "paging-data",
                 args: ["matching", "discount", "discountBase", "serviceRate", "materialPrice", "servicePrice", "projectPrice", "projectBase", "difference", "coupon", "internal", "fulldel", "cashback", "paidupMatching"]
             }, {
+                result: "paging-data-accountStatus",
+                args: ["decorationPaymentScale", "decorationPaymentTarget", "salesPaymentScale", "salesPaymentTarget", "constructionCnid", "salesUnfinish", "selectionUnfinish"]
+            }, {
                 result: "paging-data-decoration",
                 args: ["orderTotalPrice", "quotationPrice", "couponCut", "thingCut", "factPrice", "precontractPrice", "notSalesmanRate", "discount"]
             }, {
