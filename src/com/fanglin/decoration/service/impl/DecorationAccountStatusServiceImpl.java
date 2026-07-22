@@ -18,7 +18,6 @@ import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.decoration.service.DecorationAccountStatusService;
 import com.fanglin.decoration.vo.DecorationAccountStatusVO;
 import com.fanglin.quotation.dao.SelectionItemDao;
-import com.fanglin.quotation.po.SelectionItemPO;
 import com.fanglin.sales.dao.SalesDao;
 import com.fanglin.system.dao.SystemConfigDao;
 import com.fanglin.system.po.SystemConfigPO;
@@ -154,7 +153,7 @@ public class DecorationAccountStatusServiceImpl implements DecorationAccountStat
 
 		boolean hasAccountNode = false;
 
-		for (ConstructionSchedulePO constructionSchedulePO : constructionScheduleDao.queryConstructionScheduleForAccountByOrderId(orderId)) {
+		for (ConstructionSchedulePO constructionSchedulePO : constructionScheduleDao.queryConstructionScheduleByOrderId(orderId)) {
 
 			if (constructionSchedulePO.getNode() == null) continue;
 
