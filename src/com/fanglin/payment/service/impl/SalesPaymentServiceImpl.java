@@ -20,6 +20,7 @@ import com.fanglin.core.security.SensitiveDataHelper;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.customer.service.DecorationService;
 import com.fanglin.decoration.dao.DecorationDao;
+import com.fanglin.decoration.po.DecorationAccountStatusPO;
 import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.decoration.service.DecorationAccountStatusService;
 import com.fanglin.decoration.service.DecorationAdditionService;
@@ -1113,7 +1114,7 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 		salesPO.setStatus(SalesPO.STATUS_WAST_SHORT);
 		salesDao.update(salesPO);
 
-		decorationAccountStatusService.updateDecorationAccountStatus(salesPO.getOrderId());
+		decorationAccountStatusService.updateDecorationAccountStatus(salesPO.getOrderId(), DecorationAccountStatusPO.TYPE_SALES_INT);
 
 		salesPaymentDao.save(salesPaymentPO);
 

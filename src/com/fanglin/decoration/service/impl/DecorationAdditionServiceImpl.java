@@ -20,6 +20,7 @@ import com.fanglin.decoration.po.DecorationAdditionPO;
 import com.fanglin.decoration.po.DecorationHolonomyPO;
 import com.fanglin.decoration.po.DecorationMidpackPO;
 import com.fanglin.decoration.po.DecorationPO;
+import com.fanglin.decoration.po.DecorationAccountStatusPO;
 import com.fanglin.decoration.service.DecorationAdditionService;
 import com.fanglin.decoration.service.DecorationAccountStatusService;
 import com.fanglin.decoration.vo.DecorationAdditionVO;
@@ -193,7 +194,7 @@ public class DecorationAdditionServiceImpl implements DecorationAdditionService 
 
 		decorationDao.update(decorationPO);
 
-		decorationAccountStatusService.updateDecorationAccountStatus(decorationPO.getOrderId());
+		decorationAccountStatusService.updateDecorationAccountStatus(decorationPO.getOrderId(), DecorationAccountStatusPO.TYPE_DECORATION_PAYMENT_INT);
 	}
 
 	@Override
@@ -258,7 +259,7 @@ public class DecorationAdditionServiceImpl implements DecorationAdditionService 
 
 		decorationDao.update(decorationPO);
 
-		decorationAccountStatusService.updateDecorationAccountStatus(decorationPO.getOrderId());
+		decorationAccountStatusService.updateDecorationAccountStatus(decorationPO.getOrderId(), DecorationAccountStatusPO.TYPE_SALES_PAYMENT_INT);
 
 	}
 }

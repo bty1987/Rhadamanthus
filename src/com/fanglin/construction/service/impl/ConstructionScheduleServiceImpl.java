@@ -29,6 +29,7 @@ import com.fanglin.data.common.dao.ConstructionNodeDao;
 import com.fanglin.data.common.vo.ConstructionNodeVO;
 import com.fanglin.data.po.ConstructionNodePO;
 import com.fanglin.decoration.dao.DecorationDao;
+import com.fanglin.decoration.po.DecorationAccountStatusPO;
 import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.decoration.service.DecorationAccountStatusService;
 import com.fanglin.decoration.vo.DecorationVO;
@@ -351,7 +352,7 @@ public class ConstructionScheduleServiceImpl implements ConstructionScheduleServ
 		constructionScheduleVO.setEndTime(constructionSchedulePO.getEndTime());
 
 		if (constructionNodePO.getAccount() == ConstructionNodePO.ACCOUNT_VALID_INT) {
-			decorationAccountStatusService.updateDecorationAccountStatus(decorationPO.getOrderId());
+			decorationAccountStatusService.updateDecorationAccountStatus(decorationPO.getOrderId(), DecorationAccountStatusPO.TYPE_CONSTRUCTION_INT);
 		}
 
 		// 生成消息队列数据
