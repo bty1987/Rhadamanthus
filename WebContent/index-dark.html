@@ -312,6 +312,7 @@
 
         var jses = "";
 
+        jses += '<script src="js/com/memory.js?version=' + versionCode + '"><\/script>';
         jses += '<script src="js/com/config.js?version=' + versionCode + '"><\/script>';
         jses += '<script src="js/com/server.js?version=' + versionCode + '"><\/script>';
         jses += '<script src="js/com/api.js?version=' + versionCode + '"><\/script>';
@@ -324,7 +325,9 @@
         jses += '<script src="js/com/condition.js?version=' + versionCode + '"><\/script>';
         jses += '<script src="js/com/searcher.js?version=' + versionCode + '"><\/script>';
         jses += '<script src="js/com/exporter.js?version=' + versionCode + '"><\/script>';
-        jses += '<script src="js/index-dark.js?version=' + versionCode + '"><\/script>';
+        jses += '<script src="js/com/printer.js?version=' + versionCode + '"><\/script>';
+        jses += '<script src="js/com/constant.js?version=' + versionCode + '"><\/script>';
+        jses += '<script src="js/index.js?version=' + versionCode + '"><\/script>';
 
         if(!parent.window.isPC && !parent.window.isEncryption){
             document.write(jses);
@@ -333,6 +336,7 @@
             document.write(jses);
         }else if(parent.window.isPC && parent.window.isEncryption){
 
+            win.evalNWBin(null, 'js/com/memory.bin');
             win.evalNWBin(null, 'js/com/config.bin');
             win.evalNWBin(null, 'js/com/load.bin');
             win.evalNWBin(null, 'js/com/version.bin');
@@ -344,6 +348,8 @@
             win.evalNWBin(null, 'js/com/condition.bin');
             win.evalNWBin(null, 'js/com/searcher.bin');
             win.evalNWBin(null, 'js/com/exporter.bin');
+            win.evalNWBin(null, 'js/com/printer.bin');
+            win.evalNWBin(null, 'js/com/constant.bin');
             win.evalNWBin(null, 'js/index.bin');
             win.evalNWBin(null, 'js/com/nw.bin');
         }

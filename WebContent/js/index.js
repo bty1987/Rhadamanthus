@@ -290,6 +290,11 @@ $(function() {
         com.setCookie("templateStyle", template, config.timeout);
     }
 
+    function getHomeUrl() {
+
+        return window.templateStyle == "dark" ? "home-dark.html" : "home-antv.html";
+    }
+
     function loadIndexPrefer() {
 
         if (!api.personel || !api.personel.queryUserPrefers) {
@@ -532,7 +537,7 @@ $(function() {
 
         foldMenu();
 
-        com.loadPage('home-antv.html', $(this));
+        com.loadPage(getHomeUrl(), $(this));
 
         $.breadcrumb('icon-home', ['首页']);
 
@@ -656,7 +661,7 @@ $(function() {
         if (config && !params.homeLoader) {
             $('#navbar').fadeIn();
             $('#main-container').fadeIn();
-            com.switchPage('home-antv.html', true);
+            com.switchPage(getHomeUrl(), true);
             params.homeLoader = true;
             setTimeout(function() {
                 console.log('[diag] after switchPage, #homeNav:', $('#homeNav').length, '#operateTab:', $('#operateTab').length, '.flpage.tab-content:', $('.flpage.tab-content').length);
@@ -818,7 +823,7 @@ $(function() {
                 "mid": "homePage",
                 "menuText": "首页"
             });
-            com.loadPage('home-antv.html', $(this));
+            com.loadPage(getHomeUrl(), $(this));
             $.breadcrumb('icon-home', ['首页']);
             return false;
         });
