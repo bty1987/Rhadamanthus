@@ -33,6 +33,7 @@ jQuery(function($) {
 
         var url = null;
         var args = null;
+        var profileType = params.quotation.profile ? params.quotation.profile.type : params.quotation.type;
 
         if (params.quotation.qpid) {
             url = api.quotation.queryQuotationProfileByQpid;
@@ -43,7 +44,13 @@ jQuery(function($) {
             url = api.quotation.queryQuotationProfileByQid;
             args = {
                 "quotationProfile.qid": params.quotation.qid,
-                "quotationProfile.type": params.quotation.type,
+                "quotationProfile.type": profileType,
+            }
+        } else if (profileType == 3 && params.quotation.orderId) {
+            url = api.quotation.queryQuotationProfileByOrderId;
+            args = {
+                "quotationProfile.orderId": params.quotation.orderId,
+                "quotationProfile.type": profileType,
             }
         }
 
@@ -65,7 +72,7 @@ jQuery(function($) {
 
                 display(v);
 
-                if (v.type == params.quotation.profile.type)
+                if (v.type == profileType)
                     isMake = false;
             });
 
@@ -82,7 +89,6 @@ jQuery(function($) {
         var template = null;
 
         // 根据用途 type 选择对应的模板配置 key: 标签(4)/增减项(5)各自独立模板, 其他复用交接模板
-        var profileType = params.quotation.profile.type;
         var templateKey;
         if (profileType == 4) {
             templateKey = "QUOTATION_TAG_PROFILE_TEMPLATE";
@@ -105,8 +111,9 @@ jQuery(function($) {
         }
 
         args["quotationProfile.tid"] = template;
-        args["quotationProfile.type"] = params.quotation.profile.type;
-        args["quotationProfile.qid"] = params.quotation.qid;
+        args["quotationProfile.type"] = profileType;
+        if (params.quotation.qid)
+            args["quotationProfile.qid"] = params.quotation.qid;
         args["quotationProfile.orderId"] = params.quotation.orderId;
 
         com.post(api.quotation.makeQuotationProfile, args, function(res) {
@@ -261,7 +268,7 @@ jQuery(function($) {
 
                     // 仅交接单(type=3)触发预算员自动分配,标签(type=4)等其他用途只保存
                     var orderId = params.quotation.orderId;
-                    var profileType = params.quotation.profile.type;
+                    var profileType = params.quotation.profile ? params.quotation.profile.type : params.quotation.type;
 
                     if (orderId && profileType == 3) {
                         com.post(api.quotation.autoQuotationAssign, {
