@@ -10,7 +10,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.communion.dao.BrandDao;
+import com.fanglin.communion.dao.BrandSupplierDao;
 import com.fanglin.communion.po.BrandPO;
+import com.fanglin.communion.po.BrandSupplierPO;
 import com.fanglin.communion.po.CategoryPO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
@@ -72,6 +74,9 @@ public class SelectionItemServiceImpl implements SelectionItemService {
 
 	@Autowired
 	private BrandDao brandDao;
+
+	@Autowired
+	private BrandSupplierDao brandSupplierDao;
 
 	@Autowired
 	private GoodsDao goodsDao;
@@ -328,6 +333,43 @@ public class SelectionItemServiceImpl implements SelectionItemService {
 		if (selectionItemVO.getComment() != null) {
 			selectionItemPO.setComment(selectionItemVO.getComment());
 		}
+
+		selectionItemDao.update(selectionItemPO);
+
+		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int updateSelectionItemForSupplier(SelectionItemVO selectionItemVO) throws FLException {
+
+		SelectionItemPO selectionItemPO = selectionItemDao.get(selectionItemVO.getSiid());
+
+		if (selectionItemPO == null) {
+			throw new FLException(200038, "选材项不存在");
+		}
+
+		if (selectionItemPO.getStatus() > SelectionItemPO.STATUS_CHECK_SHORT) {
+			throw new FLException(200039, "选材项状态不可操作");
+		}
+
+		long uid = selectionItemVO.getSupplier().getUid();
+
+		List<BrandSupplierPO> brandSupplierPOs = brandSupplierDao.queryBrandSupplier(selectionItemPO.getGoods().getBid());
+
+		boolean contains = false;
+		for (BrandSupplierPO brandSupplierPO : brandSupplierPOs) {
+			if (brandSupplierPO.getSupplier().getUid() == uid) {
+				contains = true;
+				break;
+			}
+		}
+
+		if (!contains) {
+			throw new FLException(200045, "厂商不在品牌关联列表中");
+		}
+
+		selectionItemPO.setSuid(uid);
 
 		selectionItemDao.update(selectionItemPO);
 

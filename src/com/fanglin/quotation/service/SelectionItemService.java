@@ -28,6 +28,8 @@ public interface SelectionItemService {
 
 	public int updateSelectionItem(SelectionItemVO selectionItemVO) throws FLException;
 
+	public int updateSelectionItemForSupplier(SelectionItemVO selectionItemVO) throws FLException;
+
 	public int refundSelectionItem(SelectionItemVO selectionItemVO) throws FLException;
 
 	public int addedSelectionItem(SelectionItemVO selectionItemVO, String userId) throws FLException;

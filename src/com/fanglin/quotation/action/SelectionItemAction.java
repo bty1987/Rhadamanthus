@@ -103,6 +103,14 @@ public class SelectionItemAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "updateSelectionItemForSupplier", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateSelectionItemForSupplier() throws FLException {
+
+		selectionItemService.updateSelectionItemForSupplier(selectionItem);
+
+		return SUCCESS;
+	}
+
 	@Action(value = "refundSelectionItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String refundSelectionItem() throws FLException {
 

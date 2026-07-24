@@ -7,13 +7,15 @@ $(function() {
             refundSelectionItemModal: com.focusPage('#refundSelectionItemModal'),
             addedSelectionItemModal: com.focusPage('#addedSelectionItemModal'),
             balanceSelectionItemModal: com.focusPage('#balanceSelectionItemModal'),
-            pictureModal: com.focusPage('#pictureModal')
+            pictureModal: com.focusPage('#pictureModal'),
+            supplierSelectionItemModal: com.focusPage('#supplierSelectionItemModal')
         },
         btns: {
             updateBtn: com.focusPage('#updateBtn'),
             refundBtn: com.focusPage('#refundBtn'),
             addedBtn: com.focusPage('#addedBtn'),
             balanceSalesBtn: com.focusPage('#balanceSalesBtn'),
+            supplierBtn: com.focusPage('#supplierBtn'),
         },
         items: {
             num: com.focusPage("#num"),
@@ -23,7 +25,9 @@ $(function() {
             utilitynum: com.focusPage('#utilitynum'),
             balanceSales: com.focusPage('#balanceSales'),
 
-            picture: com.focusPage('#picture', '#pictureModal')
+            picture: com.focusPage('#picture', '#pictureModal'),
+            supplierSelect: com.focusPage('#supplierSelect'),
+            supplierBrand: com.focusPage('#supplierBrand')
         },
         title: com.focusPage("#myModalLabel"),
         dcomment: com.focusPage("#dcomment"),
@@ -31,7 +35,8 @@ $(function() {
             siid: 0,
             sid: 0,
             status: 0,
-            num: 0
+            num: 0,
+            bid: 0
         },
         typeList: [],
         statusList: [],
@@ -126,10 +131,18 @@ $(function() {
         com.cleanItems(selectionItem.items);
     });
 
+    selectionItem.modals.supplierSelectionItemModal.on("hide.bs.modal", function() {
+
+        com.clearValidator();
+        selectionItem.items.supplierSelect.empty();
+        selectionItem.items.supplierBrand.text("");
+    });
+
     selectionItem.btns.updateBtn.bindClick(updateData);
     selectionItem.btns.refundBtn.bindClick(refundSelectionItem);
     selectionItem.btns.addedBtn.bindClick(addedSelectionItem);
     selectionItem.btns.balanceSalesBtn.bindClick(balanceSalesData);
+    selectionItem.btns.supplierBtn.bindClick(updateSupplier);
 
     selectionItem.pageConfig = getConfig(params['urlLoadParams'].type, 8);
 
@@ -472,6 +485,40 @@ $(function() {
             };
         }
 
+        if (selectionItem.pageType == "expert") {
+            btns.supplier = {
+                name: "修改厂商",
+                clazz: "btn-grey",
+                show: function(v) {
+                    return true;
+                },
+                handle: function(v) {
+                    selectionItem.parameters.siid = v.siid;
+                    selectionItem.parameters.bid = v.goods.bid;
+                    selectionItem.items.supplierBrand.text(v.goods.brand);
+
+                    com.post(api.communion.queryBrandSupplier, {
+                        "brandSupplier.brand.bid": v.goods.bid
+                    }, function(res) {
+
+                        var suppliers = [];
+
+                        $.each(res.brandSuppliers || [], function(i, brandSupplier) {
+                            suppliers.push(brandSupplier.supplier);
+                        });
+
+                        selectionItem.items.supplierSelect.bindData(suppliers, "uid", "currentName");
+
+                        if (v.supplier && v.supplier.uid != null) {
+                            selectionItem.items.supplierSelect.val(v.supplier.uid);
+                        }
+                    });
+
+                    selectionItem.modals.supplierSelectionItemModal.modal("show");
+                }
+            };
+        }
+
         return btns;
     })();
 
@@ -727,6 +774,27 @@ $(function() {
         });
 
         selectionItem.modals.updateSelectionItemModal.modal("hide");
+    }
+
+    function updateSupplier() {
+
+        if (selectionItem.items.supplierSelect.val() == null || selectionItem.items.supplierSelect.val() == "") {
+            com.showAlert(com.warning, "请选择厂商");
+            return false;
+        }
+
+        var option = {
+            "selectionItem.siid": selectionItem.parameters.siid,
+            "selectionItem.supplier.uid": selectionItem.items.supplierSelect.val()
+        };
+
+        com.post(api.quotation.updateSelectionItemForSupplier, option, function(res) {
+
+            searcher.doSearch();
+            com.showAlert(com.info, "操作成功");
+        });
+
+        selectionItem.modals.supplierSelectionItemModal.modal("hide");
     }
 
     function refundSelectionItem() {
