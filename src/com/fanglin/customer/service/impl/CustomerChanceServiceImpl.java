@@ -600,6 +600,15 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 			customerChancePO.setRegion(belonger.getDept());
 		}
 
+		// 记录手动分配方式: 按调用方传入的维度判定(优先级 belonger > department > region)
+		if (customerChanceVO.getBelonger() != null) {
+			customerChancePO.setType(CustomerChancePO.ATTTYPE_USER_INT);
+		} else if (customerChanceVO.getDepartment() != null) {
+			customerChancePO.setType(CustomerChancePO.ATTTYPE_DEPT_INT);
+		} else if (customerChanceVO.getRegion() != null) {
+			customerChancePO.setType(CustomerChancePO.ATTTYPE_REGION_INT);
+		}
+
 		customerChancePO.setStatus(CustomerChancePO.STATUS_INIT_INT);
 
 		customerChanceDao.update(customerChancePO);
