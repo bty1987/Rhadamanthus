@@ -1618,6 +1618,11 @@ $.extend(api, {
                 args: ["selection.total", "selection.quotationTotal", "selection.extensionAddTotal", "selection.extensionReduceTotal", "selection.addReduceAddTotal", "selection.addReduceMinusTotal", "selectionItem.num"],
             }
         },
+        updateSelectionItemForSupplier: {
+            url: "updateSelectionItemForSupplier.do",
+            intercept: true,
+            type: "update"
+        },
         refundSelectionItem: {
             url: "refundSelectionItem.do",
             intercept: true,
