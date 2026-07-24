@@ -136,7 +136,7 @@ public class A20260404ServiceImpl implements A20260404Service {
 				if (dutyConfig == null) {
 					throw new FLException(230027, "供应商职位配置不存在(supplierDuty)");
 				}
-				DutyPO dutyPO = dutyDao.get(Integer.valueOf(dutyConfig.getValue()));
+				DutyPO dutyPO = dutyDao.get(dutyConfig.getValue());
 				if (dutyPO == null) {
 					throw new FLException(230011, "供应商职位不存在: " + dutyConfig.getValue());
 				}
