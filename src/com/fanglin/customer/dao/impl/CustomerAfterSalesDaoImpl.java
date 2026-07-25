@@ -55,6 +55,19 @@ public class CustomerAfterSalesDaoImpl extends DaoImpl<CustomerAfterSalesPO> imp
 		return query.list();
 	}
 
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<CustomerAfterSalesPO> queryCustomerAfterSalesByCid(long cid, int company) {
+
+		org.hibernate.Criteria query = session().createCriteria(CustomerAfterSalesPO.class).add(Restrictions.eq(CustomerAfterSalesPO.COLUMN_CID_STR, cid));
+
+		if (company != CompanyPO.TYPE_HEADQUARTER_INT) {
+			query.add(Restrictions.eq("company", company));
+		}
+
+		return query.list();
+	}
+
 	private void queryFilterExcute(PagingQuery<CustomerAfterSalesPO> query, List<Filter> filters) throws FLException {
 
 		if (filters == null) return;

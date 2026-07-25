@@ -16,4 +16,6 @@ public interface CustomerAfterSalesDao extends Dao<CustomerAfterSalesPO> {
 
 	public List<CustomerAfterSalesPO> queryCustomerAfterSalesByOrderId(String orderId, int company);
 
+	public List<CustomerAfterSalesPO> queryCustomerAfterSalesByCid(long cid, int company);
+
 }
