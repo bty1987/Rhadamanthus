@@ -724,6 +724,9 @@ $.extend(api, {
         queryCustomerAfterSalesByOrderId: {
             url: "queryCustomerAfterSalesByOrderId.do"
         },
+        queryCustomerAfterSalesByCid: {
+            url: "queryCustomerAfterSalesByCid.do"
+        },
         addCustomerAfterSales: {
             url: "addCustomerAfterSales.do"
         },
@@ -732,6 +735,18 @@ $.extend(api, {
         },
         handleCustomerAfterSales: {
             url: "handleCustomerAfterSales.do"
+        },
+        dispatchCustomerAfterSales: {
+            url: "dispatchCustomerAfterSales.do"
+        },
+        tranCustomerAfterSales: {
+            url: "tranCustomerAfterSales.do"
+        },
+        holdCustomerAfterSales: {
+            url: "holdCustomerAfterSales.do"
+        },
+        upgradeCustomerAfterSales: {
+            url: "upgradeCustomerAfterSales.do"
         },
         finishCustomerAfterSales: {
             url: "finishCustomerAfterSales.do"

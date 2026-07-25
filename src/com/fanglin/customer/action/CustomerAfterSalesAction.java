@@ -62,6 +62,14 @@ public class CustomerAfterSalesAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "queryCustomerAfterSalesByCid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryCustomerAfterSalesByCid() throws FLException {
+
+		customerAfterSaleses = customerAfterSalesService.queryCustomerAfterSalesByCid(customerAfterSales, queryCompany());
+
+		return SUCCESS;
+	}
+
 	@Action(value = "addCustomerAfterSales", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addCustomerAfterSales() throws FLException {
 
@@ -82,6 +90,38 @@ public class CustomerAfterSalesAction extends BaseListAction {
 	public String handleCustomerAfterSales() throws FLException {
 
 		customerAfterSalesService.handleCustomerAfterSales(customerAfterSales, queryUserId());
+
+		return SUCCESS;
+	}
+
+	@Action(value = "dispatchCustomerAfterSales", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String dispatchCustomerAfterSales() throws FLException {
+
+		customerAfterSalesService.dispatchCustomerAfterSales(customerAfterSales, queryUserId());
+
+		return SUCCESS;
+	}
+
+	@Action(value = "tranCustomerAfterSales", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String tranCustomerAfterSales() throws FLException {
+
+		customerAfterSalesService.tranCustomerAfterSales(customerAfterSales, queryUserId());
+
+		return SUCCESS;
+	}
+
+	@Action(value = "holdCustomerAfterSales", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String holdCustomerAfterSales() throws FLException {
+
+		customerAfterSalesService.holdCustomerAfterSales(customerAfterSales, queryUserId());
+
+		return SUCCESS;
+	}
+
+	@Action(value = "upgradeCustomerAfterSales", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String upgradeCustomerAfterSales() throws FLException {
+
+		customerAfterSalesService.upgradeCustomerAfterSales(customerAfterSales, queryUserId());
 
 		return SUCCESS;
 	}

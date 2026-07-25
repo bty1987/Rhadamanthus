@@ -17,11 +17,21 @@ public interface CustomerAfterSalesService {
 
 	public List<CustomerAfterSalesVO> queryCustomerAfterSalesByOrderId(CustomerAfterSalesVO customerAfterSalesVO, int company);
 
+	public List<CustomerAfterSalesVO> queryCustomerAfterSalesByCid(CustomerAfterSalesVO customerAfterSalesVO, int company);
+
 	public int addCustomerAfterSales(CustomerAfterSalesVO customerAfterSalesVO, String userId, int company) throws FLException;
 
 	public int receiveCustomerAfterSales(CustomerAfterSalesVO customerAfterSalesVO, String userId) throws FLException;
 
+	public int dispatchCustomerAfterSales(CustomerAfterSalesVO customerAfterSalesVO, String userId) throws FLException;
+
 	public int handleCustomerAfterSales(CustomerAfterSalesVO customerAfterSalesVO, String userId) throws FLException;
+
+	public int tranCustomerAfterSales(CustomerAfterSalesVO customerAfterSalesVO, String userId) throws FLException;
+
+	public int holdCustomerAfterSales(CustomerAfterSalesVO customerAfterSalesVO, String userId) throws FLException;
+
+	public int upgradeCustomerAfterSales(CustomerAfterSalesVO customerAfterSalesVO, String userId) throws FLException;
 
 	public int finishCustomerAfterSales(CustomerAfterSalesVO customerAfterSalesVO, String userId) throws FLException;
 

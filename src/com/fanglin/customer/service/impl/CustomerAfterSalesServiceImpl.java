@@ -99,6 +99,19 @@ public class CustomerAfterSalesServiceImpl implements CustomerAfterSalesService 
 	}
 
 	@Override
+	public List<CustomerAfterSalesVO> queryCustomerAfterSalesByCid(CustomerAfterSalesVO customerAfterSalesVO, int company) {
+
+		List<CustomerAfterSalesPO> customerAfterSalesPOs = customerAfterSalesDao.queryCustomerAfterSalesByCid(customerAfterSalesVO.getCid(), company);
+		List<CustomerAfterSalesVO> customerAfterSalesVOs = new ArrayList<CustomerAfterSalesVO>();
+
+		for (CustomerAfterSalesPO customerAfterSalesPO : customerAfterSalesPOs) {
+			customerAfterSalesVOs.add(POtoVO(customerAfterSalesPO));
+		}
+
+		return customerAfterSalesVOs;
+	}
+
+	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public int addCustomerAfterSales(CustomerAfterSalesVO customerAfterSalesVO, String userId, int company) throws FLException {
 
@@ -163,9 +176,59 @@ public class CustomerAfterSalesServiceImpl implements CustomerAfterSalesService 
 	@Transactional(rollbackFor = Exception.class)
 	public int handleCustomerAfterSales(CustomerAfterSalesVO customerAfterSalesVO, String userId) throws FLException {
 
+		return changeCustomerAfterSalesForHandle(customerAfterSalesVO, userId, CustomerAfterSalesPO.STATUS_HANDLE_INT, CustomerAfterSalesRecordPO.TYPE_HANDLE_INT);
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int dispatchCustomerAfterSales(CustomerAfterSalesVO customerAfterSalesVO, String userId) throws FLException {
+
 		CustomerAfterSalesPO customerAfterSalesPO = queryPO(customerAfterSalesVO);
 
-		if (!Arrays.asList(CustomerAfterSalesPO.STATUS_RECEIVE_INT, CustomerAfterSalesPO.STATUS_DISPATCH_INT, CustomerAfterSalesPO.STATUS_HANDLE_INT, CustomerAfterSalesPO.STATUS_UPGRADE_INT, CustomerAfterSalesPO.STATUS_REOPEN_INT).contains(customerAfterSalesPO.getStatus())) {
+		if (!Arrays.asList(CustomerAfterSalesPO.STATUS_INIT_INT, CustomerAfterSalesPO.STATUS_RECEIVE_INT, CustomerAfterSalesPO.STATUS_REOPEN_INT).contains(customerAfterSalesPO.getStatus())) {
+			throw new FLException(330115, "售后单状态不可操作");
+		}
+
+		UserPO operator = queryUser(userId);
+		UserPO owner = queryOwner(customerAfterSalesVO.getOwner(), customerAfterSalesPO.getOwner() == null ? operator : customerAfterSalesPO.getOwner());
+		short oldStatus = customerAfterSalesPO.getStatus();
+
+		customerAfterSalesPO.setOwner(owner);
+		customerAfterSalesPO.setStatus(CustomerAfterSalesPO.STATUS_DISPATCH_INT);
+		customerAfterSalesPO.setUpdateTime(DateUtil.getDateToTimestamp(new Date()));
+		customerAfterSalesDao.update(customerAfterSalesPO);
+
+		addRecord(customerAfterSalesPO, CustomerAfterSalesRecordPO.TYPE_DISPATCH_INT, operator, oldStatus, customerAfterSalesPO.getStatus(), customerAfterSalesVO.getComment());
+
+		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int tranCustomerAfterSales(CustomerAfterSalesVO customerAfterSalesVO, String userId) throws FLException {
+
+		return changeCustomerAfterSalesForOwner(customerAfterSalesVO, userId, CustomerAfterSalesRecordPO.TYPE_TRAN_INT);
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int holdCustomerAfterSales(CustomerAfterSalesVO customerAfterSalesVO, String userId) throws FLException {
+
+		return changeCustomerAfterSalesForHandle(customerAfterSalesVO, userId, CustomerAfterSalesPO.STATUS_HOLD_INT, CustomerAfterSalesRecordPO.TYPE_HOLD_INT);
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int upgradeCustomerAfterSales(CustomerAfterSalesVO customerAfterSalesVO, String userId) throws FLException {
+
+		return changeCustomerAfterSalesForHandle(customerAfterSalesVO, userId, CustomerAfterSalesPO.STATUS_UPGRADE_INT, CustomerAfterSalesRecordPO.TYPE_UPGRADE_INT);
+	}
+
+	private int changeCustomerAfterSalesForHandle(CustomerAfterSalesVO customerAfterSalesVO, String userId, short status, short recordType) throws FLException {
+
+		CustomerAfterSalesPO customerAfterSalesPO = queryPO(customerAfterSalesVO);
+
+		if (!Arrays.asList(CustomerAfterSalesPO.STATUS_RECEIVE_INT, CustomerAfterSalesPO.STATUS_DISPATCH_INT, CustomerAfterSalesPO.STATUS_HANDLE_INT, CustomerAfterSalesPO.STATUS_HOLD_INT, CustomerAfterSalesPO.STATUS_UPGRADE_INT, CustomerAfterSalesPO.STATUS_REOPEN_INT).contains(customerAfterSalesPO.getStatus())) {
 			throw new FLException(330115, "售后单状态不可操作");
 		}
 
@@ -175,12 +238,38 @@ public class CustomerAfterSalesServiceImpl implements CustomerAfterSalesService 
 		short oldStatus = customerAfterSalesPO.getStatus();
 
 		customerAfterSalesPO.setOwner(owner);
-		customerAfterSalesPO.setStatus(CustomerAfterSalesPO.STATUS_HANDLE_INT);
+		customerAfterSalesPO.setStatus(status);
 		customerAfterSalesPO.setHandleTime(DateUtil.getDateToTimestamp(now));
 		customerAfterSalesPO.setUpdateTime(DateUtil.getDateToTimestamp(now));
 		customerAfterSalesDao.update(customerAfterSalesPO);
 
-		addRecord(customerAfterSalesPO, CustomerAfterSalesRecordPO.TYPE_HANDLE_INT, operator, oldStatus, customerAfterSalesPO.getStatus(), customerAfterSalesVO.getComment());
+		addRecord(customerAfterSalesPO, recordType, operator, oldStatus, customerAfterSalesPO.getStatus(), customerAfterSalesVO.getComment());
+
+		return 0;
+	}
+
+	private int changeCustomerAfterSalesForOwner(CustomerAfterSalesVO customerAfterSalesVO, String userId, short recordType) throws FLException {
+
+		CustomerAfterSalesPO customerAfterSalesPO = queryPO(customerAfterSalesVO);
+
+		if (Arrays.asList(CustomerAfterSalesPO.STATUS_FINISH_INT, CustomerAfterSalesPO.STATUS_CLOSE_INT, CustomerAfterSalesPO.STATUS_CANCEL_INT).contains(customerAfterSalesPO.getStatus())) {
+			throw new FLException(330115, "售后单状态不可操作");
+		}
+
+		UserPO operator = queryUser(userId);
+		UserPO owner = queryOwner(customerAfterSalesVO.getOwner(), null);
+
+		if (owner == null) {
+			throw new FLException(190005, "人员不存在");
+		}
+
+		short oldStatus = customerAfterSalesPO.getStatus();
+
+		customerAfterSalesPO.setOwner(owner);
+		customerAfterSalesPO.setUpdateTime(DateUtil.getDateToTimestamp(new Date()));
+		customerAfterSalesDao.update(customerAfterSalesPO);
+
+		addRecord(customerAfterSalesPO, recordType, operator, oldStatus, customerAfterSalesPO.getStatus(), customerAfterSalesVO.getComment());
 
 		return 0;
 	}

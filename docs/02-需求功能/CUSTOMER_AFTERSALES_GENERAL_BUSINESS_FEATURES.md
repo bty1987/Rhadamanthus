@@ -425,12 +425,14 @@ P0/P1 建议接口:
 | `pageCustomerAfterSales` | 分页售后主单 |
 | `queryCustomerAfterSalesByAsid` | 查询售后详情 |
 | `queryCustomerAfterSalesByOrderId` | 按订单查询售后 |
-| `queryCustomerAfterSalesByCustomerId` | 按客户查询售后 |
+| `queryCustomerAfterSalesByCid` | 按客户查询售后 |
 | `addCustomerAfterSales` | 新增售后主单 |
 | `receiveCustomerAfterSales` | 接收售后 |
-| `assignCustomerAfterSales` | 派工/分配负责人 |
-| `transferCustomerAfterSales` | 转交售后 |
 | `handleCustomerAfterSales` | 添加处理记录并进入处理中 |
+| `dispatchCustomerAfterSales` | 派工/分配负责人 |
+| `tranCustomerAfterSales` | 转交售后 |
+| `holdCustomerAfterSales` | 挂起售后 |
+| `upgradeCustomerAfterSales` | 升级售后 |
 | `finishCustomerAfterSales` | 完成处理 |
 | `closeCustomerAfterSales` | 关闭售后 |
 | `cancelCustomerAfterSales` | 取消售后 |
@@ -441,7 +443,7 @@ P0/P1 建议接口:
 | `countCustomerAfterSalesForSla` | SLA 看板统计 |
 | `countCustomerAfterSalesForCategory` | 问题分类统计 |
 
-方法命名遵守现有规范: `page` 必须分页, `query` 不分页, 状态动作使用 `receive/assign/transfer/handle/finish/close/cancel/reopen`。
+方法命名遵守现有规范: `page` 必须分页, `query` 不分页, 状态动作使用 `receive/dispatch/tran/handle/hold/upgrade/finish/close/cancel/reopen`。
 
 ---
 
@@ -470,7 +472,8 @@ P0/P1 建议接口:
 7. 回访不满意或未解决时, 应支持重开售后主单, 而不是只记录一条满意度。
 8. 费用、赔付、退款等必须接审批和权限, 不应只作为普通备注字段。
 9. API 文档、错误码、前端 api 映射、数据库脚本需要同步。
-10. 如果要和 Market 联动, Market 只读取售后结果做营销排除、客户风险和满意度分群, 不直接改售后状态。
+10. 已实现接口使用 `dispatch/tran/hold/upgrade` 命名承接派工、转交、挂起、升级动作, 和现有代码动词风格保持一致。
+11. 如果要和 Market 联动, Market 只读取售后结果做营销排除、客户风险和满意度分群, 不直接改售后状态。
 
 ---
 
