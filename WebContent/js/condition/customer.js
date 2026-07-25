@@ -1386,6 +1386,217 @@
             keyPath: "cid",
             valuePath: "name"
         }
+    },
+    "customer-aftersales-asNo": {
+        label: "售后编号",
+        type: "text",
+        submitConfig: {
+            name: "asNo",
+            op: "eq",
+            validate: null
+        }
+    },
+    "customer-aftersales-orderId": {
+        label: "装修单号",
+        type: "text",
+        submitConfig: {
+            name: "orderId",
+            op: "eq",
+            validate: {
+                "reg": /^[A-Z0-9]*$/,
+                "msg": "格式不正确A-Z,0-9"
+            }
+        }
+    },
+    "customer-aftersales-csid": {
+        label: "客源ID",
+        type: "text",
+        submitConfig: {
+            name: "csid",
+            op: "eq",
+            validate: {
+                "reg": /^[0-9]*$/,
+                "msg": "格式不正确0-9"
+            }
+        }
+    },
+    "customer-aftersales-cid": {
+        label: "客户ID",
+        type: "text",
+        submitConfig: {
+            name: "cid",
+            op: "eq",
+            validate: {
+                "reg": /^[0-9]*$/,
+                "msg": "格式不正确0-9"
+            }
+        }
+    },
+    "customer-aftersales-type": {
+        label: "售后类型",
+        type: "select",
+        submitConfig: {
+            name: "type",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: null,
+            postData: null,
+            listPath: [{
+                "key": "0",
+                "value": "反馈"
+            }, {
+                "key": "1",
+                "value": "投诉"
+            }, {
+                "key": "2",
+                "value": "报修"
+            }, {
+                "key": "3",
+                "value": "维修"
+            }, {
+                "key": "4",
+                "value": "建议"
+            }, {
+                "key": "5",
+                "value": "表扬"
+            }, {
+                "key": "6",
+                "value": "退款"
+            }],
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+    "customer-aftersales-source": {
+        label: "来源",
+        type: "select",
+        submitConfig: {
+            name: "source",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: null,
+            postData: null,
+            listPath: [{
+                "key": "0",
+                "value": "手工"
+            }],
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+    "customer-aftersales-priority": {
+        label: "优先级",
+        type: "select",
+        submitConfig: {
+            name: "priority",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: null,
+            postData: null,
+            listPath: [{
+                "key": "0",
+                "value": "普通"
+            }, {
+                "key": "1",
+                "value": "重要"
+            }, {
+                "key": "2",
+                "value": "紧急"
+            }],
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+    "customer-aftersales-status": {
+        label: "状态",
+        type: "select",
+        submitConfig: {
+            name: "status",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: null,
+            postData: null,
+            listPath: [{
+                "key": "0",
+                "value": "初始"
+            }, {
+                "key": "1",
+                "value": "已接收"
+            }, {
+                "key": "2",
+                "value": "已派工"
+            }, {
+                "key": "3",
+                "value": "处理中"
+            }, {
+                "key": "4",
+                "value": "待确认"
+            }, {
+                "key": "5",
+                "value": "已完成"
+            }, {
+                "key": "6",
+                "value": "已关闭"
+            }, {
+                "key": "7",
+                "value": "已取消"
+            }, {
+                "key": "8",
+                "value": "已挂起"
+            }, {
+                "key": "9",
+                "value": "已升级"
+            }, {
+                "key": "10",
+                "value": "已重开"
+            }],
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+    "customer-aftersales-owner": {
+        label: "负责人",
+        type: "autofill",
+        submitConfig: {
+            name: "owner.userId",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: api.personel.queryUserByPinyin,
+            postData: {
+                "user.status": "0"
+            },
+            listPath: "autoFillKeyValue",
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+    "customer-aftersales-creater": {
+        label: "创建人",
+        type: "autofill",
+        submitConfig: {
+            name: "creater.userId",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: api.personel.queryUserByPinyin,
+            postData: {
+                "user.status": "0"
+            },
+            listPath: "autoFillKeyValue",
+            keyPath: "key",
+            valuePath: "value"
+        }
     }
 
 

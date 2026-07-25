@@ -56,6 +56,9 @@ $.extend(api.index, {
     feedbackGuarantee2edit: {
         url: "/views/customer/feedbackGuarantee2edit.html"
     },
+    customerAfterSales: {
+        url: "/views/customer/customerAfterSales.html"
+    },
 });
 
 $.extend(api, {
