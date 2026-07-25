@@ -904,3 +904,64 @@ CREATE TABLE `vustomernet` (
   PRIMARY KEY (`vnid`),
   KEY `indexone` (`unionId`, `netunionId`) USING BTREE
 ) ENGINE=InnoDB AUTO_INCREMENT=44 DEFAULT CHARSET=utf8_general_ci ROW_FORMAT=Compact;
+
+DROP TABLE IF EXISTS `customeraftersales`;
+CREATE TABLE `customeraftersales` (
+  `asid` int(11) NOT NULL AUTO_INCREMENT COMMENT '售后单ID',
+  `asNo` varchar(32) NOT NULL COMMENT '售后单编号',
+  `type` tinyint(1) NOT NULL DEFAULT 0 COMMENT '类型:0反馈,1投诉,2报修,3维修,4建议,5表扬,6退款',
+  `source` tinyint(1) NOT NULL DEFAULT 0 COMMENT '来源:0人工,1电话,2微信,3小程序,4门店,5平台,6调研,7内部',
+  `orderId` varchar(32) NULL COMMENT '订单号',
+  `csid` int(11) NOT NULL DEFAULT 0 COMMENT '客资ID',
+  `cid` int(11) NOT NULL DEFAULT 0 COMMENT '客户ID',
+  `contactName` varchar(64) NULL COMMENT '联系人',
+  `phone` varchar(128) NULL COMMENT '加密手机号',
+  `content` varchar(512) NOT NULL DEFAULT '' COMMENT '问题描述',
+  `priority` tinyint(1) NOT NULL DEFAULT 0 COMMENT '优先级:0普通,1紧急,2重大,3舆情,4法务',
+  `status` tinyint(1) NOT NULL DEFAULT 0 COMMENT '状态:0初始,1已接收,2待派工,3处理中,4待确认,5已完成,6已关闭,7已取消,8已挂起,9已升级,10已重开',
+  `ouid` int(11) NULL COMMENT '当前负责人',
+  `did` int(11) NOT NULL DEFAULT 0 COMMENT '责任部门',
+  `cuid` int(11) NOT NULL COMMENT '创建人',
+  `createTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `updateTime` timestamp NULL COMMENT '更新时间',
+  `receiveTime` timestamp NULL COMMENT '接收时间',
+  `handleTime` timestamp NULL COMMENT '处理时间',
+  `finishTime` timestamp NULL COMMENT '完成时间',
+  `closeTime` timestamp NULL COMMENT '关闭时间',
+  `responseDeadline` timestamp NULL COMMENT '响应截止时间',
+  `finishDeadline` timestamp NULL COMMENT '完成截止时间',
+  `company` int(11) NOT NULL COMMENT '公司',
+  PRIMARY KEY (`asid`),
+  UNIQUE KEY `unique_asNo` (`asNo`) USING BTREE,
+  KEY `index_orderId` (`orderId`) USING BTREE,
+  KEY `index_csid` (`csid`) USING BTREE,
+  KEY `index_cid` (`cid`) USING BTREE,
+  KEY `index_status` (`status`) USING BTREE,
+  KEY `index_company` (`company`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8_general_ci ROW_FORMAT=Compact COMMENT='通用售后单';
+
+DROP TABLE IF EXISTS `customeraftersalesrecord`;
+CREATE TABLE `customeraftersalesrecord` (
+  `asrid` int(11) NOT NULL AUTO_INCREMENT COMMENT '售后记录ID',
+  `asid` int(11) NOT NULL COMMENT '售后单ID',
+  `type` tinyint(1) NOT NULL DEFAULT 0 COMMENT '类型:0创建,1接收,2派工,3处理,4转交,5完成,6关闭,7取消,8挂起,9升级,10重开,11备注',
+  `ouid` int(11) NOT NULL COMMENT '操作人',
+  `operateTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '操作时间',
+  `oldStatus` tinyint(1) NOT NULL DEFAULT 0 COMMENT '原状态',
+  `newStatus` tinyint(1) NOT NULL DEFAULT 0 COMMENT '新状态',
+  `comment` varchar(512) NULL COMMENT '说明',
+  PRIMARY KEY (`asrid`),
+  KEY `index_asid` (`asid`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8_general_ci ROW_FORMAT=Compact COMMENT='通用售后记录';
+
+DROP TABLE IF EXISTS `customeraftersalesref`;
+CREATE TABLE `customeraftersalesref` (
+  `asfid` int(11) NOT NULL AUTO_INCREMENT COMMENT '售后引用ID',
+  `asid` int(11) NOT NULL COMMENT '售后单ID',
+  `type` tinyint(1) NOT NULL COMMENT '引用类型:0feedback,1feedbackcomplaint,2feedbackguarantee,3aepair,4repair,5complain,6complaint,7revisit,8survey',
+  `refId` int(11) NOT NULL COMMENT '引用ID',
+  `createTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  PRIMARY KEY (`asfid`),
+  UNIQUE KEY `unique_ref` (`type`, `refId`) USING BTREE,
+  KEY `index_asid` (`asid`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8_general_ci ROW_FORMAT=Compact COMMENT='通用售后旧表引用';
