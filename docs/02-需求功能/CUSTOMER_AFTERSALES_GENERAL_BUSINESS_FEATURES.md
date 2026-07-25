@@ -384,6 +384,8 @@ Consultion 咨询单
 | 时间线 `CustomerAfterSalesRecord` | 记录接收、处理、派工、转交、完成、关闭 |
 | 附件 `CustomerAfterSalesAttachment` | 复用上传能力保存图片/文件 |
 
+当前落地状态: 已补充 `WebContent/views/customer/customerAfterSales.html` 与 `WebContent/js/customer/customerAfterSales.js` 作为统一售后前台工作台, 支持分页筛选、新增售后、查看详情/时间线/旧单引用, 以及接收、派工、处理、转交、挂起、升级、完成、关闭、取消、重开等主流程操作。旧 `feedback/complain/aepair/repair` 页面暂不迁移, 继续作为生产链路独立运行。
+
 ### P1: SLA、派工和回访闭环
 
 | 功能 | 说明 |
