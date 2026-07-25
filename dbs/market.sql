@@ -120,3 +120,125 @@ CREATE TABLE `epicture` (
   `url` varchar(64) NOT NULL COMMENT '图片地址',
   PRIMARY KEY (`epid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=196 DEFAULT CHARSET=utf8_general_ci ROW_FORMAT=Compact COMMENT='图片表';
+
+DROP TABLE IF EXISTS `market_campaign`;
+CREATE TABLE `market_campaign` (
+  `mcid` int(11) NOT NULL AUTO_INCREMENT COMMENT '活动ID',
+  `name` varchar(128) NOT NULL COMMENT '活动名称',
+  `type` tinyint(2) NOT NULL DEFAULT 0 COMMENT '活动类型',
+  `regionId` int(11) NOT NULL DEFAULT 0 COMMENT '区域ID',
+  `ownerId` int(11) NOT NULL DEFAULT 0 COMMENT '负责人ID',
+  `budget` decimal(10,2) NULL COMMENT '预算',
+  `startTime` timestamp NULL COMMENT '开始时间',
+  `endTime` timestamp NULL COMMENT '结束时间',
+  `status` tinyint(2) NOT NULL DEFAULT 0 COMMENT '状态:0草稿,1预热,2进行中,3暂停,4结束,5归档',
+  `comment` varchar(255) NULL COMMENT '备注',
+  `createTime` timestamp NULL COMMENT '创建时间',
+  `updateTime` timestamp NULL COMMENT '更新时间',
+  `company` int(11) NOT NULL COMMENT '公司',
+  PRIMARY KEY (`mcid`),
+  KEY `indexone` (`company`, `status`),
+  KEY `indextwo` (`ownerId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8_general_ci ROW_FORMAT=Compact COMMENT='营销活动';
+
+DROP TABLE IF EXISTS `market_channel`;
+CREATE TABLE `market_channel` (
+  `mchid` int(11) NOT NULL AUTO_INCREMENT COMMENT '渠道ID',
+  `name` varchar(64) NOT NULL COMMENT '渠道名称',
+  `type` tinyint(2) NOT NULL DEFAULT 0 COMMENT '渠道类型',
+  `platform` varchar(64) NULL COMMENT '平台',
+  `ownerId` int(11) NOT NULL DEFAULT 0 COMMENT '负责人ID',
+  `status` tinyint(2) NOT NULL DEFAULT 0 COMMENT '状态:0启用,1禁用',
+  `comment` varchar(255) NULL COMMENT '备注',
+  `company` int(11) NOT NULL COMMENT '公司',
+  PRIMARY KEY (`mchid`),
+  KEY `indexone` (`company`, `status`),
+  KEY `indextwo` (`ownerId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8_general_ci ROW_FORMAT=Compact COMMENT='营销渠道';
+
+DROP TABLE IF EXISTS `market_source`;
+CREATE TABLE `market_source` (
+  `msid` int(11) NOT NULL AUTO_INCREMENT COMMENT '来源ID',
+  `channelId` int(11) NOT NULL COMMENT '渠道ID',
+  `campaignId` int(11) NOT NULL COMMENT '活动ID',
+  `profileId` int(11) NOT NULL DEFAULT 0 COMMENT '人员/门店/名片ID',
+  `code` varchar(64) NOT NULL COMMENT '来源码',
+  `url` varchar(255) NULL COMMENT '推广链接',
+  `qrcode` varchar(255) NULL COMMENT '二维码',
+  `utmSource` varchar(64) NULL COMMENT 'UTM source',
+  `utmMedium` varchar(64) NULL COMMENT 'UTM medium',
+  `utmCampaign` varchar(64) NULL COMMENT 'UTM campaign',
+  `status` tinyint(2) NOT NULL DEFAULT 0 COMMENT '状态:0启用,1禁用',
+  `createTime` timestamp NULL COMMENT '创建时间',
+  `company` int(11) NOT NULL COMMENT '公司',
+  PRIMARY KEY (`msid`),
+  UNIQUE KEY `uniqueone` (`company`, `code`),
+  KEY `indexone` (`company`, `campaignId`),
+  KEY `indextwo` (`company`, `channelId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8_general_ci ROW_FORMAT=Compact COMMENT='营销来源';
+
+DROP TABLE IF EXISTS `market_inbound`;
+CREATE TABLE `market_inbound` (
+  `miid` int(11) NOT NULL AUTO_INCREMENT COMMENT '入站ID',
+  `inboundNo` varchar(64) NOT NULL COMMENT '入站编号',
+  `name` varchar(64) NULL COMMENT '姓名/称呼',
+  `phone` varchar(255) NULL COMMENT '手机号密文',
+  `phoneHash` varchar(64) NULL COMMENT '手机号哈希',
+  `wechat` varchar(64) NULL COMMENT '微信号',
+  `email` varchar(128) NULL COMMENT '邮箱',
+  `companyName` varchar(128) NULL COMMENT '企业/组织名称',
+  `demand` varchar(255) NULL COMMENT '需求描述',
+  `cityId` int(11) NOT NULL DEFAULT 0 COMMENT '城市/区域ID',
+  `channelId` int(11) NOT NULL COMMENT '渠道ID',
+  `sourceId` int(11) NOT NULL COMMENT '来源ID',
+  `campaignId` int(11) NOT NULL COMMENT '活动ID',
+  `csid` int(11) NOT NULL DEFAULT 0 COMMENT 'CustomerSource ID',
+  `ccid` int(11) NOT NULL DEFAULT 0 COMMENT 'CustomerChance ID',
+  `orderId` varchar(15) NULL COMMENT '订单ID',
+  `idempotentKey` varchar(64) NOT NULL COMMENT '幂等键',
+  `status` tinyint(2) NOT NULL DEFAULT 0 COMMENT '状态:0待承接,1成功,2失败,3重试中,4忽略',
+  `errorMsg` varchar(255) NULL COMMENT '失败原因',
+  `createTime` timestamp NULL COMMENT '创建时间',
+  `updateTime` timestamp NULL COMMENT '更新时间',
+  `company` int(11) NOT NULL COMMENT '公司',
+  PRIMARY KEY (`miid`),
+  UNIQUE KEY `uniqueone` (`company`, `inboundNo`),
+  UNIQUE KEY `uniquetwo` (`company`, `idempotentKey`),
+  KEY `indexone` (`company`, `campaignId`, `status`),
+  KEY `indextwo` (`company`, `channelId`, `status`),
+  KEY `indexthree` (`company`, `csid`),
+  KEY `indexfour` (`company`, `ccid`),
+  KEY `indexfive` (`phoneHash`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8_general_ci ROW_FORMAT=Compact COMMENT='营销入站';
+
+DROP TABLE IF EXISTS `market_inbound_item`;
+CREATE TABLE `market_inbound_item` (
+  `miiid` int(11) NOT NULL AUTO_INCREMENT COMMENT '入站扩展项ID',
+  `miid` int(11) NOT NULL COMMENT '入站ID',
+  `fieldKey` varchar(64) NOT NULL COMMENT '字段键',
+  `fieldValue` varchar(255) NULL COMMENT '字段值',
+  PRIMARY KEY (`miiid`),
+  KEY `indexone` (`miid`),
+  KEY `indextwo` (`fieldKey`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8_general_ci ROW_FORMAT=Compact COMMENT='营销入站扩展字段';
+
+DROP TABLE IF EXISTS `market_attribution`;
+CREATE TABLE `market_attribution` (
+  `maid` int(11) NOT NULL AUTO_INCREMENT COMMENT '归因ID',
+  `campaignId` int(11) NOT NULL DEFAULT 0 COMMENT '活动ID',
+  `sourceId` int(11) NOT NULL DEFAULT 0 COMMENT '来源ID',
+  `miid` int(11) NOT NULL DEFAULT 0 COMMENT '入站ID',
+  `csid` int(11) NOT NULL DEFAULT 0 COMMENT 'CustomerSource ID',
+  `ccid` int(11) NOT NULL DEFAULT 0 COMMENT 'CustomerChance ID',
+  `orderId` varchar(15) NULL COMMENT '订单ID',
+  `eventType` tinyint(2) NOT NULL DEFAULT 0 COMMENT '事件类型:0提交,1客资,2机会,3订单',
+  `status` tinyint(2) NOT NULL DEFAULT 0 COMMENT '状态',
+  `createTime` timestamp NULL COMMENT '创建时间',
+  `company` int(11) NOT NULL COMMENT '公司',
+  PRIMARY KEY (`maid`),
+  KEY `indexone` (`company`, `campaignId`),
+  KEY `indextwo` (`company`, `sourceId`),
+  KEY `indexthree` (`company`, `miid`),
+  KEY `indexfour` (`company`, `csid`),
+  KEY `indexfive` (`company`, `ccid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8_general_ci ROW_FORMAT=Compact COMMENT='营销归因';
