@@ -714,6 +714,49 @@ $.extend(api, {
         updateFeedbackGuarantee: {
             url: "updateFeedbackGuarantee.do"
         },
+
+        pageCustomerAfterSales: {
+            url: "pageCustomerAfterSales.do"
+        },
+        queryCustomerAfterSalesByAsid: {
+            url: "queryCustomerAfterSalesByAsid.do"
+        },
+        queryCustomerAfterSalesByOrderId: {
+            url: "queryCustomerAfterSalesByOrderId.do"
+        },
+        addCustomerAfterSales: {
+            url: "addCustomerAfterSales.do"
+        },
+        receiveCustomerAfterSales: {
+            url: "receiveCustomerAfterSales.do"
+        },
+        handleCustomerAfterSales: {
+            url: "handleCustomerAfterSales.do"
+        },
+        finishCustomerAfterSales: {
+            url: "finishCustomerAfterSales.do"
+        },
+        closeCustomerAfterSales: {
+            url: "closeCustomerAfterSales.do"
+        },
+        cancelCustomerAfterSales: {
+            url: "cancelCustomerAfterSales.do"
+        },
+        reopenCustomerAfterSales: {
+            url: "reopenCustomerAfterSales.do"
+        },
+        queryCustomerAfterSalesRecord: {
+            url: "queryCustomerAfterSalesRecord.do"
+        },
+        addCustomerAfterSalesRecord: {
+            url: "addCustomerAfterSalesRecord.do"
+        },
+        queryCustomerAfterSalesRef: {
+            url: "queryCustomerAfterSalesRef.do"
+        },
+        addCustomerAfterSalesRef: {
+            url: "addCustomerAfterSalesRef.do"
+        },
         pageGroup: {
             url: "pageGroup.do"
         },
