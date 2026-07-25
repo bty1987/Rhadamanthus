@@ -709,12 +709,105 @@ Customer 重点能力完整度复核:
 | `390013` | 触达模板不存在 |
 | `390014` | 客群不存在 |
 | `390015` | 标签不存在 |
+| `390016` | 来源已存在 |
 
 正式开发前必须先在 `docs/03-API文档/API/error.md` 登记。
 
 ---
 
-## 11. 分期实施建议
+## 11. 实施前置评审与调整准入方案
+
+### 11.1 Review 结论
+
+本方案可以进入调整, 但不建议按 9 个业务域一次性开发。当前 market 模块仍以 `Ecase/Ecustomer/Eperson/Card` 等展示和报名对象为主, 缺少活动、渠道、来源码、入站状态、承接结果和归因映射; customer 模块已经承载客资、机会、分配、保护、转单、售后、积分、会员等生产逻辑。直接在 Market 重建完整线索池或修改 Customer 主链路, 会产生重复状态机和生产风险。
+
+推荐采用“P0 前置层先行”的方式: 只新增 Market 自身的营销运营数据和承接快照, 通过适配层调用 Customer 现有 Service 完成生产写入, 暂不改 Customer 表结构、状态机和核心流程。
+
+本次调整已按该边界完成 P0 代码落地: 新增 Market 活动、渠道、来源、入站、扩展项和归因模型, 补齐 API 映射、后台轻页面、错误码和数据库脚本; Customer 模块未修改, 承接动作集中在 `MarketCustomerBridgeService`。
+
+### 11.2 当前可操作性判断
+
+| 评审项 | 判断 | 处理建议 |
+| --- | --- | --- |
+| 现有 Market 结构 | 可扩展 | 继续沿用 action/service/dao/po/vo 分层, 新对象使用 `Market*` 命名, 不替换旧 `E*` 接口 |
+| 旧 `Ecustomer` | 只能兼容 | 字段偏装修, 无活动/渠道/来源/承接状态/公司/创建时间, 手机号也不是新规范加密模型; 仅作为历史报名入口保留 |
+| Customer 客资/机会 | 已是生产主链路 | Market 不重做分配、保护、跟进、转单状态机, 只保存入站快照和归因引用 |
+| 积分/会员/权益 | Customer/Store 有底座但分散 | P0 不做权益; P2 再做 Market 权益编排, 实际账户流水和券核销走 Customer/Store 适配 |
+| 售后/回访/调研 | Customer 已覆盖服务阶段 | Market 不做售后工单, 只在 P2/P3 读取售后结果用于复购排除、满意度标签和 NPS 分析 |
+| 客群/画像 | Customer 有静态画像, Market 可补行为标签 | P0 暂缓; P2 做营销标签和客群引用, 不复制客户主档案 |
+| 报表统计 | 可做基础统计 | P0 只做活动/渠道入站数、承接成功数、失败数; ROI、多触点归因放到 P3 |
+
+### 11.3 P0 准入范围
+
+P0 只允许建设“活动 -> 渠道 -> 来源码 -> 入站快照 -> Customer 承接 -> 归因映射 -> 基础统计”这一条最小闭环。
+
+| 类型 | 允许开发 | 暂不开发 |
+| --- | --- | --- |
+| 数据对象 | `MarketCampaign`, `MarketChannel`, `MarketSource`, `MarketInbound`, `MarketInboundItem`, `MarketAttribution` | `MarketTag`, `MarketAudience`, `MarketBenefit`, `MarketTouch`, `MarketEvent` 的完整体系 |
+| 接口 | 活动/渠道/来源分页与新增更新, 入站提交, 入站重试, 归因查询, 活动/渠道基础统计 | 自动营销、权益领取、积分发放、动态客群、复杂漏斗、ROI 报表 |
+| Customer 衔接 | 通过 `MarketCustomerBridgeService` 调用 `CustomerSourceService` 或 `CustomerChanceService` | 直接调用 Customer DAO, 直接改 Customer 表, 复制 Customer 分配逻辑 |
+| 前端页面 | 活动管理、渠道来源、入站记录、归因查询的后台轻页面 | 可视化落地页编辑器、营销自动化编排器、复杂数据大屏 |
+
+P0 最小数据闭环建议如下:
+
+```text
+MarketCampaign/MarketChannel/MarketSource
+    -> addMarketInbound 保存原始表单和幂等键
+    -> MarketCustomerBridgeService 调用 CustomerSourceService/CustomerChanceService
+    -> 回写 MarketInbound.csid/ccid/orderId/status/errorMsg
+    -> 写入 MarketAttribution
+    -> countMarketInboundForCampaign/countMarketInboundForChannel 输出基础统计
+```
+
+### 11.4 开发前置条件
+
+正式进入代码开发前, 需要先完成以下前置条件:
+
+| 前置项 | 要求 |
+| --- | --- |
+| 错误码 | 在 `docs/03-API文档/API/error.md` 登记 `390xxx` Market 错误码, 保持同码同文案 |
+| 数据库 | 在 `dbs/market.sql` 追加新表, 只新增 `market_` 前缀表, 不修改 Customer 生产表 |
+| 敏感数据 | Market 入站手机号使用 `SensitiveDataHelper.encrypt()` 或等价现有敏感数据工具, 页面展示只返回脱敏值 |
+| 幂等键 | `market_inbound` 需要保存 `idempotentKey` 或等价字段, 建议由 `company + campaignId + sourceId + phoneHash + 时间窗` 生成 |
+| 承接状态 | 至少支持待承接、承接成功、承接失败、重试中、忽略, 失败原因必须回写 |
+| Customer 适配 | 新增 `MarketCustomerBridgeService`, 所有写 Customer 的动作集中在此服务, Market 其他 Service 不直接写 Customer |
+| 权限边界 | 后台管理接口走登录权限; C 端 `addMarketInbound` 可匿名但必须支持验证码、防刷和频控 |
+| 兼容策略 | 旧 `Ecustomer/addEcustomer` 保留, 不直接迁移历史数据; 后续需要时再做只读映射或迁移脚本 |
+
+### 11.5 禁止项与风险控制
+
+| 禁止项 | 原因 |
+| --- | --- |
+| 新建 `MarketLead` 并长期维护线索主状态 | 会和 `CustomerSource/CustomerChance` 重叠, 形成双线索池 |
+| 在 Market 中实现分配、保护、释放、转单状态机 | Customer 已有复杂生产规则和消息通知, 重做风险高 |
+| P0 直接改 Customer 表结构或核心 Service | Customer 正在生产环境运行, 需要独立评审和迁移窗口 |
+| Market 自动覆盖 CustomerProfile、积分账户、会员状态、售后结论 | 这些是生产数据或服务结论, 只能通过适配和审核写入 |
+| 报表实时扫入站/事件大表 | 后续数据量增长会拖慢后台, P1 后应设计日聚合 |
+
+### 11.6 P0 验收标准
+
+| 验收项 | 标准 |
+| --- | --- |
+| 活动来源 | 能创建活动、渠道和来源码, 来源可关联活动和渠道 |
+| 入站提交 | C 端提交后可保存原始快照和扩展字段, 重复提交不会重复写入 Customer |
+| Customer 承接 | 承接成功后 `MarketInbound` 回写 `csid/ccid/orderId`, 失败时保留错误信息并可重试 |
+| 归因映射 | 可通过 `campaignId/sourceId/miid/csid/ccid/orderId` 查询来源关系 |
+| 基础统计 | 可查看活动、渠道维度的入站数、承接成功数、失败数 |
+| 生产隔离 | Customer 表结构和既有状态机无改动, 旧 market 页面和接口不受影响 |
+| 文档同步 | API 文档、前端 api 映射、错误码、数据库脚本与代码同步提交 |
+
+### 11.7 建议的执行顺序
+
+1. 先登记 `390xxx` 错误码和 P0 API 文档。
+2. 新增 `market_campaign/market_channel/market_source/market_inbound/market_inbound_item/market_attribution` 表结构。
+3. 按现有 market 分层补齐 PO/VO/DAO/Service/Action。
+4. 新增 `MarketCustomerBridgeService`, 只在该服务中调用 Customer 承接接口。
+5. 补 `WebContent/js/api/market.js` API 映射和最轻后台页面。
+6. 用 `git diff --check`、可用环境下的 `mvn clean compile` 做提交前检查。
+
+---
+
+## 12. 分期实施建议
 
 ### P0: 通用获客闭环
 
@@ -770,7 +863,7 @@ Customer 重点能力完整度复核:
 
 ---
 
-## 12. MVP 用户故事
+## 13. MVP 用户故事
 
 | 角色 | 用户故事 |
 | --- | --- |
@@ -783,7 +876,7 @@ Customer 重点能力完整度复核:
 
 ---
 
-## 13. 推荐的第一版接口清单
+## 14. 推荐的第一版接口清单
 
 P0 最小可交付建议只做以下接口:
 
@@ -806,7 +899,7 @@ P0 最小可交付建议只做以下接口:
 
 ---
 
-## 14. 开发注意事项
+## 15. 开发注意事项
 
 1. 旧功能不要直接删除: `Ecase/Ecustomer/Eperson/Card` 仍保留, 后续通过迁移脚本或适配层逐步归并。
 2. 新表统一 `market_` 前缀, 避免与现有短表名混杂。
@@ -823,6 +916,6 @@ P0 最小可交付建议只做以下接口:
 
 ---
 
-## 15. 结论
+## 16. 结论
 
 Market 模块建议从“展示型获客模块”升级为“通用增长营销入口和运营层”, Customer 则作为生产环境中的客户主链路和营销转化承接层。第一阶段重点完成活动、渠道、来源码、表单入站、Customer 承接适配和归因统计; 后续可以在 Market 旁路建设营销标签、动态客群、权益编排、触达频控、裂变邀请和营销自动化。客户资源、机会分配、保护、转单、售后工单等高风险生产状态继续由 Customer 承担, Market 通过引用和适配连接它们。

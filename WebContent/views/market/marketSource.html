@@ -1,0 +1,87 @@
+<div>
+    <div id="condList" class="fl_search clearfix"></div>
+    <div id="resultList" class="clearfix tab-pane active"></div>
+    <div id="pagenation" class="fl-page-wrap clearfix"></div>
+</div>
+
+<div class="modal fade" id="marketSourceModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content" style="width:900px;margin-left:-30%">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span>&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">营销来源</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <form class="form-horizontal">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label no-padding-right orange" for="campaignId">活动</label>
+                                    <div class="col-sm-9">
+                                        <select id="campaignId" class="col-xs-10 col-sm-6 v_required" data-rel="popover"></select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label no-padding-right orange" for="channelId">渠道</label>
+                                    <div class="col-sm-9">
+                                        <select id="channelId" class="col-xs-10 col-sm-6 v_required" data-rel="popover"></select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label no-padding-right orange" for="profileId">关联ID</label>
+                                    <div class="col-sm-9">
+                                        <input type="text" id="profileId" class="col-xs-10 col-sm-6 v_number" maxlength="11" data-rel="popover"/>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label no-padding-right orange" for="code">来源码</label>
+                                    <div class="col-sm-9">
+                                        <input type="text" id="code" class="col-xs-10 col-sm-6" maxlength="64" data-rel="popover"/>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label no-padding-right orange" for="url">推广链接</label>
+                                    <div class="col-sm-9">
+                                        <input type="text" id="url" class="col-xs-10 col-sm-6" maxlength="255" data-rel="popover"/>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label no-padding-right orange" for="qrcode">二维码</label>
+                                    <div class="col-sm-9">
+                                        <input type="text" id="qrcode" class="col-xs-10 col-sm-6" maxlength="255" data-rel="popover"/>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label no-padding-right orange" for="utmSource">UTM Source</label>
+                                    <div class="col-sm-9">
+                                        <input type="text" id="utmSource" class="col-xs-10 col-sm-6" maxlength="64" data-rel="popover"/>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label no-padding-right orange" for="utmMedium">UTM Medium</label>
+                                    <div class="col-sm-9">
+                                        <input type="text" id="utmMedium" class="col-xs-10 col-sm-6" maxlength="64" data-rel="popover"/>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label no-padding-right orange" for="utmCampaign">UTM Campaign</label>
+                                    <div class="col-sm-9">
+                                        <input type="text" id="utmCampaign" class="col-xs-10 col-sm-6" maxlength="64" data-rel="popover"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="text-align: center">
+                <button type="button" id="saveBtn" class="btn btn-primary">保存</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $.loadScript(['js/market/marketSource.js']);
+</script>

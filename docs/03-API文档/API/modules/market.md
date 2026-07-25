@@ -3911,3 +3911,144 @@ OR::
     "cnotice.status":1
 }
 ```
+
+---
+
+#### MarketCampaignAction
+
+> P0 通用 Market 活动管理接口。活动用于承载营销主题, 后续通过渠道、来源和入站记录做归因。
+
+##### `分页` pageMarketCampaign
+
+- URL: `pageMarketCampaign.do`
+- 参数: `paging`, `filters`
+- 筛选: `name`, `type`, `status`, `regionId`, `ownerId`
+- 返回: `paging.data` 为 `marketCampaign` 列表
+
+##### `查询启用` queryMarketCampaignForEnable
+
+- URL: `queryMarketCampaignForEnable.do`
+- 返回: `marketCampaigns`
+
+##### `新增` addMarketCampaign
+
+- URL: `addMarketCampaign.do`
+- 参数: `marketCampaign.name`, `marketCampaign.type`, `marketCampaign.regionId`, `marketCampaign.ownerId`, `marketCampaign.budget`, `marketCampaign.startTime`, `marketCampaign.endTime`, `marketCampaign.comment`
+- 说明: 新增后状态为草稿。
+
+##### `更新` updateMarketCampaign
+
+- URL: `updateMarketCampaign.do`
+- 参数: `marketCampaign.mcid` 及可更新字段
+
+##### `发布` publishMarketCampaign
+
+- URL: `publishMarketCampaign.do`
+- 参数: `marketCampaign.mcid`
+- 错误: `390001 活动不存在`, `390002 活动状态不可操作`
+
+##### `暂停` disableMarketCampaign
+
+- URL: `disableMarketCampaign.do`
+- 参数: `marketCampaign.mcid`
+
+#### MarketChannelAction
+
+##### `分页` pageMarketChannel
+
+- URL: `pageMarketChannel.do`
+- 参数: `paging`, `filters`
+- 筛选: `name`, `platform`, `type`, `status`, `ownerId`
+
+##### `查询启用` queryMarketChannelForEnable
+
+- URL: `queryMarketChannelForEnable.do`
+- 返回: `marketChannels`
+
+##### `新增` addMarketChannel
+
+- URL: `addMarketChannel.do`
+- 参数: `marketChannel.name`, `marketChannel.type`, `marketChannel.platform`, `marketChannel.ownerId`, `marketChannel.comment`
+
+##### `更新` updateMarketChannel
+
+- URL: `updateMarketChannel.do`
+- 参数: `marketChannel.mchid` 及可更新字段
+
+##### `禁用` disableMarketChannel
+
+- URL: `disableMarketChannel.do`
+- 参数: `marketChannel.mchid`
+- 错误: `390003 渠道不存在`
+
+#### MarketSourceAction
+
+##### `分页` pageMarketSource
+
+- URL: `pageMarketSource.do`
+- 参数: `paging`, `filters`
+- 筛选: `code`, `utmSource`, `utmMedium`, `utmCampaign`, `status`, `channelId`, `campaignId`, `profileId`
+
+##### `新增` addMarketSource
+
+- URL: `addMarketSource.do`
+- 参数: `marketSource.channelId`, `marketSource.campaignId`, `marketSource.profileId`, `marketSource.code`, `marketSource.url`, `marketSource.qrcode`, `marketSource.utmSource`, `marketSource.utmMedium`, `marketSource.utmCampaign`
+- 说明: `code` 为空时后端自动生成。
+- 错误: `390001 活动不存在`, `390003 渠道不存在`, `390016 来源已存在`
+
+##### `更新` updateMarketSource
+
+- URL: `updateMarketSource.do`
+- 参数: `marketSource.msid` 及可更新字段
+
+##### `禁用` disableMarketSource
+
+- URL: `disableMarketSource.do`
+- 参数: `marketSource.msid`
+- 错误: `390004 来源不存在`
+
+#### MarketInboundAction
+
+##### `分页` pageMarketInbound
+
+- URL: `pageMarketInbound.do`
+- 参数: `paging`, `filters`
+- 筛选: `inboundNo`, `name`, `phoneHash`, `orderId`, `status`, `campaignId`, `channelId`, `sourceId`, `csid`, `ccid`
+- 说明: 手机号返回脱敏值。
+
+##### `查询` queryMarketInboundByMiid
+
+- URL: `queryMarketInboundByMiid.do`
+- 参数: `marketInbound.miid`
+- 返回: `marketInbound`, 包含 `items` 扩展字段
+
+##### `新增入站` addMarketInbound
+
+- URL: `addMarketInbound.do`
+- 参数: `marketInbound.name`, `marketInbound.phone`, `marketInbound.wechat`, `marketInbound.email`, `marketInbound.companyName`, `marketInbound.demand`, `marketInbound.cityId`, `marketInbound.channelId`, `marketInbound.sourceId`, `marketInbound.campaignId`, `marketInbound.idempotentKey`, `marketInbound.items`
+- 可选承接参数: `marketInbound.customerSource` 或 `marketInbound.customerChance`
+- 说明: 后端保存原始入站快照、手机号加密值和 `phoneHash`; 如果携带 Customer 承接对象, 通过 `MarketCustomerBridgeService` 调用 Customer Service; 否则状态保持待承接并记录原因。
+
+##### `重试承接` retryMarketInbound
+
+- URL: `retryMarketInbound.do`
+- 参数: `marketInbound.miid`, 可选 `marketInbound.customerSource` 或 `marketInbound.customerChance`
+- 错误: `390005 入站记录不存在`, `390006 入站状态不可操作`
+
+##### `查询归因` queryMarketAttributionByCsid
+
+- URL: `queryMarketAttributionByCsid.do`
+- 参数: `marketAttribution.csid`
+- 返回: `marketAttributions`
+
+##### `活动入站统计` countMarketInboundForCampaign
+
+- URL: `countMarketInboundForCampaign.do`
+- 参数: `marketInbound.campaignId`, `marketInbound.status`
+- 返回: `count`
+
+##### `渠道入站统计` countMarketInboundForChannel
+
+- URL: `countMarketInboundForChannel.do`
+- 参数: `marketInbound.channelId`, `marketInbound.status`
+- 返回: `count`

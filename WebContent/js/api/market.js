@@ -20,6 +20,32 @@ $.extend(api, {market: {
     pageEcustomer: {url: "pageEcustomer.do"},
     addEcustomer: {url: "addEcustomer.do"},
 
+    pageMarketCampaign: {url: "pageMarketCampaign.do"},
+    queryMarketCampaignForEnable: {url: "queryMarketCampaignForEnable.do"},
+    addMarketCampaign: {url: "addMarketCampaign.do"},
+    updateMarketCampaign: {url: "updateMarketCampaign.do"},
+    publishMarketCampaign: {url: "publishMarketCampaign.do"},
+    disableMarketCampaign: {url: "disableMarketCampaign.do"},
+
+    pageMarketChannel: {url: "pageMarketChannel.do"},
+    queryMarketChannelForEnable: {url: "queryMarketChannelForEnable.do"},
+    addMarketChannel: {url: "addMarketChannel.do"},
+    updateMarketChannel: {url: "updateMarketChannel.do"},
+    disableMarketChannel: {url: "disableMarketChannel.do"},
+
+    pageMarketSource: {url: "pageMarketSource.do"},
+    addMarketSource: {url: "addMarketSource.do"},
+    updateMarketSource: {url: "updateMarketSource.do"},
+    disableMarketSource: {url: "disableMarketSource.do"},
+
+    pageMarketInbound: {url: "pageMarketInbound.do"},
+    queryMarketInboundByMiid: {url: "queryMarketInboundByMiid.do"},
+    addMarketInbound: {url: "addMarketInbound.do", intercept: true},
+    retryMarketInbound: {url: "retryMarketInbound.do"},
+    queryMarketAttributionByCsid: {url: "queryMarketAttributionByCsid.do"},
+    countMarketInboundForCampaign: {url: "countMarketInboundForCampaign.do"},
+    countMarketInboundForChannel: {url: "countMarketInboundForChannel.do"},
+
     pageEcity: {url: "pageEcity.do"},
     queryEcity: {url: "queryEcity.do"},
     queryEcityByXandY: {url: "queryEcityByXandY.do"},
