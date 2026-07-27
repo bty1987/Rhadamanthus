@@ -141,7 +141,7 @@ jQuery(function() {
 
                 $btnDiv.append($btnRetrun);
 
-                if (v.status == 0) {
+                if (v.status == constant.sales().sales.status.STATUS_INIT_INT) {
                     $btnDiv.append($btnSettle);
                 }
 

@@ -142,7 +142,7 @@ $(function() {
 
         $.each(res.decorationBusitypes, function(index, value) {
 
-            if (value.status == 0) {
+            if (value.status == constant.data().decorationBusitype.status.STATUS_ACTIVATE) {
                 decorationBusitypes.push(value);
             }
             customerOrigine.decorationBusitypeList[value.dbid] = value.name;
@@ -158,7 +158,7 @@ $(function() {
 
         $.each(res.decorationBusitypes, function(index, value) {
 
-            if (value.status == 0) {
+            if (value.status == constant.data().decorationBusitype.status.STATUS_ACTIVATE) {
                 decorationBusitypes.push(value);
             }
             customerOrigine.decorationBusitypeList[value.dbid] = value.name;
@@ -186,7 +186,7 @@ $(function() {
 
             customerOrigine.decorationTypes[v.key] = v.type;
 
-            if (v.status == 0) {
+            if (v.status == constant.decoration().decorationAtttype.status.STATUS_ENABLE_INT) {
                 customerOrigine.decorationAtttypes.push(v);
             }
         });
@@ -788,7 +788,7 @@ $(function() {
                     if (v.decorationBusitype != null) {
                         var typeValue = null;
                         $.each(customerOrigine.decorationAtttypes, function(i, attType) {
-                            if (attType.dbid == v.decorationBusitype.dbid && attType.status == 0) {
+                            if (attType.dbid == v.decorationBusitype.dbid && attType.status == constant.decoration().decorationAtttype.status.STATUS_ENABLE_INT) {
                                 typeValue = attType.key;
                                 return false; // 找到后退出循环
                             }

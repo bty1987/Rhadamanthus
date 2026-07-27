@@ -34,6 +34,7 @@ jQuery(function($) {
 
 			var propertyArr = [
 				["名称: ", v.name, "grey"],
+				// activity.status 库常量为"有效/失效", 此处业务文案"启用/禁用", 保留避免改文案
 				["状态: ", v.status == 0 ? "启用" : "禁用", "red"]
 			];
 

@@ -218,7 +218,7 @@ jQuery(function($) {
                 clazz: "btn-info",
                 show: function(v) {
 
-                    return v.status == 0 && activityPayment.pageConfig.pageBtn.contains("collect");
+                    return v.status == constant.payment().activityPayment.status.STATUS_INIT_INT && activityPayment.pageConfig.pageBtn.contains("collect");
                 },
                 handle: function(v) {
 

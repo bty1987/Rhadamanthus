@@ -288,7 +288,7 @@ jQuery(function($) {
                 },
                 show: function(v) {
 
-                    return v.status == 0 && oalesPayment.pageConfig.pageBtn.contains("collect");
+                    return v.status == constant.payment().oalesPayment.status.STATUS_INIT_INT && oalesPayment.pageConfig.pageBtn.contains("collect");
                 },
                 handle: collectOalesPaymentLine
             },
@@ -461,7 +461,7 @@ jQuery(function($) {
 
         var payment = oalesPayment.payment;
 
-        if (payment.type == 0 && payment.status == 0) {
+        if (payment.type == 0 && payment.status == constant.payment().payment.status.STATUS_INIT_INT) {
             url = api.payment.collectOalesPayment;
 
             // 批量收款参数
@@ -481,7 +481,7 @@ jQuery(function($) {
             if (oalesPayment.profit)
                 options["oalesPayment.bompany"] = oalesPayment.decoration.bompany;
 
-        } else if (payment.type == 1 && payment.status == 0) {
+        } else if (payment.type == 1 && payment.status == constant.payment().payment.status.STATUS_INIT_INT) {
             url = api.payment.refundOalesPayment;
             type = 1;
         } else if (payment.status == constant.payment().materialPayment.STATUS_COLLECT_INT) {

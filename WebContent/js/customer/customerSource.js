@@ -534,7 +534,7 @@ $(function() {
 
         $.each(res.decorationBusitypes, function(intex, value) {
 
-            if (value.status == 0) {
+            if (value.status == constant.data().decorationBusitype.status.STATUS_ACTIVATE) {
                 $arr.push(value);
             }
         });
@@ -780,7 +780,7 @@ $(function() {
         },
         show: function(v) {
 
-            return (v.status == 0 || v.status == 2) && customerSource.depage == "user";
+            return (v.status == constant.customer().customerSource.status.STATUS_INIT_INT || v.status == constant.customer().customerSource.status.STATUS_APPROVAL_INT) && customerSource.depage == "user";
         }
     }, {
         name: "更新",
@@ -823,7 +823,7 @@ $(function() {
         },
         show: function(v) {
 
-            return (v.status == 0 || v.status == 2) && customerSource.depage == "user";
+            return (v.status == constant.customer().customerSource.status.STATUS_INIT_INT || v.status == constant.customer().customerSource.status.STATUS_APPROVAL_INT) && customerSource.depage == "user";
         }
     }, {
         name: "初审",
