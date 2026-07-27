@@ -346,10 +346,10 @@ jQuery(function($) {
                 type: "switch",
                 clazz: "status-lbl",
                 init: function(v) {
-                    return v.status == 0;
+                    return v.status == constant.data().common.status.STATUS_ENABLE_INT;
                 },
                 handle: function(v, check) {
-                    updateBuildingCustomerStatus(v.csid, check ? 0 : 1);
+                    updateBuildingCustomerStatus(v.csid, check ? constant.data().common.status.STATUS_ENABLE_INT : constant.data().common.status.STATUS_DISABLE_INT);
                 }
             }
         };

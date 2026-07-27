@@ -159,7 +159,7 @@ jQuery(function($) {
         com.post(api.approval.pageApprovalFlow, { "paging.page": 1, "paging.rows": 999 }, function(res) {
             var flows = res.paging.data || [];
             $.each(flows, function(i, f) {
-                if (f.status == 0 && f.businessType == 100) {
+                if (f.status == constant.data().common.status.STATUS_ENABLE_INT && f.businessType == 100) {
                     $('<option></option>').val(f.code).text(f.name).attr("data-flowId", f.flowId).appendTo($sel);
                 }
             });
