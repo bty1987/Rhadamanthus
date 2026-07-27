@@ -86,7 +86,7 @@ $(function($) {
         }, {
             field: "status",
             name: "状态",
-            prop: function(v) { return v.status == 1 ? "启用" : "禁用"; },
+            prop: function(v) { return constant.data().receiptType.status.keys[v.status]; },
             clazz: "red"
         }, {
             field: "grade",
@@ -159,8 +159,8 @@ $(function($) {
             status: {
                 type: "switch",
                 clazz: "status-lbl",
-                init: function(v) { return v.status == 1; },
-                handle: function(v, checked) { updateStatus(v.rtId, checked ? 1 : 0, null); }
+                init: function(v) { return v.status == constant.data().receiptType.status.STATUS_ENABLE_INT; },
+                handle: function(v, checked) { updateStatus(v.rtId, checked ? constant.data().receiptType.status.STATUS_ENABLE_INT : constant.data().receiptType.status.STATUS_DISABLE_INT, null); }
             },
             update: {
                 name: "修改",

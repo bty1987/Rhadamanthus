@@ -36,7 +36,7 @@ $(function($) {
         }, {
             field: "status",
             name: "状态",
-            prop: function(v) { return v.status == 0 ? "启用" : "禁用"; },
+            prop: function(v) { return constant.data().common.status.keys[v.status]; },
             clazz: "red"
         }];
     })();
@@ -47,7 +47,7 @@ $(function($) {
             status: {
                 type: "switch",
                 clazz: "status-lbl",
-                init: function(v) { return v.status == 0; },
+                init: function(v) { return v.status == constant.data().common.status.STATUS_ENABLE_INT; },
                 handle: function(v, checked) {
                     var cvalue = checked ? 1 : 0;
                     com.post(api.data.updateDecorationMeasureRuleForStatus, {

@@ -48,7 +48,7 @@ jQuery(function($) {
 
         $.each(res.decorationAtttypes, function(i, v) {
 
-            if (v.status == 0) {
+            if (v.status == constant.data().common.status.STATUS_ENABLE_INT) {
                 decorationMatching.type[v.key] = v.type;
                 decorationMatching.typeness.push(v);
             }

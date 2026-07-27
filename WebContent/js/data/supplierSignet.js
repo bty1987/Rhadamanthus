@@ -196,7 +196,7 @@ jQuery(function($) {
         },
         show: function(v) {
 
-            return (v.status == 0);
+            return (v.status == constant.data().signet.status.STATUS_INIT_INT);
         }
     }, {
         name: "注册",
@@ -213,7 +213,7 @@ jQuery(function($) {
         },
         show: function(v) {
 
-            return (v.status == 0);
+            return (v.status == constant.data().signet.status.STATUS_INIT_INT);
         }
     }, {
         name: "认证",
@@ -230,7 +230,7 @@ jQuery(function($) {
         },
         show: function(v) {
 
-            return (v.status == 1);
+            return (v.status == constant.data().signet.status.STATUS_REGIST_INT);
         }
     }, {
         name: "确认",

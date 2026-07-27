@@ -184,8 +184,8 @@ $(function() {
             status: {
                 type: "switch",
                 clazz: "status-lbl",
-                init: function(v) { return v.status == 0; },
-                handle: function(v, checked) { updateStatus(v.no, checked ? 0 : 1); }
+                init: function(v) { return v.status == constant.data().common.status.STATUS_ENABLE_INT; },
+                handle: function(v, checked) { updateStatus(v.no, checked ? constant.data().common.status.STATUS_ENABLE_INT : constant.data().common.status.STATUS_DISABLE_INT); }
             }
         };
 

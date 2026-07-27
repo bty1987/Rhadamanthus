@@ -38,7 +38,7 @@ $(function() {
         }, {
             field: "status",
             name: "状态",
-            prop: function(v) { return v.constructionCost.status == 0 ? "启用" : "禁用"; },
+            prop: function(v) { return constant.data().common.status.keys[v.constructionCost.status]; },
             clazz: "red"
         }, {
             field: "sort",

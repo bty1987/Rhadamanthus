@@ -101,7 +101,7 @@ jQuery(function($) {
         name: "状态",
         prop: function(v) {
 
-            return v.status == 0 ? "启用" : "禁用";
+            return constant.data().common.status.keys[v.status];
         },
         clazz: "red"
     }];
@@ -124,7 +124,7 @@ jQuery(function($) {
         },
         show: function(v) {
 
-            return v.status == 0;
+            return v.status == constant.data().common.status.STATUS_ENABLE_INT;
         }
     }, {
         name: "状态",
