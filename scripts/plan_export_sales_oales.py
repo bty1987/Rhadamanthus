@@ -58,7 +58,15 @@ class Exporter(Util):
             o.award AS '奖励',
             communion.kv('sales', 'oales', 'awardType', o.awardType) as '奖励类型',
             communion.kv('sales', 'oales', 'type', o.type) as '类型',
-            ((o.profit/1000)/(o.threshold/1000)) AS '复合业绩'
+            ((o.profit/1000)/(o.threshold/1000)) AS '复合业绩',
+            bu.userId AS '业务工号',
+            bu.currentName AS '业务姓名',
+            bdd.no AS '业务部门编号',
+            bdd.alias AS '业务部门',
+            bdr.no AS '业务分区编号',
+            bdr.alias AS '业务分区',
+            b.kiname AS '品牌金蝶名称',
+            b.kino AS '品牌金蝶编码'
         """
 
         self.SQL_QUERY = """
@@ -79,6 +87,10 @@ class Exporter(Util):
                 LEFT JOIN communion.user chu on o.chauid = chu.uid
                 LEFT JOIN communion.user su on o.svuid = su.uid
                 LEFT JOIN communion.user eu on d.euid = eu.uid
+                LEFT JOIN communion.user bu on d.smuid = bu.uid
+                LEFT JOIN communion.department bdd on bu.deptid = bdd.did
+                LEFT JOIN communion.department bdr on bdd.fdid = bdr.did
+                LEFT JOIN communion.brand b on o.bid = b.bid
             WHERE
                 db.type = 0 AND
                 db.status = 0 AND
@@ -143,10 +155,11 @@ class Exporter(Util):
             sql = self.SQL_QUERY % (self.column, timeColumn, startTime, timeColumn, endTime, company)
 
             tableHead = [
-                "外销单号", "装修单号", "装修等级", "楼盘", "楼号", "品类", "品牌", "销售单类型", "外销单状态", "外销单类型", 
-                "创建时间", "签单时间", "复核时间", "设计师工号", "设计师", "签约设计分区编号", "签设计分区", "签约设计部编号", "签约设计部", "设计师分区编号", 
-                "设计师分区", "设计师部编号", "设计师部", "主材员工号", "主材员", "渠道工号", "渠道", "服务管家工号", "服务管家", "方案设计工号", 
-                "方案设计", "利润", "系数", "成本", "总额", "奖励", "奖励类型", "类型", "复合业绩"
+                "外销单号", "装修单号", "装修等级", "楼盘", "楼号", "品类", "品牌", "销售单类型", "外销单状态", "外销单类型",
+                "创建时间", "签单时间", "复核时间", "设计师工号", "设计师", "签约设计分区编号", "签设计分区", "签约设计部编号", "签约设计部", "设计师分区编号",
+                "设计师分区", "设计师部编号", "设计师部", "主材员工号", "主材员", "渠道工号", "渠道", "服务管家工号", "服务管家", "方案设计工号",
+                "方案设计", "利润", "系数", "成本", "总额", "奖励", "奖励类型", "类型", "复合业绩",
+                "业务工号", "业务姓名", "业务部门编号", "业务部门", "业务分区编号", "业务分区", "品牌金蝶名称", "品牌金蝶编码"
             ]
 
             self.createTableHead(sheet, tableHead)
