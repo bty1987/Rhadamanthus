@@ -98,7 +98,7 @@ jQuery(function($) {
 
             com.post(api.communion.updatePricePoolForStatus, {
                 "pricePool.ppid": v.ppid,
-                "pricePool.status": v.status == 0 ? 1 : 0
+                "pricePool.status": v.status == constant.data().common.status.STATUS_ENABLE_INT ? constant.data().common.status.STATUS_DISABLE_INT : constant.data().common.status.STATUS_ENABLE_INT
             }, function(res) {
 
                 com.showAlert(com.info, "操作成功");

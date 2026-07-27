@@ -598,7 +598,7 @@ $(function () {
 
             com.post(api.communion.updateGoodsPoolForStatus, {
                 "goodsPool.gpid": v.gpid,
-                "goodsPool.status": v.status == 0 ? 1 : 0
+                "goodsPool.status": v.status == constant.data().common.status.STATUS_ENABLE_INT ? constant.data().common.status.STATUS_DISABLE_INT : constant.data().common.status.STATUS_ENABLE_INT
             }, function (res) {
 
                 com.showAlert(com.info, "操作成功");

@@ -619,7 +619,7 @@ $(function () {
 
             com.post(api.data.updateGoodsForStatus, {
                 "goods.gid": v.gid,
-                "goods.status": v.status == 0 ? 1 : 0
+                "goods.status": v.status == constant.data().goods.status.STATUS_ENABLE_INT ? constant.data().goods.status.STATUS_DISABLE_INT : constant.data().goods.status.STATUS_ENABLE_INT
             }, function (res) {
 
                 com.showAlert(com.info, "操作成功");

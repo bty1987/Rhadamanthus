@@ -51,7 +51,7 @@ jQuery(function($) {
 
             com.post(api.data.updateColorForStatus, {
                 "color.cid": v.cid,
-                "color.status": v.status == 0 ? 1 : 0
+                "color.status": v.status == constant.data().color.status.STATUS_ENABLE_INT ? constant.data().color.status.STATUS_DISABLE_INT : constant.data().color.status.STATUS_ENABLE_INT
             }, function(res) {
 
                 com.showAlert(com.info, "操作成功");
