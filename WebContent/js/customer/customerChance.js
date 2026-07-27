@@ -254,7 +254,7 @@ jQuery(function($) {
 
             customerChance.decoration.types[v.key] = v.type;
 
-            if (v.status == 0) {
+            if (v.status == constant.decoration().decorationAtttype.status.STATUS_ENABLE_INT) {
                 customerChance.atttypes.push(v);
             }
         });
@@ -316,7 +316,7 @@ jQuery(function($) {
         if (customerChance.depage == "user" || customerChance.depage == "designer")
             $disable.append($disableI).append($disableS).appendTo(customerChance.items.infolist);
 
-        customerChance.userRule.status == 0 ? $enable.hide() : $disable.hide();
+        customerChance.userRule.status == constant.customer().customerUserRule.status.STATUS_ENABLE_INT ? $enable.hide() : $disable.hide();
     }
 
     // if (customerChance.depage != "source")
@@ -1087,7 +1087,7 @@ jQuery(function($) {
 
         $.each(res.decorationBusitypes, function(intex, value) {
 
-            if (value.status == 0) {
+            if (value.status == constant.data().decorationBusitype.status.STATUS_ACTIVATE) {
                 $arr.push(value);
             }
         });

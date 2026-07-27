@@ -555,7 +555,7 @@ jQuery(function($) {
 
                         $.each(res.paytrans, function(i, pt) {
 
-                            if (pt.status == 0) {
+                            if (pt.status == constant.payment().paytran.status.STATUS_INIT_INT) {
                                 paytranId = pt.ptid;
                                 paytranMoney = pt.money;
                                 return false;

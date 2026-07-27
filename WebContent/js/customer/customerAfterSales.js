@@ -387,6 +387,7 @@ jQuery(function($) {
     }, {
         name: "接收",
         clazz: "btn-success",
+        // customerAfterSales.status(售后工单状态): 库无专属常量, PO枚举待确认, 暂保留。
         show: function(v) { return v.status == 0; },
         handle: function(v) {
             openOperation("receive", v.asid);
