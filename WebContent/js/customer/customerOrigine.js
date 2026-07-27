@@ -186,7 +186,7 @@ $(function() {
 
             customerOrigine.decorationTypes[v.key] = v.type;
 
-            if (v.status == constant.decoration().decorationAtttype.status.STATUS_ENABLE_INT) {
+            if (v.status == constant.decoration().decorationAtttype.STATUS_ENABLE_INT) {
                 customerOrigine.decorationAtttypes.push(v);
             }
         });
@@ -788,7 +788,7 @@ $(function() {
                     if (v.decorationBusitype != null) {
                         var typeValue = null;
                         $.each(customerOrigine.decorationAtttypes, function(i, attType) {
-                            if (attType.dbid == v.decorationBusitype.dbid && attType.status == constant.decoration().decorationAtttype.status.STATUS_ENABLE_INT) {
+                            if (attType.dbid == v.decorationBusitype.dbid && attType.status == constant.decoration().decorationAtttype.STATUS_ENABLE_INT) {
                                 typeValue = attType.key;
                                 return false; // 找到后退出循环
                             }

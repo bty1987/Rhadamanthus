@@ -254,7 +254,7 @@ jQuery(function($) {
 
             customerChance.decoration.types[v.key] = v.type;
 
-            if (v.status == constant.decoration().decorationAtttype.status.STATUS_ENABLE_INT) {
+            if (v.status == constant.decoration().decorationAtttype.STATUS_ENABLE_INT) {
                 customerChance.atttypes.push(v);
             }
         });
