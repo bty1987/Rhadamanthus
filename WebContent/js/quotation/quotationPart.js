@@ -1953,36 +1953,57 @@ var QuotationDetail = (function() {
 
             com.post(api.data.queryDecorationMatching, quo.typeness, function(res) {
 
+                // 按 typeness 分组缓存,保持组内顺序
+                var groups = {};
+
                 $.each(res.decorationMatchings, function(i, v) {
 
                     if ((v.vision & 2) != constant.data().decorationMatching.VISION_QUOTECOUNT_INT)
                         return true;
 
-                    var params = {
-                        "value": v.base,
-                        "data-name": v.name,
-                        "data-baseDiscount": v.discount,
-                        "data-trafficDiscount": v.trafficDiscount,
-                        "data-manageDiscount": v.manageDiscount,
-                        "data-taxDiscount": v.taxDiscount,
-                        "data-discountType": v.discountType
-                    };
+                    var key = v.typeness;
 
-                    var radio = $('<div class="radio no-padding" style="margin-bottom:10px"></div>');
-                    var lableInput = $('<label></label>').append($('<input type="radio" name="basePrice" class="ace"></input>').attr(params)).append('<sapn class="lbl"></sapn>');
-                    var lbl1 = $('<label>' + v.name + '</label>').addClass('quotation-base-price-radio').addClass('quotation-base-price-radio-width15');
-                    var lbl2 = $('<label> 折扣(' + constant.data().decorationMatching.discountType.keys[v.discountType] + "): " + v.discount + '</label>').addClass('quotation-base-price-lbl');
-                    var lbl3 = $('<label> 基数: ' + v.base + '</label>').addClass('quotation-base-price-lbl').addClass('hide');
+                    if (!groups[key]) groups[key] = [];
+                    groups[key].push(v);
+                });
 
-                    radio.append(lableInput).append(lbl1).append(lbl2).append(lbl3).appendTo(com.focusPage("#showBaseVersion"));
+                // 按 typeness 升序(0/1/2)依次渲染,每组先标题后 radio 列表
+                Object.keys(groups).sort(function(a, b) {
+                    return a - b;
+                }).forEach(function(key) {
 
-                    lableInput.click(function(e) {
+                    // 组标题: typeness 即 decorationAtttype 的 key,直接复用常量取中文名(0=半包/1=整装/2=满减)
+                    var typenessName = constant.data().decorationAtttype.type.keys[key] || "其他";
+                    com.focusPage("#showBaseVersion").append($('<div class="quotation-base-price-group-title" style="font-weight:bold;font-size:14px;margin:10px 0 5px;color:#676a6c;border-bottom:1px solid #eee;padding-bottom:3px;">' + typenessName + '</div>'));
 
-                        if (v.discountType != constant.data().decorationMatching.DISCOUNTTYPE_ONLY_INT) {
-                            com.focusPage("#discount").val(10).removeAttr("disabled");
-                        } else {
-                            com.focusPage("#discount").prop("disabled", "disabled").val(v.discount);
-                        }
+                    $.each(groups[key], function(i, v) {
+
+                        var params = {
+                            "value": v.base,
+                            "data-name": v.name,
+                            "data-baseDiscount": v.discount,
+                            "data-trafficDiscount": v.trafficDiscount,
+                            "data-manageDiscount": v.manageDiscount,
+                            "data-taxDiscount": v.taxDiscount,
+                            "data-discountType": v.discountType
+                        };
+
+                        var radio = $('<div class="radio no-padding" style="margin-bottom:10px"></div>');
+                        var lableInput = $('<label></label>').append($('<input type="radio" name="basePrice" class="ace"></input>').attr(params)).append('<sapn class="lbl"></sapn>');
+                        var lbl1 = $('<label>' + v.name + '</label>').addClass('quotation-base-price-radio').addClass('quotation-base-price-radio-width15');
+                        var lbl2 = $('<label> 折扣(' + constant.data().decorationMatching.discountType.keys[v.discountType] + "): " + v.discount + '</label>').addClass('quotation-base-price-lbl');
+                        var lbl3 = $('<label> 基数: ' + v.base + '</label>').addClass('quotation-base-price-lbl').addClass('hide');
+
+                        radio.append(lableInput).append(lbl1).append(lbl2).append(lbl3).appendTo(com.focusPage("#showBaseVersion"));
+
+                        lableInput.click(function(e) {
+
+                            if (v.discountType != constant.data().decorationMatching.DISCOUNTTYPE_ONLY_INT) {
+                                com.focusPage("#discount").val(10).removeAttr("disabled");
+                            } else {
+                                com.focusPage("#discount").prop("disabled", "disabled").val(v.discount);
+                            }
+                        });
                     });
                 });
             });
