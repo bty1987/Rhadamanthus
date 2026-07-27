@@ -404,7 +404,7 @@ jQuery(function($) {
 
         $.each(res.decorationAtttypes, function(i, v) {
 
-            if (v.status == constant.decoration().decorationAtttype.status.STATUS_ENABLE_INT) {
+            if (v.status == constant.decoration().decorationAtttype.STATUS_ENABLE_INT) {
                 decorationDetail.type[v.key] = v.type;
                 decorationDetail.decorationAtttypes.push(v);
             }
