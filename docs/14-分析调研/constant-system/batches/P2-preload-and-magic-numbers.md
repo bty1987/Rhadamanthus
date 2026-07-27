@@ -1,11 +1,45 @@
 # P2 · 并发预加载 + approval 模块魔法数收敛
 
 > 实施日期：2026-07-27
-> 状态：P2-a ✅ 已完成 / P2-b ✅ approval 模块已完成（示范）
+> 状态：P2-a 🔴 已回退（引入回归）/ P2-b ✅ approval/balance/building/decorationContract 已完成
 
 ---
 
-## P2-a：登录后并发预加载
+## ⚠️ P2-a 已回退（2026-07-27）
+
+### 回归 bug：系统所有查询条件无法显示
+
+P2-a 的 `Constant().preload()` 破坏了 condition 组件的同步加载契约，导致**系统所有查询条件下拉框无数据**。
+
+**根因链**：
+1. `Constant().preload()`（index.js:126）异步派发 16 个请求，**立即返回**
+2. `handle()` 在派发请求时就把 `load` 标志置 true（数据尚未返回）
+3. 紧接着 `Condition.init('js/condition/')`（index.js:129）用 `$.ajax dataType:script async:false` **同步加载**所有 condition 文件
+4. condition 文件里的 `listPath: constant.approval().approval.type.datas` 在加载时**立即求值**
+5. `handle("approval")` 发现 `load=true`，命中"已加载"分支直接返回，但 datas 为空
+6. condition 拿到空 datas → 查询条件下拉框无选项
+
+**根本矛盾**：condition 文件加载机制要求 `constant.xxx()` **同步阻塞返回完整数据**，
+而 preload 的异步预取把 load 标志提前置 true，与同步契约存在**根本性时序冲突**。
+
+### 处置
+- 回退 index.js 两处 preload 调用（登录回调 + 切公司回调），提交 `c3c1a74da`
+- constant.js 的 `preload()` 方法定义保留（无害，暂不调用）
+- P0 的菜单点击 `Constant().module(module, {async:true})` **不受影响**——condition 的 listPath 在登录时求值一次后固化为对象引用，后续菜单点击不会重新求值
+
+### 教训
+- **同步依赖不能与异步预取混用**：condition 组件隐式依赖 `constant.xxx()` 的同步阻塞语义，preLoad 破坏了这个隐式契约
+- 优化常量加载性能，不能在 condition 初始化路径上动手——condition 必须等常量同步就绪
+- 若要恢复预加载优化，需先重构 condition 组件，让它**延迟求值** listPath（render 时而非加载时求值），这是一项独立的中等改造
+
+### P2-a 是否重做？
+**暂不重做。** P0（菜单异步预取）已能消除菜单点击阻塞，这是用户感知最强的卡顿点。
+condition 加载时的同步请求是"登录后一次性"的，可接受。preload 的边际收益不值得 condition 重构的成本。
+若未来确实需要，走 P3（后端聚合接口）更合适——一次请求拿全量，condition 加载时同步取内存即可。
+
+---
+
+## P2-a（原始方案，已回退，留存备查）
 
 ### 设计决策（已与你确认）
 **选择"仅并发预加载"，不引入 localStorage。** 理由：
