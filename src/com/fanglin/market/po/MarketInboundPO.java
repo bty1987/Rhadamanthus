@@ -10,7 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "market_inbound", catalog = "market")
+@Table(name = "marketinbound", catalog = "market")
 public class MarketInboundPO implements Serializable {
 
 	private static final long serialVersionUID = -567282014549576904L;
