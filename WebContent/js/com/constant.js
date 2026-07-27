@@ -23,11 +23,20 @@
 
         // 模块数据容器：constant[module] -> { load: bool, <clazz>: {...} }
         // load 标志位用于判断该模块是否已发起过 queryConstant 请求，避免重复请求。
-        var handle = function(module, clazz, type) {
+        //
+        // opts.async（默认 false）：
+        //   false - 同步请求，请求返回前阻塞主线程。业务侧"用完立即取值"的旧调用形态依赖此行为，
+        //           故保持默认值不变以兼容 3000+ 调用点。
+        //   true  - 异步预取，不阻塞 UI。用于菜单点击/登录后等"提前加载"场景，让后续业务访问命中缓存。
+        //           异步预取期间若业务侧同步访问，会命中 load=true 的同步返回分支拿到未填满对象，
+        //           因此 async:true 仅用于"确定业务尚未访问该模块"的预加载时机。
+        var handle = function(module, clazz, type, opts) {
 
             if (!module) {
                 return constant;
             }
+
+            opts = opts || {};
 
             // 确保模块容器存在。已加载过的模块直接返回，避免重复请求。
             if (!constant[module]) {
@@ -55,6 +64,10 @@
             if (type) {
                 options["constant.type"] = type;
             }
+
+            // asyncFlag 透传给 com.post：false=同步（默认，兼容旧调用），true=异步（预取不阻塞 UI）。
+            // 见 core.js:167-172：asyncFlag 传 undefined/true 走异步，传 false 走同步。
+            var asyncFlag = opts.async === true ? true : false;
 
             com.post(api.data.queryConstant, options, function(res) {
 
@@ -87,7 +100,7 @@
                         "value": v.value
                     });
                 });
-            }, null, false);
+            }, null, asyncFlag);
 
             constant[module]["load"] = true;
 
@@ -144,8 +157,18 @@
          * projectStatus 在节点列表前追加三个写死状态：
          *   0=初始 / 1=开工 / 2=完工
          * 节点数据来源于 api.data.queryConstructionNode，与 queryConstant 接口分离。
+         *
+         * opts.async（默认 false=同步）：
+         *   init() 必须用同步，否则节点回调可能在访问器重建后才返回，
+         *   把旧公司数据写进新公司的 constant.data.construction.node（公司隔离 bug）。
+         *   节点数据量小、单次请求，同步阻塞可控。
          */
-        var loadConstructionNodes = function() {
+        var loadConstructionNodes = function(opts) {
+
+            opts = opts || {};
+
+            // asyncFlag 透传：默认同步（false），保证切公司时数据就绪后再重建访问器。
+            var asyncFlag = opts.async === true ? true : false;
 
             com.post(api.data.queryConstructionNode, {}, function(res) {
 
@@ -182,7 +205,11 @@
                     });
                 });
 
-                // 镜像到 decoration.decoration.projectStatus，前置固定状态
+                // 镜像到 decoration.decoration.projectStatus，前置固定状态：
+                //   0=初始 / 1=开工 / 2=完工，再拼接节点数据。
+                // 注意：init() 同步调用时此处 constant["decoration"] 已被重建为访问器函数，
+                //       故镜像写进函数对象的 decoration.projectStatus 属性，供 constant.decoration().decoration.projectStatus 读取。
+                //       handle("decoration") 首次拉取时不会覆盖该镜像（queryConstant 不含 projectStatus 类型）。
                 if (!constant["decoration"]) {
                     constant["decoration"] = {};
                 }
@@ -191,17 +218,19 @@
                     constant["decoration"]["decoration"] = {};
                 }
 
+                var nodeData = constant[module][clazz][type];
+
                 constant["decoration"]["decoration"]["projectStatus"] = {
                     "keys": $.extend({
                         0: "初始",
                         1: "开工",
                         2: "完工"
-                    }, constant[module][clazz][type]["keys"]),
+                    }, nodeData["keys"]),
                     "values": $.extend({
                         "初始": 0,
                         "开工": 1,
                         "完工": 2
-                    }, constant[module][clazz][type]["values"]),
+                    }, nodeData["values"]),
                     "datas": [{
                         "key": 0,
                         "value": "初始"
@@ -211,16 +240,17 @@
                     }, {
                         "key": 2,
                         "value": "完工"
-                    }].concat(constant[module][clazz][type]["datas"])
+                    }].concat(nodeData["datas"])
                 };
-            });
+            }, null, asyncFlag);
         }
 
         return {
             init: function() {
 
                 // 将 constant 重建为按需加载的模块访问器。
-                // 调用 constant.<module>() 触发首次加载并返回模块对象；后续调用直接命中缓存。
+                // 重建会丢弃旧的数据对象（含上一家公司缓存），实现切公司失效。
+                // 新访问器函数无 "load" 标志，handle() 首次访问会重新拉取当前公司数据。
                 $.each(["data", "customer", "decoration", "quotation", "construction", "salary", "sales", "payment", "information", "right", "inventory", "personel", "balance", "approval", "system", "building"], function(i, module) {
 
                     constant[module] = function() {
@@ -228,22 +258,24 @@
                     };
                 });
 
-                // 施工节点独立于 queryConstant 接口，单独加载
-                loadConstructionNodes();
+                // 施工节点独立于 queryConstant 接口，单独加载。
+                // 必须同步：切公司场景下，若异步回调在访问器重建后才返回，
+                // 会把上一家公司节点数据写进新公司的 constant.data.construction.node（公司隔离 bug）。
+                loadConstructionNodes({ async: false });
 
                 window.console && window.console.log && console.log("%cConstant Config Ready 常量配置就绪", "color:#0a0; font-size:1em");
             },
-            module: function(module) {
+            module: function(module, opts) {
 
-                return handle(module);
+                return handle(module, null, null, opts);
             },
-            clazz: function(module, clazz) {
+            clazz: function(module, clazz, opts) {
 
-                return handle(module, clazz);
+                return handle(module, clazz, null, opts);
             },
-            type: function(module, clazz, type) {
+            type: function(module, clazz, type, opts) {
 
-                return handle(module, clazz, type);
+                return handle(module, clazz, type, opts);
             },
             get: get,
             valueOf: valueOf,
