@@ -959,8 +959,11 @@ $(function() {
 
             console.log('[diag] menu click, href:', hrefStr, 'mid:', mid, 'module:', module);
 
-            if (module && (!constant[module] || !constant[module]["update"])) {
-                Constant().module(module);
+            // 菜单点击时异步预取该模块常量，不阻塞 UI。
+            // 业务页面真正访问 constant.<module>() 时大概率已命中 load=true 的同步缓存分支。
+            // 标志位须与 constant.js 一致使用 "load"（旧代码误写成 "update" 永远不命中）。
+            if (module && (!constant[module] || !constant[module]["load"])) {
+                Constant().module(module, { async: true });
             }
 
             if ($this.siblings('ul').length) {
