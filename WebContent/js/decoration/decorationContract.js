@@ -346,6 +346,9 @@ jQuery(function($) {
         }
     }, ];
 
+    // decorationContract 状态：0=初始 1=已签 2=失效 3=归档 4=归档本地（communion.constant decoration.decorationContract.status）
+    var CST = constant.decoration().decorationContract.status;
+
     var cardbtns = [{
         name: "查看",
         clazz: "btn-yellow",
@@ -375,7 +378,7 @@ jQuery(function($) {
         },
         show: function(v) {
 
-            return v.status == 1;
+            return v.status == CST.STATUS_SIGN_INT;
         }
     }, {
         name: "下载",
@@ -386,7 +389,7 @@ jQuery(function($) {
         },
         show: function(v) {
 
-            return [3, 4].indexOf(v.status) != -1 && (decorationContract.showtype != "design" && decorationContract.showtype != "plan");
+            return [CST.STATUS_FILE_INT, CST.STATUS_FILELOCAL_INT].indexOf(v.status) != -1 && (decorationContract.showtype != "design" && decorationContract.showtype != "plan");
         }
     }, {
         name: "隐藏",
@@ -419,7 +422,7 @@ jQuery(function($) {
         },
         show: function(v) {
 
-            return v.status == 0 && decorationContract.showtype != "design";
+            return v.status == CST.STATUS_VALID_INT && decorationContract.showtype != "design";
         }
     }, {
         name: "失效",
@@ -430,7 +433,7 @@ jQuery(function($) {
         },
         show: function(v) {
 
-            return v.status == 0;
+            return v.status == CST.STATUS_VALID_INT;
         }
     }, {
         type: "newline"
@@ -443,7 +446,7 @@ jQuery(function($) {
         },
         show: function(v) {
 
-            return v.status == 0 && decorationContract.showtype != "design";
+            return v.status == CST.STATUS_VALID_INT && decorationContract.showtype != "design";
         }
     }, {
         name: "客户签",
@@ -454,7 +457,7 @@ jQuery(function($) {
         },
         show: function(v) {
 
-            return v.status == 0;
+            return v.status == CST.STATUS_VALID_INT;
         }
     }, {
         name: "二维签名",
@@ -465,7 +468,7 @@ jQuery(function($) {
         },
         show: function(v) {
 
-            return v.status == 0;
+            return v.status == CST.STATUS_VALID_INT;
         }
     }, {
         name: "二维客签",
@@ -476,7 +479,7 @@ jQuery(function($) {
         },
         show: function(v) {
 
-            return v.status == 0;
+            return v.status == CST.STATUS_VALID_INT;
         }
     }, {
         type: "newline"
@@ -489,7 +492,7 @@ jQuery(function($) {
         },
         show: function(v) {
 
-            return v.status == 0;
+            return v.status == CST.STATUS_VALID_INT;
         }
     }, {
         name: "客签通知",
@@ -500,7 +503,7 @@ jQuery(function($) {
         },
         show: function(v) {
 
-            return v.status == 0;
+            return v.status == CST.STATUS_VALID_INT;
         }
     }, {
         name: "查看通知",
@@ -864,7 +867,7 @@ jQuery(function($) {
 
     function downloadContract(v) {
 
-        if (v.status == 3)
+        if (v.status == CST.STATUS_FILE_INT)
             window.open(v.download);
         else
             com.popup("装修单: " + v.orderId + " 合同", config.media + v.path);
