@@ -515,14 +515,12 @@ $(function() {
             com.post(api.quotation.autoQuotationAssign, {
                 "quotationAssign.orderId": row.orderId
             }, function(res) {
-                if (res.errorCode == 0) {
-                    com.showAlert(com.info, '分配成功！已自动分配给' + modeLabels.userLabel);
-                } else {
-                    com.showAlert(com.warning, res.errorMsg || '分配失败，请查看分配记录了解详情');
-                }
+                // 成功回调仅在实际分配预算员后进入,进队列等异常走失败回调
+                com.showAlert(com.info, '分配成功！已自动分配给' + modeLabels.userLabel);
                 searcher.doSearch();
             }, function(res) {
-                com.showAlert(com.error, res.errorMsg || '分配失败');
+                // 进待分配队列(手动模式/无可用预算员)及其他业务异常均走此分支
+                com.showAlert(com.error, res.errorMsg || '分配失败，请查看分配记录了解详情');
             });
         });
     }

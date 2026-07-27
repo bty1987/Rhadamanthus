@@ -15,6 +15,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.communion.po.DepartmentPO;
@@ -94,6 +95,13 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 	private QuotationService quotationService;
 
 	/**
+	 * 自身代理引用，用于 REQUIRES_NEW 事务的正确发起。
+	 * Spring 4.3+ 允许自注入，避免 this 调用绕过代理导致事务失效。
+	 */
+	@Autowired
+	private QuotationAssignService selfQuotationAssignService;
+
+	/**
 	 * 检查预算员在指定公司下是否有匹配的规则明细
 	 * 
 	 * @param userRule 预算员规则
@@ -161,7 +169,8 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 
 		// 5. 如果是手动模式，直接进入待分配队列
 		if (config.getAutoAssign() != QuotationAssignConfigPO.AUTO_ASSIGN_AUTO_INT) {
-			return createPendingRequest(decoration, company, department, decorationType);
+			selfQuotationAssignService.addQuotationAssignRequestForPending(decoration, company, department, decorationType);
+			throw new FLException(200106, "已加入待分配队列，请等待分配");
 		}
 
 		// 6. 查找可分配预算员
@@ -170,7 +179,8 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 		List<QuotationAssignUserRuleItemPO> availableItems = quotationAssignUserRuleItemDao.queryQuotationAssignUserRuleItemForCross(company, department, decorationType);
 
 		if (availableItems == null || availableItems.isEmpty()) {
-			return createPendingRequest(decoration, company, department, decorationType);
+			selfQuotationAssignService.addQuotationAssignRequestForPending(decoration, company, department, decorationType);
+			throw new FLException(200106, "已加入待分配队列，请等待分配");
 		}
 
 		// 7. DAO 已通过 item 查询完成类型匹配和排序（按 lastFinishTime ASC）
@@ -415,9 +425,16 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 	}
 
 	/**
-	 * 创建待分配请求
+	 * 新增待分配请求
+	 *
+	 * <p>使用 REQUIRES_NEW 开独立事务落库，使待分配请求/记录独立于 autoQuotationAssign
+	 * 的主事务提交——主事务后续抛出的 FLException 不会回滚此处已落库的队列数据，
+	 * 预算经理的待分配列表仍能看到该单。仅供 autoQuotationAssign 通过自身代理调用,
+	 * 不直接暴露给业务侧。
 	 */
-	private int createPendingRequest(DecorationPO decoration, Integer company, Integer department, Short decorationType) throws FLException {
+	@Override
+	@Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
+	public int addQuotationAssignRequestForPending(DecorationPO decoration, Integer company, Integer department, Short decorationType) throws FLException {
 
 		String orderId = decoration.getOrderId();
 
