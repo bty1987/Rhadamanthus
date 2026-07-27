@@ -1953,57 +1953,57 @@ var QuotationDetail = (function() {
 
             com.post(api.data.queryDecorationMatching, quo.typeness, function(res) {
 
-                // 按 typeness 分组缓存,保持组内顺序
-                var groups = {};
+                // 第一步: 按 decorationAtttype 常量(0=半包/1=整装/2=满减)预绘制全部 typeness 标题块,先隐藏
+                // 每个标题块用 data-typeness 标识,内容容器 class=group-content 用于后续挂载数据
+                var typenessDatas = constant.data().decorationAtttype.type.datas;
 
+                $.each(typenessDatas, function(i, t) {
+
+                    var groupBlock = $('<div class="quotation-base-price-group" data-typeness="' + t.key + '" style="display:none;"></div>');
+                    var title = $('<div class="quotation-base-price-group-title" style="font-weight:bold;font-size:14px;margin:10px 0 5px;color:#676a6c;border-bottom:1px solid #eee;padding-bottom:3px;">' + t.value + '</div>');
+                    var content = $('<div class="group-content"></div>');
+
+                    groupBlock.append(title).append(content).appendTo(com.focusPage("#showBaseVersion"));
+                });
+
+                // 第二步: 单遍遍历 matching, 按 typeness 定位到对应标题块, 挂载数据并显示
                 $.each(res.decorationMatchings, function(i, v) {
 
                     if ((v.vision & 2) != constant.data().decorationMatching.VISION_QUOTECOUNT_INT)
                         return true;
 
-                    var key = v.typeness;
+                    var groupBlock = com.focusPage('#showBaseVersion .quotation-base-price-group[data-typeness="' + v.typeness + '"]');
 
-                    if (!groups[key]) groups[key] = [];
-                    groups[key].push(v);
-                });
+                    if (groupBlock.length == 0) return true; // 常量里未定义的 typeness, 跳过
 
-                // 按 typeness 升序(0/1/2)依次渲染,每组先标题后 radio 列表
-                Object.keys(groups).sort(function(a, b) {
-                    return a - b;
-                }).forEach(function(key) {
+                    var params = {
+                        "value": v.base,
+                        "data-name": v.name,
+                        "data-baseDiscount": v.discount,
+                        "data-trafficDiscount": v.trafficDiscount,
+                        "data-manageDiscount": v.manageDiscount,
+                        "data-taxDiscount": v.taxDiscount,
+                        "data-discountType": v.discountType
+                    };
 
-                    // 组标题: typeness 即 decorationAtttype 的 key,直接复用常量取中文名(0=半包/1=整装/2=满减)
-                    var typenessName = constant.data().decorationAtttype.type.keys[key] || "其他";
-                    com.focusPage("#showBaseVersion").append($('<div class="quotation-base-price-group-title" style="font-weight:bold;font-size:14px;margin:10px 0 5px;color:#676a6c;border-bottom:1px solid #eee;padding-bottom:3px;">' + typenessName + '</div>'));
+                    var radio = $('<div class="radio no-padding" style="margin-bottom:10px"></div>');
+                    var lableInput = $('<label></label>').append($('<input type="radio" name="basePrice" class="ace"></input>').attr(params)).append('<sapn class="lbl"></sapn>');
+                    var lbl1 = $('<label>' + v.name + '</label>').addClass('quotation-base-price-radio').addClass('quotation-base-price-radio-width15');
+                    var lbl2 = $('<label> 折扣(' + constant.data().decorationMatching.discountType.keys[v.discountType] + "): " + v.discount + '</label>').addClass('quotation-base-price-lbl');
+                    var lbl3 = $('<label> 基数: ' + v.base + '</label>').addClass('quotation-base-price-lbl').addClass('hide');
 
-                    $.each(groups[key], function(i, v) {
+                    radio.append(lableInput).append(lbl1).append(lbl2).append(lbl3).appendTo(groupBlock.find('.group-content'));
 
-                        var params = {
-                            "value": v.base,
-                            "data-name": v.name,
-                            "data-baseDiscount": v.discount,
-                            "data-trafficDiscount": v.trafficDiscount,
-                            "data-manageDiscount": v.manageDiscount,
-                            "data-taxDiscount": v.taxDiscount,
-                            "data-discountType": v.discountType
-                        };
+                    // 该 typeness 有数据, 显示对应标题块
+                    groupBlock.show();
 
-                        var radio = $('<div class="radio no-padding" style="margin-bottom:10px"></div>');
-                        var lableInput = $('<label></label>').append($('<input type="radio" name="basePrice" class="ace"></input>').attr(params)).append('<sapn class="lbl"></sapn>');
-                        var lbl1 = $('<label>' + v.name + '</label>').addClass('quotation-base-price-radio').addClass('quotation-base-price-radio-width15');
-                        var lbl2 = $('<label> 折扣(' + constant.data().decorationMatching.discountType.keys[v.discountType] + "): " + v.discount + '</label>').addClass('quotation-base-price-lbl');
-                        var lbl3 = $('<label> 基数: ' + v.base + '</label>').addClass('quotation-base-price-lbl').addClass('hide');
+                    lableInput.click(function(e) {
 
-                        radio.append(lableInput).append(lbl1).append(lbl2).append(lbl3).appendTo(com.focusPage("#showBaseVersion"));
-
-                        lableInput.click(function(e) {
-
-                            if (v.discountType != constant.data().decorationMatching.DISCOUNTTYPE_ONLY_INT) {
-                                com.focusPage("#discount").val(10).removeAttr("disabled");
-                            } else {
-                                com.focusPage("#discount").prop("disabled", "disabled").val(v.discount);
-                            }
-                        });
+                        if (v.discountType != constant.data().decorationMatching.DISCOUNTTYPE_ONLY_INT) {
+                            com.focusPage("#discount").val(10).removeAttr("disabled");
+                        } else {
+                            com.focusPage("#discount").prop("disabled", "disabled").val(v.discount);
+                        }
                     });
                 });
             });
