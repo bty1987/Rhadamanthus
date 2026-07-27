@@ -74,7 +74,7 @@ jQuery(function($) {
         name: "状态",
         prop: function(v) {
 
-            return v.status == 0 ? '初始' : '完成';
+            return constant.decoration().decorationService.status.keys[v.status];
         },
         clazz: "red"
     }, {
@@ -95,7 +95,7 @@ jQuery(function($) {
         clazz: "btn-yellow",
         show: function(v) {
 
-            return v.status == 0;
+            return v.status == constant.decoration().decorationService.status.STATUS_INIT_INT;
         }, // 只在状态为0时显示
         handle: function(v) {
 

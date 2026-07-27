@@ -1195,6 +1195,9 @@ $(function() {
 
             var addReduces = res.addReduces;
 
+            // 增减项状态：0=未提交 1=提交 2=已付款 3=已确认（AddReducePO，库 quotation.addreduce）
+            var ARS = constant.quotation().addreduce.status;
+
             $.each(addReduces, function(i, v) {
 
                 if ([0].indexOf(v.paytype) == -1) // 付款类型验证
@@ -1223,8 +1226,8 @@ $(function() {
                     accountBasic.addUndisPrice = utils.accAdd(accountBasic.addUndisPrice, v.undisPrice);
                     accountBasic.addPredisTaxPrice = utils.accAdd(accountBasic.addPredisTaxPrice, v.taxPrice);
                     accountBasic.addTaxPrice = utils.accAdd(accountBasic.addTaxPrice, taxPrice);// 增项税金
-                    accountBasic.addDone = utils.accAdd(accountBasic.addDone, v.status == 2 || v.status == 3 ? v.total : 0);
-                    accountBasic.addOwing = utils.accAdd(accountBasic.addOwing, v.status == 0 || v.status == 1 ? v.total : 0);
+                    accountBasic.addDone = utils.accAdd(accountBasic.addDone, v.status == ARS.STATUS_PAYED_INT || v.status == ARS.STATUS_CONFIRMED_INT ? v.total : 0);
+                    accountBasic.addOwing = utils.accAdd(accountBasic.addOwing, v.status == ARS.STATUS_UNSUBMIT_INT || v.status == ARS.STATUS_SUBMIT_INT ? v.total : 0);
 
                     accountBasic.asDifference = utils.accAdd(accountBasic.asDifference, accountBasic.addDisPrice * (accountBasic.dd / 10) + accountBasic.addUndisPrice + Math.round(accountBasic.addManagePrice) - Math.round(accountBasic.addTotalPrice));
 
@@ -1239,8 +1242,8 @@ $(function() {
                         accountBasic.addConstructionUndisPrice = utils.accAdd(accountBasic.addConstructionUndisPrice, v.undisPrice);
                         accountBasic.addConstructionPredisTaxPrice = utils.accAdd(accountBasic.addConstructionPredisTaxPrice, v.taxPrice);
                         accountBasic.addConstructionTaxPrice = utils.accAdd(accountBasic.addConstructionTaxPrice, taxPrice);// 增项税金
-                        accountBasic.addConstructionOwing = utils.accAdd(accountBasic.addConstructionOwing, v.status == 0 || v.status == 1 ? v.total : 0);
-                        accountBasic.addConstructionDone = utils.accAdd(accountBasic.addConstructionDone, v.status == 2 || v.status == 3 ? v.total : 0);
+                        accountBasic.addConstructionOwing = utils.accAdd(accountBasic.addConstructionOwing, v.status == ARS.STATUS_UNSUBMIT_INT || v.status == ARS.STATUS_SUBMIT_INT ? v.total : 0);
+                        accountBasic.addConstructionDone = utils.accAdd(accountBasic.addConstructionDone, v.status == ARS.STATUS_PAYED_INT || v.status == ARS.STATUS_CONFIRMED_INT ? v.total : 0);
 
                         accountBasic.constructionAsDifference = utils.accAdd(accountBasic.constructionAsDifference, accountBasic.addConstructionDisPrice * (accountBasic.dd / 10) + accountBasic.addConstructionUndisPrice + Math.round(accountBasic.addConstructionManagePrice) - Math.round(accountBasic.addConstructionTotalPrice));
 
@@ -1255,8 +1258,8 @@ $(function() {
                         accountBasic.addMaterialUndisPrice = utils.accAdd(accountBasic.addMaterialUndisPrice, v.undisPrice);
                         accountBasic.addMaterialPredisTaxPrice = utils.accAdd(accountBasic.addMaterialPredisTaxPrice, v.taxPrice);
                         accountBasic.addMaterialTaxPrice = utils.accAdd(accountBasic.addMaterialTaxPrice, taxPrice);// 增项税金
-                        accountBasic.addMaterialDone = utils.accAdd(accountBasic.addMaterialDone, v.status == 2 || v.status == 3 ? v.total : 0);
-                        accountBasic.addMaterialOwing = utils.accAdd(accountBasic.addMaterialOwing, v.status == 0 || v.status == 1 ? v.total : 0);
+                        accountBasic.addMaterialDone = utils.accAdd(accountBasic.addMaterialDone, v.status == ARS.STATUS_PAYED_INT || v.status == ARS.STATUS_CONFIRMED_INT ? v.total : 0);
+                        accountBasic.addMaterialOwing = utils.accAdd(accountBasic.addMaterialOwing, v.status == ARS.STATUS_UNSUBMIT_INT || v.status == ARS.STATUS_SUBMIT_INT ? v.total : 0);
 
                         accountBasic.materialAsDifference = utils.accAdd(accountBasic.materialAsDifference, accountBasic.addMaterialDisPrice * (accountBasic.dd / 10) + accountBasic.addMaterialUndisPrice + Math.round(accountBasic.addMaterialManagePrice) - Math.round(accountBasic.addMaterialTotalPrice));
 
@@ -1274,8 +1277,8 @@ $(function() {
                     accountBasic.reduceUndisPrice = utils.accAdd(accountBasic.reduceUndisPrice, v.undisPrice);
                     accountBasic.reducePredisTaxPrice = utils.accAdd(accountBasic.reducePredisTaxPrice, v.taxPrice);
                     accountBasic.reduceTaxPrice = utils.accAdd(accountBasic.reduceTaxPrice, taxPrice);// 减项税金
-                    accountBasic.reduceDone = utils.accAdd(accountBasic.reduceDone, v.status == 2 || v.status == 3 ? v.total : 0);
-                    accountBasic.reduceOwing = utils.accAdd(accountBasic.reduceOwing, v.status == 0 || v.status == 1 ? v.total : 0);
+                    accountBasic.reduceDone = utils.accAdd(accountBasic.reduceDone, v.status == ARS.STATUS_PAYED_INT || v.status == ARS.STATUS_CONFIRMED_INT ? v.total : 0);
+                    accountBasic.reduceOwing = utils.accAdd(accountBasic.reduceOwing, v.status == ARS.STATUS_UNSUBMIT_INT || v.status == ARS.STATUS_SUBMIT_INT ? v.total : 0);
 
                     accountBasic.asDifference = utils.accAdd(accountBasic.asDifference, accountBasic.reduceDisPrice * (accountBasic.dd / 10) + accountBasic.reduceUndisPrice + Math.round(accountBasic.reduceManagePrice) - Math.round(accountBasic.reduceTotalPrice));
 
@@ -1290,8 +1293,8 @@ $(function() {
                         accountBasic.reduceConstructionUndisPrice = utils.accAdd(accountBasic.reduceConstructionUndisPrice, v.undisPrice);
                         accountBasic.reduceConstructionPredisTaxPrice = utils.accAdd(accountBasic.reduceConstructionPredisTaxPrice, v.taxPrice);
                         accountBasic.reduceConstructionTaxPrice = utils.accAdd(accountBasic.reduceConstructionTaxPrice, taxPrice);// 减项税金
-                        accountBasic.reduceConstructionDone = utils.accAdd(accountBasic.reduceConstructionDone, v.status == 2 || v.status == 3 ? v.total : 0);
-                        accountBasic.reduceConstructionOwing = utils.accAdd(accountBasic.reduceConstructionOwing, v.status == 0 || v.status == 1 ? v.total : 0);
+                        accountBasic.reduceConstructionDone = utils.accAdd(accountBasic.reduceConstructionDone, v.status == ARS.STATUS_PAYED_INT || v.status == ARS.STATUS_CONFIRMED_INT ? v.total : 0);
+                        accountBasic.reduceConstructionOwing = utils.accAdd(accountBasic.reduceConstructionOwing, v.status == ARS.STATUS_UNSUBMIT_INT || v.status == ARS.STATUS_SUBMIT_INT ? v.total : 0);
 
                         accountBasic.constructionAsDifference = utils.accAdd(accountBasic.constructionAsDifference, accountBasic.reduceConstructionDisPrice * (accountBasic.dd / 10) + accountBasic.reduceConstructionUndisPrice + Math.round(accountBasic.reduceConstructionManagePrice) - Math.round(accountBasic.reduceConstructionTotalPrice));
 
@@ -1306,8 +1309,8 @@ $(function() {
                         accountBasic.reduceMaterialUndisPrice = utils.accAdd(accountBasic.reduceMaterialUndisPrice, v.undisPrice);
                         accountBasic.reduceMaterialPredisTaxPrice = utils.accAdd(accountBasic.reduceMaterialPredisTaxPrice, v.taxPrice);
                         accountBasic.reduceMaterialTaxPrice = utils.accAdd(accountBasic.reduceMaterialTaxPrice, taxPrice);// 减项税金
-                        accountBasic.reduceMaterialDone = utils.accAdd(accountBasic.reduceMaterialDone, v.status == 2 || v.status == 3 ? v.total : 0);
-                        accountBasic.reduceMaterialOwing = utils.accAdd(accountBasic.reduceMaterialOwing, v.status == 0 || v.status == 1 ? v.total : 0);
+                        accountBasic.reduceMaterialDone = utils.accAdd(accountBasic.reduceMaterialDone, v.status == ARS.STATUS_PAYED_INT || v.status == ARS.STATUS_CONFIRMED_INT ? v.total : 0);
+                        accountBasic.reduceMaterialOwing = utils.accAdd(accountBasic.reduceMaterialOwing, v.status == ARS.STATUS_UNSUBMIT_INT || v.status == ARS.STATUS_SUBMIT_INT ? v.total : 0);
 
                         accountBasic.materialAsDifference = utils.accAdd(accountBasic.materialAsDifference, accountBasic.reduceMaterialDisPrice * (accountBasic.dd / 10) + accountBasic.reduceMaterialUndisPrice + Math.round(accountBasic.reduceMaterialManagePrice) - Math.round(accountBasic.reduceMaterialTotalPrice));
 
