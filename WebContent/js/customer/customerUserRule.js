@@ -390,7 +390,7 @@ $(function() {
         },
         show: function(v) {
 
-            return btnVisible("start") && (v.status == constant.customer().customerUserRule.status.STATUS_USER_INVALID_INT || v.status == constant.customer().customerUserRule.status.STATUS_DEPT_INVALID_INT || v.status == constant.customer().customerUserRule.status.STATUS_REGION_INVALID_INT || v.status == constant.customer().customerUserRule.status.STATUS_ADVANCE_INVALID_INT);
+            return btnVisible("start") && (v.status == constant.customer().customerUserRule.STATUS_USER_INVALID_INT || v.status == constant.customer().customerUserRule.STATUS_DEPT_INVALID_INT || v.status == constant.customer().customerUserRule.STATUS_REGION_INVALID_INT || v.status == constant.customer().customerUserRule.STATUS_ADVANCE_INVALID_INT);
         }
     }, {
         name: "停止接单",

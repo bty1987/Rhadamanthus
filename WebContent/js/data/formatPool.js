@@ -50,7 +50,7 @@ jQuery(function($) {
 
             com.post(api.communion.updateFormatPoolForStatus, {
                 "formatPool.fpid": v.fpid,
-                "formatPool.status": v.status == constant.data().common.status.STATUS_ENABLE_INT ? constant.data().common.status.STATUS_DISABLE_INT : constant.data().common.status.STATUS_ENABLE_INT
+                "formatPool.status": v.status == constant.data().common.STATUS_ENABLE_INT ? constant.data().common.STATUS_DISABLE_INT : constant.data().common.STATUS_ENABLE_INT
             }, function(res) {
 
                 com.showAlert(com.info, "操作成功");

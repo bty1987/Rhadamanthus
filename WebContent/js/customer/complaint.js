@@ -121,12 +121,12 @@ $(function() {
 
                 $liLine.append($h3).append($ulProperty);
                 $btnDiv.append($btnComplaink);
-                if (v.status == constant.customer().complaint.status.STATUS_INIT_INT) {
+                if (v.status == constant.customer().complaint.STATUS_INIT_INT) {
                     $btnDiv.append($btnComplainkContent);
                 }
-                if (v.status == constant.customer().complaint.status.STATUS_HANDLE_INT) {
+                if (v.status == constant.customer().complaint.STATUS_HANDLE_INT) {
                     $btnDiv.append($btnComplaintFinish);
-                } else if (v.status == constant.customer().complaint.status.STATUS_END_INT) {
+                } else if (v.status == constant.customer().complaint.STATUS_END_INT) {
                     $btnDiv.append($btnComplaintClose);
                 }
 

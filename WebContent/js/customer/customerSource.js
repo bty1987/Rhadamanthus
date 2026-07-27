@@ -780,7 +780,7 @@ $(function() {
         },
         show: function(v) {
 
-            return (v.status == constant.customer().customerSource.status.STATUS_INIT_INT || v.status == constant.customer().customerSource.status.STATUS_APPROVAL_INT) && customerSource.depage == "user";
+            return (v.status == constant.customer().customerSource.STATUS_INIT_INT || v.status == constant.customer().customerSource.STATUS_APPROVAL_INT) && customerSource.depage == "user";
         }
     }, {
         name: "更新",
@@ -823,7 +823,7 @@ $(function() {
         },
         show: function(v) {
 
-            return (v.status == constant.customer().customerSource.status.STATUS_INIT_INT || v.status == constant.customer().customerSource.status.STATUS_APPROVAL_INT) && customerSource.depage == "user";
+            return (v.status == constant.customer().customerSource.STATUS_INIT_INT || v.status == constant.customer().customerSource.STATUS_APPROVAL_INT) && customerSource.depage == "user";
         }
     }, {
         name: "初审",

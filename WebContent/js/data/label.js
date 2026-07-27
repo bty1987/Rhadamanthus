@@ -37,9 +37,9 @@ $(function(){
             status: {
                 type: "switch",
                 clazz: "status-lbl",
-                init: function(v) { return v.status == constant.data().common.status.STATUS_ENABLE_INT; },
+                init: function(v) { return v.status == constant.data().common.STATUS_ENABLE_INT; },
                 handle: function(v, checked) {
-                    updatastatus(v.lid, checked ? constant.data().common.status.STATUS_ENABLE_INT : constant.data().common.status.STATUS_DISABLE_INT);
+                    updatastatus(v.lid, checked ? constant.data().common.STATUS_ENABLE_INT : constant.data().common.STATUS_DISABLE_INT);
                 }
             },
             edit: {name: "编辑", clazz: "btn-yellow", handle: function(v) { editlabel(v); }}

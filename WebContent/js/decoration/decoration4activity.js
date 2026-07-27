@@ -412,7 +412,7 @@ jQuery(function($) {
             for ( var i = 0; i < decorationActivitys.length; i++) {
                 var decorationActivity = decorationActivitys[i];
 
-                if (decorationActivity.status == constant.decoration().decorationActivity.status.STATUS_LOCK_INT) {
+                if (decorationActivity.status == constant.decoration().decorationActivity.STATUS_LOCK_INT) {
                     continue;
                 }
 
@@ -457,7 +457,7 @@ jQuery(function($) {
             for ( var i = 0; i < decorationActivitys.length; i++) {
                 var decorationActivity = decorationActivitys[i];
 
-                if (decorationActivity.status == constant.decoration().decorationActivity.status.STATUS_LOCK_INT) {
+                if (decorationActivity.status == constant.decoration().decorationActivity.STATUS_LOCK_INT) {
                     continue;
                 }
 

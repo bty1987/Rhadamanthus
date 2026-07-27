@@ -672,7 +672,7 @@ jQuery(function($) {
             for ( var i = 0; i < decorationActivitys.length; i++) {
                 var decorationActivity = decorationActivitys[i];
 
-                if (decorationActivity.status == constant.decoration().decorationActivity.status.STATUS_LOCK_INT) {
+                if (decorationActivity.status == constant.decoration().decorationActivity.STATUS_LOCK_INT) {
                     continue;
                 }
 
@@ -2283,7 +2283,7 @@ jQuery(function($) {
         }
 
         // customer.status: 0=初始 1=认证 2=已认证（CustomerPO）。库 customer.customer.status 未登记，
-        // 待 customer 模块批次补录后改为 constant.customer().customer.status.STATUS_INIT_INT。
+        // 待 customer 模块批次补录后改为 constant.customer().customer.STATUS_INIT_INT。
         decorationDetail.customer.status == 0 ? url = api.data.updateCustomer : url = api.data.updateCustomerForBase;
 
         var options = {

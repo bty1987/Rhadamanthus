@@ -159,8 +159,8 @@ $(function($) {
             status: {
                 type: "switch",
                 clazz: "status-lbl",
-                init: function(v) { return v.status == constant.data().receiptType.status.STATUS_ENABLE_INT; },
-                handle: function(v, checked) { updateStatus(v.rtId, checked ? constant.data().receiptType.status.STATUS_ENABLE_INT : constant.data().receiptType.status.STATUS_DISABLE_INT, null); }
+                init: function(v) { return v.status == constant.data().receiptType.STATUS_ENABLE_INT; },
+                handle: function(v, checked) { updateStatus(v.rtId, checked ? constant.data().receiptType.STATUS_ENABLE_INT : constant.data().receiptType.STATUS_DISABLE_INT, null); }
             },
             update: {
                 name: "修改",
