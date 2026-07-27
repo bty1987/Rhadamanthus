@@ -276,7 +276,7 @@ jQuery(function($) {
                         }, function(data) {
                             com.showAlert(com.info, '报价配置提交成功，预算员已自动分配');
                         }, function(error) {
-                            // 进待分配队列(手动模式/无可用预算员)及其他业务异常均走此分支,error.errorMsg 为后端 FLException 消息
+                            // 自动分配失败:手动模式(200113)/无可用预算员(200114)/其他业务异常,error.errorMsg 为后端 FLException 消息
                             com.showAlert(com.error, error.errorMsg || '预算员自动分配失败，请稍后手动分配或联系管理员');
                         });
                     } else {

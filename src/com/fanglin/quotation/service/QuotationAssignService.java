@@ -11,7 +11,6 @@
 package com.fanglin.quotation.service;
 
 import com.fanglin.core.interceptor.FLException;
-import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.quotation.vo.QuotationAssignVO;
 
 /**
@@ -112,19 +111,4 @@ public interface QuotationAssignService {
 	 * @throws FLException 业务异常
 	 */
 	int transferQuotationAssign(QuotationAssignVO quotationAssignVO, String userId) throws FLException;
-
-	/**
-	 * 新增待分配请求（独立事务落库）
-	 *
-	 * <p>仅供 autoQuotationAssign 通过自身代理调用，发起 REQUIRES_NEW 事务,
-	 * 使待分配队列数据独立于主事务提交。不直接暴露给业务侧。
-	 *
-	 * @param decoration 装修单PO
-	 * @param company 公司ID
-	 * @param department 部门ID
-	 * @param decorationType 装修类型
-	 * @return 影响行数
-	 * @throws FLException 业务异常
-	 */
-	int addQuotationAssignRequestForPending(DecorationPO decoration, Integer company, Integer department, Short decorationType) throws FLException;
 }

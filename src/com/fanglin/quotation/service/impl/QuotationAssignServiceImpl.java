@@ -15,7 +15,6 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.communion.po.DepartmentPO;
@@ -95,13 +94,6 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 	private QuotationService quotationService;
 
 	/**
-	 * 自身代理引用，用于 REQUIRES_NEW 事务的正确发起。
-	 * Spring 4.3+ 允许自注入，避免 this 调用绕过代理导致事务失效。
-	 */
-	@Autowired
-	private QuotationAssignService selfQuotationAssignService;
-
-	/**
 	 * 检查预算员在指定公司下是否有匹配的规则明细
 	 * 
 	 * @param userRule 预算员规则
@@ -167,10 +159,10 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 			throw new FLException(200101, "该公司/部门未启用预算员自动分配功能");
 		}
 
-		// 5. 如果是手动模式，直接进入待分配队列
+		// 5. 手动模式不属于自动分配范畴,抛清晰异常,不在此处进队列
+		// (进队列是独立业务动作,由 createQuotationAssignRequest 接口显式触发)
 		if (config.getAutoAssign() != QuotationAssignConfigPO.AUTO_ASSIGN_AUTO_INT) {
-			selfQuotationAssignService.addQuotationAssignRequestForPending(decoration, company, department, decorationType);
-			throw new FLException(200106, "已加入待分配队列，请等待分配");
+			throw new FLException(200113, "该部门为手动分配模式,请通知预算经理手动派单");
 		}
 
 		// 6. 查找可分配预算员
@@ -179,8 +171,7 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 		List<QuotationAssignUserRuleItemPO> availableItems = quotationAssignUserRuleItemDao.queryQuotationAssignUserRuleItemForCross(company, department, decorationType);
 
 		if (availableItems == null || availableItems.isEmpty()) {
-			selfQuotationAssignService.addQuotationAssignRequestForPending(decoration, company, department, decorationType);
-			throw new FLException(200106, "已加入待分配队列，请等待分配");
+			throw new FLException(200114, "暂无可用预算员,请稍后重试或联系管理员");
 		}
 
 		// 7. DAO 已通过 item 查询完成类型匹配和排序（按 lastFinishTime ASC）
@@ -424,53 +415,10 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 		}
 	}
 
-	/**
-	 * 新增待分配请求
-	 *
-	 * <p>使用 REQUIRES_NEW 开独立事务落库，使待分配请求/记录独立于 autoQuotationAssign
-	 * 的主事务提交——主事务后续抛出的 FLException 不会回滚此处已落库的队列数据，
-	 * 预算经理的待分配列表仍能看到该单。仅供 autoQuotationAssign 通过自身代理调用,
-	 * 不直接暴露给业务侧。
-	 */
-	@Override
-	@Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
-	public int addQuotationAssignRequestForPending(DecorationPO decoration, Integer company, Integer department, Short decorationType) throws FLException {
-
-		String orderId = decoration.getOrderId();
-
-		QuotationAssignRequestPO existRequest = quotationAssignRequestDao.queryQuotationAssignRequestForActive(orderId);
-		if (existRequest != null) {
-			if (existRequest.getStatus() == QuotationAssignRequestPO.STATUS_ASSIGNED_INT) {
-				throw new FLException(200097, "该装修单已分配报价员，无需重复分配");
-			}
-			throw new FLException(200106, "已加入待分配队列，请等待分配");
-		}
-
-		QuotationAssignRequestPO request = new QuotationAssignRequestPO();
-		request.setOrderId(orderId);
-		request.setCompany(new com.fanglin.system.po.CompanyPO(company));
-		request.setDepartment(department != null ? new DepartmentPO(department) : null);
-		request.setDecorationType(decorationType);
-		request.setPriority(QuotationAssignRequestPO.PRIORITY_NORMAL_INT);
-		request.setCreateTime(new Timestamp(System.currentTimeMillis()));
-		request.setRequestTime(new Timestamp(System.currentTimeMillis()));
-		request.setRequestUser(getRequestUser(decoration));
-		request.setStatus(QuotationAssignRequestPO.STATUS_PENDING_INT);
-		quotationAssignRequestDao.save(request);
-
-		QuotationAssignRecordPO record = new QuotationAssignRecordPO();
-		record.setOrderId(orderId);
-		record.setUid(null);
-		record.setAssignType(QuotationAssignRecordPO.ASSIGN_TYPE_FORWARD_AUTO_INT);
-		record.setAssignResult(QuotationAssignRecordPO.ASSIGN_RESULT_FAILED_INT);
-		record.setAssignUid(null);
-		record.setAssignTime(new Timestamp(System.currentTimeMillis()));
-		record.setFailReason(QuotationAssignRecordPO.FAIL_REASON_NO_AVAILABLE_BUDGETER_STR);
-		record.setDecorationType(decorationType);
-		quotationAssignRecordDao.save(record);
-
-		return 0;
-	}
+	// ==================== 进待分配队列(独立业务动作) ====================
+	// 注:进待分配队列由 QuotationAssignRequestService.createQuotationAssignRequest 独立承担,
+	// autoQuotationAssign 只负责"尝试自动分配",两者解耦。预算经理手动加单等场景
+	// 调用 createQuotationAssignRequest 接口即可。
 
 	/**
 	 * 分配给指定预算员
