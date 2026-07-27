@@ -60,7 +60,7 @@ $(function() {
         var decorationBusitypes = [{key: -1, value: '通用'}];
 
         $.each(res.decorationBusitypes, function(intex, value) {
-            if (value.status == 0) {
+            if (value.status == constant.data().decorationBusitype.status.STATUS_ACTIVATE) {
                 decorationBusitypes.push({"key": value.dbid, "value": value.name});
                 paymentScale.busitypes[value.dbid] = value.name;
             }
@@ -113,7 +113,7 @@ $(function() {
                 ["业务类型:", com.checkNull(paymentScale.busitypes[v.dbid], "暂无"), "red"],
                 ["属性类型:", com.checkNull(paymentScale.atttypes[v.atttype], "暂无"), "red"],
                 ["说明:", v.comment, "grey"],
-                ["状态:", v.status == 0 ? "启用" : "禁用", 'red']
+                ["状态:", constant.data().common.status.keys[v.status], 'red']
             ];
 
             $btnStatus.append($statusSwitch).append($span);
@@ -138,9 +138,9 @@ $(function() {
                 deletePaymentScale(v.psid);
             });
 
-            v.status == 0 && $statusSwitch.prop("checked", true);
+            v.status == constant.data().common.status.STATUS_ENABLE_INT && $statusSwitch.prop("checked", true);
 
-            $statusSwitch.prop("checked", v.status == 0 ? true : false).switchBtn("status-lbl").on("click", function() {
+            $statusSwitch.prop("checked", v.status == constant.data().common.status.STATUS_ENABLE_INT ? true : false).switchBtn("status-lbl").on("click", function() {
 
                 updateStatus(v.psid, $statusSwitch.prop("checked") ? 0 : 1);
             });

@@ -108,10 +108,10 @@ jQuery(function($) {
 
             var status = null;
 
-            if (v.status == 0) {
-                status = 1;
+            if (v.status == constant.data().price.status.STATUS_ENABLE_INT) {
+                status = constant.data().price.status.STATUS_DISABLE_INT;
             } else {
-                status = 0;
+                status = constant.data().price.status.STATUS_ENABLE_INT;
             }
 
             com.post(api.data.updatePriceForStatus, {
