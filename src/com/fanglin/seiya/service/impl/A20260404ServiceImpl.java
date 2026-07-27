@@ -77,130 +77,123 @@ public class A20260404ServiceImpl implements A20260404Service {
 
 		Map<String, Object> result = new HashMap<String, Object>();
 
-		try {
-			logger.info("同步供应商数据: userId={}, userName={}, phone={}, company={}", userId, userName, phone, company);
+		logger.info("同步供应商数据: userId={}, userName={}, phone={}, company={}", userId, userName, phone, company);
 
-			// 0. 验证公司是否存在
-			CompanyPO companyPO = companyDao.get(company);
-			if (companyPO == null) {
-				throw new FLException(510000, "公司不存在: " + company);
-			}
-
-			// 1. 通过编号(userId)判断是否存在
-			UserPO supplierPO = userDao.queryUserByUserId(userId);
-			String operation = "add";
-
-			if (supplierPO != null) {
-				// 存在则更新
-				operation = "update";
-				logger.info("供应商已存在，执行更新: uid={}, userId={}", supplierPO.getUid(), supplierPO.getUserId());
-
-				// 更新基本信息
-				supplierPO.setUserName(userName);
-				supplierPO.setCurrentName(userName);
-				supplierPO.setPhone(phone);
-				supplierPO.setOldUserId(userId); // oldUserId = userId
-
-				supplierDao.update(supplierPO);
-				logger.info("更新供应商成功: uid={}, userId={}", supplierPO.getUid(), supplierPO.getUserId());
-
-			} else {
-				// 不存在则创建
-				logger.info("供应商不存在，执行新增: userId={}", userId);
-
-				// 2. 检查供应商数量限制
-				SystemConfigPO userlimit = systemConfigDao.querySystemConfig("supplierlimit", company);
-				if (supplierDao.countSupplierByCompany(company) >= (userlimit == null ? 100 : Integer.valueOf(userlimit.getValue()))) {
-					throw new FLException(190036, "供应商数已达上限");
-				}
-
-				// 3. 获取默认部门（从 systemConfig 获取 supplierDept 配置）
-				SystemConfigPO deptConfig = systemConfigDao.querySystemConfig("supplierDept", company);
-				if (deptConfig == null) {
-					throw new FLException(310004, "供应商部门配置不存在(supplierDept)");
-				}
-				DepartmentPO departmentPO = departmentDao.get(Integer.valueOf(deptConfig.getValue()));
-				if (departmentPO == null) {
-					throw new FLException(310002, "供应商部门不存在: " + deptConfig.getValue());
-				}
-
-				// 4. 获取默认角色（从 systemConfig 获取 supplier 角色ID）
-				SystemConfigPO roleConfig = systemConfigDao.querySystemConfig("supplier");
-				if (roleConfig == null) {
-					throw new FLException(230029, "供应商角色配置不存在(supplier)");
-				}
-				RolePO rolePO = new RolePO(Integer.valueOf(roleConfig.getValue()));
-
-				// 5. 获取默认职位（从 systemConfig 获取 supplierDuty 配置）
-				SystemConfigPO dutyConfig = systemConfigDao.querySystemConfig("supplierDuty");
-				if (dutyConfig == null) {
-					throw new FLException(230027, "供应商职位配置不存在(supplierDuty)");
-				}
-				DutyPO dutyPO = dutyDao.get(dutyConfig.getValue());
-				if (dutyPO == null) {
-					throw new FLException(230011, "供应商职位不存在: " + dutyConfig.getValue());
-				}
-
-				// 6. 创建供应商用户
-				supplierPO = new UserPO();
-				supplierPO.setUserId(userId);
-				supplierPO.setLoginId(userId); // loginId = userId
-				supplierPO.setCurrentName(userName);
-				supplierPO.setUserName(userName);
-				supplierPO.setPhone(phone);
-				supplierPO.setOldUserId(userId); // oldUserId = userId
-
-				// 设置默认密码
-				SystemConfigPO passwordConfig = systemConfigDao.querySystemConfig("password", company);
-				String defaultPassword = passwordConfig == null ? "helloworld" : passwordConfig.getValue();
-				supplierPO.setPassword(MD5Helper.MD5(defaultPassword));
-
-				// 设置部门、角色、职位
-				supplierPO.setDept(departmentPO);
-				supplierPO.setRole(rolePO);
-				supplierPO.setDuty(dutyPO);
-
-				// 设置公司
-				supplierPO.setCompany(company);
-
-				// 生成拼音
-				supplierPO.setPinYin(PinYin4Util.getPinyin(userName).get(0));
-
-				// 设置状态
-				supplierPO.setIsLogin(UserPO.ISLOGIN_FIP_INT);
-				supplierPO.setType(UserPO.TYPE_SUPPLIER_INT);
-				supplierPO.setExtranet((short) (UserPO.EXTRANET_WEB_INT + UserPO.EXTRANET_PC_INT));
-
-				// 保存
-				supplierDao.save(supplierPO);
-				logger.info("新增供应商成功: uid={}, userId={}", supplierPO.getUid(), supplierPO.getUserId());
-
-				// 7. 创建用户角色关联
-				UserRolePO userRolePO = new UserRolePO(supplierPO.getUid(), rolePO, supplierPO);
-				userRoleDao.save(userRolePO);
-
-				// 8. 创建用户信息
-				UserInfoPO userInfoPO = new UserInfoPO();
-				userInfoPO.setSalary("0");
-				userInfoPO.setUser(supplierPO);
-				userInfoDao.save(userInfoPO);
-			}
-
-			// 9. 返回结果
-			result.put("success", true);
-			result.put("operation", operation);
-			result.put("uid", supplierPO.getUid());
-			result.put("userId", supplierPO.getUserId());
-			result.put("userName", supplierPO.getUserName());
-
-			return result;
-
-		} catch (FLException e) {
-			throw e;
-		} catch (Exception e) {
-			logger.error("同步供应商异常: userId={}, userName={}, company={}", userId, userName, company, e);
-			throw new FLException(500003, "同步供应商失败: " + e.getMessage());
+		// 0. 验证公司是否存在
+		CompanyPO companyPO = companyDao.get(company);
+		if (companyPO == null) {
+			throw new FLException(510000, "公司不存在: " + company);
 		}
+
+		// 1. 通过编号(userId)判断是否存在
+		UserPO supplierPO = userDao.queryUserByUserId(userId);
+		String operation = "add";
+
+		if (supplierPO != null) {
+			// 存在则更新
+			operation = "update";
+			logger.info("供应商已存在，执行更新: uid={}, userId={}", supplierPO.getUid(), supplierPO.getUserId());
+
+			// 更新基本信息
+			supplierPO.setUserName(userName);
+			supplierPO.setCurrentName(userName);
+			supplierPO.setPhone(phone);
+			supplierPO.setOldUserId(userId); // oldUserId = userId
+
+			supplierDao.update(supplierPO);
+			logger.info("更新供应商成功: uid={}, userId={}", supplierPO.getUid(), supplierPO.getUserId());
+
+		} else {
+			// 不存在则创建
+			logger.info("供应商不存在，执行新增: userId={}", userId);
+
+			// 2. 检查供应商数量限制
+			SystemConfigPO userlimit = systemConfigDao.querySystemConfig("supplierlimit", company);
+			if (supplierDao.countSupplierByCompany(company) >= (userlimit == null ? 100 : Integer.valueOf(userlimit.getValue()))) {
+				throw new FLException(190036, "供应商数已达上限");
+			}
+
+			// 3. 获取默认部门（从 systemConfig 获取 supplierDept 配置）
+			SystemConfigPO deptConfig = systemConfigDao.querySystemConfig("supplierDept", company);
+			if (deptConfig == null) {
+				throw new FLException(310004, "供应商部门配置不存在(supplierDept)");
+			}
+			DepartmentPO departmentPO = departmentDao.get(Integer.valueOf(deptConfig.getValue()));
+			if (departmentPO == null) {
+				throw new FLException(310002, "供应商部门不存在: " + deptConfig.getValue());
+			}
+
+			// 4. 获取默认角色（从 systemConfig 获取 supplier 角色ID）
+			SystemConfigPO roleConfig = systemConfigDao.querySystemConfig("supplier");
+			if (roleConfig == null) {
+				throw new FLException(230029, "供应商角色配置不存在(supplier)");
+			}
+			RolePO rolePO = new RolePO(Integer.valueOf(roleConfig.getValue()));
+
+			// 5. 获取默认职位（从 systemConfig 获取 supplierDuty 配置）
+			SystemConfigPO dutyConfig = systemConfigDao.querySystemConfig("supplierDuty");
+			if (dutyConfig == null) {
+				throw new FLException(230027, "供应商职位配置不存在(supplierDuty)");
+			}
+			DutyPO dutyPO = dutyDao.get(dutyConfig.getValue());
+			if (dutyPO == null) {
+				throw new FLException(230011, "供应商职位不存在: " + dutyConfig.getValue());
+			}
+
+			// 6. 创建供应商用户
+			supplierPO = new UserPO();
+			supplierPO.setUserId(userId);
+			supplierPO.setLoginId(userId); // loginId = userId
+			supplierPO.setCurrentName(userName);
+			supplierPO.setUserName(userName);
+			supplierPO.setPhone(phone);
+			supplierPO.setOldUserId(userId); // oldUserId = userId
+
+			// 设置默认密码
+			SystemConfigPO passwordConfig = systemConfigDao.querySystemConfig("password", company);
+			String defaultPassword = passwordConfig == null ? "helloworld" : passwordConfig.getValue();
+			supplierPO.setPassword(MD5Helper.MD5(defaultPassword));
+
+			// 设置部门、角色、职位
+			supplierPO.setDept(departmentPO);
+			supplierPO.setRole(rolePO);
+			supplierPO.setDuty(dutyPO);
+
+			// 设置公司
+			supplierPO.setCompany(company);
+
+			// 生成拼音
+			supplierPO.setPinYin(PinYin4Util.getPinyin(userName).get(0));
+
+			// 设置状态
+			supplierPO.setIsLogin(UserPO.ISLOGIN_FIP_INT);
+			supplierPO.setType(UserPO.TYPE_SUPPLIER_INT);
+			supplierPO.setExtranet((short) (UserPO.EXTRANET_WEB_INT + UserPO.EXTRANET_PC_INT));
+
+			// 保存
+			supplierDao.save(supplierPO);
+			logger.info("新增供应商成功: uid={}, userId={}", supplierPO.getUid(), supplierPO.getUserId());
+
+			// 7. 创建用户角色关联
+			UserRolePO userRolePO = new UserRolePO(supplierPO.getUid(), rolePO, supplierPO);
+			userRoleDao.save(userRolePO);
+
+			// 8. 创建用户信息
+			UserInfoPO userInfoPO = new UserInfoPO();
+			userInfoPO.setSalary("0");
+			userInfoPO.setUser(supplierPO);
+			userInfoDao.save(userInfoPO);
+		}
+
+		// 9. 返回结果
+		result.put("success", true);
+		result.put("operation", operation);
+		result.put("uid", supplierPO.getUid());
+		result.put("userId", supplierPO.getUserId());
+		result.put("userName", supplierPO.getUserName());
+
+		return result;
+
 	}
 
 }
