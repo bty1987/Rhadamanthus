@@ -727,7 +727,7 @@ $(function() {
             "constructionInfo.decoration.orderId": contract.orderId,
             "constructionInfo.finishTime": order.infoItems.finishTime.val(),
             "constructionInfo.keyTime": order.infoItems.keyTime.val() ? order.infoItems.keyTime.val() + " 00:00:00" : '',
-            "constructionInfo.designTime": order.infoItems.designTime.val() ? order.infoItems.designTime.val() + " 00:00:00" : '',
+            "constructionInfo.initDesignTime": order.infoItems.designTime.val() ? order.infoItems.designTime.val() + " 00:00:00" : '',
             "constructionInfo.drawlineTime": order.infoItems.drawlineTime.val() ? order.infoItems.drawlineTime.val() + " 00:00:00" : '',
             "constructionInfo.comment": order.infoItems.comment.val(),
             "constructionInfo.designPeriod": order.infoItems.designPeriod.val(),
@@ -2383,7 +2383,7 @@ $(function() {
             var constructionInfo = res.constructionInfo;
             var handoverStatusText = constant.construction().constructionInfo.handoverStatus.keys[constructionInfo.handoverStatus] || "-";
 
-            com.showTip(btn, " 预计交钥匙时间:" + com.checkNull(constructionInfo.keyTime, "") + "<br\>预计放线时间:" + com.checkNull(constructionInfo.drawlineTime, "") + "<br\>预计完工时间:" + com.checkNull(constructionInfo.finishTime, "") + "<br\>预计设计完成时间:" + com.checkNull(constructionInfo.designTime, "") + "<br\>交接状态:" + handoverStatusText);
+            com.showTip(btn, " 预计交钥匙时间:" + com.checkNull(constructionInfo.keyTime, "") + "<br\>预计放线时间:" + com.checkNull(constructionInfo.drawlineTime, "") + "<br\>预计完工时间:" + com.checkNull(constructionInfo.finishTime, "") + "<br\>预计设计完成时间:" + com.checkNull(constructionInfo.initDesignTime, "") + "<br\>交接状态:" + handoverStatusText);
         });
     };
 
