@@ -611,6 +611,10 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 
 		decorationAccountStatusService.updateDecorationAccountStatus(orderId, DecorationAccountStatusPO.TYPE_SIGN_INT);
 
+		constructionInfoPO.setInitDesignTime(DateUtil.getDateToTimestamp(new Date()));
+
+		constructionInfoDao.update(constructionInfoPO);
+
 		if (!resignFlag && !prosignFlag) { // 签约
 
 			decorationAdditionPO.clearDesign();
