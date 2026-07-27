@@ -216,6 +216,10 @@ jQuery(function($) {
 
     var linebtns = (function() {
 
+        // buildingHouse 复用 building.building 状态枚举：
+        // 0=待审核 1=签约 2=失效 3=通过 4=驳回（见 communion.constant building.building.status）
+        var ST = constant.building().building.status;
+
         return {
             drawing: {
                 name: "图片",
@@ -254,9 +258,9 @@ jQuery(function($) {
             follow: {
                 name: "转移房源",
                 clazz: "btn-warning",
-                show: function(v) { return v.status == 0 || v.status == 3; },
+                show: function(v) { return v.status == ST.STATUS_INIT_INT || v.status == ST.STATUS_PASS_INT; },
                 handle: function(v) {
-                    if (v.status == 1 || v.status == 2 || v.status == 4) {
+                    if (v.status == ST.STATUS_SIGN_INT || v.status == ST.STATUS_DISABLE_INT || v.status == ST.STATUS_REJECT_INT) {
                         com.showAlert(com.warning, "当前房源已签约或已失效,不能转移房源");
                         return;
                     }
@@ -275,9 +279,9 @@ jQuery(function($) {
             bind: {
                 name: "绑定客源",
                 clazz: "btn-success",
-                show: function(v) { return v.status == 3; },
+                show: function(v) { return v.status == ST.STATUS_PASS_INT; },
                 handle: function(v) {
-                    if (v.status == 1 || v.status == 2 || v.status == 4) {
+                    if (v.status == ST.STATUS_SIGN_INT || v.status == ST.STATUS_DISABLE_INT || v.status == ST.STATUS_REJECT_INT) {
                         com.showAlert(com.warning, "当前房源已签约或已失效,不能绑定客源");
                         return false;
                     }
@@ -294,7 +298,7 @@ jQuery(function($) {
             record: {
                 name: "跟进记录",
                 clazz: "btn-inverse",
-                show: function(v) { return v.status == 1 || v.status == 3; },
+                show: function(v) { return v.status == ST.STATUS_SIGN_INT || v.status == ST.STATUS_PASS_INT; },
                 handle: function(v) {
                     params.building.buildingHouse = v;
                     params.build.flag = true;
@@ -305,12 +309,12 @@ jQuery(function($) {
             success: {
                 name: "通过",
                 clazz: "btn-danger",
-                show: function(v) { return v.status == 0; },
+                show: function(v) { return v.status == ST.STATUS_INIT_INT; },
                 handle: function(v) {
-                    if (v.status == 0) {
+                    if (v.status == ST.STATUS_INIT_INT) {
                         com.post(api.building.updateBuildingHouseForStatus, {
                             "buildingHouse.hsid": v.hsid,
-                            "buildingHouse.status": 3
+                            "buildingHouse.status": ST.STATUS_PASS_INT
                         }, function(res) {
 
                             com.showAlert(com.info, "房源信息已通过");
@@ -324,12 +328,12 @@ jQuery(function($) {
             fail: {
                 name: "驳回",
                 clazz: "btn-pink",
-                show: function(v) { return v.status == 0; },
+                show: function(v) { return v.status == ST.STATUS_INIT_INT; },
                 handle: function(v) {
-                    if (v.status == 0) {
+                    if (v.status == ST.STATUS_INIT_INT) {
                         com.post(api.building.updateBuildingHouseForStatus, {
                             "buildingHouse.hsid": v.hsid,
-                            "buildingHouse.status": 4
+                            "buildingHouse.status": ST.STATUS_REJECT_INT
                         }, function(res) {
 
                             com.showAlert(com.info, "房源信息已驳回");
@@ -343,9 +347,9 @@ jQuery(function($) {
             key: {
                 name: "收钥匙人",
                 clazz: "btn-yellow",
-                show: function(v) { return v.status == 0 || v.status == 3 || v.status == 4; },
+                show: function(v) { return v.status == ST.STATUS_INIT_INT || v.status == ST.STATUS_PASS_INT || v.status == ST.STATUS_REJECT_INT; },
                 handle: function(v) {
-                    if (v.status == 1 || v.status == 2) {
+                    if (v.status == ST.STATUS_SIGN_INT || v.status == ST.STATUS_DISABLE_INT) {
                         return false;
                     }
 
@@ -363,9 +367,9 @@ jQuery(function($) {
                 name: "状态",
                 type: "switch",
                 clazz: "status-lbl",
-                show: function(v) { return v.status == 2 || v.status == 3 || v.status == 4; },
+                show: function(v) { return v.status == ST.STATUS_DISABLE_INT || v.status == ST.STATUS_PASS_INT || v.status == ST.STATUS_REJECT_INT; },
                 init: function(v) {
-                    return v.status == 0 || v.status == 3 || v.status == 4;
+                    return v.status == ST.STATUS_INIT_INT || v.status == ST.STATUS_PASS_INT || v.status == ST.STATUS_REJECT_INT;
                 },
                 handle: function(v, check) {
                     if (!check) {
