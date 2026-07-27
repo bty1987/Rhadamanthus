@@ -51,7 +51,7 @@ jQuery(function($) {
 
             com.post(api.data.updateFormatForStatus, {
                 "format.fid": v.fid,
-                "format.status": v.status == constant.data().format.status.STATUS_ENABLE_INT ? constant.data().format.status.STATUS_DISABLE_INT : constant.data().format.status.STATUS_ENABLE_INT
+                "format.status": v.status == constant.data().format.STATUS_ENABLE_INT ? constant.data().format.STATUS_DISABLE_INT : constant.data().format.STATUS_ENABLE_INT
             }, function(res) {
 
                 com.showAlert(com.info, "操作成功");

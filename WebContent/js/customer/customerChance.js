@@ -316,7 +316,7 @@ jQuery(function($) {
         if (customerChance.depage == "user" || customerChance.depage == "designer")
             $disable.append($disableI).append($disableS).appendTo(customerChance.items.infolist);
 
-        customerChance.userRule.status == constant.customer().customerUserRule.status.STATUS_ENABLE_INT ? $enable.hide() : $disable.hide();
+        customerChance.userRule.status == constant.customer().customerUserRule.STATUS_ENABLE_INT ? $enable.hide() : $disable.hide();
     }
 
     // if (customerChance.depage != "source")

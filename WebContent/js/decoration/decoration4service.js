@@ -95,7 +95,7 @@ jQuery(function($) {
         clazz: "btn-yellow",
         show: function(v) {
 
-            return v.status == constant.decoration().decorationService.status.STATUS_INIT_INT;
+            return v.status == constant.decoration().decorationService.SERVICESTATUS_INIT_INT;
         }, // 只在状态为0时显示
         handle: function(v) {
 

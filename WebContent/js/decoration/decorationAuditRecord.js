@@ -462,7 +462,7 @@ $(function() {
                         delAuditScale(v.asid);
                     });
                     if (auditRecord.auditStatusType == 'admin') {
-                        if (v.status == constant.decoration().decorationAuditScale.status.STATUS_INIT_INT) {
+                        if (v.status == constant.decoration().decorationAuditScale.STATUS_INIT_INT) {
                             $divBtnWrap.append($confirm);
                         }
                         $divBtnWrap.append($btnDel).appendTo($h3);

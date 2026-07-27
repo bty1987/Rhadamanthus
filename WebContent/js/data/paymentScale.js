@@ -138,9 +138,9 @@ $(function() {
                 deletePaymentScale(v.psid);
             });
 
-            v.status == constant.data().common.status.STATUS_ENABLE_INT && $statusSwitch.prop("checked", true);
+            v.status == constant.data().common.STATUS_ENABLE_INT && $statusSwitch.prop("checked", true);
 
-            $statusSwitch.prop("checked", v.status == constant.data().common.status.STATUS_ENABLE_INT ? true : false).switchBtn("status-lbl").on("click", function() {
+            $statusSwitch.prop("checked", v.status == constant.data().common.STATUS_ENABLE_INT ? true : false).switchBtn("status-lbl").on("click", function() {
 
                 updateStatus(v.psid, $statusSwitch.prop("checked") ? 0 : 1);
             });

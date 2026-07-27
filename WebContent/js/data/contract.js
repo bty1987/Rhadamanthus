@@ -124,7 +124,7 @@ jQuery(function($) {
         },
         show: function(v) {
 
-            return v.status == constant.data().common.status.STATUS_ENABLE_INT;
+            return v.status == constant.data().common.STATUS_ENABLE_INT;
         }
     }, {
         name: "状态",
