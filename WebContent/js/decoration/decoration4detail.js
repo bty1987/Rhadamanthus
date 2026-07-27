@@ -1077,10 +1077,13 @@ jQuery(function($) {
             var manageRate = 0;
             var trafficRate = 0;
             var taxRate = 0;
+            var quotationDiscount = 0;
             // 通过订单编号获取默认报价信息
             com.post(api.quotation.queryQuotationForDefaultByOrderId, {
                 "quotation.orderId": decorationDetail.orderId
             }, function(res) {
+
+                quotationDiscount = res.quotation.discount;
 
                 if (res.quotation.manageRate != null && res.quotation.manageRate != 0) {
                     manageRate = res.quotation.manageRate;
@@ -1114,6 +1117,12 @@ jQuery(function($) {
             var manageDiscount = decorationMaching.manageDiscount;
             var trafficDiscount = decorationMaching.trafficDiscount;
             var taxDiscount = decorationMaching.taxDiscount;
+
+            // 校验:选择的折扣不能小于默认报价折扣(数值越小折扣越低)
+            if (parseInt(discount) < parseInt(quotationDiscount)) {
+                com.showAlert(com.warning, "折扣不能小于报价折扣");
+                return false;
+            }
 
             if (decorationDetail.notSalesmanRate < 1) {
                 manageRate = parseFloat(manageRate) + parseFloat(decorationDetail.notSalesmanRate);
