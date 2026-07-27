@@ -21,6 +21,9 @@
 
     var Constant = function() {
 
+        // 预置模块清单：init() 重建访问器、preload() 并发预取，均以此为准。
+        var MODULES = ["data", "customer", "decoration", "quotation", "construction", "salary", "sales", "payment", "information", "right", "inventory", "personel", "balance", "approval", "system", "building"];
+
         // 模块数据容器：constant[module] -> { load: bool, <clazz>: {...} }
         // load 标志位用于判断该模块是否已发起过 queryConstant 请求，避免重复请求。
         //
@@ -251,7 +254,7 @@
                 // 将 constant 重建为按需加载的模块访问器。
                 // 重建会丢弃旧的数据对象（含上一家公司缓存），实现切公司失效。
                 // 新访问器函数无 "load" 标志，handle() 首次访问会重新拉取当前公司数据。
-                $.each(["data", "customer", "decoration", "quotation", "construction", "salary", "sales", "payment", "information", "right", "inventory", "personel", "balance", "approval", "system", "building"], function(i, module) {
+                $.each(MODULES, function(i, module) {
 
                     constant[module] = function() {
                         return handle(module);
@@ -264,6 +267,29 @@
                 loadConstructionNodes({ async: false });
 
                 window.console && window.console.log && console.log("%cConstant Config Ready 常量配置就绪", "color:#0a0; font-size:1em");
+            },
+            /**
+             * 并发异步预取所有模块常量。
+             *
+             * 用途：登录后/切公司后调用，在用户点击菜单进入业务页面之前，把 16 个模块的常量
+             *      并发异步拉到内存。配合菜单点击时的 module() 预取（index.js），让业务页面
+             *      真正访问 constant.<module>() 时大概率命中 load=true 的同步缓存分支，零阻塞。
+             *
+             * 安全前提：调用时机必须在业务页面加载之前（如登录回调末尾）。异步预取期间
+             *           load 标志已置位但数据可能尚未填满，此时同步访问会拿到未填满对象，
+             *           故仅用于"确定业务尚未访问该模块"的窗口。
+             *
+             * @param opts.modules 可选，指定要预取的模块子集；默认全部 MODULES
+             */
+            preload: function(opts) {
+
+                opts = opts || {};
+
+                var modules = opts.modules || MODULES;
+
+                $.each(modules, function(i, module) {
+                    handle(module, null, null, { async: true });
+                });
             },
             module: function(module, opts) {
 
