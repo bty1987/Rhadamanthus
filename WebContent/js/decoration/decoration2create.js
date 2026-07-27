@@ -171,7 +171,7 @@ jQuery(function($) {
 
         $.each(res.decorationBusitypes, function(intex, value) {
 
-            if (value.status == 0) {
+            if (value.status == constant.data().decorationBusitype.status.STATUS_ACTIVATE) {
                 orderEntry.decorationBusitypes.push(value);
             }
         });
@@ -182,7 +182,7 @@ jQuery(function($) {
 
         $.each(res.decorationAtttypes, function(i, v) {
 
-            if (v.status == 0) {
+            if (v.status == constant.decoration().decorationAtttype.status.STATUS_ENABLE_INT) {
                 orderEntry.type[v.key] = v.type;
                 orderEntry.decorationAtttypes.push(v);
             }

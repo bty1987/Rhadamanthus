@@ -404,7 +404,7 @@ jQuery(function($) {
 
         $.each(res.decorationAtttypes, function(i, v) {
 
-            if (v.status == 0) {
+            if (v.status == constant.decoration().decorationAtttype.status.STATUS_ENABLE_INT) {
                 decorationDetail.type[v.key] = v.type;
                 decorationDetail.decorationAtttypes.push(v);
             }
@@ -672,7 +672,7 @@ jQuery(function($) {
             for ( var i = 0; i < decorationActivitys.length; i++) {
                 var decorationActivity = decorationActivitys[i];
 
-                if (decorationActivity.status == 1) {
+                if (decorationActivity.status == constant.decoration().decorationActivity.status.STATUS_LOCK_INT) {
                     continue;
                 }
 
@@ -1452,7 +1452,7 @@ jQuery(function($) {
 
             $.each(res.decorationBusitypes, function(intex, value) {
 
-                if (value.status == 0) {
+                if (value.status == constant.data().decorationBusitype.status.STATUS_ACTIVATE) {
                     decorationDetail.decorationBusitypes.push(value);
                 } else if (value.dbid == decoration.busitype) {
                     decorationDetail.decorationBusitypes.push(value);
@@ -2105,6 +2105,7 @@ jQuery(function($) {
         var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
         var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
 
+        // customerPhone.status: 启停开关。库无 customerPhone 专属常量, 待后续补录。
         var $btnStauts = $('<input />').attr("type", "checkbox").prop("disabled", true).addClass('ace ace-switch ace-switch-5').attr("checked", v.status == 0 ? true : false);
         var $btnSpan = $('<span></span>').addClass("lbl status-lbl");
 
@@ -2272,6 +2273,8 @@ jQuery(function($) {
             return;
         }
 
+        // customer.status: 0=初始 1=认证 2=已认证（CustomerPO）。库 customer.customer.status 未登记，
+        // 待 customer 模块批次补录后改为 constant.customer().customer.status.STATUS_INIT_INT。
         decorationDetail.customer.status == 0 ? url = api.data.updateCustomer : url = api.data.updateCustomerForBase;
 
         var options = {
@@ -2361,6 +2364,9 @@ jQuery(function($) {
 
     function saveDecorationUser() {
 
+        // decorationUser.status 此处非业务枚举, 而是前端"新增/更新"流程标志:
+        // 0=尚未持久化(走新增 addDecorationUser), 非0=已存在(走更新 updateDecorationUser)。
+        // DecorationUserPO 无 status 字段, 故保留字面量, 不走业务常量。
         if (decorationDetail.decorationUser.status == 0 && com.validate('form')) {
             return false;
         }

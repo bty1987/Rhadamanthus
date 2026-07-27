@@ -91,6 +91,7 @@ $(function() {
 
                 var salesReceipt = v.salesReceipt;
 
+                // v.status 为销售单状态(跨 sales 模块), 对象与常量归属待确认, 暂保留。
                 if (v.status == 0)
                     return true;
 
