@@ -11,7 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "market_campaign", catalog = "market")
+@Table(name = "marketcampaign", catalog = "market")
 public class MarketCampaignPO implements Serializable {
 
 	private static final long serialVersionUID = -2956356807957074557L;

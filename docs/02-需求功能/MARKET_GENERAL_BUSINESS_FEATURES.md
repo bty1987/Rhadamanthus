@@ -70,10 +70,10 @@
 
 | 对象 | 表名建议 | 说明 |
 | --- | --- | --- |
-| `MarketContent` | `market_content` | 通用内容, 支持文章/案例/评价/视频/FAQ |
-| `MarketMaterial` | `market_material` | 素材库, 图片/视频/文件统一管理 |
-| `MarketProfile` | `market_profile` | 人员/门店/品牌主页 |
-| `MarketRegion` | `market_region` | 区域、城市、门店服务范围 |
+| `MarketContent` | `marketcontent` | 通用内容, 支持文章/案例/评价/视频/FAQ |
+| `MarketMaterial` | `marketmaterial` | 素材库, 图片/视频/文件统一管理 |
+| `MarketProfile` | `marketprofile` | 人员/门店/品牌主页 |
+| `MarketRegion` | `marketregion` | 区域、城市、门店服务范围 |
 
 内容类型建议:
 
@@ -103,11 +103,11 @@
 
 | 对象 | 表名建议 | 说明 |
 | --- | --- | --- |
-| `MarketCampaign` | `market_campaign` | 活动主表 |
-| `MarketCampaignPage` | `market_campaign_page` | 活动页配置 |
-| `MarketCampaignForm` | `market_campaign_form` | 活动表单定义 |
-| `MarketCampaignItem` | `market_campaign_item` | 活动权益/商品/内容项 |
-| `MarketCampaignRecord` | `market_campaign_record` | 活动行为记录 |
+| `MarketCampaign` | `marketcampaign` | 活动主表 |
+| `MarketCampaignPage` | `marketcampaignpage` | 活动页配置 |
+| `MarketCampaignForm` | `marketcampaignform` | 活动表单定义 |
+| `MarketCampaignItem` | `marketcampaignitem` | 活动权益/商品/内容项 |
+| `MarketCampaignRecord` | `marketcampaignrecord` | 活动行为记录 |
 
 状态建议:
 
@@ -137,10 +137,10 @@
 
 | 对象 | 表名建议 | 说明 |
 | --- | --- | --- |
-| `MarketChannel` | `market_channel` | 渠道定义 |
-| `MarketSource` | `market_source` | 推广来源/二维码/链接 |
-| `MarketAttribution` | `market_attribution` | 客资/机会/订单归因记录 |
-| `MarketCost` | `market_cost` | 渠道或活动成本 |
+| `MarketChannel` | `marketchannel` | 渠道定义 |
+| `MarketSource` | `marketsource` | 推广来源/二维码/链接 |
+| `MarketAttribution` | `marketattribution` | 客资/机会/订单归因记录 |
+| `MarketCost` | `marketcost` | 渠道或活动成本 |
 
 渠道类型建议:
 
@@ -174,9 +174,9 @@
 
 | 对象 | 表名建议 | 说明 |
 | --- | --- | --- |
-| `MarketInbound` | `market_inbound` | 表单入站快照和承接结果 |
-| `MarketInboundItem` | `market_inbound_item` | 自定义表单字段值 |
-| `MarketAttribution` | `market_attribution` | 活动/渠道与 Customer 客资/机会/订单的归因映射 |
+| `MarketInbound` | `marketinbound` | 表单入站快照和承接结果 |
+| `MarketInboundItem` | `marketinbounditem` | 自定义表单字段值 |
+| `MarketAttribution` | `marketattribution` | 活动/渠道与 Customer 客资/机会/订单的归因映射 |
 
 入站主表建议字段:
 
@@ -230,10 +230,10 @@ Customer 已有画像和部分规则能力, 但 Market 的客群标签更偏行�
 
 | 对象 | 表名建议 | 说明 |
 | --- | --- | --- |
-| `MarketTag` | `market_tag` | 标签定义 |
-| `MarketAudience` | `market_audience` | 客群定义 |
-| `MarketAudienceItem` | `market_audience_item` | 客群成员 |
-| `MarketBlacklist` | `market_blacklist` | 黑名单 |
+| `MarketTag` | `markettag` | 标签定义 |
+| `MarketAudience` | `marketaudience` | 客群定义 |
+| `MarketAudienceItem` | `marketaudienceitem` | 客群成员 |
+| `MarketBlacklist` | `marketblacklist` | 黑名单 |
 
 ### 3.6 权益优惠
 
@@ -252,11 +252,11 @@ Customer 已有画像和部分规则能力, 但 Market 的客群标签更偏行�
 
 | 对象 | 表名建议 | 说明 |
 | --- | --- | --- |
-| `MarketBenefit` | `market_benefit` | 通用权益定义 |
-| `MarketBenefitPackage` | `market_benefit_package` | 礼包 |
-| `MarketBenefitUser` | `market_benefit_user` | 用户领取记录 |
-| `MarketBenefitUse` | `market_benefit_use` | 核销/使用记录 |
-| `MarketInvite` | `market_invite` | 邀请/裂变关系 |
+| `MarketBenefit` | `marketbenefit` | 通用权益定义 |
+| `MarketBenefitPackage` | `marketbenefitpackage` | 礼包 |
+| `MarketBenefitUser` | `marketbenefituser` | 用户领取记录 |
+| `MarketBenefitUse` | `marketbenefituse` | 核销/使用记录 |
+| `MarketInvite` | `marketinvite` | 邀请/裂变关系 |
 
 ### 3.7 触达通知
 
@@ -275,10 +275,10 @@ Customer 已有画像和部分规则能力, 但 Market 的客群标签更偏行�
 
 | 对象 | 表名建议 | 说明 |
 | --- | --- | --- |
-| `MarketNotice` | `market_notice` | 通知任务 |
-| `MarketTouch` | `market_touch` | 触达记录 |
-| `MarketTouchTemplate` | `market_touch_template` | 触达模板 |
-| `MarketTask` | `market_task` | 人工跟进任务 |
+| `MarketNotice` | `marketnotice` | 通知任务 |
+| `MarketTouch` | `markettouch` | 触达记录 |
+| `MarketTouchTemplate` | `markettouchtemplate` | 触达模板 |
+| `MarketTask` | `markettask` | 人工跟进任务 |
 
 ### 3.8 转化漏斗
 
@@ -301,9 +301,9 @@ Customer 已有画像和部分规则能力, 但 Market 的客群标签更偏行�
 
 | 对象 | 表名建议 | 说明 |
 | --- | --- | --- |
-| `MarketEvent` | `market_event` | 埋点事件 |
-| `MarketConversion` | `market_conversion` | 转化记录 |
-| `MarketFunnelDaily` | `market_funnel_daily` | 日维度聚合 |
+| `MarketEvent` | `marketevent` | 埋点事件 |
+| `MarketConversion` | `marketconversion` | 转化记录 |
+| `MarketFunnelDaily` | `marketfunneldaily` | 日维度聚合 |
 
 ### 3.9 数据看板
 
@@ -454,30 +454,30 @@ $.extend(api, {market: {
 
 ## 7. 数据库设计草案
 
-仍使用 `market` catalog, 新表统一使用 `market_` 前缀, 与旧表区分。
+仍使用 `market` catalog, 新表统一使用无下划线连续小写表名, 与项目现有 `card/cardphoto/cnotice` 等 market 表风格保持一致。
 
 ### 7.1 核心表
 
 | 表名 | 说明 | 优先级 |
 | --- | --- | --- |
-| `market_campaign` | 营销活动 | P0 |
-| `market_campaign_page` | 活动页配置 | P1 |
-| `market_campaign_form` | 活动表单定义 | P1 |
-| `market_channel` | 渠道 | P0 |
-| `market_source` | 推广来源/二维码/链接 | P0 |
-| `market_inbound` | 表单入站快照 | P0 |
-| `market_inbound_item` | 入站扩展字段 | P0 |
-| `market_attribution` | 活动/渠道归因映射 | P0 |
-| `market_content` | 内容资产 | P1 |
-| `market_material` | 素材资产 | P1 |
-| `market_tag` | 标签 | P2 |
-| `market_audience` | 客群 | P2 |
-| `market_benefit` | 权益 | P2 |
-| `market_event` | 行为事件 | P1 |
+| `marketcampaign` | 营销活动 | P0 |
+| `marketcampaignpage` | 活动页配置 | P1 |
+| `marketcampaignform` | 活动表单定义 | P1 |
+| `marketchannel` | 渠道 | P0 |
+| `marketsource` | 推广来源/二维码/链接 | P0 |
+| `marketinbound` | 表单入站快照 | P0 |
+| `marketinbounditem` | 入站扩展字段 | P0 |
+| `marketattribution` | 活动/渠道归因映射 | P0 |
+| `marketcontent` | 内容资产 | P1 |
+| `marketmaterial` | 素材资产 | P1 |
+| `markettag` | 标签 | P2 |
+| `marketaudience` | 客群 | P2 |
+| `marketbenefit` | 权益 | P2 |
+| `marketevent` | 行为事件 | P1 |
 
 ### 7.2 P0 表字段建议
 
-#### `market_campaign`
+#### `marketcampaign`
 
 | 字段 | 类型 | 说明 |
 | --- | --- | --- |
@@ -495,7 +495,7 @@ $.extend(api, {market: {
 | `updateTime` | timestamp | 更新时间 |
 | `company` | int | 公司 |
 
-#### `market_channel`
+#### `marketchannel`
 
 | 字段 | 类型 | 说明 |
 | --- | --- | --- |
@@ -508,7 +508,7 @@ $.extend(api, {market: {
 | `comment` | varchar(255) | 备注 |
 | `company` | int | 公司 |
 
-#### `market_source`
+#### `marketsource`
 
 | 字段 | 类型 | 说明 |
 | --- | --- | --- |
@@ -525,7 +525,7 @@ $.extend(api, {market: {
 | `status` | tinyint | 状态 |
 | `createTime` | timestamp | 创建时间 |
 
-#### `market_inbound`
+#### `marketinbound`
 
 | 字段 | 类型 | 说明 |
 | --- | --- | --- |
@@ -550,7 +550,7 @@ $.extend(api, {market: {
 | `updateTime` | timestamp | 更新时间 |
 | `company` | int | 公司 |
 
-#### `market_attribution`
+#### `marketattribution`
 
 | 字段 | 类型 | 说明 |
 | --- | --- | --- |
@@ -638,10 +638,10 @@ Customer 重点能力完整度复核:
 | 组件 | 职责 | 说明 |
 | --- | --- | --- |
 | `MarketCustomerBridgeService` | Market 到 Customer 的唯一承接适配层 | 统一封装创建客资、创建机会、写画像、发放积分、查询售后结果等动作, 避免 Market Service 直接散落调用 Customer DAO |
-| `market_inbound` | 原始入站和承接状态 | 保存提交快照、幂等键、失败原因、重试次数、承接后的 `csid/ccid/orderId` |
-| `market_attribution` | 营销归因映射 | 保存 `campaignId/sourceId/miid` 与 Customer 生产对象的引用, 支撑后续 ROI 和漏斗统计 |
-| `market_audience_item` | 客群成员引用 | 只保存 `cid/csid/ccid/orderId/unionId/phoneHash` 等引用或脱敏索引, 不复制客户主档案 |
-| `market_reward_grant` | 权益发放过程 | 记录营销规则命中、待发放、已发放、失败重试; 真正账户流水仍走 Customer/Store 适配 |
+| `marketinbound` | 原始入站和承接状态 | 保存提交快照、幂等键、失败原因、重试次数、承接后的 `csid/ccid/orderId` |
+| `marketattribution` | 营销归因映射 | 保存 `campaignId/sourceId/miid` 与 Customer 生产对象的引用, 支撑后续 ROI 和漏斗统计 |
+| `marketaudienceitem` | 客群成员引用 | 只保存 `cid/csid/ccid/orderId/unionId/phoneHash` 等引用或脱敏索引, 不复制客户主档案 |
+| `marketrewardgrant` | 权益发放过程 | 记录营销规则命中、待发放、已发放、失败重试; 真正账户流水仍走 Customer/Store 适配 |
 
 开发保护线:
 
@@ -766,9 +766,9 @@ MarketCampaign/MarketChannel/MarketSource
 | 前置项 | 要求 |
 | --- | --- |
 | 错误码 | 在 `docs/03-API文档/API/error.md` 登记 `390xxx` Market 错误码, 保持同码同文案 |
-| 数据库 | 在 `dbs/market.sql` 追加新表, 只新增 `market_` 前缀表, 不修改 Customer 生产表 |
+| 数据库 | 在 `dbs/market.sql` 追加新表, 新增表名使用无下划线连续小写形式, 不修改 Customer 生产表 |
 | 敏感数据 | Market 入站手机号使用 `SensitiveDataHelper.encrypt()` 或等价现有敏感数据工具, 页面展示只返回脱敏值 |
-| 幂等键 | `market_inbound` 需要保存 `idempotentKey` 或等价字段, 建议由 `company + campaignId + sourceId + phoneHash + 时间窗` 生成 |
+| 幂等键 | `marketinbound` 需要保存 `idempotentKey` 或等价字段, 建议由 `company + campaignId + sourceId + phoneHash + 时间窗` 生成 |
 | 承接状态 | 至少支持待承接、承接成功、承接失败、重试中、忽略, 失败原因必须回写 |
 | Customer 适配 | 新增 `MarketCustomerBridgeService`, 所有写 Customer 的动作集中在此服务, Market 其他 Service 不直接写 Customer |
 | 权限边界 | 后台管理接口走登录权限; C 端 `addMarketInbound` 可匿名但必须支持验证码、防刷和频控 |
@@ -799,7 +799,7 @@ MarketCampaign/MarketChannel/MarketSource
 ### 11.7 建议的执行顺序
 
 1. 先登记 `390xxx` 错误码和 P0 API 文档。
-2. 新增 `market_campaign/market_channel/market_source/market_inbound/market_inbound_item/market_attribution` 表结构。
+2. 新增 `marketcampaign/marketchannel/marketsource/marketinbound/marketinbounditem/marketattribution` 表结构。
 3. 按现有 market 分层补齐 PO/VO/DAO/Service/Action。
 4. 新增 `MarketCustomerBridgeService`, 只在该服务中调用 Customer 承接接口。
 5. 补 `WebContent/js/api/market.js` API 映射和最轻后台页面。
@@ -902,7 +902,7 @@ P0 最小可交付建议只做以下接口:
 ## 15. 开发注意事项
 
 1. 旧功能不要直接删除: `Ecase/Ecustomer/Eperson/Card` 仍保留, 后续通过迁移脚本或适配层逐步归并。
-2. 新表统一 `market_` 前缀, 避免与现有短表名混杂。
+2. 新表统一使用无下划线连续小写表名, 避免与现有 market 短表名风格冲突。
 3. 普通业务 Action 遵守 `throws FLException`, 不在 Action 层本地 `catch (Exception)`。
 4. Service 写操作添加 `@Transactional(rollbackFor = Exception.class)`。
 5. 手机号、邮箱等敏感字段尽量不在 Market 长期保存; 必须保存入站快照时需加密或脱敏, Customer 主数据复用 `SensitiveDataHelper` 现有逻辑。

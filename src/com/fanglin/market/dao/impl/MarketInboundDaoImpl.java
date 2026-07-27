@@ -44,7 +44,7 @@ public class MarketInboundDaoImpl extends DaoImpl<MarketInboundPO> implements Ma
 	@Override
 	public int countMarketInboundForCampaign(long campaignId, short status, int company) {
 
-		String sql = "select count(*) from market.market_inbound where campaignId = :campaignId and status = :status and company = :company";
+		String sql = "select count(*) from market.marketinbound where campaignId = :campaignId and status = :status and company = :company";
 		BigInteger count = (BigInteger) session().createSQLQuery(sql).setLong("campaignId", campaignId).setShort("status", status).setInteger("company", company).uniqueResult();
 
 		return count.intValue();
@@ -53,7 +53,7 @@ public class MarketInboundDaoImpl extends DaoImpl<MarketInboundPO> implements Ma
 	@Override
 	public int countMarketInboundForChannel(long channelId, short status, int company) {
 
-		String sql = "select count(*) from market.market_inbound where channelId = :channelId and status = :status and company = :company";
+		String sql = "select count(*) from market.marketinbound where channelId = :channelId and status = :status and company = :company";
 		BigInteger count = (BigInteger) session().createSQLQuery(sql).setLong("channelId", channelId).setShort("status", status).setInteger("company", company).uniqueResult();
 
 		return count.intValue();

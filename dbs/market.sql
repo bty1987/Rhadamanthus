@@ -121,8 +121,8 @@ CREATE TABLE `epicture` (
   PRIMARY KEY (`epid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=196 DEFAULT CHARSET=utf8_general_ci ROW_FORMAT=Compact COMMENT='图片表';
 
-DROP TABLE IF EXISTS `market_campaign`;
-CREATE TABLE `market_campaign` (
+DROP TABLE IF EXISTS `marketcampaign`;
+CREATE TABLE `marketcampaign` (
   `mcid` int(11) NOT NULL AUTO_INCREMENT COMMENT '活动ID',
   `name` varchar(128) NOT NULL COMMENT '活动名称',
   `type` tinyint(2) NOT NULL DEFAULT 0 COMMENT '活动类型',
@@ -141,8 +141,8 @@ CREATE TABLE `market_campaign` (
   KEY `indextwo` (`ownerId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8_general_ci ROW_FORMAT=Compact COMMENT='营销活动';
 
-DROP TABLE IF EXISTS `market_channel`;
-CREATE TABLE `market_channel` (
+DROP TABLE IF EXISTS `marketchannel`;
+CREATE TABLE `marketchannel` (
   `mchid` int(11) NOT NULL AUTO_INCREMENT COMMENT '渠道ID',
   `name` varchar(64) NOT NULL COMMENT '渠道名称',
   `type` tinyint(2) NOT NULL DEFAULT 0 COMMENT '渠道类型',
@@ -156,8 +156,8 @@ CREATE TABLE `market_channel` (
   KEY `indextwo` (`ownerId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8_general_ci ROW_FORMAT=Compact COMMENT='营销渠道';
 
-DROP TABLE IF EXISTS `market_source`;
-CREATE TABLE `market_source` (
+DROP TABLE IF EXISTS `marketsource`;
+CREATE TABLE `marketsource` (
   `msid` int(11) NOT NULL AUTO_INCREMENT COMMENT '来源ID',
   `channelId` int(11) NOT NULL COMMENT '渠道ID',
   `campaignId` int(11) NOT NULL COMMENT '活动ID',
@@ -177,8 +177,8 @@ CREATE TABLE `market_source` (
   KEY `indextwo` (`company`, `channelId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8_general_ci ROW_FORMAT=Compact COMMENT='营销来源';
 
-DROP TABLE IF EXISTS `market_inbound`;
-CREATE TABLE `market_inbound` (
+DROP TABLE IF EXISTS `marketinbound`;
+CREATE TABLE `marketinbound` (
   `miid` int(11) NOT NULL AUTO_INCREMENT COMMENT '入站ID',
   `inboundNo` varchar(64) NOT NULL COMMENT '入站编号',
   `name` varchar(64) NULL COMMENT '姓名/称呼',
@@ -211,8 +211,8 @@ CREATE TABLE `market_inbound` (
   KEY `indexfive` (`phoneHash`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8_general_ci ROW_FORMAT=Compact COMMENT='营销入站';
 
-DROP TABLE IF EXISTS `market_inbound_item`;
-CREATE TABLE `market_inbound_item` (
+DROP TABLE IF EXISTS `marketinbounditem`;
+CREATE TABLE `marketinbounditem` (
   `miiid` int(11) NOT NULL AUTO_INCREMENT COMMENT '入站扩展项ID',
   `miid` int(11) NOT NULL COMMENT '入站ID',
   `fieldKey` varchar(64) NOT NULL COMMENT '字段键',
@@ -222,8 +222,8 @@ CREATE TABLE `market_inbound_item` (
   KEY `indextwo` (`fieldKey`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8_general_ci ROW_FORMAT=Compact COMMENT='营销入站扩展字段';
 
-DROP TABLE IF EXISTS `market_attribution`;
-CREATE TABLE `market_attribution` (
+DROP TABLE IF EXISTS `marketattribution`;
+CREATE TABLE `marketattribution` (
   `maid` int(11) NOT NULL AUTO_INCREMENT COMMENT '归因ID',
   `campaignId` int(11) NOT NULL DEFAULT 0 COMMENT '活动ID',
   `sourceId` int(11) NOT NULL DEFAULT 0 COMMENT '来源ID',
