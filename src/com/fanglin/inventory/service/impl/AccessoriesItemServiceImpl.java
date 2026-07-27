@@ -281,15 +281,17 @@ public class AccessoriesItemServiceImpl implements AccessoriesItemService {
 			throw new FLException(260024, "辅料单状态不可操作");
 		}
 
-		if (accessoriesPO.getType() == AccessoriesPO.TYPE_POST_INT) { // 售后类型辅料单不需要处理工程单和工程辅料
-			return 0;
-		}
-
 		long total = Arith.mul(accessoriesItemPO.getSelling(), accessoriesItemPO.getNum());
 
 		accessoriesPO.setTotal(Arith.sub(accessoriesPO.getTotal(), total));
 
 		accessoriesDao.update(accessoriesPO);
+
+		accessoriesItemDao.delete(accessoriesItemPO); // 删除前置,与 addAccessoriesItem 对称,确保售后类型辅料单也能删除
+
+		if (accessoriesPO.getType() == AccessoriesPO.TYPE_POST_INT) { // 售后类型辅料单不需要处理工程单和工程辅料
+			return 0;
+		}
 
 		ConstructionPO constructionPO = constructionDao.queryConstructionByOrderId(accessoriesPO.getOrderId());
 
@@ -304,8 +306,6 @@ public class AccessoriesItemServiceImpl implements AccessoriesItemService {
 
 			constructionAccessoryDao.update(constructionAccessoryPO);
 		}
-
-		accessoriesItemDao.delete(accessoriesItemPO);
 
 		return 0;
 	}
