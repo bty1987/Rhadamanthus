@@ -799,7 +799,7 @@ jQuery(function($) {
             "data-status": v.status
         });
 
-        if (v.status == constant.information().vpayment.status.STATUS_PAYED_INT) {
+        if (v.status == constant.information().vpayment.STATUS_PAYED_INT) {
             $("<li></li>").append($("<strong></strong>").text("时间:")).append($("<b></b>").addClass("blue").text(v.createTime)).appendTo(ul);
             $("<li></li>").append($("<strong></strong>").text("状态:")).append($("<b></b>").addClass("red").text("已付款")).appendTo(ul);
             return false;
@@ -831,7 +831,7 @@ jQuery(function($) {
                 var ptid = paytran.ptid;
                 var posul = com.focusPage("#pos" + ptid);
 
-                if (paytran.status == constant.payment().paytran.status.STATUS_INIT_INT)
+                if (paytran.status == constant.payment().paytran.STATUS_INIT_INT)
                     return false;
 
                 if (paytran.status != 1) {

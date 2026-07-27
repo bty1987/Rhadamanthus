@@ -324,7 +324,7 @@ jQuery(function($) {
         },
         show: function(v) {
 
-            return salary.pageType != "checker" && v.status == constant.salary().salary.status.STATUS_INIT_INT;
+            return salary.pageType != "checker" && v.status == constant.salary().salary.STATUS_INIT_INT;
         }
 
     }, {
@@ -337,7 +337,7 @@ jQuery(function($) {
         },
         show: function(v) {
 
-            return salary.pageType != "checker" && v.status == constant.salary().salary.status.STATUS_PASS_INT;
+            return salary.pageType != "checker" && v.status == constant.salary().salary.STATUS_PASS_INT;
         }
     }, {
         name: "撤销",
@@ -349,7 +349,7 @@ jQuery(function($) {
         },
         show: function(v) {
 
-            return salary.pageType != "checker" && v.status == constant.salary().salary.status.STATUS_INIT_INT;
+            return salary.pageType != "checker" && v.status == constant.salary().salary.STATUS_INIT_INT;
         }
     }, {
         name: "发送通知",
@@ -361,7 +361,7 @@ jQuery(function($) {
         },
         show: function(v) {
 
-            return salary.pageType != "checker" && v.isSend == 0 && v.status == constant.salary().salary.status.STATUS_PASS_INT;
+            return salary.pageType != "checker" && v.isSend == 0 && v.status == constant.salary().salary.STATUS_PASS_INT;
         }
     }, {
         name: "取消通知",

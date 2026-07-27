@@ -171,7 +171,7 @@ jQuery(function($) {
 
         $.each(res.decorationBusitypes, function(intex, value) {
 
-            if (value.status == constant.data().decorationBusitype.status.STATUS_ACTIVATE) {
+            if (value.status == constant.data().decorationBusitype.STATUS_ACTIVATE) {
                 orderEntry.decorationBusitypes.push(value);
             }
         });

@@ -48,12 +48,12 @@ jQuery(function($) {
             status: {
                 type: "switch",
                 clazz: "status-lbl",
-                init: function(v) { return v.status == constant.approval().process.status.STATUS_ENABLE_INT; },
+                init: function(v) { return v.status == constant.approval().process.STATUS_ENABLE_INT; },
                 handle: function(v, checked) {
 
                     com.post(api.approval.updateProcessForStatus, {
                         "process.pid": v.pid,
-                        "process.status": v.status == constant.approval().process.status.STATUS_ENABLE_INT ? constant.approval().process.status.STATUS_DISABLE_INT : constant.approval().process.status.STATUS_ENABLE_INT
+                        "process.status": v.status == constant.approval().process.STATUS_ENABLE_INT ? constant.approval().process.STATUS_DISABLE_INT : constant.approval().process.STATUS_ENABLE_INT
                     }, function(res) {
 
                         searcher.doSearch();

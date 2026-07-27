@@ -125,7 +125,7 @@ $(function() {
 
             $.each(res.balanceDccountes, function(i, v) {
 
-                if (v.status == constant.balance().balanceDccount.status.STATUS_VALID_SHORT) {
+                if (v.status == constant.balance().balanceDccount.STATUS_VALID_SHORT) {
 
                     balanceDccountes.push(v);
                 }
@@ -145,7 +145,7 @@ $(function() {
 
             $.each(res.balanceCutpays, function(i, v) {
 
-                if (v.status == constant.balance().balanceCutpay.status.STATUS_INIT_INT) {
+                if (v.status == constant.balance().balanceCutpay.STATUS_INIT_INT) {
 
                     balanceCutpays.push(v);
                 }
