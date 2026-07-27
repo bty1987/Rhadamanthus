@@ -124,7 +124,7 @@ jQuery(function($) {
             var $sel = com.focusPage("#flowId");
 
             $.each(flows, function(i, f) {
-                if (f.status == 0) {
+                if (f.status == constant.data().common.status.STATUS_ENABLE_INT) {
                     $('<option></option>').val(f.flowId).text(f.name + " (" + f.code + ")").appendTo($sel);
                 }
             });

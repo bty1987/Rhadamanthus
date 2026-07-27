@@ -119,6 +119,12 @@ $(function() {
 
         Constant().init();
 
+        // 并发异步预取所有模块常量：在用户点击菜单进入业务页面之前，把 16 个模块的常量
+        // 一次性拉到内存。配合菜单点击时的 module() 预取，让业务页面访问 constant.<module>()
+        // 时大概率命中 load=true 的同步缓存分支，消除首次访问的同步阻塞。
+        // 安全：此时业务页面尚未加载，异步预取窗口内不会有同步访问。
+        Constant().preload();
+
         Condition = Condition(api);
         Condition.init('js/condition/');
 
@@ -439,6 +445,9 @@ $(function() {
             com.closePopup();
 
             Constant().init();
+
+            // 切公司后同样并发预取当前公司常量（init 已丢弃上一家公司缓存）
+            Constant().preload();
 
         }, null, false);
 

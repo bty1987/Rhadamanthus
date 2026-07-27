@@ -34,7 +34,7 @@ jQuery(function($) {
         }, {
             field: "status",
             name: "状态",
-            prop: function(v) { return v.status == 0 ? "启用" : "禁用"; },
+            prop: function(v) { return constant.data().common.status.keys[v.status]; },
             clazz: "red"
         }];
     })();
@@ -54,11 +54,11 @@ jQuery(function($) {
             status: {
                 type: "switch",
                 clazz: "status-lbl",
-                init: function(v) { return v.status == 0; },
+                init: function(v) { return v.status == constant.data().common.status.STATUS_ENABLE_INT; },
                 handle: function(v, checked) {
                     com.post(api.approval.updateApprovalFlowForStatus, {
                         "flow.flowId": v.flowId,
-                        "flow.status": v.status == 0 ? 1 : 0
+                        "flow.status": v.status == constant.data().common.status.STATUS_ENABLE_INT ? constant.data().common.status.STATUS_DISABLE_INT : constant.data().common.status.STATUS_ENABLE_INT
                     }, function(res) {
                         searcher.doSearch();
                     });
