@@ -727,7 +727,7 @@ $(function() {
             "constructionInfo.decoration.orderId": contract.orderId,
             "constructionInfo.finishTime": order.infoItems.finishTime.val(),
             "constructionInfo.keyTime": order.infoItems.keyTime.val() ? order.infoItems.keyTime.val() + " 00:00:00" : '',
-            "constructionInfo.designTime": order.infoItems.designTime.val() ? order.infoItems.designTime.val() + " 00:00:00" : '',
+            "constructionInfo.initDesignTime": order.infoItems.designTime.val() ? order.infoItems.designTime.val() + " 00:00:00" : '',
             "constructionInfo.drawlineTime": order.infoItems.drawlineTime.val() ? order.infoItems.drawlineTime.val() + " 00:00:00" : '',
             "constructionInfo.comment": order.infoItems.comment.val(),
             "constructionInfo.designPeriod": order.infoItems.designPeriod.val(),
