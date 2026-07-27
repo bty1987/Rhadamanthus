@@ -142,7 +142,7 @@ $(function() {
 
         $.each(res.decorationBusitypes, function(index, value) {
 
-            if (value.status == constant.data().decorationBusitype.status.STATUS_ACTIVATE) {
+            if (value.status == constant.data().decorationBusitype.STATUS_ACTIVATE) {
                 decorationBusitypes.push(value);
             }
             customerOrigine.decorationBusitypeList[value.dbid] = value.name;
@@ -158,7 +158,7 @@ $(function() {
 
         $.each(res.decorationBusitypes, function(index, value) {
 
-            if (value.status == constant.data().decorationBusitype.status.STATUS_ACTIVATE) {
+            if (value.status == constant.data().decorationBusitype.STATUS_ACTIVATE) {
                 decorationBusitypes.push(value);
             }
             customerOrigine.decorationBusitypeList[value.dbid] = value.name;

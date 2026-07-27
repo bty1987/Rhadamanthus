@@ -72,10 +72,10 @@ jQuery(function($) {
 				type: "switch",
 				clazz: "status-lbl",
 				init: function(v) {
-					return v.status == constant.data().common.status.STATUS_ENABLE_INT;
+					return v.status == constant.data().common.STATUS_ENABLE_INT;
 				},
 				handle: function(v, check) {
-					updateNodeStatus(v.bnid, check ? constant.data().common.status.STATUS_ENABLE_INT : constant.data().common.status.STATUS_DISABLE_INT);
+					updateNodeStatus(v.bnid, check ? constant.data().common.STATUS_ENABLE_INT : constant.data().common.STATUS_DISABLE_INT);
 				}
 			}
 		};

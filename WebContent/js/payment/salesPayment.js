@@ -251,7 +251,7 @@ $(function() {
 
             $.each(res.paytrans, function(i, pt) {
 
-                if (pt.status == constant.payment().paytran.status.STATUS_INIT_INT) {
+                if (pt.status == constant.payment().paytran.STATUS_INIT_INT) {
                     paytranId = pt.ptid;
                     paytranMoney = pt.money;
                     return false;
@@ -734,7 +734,7 @@ $(function() {
 
         var payment = salesPayment.payment;
 
-        if (salesPayment.collectType.contains(payment.type) && payment.status == constant.payment().payment.status.STATUS_INIT_INT) {
+        if (salesPayment.collectType.contains(payment.type) && payment.status == constant.payment().payment.STATUS_INIT_INT) {
             url = api.payment.collectSalesPayment;
 
             // 批量收款参数
@@ -754,7 +754,7 @@ $(function() {
             if (salesPayment.profit)
                 options["salesPayment.bompany"] = salesPayment.decoration.bompany;
 
-        } else if (salesPayment.refundType.contains(payment.type) && payment.status == constant.payment().payment.status.STATUS_INIT_INT) {
+        } else if (salesPayment.refundType.contains(payment.type) && payment.status == constant.payment().payment.STATUS_INIT_INT) {
             url = api.payment.refundSalesPayment;
             type = 1;
         } else if (payment.status == constant.payment().materialPayment.STATUS_COLLECT_INT) {

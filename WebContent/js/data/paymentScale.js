@@ -60,7 +60,7 @@ $(function() {
         var decorationBusitypes = [{key: -1, value: '通用'}];
 
         $.each(res.decorationBusitypes, function(intex, value) {
-            if (value.status == constant.data().decorationBusitype.status.STATUS_ACTIVATE) {
+            if (value.status == constant.data().decorationBusitype.STATUS_ACTIVATE) {
                 decorationBusitypes.push({"key": value.dbid, "value": value.name});
                 paymentScale.busitypes[value.dbid] = value.name;
             }

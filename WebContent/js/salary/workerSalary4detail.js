@@ -72,7 +72,7 @@ jQuery(function($) {
                     .append(addSpan('状态', workerSalary4detail.salaryStatus[v.status]));
 
                 // 状态为初始(0)的允许删除
-                if (v.status == constant.salary().salary.status.STATUS_INIT_INT) {
+                if (v.status == constant.salary().salary.STATUS_INIT_INT) {
                     $('<button>删除</button>')
                         .addClass("btn btn-xs btn-danger pull-right")
                         .css("margin-left", "15px")

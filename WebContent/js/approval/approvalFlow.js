@@ -54,11 +54,11 @@ jQuery(function($) {
             status: {
                 type: "switch",
                 clazz: "status-lbl",
-                init: function(v) { return v.status == constant.data().common.status.STATUS_ENABLE_INT; },
+                init: function(v) { return v.status == constant.data().common.STATUS_ENABLE_INT; },
                 handle: function(v, checked) {
                     com.post(api.approval.updateApprovalFlowForStatus, {
                         "flow.flowId": v.flowId,
-                        "flow.status": v.status == constant.data().common.status.STATUS_ENABLE_INT ? constant.data().common.status.STATUS_DISABLE_INT : constant.data().common.status.STATUS_ENABLE_INT
+                        "flow.status": v.status == constant.data().common.STATUS_ENABLE_INT ? constant.data().common.STATUS_DISABLE_INT : constant.data().common.STATUS_ENABLE_INT
                     }, function(res) {
                         searcher.doSearch();
                     });
