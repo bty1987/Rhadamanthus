@@ -149,6 +149,11 @@ public class A20260404ServiceImpl implements A20260404Service {
 			supplierPO.setPhone(phone);
 			supplierPO.setOldUserId(userId); // oldUserId = userId
 
+			// gender/identity 为 NOT NULL 且无默认值，外部同步数据不含这两项，给空串占位
+			// （与生产 user 表既有空串占位数据一致，不伪造性别/身份证信息）
+			supplierPO.setGender("");
+			supplierPO.setIdentity("");
+
 			// 设置默认密码
 			SystemConfigPO passwordConfig = systemConfigDao.querySystemConfig("password", company);
 			String defaultPassword = passwordConfig == null ? "helloworld" : passwordConfig.getValue();
