@@ -334,7 +334,7 @@ var paymentUtils = {
             "data-status": v.status
         });
 
-        if (v.status == 1 || v.status == 4) {
+        if (v.status == constant.payment().paytran.STATUS_SUCCESS_INT || v.status == constant.payment().paytran.STATUS_USED_INT) {
             $("<li></li>").append($("<strong></strong>").text("时间:")).append($("<b></b>").addClass("blue").text(v.createTime)).appendTo(ul);
             $("<li></li>").append($("<strong></strong>").text("状态:")).append($("<b></b>").addClass("red").text("已付款")).appendTo(ul);
             return false;

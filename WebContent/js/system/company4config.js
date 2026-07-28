@@ -218,7 +218,7 @@ jQuery(function ($) {
                         [data.name],
                         [data.no],
                         [data.type],
-                        [data.status == 1 ? "启用" : "禁用"]
+                        [constant.data().receiptType.status.keys[data.status]]
                     ];
                     break;
                 case 'systemConfig':

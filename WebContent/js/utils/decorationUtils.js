@@ -2143,7 +2143,7 @@ var decorationUtils = {
                     $liProperty.appendTo($ulProperty);
                 });
 
-                if (v.status == 0) {
+                if (v.status == constant.decoration().decorationService.STATUS_INIT_INT) {
                     $divBtnWrap.append($updateBtn);
                     $divBtnWrap.appendTo($h4);
                 }
