@@ -357,7 +357,7 @@ var decorationUtils = {
 
                 var salesReceipt = v.salesReceipt;
 
-                if (v.status == 0)
+                if (v.status == constant.payment().salesPayment.STATUS_INIT_INT)
                     return true;
                 if (v.sales.type == 1) {
                     v.sales.brand.name = v.sales.brand.name + '(补贴)';

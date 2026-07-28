@@ -77,7 +77,7 @@ $(function() {
                 [v.measurementunit,'grey'],
                 [v.unitprice,'blue'],
                 [v.quoteType.name,'red'],
-                [v.status == 0 ? "启用" : "禁用",'red']
+                [constant.data().common.status.keys[v.status],'red']
             ];
             $.each(propertyArr,function (i,v) {
                 var $cell = $('<div></div>').addClass('cell col-xs-2 '+v[1]+'').html(v[0]);

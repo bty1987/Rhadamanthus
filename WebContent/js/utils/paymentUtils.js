@@ -395,7 +395,7 @@ var paymentUtils = {
                 var ptid = paytran.ptid;
                 var posul = com.focusPage("#pos" + ptid);
 
-                if (paytran.status == 0)
+                if (paytran.status == constant.payment().paytran.STATUS_INIT_INT)
                     return false;
 
                 if (paytran.status != 1) {
@@ -555,7 +555,7 @@ var paymentUtils = {
             $.each(res.receiptTypes, function(i, v) {
 
                 if (v.type == 1) {
-                    if (v.status == 1) {
+                    if (v.status == constant.data().receiptType.STATUS_ENABLE_INT) {
                         payment.cash.push(v);
                         payment.cashUtil.push({
                             "key": v.no,
@@ -564,7 +564,7 @@ var paymentUtils = {
                     }
                     payment.cashInfo[v.no] = v.name;
                 } else if (v.type == 2) {
-                    if (v.status == 1) {
+                    if (v.status == constant.data().receiptType.STATUS_ENABLE_INT) {
                         payment.bank.push(v);
                         payment.posValues[v.no] = v;
                         payment.bankUtil.push({
@@ -574,7 +574,7 @@ var paymentUtils = {
                     }
                     payment.bankInfo[v.no] = v.name;
                 } else if (v.type == 3) {
-                    if (v.status == 1) {
+                    if (v.status == constant.data().receiptType.STATUS_ENABLE_INT) {
                         payment.checkv.push(v);
                         payment.checkvUtil.push({
                             "key": v.no,
@@ -1301,7 +1301,7 @@ var paymentUtils = {
 
                 paymentUtils.makeContract(rtid, paymentType, pdfoptions, customerName, receipt);
             });
-        } else if (paymentContract && paymentContract.status == 0) {
+        } else if (paymentContract && paymentContract.status == constant.payment().paymentContract.STATUS_VALID_INT) {
             $("#" + htmlFlag + "customerSign").show().unbind("click").click(function() {
 
                 paymentUtils.customerSign(paymentContract, params.payment.cid, pdfoptions.orderId, receipt.url);
