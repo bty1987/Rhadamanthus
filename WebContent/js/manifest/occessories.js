@@ -590,7 +590,7 @@ $(function() {
             if (occessoriesPictures && occessoriesPictures.length) {
                 $.each(occessoriesPictures, function(i, value) {
 
-                    if (value.status == 0) {
+                    if (value.status == constant.inventory().inventoryDrawing.STATUS_INIT_INT) {
                         appendGalleryElement("inventoryDrawing", value);
                     }
                 });

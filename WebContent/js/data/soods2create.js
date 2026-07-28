@@ -83,7 +83,7 @@ $(function() {
 
             var $btnCompile = $('<a></a>').addClass('btn btn-minier btn-yellow').html('编辑');
             var $btnDel = $('<a></a>').addClass('btn btn-minier btn-danger').html('删除');
-            var propertyArr = [["商品品牌: ", v.goods.brand, "blue"], ["商品品类: ", v.goods.category, "blue"], ["状态: ", v.status == 0 ? "有效" : "无效", "red"], ["数量: ", v.num, "blue"],
+            var propertyArr = [["商品品牌: ", v.goods.brand, "blue"], ["商品品类: ", v.goods.category, "blue"], ["状态: ", constant.data().soods.status.keys[v.status], "red"], ["数量: ", v.num, "blue"],
 
             ];
             $.each(propertyArr, function(index, value) {

@@ -21,7 +21,10 @@ public class CormricePO implements Serializable {
 
 	public static final String COLUMN_QCID_STR = "quotationCtem.qcid";
 
+	// 状态：0=有效 1=无效（前端 cormrice.js 的"有效/无效"显示）
 	public static final short STATUS_VALID_STR = 0;
+
+	public static final short STATUS_INVALID_STR = 1;
 
 	private long cpid;
 
