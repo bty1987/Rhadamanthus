@@ -61,7 +61,7 @@ jQuery(function ($) {
                 ["审批人:", v.auser.userName == null ? "无" : v.auser.userName, "grey"],
                 ["审批时间:", v.approveTime == null ? "无" : v.approveTime, "grey"],
                 ["金额:", v.salary, "grey"],
-                ["状态:", v.status == 0 ? "初始" : (v.status == 1 ? "已通过" : "已驳回"), "grey"]
+                ["状态:", constant.salary().salary.status.keys[v.status], "grey"]
             ];
 
             var $label = $('<label></label>');

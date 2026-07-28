@@ -40,7 +40,7 @@ $(function() {
                 var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-success pull-left').html('编辑');
                 var $btnUpdate = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').html('修改结算状态');
 
-                var balanceStatus = v.status == 0 ? "初始" : "已付款";
+                var balanceStatus = v.status == constant.inventory().purchaseBalance.STATUS_INIT_INT ? "初始" : "已付款";
 
                 var propertyArr = [["创建时间:", v.createTime, "green"], ["创建人:", v.creater.userName, "grey"], ["结算值:", v.balance, "blue"], ["状态:", balanceStatus, "red"], ["说明:", v.comment, "grey"]];
 
@@ -57,7 +57,7 @@ $(function() {
                 $liLine.append($h3).append($ulProperty);
 
                 if (params.manifest.purchaseBalance.balanceStatus != 2) {
-                    if (v.status == 0) {
+                    if (v.status == constant.inventory().purchaseBalance.STATUS_INIT_INT) {
                         $btnDiv.append($btnEdit).append($btnUpdate);
                     }
                 } else if (params.manifest.purchaseBalance.balanceStatus == 2) {
@@ -77,9 +77,9 @@ $(function() {
                     e.stopPropagation();
 
                     com.showConfirm('确定要修改为已付款状态?', function(index) {
-                        if (v.status == 1) {
+                        if (v.status == constant.inventory().purchaseBalance.STATUS_DONE_INT) {
                             com.showAlert(com.warning, '采购结算状态不可操作')
-                        } else if (v.status == 0) {
+                        } else if (v.status == constant.inventory().purchaseBalance.STATUS_INIT_INT) {
                             com.post(api.inventory.updatePurchaseBalanceForStatus, {
                                 "purchaseBalance.pbid": v.pbid,
                                 "purchaseBalance.status": v.status
@@ -161,7 +161,7 @@ $(function() {
                 column: [["创建时间:", "createTime"], ["创建人:", "creater.userName"], ["结算值:", "balance"], ["状态:", "status"], ["说明:", "comment"]],
                 list: data.purchaseBalances
             }, function(v) {
-                v.status = v.status == 0 ? "初始" : "已付款";
+                v.status = v.status == constant.inventory().purchaseBalance.STATUS_INIT_INT ? "初始" : "已付款";
             });
         }, function(e) {
             com.showAlert(com.error, e.errorMsg);

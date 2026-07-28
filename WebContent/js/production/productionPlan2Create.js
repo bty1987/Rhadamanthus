@@ -133,7 +133,7 @@ $(function(){
 
                 com.focusPage('#importProductionPlanExcel').removeClass('hide');
 
-                if(v.status == 1||v.status == 2){
+                if(v.status == constant.production().productionPlan.STATUS_FINISH_INT||v.status == constant.production().productionPlan.STATUS_INVALID_INT){
                     com.focusPage('#importProductionPlanExcel').addClass('hide');
                 }
 

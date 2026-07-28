@@ -36,7 +36,7 @@ jQuery(function($) {
         }, {
             field: "status",
             name: "状态",
-            prop: function(v) { return v.status == 0 ? "初始" : v.status == 1 ? "上线" : "下线"; },
+            prop: function(v) { return constant.system().upgradePackage.status.keys[v.status]; },
             clazz: "red"
         }, {
             field: "createTime",
@@ -77,7 +77,7 @@ jQuery(function($) {
             off: {
                 name: "下线",
                 clazz: "btn-yellow",
-                show: function(v) { return v.status == 1; },
+                show: function(v) { return v.status == constant.system().upgradePackage.STATUS_ONLINE_INT; },
                 handle: function(v) {
                     com.showConfirm("是否下线版本: " + v.no, function() {
                         com.post(api.upgrade.updateUpgradeForStatus, {

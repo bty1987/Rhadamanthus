@@ -25,7 +25,10 @@ public class PurchaseBalancePO implements Serializable{
 	private static final long serialVersionUID = -3855963119019395466L;
 	
 	public static final String COLUMN_PID_STR = "pid";
-	
+
+	// 结算状态：0=初始(未付款) 1=已付款(完结)
+	public static final short STATUS_INIT_INT = 0;
+
 	public static final short STATUS_DONE_INT = 1;
 
 	private long pbid;
