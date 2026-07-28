@@ -189,6 +189,7 @@ jQuery(function($) {
                 type: "switch",
                 clazz: "display-lbl",
                 init: function(v) {
+                    // ecase 启停: 1=启用 0=禁用(与 common.status 反逻辑), EcasePO 无 STATUS 枚举, 保留字面量
                     return v.status == 1;
                 },
                 handle: function(v, check) {
