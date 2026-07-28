@@ -142,7 +142,7 @@ $(function(){
                             $btnDiv.append($btnUpload);
                             break;
                         case "btnInstore"://入库
-                            if (v.status == 1) {
+                            if (v.status == constant.production().hardware.STATUS_PURCHASE_SHORT) {
                                 $btnDiv.append($btnInstore);
                             }
                             break;

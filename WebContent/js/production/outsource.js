@@ -154,7 +154,7 @@ $(function(){
 				outsource.items.oid = v.oid;
 				outsource.items.userId.val(v.supplier.userName).attr("disabled", "disabled");
 				var $TimeLimit = outsource.items.timeLimit.val(v.timeLimit);
-				v.status == 0 ? $TimeLimit.removeAttr("disabled", "disabled") : $TimeLimit.attr("disabled","disabled");
+				v.status == constant.production().outsource.STATUS_INIT_SHORT ? $TimeLimit.removeAttr("disabled", "disabled") : $TimeLimit.attr("disabled","disabled");
 				outsource.items.comment.val(v.comment);
 				outsource.modals.outsourceModal.modal("show");
 			});

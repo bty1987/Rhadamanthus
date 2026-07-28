@@ -125,12 +125,12 @@ $(function(){
                             $btnDiv.append($qrcode);
                         break;
                     case "btnIntstore"://仓储
-                        if (v.status == 0) {
+                        if (v.status == constant.production().tranpack.STATUS_INIT_SHORT) {
                             $btnDiv.append($btnInstore);
                         }
                         break;
                     case "btnReceipt"://物流
-                        if (v.status == 1) {
+                        if (v.status == constant.production().tranpack.STATUS_INSTORE_SHORT) {
                             $btnDiv.append($btnReceipt);
                         }
                         break;

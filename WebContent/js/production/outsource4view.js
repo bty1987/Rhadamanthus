@@ -128,12 +128,12 @@ $(function(){
                         $btnDiv.append($btnimport);
                         break;
                     case "btnReceipt"://审核
-                        if (v.status == 0) {
+                        if (v.status == constant.production().outsource.STATUS_INIT_SHORT) {
                             $btnDiv.append($btnReceipt);
                         }
                         break;
                     case "btnConfirm"://确认
-                        if (v.status == 1) {
+                        if (v.status == constant.production().outsource.STATUS_RECEIVE_SHORT) {
                             $btnDiv.append($btnConfirm);
                         }
                         break;

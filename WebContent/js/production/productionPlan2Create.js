@@ -73,7 +73,7 @@ $(function(){
             var remainDate = productionUtils.dateDiffer(v.createTime, v.timeLimit);//计算剩余工期
             var remainDay = 0 ;  //显示剩余工期
 
-            if(v.status == 1){
+            if(v.status == constant.production().productionPlan.STATUS_FINISH_INT){
                 remainDay = "订单已结束";
             }else if(remainDate < 0){
                 remainDay = "已超过期限"+Math.abs(remainDate)+"天";
@@ -87,7 +87,7 @@ $(function(){
                 ["楼盘地址:", v.production.house.village.name + " " + v.production.house.houseNumber, "grey"],
                 ["创建时间:", v.createTime, "green"],
                 ["完结时间:", v.finishTime == null ? "订单未完结" : v.finishTime, "green"],
-                ["状态:", v.status == 1 ? "完结" : "初始", "red"],
+                ["状态:", constant.production().productionPlan.status.keys[v.status], "red"],
                 ["工期:", v.timeLimit, "green"],
                 ["剩余时间:",remainDay,(remainDate < 5 ? "red":"green")],
             ];
@@ -99,7 +99,7 @@ $(function(){
                 $liProperty.appendTo($ulProperty);
             });
 
-            v.status == 0 ?
+            v.status == constant.production().productionPlan.STATUS_CREATE_INT ?
                 $btnDiv.append($btnSub).append($btnPrograss).append($btnUpload).append($btnFinish) :
                 $btnDiv.append($btnSub).append($btnPrograss).append($btnUpload);
             $h3.append($title).append($btnDiv);
