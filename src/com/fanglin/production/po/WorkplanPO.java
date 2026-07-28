@@ -25,7 +25,13 @@ public class WorkplanPO implements Serializable {
 
 	public static final String COLUMN_COMPANY_STR = "company";
 
+	// 启停状态：0=启用 1=禁用（前端 workplan.js 的"启用/禁用"开关）
+	// 注：COLUMN_STATUS_SHORT 为历史误命名，被 WorkplanDaoImpl 引用为"启用状态"查询条件，保留不动。
 	public static final short COLUMN_STATUS_SHORT = 0;
+
+	public static final short STATUS_ENABLE_SHORT = 0;
+
+	public static final short STATUS_DISABLE_SHORT = 1;
 
 	private long wpid;
 

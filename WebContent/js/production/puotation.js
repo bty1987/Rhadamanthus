@@ -80,7 +80,7 @@
                     ["创建时间:", v.createTime , "green"],
                     ["折让:", v.discount, "blue"],
                     ["总价:", v.total, "blue"],
-                    ["类型:", v.status == 0 ? "未使用" : "正使用", "red"],
+                    ["类型:", v.status == constant.production().puotation.STATUS_UNUSE_INT ? "未使用" : "正使用", "red"],
                     ["说明:", v.comment, "grey"],
                 ];
 
@@ -95,9 +95,9 @@
                 $liLine.append($h3).append($ulProperty);
 
                 if(puotation.status != 6 &&puotation.status != 7 && puotation.status != 8){
-                    if(v.status==0){
+                    if(v.status==constant.production().puotation.STATUS_UNUSE_INT){
                         $btnDiv.append($btnAdd).append($btnItem).append($btnDis).append($btnDelete).append($btnStatus).append($btnEdit);
-                    }else if(v.status==1){
+                    }else if(v.status==constant.production().puotation.STATUS_USING_INT){
                         $btnDiv.append($btnItem).append($btnStatus);
                     }
                 }else{
@@ -189,7 +189,7 @@
     };
 
     function statusPuotation(v) {
-        com.showConfirm("确定更改状态为" + (v.status == 0 ? "正使用" : "未使用"), function(){
+        com.showConfirm("确定更改状态为" + (v.status == constant.production().puotation.STATUS_UNUSE_INT ? "正使用" : "未使用"), function(){
             com.post(api.production.updatePuotationForDefault, {"puotation.qid": v.qid}, function () {
                 com.focusPage('#list ul.item-list').remove();
                 queryPuotationByPid(v.pid);

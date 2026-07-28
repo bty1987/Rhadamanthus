@@ -119,7 +119,7 @@ jQuery(function ($) {
             updateStatus(v.cid, 0);
             return false;
         }, show: function (v) {
-            return v.status == 1;
+            return v.status == constant.data().chating.STATUS_END_INT;
         }
     },
         {
@@ -127,7 +127,7 @@ jQuery(function ($) {
                 updateStatus(v.cid, 1);
                 return false;
             }, show: function (v) {
-                return v.status == 0;
+                return v.status == constant.data().chating.STATUS_START_INT;
             }
         },];
 

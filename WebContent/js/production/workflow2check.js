@@ -155,7 +155,7 @@ jQuery(function ($) {
             'data-wfid': data.workflow.wfid
         });
 
-        $lineInfoWrap1.find('div.status').text(data.workflow.status == 0 ? "启用":"禁用");
+        $lineInfoWrap1.find('div.status').text(constant.production().workflow.status.keys[data.workflow.status]);
         $lineInfoWrap1.find('div.name').text(data.workflow.name);
 
     }

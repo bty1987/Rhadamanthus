@@ -97,7 +97,7 @@ $(function(){
             del: {
                 name: "删除",
                 clazz: "btn-danger",
-                show: function(v) { return productionPlanItem.params.status == 0; },
+                show: function(v) { return productionPlanItem.params.status == constant.production().productionPlan.STATUS_CREATE_INT; },
                 handle: function(v) {
                     com.showConfirm("确定删除吗?", function() {
                         com.post(api.production.deleteProductionPlanItem, { "productionPlanItem.ppiid": v.ppiid }, function() {

@@ -2114,8 +2114,7 @@ jQuery(function($) {
         var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
         var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
 
-        // customerPhone.status: 启停开关。库无 customerPhone 专属常量, 待后续补录。
-        var $btnStauts = $('<input />').attr("type", "checkbox").prop("disabled", true).addClass('ace ace-switch ace-switch-5').attr("checked", v.status == 0 ? true : false);
+        var $btnStauts = $('<input />').attr("type", "checkbox").prop("disabled", true).addClass('ace ace-switch ace-switch-5').attr("checked", v.status == constant.customer().customerPhone.STATUS_ENABLE_INT ? true : false);
         var $btnSpan = $('<span></span>').addClass("lbl status-lbl");
 
         $divBtnWrap.append($btnStauts).append($btnSpan).appendTo($h3);

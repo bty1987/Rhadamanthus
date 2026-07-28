@@ -26,6 +26,11 @@ public class PuotationPO implements Serializable {
 
 	public static final String COLUMN_QID_STR = "qid";
 
+	// 报价状态：0=未使用 1=正使用（对应前端 puotation.js 的"未使用/正使用"文案）
+	public static final short STATUS_UNUSE_INT = 0;
+
+	public static final short STATUS_USING_INT = 1;
+
 	private Long qid;
 
 	private long pid;
