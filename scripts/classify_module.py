@@ -22,27 +22,21 @@ OUT = r"D:\ERP\Rhadamanthus\scripts\operation_module_map.tsv"
 RULES = [
     # ---- 通用/系统类 (mid=1 系统) 放最后兜底, 这里先排具体业务模块 ----
 
-    # 营销 / 大活动 / 卡券 (mid=338 营销, 380 大活动, 379 领劵)
-    # 大活动 = Vactivity/Vaward/Vprize/Vscore/Vticket/Vpayment/Vcustomer (VIP活动体系)
-    (380, "大活动", ["Vactivity", "Vaward", "Vprize", "Vscore", "Vticket",
-                    "Vpayment", "Vcustomer",
-                    "AwardStock", "AwardPurchase", "AwardRecord"]),
-    # 领劵/卡券 (mid=379) -- Coupon 卡券
-    (379, "领劵", ["Coupon"]),
-    # 营销 (mid=338) -- Ecase/Eperson/Eopinions/Ecity/Epicture/Cnotice/CardPhoto/Emember
-    #                  (营销案例/营销人员/口碑/站点/营销图片/营销通知/方片/会员)/
-    #                  Cart 购物车, Evaluate 评价, Behead 砍价, Muser 会员
+    # 营销 (mid=338 营销, system=1) -- 营销案例/人员/口碑/会员/购物车/评价/砍价
+    #   ★ 已吸收原 system=2 的: 大活动(380)/领券(379) 关键词
+    #   大活动 = Vactivity/Vaward/Vprize/Vscore/Vticket/Vpayment/Vcustomer (VIP活动体系)
+    #   领券 = Coupon/MuserCoupon (卡券体系)
     (338, "营销", ["Ecase", "Eperson", "Eopinions", "Ecity", "Epicture",
                    "Cnotice", "CardPhoto", "Emember", "Member", "Muser",
                    "Slide", "Background", "Macontrol",
-                   "Cart", "Evaluate", "Behead", "behead"]),
+                   "Cart", "Evaluate", "Behead", "behead",
+                   "Vactivity", "Vaward", "Vprize", "Vscore", "Vticket",
+                   "Vpayment", "Vcustomer",
+                   "AwardStock", "AwardPurchase", "AwardRecord",
+                   "Coupon"]),
 
-    # 招聘 (mid=672)
-    (672, "招聘", ["Recruitment"]),
-
-    # 厂商/供应商 (mid=524)
-    (524, "厂商", ["Supplier", "SupplierContract", "SupplierSignet",
-                   "BrandSupplier"]),
+    # 注: 招聘/供应商关键词已分别并入下方 mid=4(人事)/mid=227(主材) 的规则条目
+    #     原 system=2 的 672(招聘)/524(厂商)/380(大活动)/379(领券) 不再单独使用
 
     # 薪资 (mid=134) -- WorkerSalary 工人工费, Salary 薪资
     (134, "薪资", ["WorkerSalary", "SalaryDrawing", "Salary"]),
@@ -55,8 +49,9 @@ RULES = [
     (203, "仓储", ["Manifest", "Storehouse", "InventoryDrawing",
                    "GoodsStorehouseStock", "Purchase", "pagePurchase"]),
 
-    # 会计 (mid=103) -- Voucher 凭证, Subject 科目, AccountBook 账本, AccountItem
-    (103, "会计", ["Voucher", "Subject", "AccountBook", "AccountItem"]),
+    # 会计 (mid=103) -- Voucher 凭证, Subject 科目, AccountBook 账本
+    #    注意: 不含 AccountItem, 因 DecorationAccountItem(装修决算项)/SalesAccount 等属业务模块
+    (103, "会计", ["Voucher", "Subject", "AccountBook"]),
 
     # 国补 (mid=861)
     (861, "国补", ["Subsidy"]),
@@ -127,12 +122,16 @@ RULES = [
     #                    GoodsKind 商品类别, Category 分类
     #    说明: Soods(选材)/Selection(选材)/Noods(辅料定义)/Goods/Price/Color/Format
     #          在方林体系里属于"主材"域(商品池+选材+主材销售)
+    #          Supplier/SupplierContract/SupplierSignet/BrandSupplier 供应商
+    #          (原system=2的524厂商, 供应商主要服务于主材采购/选材/辅材)
     (227, "主材", ["Material", "Mpayment", "Morder", "Mbrand", "Mcategory",
                    "Mcolor", "Mformat", "Mgoods", "Mprice",
                    "Soods", "Selection", "Noods",
                    "Goods", "Price", "Color", "Format",
                    "GoodsKind", "GoodsPool", "GoodsRecord",
-                   "Category", "NormtimeItem"]),
+                   "Category", "NormtimeItem",
+                   "Supplier", "SupplierContract", "SupplierSignet",
+                   "BrandSupplier"]),
 
     # 销售 (mid=204) -- Sales 销售, Oales 销售单, SalesActivity 销售活动,
     #                    SalesDelivery 销售发货, SalesRefunds 销售退货,
@@ -204,11 +203,13 @@ RULES = [
     # 人事 (mid=4) -- User 人员, UserInfo, UserEducation, UserExperience,
     #                  UserContract 人员合同, UserPrefer, UserFunction,
     #                  UserOperation, UserCompany, DingTalk 钉钉同步,
-    #                  LoginInfo 登录信息, UserPartner
+    #                  LoginInfo 登录信息, UserPartner,
+    #                  Recruitment 招聘(原system=2的672, 招聘是人事核心子功能)
     (4, "人事", ["User", "DingTalk", "LoginInfo", "UserContract",
                  "UserPartner", "UserEducation", "UserExperience",
                  "UserOperation", "UserFunction", "UserCompany",
                  "UserInfo", "UserPrefer", "UserDept",
+                 "Recruitment",
                  "registUser", "authUser", "confirmUser", "quitUser",
                  "tranUser", "addUser", "updateUser", "queryUser",
                  "pageUser", "signUserContract", "affixUserContract",
