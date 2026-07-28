@@ -34,4 +34,8 @@ public interface RoleOperationDao extends Dao<RoleOperationPO> {
 
 	public int deleteRoleOperationByOId(int oId, Integer company);
 
+	public int deleteRoleOperation(int rid, List<Integer> companys);
+
+	public int syncRoleOperation(int rid, int cuid, List<Integer> companys, int company);
+
 }

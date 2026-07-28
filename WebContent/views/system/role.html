@@ -130,16 +130,20 @@
 
                 <div class="modal-body">
                     <form class="form-horizontal">
-                        <div class="form-group hide">
-                            <label class="col-sm-3 control-label no-padding-right" for="currentOperation">现有操作</label>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right">搜索</label>
                             <div class="col-sm-9">
-                                <div class="tags" style="border: 0px" id="currentOperation"></div>
+                                <input type="text" id="operationSearch" class="form-control" placeholder="输入操作名称关键字,自动过滤并展开匹配项">
                             </div>
                         </div>
                         <div class="space-4"></div>
                         <div class="form-group">
                             <label class="col-sm-3 control-label no-padding-right">操作</label>
-                            <div id="operation" class="tags" style="border: 0px"></div>
+                            <div class="col-sm-9">
+                                <div id="operationTree" style="max-height: 500px; overflow-y: auto; border: 1px solid #ddd; padding: 10px;">
+                                    <!-- 按模块分组的操作折叠面板将在这里动态生成 -->
+                                </div>
+                            </div>
                         </div>
                     </form>
                 </div>
@@ -359,6 +363,45 @@
 
                 <div class="modal-footer">
                     <button type="button" id="confirmTaskCopyBtn" class="btn btn-primary" data-i18n="page.system.label.confirmCopy">确认复制</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal" data-i18n="msg.cancel">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--操作复制弹窗-->
+    <div class="modal fade" id="operationCopyModal" tabindex="-1">
+        <div class="modal-dialog" style="width: 600px;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span>&times;</span>
+                        <span class="sr-only">Close</span>
+                    </button>
+                    <h4 class="modal-title">操作复制</h4>
+                    <span id="copyOperationRoleName" class="text-info"></span>
+                </div>
+                <div class="modal-body">
+                    <div class="form-horizontal">
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right" data-i18n="page.system.label.sourceRole">源角色</label>
+                            <div class="col-sm-9">
+                                <span class="form-control-static" id="sourceOperationRoleName"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right">目标公司</label>
+                            <div class="col-sm-9">
+                                <div id="operationCompanyList" style="max-height: 300px; overflow-y: auto; border: 1px solid #ddd; padding: 10px;">
+                                    <!-- 公司列表将在这里动态生成 -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" id="confirmOperationCopyBtn" class="btn btn-primary" data-i18n="page.system.label.confirmCopy">确认复制</button>
                     <button type="button" class="btn btn-default" data-dismiss="modal" data-i18n="msg.cancel">取消</button>
                 </div>
             </div>

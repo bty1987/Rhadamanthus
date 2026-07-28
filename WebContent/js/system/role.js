@@ -18,8 +18,8 @@ jQuery(function($) {
             taskList: com.focusPage("#taskList"),
             taskPermList: com.focusPage("#taskPermList"),
 
-            currentOperation: com.focusPage("#currentOperation"),
-            operation: com.focusPage("#operation"),
+            operation: com.focusPage("#operationTree"),
+            operationSearch: com.focusPage("#operationSearch"),
         },
 
         modals: {
@@ -30,6 +30,7 @@ jQuery(function($) {
             operationModal: com.focusPage("#operationModal"),
             taskModal: com.focusPage("#taskModal"),
             taskCopyModal: com.focusPage("#taskCopyModal"),
+            operationCopyModal: com.focusPage("#operationCopyModal"),
 
             chainPageModal: com.focusPage("#chainPageModal"),
             chartPageModal: com.focusPage("#chartPageModal"),
@@ -91,6 +92,7 @@ jQuery(function($) {
     com.focusPage("#confirmCopyBtn").on("click", confirmCopyModule);
     com.focusPage("#taskCopyBtn").on("click", showTaskCopySelectionModal);
     com.focusPage("#confirmTaskCopyBtn").on("click", confirmCopyTask);
+    com.focusPage("#confirmOperationCopyBtn").on("click", confirmCopyOperation);
 
     com.post(api.data.queryChainPage, {}, function(res) {
 
@@ -182,42 +184,13 @@ jQuery(function($) {
         });
     }, null, false);
 
-    com.post(api.system.queryOperationForSelf, {
-        'operation.system': 1,
-        'operation.type': 0,
-    }, function(data) {
+    // 操作配置: 全量操作列表缓存(首次打开弹窗时懒加载, 避免页面初始化即渲染上千DOM)
+    role.operationData = null;
 
-        $.each(data.operations, function(i, v) {
-
-            if (v.type != 0)
-                return true;
-
-            var $div = $('<div class="tag"></div>');
-
-            var $indexInput = $('<input/>').attr({
-                type: "checkbox",
-                value: v.name,
-                name: "operation",
-                "id": v.oid,
-                class: "ace",
-            }).val(v.oid);
-
-            var $span = $('<span></span>').html(v.name).addClass('lbl');
-
-            $indexInput.click(function() {
-
-                var ele = $(this);
-                var checked = ele.prop("checked");
-
-                com.post(checked ? api.system.updateRoleOperation : api.system.deleteRoleOperation, {
-                    "role.rid": role.rid,
-                    'operation.oid': ele.val()
-                });
-            })
-
-            $div.append($indexInput).append($span).appendTo(role.items.operation);
-        });
-    }, null, false);
+    // 操作搜索框: 实时按操作名称过滤, 匹配的模块组自动展开
+    role.items.operationSearch.on('input', function() {
+        filterOperationTree($(this).val());
+    });
 
     var lineprops = (function() {
 
@@ -315,6 +288,15 @@ jQuery(function($) {
                     showTaskCopySelectionModal();
                 }
             },
+            copyOperation: {
+                name: "操作复制",
+                clazz: "btn-default",
+                show: isAdvance,
+                handle: function(v) {
+                    role.rid = v.rid;
+                    showOperationCopySelectionModal();
+                }
+            },
             officeModule: {
                 name: "办公配置",
                 clazz: "btn-info",
@@ -332,28 +314,26 @@ jQuery(function($) {
                 handle: function(v) {
                     role.rid = v.rid;
 
-                    role.items.currentOperation.html("");
+                    // 清空搜索框
+                    role.items.operationSearch.val("");
 
-                    com.focusPage("input[type='checkbox']", "#operation").prop("checked", false);
-
-                    com.post(api.system.queryOperationByRid, {
-                        'operation.system': 1,
-                        "role.rid": v.rid
-                    }, function(data) {
-
-                        if (data.operations.length) {
-                            $.each(data.operations, function(i, v) {
-
-                                var $div = $('<div></div>').appendTo(role.items.currentOperation);
-                                var $span = $('<span class="tag"></span>').html(v.name).appendTo($div);
-
-                                com.focusPage("#" + v.oid, "#operation").prop("checked", true);
-
-                            });
-                        }
-                    }, null, false);
-
-                    role.modals.operationModal.modal('show');
+                    // 首次打开: 拉全量操作并按 module 分组渲染折叠面板; 后续打开复用缓存
+                    if (role.operationData) {
+                        resetOperationCheckState();
+                        loadRoleOperationCheckState(v.rid);
+                        role.modals.operationModal.modal('show');
+                    } else {
+                        role.items.operation.html('<div class="text-center"><i class="ace-icon fa fa-spinner fa-spin fa-2x"></i><p>正在加载操作列表...</p></div>');
+                        com.post(api.system.queryOperationForSelf, {
+                            'operation.system': 1,
+                            'operation.type': 0,
+                        }, function(data) {
+                            role.operationData = data.operations || [];
+                            renderOperationTree(role.operationData);
+                            loadRoleOperationCheckState(v.rid);
+                            role.modals.operationModal.modal('show');
+                        });
+                    }
                 }
             },
             chart: {
@@ -1903,6 +1883,310 @@ jQuery(function($) {
         // 清理滚动事件监听器，避免内存泄漏
         com.focusPage('#taskCompanyList').off('wheel mousewheel DOMMouseScroll');
     });
+
+    /**
+     * 显示操作复制弹窗, 加载目标公司列表
+     */
+    function showOperationCopySelectionModal() {
+        var roleName = '';
+        com.post(api.system.queryRole, {
+            "role.rid": role.rid
+        }, function(res) {
+            if (res.role) {
+                roleName = res.role.name;
+                com.focusPage('#sourceOperationRoleName').text(roleName);
+                com.focusPage('#copyOperationRoleName').text('从角色【' + roleName + '】复制操作到其他公司');
+            }
+
+            var operationCompanyList = com.focusPage('#operationCompanyList');
+
+            operationCompanyList.html('<div class="text-center"><i class="ace-icon fa fa-spinner fa-spin fa-2x"></i><p>正在加载公司列表...</p></div>');
+
+            com.post(api.system.queryCompany, {}, function(data) {
+
+                if (!data.companys || data.companys.length == 0) {
+                    operationCompanyList.html('<div class="text-center text-muted">暂无可选公司</div>');
+                    return false;
+                }
+
+                operationCompanyList.html("");
+
+                data.companys.forEach(function(company) {
+                    var item = $('<div class="company-item"></div>').appendTo(operationCompanyList);
+                    var label = $('<label class="checkbox-inline"></label>').appendTo(item);
+                    var input = $('<input type="checkbox" class="ace operation-company-checkbox" value="' + company.cid + '"></input>').appendTo(label);
+                    var span = $('<span class="lbl">' + company.name + '</span>').appendTo(label);
+
+                    label.click(function(e) {
+                        $(this).find("input").prop("checked", "checked");
+                        e.stopPropagation();
+                        return false;
+                    });
+                });
+            }, function() {
+                operationCompanyList.html('<div class="text-center text-danger">加载公司列表失败</div>');
+            });
+
+            role.modals.operationCopyModal.modal('show');
+        });
+    }
+
+    /**
+     * 确认操作复制操作
+     */
+    function confirmCopyOperation() {
+        var selectedCompanies = [];
+        com.focusPage('.operation-company-checkbox:checked').each(function() {
+            selectedCompanies.push($(this).val());
+        });
+
+        if (selectedCompanies.length === 0) {
+            com.showAlert(com.warning, '请至少选择一个目标公司');
+            return;
+        }
+
+        var $confirmBtn = com.focusPage('#confirmOperationCopyBtn');
+        $confirmBtn.prop('disabled', true).html('<i class="ace-icon fa fa-spinner fa-spin fa-1x"></i> 正在复制...');
+
+        var params = {
+            'role.rid': role.rid,
+            'companys[0].cid': selectedCompanies[0]
+        };
+
+        for (var i = 1; i < selectedCompanies.length; i++) {
+            params['companys[' + i + '].cid'] = selectedCompanies[i];
+        }
+
+        com.post(api.system.syncRoleOperation, params, function(data) {
+            $confirmBtn.prop('disabled', false).html('确认复制');
+
+            if (data.errorCode == 0) {
+                com.showAlert(com.info, '操作复制成功！');
+                role.modals.operationCopyModal.modal('hide');
+
+                setTimeout(function() {
+                    if (typeof searcher !== 'undefined') {
+                        searcher.doSearch();
+                    }
+                }, 500);
+            } else {
+                com.showAlert(com.error, data.errorMsg || '操作复制失败');
+            }
+        }, function(error) {
+            console.error('操作复制失败:', error);
+            com.showAlert(com.error, '操作复制失败，请重试');
+            $confirmBtn.prop('disabled', false).html('确认复制');
+        });
+    }
+
+    // 绑定操作复制弹窗的关闭事件，清理滚动事件监听器
+    com.focusPage('#operationCopyModal').on('hidden.bs.modal', function() {
+        com.focusPage('#operationCompanyList').off('wheel mousewheel DOMMouseScroll');
+    });
+
+    // ==================== 操作配置: 按 module 分组的折叠面板 ====================
+
+    /**
+     * 渲染操作树: 按 v.module.mid 分桶, 每个模块一个可折叠组, 组内为操作 checkbox.
+     * DOM 结构参照 #moduleNewTree 的 dd-list 模式 (二级: 模块组 -> 操作项).
+     */
+    function renderOperationTree(operations) {
+        var $wrap = role.items.operation.empty();
+        var $tree = $('<ol class="dd-list"></ol>').appendTo($wrap);
+
+        if (!operations || !operations.length) {
+            $wrap.html('<div class="text-center" style="padding: 50px; color: #999;">暂无操作数据</div>');
+            return;
+        }
+
+        // 按 module.mid 分桶; module 为空的归到"未分类"(mid=0)
+        var groups = {};
+        $.each(operations, function(i, v) {
+            if (v.type != 0) return true;
+            var mid = (v.module && v.module.mid) ? v.module.mid : 0;
+            var mname = (v.module && v.module.name) ? v.module.name : '未分类';
+            if (!groups[mid]) groups[mid] = { name: mname, items: [] };
+            groups[mid].items.push(v);
+        });
+
+        // 模块组按 mid 排序, "未分类"(mid=0) 排最后
+        var mids = Object.keys(groups).map(Number).sort(function(a, b) {
+            if (a === 0) return 1;
+            if (b === 0) return -1;
+            return a - b;
+        });
+
+        $.each(mids, function(i, mid) {
+            var group = groups[mid];
+            // 组内操作按 oid 排序
+            group.items.sort(function(a, b) { return a.oid - b.oid; });
+            $tree.append(createOperationModuleGroup(mid, group));
+        });
+    }
+
+    /**
+     * 创建一个模块折叠组: 标题行(展开按钮+模块名+计数+全选框) + 隐藏的操作列表容器.
+     */
+    function createOperationModuleGroup(mid, group) {
+        var $li = $('<li class="dd-item" data-mid="' + mid + '" data-level="1"></li>');
+        var $handle = $('<div class="dd-handle clearfix" style="padding: 6px 0;"></div>').appendTo($li);
+
+        // 展开/折叠按钮 (默认折叠)
+        var $toggle = $('<button type="button" class="btn btn-xs btn-info pull-left" style="margin-right: 5px;"><i class="ace-icon fa fa-plus"></i></button>').appendTo($handle);
+
+        // 模块全选框
+        var $groupCb = $('<input type="checkbox" class="ace operation-group-checkbox" value="' + mid + '">').appendTo($handle);
+        $('<span class="lbl" style="font-weight: bold; margin-left: 4px;">' + group.name + ' (' + group.items.length + ')</span>').appendTo($handle);
+
+        // 操作列表容器 (默认隐藏)
+        var $list = $('<ol class="dd-list operation-children hide" style="padding-left: 20px; margin-top: 4px;"></ol>').appendTo($li);
+
+        // 渲染组内操作项
+        $.each(group.items, function(i, v) {
+            $list.append(createOperationItem(v));
+        });
+
+        // 展开/折叠: 首次只切换显隐, 操作项已在 DOM 中(避免懒加载复杂度, 1343条分24组单组不大)
+        $toggle.on('click', function(e) {
+            e.stopPropagation();
+            var $icon = $(this).find('i');
+            if ($icon.hasClass('fa-plus')) {
+                $icon.removeClass('fa-plus').addClass('fa-minus');
+                $list.removeClass('hide');
+            } else {
+                $icon.removeClass('fa-minus').addClass('fa-plus');
+                $list.addClass('hide');
+            }
+        });
+
+        // 模块全选框: 勾选/取消 控制组内全部操作 (并触发各自入库)
+        $groupCb.on('click', function(e) {
+            e.stopPropagation();
+            var checked = $(this).prop('checked');
+            $list.find('input[name="operation"]').each(function() {
+                if ($(this).prop('checked') !== checked) {
+                    $(this).prop('checked', checked).trigger('change');
+                }
+            });
+        });
+
+        return $li;
+    }
+
+    /**
+     * 创建单个操作项: checkbox(实时入库) + 名称.
+     * 保留 name="operation" + value=oid, 兼容原 saveOperation 批量保存逻辑.
+     */
+    function createOperationItem(v) {
+        var $li = $('<li class="dd-item" data-oid="' + v.oid + '" style="display: inline-block; width: 50%; padding: 2px 0;"></li>');
+        var $cb = $('<input type="checkbox" class="ace" name="operation" id="' + v.oid + '">').val(v.oid).appendTo($li);
+        $('<span class="lbl">' + v.name + '</span>').appendTo($li);
+
+        // 实时入库: 勾选->updateRoleOperation, 取消->deleteRoleOperation (保留原有机制)
+        $cb.on('change', function() {
+            var checked = $(this).prop('checked');
+            com.post(checked ? api.system.updateRoleOperation : api.system.deleteRoleOperation, {
+                "role.rid": role.rid,
+                'operation.oid': $(this).val()
+            });
+            // 同步更新所在模块组全选框的三态
+            syncOperationGroupCheckbox($(this));
+        });
+
+        return $li;
+    }
+
+    /**
+     * 根据组内操作勾选状态, 更新模块组全选框.
+     */
+    function syncOperationGroupCheckbox($cb) {
+        var $group = $cb.closest('.dd-item[data-level="1"]');
+        var $groupCb = $group.find('> .dd-handle .operation-group-checkbox');
+        var $items = $group.find('> .operation-children input[name="operation"]');
+        var total = $items.length;
+        var checked = $items.filter(':checked').length;
+        $groupCb.prop('checked', total > 0 && checked === total);
+    }
+
+    /**
+     * 清空所有操作勾选状态 (打开新角色的弹窗前重置).
+     */
+    function resetOperationCheckState() {
+        role.items.operation.find('input[type="checkbox"]').prop('checked', false);
+    }
+
+    /**
+     * 拉取当前角色已选操作, 回填勾选状态.
+     */
+    function loadRoleOperationCheckState(rid) {
+        com.post(api.system.queryOperationByRid, {
+            'operation.system': 1,
+            "role.rid": rid
+        }, function(data) {
+            if (data.operations && data.operations.length) {
+                $.each(data.operations, function(i, v) {
+                    role.items.operation.find('#' + v.oid).prop('checked', true);
+                });
+                // 回填后, 同步每个模块组全选框状态
+                role.items.operation.find('.dd-item[data-level="1"]').each(function() {
+                    syncOperationGroupCheckbox($(this).find('input[name="operation"]').first());
+                });
+            }
+        });
+    }
+
+    /**
+     * 搜索过滤: 按操作名称匹配关键字, 命中的操作项高亮显示且其所在模块组自动展开,
+     * 未命中的操作项隐藏. 关键字为空时恢复全部显示并折叠所有组.
+     */
+    function filterOperationTree(keyword) {
+        keyword = $.trim(keyword || '').toLowerCase();
+        var $groups = role.items.operation.find('.dd-item[data-level="1"]');
+
+        if (!keyword) {
+            // 恢复: 全部操作显示, 全部组折叠
+            $groups.each(function() {
+                $(this).find('> .operation-children input[name="operation"]').closest('li').show();
+                collapseOperationGroup($(this));
+            });
+            return;
+        }
+
+        $groups.each(function() {
+            var $group = $(this);
+            var $items = $group.find('> .operation-children input[name="operation"]');
+            var hit = 0;
+            $items.each(function() {
+                var $li = $(this).closest('li');
+                var name = ($(this).next('.lbl').text() || '').toLowerCase();
+                if (name.indexOf(keyword) >= 0) {
+                    $li.show();
+                    hit++;
+                } else {
+                    $li.hide();
+                }
+            });
+            // 有命中的组展开显示, 无命中的组整组隐藏
+            if (hit > 0) {
+                $group.show();
+                expandOperationGroup($group);
+            } else {
+                $group.hide();
+            }
+        });
+    }
+
+    function expandOperationGroup($group) {
+        var $icon = $group.find('> .dd-handle button i');
+        $icon.removeClass('fa-plus').addClass('fa-minus');
+        $group.find('> .operation-children').removeClass('hide');
+    }
+
+    function collapseOperationGroup($group) {
+        var $icon = $group.find('> .dd-handle button i');
+        $icon.removeClass('fa-minus').addClass('fa-plus');
+        $group.find('> .operation-children').addClass('hide');
+    }
 
     // ==================== 弹窗蒙层残留兜底 ====================
     // Bootstrap 3 在 modal-body 动画期间被重渲染 / 重复 show / 异步 show 时机错乱时,
