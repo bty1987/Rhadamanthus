@@ -120,10 +120,13 @@ LogUtils.log(userId, "操作描述", "操作模块", 对象ID);
 - **三层同名**：Action/Service/DAO 同一操作方法名保持一致
 - **🔴 方法/接口排序约束**：新增方法**按前缀归类插入到同组合适位置**，禁止无脑追加到文件末尾。无论是 Action / Service / DAO，同一类内的方法排序大体遵循：
   ```
-  page → query → fetch → count → amount → add → create → update → batch → delete → (其他业务动词)
+  page → query → fetch → count → amount → add → create → update → batch → delete
   ```
   - **CRUD 前缀组**（固定顺序）：先读类（`page`/`query`/`fetch`/`count`/`amount`），再写类（`add`/`create`/`update`/`batch`/`delete`）
-  - **其他业务动词**（`submit`/`confirm`/`cancel`/`sign`/`approve` 等）：无强制先后，按业务流程/语义就近归组排序（如 `submit` 紧跟 `add`/`create` 之后，`cancel` 紧跟 `delete` 之前）
+  - **其他业务动词**（`submit`/`confirm`/`cancel`/`sign`/`approve`/`affirm`/`enable`/`disable`/`lock`/`reset` 等）**不是统一堆到末尾**，而是按其本质语义归入对应的读/增/改/删段就近排布：
+    - 属"增"类（新增/提交/发起）：`submit`/`approve`/`sign`（提交审批/签约）→ 跟在 `add`/`create` 段之后
+    - 属"改"类（确认/状态变更）：`confirm`/`affirm`/`enable`/`disable`/`lock`/`reset` → 跟在 `update`/`batch` 段之后
+    - 属"删"类（撤销/取消）：`cancel`/`refuse`/`reject` → 跟在 `delete` 段之前
   - 同前缀的多个方法，按 `By条件`/`For目的` 维度聚拢（如所有 `queryXxxByOrderId` 连续排布）
   - **目的**：便于定位、减少 review 时的跳转成本，避免文件末尾无限膨胀的同质方法堆
 - 示例：`queryDecorationByOrderId`、`pageSalesForBalanceByCompany`、`cancelMaterialPaymentForDeposit`
