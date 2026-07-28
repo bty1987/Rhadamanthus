@@ -61,7 +61,7 @@ $(function(){
                     props.push({
                         field: "status",
                         name: "状态",
-                        prop: function(v) { return v.status == 0 ? "初始" : "完结"; },
+                        prop: function(v) { return constant.production().productionPlan.status.keys[v.status]; },
                         clazz: "red"
                     });
                     break;
@@ -74,7 +74,7 @@ $(function(){
                         name: "订单剩余时间",
                         prop: function(v) {
                             var remainDate = productionUtils.dateDiffer(v.createTime, v.timeLimit);
-                            if (v.status == 1) {
+                            if (v.status == constant.production().productionPlan.STATUS_FINISH_INT) {
                                 return "订单已结束";
                             } else if (remainDate < 0) {
                                 return "已超过期限" + Math.abs(remainDate) + "天";
@@ -163,7 +163,7 @@ $(function(){
                     btns.finish = {
                         name: "完结",
                         clazz: "btn-inverse",
-                        show: function(v) { return v.status == 0; },
+                        show: function(v) { return v.status == constant.production().productionPlan.STATUS_CREATE_INT; },
                         handle: function(v) {
                             productionPlan.ppid = v.ppid;
                             productionPlan.modals.productionPlanFinishModal.modal("show");

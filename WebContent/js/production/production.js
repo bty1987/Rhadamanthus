@@ -268,7 +268,7 @@ $(function() {
                         }
                         break;
                     case "btnBind":// 绑定
-                        if (v.status == 0) {
+                        if (v.status == constant.production().production.STATUS_INIT_SHORT) {
                             $btnDiv.append($btnBind);
                         }
                         break;
@@ -298,12 +298,12 @@ $(function() {
                         }
                         break;
                     case "btnDesign":// 设计
-                        if (v.status == 0) {
+                        if (v.status == constant.production().production.STATUS_INIT_SHORT) {
                             $btnDiv.append($btnDesign);
                         }
                         break;
                     case "btnSplit":// 拆单
-                        if (v.status == 1) {
+                        if (v.status == constant.production().production.STATUS_DESIGN_SHORT) {
                             $btnDiv.append($btnSplit);
                         }
                         break;
@@ -358,7 +358,7 @@ $(function() {
                 var $Designer = production.updateItems.uDesigner.val(v.designer.userName);
                 var $Salesman = production.updateItems.uSalesman.val(v.salesman.userName);
                 var $Spliter = production.updateItems.uSpliter.val(v.spliter.userName);
-                v.status == 0 ? $Designer.removeAttr("disabled", "disabled") : $Designer.attr("disabled", "disabled");
+                v.status == constant.production().production.STATUS_INIT_SHORT ? $Designer.removeAttr("disabled", "disabled") : $Designer.attr("disabled", "disabled");
                 v.status != 0 && v.status != 1 ? $Salesman.attr("disabled", "disabled") : $Salesman.removeAttr("disabled", "disabled");
                 v.status != 0 && v.status != 1 ? $Spliter.attr("disabled", "disabled") : $Spliter.removeAttr("disabled", "disabled");
 

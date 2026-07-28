@@ -109,9 +109,9 @@ $(function (){
                 $liLine.append($h3).append($ulProperty);
 
                 if (queryHardware.productionStatus != 6 && queryHardware.productionStatus != 7) {
-                    if (v.status == 0){
+                    if (v.status == constant.production().hardware.STATUS_INIT_SHORT){
                         $btnDiv.append($btnEdit).append($btnUpload).append($btnHr)
-                    }else if (v.status == 1){
+                    }else if (v.status == constant.production().hardware.STATUS_PURCHASE_SHORT){
                         $btnDiv.append($btnEdit).append($btnUpload).append($btnHr).append($btnInstore)
                     }else if (v.status == 2){
                         $btnDiv.append($btnEdit).append($btnUpload).append($btnHr).append($btnFinish)
