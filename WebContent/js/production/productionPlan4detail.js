@@ -157,7 +157,7 @@ jQuery(function ($) {
 
             var propertyArr = [
                 ["工序 : ",v.workflow.name, "blue"],
-                ["操作状态 : ", v.status == 0 ? "初始" : "执行", "red"],
+                ["操作状态 : ", constant.production().productionWorkFlow.status.keys[v.status], "red"],
                 ["车间 : ", productionWorkPlan.workshop, "grey"],
                 v.operator.currentName != null ? ["操作人 : ", v.operator.currentName, "grey"] : []
             ];

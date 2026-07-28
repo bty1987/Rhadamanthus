@@ -68,7 +68,7 @@ $(function() {
 
             var $btnDel = $('<a></a>').addClass('btn btn-minier btn-success').html('删除');
 
-            var propertyArr = [["公共项单位: ", v.quotationCtem.unit.name, "gray"], ["定额单位: ", v.unit, "gray"], ["转换量: ", v.trannum, "blue"], ["工费: ", v.salary, "blue"], ["状态: ", v.status == 0 ? "有效" : "无效", "red"]];
+            var propertyArr = [["公共项单位: ", v.quotationCtem.unit.name, "gray"], ["定额单位: ", v.unit, "gray"], ["转换量: ", v.trannum, "blue"], ["工费: ", v.salary, "blue"], ["状态: ", constant.data().cormrice.status.keys[v.status], "red"]];
 
             $.each(propertyArr, function(index, value) {
 

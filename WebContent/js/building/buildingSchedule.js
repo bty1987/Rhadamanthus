@@ -392,11 +392,9 @@ jQuery(function($) {
 
         var statusDiv = com.focusPage("#" + sore + "Status").html("");
 
-        // buildingSchedule.status：0=初始 2=完结（BuildingSchedulePO.STATUS_INIT_SHORT/STATUS_FINISH_SHORT）
-        // 库里无 building.buildingSchedule 专属常量，且语义与 common.status(启用/禁用) 不符，故保留字面量。
-        if (buildingSchedules[sore].status == 0) {
+        if (buildingSchedules[sore].status == constant.building().buildingSchedule.STATUS_INIT_SHORT) {
             $("<span></span>").addClass("label label-success").text("初始").appendTo(statusDiv);
-        } else if (buildingSchedules[sore].status == 2) {
+        } else if (buildingSchedules[sore].status == constant.building().buildingSchedule.STATUS_END_SHORT) {
             $("<span></span>").addClass("label").text("完结").appendTo(statusDiv);
         }
     }

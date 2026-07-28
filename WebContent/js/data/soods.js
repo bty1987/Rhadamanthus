@@ -141,7 +141,7 @@ $(function() {
         }, {
             field: "status",
             name: "状态",
-            prop: function(v) { return v.status == 0 ? "有效" : "无效"; },
+            prop: function(v) { return constant.data().soods.status.keys[v.status]; },
             clazz: "red"
         }, {
             field: "type",
@@ -328,7 +328,7 @@ $(function() {
                 list: res.paging.data
             }, function(v) {
 
-                v.status = v.status == 0 ? "有效" : "无效";
+                v.status = constant.data().soods.status.keys[v.status];
             });
         });
     }
