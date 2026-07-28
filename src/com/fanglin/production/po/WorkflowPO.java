@@ -18,7 +18,14 @@ public class WorkflowPO implements Serializable {
 
 	public static final String COLUMN_WFID_STR = "wfid";
 
+	// 启停状态：0=启用 1=禁用（前端 workflow.js/workflow2check.js 的"启用/禁用"开关）
+	// 注：COLUMN_STATUS_STR 为历史误命名(实为 short=0 即启用值)，被 WorkflowDaoImpl/ServiceImpl
+	// 引用为"启用状态"查询条件，保留不动以免破坏现有逻辑；新增语义清晰的 STATUS_* 常量供后续使用。
 	public static final short COLUMN_STATUS_STR = 0;
+
+	public static final short STATUS_ENABLE_SHORT = 0;
+
+	public static final short STATUS_DISABLE_SHORT = 1;
 
 	public static final String COLUMN_NAME_STR = "name";
 

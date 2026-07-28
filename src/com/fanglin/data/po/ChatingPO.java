@@ -20,7 +20,10 @@ public class ChatingPO implements Serializable {
 
 	public static final String COLUMN_STATUS_STR = "status";
 
+	// 会话状态：0=开始 1=结束（前端 chating.js 的启停开关）
 	public static final short STATUS_START_INT = 0;
+
+	public static final short STATUS_END_INT = 1;
 
 	private long cid;
 
