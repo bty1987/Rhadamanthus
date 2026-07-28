@@ -23,12 +23,14 @@ public class CustomerFunctionRightAction extends BaseListAction {
 
 	@Autowired
 	private CustomerFunctionRightService customerFunctionRightService;
-	
+
 	private List<CustomerFunctionRightVO> customerFunctionRights;
-	
+
 	private CustomerFunctionRightVO customerFunctionRight;
-	
+
 	private List<Long> cfids;
+
+	private List<String> companys;
 	
 	@Action(value="queryCustomerFunctionRight", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String queryCustomerFunctionRight() throws FLException{
@@ -40,9 +42,17 @@ public class CustomerFunctionRightAction extends BaseListAction {
 	
 	@Action(value="updateCustomerFunctionRight", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String updateCustomerFunctionRight() throws FLException{
-		
+
 		customerFunctionRightService.updateCustomerFunctionRight(customerFunctionRight, cfids, queryCompany());
-		
+
+		return SUCCESS;
+	}
+
+	@Action(value = "syncCustomerFunctionRight", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String syncCustomerFunctionRight() throws FLException {
+
+		customerFunctionRightService.syncCustomerFunctionRight(customerFunctionRight, companys, queryCompany());
+
 		return SUCCESS;
 	}
 
@@ -70,6 +80,14 @@ public class CustomerFunctionRightAction extends BaseListAction {
 
 	public void setCfids(List<Long> cfids) {
 		this.cfids = cfids;
+	}
+
+	public List<String> getCompanys() {
+		return companys;
+	}
+
+	public void setCompanys(List<String> companys) {
+		this.companys = companys;
 	}
 
 }

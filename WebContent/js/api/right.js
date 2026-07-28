@@ -108,12 +108,18 @@ $.extend(api, {
         updateConstructionFunctionRight: {
             url: "updateConstructionFunctionRight.do"
         },
+        syncConstructionFunctionRight: {
+            url: "syncConstructionFunctionRight.do"
+        },
 
         queryCustomerFunctionRight: {
             url: "queryCustomerFunctionRight.do"
         },
         updateCustomerFunctionRight: {
             url: "updateCustomerFunctionRight.do"
+        },
+        syncCustomerFunctionRight: {
+            url: "syncCustomerFunctionRight.do"
         },
 
         querySalesDeliveryStatusRight: {

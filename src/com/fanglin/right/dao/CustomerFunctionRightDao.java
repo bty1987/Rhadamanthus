@@ -11,4 +11,8 @@ public interface CustomerFunctionRightDao extends Dao<CustomerFunctionRightPO> {
 
 	public int deleteCustomerFunctionRightByName(String name, Integer company);
 
+	public int deleteCustomerFunctionRight(String name, List<Integer> cids);
+
+	public void syncCustomerFunctionRight(String name, List<Integer> cids, Integer company);
+
 }

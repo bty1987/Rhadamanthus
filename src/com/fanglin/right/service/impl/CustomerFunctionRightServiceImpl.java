@@ -11,10 +11,12 @@ import org.springframework.transaction.annotation.Transactional;
 import com.fanglin.customer.dao.CustomerFunctionDao;
 import com.fanglin.customer.po.CustomerFunctionPO;
 import com.fanglin.customer.vo.CustomerFunctionVO;
+import com.fanglin.core.interceptor.FLException;
 import com.fanglin.right.dao.CustomerFunctionRightDao;
 import com.fanglin.right.po.CustomerFunctionRightPO;
 import com.fanglin.right.service.CustomerFunctionRightService;
 import com.fanglin.right.vo.CustomerFunctionRightVO;
+import com.fanglin.system.service.impl.CompanyServiceImpl;
 import com.fanglin.utils.BeanUtil;
 
 @Service("customerFunctionRightService")
@@ -50,20 +52,36 @@ public class CustomerFunctionRightServiceImpl implements CustomerFunctionRightSe
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public void updateCustomerFunctionRight(CustomerFunctionRightVO customerFunctionRightVO, List<Long> cfids, int company) {
-		
+
 		customerFunctionRightDao.deleteCustomerFunctionRightByName(customerFunctionRightVO.getName(), company);
-		
+
 		for (Long cfid : cfids) {
 			CustomerFunctionRightPO customerFunctionRightPO = new CustomerFunctionRightPO();
 			CustomerFunctionPO customerFunctionPO = customerFunctionDao.get(cfid);
-			
+
 			customerFunctionRightPO.setName(customerFunctionRightVO.getName());
 			customerFunctionRightPO.setCustomerFunction(customerFunctionPO);
 			customerFunctionRightPO.setCompany(company);
-			
+
 			customerFunctionRightDao.save(customerFunctionRightPO);
 		}
-		
+
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int syncCustomerFunctionRight(CustomerFunctionRightVO customerFunctionRightVO, List<String> companys, Integer company) throws FLException {
+
+		List<Integer> cids = new ArrayList<Integer>();
+
+		for (String cid : companys) {
+			cids.add(CompanyServiceImpl.decode(cid));
+		}
+
+		customerFunctionRightDao.deleteCustomerFunctionRight(customerFunctionRightVO.getName(), cids);
+		customerFunctionRightDao.syncCustomerFunctionRight(customerFunctionRightVO.getName(), cids, company);
+
+		return 0;
 	}
 
 }
