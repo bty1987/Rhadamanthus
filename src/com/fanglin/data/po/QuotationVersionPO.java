@@ -36,7 +36,10 @@ public class QuotationVersionPO implements Serializable {
 
 	public static final String COLUMN_STATUS_STR = "status";
 
+	// 状态：0=启用 1=禁用
 	public static final short STATUS_ENABLE_INT = 0;
+
+	public static final short STATUS_DISABLE_INT = 1;
 
 	private long qvId;
 

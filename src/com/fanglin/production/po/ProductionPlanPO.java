@@ -23,6 +23,8 @@ public class ProductionPlanPO implements Serializable {
 	public static final short STATUS_CREATE_INT = 0;//初始
 
 	public static final short STATUS_FINISH_INT = 1;//完结
+
+	public static final short STATUS_INVALID_INT = 2;//失效
 	
 	public static final String COLUMN_PID_STR = "production.pid";
 	
