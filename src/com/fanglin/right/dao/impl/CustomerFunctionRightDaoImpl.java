@@ -23,6 +23,16 @@ public class CustomerFunctionRightDaoImpl extends DaoImpl<CustomerFunctionRightP
 	}
 
 	@Override
+	public void syncCustomerFunctionRight(String name, List<Integer> cids, Integer company) {
+
+		StringBuffer syncsql = new StringBuffer("insert into platform.customerfunctionright (name, cfid, company) ");
+
+		syncsql.append("select cfr.name, cfr.cfid, co.cid from platform.customerfunctionright cfr, communion.company co where cfr.name = :name and cfr.company = :company and co.cid in :companys");
+
+		session().createSQLQuery(syncsql.toString()).setString("name", name).setInteger("company", company).setParameterList("companys", cids).setInteger("company", company).executeUpdate();
+	}
+
+	@Override
 	public int deleteCustomerFunctionRightByName(String name, Integer company) {
 
 		String sql = "delete from platform.customerfunctionright where name = :name and company = :company";
@@ -38,16 +48,6 @@ public class CustomerFunctionRightDaoImpl extends DaoImpl<CustomerFunctionRightP
 		session().createSQLQuery(sql).setString("name", name).setParameterList("companys", cids).executeUpdate();
 
 		return 0;
-	}
-
-	@Override
-	public void syncCustomerFunctionRight(String name, List<Integer> cids, Integer company) {
-
-		StringBuffer syncsql = new StringBuffer("insert into platform.customerfunctionright (name, cfid, company) ");
-
-		syncsql.append("select cfr.name, cfr.cfid, co.cid from platform.customerfunctionright cfr, communion.company co where cfr.name = :name and cfr.company = :company and co.cid in :companys");
-
-		session().createSQLQuery(syncsql.toString()).setString("name", name).setInteger("company", company).setParameterList("companys", cids).setInteger("company", company).executeUpdate();
 	}
 
 }
