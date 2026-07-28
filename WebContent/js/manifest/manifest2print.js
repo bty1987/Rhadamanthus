@@ -50,8 +50,8 @@ jQuery(function($) {
         var type = manifestTypes[commonInfo.type];
 
         var status;
-        (commonInfo.status == 0) && (status = "初始");
-        (commonInfo.status == 1) && (status = "已确认");
+        (commonInfo.status == constant.inventory().manifest.STATUS_INIT_INT) && (status = "初始");
+        (commonInfo.status == constant.inventory().manifest.STATUS_CONFIRM_INT) && (status = "已确认");
 
         var center = $("<center></center>").appendTo($("#manifestPrint"));
 

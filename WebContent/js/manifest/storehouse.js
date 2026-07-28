@@ -80,7 +80,7 @@ $(function () {
 
             $btnStart.click(function () {
 
-                if (v.status == 0) {
+                if (v.status == constant.inventory().storehouse.STATUS_ENABLE_INT) {
                     com.showAlert(com.warning, "已启用");
                     return false;
                 }
@@ -90,7 +90,7 @@ $(function () {
 
             $btnBan.click(function () {
 
-                if (v.status == 1) {
+                if (v.status == constant.inventory().storehouse.STATUS_DISABLE_INT) {
                     com.showAlert(com.warning, "已禁用");
                     return false;
                 }

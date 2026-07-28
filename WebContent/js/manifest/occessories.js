@@ -367,7 +367,7 @@ $(function() {
         },
         show: function(v) {
 
-            return v.status == 1;
+            return v.status == constant.inventory().occessories.STATUS_BIND_INT;
         }
     }, {
         name: "编辑",
@@ -387,7 +387,7 @@ $(function() {
         },
         show: function(v) {
 
-            return v.status == 0;
+            return v.status == constant.inventory().occessories.STATUS_INIT_INT;
         }
     }, {
         name: "填写结算额",
@@ -471,7 +471,7 @@ $(function() {
         },
         show: function(v) {
 
-            return v.status == 0 || (occessories.pageType == "bind" && v.status == 1);
+            return v.status == constant.inventory().occessories.STATUS_INIT_INT || (occessories.pageType == "bind" && v.status == constant.inventory().occessories.STATUS_BIND_INT);
         }
     }, {
         name: "完成",
@@ -545,7 +545,7 @@ $(function() {
         },
         show: function(v) {
 
-            return v.status == 0;
+            return v.status == constant.inventory().occessories.STATUS_INIT_INT;
         }
     }, {
         name: "打印",

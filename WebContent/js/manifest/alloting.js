@@ -19,7 +19,7 @@ jQuery(function ($) {
     com.post(api.inventory.queryStorehouseForSelf, {}, function (res) {
 
         $.each(res.storehouses, function (i, v) {
-            if (v.status == 0) {
+            if (v.status == constant.inventory().storehouse.STATUS_ENABLE_INT) {
                 manifest.storehouses.push(v);
             }
         });

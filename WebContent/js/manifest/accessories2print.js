@@ -26,7 +26,7 @@ jQuery(function($) {
         commonInfo["phone"] = data.decoration.supervisor.phone == null ? "---" : data.decoration.supervisor.phone;
     }, null, false);
 
-    if (_params.manifest.accessories.status == 1) {
+    if (_params.manifest.accessories.status == constant.inventory().accessories.STATUS_ADVANCE_INT) {
         com.post(api.inventory.queryAccessoriesItemByAid, {
             "accessoriesItem.aid": _params.manifest.accessories.aid
         }, function(res) {
@@ -88,7 +88,7 @@ jQuery(function($) {
         var designerReceiptTd = $('<td colspan="12" style="padding-left: 10px;"></td>').text('创  建  人: ' + commonInfo["creater"]);
         var createTd = $('<td colspan="4" style="padding-left: 10px;"></td>').text('创  建  人: ' + commonInfo["creater"]);
 
-        if (_params.manifest.accessories.status == 1) {
+        if (_params.manifest.accessories.status == constant.inventory().accessories.STATUS_ADVANCE_INT) {
             orderReceiptTr.append(anoTd).append(createrTd).append(totalTd);
             presonReceiptTr.append(statusTd).append(deptTd).append(phoneTd);
             msgReceiptTr.append(createTd).append(createTimeTd2);
@@ -110,7 +110,7 @@ jQuery(function($) {
 
             var outstorehouseName;
 
-            if (_params.manifest.accessories.status == 1) {
+            if (_params.manifest.accessories.status == constant.inventory().accessories.STATUS_ADVANCE_INT) {
                 outstorehouseName = "---";
             } else {
                 outstorehouseName = v.outstorehouse.name == null ? "---" : v.outstorehouse.name;
