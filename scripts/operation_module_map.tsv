@@ -1342,3 +1342,9 @@ oid	moduleId	moduleName	operation	name
 1538	237	工程	pageAoodsCharge	分页查询辅材收费
 1539	237	工程	queryConstructionCost	查询施工成本
 1540	237	工程	pageAoodsCost	分页查询辅材成本
+1541	5	数据	pageDuty	pageDuty
+1542	5	数据	updateDuty	updateDuty
+1543	7	信息	queryMessageByMid	queryMessageByMid
+1544	524	厂商	pageSalesForSupplier	pageSalesForSupplier
+1545	10	款项	pagePaymentContract	pagePaymentContract
+1546	237	工程	pageAccessoriesType	pageAccessoriesType
