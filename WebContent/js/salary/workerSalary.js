@@ -414,7 +414,7 @@ jQuery(function($) {
         },
         show: function(v) {
 
-            return salary.pageType != "checker" && v.decoration != null && v.decoration.orderId != null && v.status == 1;
+            return salary.pageType != "checker" && v.decoration != null && v.decoration.orderId != null && v.status == constant.salary().salary.STATUS_PASS_INT;
         }
     }, ];
 
