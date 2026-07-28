@@ -48,6 +48,47 @@
             </div>
         </div>
     </div>
+
+    <!-- 同步功能模态框 -->
+    <div class="modal fade" id="syncModal" tabindex="-1" data-backdrop="static">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span>&times;</span><span class="sr-only">Close</span>
+                    </button>
+                    <h4 class="modal-title">同步客户功能配置</h4>
+                </div>
+
+                <div class="modal-body">
+                    <form class="form-horizontal">
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">功能名称:</label>
+                            <div class="col-sm-9">
+                                <p class="form-control-static" id="syncFunctionName"></p>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right">目标公司</label>
+                            <div class="col-sm-9">
+                                <div id="companyList" style="max-height: 300px; overflow-y: auto; border: 1px solid #ddd; padding: 10px;">
+                                    <div class="text-center">
+                                        <i class="ace-icon fa fa-spinner fa-spin fa-2x"></i>
+                                        <p>正在加载公司列表...</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" id="syncConfirmBtn" class="btn btn-primary">确认同步</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <script type="text/javascript">

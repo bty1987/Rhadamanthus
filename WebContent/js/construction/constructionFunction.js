@@ -11,19 +11,25 @@ jQuery(function ($) {
     var constructionFunction = {
         modal: {
             apiModal: com.focusPage("#apiModal"),
+            syncModal: com.focusPage("#syncModal"),
         },
         btn: {
             apiBtn: com.focusPage("#apiBtn"),
+            syncConfirmBtn: com.focusPage("#syncConfirmBtn"),
         },
         items: {
             apiData: com.focusPage("#apiData"),
             condArrData: com.focusPage("#condArrData"),
             fieldData: com.focusPage("#fieldData"),
             functionData: com.focusPage("#functionData"),
+            syncFunctionName: com.focusPage("#syncFunctionName"),
+            companyList: com.focusPage("#companyList"),
         },
 
         name: {},
         cfids: [],
+        currentSyncKey: {},
+        companys: [],
     };
 
     // 页面分组列表(type=0)
@@ -38,12 +44,17 @@ jQuery(function ($) {
             var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
 
             var $btnView = $('<a></a>').addClass('btn btn-minier btn-yellow').html('配置');
+            var $btnSync = $('<a></a>').addClass('btn btn-minier btn-info').html('同步').css('margin-left', '5px');
 
-            $divBtnWrap.append($btnView).appendTo($h3);
+            $divBtnWrap.append($btnView).append($btnSync).appendTo($h3);
             $h3.appendTo($li.appendTo($ul));
 
             $btnView.on('click', function () {
                 apiConfig(v.name);
+            });
+
+            $btnSync.on('click', function () {
+                syncConfig(v.name, v.value);
             });
 
             $ul.appendTo(com.focusPage("#resultList"));
@@ -139,5 +150,86 @@ jQuery(function ($) {
             constructionFunction.modal.apiModal.modal("hide");
         });
     });
+
+    // ==================== 同步功能配置 ====================
+
+    // 同步配置: 打开弹窗并加载公司列表
+    function syncConfig(name, displayName) {
+        constructionFunction.currentSyncKey = name;
+        constructionFunction.items.syncFunctionName.html(displayName || name);
+        constructionFunction.items.companyList.html('<div class="text-center"><i class="ace-icon fa fa-spinner fa-spin fa-2x"></i><p>正在加载公司列表...</p></div>');
+        constructionFunction.modal.syncModal.modal("show");
+        loadCompanyList();
+    }
+
+    // 加载公司列表
+    function loadCompanyList() {
+        com.post(api.system.queryCompany, {}, function (res) {
+            constructionFunction.companys = res.companys || [];
+            renderCompanyList();
+        }, function () {
+            constructionFunction.items.companyList.html('<div class="text-center text-danger">加载公司列表失败</div>');
+        });
+    }
+
+    // 渲染公司列表
+    function renderCompanyList() {
+        if (!constructionFunction.companys || constructionFunction.companys.length === 0) {
+            constructionFunction.items.companyList.html('<div class="text-center text-muted">暂无可选公司</div>');
+            return;
+        }
+
+        constructionFunction.items.companyList.html("");
+
+        constructionFunction.companys.forEach(function (company) {
+            var item = $('<div class="company-item"></div>').appendTo(constructionFunction.items.companyList);
+            var label = $('<label class="checkbox-inline"></label>').appendTo(item);
+            var input = $('<input type="checkbox" class="ace company-checkbox" value="' + company.cid + '"></input>').appendTo(label);
+            var span = $('<span class="lbl">' + company.name + '</span>').appendTo(label);
+
+            label.click(function (e) {
+                $(this).find("input").prop("checked", "checked");
+                e.stopPropagation();
+                return false;
+            });
+        });
+    }
+
+    // 同步确认按钮点击事件
+    constructionFunction.btn.syncConfirmBtn.click(function () {
+        var selectedCompanies = [];
+        com.focusPage('.company-checkbox:checked').each(function () {
+            selectedCompanies.push($(this).val());
+        });
+
+        if (selectedCompanies.length === 0) {
+            com.showAlert(com.warning, "请至少选择一个目标公司");
+            return;
+        }
+
+        performSync(constructionFunction.currentSyncKey, selectedCompanies);
+    });
+
+    // 执行同步操作
+    function performSync(functionName, companys) {
+        var params = {
+            "constructionFunctionRight.name": functionName
+        };
+
+        $.each(companys, function (i, v) {
+            params["companys[" + i + "]"] = v;
+        });
+
+        com.post(api.right.syncConstructionFunctionRight, params, function (res) {
+            if (res.errorCode === 0) {
+                com.showAlert(com.info, "同步成功！");
+                constructionFunction.modal.syncModal.modal("hide");
+            } else {
+                com.showAlert(com.error, "同步失败：" + (res.errorMsg || "未知错误"));
+            }
+        }, function (res) {
+            com.showAlert(com.error, "同步请求失败：" + (res.errorMsg || "网络错误"));
+        });
+    }
 
 });
