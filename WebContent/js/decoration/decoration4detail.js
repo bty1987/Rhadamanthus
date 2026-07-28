@@ -2282,9 +2282,7 @@ jQuery(function($) {
             return;
         }
 
-        // customer.status: 0=初始 1=认证 2=已认证（CustomerPO）。库 customer.customer.status 未登记，
-        // 待 customer 模块批次补录后改为 constant.customer().customer.STATUS_INIT_INT。
-        decorationDetail.customer.status == 0 ? url = api.data.updateCustomer : url = api.data.updateCustomerForBase;
+        decorationDetail.customer.status == constant.customer().customer.STATUS_INIT_INT ? url = api.data.updateCustomer : url = api.data.updateCustomerForBase;
 
         var options = {
             "customer.cid": decorationDetail.customer.cid,

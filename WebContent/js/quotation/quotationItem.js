@@ -455,7 +455,7 @@ $(function() {
             }, function(v) {
 
                 v.discount = v.discount == 0 ? '不打折' : '打折';
-                v.status = v.status == 0 ? '启用' : '禁用';
+                v.status = constant.data().common.status.keys[v.status];
             });
         });
     });

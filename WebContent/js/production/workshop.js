@@ -72,7 +72,7 @@ $(function () {
 
             var propertyArr = [
                 [v.name,'grey'],
-                [v.status == 0 ? "启用" : "禁用",'red']
+                [constant.data().common.status.keys[v.status],'red']
             ];
 
             $.each(propertyArr, function (i, v) {
