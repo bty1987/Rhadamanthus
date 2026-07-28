@@ -118,6 +118,14 @@ LogUtils.log(userId, "操作描述", "操作模块", 对象ID);
 - **For目的**：范围/场景/角色/状态（`ForBalance`/`ForDeposit`/`ForPlatforPm`/`ForEnable`），与By条件区分
 - **业务动词**(CRUD表达不了时用)：`submit`/`confirm`/`cancel`/`sign`/`approve`/`affirm`/`enable`/`disable`/`bind`/`lock`/`reset` 等
 - **三层同名**：Action/Service/DAO 同一操作方法名保持一致
+- **🔴 方法/接口排序约束**：新增方法**按前缀归类插入到同组合适位置**，禁止无脑追加到文件末尾。无论是 Action / Service / DAO，同一类内的方法排序大体遵循：
+  ```
+  page → query → fetch → count → amount → add → create → update → batch → delete → (其他业务动词)
+  ```
+  - **CRUD 前缀组**（固定顺序）：先读类（`page`/`query`/`fetch`/`count`/`amount`），再写类（`add`/`create`/`update`/`batch`/`delete`）
+  - **其他业务动词**（`submit`/`confirm`/`cancel`/`sign`/`approve` 等）：无强制先后，按业务流程/语义就近归组排序（如 `submit` 紧跟 `add`/`create` 之后，`cancel` 紧跟 `delete` 之前）
+  - 同前缀的多个方法，按 `By条件`/`For目的` 维度聚拢（如所有 `queryXxxByOrderId` 连续排布）
+  - **目的**：便于定位、减少 review 时的跳转成本，避免文件末尾无限膨胀的同质方法堆
 - 示例：`queryDecorationByOrderId`、`pageSalesForBalanceByCompany`、`cancelMaterialPaymentForDeposit`
 - 详见：`docs/10-指南手册/METHOD_NAMING_CONVENTION.md`（含2963个方法名统计、动词频次表、缩写表）
 
