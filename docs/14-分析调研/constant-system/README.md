@@ -20,12 +20,10 @@
 | P1-b | constant 表去重 + 唯一约束 + 索引（SQL 脚本） | 📄 待 DBA 执行 | [P1-abc-cache-and-schema.md](batches/P1-abc-cache-and-schema.md) |
 | P1-c | ConstantPO 补 updateTime 映射 | ⏸️ 推迟（依赖 P1-b） | [P1-abc-cache-and-schema.md](batches/P1-abc-cache-and-schema.md) |
 | P2-a | 登录后并发预加载（消除首次访问竞态） | 🔴 已回退（破坏 condition） | [P2-preload-and-magic-numbers.md](batches/P2-preload-and-magic-numbers.md) |
-| P2-b | 收敛 status 0/1 魔法数（approval 模块示范） | ✅ approval/balance/building/decorationContract 已完成 | [P2-preload-and-magic-numbers.md](batches/P2-preload-and-magic-numbers.md) |
+| P2-b | 收敛 status 0/1 魔法数（全模块） | ✅ 主体完成（218→48，处理170处） | [P2-preload-and-magic-numbers.md](batches/P2-preload-and-magic-numbers.md) · [48处分类](batches/P2-b-residual-48-classification.md) |
 | P3 | 后端聚合接口 + ETag（长期最优） | ⬜ 待开始（可选） | — |
 
-> 状态标记：⬜ 待开始 / 🔄 进行中 / ✅ 已完成 / 📄 脚本就绪待执行 / ⏸️ 阻塞待前置
-
-> 状态标记：⬜ 待开始 / 🔄 进行中 / ✅ 已完成
+> 状态标记：⬜ 待开始 / 🔄 进行中 / ✅ 已完成 / 📄 脚本就绪待执行 / ⏸️ 阻塞待前置 / 🔴 已回退
 
 ## 一句话结论
 
