@@ -24,6 +24,8 @@ import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.personel.vo.UserVO;
 import com.fanglin.system.service.OperationService;
+import com.fanglin.system.service.RoleOperationService;
+import com.fanglin.system.vo.CompanyVO;
 import com.fanglin.system.vo.OperationVO;
 import com.fanglin.system.vo.RoleVO;
 import com.fanglin.utils.SystemConfig;
@@ -38,6 +40,9 @@ public class OperationAction extends BaseListAction {
 	@Autowired
 	private OperationService operationService;
 
+	@Autowired
+	private RoleOperationService roleOperationService;
+
 	private List<OperationVO> operations;
 
 	private List<Integer> oids;
@@ -47,6 +52,8 @@ public class OperationAction extends BaseListAction {
 	private OperationVO operation;
 
 	private RoleVO role;
+
+	private List<CompanyVO> companys;
 
 	@Action(value = "pageOperation", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) })
 	public String pageOperation() {
@@ -180,6 +187,18 @@ public class OperationAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "syncRoleOperation", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String syncRoleOperation() throws FLException {
+
+		if (SystemConfig.getString("communion") == null) {
+			throw new FLException(-1, "无操作权限");
+		}
+
+		roleOperationService.syncRoleOperation(role, companys, queryUserId(), queryCompany());
+
+		return SUCCESS;
+	}
+
 	public List<OperationVO> getOperations() {
 		return operations;
 	}
@@ -218,6 +237,14 @@ public class OperationAction extends BaseListAction {
 
 	public void setRole(RoleVO role) {
 		this.role = role;
+	}
+
+	public List<CompanyVO> getCompanys() {
+		return companys;
+	}
+
+	public void setCompanys(List<CompanyVO> companys) {
+		this.companys = companys;
 	}
 
 }

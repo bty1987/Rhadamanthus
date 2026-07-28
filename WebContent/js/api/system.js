@@ -297,6 +297,10 @@ $.extend(api, {
             server: "communion",
             intercept: true,
         },
+        syncRoleOperation: {
+            url: "syncRoleOperation.do",
+            server: "communion",
+        },
 
         queryFunctionByModuleId: {
             url: "queryFunctionByModuleId.do",

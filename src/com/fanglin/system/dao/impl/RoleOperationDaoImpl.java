@@ -86,4 +86,25 @@ public class RoleOperationDaoImpl extends DaoImpl<RoleOperationPO> implements Ro
 		return 0;
 	}
 
+	@Override
+	public int deleteRoleOperation(int rid, List<Integer> companys) {
+
+		String sql = "delete from communion.roleoperation where rid = :rid and company in :companys";
+		session().createSQLQuery(sql).setInteger("rid", rid).setParameterList("companys", companys).executeUpdate();
+
+		return 0;
+	}
+
+	@Override
+	public int syncRoleOperation(int rid, int cuid, List<Integer> companys, int company) {
+
+		StringBuffer syncsql = new StringBuffer("insert into communion.roleoperation (rid, oid, cuid, company) ");
+
+		syncsql.append("select ro.rid, ro.oid, :cuid, co.cid from communion.roleoperation ro, communion.company co where ro.rid = :rid and ro.company = :company and co.cid in :companys");
+
+		session().createSQLQuery(syncsql.toString()).setInteger("cuid", cuid).setInteger("rid", rid).setParameterList("companys", companys).setInteger("company", company).executeUpdate();
+
+		return 0;
+	}
+
 }

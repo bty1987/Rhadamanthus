@@ -199,6 +199,12 @@ public class OperationServiceImpl implements OperationService {
 
 				BeanUtil.copyProperties(operationPO, operationVO, Arrays.asList("module"));
 
+				if (operationPO.getModule() != null) {
+					ModuleVO moduleVO = new ModuleVO();
+					BeanUtil.copyProperties(operationPO.getModule(), moduleVO);
+					operationVO.setModule(moduleVO);
+				}
+
 				operationVOs.add(operationVO);
 			}
 		} else {
@@ -220,6 +226,12 @@ public class OperationServiceImpl implements OperationService {
 				operationVO = new OperationVO();
 
 				BeanUtil.copyProperties(roleOperationPO.getOperation(), operationVO, Arrays.asList("module"));
+
+				if (roleOperationPO.getOperation().getModule() != null) {
+					ModuleVO moduleVO = new ModuleVO();
+					BeanUtil.copyProperties(roleOperationPO.getOperation().getModule(), moduleVO);
+					operationVO.setModule(moduleVO);
+				}
 
 				operationVOs.add(operationVO);
 
