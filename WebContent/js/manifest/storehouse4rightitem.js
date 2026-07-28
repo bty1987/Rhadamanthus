@@ -88,7 +88,7 @@ var storehouseRight = (function(){
                 var storehousesStatus = [];
                 
                 $.each(data.storehouses,function(i,v){
-                    if(v.status==0){
+                    if(v.status==constant.inventory().storehouse.STATUS_ENABLE_INT){
                         storehousesStatus.push(v);
                     }
                 });

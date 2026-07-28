@@ -11,7 +11,7 @@ jQuery(function($) {
     com.post(api.inventory.queryAccessoriesItemByAids, _params, function(res) {
 
         accessories.storehouses = $.grep(res.storehouses || [], function(v) {
-            return v.status == 0;
+            return v.status == constant.inventory().storehouse.STATUS_ENABLE_INT;
         });
 
         for ( var i = 0; i < res.accessoriesItems.length; i++) {

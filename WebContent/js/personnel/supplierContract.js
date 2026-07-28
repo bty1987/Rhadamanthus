@@ -212,7 +212,7 @@ jQuery(function($) {
         },
         show: function(v) {
 
-            return v.status == 0 && (!v.download || !v.viewpdf);
+            return v.status == constant.personel().userContract.STATUS_VALID_INT && (!v.download || !v.viewpdf);
         }
     }, {
         name: "查看",
@@ -241,7 +241,7 @@ jQuery(function($) {
         },
         show: function(v) {
 
-            return v.status == 0;
+            return v.status == constant.personel().userContract.STATUS_VALID_INT;
         }
     }, {
         name: "失效",
@@ -252,7 +252,7 @@ jQuery(function($) {
         },
         show: function(v) {
 
-            return v.status == 0;
+            return v.status == constant.personel().userContract.STATUS_VALID_INT;
         }
     }, {
         name: "公司签",
@@ -263,7 +263,7 @@ jQuery(function($) {
         },
         show: function(v) {
 
-            return v.status == 0 && (v.download && v.viewpdf);
+            return v.status == constant.personel().userContract.STATUS_VALID_INT && (v.download && v.viewpdf);
         }
     }, {
         name: "厂商签",
@@ -274,7 +274,7 @@ jQuery(function($) {
         },
         show: function(v) {
 
-            return v.status == 0 && (v.download && v.viewpdf);
+            return v.status == constant.personel().userContract.STATUS_VALID_INT && (v.download && v.viewpdf);
         }
     }, {
         name: "二维签",
@@ -285,7 +285,7 @@ jQuery(function($) {
         },
         show: function(v) {
 
-            return v.status == 0 && (v.download && v.viewpdf);
+            return v.status == constant.personel().userContract.STATUS_VALID_INT && (v.download && v.viewpdf);
         }
     }, {
         type: "newline"
@@ -320,7 +320,7 @@ jQuery(function($) {
         },
         show: function(v) {
 
-            return v.status == 1;
+            return v.status == constant.personel().userContract.STATUS_NULL_INT;
         }
     }, {
         name: "品牌",

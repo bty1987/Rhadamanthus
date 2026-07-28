@@ -143,7 +143,7 @@ $(function(){
         }, {
             field: "status",
             name: "状态",
-            prop: function(v) { return v.status == 0 ? '预结' : v.status == 1 ? '厂结' : v.status == 2 ? '结算' : '---'; },
+            prop: function(v) { return v.status == constant.material().materialBalance.STATUS_PRE_BALANCE_INT ? '预结' : v.status == constant.material().materialBalance.STATUS_VENDER_BALANCE_INT ? '厂结' : v.status == constant.material().materialBalance.STATUS_FINISH_INT ? '结算' : '---'; },
             clazz: "red"
         }, {
             field: "type",
@@ -160,7 +160,7 @@ $(function(){
                 name: "厂结值",
                 clazz: "btn-yellow",
                 handle: function(v) {
-                    if (v.status == 0) {
+                    if (v.status == constant.material().materialBalance.STATUS_PRE_BALANCE_INT) {
                         materialOrderPostBalance.total = v.total;
                         materialOrderPostBalance.msobId = v.mbid;
                         materialOrderPostBalance.smodal.modal("show");
@@ -173,9 +173,9 @@ $(function(){
                 name: "厂结",
                 clazz: "btn-success",
                 handle: function(v) {
-                    if (v.status == 0 && v.vbalance != 0) {
+                    if (v.status == constant.material().materialBalance.STATUS_PRE_BALANCE_INT && v.vbalance != 0) {
                         vpostMaterialSubOrderBalance(v.mbid);
-                    } else if (v.status == 0 && v.vbalance == 0) {
+                    } else if (v.status == constant.material().materialBalance.STATUS_PRE_BALANCE_INT && v.vbalance == 0) {
                         com.showAlert(com.warning, "厂结值未填写，请检查");
                     } else if (v.status != 0) {
                         com.showAlert(com.warning, "非预结状态下不允许进行厂结");
@@ -186,7 +186,7 @@ $(function(){
                 name: "结算值",
                 clazz: "btn-warning",
                 handle: function(v) {
-                    if (v.status == 1) {
+                    if (v.status == constant.material().materialBalance.STATUS_VENDER_BALANCE_INT) {
                         materialOrderPostBalance.preTotal = utils.accSub(v.total, v.balance);
                         materialOrderPostBalance.vbalance = v.vbalance;
                         materialOrderPostBalance.msobId = v.mbid;
@@ -200,9 +200,9 @@ $(function(){
                 name: "结算",
                 clazz: "btn-inverse",
                 handle: function(v) {
-                    if (v.status == 1 && v.post != 0) {
+                    if (v.status == constant.material().materialBalance.STATUS_VENDER_BALANCE_INT && v.post != 0) {
                         postMaterialSubOrderBalance(v.mbid);
-                    } else if (v.status == 1 && v.post == 0) {
+                    } else if (v.status == constant.material().materialBalance.STATUS_VENDER_BALANCE_INT && v.post == 0) {
                         com.showAlert(com.warning, "结算值未填写，请检查");
                     } else if (v.status != 1) {
                         com.showAlert(com.warning, "非厂结状态下不允许进行结算");
@@ -374,7 +374,7 @@ $(function(){
                 ],
                 list: res.paging.data,
             }, function(v){
-				v.status = v.status== 0 ? '预结': v.status== 1 ? '厂结' : v.status== 2 ? '结算' : '---';
+				v.status = v.status== constant.material().materialBalance.STATUS_PRE_BALANCE_INT ? '预结': v.status== constant.material().materialBalance.STATUS_VENDER_BALANCE_INT ? '厂结' : v.status== constant.material().materialBalance.STATUS_FINISH_INT ? '结算' : '---';
 				v.type = v.type == 0 ? '购货' : v.type == 1 ? '预结退货' : '结算退货';
 			});
         });

@@ -142,7 +142,7 @@ $(function() {
                 type: "switch",
                 clazz: "status-lbl",
                 init: function(v) {
-                    return v.status == 0;
+                    return v.status == constant.system().company.STATUS_ENABLE_INT;
                 },
                 handle: function(v, check) {
                     updateStatus(v.cid, check ? 0 : 1, null);

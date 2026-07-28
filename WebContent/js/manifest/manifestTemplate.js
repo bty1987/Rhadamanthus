@@ -97,7 +97,7 @@ $(function() {
 
             $btnStart.click(function() {
 
-                if (v.status == 0) {
+                if (v.status == constant.inventory().manifestTemplate.STATUS_ENABLE_INT) {
                     com.showAlert(com.warning, "已启用");
                     return false;
                 }
@@ -113,7 +113,7 @@ $(function() {
 
             $btnStop.click(function() {
 
-                if (v.status == 1) {
+                if (v.status == constant.inventory().manifestTemplate.STATUS_DISABLE_INT) {
                     com.showAlert(com.warning, "已禁用");
                     return false;
                 }

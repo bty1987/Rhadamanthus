@@ -63,7 +63,7 @@ $(function () {
             enabled: {
                 name: "已启用",
                 clazz: "btn-success",
-                show: function(v) { return v.status == 0; },
+                show: function(v) { return v.status == constant.system().version.STATUS_ENABLED_INT; },
                 handle: function(v) {
                     updateStatus(v.vid, 1);
                 }
