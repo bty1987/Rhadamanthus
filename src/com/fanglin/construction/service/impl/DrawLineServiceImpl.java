@@ -48,6 +48,7 @@ import com.fanglin.data.po.DrawLineGroupPO;
 import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.decoration.vo.DecorationVO;
+import com.fanglin.information.po.MessageCueuingPO;
 import com.fanglin.information.po.MessagePO;
 import com.fanglin.information.po.MessageQueuingPO;
 import com.fanglin.information.service.MessageService;
@@ -261,6 +262,8 @@ public class DrawLineServiceImpl implements DrawLineService {
 			if (decorationPO.getSupervisor() != null) {
 				constructionPO.setSupervisor(decorationPO.getSupervisor());
 			}
+
+			messageQueuingDao.save(new MessageCueuingPO().init(orderId, "beginConstruction", "{\"orderId\":\"" + orderId + "\",\"status\":\"1\",\"event\":\"PROJECT_STATUS_CHANGED\"" + (constructionPO.getDecoration() != null && constructionPO.getDecoration().getBusitype() != null ? ",\"busiTypeName\":\"" + constructionPO.getDecoration().getBusitype().getName() + "\"" : "") + "}"));
 		}
 
 		if (drawLineVO.getDecoration() != null && drawLineVO.getDecoration().getSupervisor() != null && drawLineVO.getDecoration().getSupervisor().getUserId() != null) {
@@ -407,6 +410,8 @@ public class DrawLineServiceImpl implements DrawLineService {
 
 		if (constructionPO == null) {
 			constructionPO = new ConstructionPO(decorationPO);
+
+			messageQueuingDao.save(new MessageCueuingPO().init(orderId, "beginConstruction", "{\"orderId\":\"" + orderId + "\",\"status\":\"1\",\"event\":\"PROJECT_STATUS_CHANGED\"" + (constructionPO.getDecoration() != null && constructionPO.getDecoration().getBusitype() != null ? ",\"busiTypeName\":\"" + constructionPO.getDecoration().getBusitype().getName() + "\"" : "") + "}"));
 		}
 
 		ConstructionCostPO constructionCostPO = constructionCostDao.queryConstructionCost(drawLinePO.getDecoration().getHouse().getBuildArea(), decorationPO.getCompany());
@@ -667,6 +672,8 @@ public class DrawLineServiceImpl implements DrawLineService {
 
 		if (constructionPO == null) {
 			constructionPO = new ConstructionPO(decorationPO);
+
+			messageQueuingDao.save(new MessageCueuingPO().init(orderId, "beginConstruction", "{\"orderId\":\"" + orderId + "\",\"status\":\"1\",\"event\":\"PROJECT_STATUS_CHANGED\"" + (constructionPO.getDecoration() != null && constructionPO.getDecoration().getBusitype() != null ? ",\"busiTypeName\":\"" + constructionPO.getDecoration().getBusitype().getName() + "\"" : "") + "}"));
 		}
 
 		ConstructionCostPO constructionCostPO = constructionCostDao.queryConstructionCost(decorationPO.getHouse().getBuildArea(), decorationPO.getCompany());

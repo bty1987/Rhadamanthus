@@ -23,10 +23,10 @@ import com.fanglin.communion.po.CustomerPO;
 import com.fanglin.communion.po.CustomerPhonePO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.security.SensitiveDataHelper;
+import com.fanglin.customer.dao.MemberDao;
 import com.fanglin.customer.dao.PointAccountDao;
 import com.fanglin.customer.dao.PointPaymentDao;
 import com.fanglin.customer.dao.PointRecordDao;
-import com.fanglin.customer.dao.MemberDao;
 import com.fanglin.customer.po.PointAccountPO;
 import com.fanglin.customer.po.PointPaymentPO;
 import com.fanglin.customer.po.PointRecordPO;
@@ -787,7 +787,7 @@ public class MemberServiceImpl implements MemberService {
 		if (awardStockPO != null) decorationActivityItemPO.setAsid(awardStockPO.getAsId());
 
 		decorationActivityItemPO.setActivityItemName(memberOrderItemVO.getName());
-		decorationActivityItemPO.setState(DecorationActivityItemPO.STATUS_INIT_INT);
+		decorationActivityItemPO.setState(DecorationActivityItemPO.STATUS_VERIFY_INT);
 
 		decorationActivityItemPO.setIsPrefor(memberOrderItemVO.getIsPrefer() != null ? memberOrderItemVO.getIsPrefer() : DecorationActivityItemPO.ISPREFOR_UNCAL_INT);
 		decorationActivityItemPO.setIsPayment(memberOrderItemVO.getIsPayment() != null ? memberOrderItemVO.getIsPayment() : DecorationActivityItemPO.ISPAYMENT_UNCAL_INT);
