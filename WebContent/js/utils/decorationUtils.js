@@ -586,7 +586,7 @@ var decorationUtils = {
 
         var stateLi = $("<li></li>").appendTo(ul);
         var stateState = $("<strong></strong>").text("状态:").appendTo(stateLi);
-        var stateSpan = $("<span></span>").addClass("red").attr("id", "state_" + _decorationActivity.daId).text(_decorationActivity.status == 0 ? "初始" : "锁定").appendTo(stateLi);
+        var stateSpan = $("<span></span>").addClass("red").attr("id", "state_" + _decorationActivity.daId).text(constant.decoration().decorationActivity.status.keys[_decorationActivity.status]).appendTo(stateLi);
 
         var uiPgDiv = $("<div></div>").addClass("ui-pg-div").css("padding-left", "8px").css("padding-bottom", "10px").appendTo(widgetBody);
 
@@ -2126,7 +2126,7 @@ var decorationUtils = {
                 var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
                 var $updateBtn = $('<a></a>').addClass('btn btn-minier btn-yellow').html('完成');
 
-                var propertyArr = [["装修单号:", v.orderId, "grey"], ["详述:", v.detail, "grey"], ["操作人:", v.operater.currentName, "grey"], ["操作时间:", v.operateTime, "green"], ["状态:", v.status == 0 ? '初始' : '完成', "red"], ["备注:", v.comment, "grey"]];
+                var propertyArr = [["装修单号:", v.orderId, "grey"], ["详述:", v.detail, "grey"], ["操作人:", v.operater.currentName, "grey"], ["操作时间:", v.operateTime, "green"], ["状态:", constant.decoration().decorationService.status.keys[v.status], "red"], ["备注:", v.comment, "grey"]];
 
                 $updateBtn.click(function() {
 

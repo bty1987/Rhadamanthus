@@ -63,7 +63,7 @@ var paymentUtils = {
 
             var data = $(positems[i]).data();
 
-            if (data.status == 0)
+            if (data.status == constant.payment().paytran.STATUS_INIT_INT)
                 return -1;
 
             bankInfo += data.no + "|" + data.money + "|" + data.createtime + "|" + data.ptid + "#";
