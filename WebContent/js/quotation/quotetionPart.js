@@ -26,6 +26,19 @@
         }
     };
 
+    function evalFormula(expres) {
+
+        expres = (expres == null || expres === "") ? "0" : String(expres);
+        expres = expres.replace(/\!\s*\(/g, "Math.ceil(");
+
+        var result = new Function("return function(){return " + expres + "}")()();
+
+        if (typeof result != "number" || isNaN(result) || !isFinite(result))
+            throw new Error("formula");
+
+        return utils.changeThrDecimal(result);
+    }
+
     var quo = {
 
         quotetion: null,
@@ -2066,12 +2079,14 @@
             if (e.keyCode == 13) {
                 try {
                     formula = formula.replace(/\s+/g, "");
-                    var test = /([\D][\.][\D])|([\d][\.][\D])|([\D][\.][\d])|(\.$)|(^\.)|([\+\-\*\/\(][\+\-\*\/])|([^\d|^\+|^\-|^\*|^\/|^\.|^\(|^\)])/;
-                    if (test.test(formula) || formula == null || formula == '') {
+                    var test = /([\D][\.][\D])|([\d][\.][\D])|([\D][\.][\d])|(\.$)|(^\.)|([\+\-\*\/\(][\+\-\*\/])|([^\d|^\+|^\-|^\*|^\/|^\.|^\(|^\)|^\!])/;
+                    var testFormula = formula.replace(/Math\.ceil\s*\(/g, "!(");
+
+                    if (test.test(testFormula) || formula == null || formula == '') {
                         that.hideInputWrap();
                         return false;
                     }
-                    var num = utils.changeThrDecimal(eval(formula));
+                    var num = evalFormula(formula);
                     if (num < 0 || num > 10000000) {
                         that.hideInputWrap();
                         return false;
@@ -2709,14 +2724,16 @@
                     var formula = that.val();
                     formula = formula.replace(/\s+/g, "");
 
-                    var test = /([\D][\.][\D])|([\d][\.][\D])|([\D][\.][\d])|(\.$)|(^\.)|([\+\-\*\/\(][\+\-\*\/])|([^\d|^\+|^\-|^\*|^\/|^\.|^\(|^\)])/;
+                    var test = /([\D][\.][\D])|([\d][\.][\D])|([\D][\.][\d])|(\.$)|(^\.)|([\+\-\*\/\(][\+\-\*\/])|([^\d|^\+|^\-|^\*|^\/|^\.|^\(|^\)|^\!])/;
 
-                    if (test.test(formula) || formula == null || formula == '') {
+                    var testFormula = formula.replace(/Math\.ceil\s*\(/g, "!(");
+
+                    if (test.test(testFormula) || formula == null || formula == '') {
                         com.focusPage('#num').val('');
                         return false;
                     }
 
-                    var num = utils.changeThrDecimal(eval(formula));
+                    var num = evalFormula(formula);
 
                     if (num < 0 || num > 10000000) {
                         com.focusPage('#num').val('');
@@ -3090,7 +3107,7 @@
 
             var formula = {
                 "formula": expres,
-                "num": utils.changeThrDecimal(isNaN(eval(expres)) ? 0 : eval(expres))
+                "num": evalFormula(expres)
             };
 
             return formula;
@@ -3384,8 +3401,10 @@
 
                     v.formula = v.formula.replace(/\!\s*\(/g, "Math.ceil(");
 
-                    v.formula = v.qfaiId != null ? v.formula : utils.changeThrDecimal(isNaN(eval(v.formula)) ? 0 : eval(v.formula));
-                    v.num = utils.changeThrDecimal(isNaN(eval(v.formula)) ? 0 : eval(v.formula));
+                    var formulaNum = evalFormula(v.formula);
+
+                    v.formula = v.qfaiId != null ? v.formula : formulaNum;
+                    v.num = formulaNum;
 
                     var $item = that.createQuote(i + 1, v).appendTo($list);
 
