@@ -1,0 +1,20 @@
+update customer.customerchance cc, customer.customersource cs set cc.dbid = cs.dbid where cc.csid = cs.csid and cc.dbid is null and cs.dbid is not null;
+
+
+update quotation.quotation q, quotation.quotationversion qv set q.taxDiscount = 2 where q.qvid = qv.qvid and q.taxprice != 0 and qv.taxDiscount = 2 and q.taxDiscount = 0;
+
+
+select * from sales.salesbalance where sid = 1216122;
+select * from sales.salesbalance where createtime > '2026-01-01 00:00:00' and createtime < '2027-01-01 00:00:00' group by sid, rid, bid, type, onetype having count(*) > 1;
+
+drop temporary table tmp;
+create temporary table tmp(siid int(11));
+replace into tmp (siid) select si.siid from quotation.selectionitem si left join balance.balanceselectionitem bsi on bsi.siid = si.siid where si.accountStatus = 1 and bsi.bsiid is null;
+update quotation.selectionitem si, tmp t set si.accountStatus = 0, si.accounttime = null where si.siid = t.siid;
+
+select * from communion.module where system = 1 and fatherModuleId is null order by `order`;
+select * from communion.module where system = 1 and fatherModuleId = 240 order by `order`;
+select * from communion.module where system = 1 and fatherModuleId = 311 order by `order`;
+
+insert communion.rolemodule (rid, mid, link, access, cuid, company)
+select rid, 923, 1, 0, 34, company from communion.rolemodule where rid = 86 group by company;
