@@ -14,6 +14,8 @@ import tempfile
 import traceback
 import random
 import time
+import openpyxl
+from openpyxl import Workbook
 
 from plan_zoo import *
 
@@ -606,32 +608,54 @@ class Util(Constant):
 
             sqlquery = sql % (columns)
 
-            workbook, sheet = self.createWorkbook(sheetname)
+            # 使用 openpyxl 创建 xlsx 工作簿, 支持超过 65535 行
+            workbook = Workbook()
+            sheet = workbook.active
+            sheet.title = sheetname
+            sheet.append(tableheads)
 
-            self.createTableHead(sheet, tableheads)
+            # 单sheet最大行数, 超过自动切下一sheet, 避免单sheet过大
+            sheetMaxRow = 500000
+            sheetIndex = 1
+            sheetRowCount = 0
 
             count = 1
             nowPage = 1
             flag = True
-            
+
             while (flag):
 
                 data = self.page(sqlquery, nowPage, self.size)
 
                 for i, v in enumerate(data):
-                
+
                     row = list(v)
-                    
+
                     if rower: row = rower(row)
-                    
+
                     if any(isinstance(item, list) for item in row):
                         for item in row:
-                            self.createTableHead(sheet, item, count)
+
+                            if sheetRowCount >= sheetMaxRow:
+                                sheetIndex += 1
+                                sheet = workbook.create_sheet(u"%s_%d" % (sheetname, sheetIndex))
+                                sheet.append(tableheads)
+                                sheetRowCount = 0
+
+                            sheet.append([(x if x is not None else None) for x in item])
                             count += 1
+                            sheetRowCount += 1
                     else:
-                        self.createTableHead(sheet, row, count)
+                        if sheetRowCount >= sheetMaxRow:
+                            sheetIndex += 1
+                            sheet = workbook.create_sheet(u"%s_%d" % (sheetname, sheetIndex))
+                            sheet.append(tableheads)
+                            sheetRowCount = 0
+
+                        sheet.append([(x if x is not None else None) for x in row])
                         count += 1
-                    
+                        sheetRowCount += 1
+
                 nowPage = nowPage + 1
                 if len(data) < self.size:
                     flag = False
@@ -643,8 +667,8 @@ class Util(Constant):
                     u"plan.schedule": int(schedules),
                     u"plan.status": 4
                 })
-                
-            resultfilepath = self.packFile(pid, workbook)
+
+            resultfilepath = self.packXlsxFile(pid, workbook)
 
             self.updataSchedule(self.pthost, pid, {
                 u"plan.resultFilepath": resultfilepath
