@@ -2,11 +2,12 @@
 # -*- coding:UTF-8 -*-
 
 from plan_util import *
+from openpyxl import Workbook
 
 class export_common(Util):
 
     def __init__(self, host='', username='', password='', media='', pthost="", charset='utf8'):
-    
+
         self.dbconn = None
         self.cursor = None
 
@@ -19,7 +20,7 @@ class export_common(Util):
         self.flag = True
 
         self.table = []
-        self.tableSource = set([])
+        self.tableSource = []
         self.column = []
         self.conditionData = []
         self.conditionDic = {}
@@ -28,6 +29,9 @@ class export_common(Util):
         self.attribute = []
         self.field = []
         self.conditionTpid = []
+
+        # 单sheet最大行数,超过自动切下一sheet,避免单sheet过大
+        self.sheetMaxRow = 500000
 
         self.size = 300
 
@@ -44,7 +48,12 @@ class export_common(Util):
                     SELECT
                         *
                     FROM
-                        data.taskparam
+                        communion.taskparam
+                    WHERE
+                        tid = %s
+                        AND status = 0
+                    ORDER BY
+                        tablesort, sort
                 """
 
         self.SQL_EXPORT_INVENTORY_ACCESSORIES = u"""
@@ -67,13 +76,23 @@ class export_common(Util):
         conditionTpid = []
 
         for condition in conditions:
+            if not condition or "|" not in condition: continue
             conditionTpid.append(condition.split("|")[0])
             self.conditionDic[int(condition.split("|")[0])] = condition.split("|")[1]
 
         self.field = sorted([int(x) for x in fields])
         self.conditionTpid = sorted([int(x) for x in conditionTpid])
 
-        sql = self.SQL_DATA_TASKPARAMS
+        # 先按 pid 反查 plan 拿到 tid, 只拉该任务的元数据, 避免全表扫描
+        self.cursor.execute(u"SELECT tid FROM information.plan WHERE pid = %s" % pid)
+        tidRow = self.cursor.fetchone()
+
+        if not tidRow:
+            raise RuntimeError(u"plan 不存在: pid=%s" % pid)
+
+        tid = tidRow[0]
+
+        sql = self.SQL_DATA_TASKPARAMS % tid
         self.cursor.execute(sql)
 
         data_dict = [dict(zip([col[0] for col in self.cursor.description], row)) for row in self.cursor.fetchall()]
@@ -83,6 +102,10 @@ class export_common(Util):
     def handleData(self, data):
 
         unionParam = set([])
+
+        # 先把主表单独取出并放在 tableSource 第一位, 避免 set 无序导致主表跑到后面
+        mainTableKeys = set([])
+
         for i, v in enumerate(data):
             if v['tpid'] in self.field:
                 self.handleColumn(v)
@@ -100,40 +123,79 @@ class export_common(Util):
             if v['tpid'] in unionParam:
                 self.handleTable(v)
 
-        for t in sorted(self.tableSource, key=lambda table: table[1]):
-            self.table.append(t[0])
+        # 增强5: 主表(ismain=0)强制排第一且去重, 从表按 (tablesort, alias) 排序
+        # 同表多列只 JOIN 一次: 按 "tableName alias" 去重(主表从表统一处理)
+        mainList = [t for t in self.tableSource if t[2] == 0]
+        slaveList = [t for t in self.tableSource if t[2] != 0]
+
+        seen = set([])
+        dedupMain = []
+        for t in mainList:
+            if t[0] in seen: continue
+            seen.add(t[0])
+            dedupMain.append(t)
+
+        dedupSlave = []
+        for t in slaveList:
+            key = t[0].split(u" ON ")[0]
+            if key in seen: continue
+            seen.add(key)
+            dedupSlave.append(t)
+
+        self.table = [t[0] for t in (dedupMain + sorted(dedupSlave, key=lambda x: (x[1], x[0])))]
 
     # 对字段显示的处理 column
     def handleColumn(self, v):
 
         if v['type'] == 0:
-            text = u"%s AS '%s'" % (v['field'], v['name'])
+            text = self.renderColumn(v)
             self.column.append(text)
 
+    # 增强4: handle 双格式渲染
+    #   含两个点 "module.clazz.field" -> SQL 层 communion.kv 函数转换
+    #   纯标识符(如 userinfo2LevelStatus) -> Python 层 handleStatus 转换(见 main 导出循环)
+    #   空 -> 原样输出
+    def renderColumn(self, v):
+
+        field = v['field']
+        name = v['name']
+        handle = (v.get('handle') or u"").strip()
+
+        if handle.count(u".") == 2:
+            mod, clazz, fld = handle.split(u".")
+            return u"communion.kv('%s','%s','%s', %s) AS '%s'" % (mod, clazz, fld, field, name)
+
+        return u"%s AS '%s'" % (field, name)
+
     # 对表关联的处理 LEFT JOIN
+    # 返回元组 (join片段, tablesort排序键, ismain), 供 handleData 排序去重
     def handleTable(self, v):
 
         if v['ismain'] == 0:
-            table = (u"%s %s" % (v['tableName'].strip(), v['alias'].strip()), v['tablesort'])
+            table = (u"%s %s" % (v['tableName'].strip(), v['alias'].strip()), v['tablesort'], 0)
         else:
-            table = (u"%s %s ON %s" % (v['tableName'].strip(), v['alias'].strip(), v['unionField'].strip()), v['tablesort'])
-        self.tableSource.add(table)
+            table = (u"%s %s ON %s" % (v['tableName'].strip(), v['alias'].strip(), v['unionField'].strip()), v['tablesort'], 1)
+        self.tableSource.append(table)
 
-    # 对条件进行处理 condition
+    # 增强3 + 增强2: 条件处理
+    #   时间列优先用 type=2 的 field; 兼容旧逻辑: 条件值匹配日期正则也按时间区间处理
+    #   等值条件 value 先校验转义, 防注入
     def handleCondition(self, v):
 
         for item in self.conditionDic.items():
-            if item[0] != v['tpid']:continue
-            date = self.checkDate(item[1])
-            if date:
-                startTime, endTime = item[1].split("-")
+            if item[0] != v['tpid']: continue
+
+            value = item[1]
+
+            if self.checkDate(value):
+                startTime, endTime = value.split("-")
                 flags = self.controlTime(startTime, endTime)
                 if flags == False:
                     raise RuntimeError(u'时间应在1-31内')
-                condition = u"%s >= '%s 00:00:00' and %s <= '%s 23:59:59'" % (
-                v['field'], startTime, v['field'], endTime)
+                condition = u"%s >= '%s 00:00:00' and %s <= '%s 23:59:59'" % (self._escapeIdent(v['field']), startTime, self._escapeIdent(v['field']), endTime)
             else:
-                condition = u"%s = %s" % (v['field'], item[1])
+                safeValue = self._escapeValue(value)
+                condition = u"%s = %s" % (self._escapeIdent(v['field']), safeValue)
             self.conditionData.append(condition)
 
     # 判断是否是日期格式
@@ -159,9 +221,38 @@ class export_common(Util):
     # 对状态,类型处理 status,type
     def handleAttribute(self, v):
 
-        if v['handle'] != None and v['handle'] != "":
+        if v['handle'] != None and v['handle'] != u"":
+            # 增强4: 含两点的 handle 走 kv, 已在 SQL 层转换, 不再进 Python handleStatus
+            if (v['handle'].strip()).count(u".") == 2: return
             handle = {'id': self.field.index(v['tpid']), 'name': v['handle']}
             self.attribute.append(handle)
+
+    # 增强2: 标识符(表名.字段)校验, 只允许 字母/数字/下划线/点/反引号
+    def _escapeIdent(self, ident):
+
+        if not re.match(r"^[A-Za-z0-9_.`]+$", ident or u""):
+            raise RuntimeError(u"非法字段标识: %s" % ident)
+        return ident
+
+    # 增强2: 条件值校验转义
+    #   数字/空 -> 原样
+    #   安全字符串 -> 单引号包裹并转义内部单引号
+    #   含非法字符 -> 拒绝
+    def _escapeValue(self, value):
+
+        if value is None: return u"NULL"
+
+        s = u"%s" % value
+
+        # 纯数字不加引号
+        if re.match(r"^-?\d+(\.\d+)?$", s):
+            return s
+
+        # 安全字符: 中文/字母/数字/下划线/短横线
+        if re.match(r"^[A-Za-z0-9_\u4e00-\u9fa5\-]+$", s):
+            return u"'%s'" % s.replace(u"'", u"''")
+
+        raise RuntimeError(u"非法条件值: %s" % value)
 
     def main(self, pid):
         try:
@@ -170,9 +261,9 @@ class export_common(Util):
             data_dic = self.handles(pid)
             self.handleData(data_dic)
 
-            column = ",".join(self.column)
-            table = " LEFT JOIN ".join(self.table)
-            condition = " AND ".join(self.conditionData)
+            column = u",".join(self.column)
+            table = u" LEFT JOIN ".join(self.table)
+            condition = u" AND ".join(self.conditionData)
 
             countSQL = self.SQL_EXPORT_INVENTORY_ACCESSORIES % (u"count(*)", table, condition)
             count = self.count(countSQL)
@@ -190,19 +281,18 @@ class export_common(Util):
             }
             self.updataSchedule(self.pthost, pid, plan)
 
-            params = self.createWorkbook(u"sheet")
-            workbook = params[0]
-            sheet = params[1]
-
-            self.createTableHead(sheet, self.tableHead)
-
-            path = tempfile.gettempdir() + u"/sheet.xls"
-            self.saveWorkbook(path, workbook)
+            # 增强1: 使用 openpyxl xlsx, 支持超过 65535 行
+            workbook = Workbook()
+            sheet = workbook.active
+            sheet.title = u"sheet"
+            self._writeRow(sheet, self.tableHead)
 
             sql = self.SQL_EXPORT_INVENTORY_ACCESSORIES % (column, table, condition)
 
             nowPage = 1
             length = 1
+            sheetIndex = 1
+            sheetRowCount = 0
             flag = True
 
             while (flag):
@@ -214,9 +304,16 @@ class export_common(Util):
                     self.divNum(data, self.divlist)
                     self.handleStatus(data, self.attribute)
 
-                    self.createTableHead(sheet, data, length)
+                    # 增强6: 单sheet超阈值自动切下一sheet
+                    if sheetRowCount >= self.sheetMaxRow:
+                        sheetIndex += 1
+                        sheet = workbook.create_sheet(u"sheet_%d" % sheetIndex)
+                        self._writeRow(sheet, self.tableHead)
+                        sheetRowCount = 0
 
+                    self._writeRow(sheet, data)
                     length = length + 1
+                    sheetRowCount = sheetRowCount + 1
 
                 molecular = molecular + len(rows)
                 schedules = (molecular / all) * 100
@@ -232,12 +329,8 @@ class export_common(Util):
                 if len(rows) < self.size:
                     flag = False
 
-            self.saveWorkbook(path, workbook)
-
-            url = self.media + u"uploadOther.do"
-            resultfilepath = self.uploudFile(path, url)
-
-            self.delFile(path)
+            # 增强1: 用 packXlsxFile 打包上传 xlsx
+            resultfilepath = self.packXlsxFile(pid, workbook)
 
             plan = {
                 u"plan.resultFilepath": resultfilepath
@@ -253,6 +346,14 @@ class export_common(Util):
             self.modelEnd(pid, self.pthost, self.media, self.flag)
 
             sys.exit(0)
+
+    # 增强1: openpyxl 按行写入
+    def _writeRow(self, sheet, data):
+
+        row = []
+        for v in data:
+            row.append(u"%s" % v if v is not None else None)
+        sheet.append(row)
 
 
 if __name__ == '__main__':
