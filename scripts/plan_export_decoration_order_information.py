@@ -2,6 +2,7 @@
 # -*- coding:UTF-8 -*-
 
 from plan_util import *
+from openpyxl import Workbook
 
 class Exporter(Util):
 
@@ -349,7 +350,9 @@ class Exporter(Util):
                 "plan.status": 4
             })
 
-            workbook, sheet = self.createWorkbook("shee1")
+            workbook = Workbook()
+            sheet = workbook.active
+            sheet.title = "shee1"
 
             sql = self.SQL_EXPORT_DECORATION_COLLECTER % (self.column, startTime, endTime, self.company("d.company", company))
 
@@ -365,7 +368,7 @@ class Exporter(Util):
                 "应收服务费", "主材总额", "纯利", "公司"
             ]
 
-            self.createTableHead(sheet, tableHead)
+            sheet.append([(v if v is not None else None) for v in tableHead])
 
             count = 1
             nowPage = 1
@@ -454,7 +457,7 @@ class Exporter(Util):
 
                     self.rates(row, rates, test_list)
 
-                    self.createTableHead(sheet, row, count)
+                    sheet.append([(v if v is not None else None) for v in row])
                     count += 1
 
                 nowPage = nowPage + 1
@@ -470,7 +473,7 @@ class Exporter(Util):
                     "plan.status": 4
                 })
 
-            resultfilepath = self.packFile(pid, workbook)
+            resultfilepath = self.packXlsxFile(pid, workbook)
 
             self.updataSchedule(self.pthost, pid, {
                 "plan.resultFilepath": resultfilepath

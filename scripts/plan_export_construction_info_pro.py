@@ -97,104 +97,34 @@ class Exporter(Util):
 
         return condition
 
+    def sqler(self, queryType, args, company):
+
+        startTime, endTime = args.split("-")
+
+        timeCond = self.timeCondition(queryType, startTime, endTime)
+        companyCond = self.company("d.company", company)
+
+        return self.SQL_QUERY % ("%s", timeCond, companyCond)
+
+    def rower(self, row):
+
+        self.divNum(row, [11, 12, 16])
+
+        return row
+
     def main(self, queryType, pid, args, company):
 
-        try:
+        tableheads = [
+            "装修单号", "楼盘", "楼号", "客户", "房屋类型", "设计分区", "设计部", "设计师", "业务员", "方案设计", "监理",
+            "面积", "合同额", "报价版本", "签单时间", "分配时间", "设计天数", "预计交钥匙时间", "预计放线时间", "预计完工时间", "预计设计完成时间", "合同方案确认时间",
+            "放线方案确认时间", "装修类型", "工程状态", "装修状态", "装修业务", "房屋类型", "备注", "公司"
+        ]
 
-            self.getDBCursor(self.host, self.username, self.password, self.charset)
+        self.getDBCursor(self.host, self.username, self.password, self.charset)
 
-            times = args.split("-")
+        sql = self.sqler(queryType, args, company)
 
-            startTime = times[0]
-            endTime = times[1]
-
-            checkFlag = self.controlTime(startTime, endTime)
-
-            if checkFlag == False:
-                self.flag = False
-                self.updataSchedule(self.pthost, pid, {
-                    "plan.status": 3,
-                    "plan.info": "时间范围大于31天"
-                })
-                return False
-
-            timeCond = self.timeCondition(queryType, startTime, endTime)
-            companyCond = self.company("d.company", company)
-
-            sqlcount = self.SQL_QUERY % ("count(*)", timeCond, companyCond)
-
-            count = self.count(sqlcount)
-            if count == 0:
-                self.flag = False
-                self.updataSchedule(self.pthost, pid, {
-                    "plan.status": 3,
-                    "plan.info": "无可导出数据"
-                })
-                return False
-
-            all = count / 0.8
-            molecular = all * 0.1
-            schedule = (molecular / all) * 100
-
-            self.updataSchedule(self.pthost, pid, {
-                "plan.schedule": schedule,
-                "plan.status": 4
-            })
-
-            sql = self.SQL_QUERY % (self.colum, timeCond, companyCond)
-
-            workbook, sheet = self.createWorkbook("装修单信息")
-
-            tableHead = [
-                "装修单号", "楼盘", "楼号", "客户", "房屋类型", "设计分区", "设计部", "设计师", "业务员", "方案设计", "监理",
-                "面积", "合同额", "报价版本", "签单时间", "分配时间", "设计天数", "预计交钥匙时间", "预计放线时间", "预计完工时间", "预计设计完成时间", "合同方案确认时间",
-                "放线方案确认时间", "装修类型", "工程状态", "装修状态", "装修业务", "房屋类型", "备注", "公司"
-            ]
-
-            self.createTableHead(sheet, tableHead)
-
-            count = 1
-            nowPage = 1
-            flag = True
-
-            while (flag):
-
-                rows = self.page(sql, nowPage, self.size)
-
-                for i, v in enumerate(rows):
-                    data = list(v)
-
-                    self.divNum(data, [11, 12, 16])
-
-                    self.createTableHead(sheet, data, count)
-
-                    count += 1
-
-                molecular = molecular + len(rows)
-                schedules = (molecular / all) * 100
-                self.updataSchedule(self.pthost, pid, {
-                    "plan.schedule": int(schedules),
-                    "plan.status": 4
-                })
-
-                nowPage = nowPage + 1
-
-                if len(rows) < self.size:
-                    flag = False
-
-            resultfilepath = self.packFile(pid, workbook)
-
-            self.updataSchedule(self.pthost, pid, {
-                "plan.resultFilepath": resultfilepath
-            })
-
-        except Exception as e:
-            self.flag = False
-            self.errCall(pid, self.pthost, self.media, e)
-
-        finally:
-            self.modelEnd(pid, self.pthost, self.media, self.flag)
-            sys.exit(0)
+        self.exporter(pid, args, "装修单信息", tableheads, self.colum, sql, self.rower)
 
 if __name__ == '__main__':
 
