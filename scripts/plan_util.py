@@ -19,6 +19,22 @@ from openpyxl import Workbook
 
 from plan_zoo import *
 
+# @功能: openpyxl sheet 适配器
+# 将 openpyxl 的 sheet 适配为 xlrd 风格(补齐 nrows/row_values),
+# 使 readFilesByline 等历史调用方零改动兼容 xlsx
+class _OpenpyxlSheetAdapter(object):
+
+    def __init__(self, sheet):
+        self._sheet = sheet
+        self.nrows = sheet.max_row or 0
+        self.ncols = sheet.max_column or 0
+
+    # @功能: 取整行数据, 与 xlrd.sheet.row_values(rowx) 行为一致
+    # @rowx: 行索引(从0开始, openpyxl 内部转为从1开始)
+    def row_values(self, rowx):
+        return [cell.value for cell in self._sheet[rowx + 1]]
+
+
 class Util(Constant):
 
     mixIndex = []
@@ -275,9 +291,16 @@ class Util(Constant):
     # @功能：打开表格(读取)
     # @ filePath:表格文件路径, @sheetsNum:sheet页
     # @ return book, sheet : 表格文件, sheet页
+    # 支持 .xls(xlrd) 与 .xlsx(openpyxl), 对 xlsx 返回补齐 nrows/row_values 的适配sheet,
+    # 使下游 readFilesByline 等调用方零改动兼容两种格式
     def openWorkbook(self, filePath, sheetsNum=0):
-        book = xlrd.open_workbook(filePath, formatting_info=True)
-        sheet = book.sheets()[sheetsNum]
+
+        if filePath.lower().endswith(u".xlsx"):
+            book = openpyxl.load_workbook(filename=filePath, data_only=True)
+            sheet = _OpenpyxlSheetAdapter(book.worksheets[sheetsNum])
+        else:
+            book = xlrd.open_workbook(filePath, formatting_info=True)
+            sheet = book.sheets()[sheetsNum]
 
         return book, sheet
 

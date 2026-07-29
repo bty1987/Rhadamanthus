@@ -166,10 +166,8 @@ class importItem():
             sheet.write(row, col, value)
 
     def openWorkbook(self, filePath, sheetsNum=0):
-        book = xlrd.open_workbook(filePath, formatting_info=True)
-        table = book.sheets()[sheetsNum]
-
-        return book, table
+        # 走父类 openWorkbook, 支持 .xls 与 .xlsx
+        return Util.openWorkbook(self, filePath, sheetsNum)
 
     def importCommit(self, sql, res, pid, cmt=500):
 
@@ -206,17 +204,8 @@ class importItem():
             self.updataSchedule(pid, plan)
 
     def readFilesByline(self, filePath):
-        sheet = self.openWorkbook(filePath)[1]
-
-        num_rows = sheet.nrows
-
-        rowsList = []
-
-        for i in range(0, num_rows):
-            row = sheet.row_values(i)
-            rowsList.append(row)
-
-        return rowsList
+        # 走父类 readFilesByline, 支持 .xls 与 .xlsx
+        return Util.readFilesByline(self, filePath, 0)
 
     def writeFile(self, path, srts):
         with open(path, 'ab+') as f:
