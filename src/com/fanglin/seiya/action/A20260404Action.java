@@ -47,6 +47,9 @@ public class A20260404Action extends BaseListAction {
 	/** 公司ID */
 	private Integer company;
 
+	/** 统一信用编码（对应 user.oldUserId） */
+	private String creditCode;
+
 	/**
 	 * 返回字段 - data对象，封装请求参数
 	 */
@@ -80,7 +83,7 @@ public class A20260404Action extends BaseListAction {
 		}
 
 		// 调用服务层处理
-		Map<String, Object> result = a20260404Service.syncSupplier(userId, userName, phone, company);
+		Map<String, Object> result = a20260404Service.syncSupplier(userId, userName, phone, company, creditCode);
 
 		// 设置响应数据
 		this.data = result;
@@ -120,6 +123,14 @@ public class A20260404Action extends BaseListAction {
 
 	public void setCompany(Integer company) {
 		this.company = company;
+	}
+
+	public String getCreditCode() {
+		return creditCode;
+	}
+
+	public void setCreditCode(String creditCode) {
+		this.creditCode = creditCode;
 	}
 
 	public Map<String, Object> getData() {

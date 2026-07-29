@@ -22,13 +22,14 @@ public interface A20260404Service {
 	 *
 	 * 通过编号(userId)判断是否存在，存在则更新，不存在则创建
 	 *
-	 * @param userId 供应商编号（也是 oldUserId 和 loginId）
+	 * @param userId 供应商编号（也是 loginId）
 	 * @param userName 供应商名称
 	 * @param phone 联系电话
 	 * @param company 公司ID
+	 * @param creditCode 统一信用编码（对应 user.oldUserId）
 	 * @return 包含 uid, operation, userId 等信息的 Map
 	 * @throws FLException 业务异常
 	 */
-	Map<String, Object> syncSupplier(String userId, String userName, String phone, Integer company) throws FLException;
+	Map<String, Object> syncSupplier(String userId, String userName, String phone, Integer company, String creditCode) throws FLException;
 
 }
