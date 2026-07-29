@@ -502,7 +502,7 @@ Condition.addupRule("construction", {
         label: "施工节点",
         type: "select",
         submitConfig: {
-            name: "constructionSchedule.node.cnid",
+            name: "cnid",
             op: "eq",
             validate: null
         },
@@ -518,7 +518,7 @@ Condition.addupRule("construction", {
         label: "计划状态",
         type: "select",
         submitConfig: {
-            name: "constructionSchedule.status",
+            name: "status",
             op: "eq",
             validate: null
         },
@@ -534,7 +534,7 @@ Condition.addupRule("construction", {
         label: "预估状态",
         type: "select",
         submitConfig: {
-            name: "constructionSchedule.planStatus",
+            name: "planStatus",
             op: "eq",
             validate: null
         },
@@ -550,7 +550,7 @@ Condition.addupRule("construction", {
         label: "附加状态",
         type: "select",
         submitConfig: {
-            name: "constructionSchedule.additemStatus",
+            name: "additemStatus",
             op: "eq",
             validate: null
         },
