@@ -73,11 +73,11 @@ public class A20260404ServiceImpl implements A20260404Service {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public Map<String, Object> syncSupplier(String userId, String userName, String phone, Integer company) throws FLException {
+	public Map<String, Object> syncSupplier(String userId, String userName, String phone, Integer company, String creditCode) throws FLException {
 
 		Map<String, Object> result = new HashMap<String, Object>();
 
-		logger.info("同步供应商数据: userId={}, userName={}, phone={}, company={}", userId, userName, phone, company);
+		logger.info("同步供应商数据: userId={}, userName={}, phone={}, company={}, creditCode={}", userId, userName, phone, company, creditCode);
 
 		// 0. 验证公司是否存在
 		CompanyPO companyPO = companyDao.get(company);
@@ -98,7 +98,7 @@ public class A20260404ServiceImpl implements A20260404Service {
 			supplierPO.setUserName(userName);
 			supplierPO.setCurrentName(userName);
 			supplierPO.setPhone(phone);
-			supplierPO.setOldUserId(userId); // oldUserId = userId
+			supplierPO.setOldUserId(creditCode); // oldUserId = 统一信用编码
 
 			supplierDao.update(supplierPO);
 			logger.info("更新供应商成功: uid={}, userId={}", supplierPO.getUid(), supplierPO.getUserId());
@@ -114,7 +114,7 @@ public class A20260404ServiceImpl implements A20260404Service {
 			}
 
 			// 3. 获取默认部门（从 systemConfig 获取 supplierDept 配置）
-			SystemConfigPO deptConfig = systemConfigDao.querySystemConfig("supplierDept", company);
+			SystemConfigPO deptConfig = systemConfigDao.querySystemConfig("supplierDept");
 			if (deptConfig == null) {
 				throw new FLException(310004, "供应商部门配置不存在(supplierDept)");
 			}
@@ -147,7 +147,7 @@ public class A20260404ServiceImpl implements A20260404Service {
 			supplierPO.setCurrentName(userName);
 			supplierPO.setUserName(userName);
 			supplierPO.setPhone(phone);
-			supplierPO.setOldUserId(userId); // oldUserId = userId
+			supplierPO.setOldUserId(creditCode); // oldUserId = 统一信用编码
 
 			// gender/identity 为 NOT NULL 且无默认值，外部同步数据不含这两项，给空串占位
 			// （与生产 user 表既有空串占位数据一致，不伪造性别/身份证信息）
