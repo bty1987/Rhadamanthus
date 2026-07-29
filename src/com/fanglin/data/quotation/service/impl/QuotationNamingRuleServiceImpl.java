@@ -14,6 +14,7 @@ import com.fanglin.data.quotation.service.QuotationNamingRuleService;
 import com.fanglin.data.quotation.vo.QuotationNamingRuleVO;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.Paging;
+import com.fanglin.utils.PinYin4Util;
 
 @Service("quotationNamingRuleService")
 @Transactional(readOnly = true)
@@ -68,6 +69,8 @@ public class QuotationNamingRuleServiceImpl implements QuotationNamingRuleServic
 
 		BeanUtil.copyProperties(quotationNamingRuleVO, rulePO);
 
+		rulePO.setPinyin(PinYin4Util.getPinyin(quotationNamingRuleVO.getName()).get(0));
+
 		quotationNamingRuleDao.save(rulePO);
 
 		return 0;
@@ -82,6 +85,8 @@ public class QuotationNamingRuleServiceImpl implements QuotationNamingRuleServic
 		if (rulePO != null) {
 
 			BeanUtil.copyProperties(quotationNamingRuleVO, rulePO);
+
+			rulePO.setPinyin(PinYin4Util.getPinyin(quotationNamingRuleVO.getName()).get(0));
 
 			quotationNamingRuleDao.update(rulePO);
 		}

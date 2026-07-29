@@ -63,7 +63,10 @@ public class QuotationNamingRuleDaoImpl extends DaoImpl<QuotationNamingRulePO> i
 		Criteria query = session().createCriteria(QuotationNamingRulePO.class);
 
 		if (pinyin != null && pinyin.length() > 0) {
-			query.add(Restrictions.like("pinyin", pinyin + "%"));
+			query.add(Restrictions.or(
+				Restrictions.like("pinyin", pinyin + "%"),
+				Restrictions.like("name", "%" + pinyin + "%")
+			));
 		}
 
 		if (type != null && type >= 0) {
