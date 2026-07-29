@@ -4,7 +4,6 @@ $(function() {
 
         items: {
             name: com.focusPage('#name'),
-            pinyin: com.focusPage('#pinyin'),
             type: com.focusPage('#type'),
             sort: com.focusPage('#sort'),
             comment: com.focusPage('#comment')
@@ -31,11 +30,6 @@ $(function() {
         fieId: "name",
         name: "名称",
         prop: "name",
-        clazz: "grey"
-    }, {
-        fieId: "pinyin",
-        name: "拼音",
-        prop: "pinyin",
         clazz: "grey"
     }, {
         fieId: "type",
@@ -76,7 +70,6 @@ $(function() {
             quotationNamingRule.qnrid = v.qnrid;
 
             quotationNamingRule.items.name.val(v.name);
-            quotationNamingRule.items.pinyin.val(v.pinyin);
             quotationNamingRule.items.type.val(v.type);
             quotationNamingRule.items.sort.val(v.sort);
             quotationNamingRule.items.comment.val(v.comment);
@@ -162,7 +155,6 @@ $(function() {
         }
 
         var name = quotationNamingRule.items.name.val();
-        var pinyin = quotationNamingRule.items.pinyin.val();
         var type = quotationNamingRule.items.type.val();
         var sort = quotationNamingRule.items.sort.val();
         var comment = quotationNamingRule.items.comment.val();
@@ -170,7 +162,6 @@ $(function() {
         var url = api.data.addQuotationNamingRule;
         var options = {
             "quotationNamingRule.name": name,
-            "quotationNamingRule.pinyin": pinyin,
             "quotationNamingRule.type": type,
             "quotationNamingRule.sort": sort || 0,
             "quotationNamingRule.comment": comment
