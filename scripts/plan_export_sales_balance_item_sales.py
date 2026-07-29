@@ -150,108 +150,42 @@ class Exporter(Util):
             companyId = " "
         return companyId
 
-    def main(self, timeType, companyType, type, pid, args, comapny):
+    def sqler(self, timeType, companyType, type, args, company):
 
-        try:
-            self.getDBCursor(self.host, self.username, self.password, self.charset)
+        startTime, endTime = args.split("-")
 
-            startTime, endTime = args.split("-")
+        timeColumn = self.timetype(timeType)
 
-            checkFlag = self.controlTime(startTime, endTime)
-            if checkFlag == False:
-                self.flag = False
-                self.updataSchedule(self.pthost, pid, {
-                    "plan.status": 3,
-                    "plan.info": '时间范围大于31天'
-                })
-                return False
+        return self.SQL_QUERY % ("%s", timeColumn, startTime, timeColumn, endTime, type, self.company(companyType, company))
 
-            timeColumn = self.timetype(timeType)
-                
-            sqlcount = self.SQL_QUERY % ("count(*)", timeColumn, startTime, timeColumn, endTime, type, self.company(companyType, comapny))
+    def rower(self, row):
 
-            count = self.count(sqlcount)
-            if count == 0:
-                self.flag = False
-                self.updataSchedule(self.pthost, pid, {
-                    "plan.status": 3,
-                    "plan.info": '无可导出数据'
-                })
-                return False
+        self.divNum(row, [25, 33, 36, 37, 38, 41, 42, 49, 50, 51, 53, 54, 56, 57])
 
-            all = count / 0.8
-            molecular = all * 0.1
-            schedule = (molecular / all) * 100
+        if row[52]: row[52] = self.salesPriceType[row[52]]
+        if row[55]: row[55] = self.salesCType[row[55]]
 
-            self.updataSchedule(self.pthost, pid, {
-                "plan.schedule": schedule,
-                "plan.status": 4
-            })
+        if row[39] == None: row[39] = u'无'; row[40] = u'无'
 
-            sql = self.SQL_QUERY % (self.colum, timeColumn, startTime, timeColumn, endTime, type, self.company(companyType, int(company)))
+        return row
 
-            workbook, sheet = self.createWorkbook("销售结算-购货")
+    def main(self, timeType, companyType, type, pid, args, company):
 
-            tableHead = [
-                "装修单号", "装修公司", "销售单号", "销售公司", "销售单状态", "楼盘地址", "品牌", "品类", "统计类别", "一类", 
-                "二类", "三类", "设计师编号", "设计师", "方案设计编号", "方案设计", "签约设计大区编号", "签约设计大区", "签约设计部编号", "签约设计部门", 
-                "设计师大区编号", "设计师大区", "设计师部编号", "设计师部", "补款时间", "券值", "券信息", "创建人工号", "创建人", "驻店工号", 
-                "驻店", "导购工号", "导购", "预结算值", "预结算时间", "预结算人", "厂商结算", "结算值", "补贴", "结算时间", 
-                "结算人", "抹零", "厂商抹零", "状态", "类型", "商品名称", "商品编号", "商品颜色", "商品规格", "售价", 
-                "折扣价", "折让价", "价格类型", "数量", "销售项总价", "结算方式", "结算值", "原数", "金蝶编号", "金蝶名称", 
-                "备注"
-            ]
+        tableheads = [
+            "装修单号", "装修公司", "销售单号", "销售公司", "销售单状态", "楼盘地址", "品牌", "品类", "统计类别", "一类",
+            "二类", "三类", "设计师编号", "设计师", "方案设计编号", "方案设计", "签约设计大区编号", "签约设计大区", "签约设计部编号", "签约设计部门",
+            "设计师大区编号", "设计师大区", "设计师部编号", "设计师部", "补款时间", "券值", "券信息", "创建人工号", "创建人", "驻店工号",
+            "驻店", "导购工号", "导购", "预结算值", "预结算时间", "预结算人", "厂商结算", "结算值", "补贴", "结算时间",
+            "结算人", "抹零", "厂商抹零", "状态", "类型", "商品名称", "商品编号", "商品颜色", "商品规格", "售价",
+            "折扣价", "折让价", "价格类型", "数量", "销售项总价", "结算方式", "结算值", "原数", "金蝶编号", "金蝶名称",
+            "备注"
+        ]
 
-            self.createTableHead(sheet, tableHead)
+        self.getDBCursor(self.host, self.username, self.password, self.charset)
 
-            count = 1
-            nowPage = 1
-            flag = True
-            
-            while (flag):
+        sql = self.sqler(timeType, companyType, type, args, company)
 
-                rows = self.page(sql, nowPage, self.size)
-
-                for i, v in enumerate(rows):
-                
-                    data = list(v)
-                    
-                    self.divNum(data, [25, 33, 36, 37, 38, 41, 42, 49, 50, 51, 53, 54, 56, 57])
-
-                    if data[52]: data[52] = self.salesPriceType[data[52]]
-                    if data[55]: data[55] = self.salesCType[data[55]]
-
-                    if data[39] == None : data[39] = u'无'; data[40] = u'无'
-
-                    self.createTableHead(sheet, data, count)
-                    count += 1
-
-                molecular = molecular + len(rows)
-                schedules = (molecular / all) * 100
-
-                self.updataSchedule(self.pthost, pid, {
-                    "plan.schedule": int(schedules),
-                    "plan.status": 4
-                })
-                
-                nowPage = nowPage + 1
-
-                if len(rows) < self.size:
-                    flag = False
-
-            resultfilepath = self.packFile(pid, workbook)
-
-            self.updataSchedule(self.pthost, pid, {
-                "plan.resultFilepath": resultfilepath
-            })
-
-        except Exception as e:
-            self.flag = False
-            self.errCall(pid, self.pthost, self.media, e)
-
-        finally:
-            self.modelEnd(pid, self.pthost, self.media, self.flag)
-            sys.exit(0)
+        self.exporter(pid, args, "销售结算-购货", tableheads, self.colum, sql, self.rower)
 
 
 if __name__ == '__main__':

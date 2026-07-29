@@ -90,109 +90,40 @@ class Exporter(Util):
 
         return companyString
 
+    def sqler(self, args, company):
+
+        startTime, endTime = args.split("-")
+
+        return self.SQL_QUERY % ("%s", startTime, endTime, self.company("d.company", company))
+
+    def rower(self, row):
+
+        self.divNum(row, [12, 13, 14, 15])
+
+        if (row[19] != None):
+            row[19] = self.constructionDrawlineIstatus[row[19]]
+        if (row[21] != None):
+            row[21] = self.constructionIshovel[row[21]]
+        if (row[22] != None):
+            row[22] = self.constructionIskey[row[22]]
+        if (row[23] != None):
+            row[23] = self.constructionIsCeremony[row[23]]
+
+        return row
+
     def main(self, pid, args, company):
 
-        try:
+        tableheads = [
+            u"装修单号", u"城市", u"城区", u"楼盘", u"楼号", u"设计分区", u"设计部", u'设计师', u"跟单员", u"工程分区",
+            u"工程部", u"监理", u"面积", u"签单额", u"折扣", u"折前总价", u"申请时间", u"放线时间", u"放线小组", u"状态",
+            u"备注", u"是否铲大白", u"是否交钥匙", u"开工仪式", u"开工时间", u"完工时间", u"预签时间", u"签单时间", u"备注", u"公司",
+        ]
 
-            self.getDBCursor(self.host, self.username, self.password, self.charset)
+        self.getDBCursor(self.host, self.username, self.password, self.charset)
 
-            times = args.split("-")
+        sql = self.sqler(args, company)
 
-            startTime = times[0]
-            endTime = times[1]
-
-            checkFlag = self.controlTime(startTime, endTime)
-
-            if checkFlag == False:
-                self.flag = False
-                self.updataSchedule(self.pthost, pid, {
-                    "plan.status": 3,
-                    "plan.info": "时间范围大于31天"
-                })
-                return False
-
-            sqlcount = self.SQL_QUERY % ("count(*)", startTime, endTime, self.company("d.company", company))
-
-            count = self.count(sqlcount)
-            if count == 0:
-                self.flag = False
-                self.updataSchedule(self.pthost, pid, {
-                    "plan.status": 3,
-                    "plan.info": "无可导出数据"
-                })
-                return False
-
-            all = count / 0.8
-            molecular = all * 0.1
-            schedule = (molecular / all) * 100
-
-            self.updataSchedule(self.pthost, pid, {
-                u"plan.schedule": schedule,
-                u"plan.status": 4
-            })
-
-            sql = self.SQL_QUERY % (self.colum, startTime, endTime, self.company("d.company", company))
-
-            workbook, sheet = self.createWorkbook(u"放线信息")
-
-            tableHead = [
-                u"装修单号", u"城市", u"城区", u"楼盘", u"楼号", u"设计分区", u"设计部", u'设计师', u"跟单员", u"工程分区", 
-                u"工程部", u"监理", u"面积", u"签单额", u"折扣", u"折前总价", u"申请时间", u"放线时间", u"放线小组", u"状态", 
-                u"备注", u"是否铲大白", u"是否交钥匙", u"开工仪式", u"开工时间", u"完工时间", u"预签时间", u"签单时间", u"备注", u"公司",
-            ]
-
-            self.createTableHead(sheet, tableHead)
-
-            count = 1
-            nowPage = 1
-            flag = True
-            
-            while (flag):
-
-                rows = self.page(sql, nowPage, self.size)
-
-                for i, v in enumerate(rows):
-                    data = list(v)
-                    self.divNum(data, [12, 13, 14, 15])
-
-                    if(data[19] != None):
-                        data[19] = self.constructionDrawlineIstatus[data[19]]
-                    if (data[21] != None):
-                        data[21] = self.constructionIshovel[data[21]]
-                    if (data[22] != None):
-                        data[22] = self.constructionIskey[data[22]]
-                    if (data[23] != None):
-                        data[23] = self.constructionIsCeremony[data[23]]
-
-                    self.createTableHead(sheet, data, count)
-
-                    count += 1
-
-                molecular = molecular + len(rows)
-                schedules = (molecular / all) * 100
-                self.updataSchedule(self.pthost, pid, {
-                    u"plan.schedule": int(schedules),
-                    u"plan.status": 4
-                })
-
-                nowPage = nowPage + 1
-
-                if len(rows) < self.size:
-                    flag = False
-
-            resultfilepath = self.packFile(pid, workbook)
-
-            self.updataSchedule(self.pthost, pid, {
-                u"plan.resultFilepath": resultfilepath
-            })
-
-        except Exception as e:
-            self.flag = False
-            self.errCall(pid, self.pthost, self.media, e)
-
-        finally:
-            self.modelEnd(pid, self.pthost, self.media, self.flag)
-            sys.exit(0)
+        self.exporter(pid, args, u"放线信息", tableheads, self.colum, sql, self.rower)
 
 if __name__ == '__main__':
 

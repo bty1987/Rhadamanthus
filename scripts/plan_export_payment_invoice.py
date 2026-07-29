@@ -138,96 +138,30 @@ class Exporter(Util):
 
         return companyId
 
+    def sqler(self, args, company):
+
+        startTime, endTime = args.split("-")
+
+        return self.SQL_EXPORT_RECEIPT % ("%s", startTime, endTime, company)
+
+    def rower(self, row):
+
+        row[7] = self.decryptSensitive(row[7])
+
+        return row
+
     def main(self, pid, args, company):
-        try:
-            self.getDBCursor(self.host, self.username, self.password, self.charset)
 
-            startTime, endTime = args.split("-")
+        tableheads = [
+            u"装修单号", u"省份", u"城市", u"城区", u"楼盘", u"楼号", u"客户名", u"客户电话", u"身份证号", u"款项类型",
+            u"款项名称", u"收据名称", u"资金类型", u"操作类型", u"收款时间", u"金额", u"客户类型", u"银行卡号", u"公司编号"
+        ]
 
-            checkFlag = self.controlTime(startTime, endTime)
+        self.getDBCursor(self.host, self.username, self.password, self.charset)
 
-            if checkFlag == False:
-                self.flag = False
-                self.updataSchedule(self.pthost, pid, {
-                    u"plan.status": 3,
-                    u"plan.info": '时间范围大于31天'
-                })
-                return False
+        sql = self.sqler(args, company)
 
-            sqlcount = self.SQL_EXPORT_RECEIPT % (u"count(*)", startTime, endTime, company)
-
-            count = self.count(sqlcount)
-
-            if count == 0:
-                self.flag = False
-                self.updataSchedule(self.pthost, pid, {
-                    u"plan.status": 3,
-                    u"plan.info": '无可导出数据'
-                })
-                return False
-
-            all = count / 0.8
-            molecular = all * 0.1
-            schedule = (molecular / all) * 100
-
-            self.updataSchedule(self.pthost, pid, {
-                u"plan.schedule": schedule,
-                u"plan.status": 4
-            })
-
-            sql = self.SQL_EXPORT_RECEIPT % (self.colum, startTime, endTime, company)
-
-            workbook, sheet = self.createWorkbook(u"发票数据")
-
-            tableHead = [
-                u"装修单号", u"省份", u"城市", u"城区", u"楼盘", u"楼号", u"客户名", u"客户电话", u"身份证号", u"款项类型",
-                u"款项名称", u"收据名称", u"资金类型", u"操作类型", u"收款时间", u"金额", u"客户类型", u"银行卡号", u"公司编号"
-            ]
-
-            self.createTableHead(sheet, tableHead)
-
-            counts = 1
-            nowPage = 1
-            flag = True
-            
-            while (flag):
-
-                rows = self.page(sql, nowPage, self.size)
-
-                for i, v in enumerate(rows):
-                    data = list(v)
-                    
-                    data[7] = self.decryptSensitive(data[7])
-
-                    self.createTableHead(sheet, data, counts)
-                    counts += 1
-
-                molecular = molecular + len(rows)
-                schedules = (molecular / all) * 100
-
-                self.updataSchedule(self.pthost, pid, {
-                    u"plan.schedule": int(schedules),
-                    u"plan.status": 4
-                })
-
-                nowPage = nowPage + 1
-
-                if len(rows) < self.size:
-                    flag = False
-
-            resultfilepath = self.packFile(pid, workbook)
-
-            self.updataSchedule(self.pthost, pid, {
-                u"plan.resultFilepath": resultfilepath
-            })
-
-        except Exception as e:
-            self.flag = False
-            self.errCall(pid, self.pthost, self.media, e)
-
-        finally:
-            self.modelEnd(pid, self.pthost, self.media, self.flag)
-            sys.exit(0)
+        self.exporter(pid, args, u"发票数据", tableheads, self.colum, sql, self.rower)
 
 if __name__ == '__main__':
 
