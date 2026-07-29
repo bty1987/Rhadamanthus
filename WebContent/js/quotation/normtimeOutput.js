@@ -248,7 +248,7 @@ function printNromadd(schedule) {
 
         $.each(res.normtimeItems, function(i, v) {
 
-            if (v.constructionNode.sort != schedule)
+            if (v.constructionNode.cnid != schedule)
                 return true;
 
             var trannum = parseFloat(v.trannum == '0' ? 1 : v.trannum);

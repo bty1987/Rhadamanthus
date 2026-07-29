@@ -264,7 +264,7 @@ function printNromadd(schedule, amountInfo) {
             if (v.status != NORMRICE_ITEM_STATUS_CONFIRMED_INT)
                 return true;
 
-            if (v.constructionNode.sort != schedule)
+            if (v.constructionNode.cnid != schedule)
                 return true;
 
             var trannum = parseFloat(v.trannum == '0' ? 1 : v.trannum);
