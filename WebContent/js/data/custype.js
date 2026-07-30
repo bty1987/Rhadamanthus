@@ -17,6 +17,8 @@ $(function() {
             phone: com.focusPage("#phone", "#custype"),
             wxapp: com.focusPage("#wxapp", "#custype"),
             atttype: com.focusPage("#atttype", "#custype"),
+            platform: com.focusPage("#platform", "#custype"),
+            receiptType: com.focusPage("#receiptType", "#custype"),
             dgrade: com.focusPage("#dgrade", "#custype"),
             sgrade: com.focusPage("#sgrade", "#custype")
         },
@@ -30,8 +32,14 @@ $(function() {
     };
 
     custype.items.atttype.bindData(constant.payment().receipt.paymentType.datas, "key", "value");
+    custype.items.platform.bindData(constant.data().custype.platform.datas, "key", "value");
     custype.items.dgrade.bindData(constant.data().custype.dgrade.datas, "key", "value", true);
     custype.items.sgrade.bindData(constant.data().custype.sgrade.datas, "key", "value", true);
+
+    com.post(api.data.queryReceiptType, {}, function(res) {
+
+        custype.items.receiptType.bindData(res.receiptTypes, "rtId", "name", "无");
+    }, null, false);
 
     custype.modals.addCustypeModal.on("hide.bs.modal", function(a) {
 
@@ -108,21 +116,19 @@ $(function() {
     }, {
         fieId: "receiptTypeName",
         name: "收据类型名称",
-        prop: "receiptType.name",
-        clazz: "blue",
-        show: function(v) {
+        prop: function(v) {
 
-            return v.receiptType.name = com.checkNull(v.receiptType.name, "无");
-        }
+            return com.checkNull(v.receiptType == null ? null : v.receiptType.name, "无");
+        },
+        clazz: "blue"
     }, {
         fieId: "receiptTypeNo",
         name: "收据类型键值",
-        prop: "receiptType.no",
-        clazz: "blue",
-        show: function(v) {
+        prop: function(v) {
 
-            return v.receiptType.no = com.checkNull(v.receiptType.no, "无");
-        }
+            return com.checkNull(v.receiptType == null ? null : v.receiptType.no, "无");
+        },
+        clazz: "blue"
     }, {
         fieId: "platform",
         name: "支付平台",
@@ -144,6 +150,8 @@ $(function() {
             custype.items.phone.val(v.phone);
             custype.items.wxapp.val(v.wxapp);
             custype.items.atttype.val(v.atttype);
+            custype.items.platform.val(v.platform);
+            custype.items.receiptType.val(v.receiptType == null ? "" : v.receiptType.rtId);
             custype.items.dgrade.val(v.dgrade);
             custype.items.sgrade.val(v.sgrade);
 
@@ -173,9 +181,6 @@ $(function() {
 
     searcher.line("name", lineprops, linebtns).render();
 
-    com.focusPage("#resultList").find("div.action-buttons").find("a.btn-yellow").hide();
-    com.focusPage('#addCustype', '#pagenation').hide();
-
     com.focusPage('#addCustype', '#pagenation').on("click", function() {
 
         custype.modals.addCustypeModal.modal("show");
@@ -193,11 +198,13 @@ $(function() {
             "custype.agent": custype.items.agent.val(),
             "custype.phone": custype.items.phone.val(),
             "custype.wxapp": custype.items.wxapp.val(),
-            "custype.atttype": custype.items.atttype.val()
+            "custype.atttype": custype.items.atttype.val(),
+            "custype.platform": custype.items.platform.val()
         };
 
         if (custype.items.dgrade.val() != "" && custype.items.dgrade.val() != null && custype.items.dgrade.val() != undefined) options["custype.dgrade"] = custype.items.dgrade.val();
         if (custype.items.sgrade.val() != "" && custype.items.sgrade.val() != null && custype.items.sgrade.val() != undefined) options["custype.sgrade"] = custype.items.sgrade.val();
+        if (custype.items.receiptType.val() != "" && custype.items.receiptType.val() != null && custype.items.receiptType.val() != undefined) options["custype.receiptType.rtId"] = custype.items.receiptType.val();
 
         if (custype.currentCtid != null) {
             url = api.data.updateCustype;
