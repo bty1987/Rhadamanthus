@@ -1,4 +1,4 @@
-<div>
+<div id="quotationAssignUserRuleItemPage">
     <div class="row">
         <div class="col-xs-12">
             <div id="condList1" class="fl_search clearfix"></div> <!-- 查询条件-->
@@ -56,6 +56,41 @@
                 <div class="modal-footer">
                     <button type="button" id="saveBtn" class="btn btn-primary" data-i18n="msg.save">保存</button>
                     <button type="button" class="btn btn-default" data-dismiss="modal" data-i18n="msg.cancel">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 查看任务弹窗 -->
+    <div class="modal fade" id="taskModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span>&times;</span><span class="sr-only">Close</span>
+                    </button>
+                    <h4 class="modal-title">当前任务列表 - <span id="taskUserName"></span></h4>
+                </div>
+                <div class="modal-body" style="max-height: 500px; overflow-y: auto;">
+                    <table class="table table-striped table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <th>装修单号</th>
+                                <th>公司</th>
+                                <th>装修类型</th>
+                                <th>状态</th>
+                                <th>优先级</th>
+                                <th>请求人</th>
+                                <th>分配时间</th>
+                            </tr>
+                        </thead>
+                        <tbody id="taskListBody">
+                        </tbody>
+                    </table>
+                    <div id="taskEmptyMsg" class="alert alert-info" style="display:none;">当前没有负责的任务</div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal" data-i18n="msg.close">关闭</button>
                 </div>
             </div>
         </div>
