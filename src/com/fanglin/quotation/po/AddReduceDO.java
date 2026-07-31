@@ -116,6 +116,8 @@ public class AddReduceDO implements Serializable {
 
 	private short isAffirm;
 
+	private short isSalary;
+
 	private UserPO creater;
 
 	private Timestamp createTime;
@@ -282,6 +284,15 @@ public class AddReduceDO implements Serializable {
 
 	public void setIsAffirm(short isAffirm) {
 		this.isAffirm = isAffirm;
+	}
+
+	@Column(name = "isSalary")
+	public short getIsSalary() {
+		return isSalary;
+	}
+
+	public void setIsSalary(short isSalary) {
+		this.isSalary = isSalary;
 	}
 
 	@Column(name = "createTime")

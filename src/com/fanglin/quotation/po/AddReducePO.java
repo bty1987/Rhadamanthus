@@ -78,6 +78,10 @@ public class AddReducePO implements Serializable {
 
 	public static final short ISAFFIRM_CONFIRMED_INT = 1;
 
+	public static final short ISSALARY_NONE_INT = 0; // 未标识工费
+
+	public static final short ISSALARY_MARKED_INT = 1; // 已标识工费
+
 	private long arId;
 
 	private long dpId;
@@ -131,6 +135,8 @@ public class AddReducePO implements Serializable {
 	private short status;
 
 	private short isAffirm;
+
+	private short isSalary;
 
 	private UserPO creater;
 
@@ -387,6 +393,15 @@ public class AddReducePO implements Serializable {
 
 	public void setIsAffirm(short isAffirm) {
 		this.isAffirm = isAffirm;
+	}
+
+	@Column(name = "isSalary")
+	public short getIsSalary() {
+		return isSalary;
+	}
+
+	public void setIsSalary(short isSalary) {
+		this.isSalary = isSalary;
 	}
 
 	@Column(name = "createTime")

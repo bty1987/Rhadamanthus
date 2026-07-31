@@ -294,6 +294,8 @@ public class AddReduceServiceImpl implements AddReduceService {
 		addReducePO.setConsPrice(0);
 		addReducePO.setComsPrice(0);
 
+		addReducePO.setIsSalary(AddReducePO.ISSALARY_NONE_INT);
+
 		addReducePO.setAccountDiscount(addReducePO.getDiscount());
 		addReducePO.setAccountManageDiscount(addReducePO.getManageDiscount());
 		addReducePO.setAccountTaxDiscount(addReducePO.getTaxDiscount());
@@ -363,6 +365,8 @@ public class AddReduceServiceImpl implements AddReduceService {
 		addReducePO.setAccountDiscount(addReduceVO.getDiscount());
 		addReducePO.setAccountManageDiscount(addReduceVO.getManageDiscount());
 		addReducePO.setAccountTaxDiscount(addReduceVO.getTaxDiscount());
+
+		addReducePO.setIsSalary(addReduceVO.getIsSalary());
 
 		addReduceDao.update(addReducePO);
 
