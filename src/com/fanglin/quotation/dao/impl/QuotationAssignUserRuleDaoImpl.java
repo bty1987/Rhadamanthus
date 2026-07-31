@@ -31,14 +31,19 @@ public class QuotationAssignUserRuleDaoImpl extends DaoImpl<QuotationAssignUserR
 	}
 
 	@Override
-	public List<QuotationAssignUserRulePO> pageQuotationAssignUserRule(Paging paging, List<Filter> filters, int company) throws FLException {
+	public List<QuotationAssignUserRulePO> pageQuotationAssignUserRule(Paging paging, List<Filter> filters, int company, String userId) throws FLException {
 
 		PagingQuery<QuotationAssignUserRulePO> query = pagingQuery(paging, QuotationAssignUserRulePO.class);
 
+		// alias 幂等（GenericDaoImpl 中基于 Map 去重），统一在此声明一次
+		query.alias("user", "user");
+
 		if (company > 0) {
-			query.alias("user", "user");
 			query.add(query.getCriterion("user.company", company, "eq"));
 		}
+
+		// 强制按当前登录人员过滤：仅返回本人预算员规则
+		query.add(query.getCriterion("user.userId", userId, "eq"));
 
 		queryFilterExcute(query, filters);
 

@@ -97,7 +97,8 @@ public class QuotationAssignUserRuleAction extends BaseListAction {
 	@Action(value = "pageQuotationAssignUserRule", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }), @Result(name = "error", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageQuotationAssignUserRule() throws FLException {
 
-		quotationAssignUserRuleService.pageQuotationAssignUserRule(getPaging(), getFilters(), queryCompany());
+		// 强制按当前登录人员过滤：仅返回本人预算员规则
+		quotationAssignUserRuleService.pageQuotationAssignUserRule(getPaging(), getFilters(), queryCompany(), queryUserId());
 
 		return SUCCESS;
 	}
