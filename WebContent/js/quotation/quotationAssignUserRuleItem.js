@@ -1,23 +1,41 @@
-$(function() {	    var DEPT_TYPE_DESIGN_INT = 2;
+$(function() {
+    var DEPT_TYPE_DESIGN_INT = 2;
+
+    // ==================== 页面作用域 ====================
+    // 本页同时支持两种入口：
+    //   1) 菜单直接进入（作为 .flpage.tab-pane.active 加载）
+    //   2) 由主页面"项目"按钮弹窗进入（内容被 load 进 #layerPopUp，并非 .flpage.tab-pane）
+    // com.focusPage 默认只在 .flpage.tab-pane.active 内查找，弹窗模式下可能取不到本页元素，
+    // 这里用页面根节点 #quotationAssignUserRuleItemPage 作为作用域兜底，确保两种模式下都能命中。
+    var $pageRoot = $('#quotationAssignUserRuleItemPage');
+    var _focusPage = function(selecter, container) {
+
+        var $set = com.focusPage(selecter, container);
+        if ($set && $set.length) return $set;
+
+        // 兜底：在页面根节点内查找
+        return container ? $pageRoot.find(container).find(selecter) : $pageRoot.find(selecter);
+    };
 
 	    // ==================== 页面元素声明 ====================
     var config = {
         modals: {
-            itemModal: com.focusPage('#itemModal')
+            itemModal: _focusPage('#itemModal'),
+            taskModal: _focusPage('#taskModal')
         },
         items: {
-            qauriid: com.focusPage('#qauriid'),
-            qaurid: com.focusPage('#qaurid'),
-            company: com.focusPage('#company'),
-            department: com.focusPage('#department'),
-            supportedType: com.focusPage('input[name="supportedType"]'),
-            budgetUser: com.focusPage('#budgetUser'),
-            userGroup: com.focusPage('#userGroup'),
-            companyGroup: com.focusPage('#companyGroup')
+            qauriid: _focusPage('#qauriid'),
+            qaurid: _focusPage('#qaurid'),
+            company: _focusPage('#company'),
+            department: _focusPage('#department'),
+            supportedType: _focusPage('input[name="supportedType"]'),
+            budgetUser: _focusPage('#budgetUser'),
+            userGroup: _focusPage('#userGroup'),
+            companyGroup: _focusPage('#companyGroup')
         },
         btns: {
             addBtn: null,
-            saveBtn: com.focusPage('#saveBtn')
+            saveBtn: _focusPage('#saveBtn')
         },
         status: {
             isNew: true
@@ -126,6 +144,15 @@ $(function() {	    var DEPT_TYPE_DESIGN_INT = 2;
             deleteItem(v);
             return false;
         }
+    }, {
+        // 查看任务按钮：弹窗显示该预算员负责的所有 request
+        name: "查看任务",
+        clazz: "btn-purple",
+        handle: function(v) {
+
+            viewUserTasks(v);
+            return false;
+        }
     }];
 
     // 配置行（按公司名称排序）
@@ -145,13 +172,13 @@ $(function() {	    var DEPT_TYPE_DESIGN_INT = 2;
 
 	    // 初始化支持类型单选框
 	    function initSupportedTypeRadios() {
-	        var $group = com.focusPage('#supportedTypeGroup').empty();
+	        var $group = _focusPage('#supportedTypeGroup').empty();
 	        $.each(constant.quotation().quotationAssignUserRule.supportedType.datas, function(i, data) {
 	            var $label = $('<label></label>').addClass('radio-inline');
 	            $('<input>').attr('type', 'radio').attr('name', 'supportedType').val(data.key).appendTo($label);
 	            $label.append(' ' + data.value).appendTo($group);
 	        });
-	        config.items.supportedType = com.focusPage('input[name="supportedType"]');
+	        config.items.supportedType = _focusPage('input[name="supportedType"]');
 	    }
 
 	    // 初始化部门下拉框（固定为设计部类型，dept.type.dtid=2）
@@ -206,7 +233,7 @@ $(function() {	    var DEPT_TYPE_DESIGN_INT = 2;
     $(document).on('click', '#addItemBtn', function() {
         resetForm();
         config.status.isNew = true;
-        com.focusPage('#modalTitle').text('新增规则项目');
+        _focusPage('#modalTitle').text('新增规则项目');
 
         // 独立页面模式：显示预算员输入，隐藏公司选择
         if (config.data.isStandalone) {
@@ -255,7 +282,7 @@ $(function() {	    var DEPT_TYPE_DESIGN_INT = 2;
         } else {
             config.items.supportedType.filter('[value="' + constant.quotation().quotationAssignUserRule.SUPPORTED_TYPE_ALL_INT + '"]').prop('checked', true);
         }
-        com.focusPage('#modalTitle').text('编辑规则项目');
+        _focusPage('#modalTitle').text('编辑规则项目');
 
         // 编辑模式下：隐藏预算员选择（已有的 Item 不需要改预算员），显示公司（只读）
         if (config.data.isStandalone) {
@@ -333,10 +360,97 @@ $(function() {	    var DEPT_TYPE_DESIGN_INT = 2;
         });
     }
 
-    // Modal 关闭时清理残留蒙版（解决 popup4page 内 Bootstrap Modal 蒙版层叠问题）
-    config.modals.itemModal.on('hidden.bs.modal', function() {
-        $('.modal-backdrop').remove();
-        $('body').removeClass('modal-open').css('padding-right', '');
+    // ==================== 查看任务功能 ====================
+
+    // 查看预算员当前负责的所有任务（已分配且未完成，与主页面"查看任务"口径一致）
+    function viewUserTasks(row) {
+
+        var userName = row.user ? row.user.currentName : "未知";
+        var uid = row.user ? row.user.uid : null;
+
+        if (!uid) {
+            com.showAlert(com.warning, '无法获取预算员信息');
+            return;
+        }
+
+        // 设置弹窗标题
+        _focusPage('#taskUserName').text(userName);
+
+        // 清空列表
+        _focusPage('#taskListBody').empty();
+        _focusPage('#taskEmptyMsg').hide();
+
+        // 构造分页参数（查全部，每页100条，第一页）
+        // 只查已分配且未完成任务(status=2)：与 currentTaskCount 统计口径一致
+        // company=0 表示不过滤公司（跨公司查看）
+        var postData = {
+            "paging.page": 1,
+            "paging.rows": 100,
+            "company": 0,
+            "filters[0].field": "uid",
+            "filters[0].data": uid,
+            "filters[0].op": "eq",
+            "filters[1].field": "status",
+            "filters[1].data": String(constant.quotation().quotationAssignRequest.STATUS_ASSIGNED_INT),
+            "filters[1].op": "eq"
+        };
+
+        com.post(api.quotation.pageQuotationAssignRequest, postData, function(res) {
+
+            var rows = res.paging.data || [];
+
+            if (rows.length == 0) {
+                _focusPage('#taskEmptyMsg').show();
+            } else {
+                var $body = _focusPage('#taskListBody');
+                $.each(rows, function(i, item) {
+
+                    var statusText = constant.quotation().quotationAssignRequest.status.keys[item.status] || "未知";
+                    var priorityText = constant.quotation().quotationAssignRequest.priority.keys[item.priority] || "普通";
+                    var companyName = item.company ? item.company.name : "-";
+                    var decorationType = constant.quotation().quotationAssignRequest.decorationType.keys[item.decorationType] || "-";
+                    var requestUserName = item.requestUser && item.requestUser.currentName ? item.requestUser.currentName : "-";
+
+                    var $tr = $('<tr></tr>');
+                    $('<td></td>').text(item.orderId || '-').appendTo($tr);
+                    $('<td></td>').text(companyName).appendTo($tr);
+                    $('<td></td>').text(decorationType).appendTo($tr);
+                    $('<td></td>').text(statusText).appendTo($tr);
+                    $('<td></td>').text(priorityText).appendTo($tr);
+                    $('<td></td>').text(requestUserName).appendTo($tr);
+                    $('<td></td>').text(item.assignTime || '-').appendTo($tr);
+
+                    $tr.appendTo($body);
+                });
+            }
+
+            // 显示弹窗
+            config.modals.taskModal.modal('show');
+        });
+    }
+
+    // 弹窗（popup4page / layui-layer）内嵌 Bootstrap Modal 会叠加蒙版：
+    // layui 已自带一层蒙版，Bootstrap 再追加 .modal-backdrop，反复开关会导致蒙版层层叠加、页面变黑。
+    // 这里在每次 show 前清掉残留的 Bootstrap 蒙版，并在 hidden 时只处理本 modal 自身产生的蒙版，
+    // 不动 layui 的蒙版，避免误删导致弹窗底层穿透。
+    // itemModal 与 taskModal 共用同一套清理逻辑。
+    $.each([config.modals.itemModal, config.modals.taskModal], function(i, $modal) {
+
+        $modal.on('show.bs.modal', function() {
+
+            // 清掉上一次残留的 Bootstrap 蒙版（仅 .in 状态的为当前活动，其余皆为残留）
+            $('body > .modal-backdrop').not('.in').remove();
+        });
+
+        $modal.on('hidden.bs.modal', function() {
+
+            // Bootstrap 关闭后通常会自行移除当前 .modal-backdrop，这里只兜底清理可能残留的副本，
+            // 且仅在没有其它可见 Bootstrap modal 时再恢复 body 状态。
+            if ($('.modal:visible').length === 0) {
+                $('body > .modal-backdrop').remove();
+                $('body').removeClass('modal-open').css('padding-right', '');
+            }
+        });
     });
 
     // 绑定保存按钮事件
