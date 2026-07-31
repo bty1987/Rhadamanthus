@@ -33,7 +33,9 @@ import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.system.dao.CompanyDao;
+import com.fanglin.system.dao.SystemConfigDao;
 import com.fanglin.system.po.CompanyPO;
+import com.fanglin.system.po.SystemConfigPO;
 import com.fanglin.utils.Arith;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
@@ -43,6 +45,8 @@ import com.fanglin.utils.Paging;
 @Service("occessoriesService")
 @Transactional(readOnly = true)
 public class OccessoriesServiceImpl implements OccessoriesService {
+
+	private static final String OCCESSORIES_DELIVE_MESSAGE_URL_STR = "https://service-erp.fanglin.vip/dingding/vue/index.html?agent=4921021#/manifest/occessories-detail?oid=%s";
 
 	@Autowired
 	private OccessoriesDao occessoriesDao;
@@ -67,6 +71,9 @@ public class OccessoriesServiceImpl implements OccessoriesService {
 
 	@Autowired
 	private MessageService messageService;
+
+	@Autowired
+	private SystemConfigDao systemConfigDao;
 
 	@Override
 	public void pageOccessories(Paging paging, List<Filter> filters, int company, OccessoriesVO occessories) {
@@ -347,7 +354,9 @@ public class OccessoriesServiceImpl implements OccessoriesService {
 
 		UserPO supervisor = occessoriesPO.getSupervisor();
 
-		messageService.sendMessage(supervisor.getUserId(), null, content, MessagePO.TYPE_SEND_CONSTRUCTION_INT, supervisor.getCompany());
+		if (supervisor != null) {
+			messageService.sendMessageForUrl(supervisor.getUserId(), deliver == null ? null : deliver.getUserId(), content, MessagePO.TYPE_SEND_CONSTRUCTION_INT, buildOccessoriesDeliveMessageUrl(occessoriesPO), supervisor.getCompany());
+		}
 
 		return 0;
 	}
@@ -553,6 +562,19 @@ public class OccessoriesServiceImpl implements OccessoriesService {
 		occessoriesDao.delete(occessoriesPO);
 
 		return 0;
+	}
+
+	private String buildOccessoriesDeliveMessageUrl(OccessoriesPO occessoriesPO) {
+
+		SystemConfigPO messageUrl = systemConfigDao.querySystemConfig("occessoriesDeliveMessageUrl", occessoriesPO.getCompany());
+
+		if (messageUrl == null) {
+			messageUrl = systemConfigDao.querySystemConfig("occessoriesDeliveMessageUrl", 0);
+		}
+
+		String value = messageUrl == null ? OCCESSORIES_DELIVE_MESSAGE_URL_STR : messageUrl.value(OCCESSORIES_DELIVE_MESSAGE_URL_STR);
+
+		return String.format(value, occessoriesPO.getOid());
 	}
 
 }
