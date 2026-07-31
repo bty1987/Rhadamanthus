@@ -575,6 +575,13 @@ $(function() {
         }
     }, ];
 
+    // 厂商页面仅保留查看和打印
+    if (occessories.pageType == "supplier") {
+        linebtns = $.grep(linebtns, function(btn) {
+            return btn.name == "查看" || btn.name == "打印";
+        });
+    }
+
     searcher.line("no", lineprops, linebtns).render();
 
     function managedrawing(v) {
