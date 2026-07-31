@@ -189,9 +189,10 @@ public class AccessInterceptor extends AbstractInterceptor {
 						throw new FLException(110005, "登陆超时");
 					}
 
-					operationService.fillRoleOperationByOperation(authentication.getUserId(), authentication.getRoleId(), authentication.getCompany(), actionName);
-
 					if (operationService.checkOperation(authentication.getUserId(), actionName, authentication.getRollcall())) {
+
+						operationService.fillRoleOperationByOperation(authentication.getUserId(), authentication.getRoleId(), authentication.getCompany(), actionName);
+
 						return invocation.invoke();
 					} else {
 						throw new FLException(-2, "无操作权限");
