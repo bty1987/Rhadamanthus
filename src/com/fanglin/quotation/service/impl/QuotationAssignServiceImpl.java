@@ -130,17 +130,20 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 			throw new FLException(140013, "装修单不存在");
 		}
 
-		if (decorationPictureDao.countDecorationPictureForValid(orderId, DecorationPicturePO.TYPE_CAD_INT) == 0) {
-			throw new FLException(110038, "工程文件CAD不能为空");
+		// 2. 消费前置校验：必须先入待分配队列（由 addQuotationAssignRequestForAuto 写入 PENDING 记录）
+		// 入队与消费已拆分为两个独立接口/事务，此处不再内部入队
+		QuotationAssignRequestPO activeRequest = quotationAssignRequestDao.queryQuotationAssignRequestForActive(orderId);
+		if (activeRequest == null) {
+			throw new FLException(200115, "分配请求不存在,请先加入待分配队列");
 		}
 
-		// 2. 检查是否已分配报价员
+		// 3. 检查是否已分配报价员
 		String quoterUid = getQuoteterUid(decoration);
 		if (quoterUid != null) {
 			throw new FLException(200097, "该装修单已分配报价员，无需重复分配");
 		}
 
-		// 3. 获取装修单类型和公司部门信息
+		// 4. 获取装修单类型和公司部门信息
 		Short decorationType = decoration.getType();
 		Integer company = decoration.getCompany();
 		Integer department = getDesignDeptId(decoration);
@@ -153,19 +156,19 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 			throw new FLException(200093, "装修单公司信息不能为空");
 		}
 
-		// 4. 检查预算配置是否启用
+		// 5. 检查预算配置是否启用
 		QuotationAssignConfigPO config = quotationAssignConfigDao.queryQuotationAssignConfig(company, department);
 		if (config == null || config.getEnabled() != QuotationAssignConfigPO.ENABLED_ENABLED_INT) {
 			throw new FLException(200101, "该公司/部门未启用预算员自动分配功能");
 		}
 
-		// 5. 手动模式不属于自动分配范畴,抛清晰异常,不在此处进队列
+		// 6. 手动模式不属于自动分配范畴,抛清晰异常,不在此处进队列
 		// (进队列是独立业务动作,由 createQuotationAssignRequest 接口显式触发)
 		if (config.getAutoAssign() != QuotationAssignConfigPO.AUTO_ASSIGN_AUTO_INT) {
 			throw new FLException(200113, "该部门为手动分配模式,请通知预算经理手动派单");
 		}
 
-		// 6. 查找可分配预算员
+		// 7. 查找可分配预算员
 		// 新模型：DAO 通过 UserRuleItem 子查询匹配 company+department+decorationType
 		// 跨公司验证：排除在其他公司有非待分配状态的预算员
 		List<QuotationAssignUserRuleItemPO> availableItems = quotationAssignUserRuleItemDao.queryQuotationAssignUserRuleItemForCross(company, department, decorationType);
@@ -174,12 +177,75 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 			throw new FLException(200114, "暂无可用预算员,请稍后重试或联系管理员");
 		}
 
-		// 7. DAO 已通过 item 查询完成类型匹配和排序（按 lastFinishTime ASC）
+		// 8. DAO 已通过 item 查询完成类型匹配和排序（按 lastFinishTime ASC）
 		// 第一个即为最优选择，通过 item.getUserRule() 获取对应的预算员规则
 		QuotationAssignUserRulePO selectedUser = availableItems.get(0).getUserRule();
 
-		// 8. 执行分配
+		// 9. 执行分配
 		return assignToUser(orderId, decoration, selectedUser, QuotationAssignRecordPO.ASSIGN_TYPE_FORWARD_AUTO_INT, null);
+	}
+
+	// ==================== 入待分配队列(独立事务,与 autoQuotationAssign 解耦) ====================
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int addQuotationAssignRequestForAuto(String orderId) throws FLException {
+
+		// ========== 参数校验 ==========
+		if (orderId == null || orderId.trim().isEmpty()) {
+			throw new FLException(140093, "装修单号不能为空");
+		}
+
+		// 1. 查询装修单
+		DecorationPO decoration = decorationDao.queryDecorationByOrderId(orderId);
+		if (decoration == null) {
+			throw new FLException(140013, "装修单不存在");
+		}
+
+		if (decorationPictureDao.countDecorationPictureForValid(orderId, DecorationPicturePO.TYPE_CAD_INT) == 0) {
+			throw new FLException(110038, "工程文件CAD不能为空");
+		}
+
+		// 2. 幂等校验：同 orderId 已存在活跃请求（PENDING/ASSIGNED）则不重复入队
+		QuotationAssignRequestPO existRequest = quotationAssignRequestDao.queryQuotationAssignRequestForActive(orderId);
+		if (existRequest != null) {
+			return 1;
+		}
+
+		// 3. 获取装修单维度（与 autoQuotationAssign 取数口径一致）
+		Integer company = decoration.getCompany();
+		Integer department = getDesignDeptId(decoration);
+
+		if (company == null) {
+			throw new FLException(200093, "装修单公司信息不能为空");
+		}
+
+		// 4. 检查预算配置：仅自动模式允许入队，手动模式抛 200113（保持现状语义）
+		QuotationAssignConfigPO config = quotationAssignConfigDao.queryQuotationAssignConfig(company, department);
+		if (config == null || config.getEnabled() != QuotationAssignConfigPO.ENABLED_ENABLED_INT) {
+			throw new FLException(200101, "该公司/部门未启用预算员自动分配功能");
+		}
+		if (config.getAutoAssign() != QuotationAssignConfigPO.AUTO_ASSIGN_AUTO_INT) {
+			throw new FLException(200113, "该部门为手动分配模式,请通知预算经理手动派单");
+		}
+
+		// 5. 从装修单补全维度，创建 PENDING 记录
+		QuotationAssignRequestPO request = new QuotationAssignRequestPO();
+		request.setOrderId(orderId);
+		request.setCompany(new com.fanglin.system.po.CompanyPO(company));
+		request.setDepartment(department != null ? new DepartmentPO(department) : null);
+		request.setDecorationType(decoration.getType());
+		request.setRequestUser(getRequestUser(decoration));
+		request.setPriority(QuotationAssignRequestPO.PRIORITY_NORMAL_INT);
+
+		Timestamp currentTime = new Timestamp(System.currentTimeMillis());
+		request.setRequestTime(currentTime);
+		request.setCreateTime(currentTime);
+		request.setStatus(QuotationAssignRequestPO.STATUS_PENDING_INT);
+
+		quotationAssignRequestDao.save(request);
+
+		return 1;
 	}
 
 	// ==================== 手动分配 ====================
@@ -415,10 +481,10 @@ public class QuotationAssignServiceImpl implements QuotationAssignService {
 		}
 	}
 
-	// ==================== 进待分配队列(独立业务动作) ====================
-	// 注:进待分配队列由 QuotationAssignRequestService.createQuotationAssignRequest 独立承担,
-	// autoQuotationAssign 只负责"尝试自动分配",两者解耦。预算经理手动加单等场景
-	// 调用 createQuotationAssignRequest 接口即可。
+	// 注:进待分配队列有两条独立路径:
+	//   ① addQuotationAssignRequestForAuto —— 自动分配前置入队(按 orderId 补全维度,写 PENDING)
+	//   ② QuotationAssignRequestService.createQuotationAssignRequest —— 预算经理手动加单(完整表单)
+	// autoQuotationAssign 只负责"尝试消费队列",与入队彻底解耦,各自独立事务。
 
 	/**
 	 * 分配给指定预算员
