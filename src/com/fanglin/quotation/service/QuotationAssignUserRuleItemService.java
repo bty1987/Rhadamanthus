@@ -28,8 +28,12 @@ public interface QuotationAssignUserRuleItemService {
 
 	/**
 	 * 分页查询预算规则明细列表（含预算员姓名）
+	 *
+	 * @param paging 分页对象
+	 * @param filters 过滤条件（支持 company、supportedType、userName）
+	 * @param qaurid 所属预算员规则ID（子页面模式固定该规则明细；为 null 时查全部，用于独立页面模式）
 	 */
-	void pageQuotationAssignUserRuleItem(Paging paging, List<Filter> filters) throws FLException;
+	void pageQuotationAssignUserRuleItem(Paging paging, List<Filter> filters, Long qaurid) throws FLException;
 
 	/**
 	 * 新增预算规则明细

@@ -85,9 +85,9 @@ public class QuotationAssignUserRuleItemServiceImpl implements QuotationAssignUs
 	}
 
 	@Override
-	public void pageQuotationAssignUserRuleItem(Paging paging, List<Filter> filters) throws FLException {
+	public void pageQuotationAssignUserRuleItem(Paging paging, List<Filter> filters, Long qaurid) throws FLException {
 
-		List<QuotationAssignUserRuleItemPO> itemPOs = quotationAssignUserRuleItemDao.pageQuotationAssignUserRuleItem(paging, filters);
+		List<QuotationAssignUserRuleItemPO> itemPOs = quotationAssignUserRuleItemDao.pageQuotationAssignUserRuleItem(paging, filters, qaurid);
 		List<QuotationAssignUserRuleItemVO> itemVOs = new ArrayList<QuotationAssignUserRuleItemVO>();
 
 		for (QuotationAssignUserRuleItemPO itemPO : itemPOs) {
