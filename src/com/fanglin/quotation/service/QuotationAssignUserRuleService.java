@@ -40,14 +40,15 @@ import com.fanglin.utils.Paging;
 public interface QuotationAssignUserRuleService {
 
 	/**
-	 * 分页查询预算员规则列表
-	 * 
+	 * 分页查询预算员规则列表（强制按当前登录人员过滤）
+	 *
      * @param paging 分页对象
      * @param filters 过滤条件
 	 * @param company 公司ID
+	 * @param userId 当前登录人员 userId（强制过滤，仅返回本人规则）
      * @throws FLException 业务异常
      */
-    void pageQuotationAssignUserRule(Paging paging, List<Filter> filters, int company) throws FLException;
+    void pageQuotationAssignUserRule(Paging paging, List<Filter> filters, int company, String userId) throws FLException;
 
 	/**
 	 * 根据ID查询预算员规则（含明细列表，用于编辑回显）

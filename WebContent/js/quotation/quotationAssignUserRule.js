@@ -38,8 +38,7 @@ $(function() {
     api.quotation.pageQuotationAssignUserRule // API 接口
     );
 
-    // 查询条件
-    searcher.condition(["quotation-assign-user-rule-status", "quotation-assign-user-rule-userName"]);
+    // 仅查询当前登录人员的数据：由后端按登录态强制过滤，前端不再提供查询条件
 
     // 顶部按钮
     searcher.button(function() {

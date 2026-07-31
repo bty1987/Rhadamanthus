@@ -66,11 +66,11 @@ public class QuotationAssignUserRuleServiceImpl implements QuotationAssignUserRu
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void pageQuotationAssignUserRule(Paging paging, List<Filter> filters, int company) throws FLException {
+	public void pageQuotationAssignUserRule(Paging paging, List<Filter> filters, int company, String userId) throws FLException {
 
 		syncQuotationAssignUserRuleStatus();
 
-		List<QuotationAssignUserRulePO> rulePOs = quotationAssignUserRuleDao.pageQuotationAssignUserRule(paging, filters, company);
+		List<QuotationAssignUserRulePO> rulePOs = quotationAssignUserRuleDao.pageQuotationAssignUserRule(paging, filters, company, userId);
 		List<QuotationAssignUserRuleVO> ruleVOs = new ArrayList<QuotationAssignUserRuleVO>();
 
 		for (QuotationAssignUserRulePO po : rulePOs) {
