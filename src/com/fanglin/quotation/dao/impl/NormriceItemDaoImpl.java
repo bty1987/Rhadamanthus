@@ -56,8 +56,11 @@ public class NormriceItemDaoImpl extends DaoImpl<NormriceItemPO> implements Norm
 	@Override
 	public int countNormoodItem(long qid, long cnid) {
 
-		String sql = "select count(*) from quotation.normriceitem where qid = :qid and cnid = :cnid and status = :status";
-		BigInteger count = (BigInteger) session().createSQLQuery(sql).setLong("qid", qid).setLong("cnid", cnid).setShort("status", NormriceItemPO.STATUS_INIT_INT).uniqueResult();
+		// 仅统计 type=QUOTA(附加项) 且 status=INIT(待确认) 的记录
+		// 普通报价项(type=OFFER/EXPAND/ADDCUT) 天然 status=0, 不得计入附加项待审判定, 否则会导致
+		// constructionschedule.additemStatus 确认/驳回后无法重置回 0
+		String sql = "select count(*) from quotation.normriceitem where qid = :qid and cnid = :cnid and type = :type and status = :status";
+		BigInteger count = (BigInteger) session().createSQLQuery(sql).setLong("qid", qid).setLong("cnid", cnid).setShort("type", NormriceItemPO.TYPE_QUOTA_INT).setShort("status", NormriceItemPO.STATUS_INIT_INT).uniqueResult();
 
 		return count == null ? 0 : count.intValue();
 	}
