@@ -17,7 +17,6 @@
         taxPrice: 0,
         taxRate: 0,
         taxDiscount: 0,
-        isSalary: 0,
         isCountIn: false,
         customFlag: false,
 
@@ -25,7 +24,6 @@
         isCountManageDiscount: com.focusPage("#isCountManageDiscount"),
         $isCountManageLabel: com.focusPage('#isCountManageLabel'),
         isCountTax: com.focusPage("#isCountTax"),
-        isCountSalary: com.focusPage("#isCountSalary"),
 
         basicParams: {
             "addReduce.arId": null,
@@ -45,7 +43,6 @@
             "addReduce.taxRate": 0,
             "addReduce.taxPrice": 0,
             "addReduce.taxDiscount": 0,
-            "addReduce.isSalary": 0,
             "addReduce.status": null
 
         },
@@ -774,20 +771,6 @@
                 }, null, false);
             });
         },
-        changeTotalIsCountInSalary: function() {
-
-            addReduceDetail.isCountSalary.on("click", function(res) {
-
-                var options = $.extend({}, addReduceDetail.basicParams);
-
-                options["addReduce.isSalary"] = addReduceDetail.isCountSalary.prop("checked") ? 1 : 0;
-                addReduceDetail.basicParams["addReduce.isSalary"] = options["addReduce.isSalary"];
-
-                com.post(api.quotation.updateAddReduceForAdvance, options, function() {
-
-                }, null, false);
-            });
-        },
         changeDiscount: function() {
 
             com.focusPage("#changeDiscountBtn").on('click', function(event) {
@@ -855,7 +838,6 @@
             this.addItemModalConfirm();
             this.changeTotalIsCountIn();
             this.changeTotalIsCountInDiscount();
-            this.changeTotalIsCountInSalary();
             this.changeDiscount();
             this.changeTotalIsCountTax();
         }
@@ -1571,7 +1553,6 @@
                 addReduceDetail.taxRate = addReduce.taxRate;
                 addReduceDetail.taxPrice = addReduce.taxPrice;
                 addReduceDetail.taxDiscount = addReduce.taxDiscount;
-                addReduceDetail.isSalary = addReduce.isSalary;
 
                 addReduceDetail.basicParams["addReduce.arId"] = addReduce.arId;
                 addReduceDetail.basicParams["addReduceItem.arId"] = addReduce.arId;
@@ -1587,7 +1568,6 @@
                 addReduceDetail.basicParams["addReduce.taxPrice"] = addReduce.taxPrice;
                 addReduceDetail.basicParams["addReduce.taxRate"] = addReduce.manageRate;
                 addReduceDetail.basicParams["addReduce.status"] = addReduce.status;
-                addReduceDetail.basicParams["addReduce.isSalary"] = addReduce.isSalary;
 
                 addReduceDetail.orderid = addReduce.orderId;
 
@@ -1723,12 +1703,6 @@
                 addReduceDetail.isCountManageDiscount.prop("checked", true);
             } else {
                 addReduceDetail.isCountManageDiscount.prop("checked", false);
-            }
-
-            if (addReduceDetail.isSalary == 1) {
-                addReduceDetail.isCountSalary.prop("checked", true);
-            } else {
-                addReduceDetail.isCountSalary.prop("checked", false);
             }
 
             if (addReduceDetail.taxDiscount != constant.quotation().addreduce.TAX_NODISCOUNT_INT) {
