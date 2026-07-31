@@ -127,6 +127,8 @@ public class AddReduceDaoImpl extends DaoImpl<AddReducePO> implements AddReduceD
 				query.add(query.getCriterion(field, Short.parseShort(data), op));
 			} else if ("isAffirm".equals(field)) {
 				query.add(query.getCriterion(field, Short.parseShort(data), op));
+			} else if ("isSalary".equals(field)) {
+				query.add(query.getCriterion(field, Short.parseShort(data), op));
 			} else if ("createTime".equals(field)) {
 				query.timeranges("createTime", "createTime", data);
 			} else if ("affirmTime".equals(field)) {

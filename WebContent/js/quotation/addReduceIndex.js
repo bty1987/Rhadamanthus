@@ -363,6 +363,12 @@
             clazz: "red",
             dataset: constant.quotation().addreduce.isAffirm.keys
         }, {
+            field: "isSalary",
+            name: "工费标识",
+            prop: "isSalary",
+            clazz: "red",
+            dataset: constant.quotation().addreduce.isSalary.keys
+        }, {
             field: "createTime",
             name: "创建时间",
             prop: "createTime",
@@ -687,6 +693,15 @@
                         dataset: constant.quotation().addreduce.isAffirm.keys
                     });
                     break;
+                case "isSalary":
+                    lineprops.push({
+                        field: "isSalary",
+                        name: "工费标识",
+                        prop: "isSalary",
+                        clazz: "red",
+                        dataset: constant.quotation().addreduce.isSalary.keys
+                    });
+                    break;
                 case "manageDiscount":
                     lineprops.push({
                         field: "manageDiscount",
@@ -837,6 +852,12 @@
             prop: "isAffirm",
             clazz: "red",
             dataset: constant.quotation().addreduce.isAffirm.keys
+        }, {
+            field: "isSalary",
+            name: "工费标识",
+            prop: "isSalary",
+            clazz: "red",
+            dataset: constant.quotation().addreduce.isSalary.keys
         }, {
             field: "createTime",
             name: "创建时间",

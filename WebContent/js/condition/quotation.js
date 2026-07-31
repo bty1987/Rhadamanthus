@@ -945,6 +945,24 @@ Condition.addupRule("quotation", {
             valuePath: "value"
         }
     },
+    "addreduce-issalary": {
+        label: "工费标识",
+        type: "select",
+        submitConfig: {
+            name: "isSalary",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: null,
+            postData: {
+                "timestamp": new Date().getTime()
+            },
+            listPath: constant.quotation().addreduce.isSalary.datas,
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
     "addreduce-createTime": {
         label: "创建时间",
         type: "dateRangePicker",

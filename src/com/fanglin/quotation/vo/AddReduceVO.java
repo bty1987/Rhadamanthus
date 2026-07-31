@@ -81,6 +81,8 @@ public class AddReduceVO implements Serializable {
 
 	private Short isAffirm;
 
+	private Short isSalary;
+
 	private Timestamp createTime;
 
 	private Timestamp confirmTime;
@@ -333,6 +335,14 @@ public class AddReduceVO implements Serializable {
 
 	public void setIsAffirm(Short isAffirm) {
 		this.isAffirm = isAffirm;
+	}
+
+	public Short getIsSalary() {
+		return isSalary;
+	}
+
+	public void setIsSalary(Short isSalary) {
+		this.isSalary = isSalary;
 	}
 
 	@JSON(format = "yyyy-MM-dd")
