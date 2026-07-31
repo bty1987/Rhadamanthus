@@ -271,13 +271,22 @@ jQuery(function($) {
                     var profileType = params.quotation.profile ? params.quotation.profile.type : params.quotation.type;
 
                     if (orderId && profileType == 3) {
-                        com.post(api.quotation.autoQuotationAssign, {
+                        // 第一步：入待分配队列（独立事务，写 PENDING 记录）
+                        com.post(api.quotation.addQuotationAssignRequestForAuto, {
                             "quotationAssign.orderId": orderId
                         }, function(data) {
-                            com.showAlert(com.info, '报价配置提交成功，预算员已自动分配');
+                            // 第二步：尝试自动分配（消费队列中该订单的 PENDING 记录）
+                            com.post(api.quotation.autoQuotationAssign, {
+                                "quotationAssign.orderId": orderId
+                            }, function(data2) {
+                                com.showAlert(com.info, '报价配置提交成功，预算员已自动分配');
+                            }, function(error) {
+                                // 无可用预算员(200114)等：已入队，等待反向分配消费
+                                com.showAlert(com.warning, '报价配置提交成功，' + (error.errorMsg || '暂无可用预算员') + '，已加入待分配队列');
+                            });
                         }, function(error) {
-                            // 自动分配失败:手动模式(200113)/无可用预算员(200114)/其他业务异常,error.errorMsg 为后端 FLException 消息
-                            com.showAlert(com.error, error.errorMsg || '预算员自动分配失败，请稍后手动分配或联系管理员');
+                            // 入队失败:手动模式(200113)/未启用配置(200101)/CAD缺失(110038)等
+                            com.showAlert(com.error, error.errorMsg || '预算员入队失败，请稍后手动分配或联系管理员');
                         });
                     } else {
                         com.showAlert(com.info, '报价配置提交成功');

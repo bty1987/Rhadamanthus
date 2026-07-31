@@ -52,6 +52,24 @@ public class QuotationAssignAction extends BaseListAction {
 	}
 
 	/**
+	 * 入待分配队列（按 orderId 自动补全维度，写 PENDING 记录）
+	 *
+	 * <p>
+	 * 与 autoQuotationAssign 解耦：前端先调本接口入队，再调 autoQuotationAssign 尝试消费。
+	 * </p>
+	 *
+	 * @return JSON 响应
+	 * @throws FLException 业务异常
+	 */
+	@Action(value = "addQuotationAssignRequestForAuto", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }), @Result(name = "error", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String addQuotationAssignRequestForAuto() throws FLException {
+
+		quotationAssignService.addQuotationAssignRequestForAuto(quotationAssign.getOrderId());
+
+		return SUCCESS;
+	}
+
+	/**
 	 * 手动分配报价员（预算经理派单）
 	 * 
 	 * @return JSON 响应

@@ -56,6 +56,25 @@ public interface QuotationAssignService {
 	int autoQuotationAssign(QuotationAssignVO quotationAssignVO) throws FLException;
 
 	/**
+	 * 按订单号自动补全信息并入待分配队列（写 STATUS_PENDING 记录）
+	 *
+	 * <p>
+	 * 与 autoQuotationAssign 解耦：本方法只负责入队（独立事务），不尝试分配。
+	 * 前端串行调用：先入队，再调 autoQuotationAssign 尝试消费。
+	 * </p>
+	 * <ul>
+	 * <li>校验装修单存在、CAD 已上传、公司/部门已启用自动分配</li>
+	 * <li>从装修单补全 company/department/decorationType/requestUser(设计师)</li>
+	 * <li>同 orderId 已存在活跃请求（PENDING/ASSIGNED）则幂等返回，不重复创建</li>
+	 * </ul>
+	 *
+	 * @param orderId 装修单号
+	 * @return 1=成功
+	 * @throws FLException 业务异常
+	 */
+	int addQuotationAssignRequestForAuto(String orderId) throws FLException;
+
+	/**
 	 * 手动分配报价员（预算经理派单）
 	 * 
 	 * @param quotationAssignVO 分配参数VO（包含orderId、budgetUid、assignUid）

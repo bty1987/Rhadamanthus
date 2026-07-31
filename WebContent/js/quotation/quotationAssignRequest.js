@@ -509,18 +509,29 @@ $(function() {
 
     // ==================== 分配功能 ====================
 
-    // 自动分配
+    // 自动分配：先入队（PENDING），再尝试立即消费
     function autoAssign(row) {
         com.showConfirm('确认自动分配该装修单吗？系统将自动查找可用' + modeLabels.userLabel + '进行分配。', function() {
-            com.post(api.quotation.autoQuotationAssign, {
+
+            // 第一步：入待分配队列（独立事务，写 PENDING 记录）
+            com.post(api.quotation.addQuotationAssignRequestForAuto, {
                 "quotationAssign.orderId": row.orderId
             }, function(res) {
-                // 成功回调仅在实际分配预算员后进入,进队列等异常走失败回调
-                com.showAlert(com.info, '分配成功！已自动分配给' + modeLabels.userLabel);
-                searcher.doSearch();
-            }, function(res) {
-                // 进待分配队列(手动模式/无可用预算员)及其他业务异常均走此分支
-                com.showAlert(com.error, res.errorMsg || '分配失败，请查看分配记录了解详情');
+
+                // 第二步：尝试自动分配（消费队列中该订单的 PENDING 记录）
+                com.post(api.quotation.autoQuotationAssign, {
+                    "quotationAssign.orderId": row.orderId
+                }, function(res2) {
+                    com.showAlert(com.info, '分配成功！已自动分配给' + modeLabels.userLabel);
+                    searcher.doSearch();
+                }, function(err) {
+                    // 无可用预算员(200114)等：已入队，等待反向分配消费
+                    com.showAlert(com.warning, (err.errorMsg || '分配失败') + '，已加入待分配队列，' + modeLabels.userLabel + '释放后将自动分配');
+                    searcher.doSearch();
+                });
+            }, function(err) {
+                // 入队失败（手动模式 200113、未启用配置 200101、CAD 缺失等）
+                com.showAlert(com.error, err.errorMsg || '入队失败，请稍后重试或联系管理员');
             });
         });
     }
@@ -650,20 +661,28 @@ $(function() {
 
         com.showLoading('正在自动分配...');
 
-        com.post(api.quotation.autoQuotationAssign, {
+        // 第一步：入待分配队列（独立事务，写 PENDING 记录）
+        com.post(api.quotation.addQuotationAssignRequestForAuto, {
             "quotationAssign.orderId": orderId.trim()
         }, function(res) {
-            com.hideLoading();
-            if (res.errorCode == 0) {
+
+            // 第二步：尝试自动分配（消费队列中该订单的 PENDING 记录）
+            com.post(api.quotation.autoQuotationAssign, {
+                "quotationAssign.orderId": orderId.trim()
+            }, function(res2) {
+                com.hideLoading();
                 com.showAlert(com.info, '分配成功！已自动分配给' + modeLabels.userLabel);
-            } else {
-                com.showAlert(com.warning, res.errorMsg || '分配失败，请查看分配记录了解详情');
-            }
-            config.modals.autoAssignModal.modal('hide');
-            searcher.doSearch();
-        }, function(res) {
+                config.modals.autoAssignModal.modal('hide');
+                searcher.doSearch();
+            }, function(err) {
+                com.hideLoading();
+                com.showAlert(com.warning, (err.errorMsg || '分配失败') + '，已加入待分配队列，' + modeLabels.userLabel + '释放后将自动分配');
+                config.modals.autoAssignModal.modal('hide');
+                searcher.doSearch();
+            });
+        }, function(err) {
             com.hideLoading();
-            com.showAlert(com.error, res.errorMsg || '分配失败');
+            com.showAlert(com.error, err.errorMsg || '入队失败，请稍后重试或联系管理员');
         });
     }
 

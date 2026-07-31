@@ -2363,7 +2363,15 @@ $.extend(api, {
             }
         },
 
-        // 正向自动分配（设计师发起，不通过request记录）
+        // 入待分配队列（按 orderId 自动补全维度，写 PENDING 记录，独立事务）
+        addQuotationAssignRequestForAuto: {
+            url: "addQuotationAssignRequestForAuto.do",
+            validate: {
+                "quotationAssign.orderId": { required: true }
+            }
+        },
+
+        // 正向自动分配（消费队列中该 orderId 的 PENDING 记录，尝试立即分配）
         autoQuotationAssign: {
             url: "autoQuotationAssign.do"
         },
