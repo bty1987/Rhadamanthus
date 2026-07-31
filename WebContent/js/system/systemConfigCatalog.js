@@ -82,6 +82,7 @@ window.SYSTEM_CONFIG_CATALOG = [
     { key: "oapiHost",                       group: "dingtalk",     name: "钉钉 API Host",        desc: "钉钉接口 host(用于审批/部门/消息/用户)",                type: "url",    defaultValue: "" },
     { key: "messageAgentId",                 group: "dingtalk",     name: "消息应用AgentId",      desc: "钉钉工作通知应用 agentId",                              type: "string", defaultValue: "" },
     { key: "messageUrl",                     group: "dingtalk",     name: "消息接口地址",         desc: "钉钉消息接口地址",                                       type: "url",    defaultValue: "" },
+    { key: "occessoriesDeliveMessageUrl",    group: "dingtalk",     name: "外辅配送消息地址",     desc: "外辅配送钉钉消息点击跳转地址模板, 使用%s占位外辅单ID",        type: "string", defaultValue: "https://service-erp.fanglin.vip/dingding/vue/index.html?agent=4921021#/manifest/occessories-detail?oid=%s" },
     { key: "dingAgentId",                    group: "dingtalk",     name: "钉钉AgentId",          desc: "钉钉应用 agentId",                                      type: "string", defaultValue: "" },
     { key: "suiteKey",                       group: "dingtalk",     name: "回调套件Key",          desc: "钉钉事件回调 suiteKey",                                 type: "string", defaultValue: "" },
     { key: "encodingAesKey",                 group: "dingtalk",     name: "回调加密Key",          desc: "钉钉事件回调 encodingAesKey",                           type: "string", defaultValue: "" },

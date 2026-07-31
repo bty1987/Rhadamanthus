@@ -58,32 +58,28 @@ public class DingTalkMessageServiceImpl implements DingTalkMessageService {
 			oa.setMessage_url(String.format(jumpValue.getValue(), aimid));
 		}
 
-		OAMessage.Head head = new OAMessage.Head();
+		return sendOA(accessToken, deliverValue.getValue(), receiveId, senderName, contents, oa, company);
+	}
 
-		head.bgcolor = "FFDFD130";
-		oa.setHead(head);
-		OAMessage.Body body = new OAMessage.Body();
+	@Override
+	public short sendMessageForUrl(String receiveId, String senderName, String contents, String messageUrl, int company) throws FLException {
 
-		body.content = "内容  : " + contents;
-		body.author = "发送人 : " + senderName;
+		SystemConfigPO deliverValue = systemConfigDao.querySystemConfig("messageAgentId", company);
 
-		oa.setBody(body);
-
-		SystemConfigPO oapiHost = systemConfigDao.querySystemConfig("oapiHost");
-
-		String url = String.format(DDApi.DDAPI_MESSAGE_SEND_STR, oapiHost.getValue(), accessToken);
-
-		JSONObject json = HttpHelper.httpPost(url, oa.delivery(deliverValue.getValue(), receiveId, ""));
-
-		if (json == null) {
-			LogUtils.logging(logger, url, company, receiveId);
-			// throw new FLException(270007, "发送消息失败");
-		} else if (json.getInteger("errcode") != 0) {
-			LogUtils.logging(logger, url, json.getInteger("errcode"), json.getString("errmsg"));
-			// throw new FLException(json.getInteger("errcode"), json.getString("errmsg"));
+		if (deliverValue == null) {
+			return -1;
 		}
 
-		return json == null ? MessagePO.DRESULT_FAIL_INT : json.getShort("errcode");
+		String accessToken = dingTalkAuthService.getAccessToken(FormatUtil.encodeCompany(company));
+
+		if (accessToken == null) {
+			return -1;
+		}
+
+		OAMessage oa = new OAMessage();
+		oa.setMessage_url(messageUrl);
+
+		return sendOA(accessToken, deliverValue.getValue(), receiveId, senderName, contents, oa, company);
 	}
 
 	@Override
@@ -181,6 +177,37 @@ public class DingTalkMessageServiceImpl implements DingTalkMessageService {
 			json = HttpHelper.httpPost(url, link.delivery());
 		} catch (Exception e) {
 			LogUtils.logging(logger, url, -1, e.getMessage());
+		}
+
+		return json == null ? MessagePO.DRESULT_FAIL_INT : json.getShort("errcode");
+	}
+
+	private short sendOA(String accessToken, String agentId, String receiveId, String senderName, String contents, OAMessage oa, int company) {
+
+		OAMessage.Head head = new OAMessage.Head();
+
+		head.bgcolor = "FFDFD130";
+		oa.setHead(head);
+
+		OAMessage.Body body = new OAMessage.Body();
+
+		body.content = "内容  : " + contents;
+		body.author = "发送人 : " + senderName;
+
+		oa.setBody(body);
+
+		SystemConfigPO oapiHost = systemConfigDao.querySystemConfig("oapiHost");
+
+		String url = String.format(DDApi.DDAPI_MESSAGE_SEND_STR, oapiHost.getValue(), accessToken);
+
+		JSONObject json = HttpHelper.httpPost(url, oa.delivery(agentId, receiveId, ""));
+
+		if (json == null) {
+			LogUtils.logging(logger, url, company, receiveId);
+			// throw new FLException(270007, "发送消息失败");
+		} else if (json.getInteger("errcode") != 0) {
+			LogUtils.logging(logger, url, json.getInteger("errcode"), json.getString("errmsg"));
+			// throw new FLException(json.getInteger("errcode"), json.getString("errmsg"));
 		}
 
 		return json == null ? MessagePO.DRESULT_FAIL_INT : json.getShort("errcode");

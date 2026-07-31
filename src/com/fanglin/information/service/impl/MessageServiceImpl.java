@@ -95,26 +95,18 @@ public class MessageServiceImpl implements MessageService {
 	@Transactional(rollbackFor = Exception.class)
 	public void sendMessage(String receiver, String sender, String contents, short type, int company) throws FLException {
 
-		MessagePO messagePO = new MessagePO();
+		MessagePO messagePO = saveMessage(receiver, sender, contents, type, company);
 
-		messagePO.setReceiver(userDao.queryUserByUserId(receiver));
-		messagePO.setType(type);
-		messagePO.setContents(contents);
-		messagePO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
-		messagePO.setStatus(MessagePO.STATUS_UNREAD_INT);
-		messagePO.setCompany(company);
+		messageDDService.sendMessage(receiver, getSenderName(messagePO), contents, messagePO.getMid(), company);
+	}
 
-		String userName = "";
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public void sendMessageForUrl(String receiver, String sender, String contents, short type, String messageUrl, int company) throws FLException {
 
-		if (sender != null && !sender.equals("")) {
-			UserPO userPO = userDao.queryUserByUserId(sender);
-			userName = userPO.getUserName();
-			messagePO.setSender(userPO);
-		}
+		MessagePO messagePO = saveMessage(receiver, sender, contents, type, company);
 
-		messageDao.save(messagePO);
-
-		messageDDService.sendMessage(receiver, userName, contents, messagePO.getMid(), company);
+		messageDDService.sendMessageForUrl(receiver, getSenderName(messagePO), contents, messageUrl, company);
 	}
 
 	@Override
@@ -149,6 +141,31 @@ public class MessageServiceImpl implements MessageService {
 	@Transactional(rollbackFor = Exception.class)
 	public void updateMessageForRead(List<Integer> ids) {
 		messageDao.updateMessageForRead(ids);
+	}
+
+	private MessagePO saveMessage(String receiver, String sender, String contents, short type, int company) {
+
+		MessagePO messagePO = new MessagePO();
+
+		messagePO.setReceiver(userDao.queryUserByUserId(receiver));
+		messagePO.setType(type);
+		messagePO.setContents(contents);
+		messagePO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
+		messagePO.setStatus(MessagePO.STATUS_UNREAD_INT);
+		messagePO.setCompany(company);
+
+		if (sender != null && !sender.equals("")) {
+			messagePO.setSender(userDao.queryUserByUserId(sender));
+		}
+
+		messageDao.save(messagePO);
+
+		return messagePO;
+	}
+
+	private String getSenderName(MessagePO messagePO) {
+
+		return messagePO.getSender() == null ? "" : messagePO.getSender().getUserName();
 	}
 
 	private MessageVO convertBean(MessagePO messagePO) {

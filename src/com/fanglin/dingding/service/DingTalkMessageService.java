@@ -20,6 +20,18 @@ public interface DingTalkMessageService {
 	public short sendMessage(String receiveId, String senderName, String contents, Long aimid, int company) throws FLException;
 
 	/**
+	 * 发送带指定跳转地址的消息
+	 * @param receiveId 接收人ID
+	 * @param senderName 发送人名称
+	 * @param contents 消息内容
+	 * @param messageUrl 跳转地址
+	 * @param company 公司ID
+	 * @return 发送结果
+	 * @throws FLException 异常
+	 */
+	public short sendMessageForUrl(String receiveId, String senderName, String contents, String messageUrl, int company) throws FLException;
+
+	/**
 	 * 发送钉钉
 	 * @param receiveId 接收人ID
 	 * @param contents 消息内容
