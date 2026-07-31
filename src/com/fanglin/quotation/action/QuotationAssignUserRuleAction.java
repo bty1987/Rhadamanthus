@@ -97,8 +97,7 @@ public class QuotationAssignUserRuleAction extends BaseListAction {
 	@Action(value = "pageQuotationAssignUserRule", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }), @Result(name = "error", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageQuotationAssignUserRule() throws FLException {
 
-		// 强制按当前登录人员过滤：仅返回本人预算员规则
-		quotationAssignUserRuleService.pageQuotationAssignUserRule(getPaging(), getFilters(), queryCompany(), queryUserId());
+		quotationAssignUserRuleService.pageQuotationAssignUserRule(getPaging(), getFilters(), queryCompany());
 
 		return SUCCESS;
 	}
@@ -199,7 +198,11 @@ public class QuotationAssignUserRuleAction extends BaseListAction {
 	@Action(value = "pageQuotationAssignUserRuleItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }), @Result(name = "error", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageQuotationAssignUserRuleItem() throws FLException {
 
-		quotationAssignUserRuleItemService.pageQuotationAssignUserRuleItem(getPaging(), getFilters());
+		// 子页面模式（由"项目"按钮进入）传入 qaurid，固定查询该预算员规则下的明细；
+		// 独立页面模式（由菜单进入）不传 qaurid，查询全部数据。
+		Long qaurid = quotationAssignUserRuleItem != null ? quotationAssignUserRuleItem.getQaurid() : null;
+
+		quotationAssignUserRuleItemService.pageQuotationAssignUserRuleItem(getPaging(), getFilters(), qaurid);
 
 		return SUCCESS;
 	}

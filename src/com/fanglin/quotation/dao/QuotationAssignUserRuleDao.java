@@ -26,11 +26,10 @@ public interface QuotationAssignUserRuleDao extends Dao<QuotationAssignUserRuleP
 	 * @param paging 分页对象
 	 * @param filters 过滤条件
 	 * @param company 公司ID（可选，通过 UserRuleItem 子查询过滤）
-	 * @param userId 当前登录人员 userId（强制过滤，仅返回本人规则）
 	 * @return
 	 * @throws FLException 业务异常
 	 */
-	List<QuotationAssignUserRulePO> pageQuotationAssignUserRule(Paging paging, List<Filter> filters, int company, String userId) throws FLException;
+	List<QuotationAssignUserRulePO> pageQuotationAssignUserRule(Paging paging, List<Filter> filters, int company) throws FLException;
 
 	/**
 	 * 根据用户ID查询预算员规则

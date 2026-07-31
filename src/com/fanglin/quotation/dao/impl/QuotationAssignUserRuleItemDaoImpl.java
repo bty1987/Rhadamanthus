@@ -28,12 +28,17 @@ public class QuotationAssignUserRuleItemDaoImpl extends DaoImpl<QuotationAssignU
 	}
 
 	@Override
-	public List<QuotationAssignUserRuleItemPO> pageQuotationAssignUserRuleItem(Paging paging, List<Filter> filters) throws FLException {
+	public List<QuotationAssignUserRuleItemPO> pageQuotationAssignUserRuleItem(Paging paging, List<Filter> filters, Long qaurid) throws FLException {
 
 		PagingQuery<QuotationAssignUserRuleItemPO> query = pagingQuery(paging, QuotationAssignUserRuleItemPO.class);
 
 		// 预先 alias，避免 N+1
 		query.alias("userRule", "userRule").alias("userRule.user", "user").alias("company", "companyAlias");
+
+		// 子页面模式（由"项目"按钮进入）：固定查询指定预算员规则下的明细
+		if (qaurid != null && qaurid > 0) {
+			query.add(query.getCriterion("userRule.qaurid", qaurid, "eq"));
+		}
 
 		queryFilterExcute(query, filters);
 
