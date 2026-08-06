@@ -366,8 +366,6 @@ public class AddReduceServiceImpl implements AddReduceService {
 		addReducePO.setAccountManageDiscount(addReduceVO.getManageDiscount());
 		addReducePO.setAccountTaxDiscount(addReduceVO.getTaxDiscount());
 
-		addReducePO.setIsSalary(addReduceVO.getIsSalary());
-
 		addReduceDao.update(addReducePO);
 
 		return 0;
