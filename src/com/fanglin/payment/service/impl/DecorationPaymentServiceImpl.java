@@ -322,6 +322,20 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 			throw new FLException(150093, "款项比例不正确");
 		}
 
+		UserPO creater = userDao.queryUserByUserId(createUserId);
+
+		// 校验:atttype=1(线上)物品必须恰好1件
+		int atttypeOnlineCount = decorationActivityItemDao.countDecorationActivityItemForAtttype(orderId, DecorationActivityItemPO.ATTTYPE_ONLINE_INT);
+		if (atttypeOnlineCount != 1) {
+			throw new FLException(140103, "活动物品数量超限");
+		}
+
+		// 自动核销:atttype=1(线上)未核销的物品,签约时强制核销
+		decorationActivityItemDao.updateDecorationActivityItemForVerify(orderId, DecorationActivityItemPO.ATTTYPE_ONLINE_INT, DecorationActivityItemPO.STATUS_VERIFY_INT, Arrays.asList(DecorationActivityItemPO.STATUS_VERIFY_INT), creater.getUid());
+
+		// 刷新Session:确保原生SQL的UPDATE落库并清空一级缓存中可能存在的旧状态,避免后续amount统计读不到或被脏缓存覆盖
+		decorationActivityItemDao.flush();
+
 		// 获取当前订单的活动项的总额
 		long couponCut = decorationActivityItemDao.amountDecorationActivityItem(orderId, DecorationActivityItemPO.ISPAYMENT_CAL_INT);
 
@@ -329,8 +343,6 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 		long paymentMoney = Arith.sub(sumMoney, couponCut);
 
 		decorationPaymentDao.deleteDecorationPaymentForBase(orderId);
-
-		UserPO creater = userDao.queryUserByUserId(createUserId);
 
 		if (paymentScaleItems.size() == 1) {
 

@@ -773,12 +773,15 @@ public class MemberServiceImpl implements MemberService {
 			throw new FLException(160011, "活动信息不存在");
 		}
 
+		// 校验:atttype=1(线上)物品无论何种状态,每单仅限1件
+		if (decorationActivityItemDao.countDecorationActivityItemForAtttype(orderId, DecorationActivityItemPO.ATTTYPE_ONLINE_INT) > 0) {
+			throw new FLException(140103, "活动物品数量超限");
+		}
+
 		UserPO creater = userDao.queryUserByUserId(userId);
 
 		DecorationActivityItemPO decorationActivityItemPO = new DecorationActivityItemPO();
-
 		AwardStockPO awardStockPO = awardStockDao.queryAwardStockByNo(memberOrderItemVO.getNo(), CompanyPO.TYPE_HEADQUARTER_INT);
-
 		decorationActivityItemPO.setOrderId(orderId);
 
 		decorationActivityItemPO.setAid(decorationActivityPO.getActivity().getAid());
@@ -787,10 +790,10 @@ public class MemberServiceImpl implements MemberService {
 		if (awardStockPO != null) decorationActivityItemPO.setAsid(awardStockPO.getAsId());
 
 		decorationActivityItemPO.setActivityItemName(memberOrderItemVO.getName());
-		decorationActivityItemPO.setState(DecorationActivityItemPO.STATUS_VERIFY_INT);
+		decorationActivityItemPO.setState(DecorationActivityItemPO.STATUS_INIT_INT);
 
 		decorationActivityItemPO.setIsPrefor(memberOrderItemVO.getIsPrefer() != null ? memberOrderItemVO.getIsPrefer() : DecorationActivityItemPO.ISPREFOR_UNCAL_INT);
-		decorationActivityItemPO.setIsPayment(memberOrderItemVO.getIsPayment() != null ? memberOrderItemVO.getIsPayment() : DecorationActivityItemPO.ISPAYMENT_UNCAL_INT);
+		decorationActivityItemPO.setIsPayment(memberOrderItemVO.getIsPayment() != null ? memberOrderItemVO.getIsPayment() : DecorationActivityItemPO.ISPAYMENT_CAL_INT);
 
 		decorationActivityItemPO.setNo(memberOrderVO.getPointOrderId());
 		decorationActivityItemPO.setAtttype(DecorationActivityItemPO.ATTTYPE_ONLINE_INT);

@@ -13,6 +13,7 @@ package com.fanglin.decoration.dao.impl;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import org.hibernate.SQLQuery;
@@ -23,6 +24,7 @@ import com.fanglin.core.dao.impl.DaoImpl;
 import com.fanglin.decoration.dao.DecorationActivityItemDao;
 import com.fanglin.decoration.po.DecorationActivityItemPO;
 import com.fanglin.utils.Arith;
+import com.fanglin.utils.DateUtil;
 
 @Repository("decorationActivityItemDao")
 public class DecorationActivityItemDaoImpl extends DaoImpl<DecorationActivityItemPO> implements DecorationActivityItemDao {
@@ -217,5 +219,48 @@ public class DecorationActivityItemDaoImpl extends DaoImpl<DecorationActivityIte
 		}
 
 		return 0L;
+	}
+
+	@Override
+	public int countDecorationActivityItemForAtttype(String orderId, short atttype) {
+
+		String sql = "SELECT COUNT(*) FROM decoration.decorationactivityitem WHERE orderId = :orderId AND atttype = :atttype";
+
+		Object result = session().createSQLQuery(sql).setString("orderId", orderId).setShort("atttype", atttype).setMaxResults(1).uniqueResult();
+
+		if (result == null) return 0;
+
+		if (result instanceof BigDecimal) return ((BigDecimal) result).intValue();
+		if (result instanceof Number) return ((Number) result).intValue();
+
+		return 0;
+	}
+
+	@Override
+	public int updateDecorationActivityItemForVerify(String orderId, short atttype, short targetState, List<Short> excludeStates, long receiverId) {
+
+		StringBuffer sql = new StringBuffer();
+
+		sql.append("update decoration.decorationactivityitem set state = :state, ruid = :ruid, receiveTime = :receiveTime, content = :content");
+		sql.append(" where orderId = :orderId and atttype = :atttype");
+
+		if (excludeStates != null && !excludeStates.isEmpty()) {
+			sql.append(" and state not in (:excludeStates)");
+		}
+
+		SQLQuery sqlQuery = session().createSQLQuery(sql.toString());
+
+		sqlQuery.setShort("state", targetState);
+		sqlQuery.setLong("ruid", receiverId);
+		sqlQuery.setTimestamp("receiveTime", DateUtil.getDateToTimestamp(new Date()));
+		sqlQuery.setString("content", "签约自动核销");
+		sqlQuery.setString("orderId", orderId);
+		sqlQuery.setShort("atttype", atttype);
+
+		if (excludeStates != null && !excludeStates.isEmpty()) {
+			sqlQuery.setParameterList("excludeStates", excludeStates);
+		}
+
+		return sqlQuery.executeUpdate();
 	}
 }

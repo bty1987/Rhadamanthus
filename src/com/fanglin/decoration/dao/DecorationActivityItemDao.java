@@ -34,7 +34,7 @@ public interface DecorationActivityItemDao extends Dao<DecorationActivityItemPO>
 
 	/**
 	 * 统计活动项目数量（使用 COUNT(*)）
-	 * 
+	 *
 	 * @param orderId 订单号
 	 * @param type 活动类型（可选）
 	 * @param states 状态列表（可选）
@@ -43,5 +43,26 @@ public interface DecorationActivityItemDao extends Dao<DecorationActivityItemPO>
 	 * @return 活动项目数量
 	 */
 	public long countDecorationActivityItem(String orderId, Short type, List<Short> states, Short isPrefor, Short isPayment);
+
+	/**
+	 * 统计指定订单 atttype 下的活动物品数量（全部状态）
+	 *
+	 * @param orderId 订单号
+	 * @param atttype 线上线下标识
+	 * @return 活动物品数量
+	 */
+	public int countDecorationActivityItemForAtttype(String orderId, short atttype);
+
+	/**
+	 * 批量核销:将指定订单 atttype 下、状态不在排除集合内的物品置为目标核销态
+	 *
+	 * @param orderId 订单号
+	 * @param atttype 线上线下标识
+	 * @param targetState 目标状态
+	 * @param excludeStates 排除状态集合（可选,排除已核销态避免重复操作）
+	 * @param receiverId 核销人ID
+	 * @return 受影响行数
+	 */
+	public int updateDecorationActivityItemForVerify(String orderId, short atttype, short targetState, List<Short> excludeStates, long receiverId);
 
 }
