@@ -1985,7 +1985,7 @@ var QuotationDetail = (function() {
                     if ((v.vision & 2) != constant.data().decorationMatching.VISION_QUOTECOUNT_INT)
                         return true;
 
-                    var groupBlock = com.focusPage('#showBaseVersion .quotation-base-price-group[data-typeness="' + v.typeness + '"]');
+                    var groupBlock = com.focusPage('#showBaseVersion .quotation-base-price-group[data-typeness="' + v.type + '"]');
 
                     if (groupBlock.length == 0) return true; // 常量里未定义的 typeness, 跳过
 
