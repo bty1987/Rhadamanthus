@@ -2127,8 +2127,8 @@ $(function() {
 
             var designTime = null;
 
-            if (datas.designTime) {
-                designTime = datas.designTime;
+            if (datas.initDesignTime) {
+                designTime = datas.initDesignTime;
             } else if (decoration.precontractTime) {
                 designTime = utils.workDays(decoration.precontractTime, (datas.designPeriod && datas.designPeriod > 0 ? datas.designPeriod : designPeriod));
             } else if (decoration.contractTime) {
@@ -2149,8 +2149,8 @@ $(function() {
                 designPeriod = datas.designPeriod;
             }
 
-            if (datas.designTime) {
-                designTime = datas.designTime;
+            if (datas.initDesignTime) {
+                designTime = datas.initDesignTime;
             }
 
             if (datas.finishTime) {
