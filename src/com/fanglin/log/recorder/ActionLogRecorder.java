@@ -28,6 +28,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.fanglin.core.security.AESHelper;
 import com.fanglin.core.vo.Authentication;
 import com.fanglin.log.context.ActionLogContext;
 import com.fanglin.log.po.ActionLogPO;
@@ -36,6 +37,8 @@ import com.fanglin.log.utils.ParamSanitizer;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.system.po.OperationPO;
+import com.fanglin.utils.Constant;
+import com.fanglin.utils.CookieUtil;
 import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.SystemConfig;
 import com.fanglin.utils.UUIDUtil;
@@ -141,6 +144,39 @@ public class ActionLogRecorder {
 	/** 已知 CRUD + 业务动词前缀（小写），用于从 actionName 切除前缀得到对象段。 */
 	private static final String[] KNOWN_VERBS = { "page", "query", "add", "update", "delete", "cancel", "submit", "confirm", "approve", "affirm", "export", "import", "get", "count", "amount", "enable", "disable", "make", "send", "finish", "create", "change", "handle", "lock", "unlock", "bind", "unbind", "sign", "refund", "reject", "receive", "copy", "discount", "close", "reset", "adopt", "agree", "check", "show", "view", "read", "fetch", "find", "verify", "search", "begin", "end", "affix", "abate", "delive", "compute", "stat", "login", "logout", "dogin", "down", "upload" };
 
+	/**
+	 * 从 request 解析 authentication（兜底，与 BaseAction.authentication() 一致）。
+	 *
+	 * <p>
+	 * 查找顺序：parameter → cookie → attribute。AES 解密可能抛异常（密文非法/未传），
+	 * recorder 作为日志组件必须吞掉异常不影响主流程，故本方法内部 try-catch 是必要的，
+	 * 与业务 Action 层"禁止本地 try-catch"规范不冲突。
+	 *
+	 * @return 解析出的 Authentication；匿名/回调类请求或解密失败时返回 null
+	 */
+	private Authentication resolveAuthentication(HttpServletRequest request) {
+
+		if (request == null) return null;
+
+		try {
+			String auth = request.getParameter("authentication");
+			if (auth == null) {
+				auth = CookieUtil.getCookie(request, Constant.COOKIE_AUTHENTICATION);
+			}
+			if (auth == null) {
+				auth = (String) request.getAttribute("authentication");
+			}
+			if (auth == null || auth.length() == 0) return null;
+
+			String decryptString = AESHelper.decrypt(auth, SystemConfig.getString("encryptKey"), SystemConfig.getString("encryptIv"));
+			if (decryptString == null || decryptString.length() == 0) return null;
+
+			return new Authentication(decryptString);
+		} catch (Throwable t) {
+			return null;
+		}
+	}
+
 	private ActionLogPO buildPO(HttpServletRequest request, String actionName, Authentication authentication, long startTime, long endTime, Object errorCode, Object errorMsg, Throwable exception, ActionLogContext.Holder ctx) {
 
 		ActionLogPO po = new ActionLogPO();
@@ -150,6 +186,13 @@ public class ActionLogRecorder {
 		po.setTraceId(UUIDUtil.getUuid());
 
 		// 用户与公司
+		// 拦截器透传的 authentication 可能为 null（如 operation.through=PASS 通道不做认证），
+		// 此时从 request 兜底解析（与 BaseAction.authentication() 一致：parameter→cookie→attribute），
+		// 让 PASS 通道的业务接口也能记录操作人。解析失败（匿名/回调类请求）返回 null，createUserPO 留空。
+		if (authentication == null) {
+			authentication = resolveAuthentication(request);
+		}
+
 		String userId = null;
 		Integer company = null;
 		if (authentication != null && authentication.getUserId() != null) {
@@ -161,8 +204,6 @@ public class ActionLogRecorder {
 			} catch (Throwable t) {
 				logger.warn("[actionLog] load user failed userId={}", userId, t);
 			}
-		} else {
-			// 未登录或匿名请求，createUserPO 保留 null（DB 列允许 NULL）
 		}
 		po.setCompanyId(company);
 
