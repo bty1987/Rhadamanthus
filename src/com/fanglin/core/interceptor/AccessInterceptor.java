@@ -89,21 +89,6 @@ public class AccessInterceptor extends AbstractInterceptor {
 			logFlagHolder[0] = operationVO != null ? operationVO.getLogFlag() : null;
 
 			if (operationVO.getThrough() != null && operationVO.getThrough() == OperationPO.THROUGH_PASS_INT) {
-
-				// PASS 通道不做权限校验,但操作日志仍需记录操作人。
-				// 尽量从 authentication 参数解出 userId/company 供 recorder 使用;
-				// 解析失败不阻断主流程(PASS 本就不强制认证),recorder 会以匿名请求处理。
-				try {
-					String auth = $authentication != null ? $authentication : CookieUtil.getCookie(request, Constant.COOKIE_AUTHENTICATION);
-					if (auth != null) {
-						String decryptString = AESHelper.decrypt(auth, SystemConfig.getString("encryptKey"), SystemConfig.getString("encryptIv"));
-						if (decryptString != null && decryptString.length() > 0) {
-							authenticationRef = new Authentication(decryptString);
-						}
-					}
-				} catch (Throwable ignore) {
-				}
-
 				return invocation.invoke();
 			} else if (operationVO.getThrough() != null && operationVO.getThrough() == OperationPO.THROUGH_COMMON_INT) {
 
