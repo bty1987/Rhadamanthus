@@ -168,7 +168,7 @@ public class A20260404ServiceImpl implements A20260404Service {
 			supplierPO.setCompany(company);
 
 			// 生成拼音
-			supplierPO.setPinYin(PinYin4Util.getPinyin(userName).get(0));
+			supplierPO.setPinYin(PinYin4Util.getPinYinHeadChar(userName).get(0));
 
 			// 设置状态
 			supplierPO.setIsLogin(UserPO.ISLOGIN_FIP_INT);
