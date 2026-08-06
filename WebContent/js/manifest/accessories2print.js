@@ -6,6 +6,7 @@ jQuery(function($) {
     utils = parent.utils;
     com = parent.com;
     _params = parent.params;
+    constant = parent.constant;
 
     var commonInfo = {};
 
@@ -85,8 +86,8 @@ jQuery(function($) {
         var phoneTd = $('<td colspan="4" style="padding-left: 10px;"></td>').text('电   话: ' + commonInfo["phone"]);
 
         var msgReceiptTr = $('<tr></tr>').appendTo(receiptTable);
-        var designerReceiptTd = $('<td colspan="12" style="padding-left: 10px;"></td>').text('创  建  人: ' + commonInfo["creater"]);
-        var createTd = $('<td colspan="4" style="padding-left: 10px;"></td>').text('创  建  人: ' + commonInfo["creater"]);
+        var designerReceiptTd = $('<td colspan="12" style="padding-left: 10px;"></td>').text('创  建  人: ' + commonInfo["creater"].currentName);
+        var createTd = $('<td colspan="4" style="padding-left: 10px;"></td>').text('创  建  人: ' + commonInfo["creater"].currentName);
 
         if (_params.manifest.accessories.status == constant.inventory().accessories.STATUS_ADVANCE_INT) {
             orderReceiptTr.append(anoTd).append(createrTd).append(totalTd);
