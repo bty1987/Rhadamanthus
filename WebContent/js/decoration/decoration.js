@@ -1962,6 +1962,18 @@ $(function() {
         com.focusPage('#drawlineScheduleCalendar').fullCalendar('today');
 
         com.focusPage('#drawlineScheduleCalendar').fullCalendar($.extend(com.calendardefault, {
+            dayClick: function() {
+
+                return false;
+            },
+            eventClick: function() {
+
+                return false;
+            },
+            eventRender: function(event, element) {
+
+                element.off('click');
+            },
             events: function(start, end, callback) {
 
                 var dates = {};
