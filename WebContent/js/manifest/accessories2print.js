@@ -13,9 +13,9 @@ jQuery(function($) {
     commonInfo["aid"] = _params.manifest.accessories.aid;
     commonInfo["no"] = _params.manifest.accessories.no
     commonInfo["orderId"] = _params.manifest.accessories.orderId
-    commonInfo["createTime"] = _params.manifest.accessories.createTime
+    commonInfo["createTime"] = _params.manifest.accessories.createTime || "";
     commonInfo["creater"] = _params.manifest.accessories.creater
-    commonInfo["manifestTime"] = _params.manifest.accessories.manifestTime
+    commonInfo["manifestTime"] = _params.manifest.accessories.manifestTime || "";
     commonInfo["printnum"] = _params.manifest.accessories.printnum
 
     com.post(api.decoration.queryDecorationForCommonByOrderId, {

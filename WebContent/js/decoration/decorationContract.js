@@ -453,9 +453,6 @@ jQuery(function($) {
             customerSign(v.dcid);
         },
         show: function(v) {
-            
-            console.log(v)
-            console.log(constant.decoration().decorationContract.STATUS_VALID_INT)
 
             return v.status == constant.decoration().decorationContract.STATUS_VALID_INT;
         }
