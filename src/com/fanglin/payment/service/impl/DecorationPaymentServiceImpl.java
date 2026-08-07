@@ -325,12 +325,12 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 		UserPO creater = userDao.queryUserByUserId(createUserId);
 
 		// 校验:atttype=1(线上)物品必须恰好1件
-		if (decorationActivityItemDao.countDecorationActivityItemForAtttype(orderId, DecorationActivityItemPO.ATTTYPE_ONLINE_INT) > 1) {
+		if (decorationActivityItemDao.countDecorationActivityItem(orderId, DecorationActivityItemPO.ATTTYPE_ONLINE_INT) > 1) {
 			throw new FLException(140103, "活动物品数量超限");
 		}
 
 		// 自动核销:atttype=1(线上)未核销的物品,签约时强制核销
-		decorationActivityItemDao.updateDecorationActivityItemForVerify(orderId, DecorationActivityItemPO.ATTTYPE_ONLINE_INT, DecorationActivityItemPO.STATUS_VERIFY_INT, Arrays.asList(DecorationActivityItemPO.STATUS_VERIFY_INT), creater.getUid());
+		decorationActivityItemDao.banchDecorationActivityItem(orderId, DecorationActivityItemPO.ATTTYPE_ONLINE_INT, DecorationActivityItemPO.STATUS_VERIFY_INT, Arrays.asList(DecorationActivityItemPO.STATUS_VERIFY_INT), creater.getUid());
 
 		// 刷新Session:确保原生SQL的UPDATE落库并清空一级缓存中可能存在的旧状态,避免后续amount统计读不到或被脏缓存覆盖
 		decorationActivityItemDao.flush();

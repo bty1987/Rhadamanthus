@@ -222,7 +222,7 @@ public class DecorationActivityItemDaoImpl extends DaoImpl<DecorationActivityIte
 	}
 
 	@Override
-	public int countDecorationActivityItemForAtttype(String orderId, short atttype) {
+	public int countDecorationActivityItem(String orderId, short atttype) {
 
 		String sql = "SELECT COUNT(*) FROM decoration.decorationactivityitem WHERE orderId = :orderId AND atttype = :atttype";
 
@@ -237,7 +237,7 @@ public class DecorationActivityItemDaoImpl extends DaoImpl<DecorationActivityIte
 	}
 
 	@Override
-	public int updateDecorationActivityItemForVerify(String orderId, short atttype, short targetState, List<Short> excludeStates, long receiverId) {
+	public int banchDecorationActivityItem(String orderId, short atttype, short targetState, List<Short> excludeStates, long receiverId) {
 
 		StringBuffer sql = new StringBuffer();
 
