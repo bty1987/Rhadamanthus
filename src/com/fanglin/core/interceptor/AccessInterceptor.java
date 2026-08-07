@@ -119,7 +119,7 @@ public class AccessInterceptor extends AbstractInterceptor {
 
 				authenticationRef = authentication; // Phase 1: 供 recorder 使用
 
-				// operationService.fillRoleOperationByOperation(authentication.getUserId(), authentication.getRoleId(), authentication.getCompany(), actionName);
+				// operationService.fillOperation(authentication.getUserId(), authentication.getRoleId(), authentication.getCompany(), actionName);
 
 				// if (!operationService.checkOperation(authentication.getUserId(), actionName, (short) 0)) {
 				// throw new FLException(-2, "无操作权限");
@@ -191,7 +191,7 @@ public class AccessInterceptor extends AbstractInterceptor {
 
 					if (operationService.checkOperation(authentication.getUserId(), actionName, authentication.getRollcall())) {
 
-						// operationService.fillRoleOperationByOperation(authentication.getUserId(), authentication.getRoleId(), authentication.getCompany(), actionName);
+						// operationService.fillOperation(authentication.getUserId(), authentication.getRoleId(), authentication.getCompany(), actionName);
 
 						return invocation.invoke();
 					} else {

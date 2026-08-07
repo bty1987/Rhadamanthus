@@ -325,8 +325,7 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 		UserPO creater = userDao.queryUserByUserId(createUserId);
 
 		// 校验:atttype=1(线上)物品必须恰好1件
-		int atttypeOnlineCount = decorationActivityItemDao.countDecorationActivityItemForAtttype(orderId, DecorationActivityItemPO.ATTTYPE_ONLINE_INT);
-		if (atttypeOnlineCount != 1) {
+		if (decorationActivityItemDao.countDecorationActivityItemForAtttype(orderId, DecorationActivityItemPO.ATTTYPE_ONLINE_INT) > 1) {
 			throw new FLException(140103, "活动物品数量超限");
 		}
 

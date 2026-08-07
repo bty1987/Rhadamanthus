@@ -1119,10 +1119,10 @@ jQuery(function($) {
             var taxDiscount = decorationMaching.taxDiscount;
 
             // 校验:选择的折扣不能小于默认报价折扣(数值越小折扣越低)
-            if (parseInt(discount) < parseInt(quotationDiscount)) {
-                com.showAlert(com.warning, "折扣不能小于报价折扣");
-                return false;
-            }
+            // if (parseInt(discount) < parseInt(quotationDiscount)) {
+            // com.showAlert(com.warning, "折扣不能小于报价折扣");
+            // return false;
+            // }
 
             if (decorationDetail.notSalesmanRate < 1) {
                 manageRate = parseFloat(manageRate) + parseFloat(decorationDetail.notSalesmanRate);
@@ -1352,6 +1352,7 @@ jQuery(function($) {
         com.post(api.system.querySystemConfigByKey, {
             "systemConfig.key": "QUOTATION_PROFILE_TEMPLATE"
         }, function(res) {
+
             template = res.systemConfig.value;
         }, null, false);
 
@@ -1362,7 +1363,13 @@ jQuery(function($) {
 
         com.popup4page("#layerPopUp4detail", api.index.quotationProfile4detailIndex.url, "交接单", null, null, function() {
 
-            params.quotation = { orderId: params.decoration.orderId, type: 3, profile: { type: 3 } };
+            params.quotation = {
+                orderId: params.decoration.orderId,
+                type: 3,
+                profile: {
+                    type: 3
+                }
+            };
         });
     });
 
@@ -1374,6 +1381,7 @@ jQuery(function($) {
         com.post(api.system.querySystemConfigByKey, {
             "systemConfig.key": "QUOTATION_TAG_PROFILE_TEMPLATE"
         }, function(res) {
+
             template = res.systemConfig.value;
         }, null, false);
 
@@ -1387,12 +1395,20 @@ jQuery(function($) {
         com.post(api.quotation.queryQuotationForDefaultByOrderId, {
             "quotation.orderId": params.decoration.orderId
         }, function(res) {
+
             qid = res.quotation.qid;
         }, null, false);
 
         com.popup4page("#layerPopUp4detail", api.index.quotationProfile4detailIndex.url, "报价标签", null, null, function() {
 
-            params.quotation = { orderId: params.decoration.orderId, qid: qid, type: 4, profile: { type: 4 } };
+            params.quotation = {
+                orderId: params.decoration.orderId,
+                qid: qid,
+                type: 4,
+                profile: {
+                    type: 4
+                }
+            };
         });
     });
 
@@ -1404,6 +1420,7 @@ jQuery(function($) {
         com.post(api.system.querySystemConfigByKey, {
             "systemConfig.key": "DRAWLINE_TAG_PROFILE_TEMPLATE"
         }, function(res) {
+
             template = res.systemConfig.value;
         }, null, false);
 
@@ -1414,19 +1431,28 @@ jQuery(function($) {
 
         com.popup4page("#layerPopUp4detail", api.index.drawlineProfile4detailIndex.url, "放线标签", null, null, function() {
 
-            params.drawlineProfile = { orderId: params.decoration.orderId, type: 4, profile: { type: 4 } };
+            params.drawlineProfile = {
+                orderId: params.decoration.orderId,
+                type: 4,
+                profile: {
+                    type: 4
+                }
+            };
         });
     });
 
     // ==================== 分配沟通功能（popup4page加载独立页面） ====================
 
     com.focusPage("#assignTalkBtn").on("click", function() {
+
         var orderId = decorationDetail.orderId;
         if (!orderId) {
             com.showAlert(com.warning, '装修单号不存在');
             return;
         }
-        params.quotationAssignTalk = { orderId: orderId };
+        params.quotationAssignTalk = {
+            orderId: orderId
+        };
         com.popup4page("#layerPopUp4talkDecoration", api.index.quotationAssignTalkIndex.url, "分配沟通");
     });
 
@@ -2409,14 +2435,17 @@ jQuery(function($) {
 
     /**
      * 批量更新合同方案图片状态
+     * 
      * @param {Number} status - 目标状态 (1=显示, 4=确认展示, 0=隐藏)
      */
     function batchUpdateDesignStatus(status) {
+
         var selectedDpids = [];
         var orderId = decorationDetail.orderId;
 
         // 获取所有选中的图片（仅在designPictures容器内）
         com.focusPage('#designPictures .picture-checkbox:checked').each(function() {
+
             var $this = $(this);
             var dpId = $this.data('dpid');
             if (dpId) {
@@ -2438,13 +2467,14 @@ jQuery(function($) {
 
         // 构建请求数据
         var requestData = {};
-        for (var i = 0; i < selectedDpids.length; i++) {
+        for ( var i = 0; i < selectedDpids.length; i++) {
             requestData['decorationPictures[' + i + '].dpId'] = selectedDpids[i];
             requestData['decorationPictures[' + i + '].orderId'] = orderId;
             requestData['decorationPictures[' + i + '].status'] = status;
         }
 
         com.post(api.decoration.batchDecorationPicture, requestData, function(res) {
+
             com.hideLoading();
             if (res.errorCode == 0) {
                 com.showAlert(com.info, '操作成功，已更新 ' + selectedDpids.length + ' 张图片状态');
@@ -2454,6 +2484,7 @@ jQuery(function($) {
                 com.showAlert(com.error, res.errorMsg || '操作失败');
             }
         }, function(err) {
+
             com.hideLoading();
             com.showAlert(com.error, '操作失败');
         });
@@ -2461,14 +2492,17 @@ jQuery(function($) {
 
     // 绑定批量操作按钮事件（使用事件委托，支持动态创建的按钮）
     $(document).on('click', '#detailBatchShow', function() {
+
         batchUpdateDesignStatus(1);
     });
 
     $(document).on('click', '#detailBatchConfirm', function() {
+
         batchUpdateDesignStatus(4);
     });
 
     $(document).on('click', '#detailBatchHide', function() {
+
         batchUpdateDesignStatus(0);
     });
 
