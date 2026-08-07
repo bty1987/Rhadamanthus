@@ -33,6 +33,12 @@ public class OperationPO implements java.io.Serializable {
 
 	public static final short THROUGH_COMMUNION_INT = 4;
 
+	public static final short TYPE_CHECK_INT = 0;
+
+	public static final short TYPE_PASS_INT = 1;
+
+	public static final short SYSTEM_PLATFORM_INT = 1;
+
 	// ===== Phase 5: 日志记录策略常量（三态语义）=====
 	/** 不记录：与 AUTO 等价，语义上表示"运维主动关闭某接口的日志" */
 	public static final short LOGFLAG_NONE_INT = 0;
@@ -75,6 +81,16 @@ public class OperationPO implements java.io.Serializable {
 	public OperationPO(ModulePO module) {
 		super();
 		this.module = module;
+	}
+
+	public OperationPO(String operation, short system, short status, short through, short type) {
+		super();
+		this.name = operation;
+		this.operation = operation;
+		this.system = system;
+		this.status = status;
+		this.through = through;
+		this.type = type;
 	}
 
 	@Id
