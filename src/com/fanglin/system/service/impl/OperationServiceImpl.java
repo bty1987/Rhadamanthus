@@ -290,7 +290,7 @@ public class OperationServiceImpl implements OperationService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void fillRoleOperationByOperation(String userId, Integer roleId, Integer company, String operation) throws FLException {
+	public void fillOperation(String userId, Integer roleId, Integer company, String operation) throws FLException {
 
 		// 四要素不齐,跳过(只对已登录、信息完整的请求收集)
 		if (userId == null || roleId == null || company == null || operation == null) return;
@@ -303,17 +303,7 @@ public class OperationServiceImpl implements OperationService {
 		OperationPO operationPO = operationDao.queryOperationByOperation(operation);
 
 		if (operationPO == null) {
-
-			operationPO = new OperationPO();
-
-			operationPO.setOperation(operation);
-			operationPO.setName(operation);
-			operationPO.setThrough(OperationPO.THROUGH_PASS_INT);
-			operationPO.setType((short) 0);
-			operationPO.setStatus(OperationPO.STATUS_ENABLE_INT);
-			operationPO.setSystem((short) 1);
-
-			operationDao.save(operationPO);
+			operationDao.save(new OperationPO(operation, OperationPO.SYSTEM_PLATFORM_INT, OperationPO.STATUS_ENABLE_INT, OperationPO.THROUGH_PASS_INT, OperationPO.TYPE_CHECK_INT));
 		}
 
 		int oid = operationPO.getOid();

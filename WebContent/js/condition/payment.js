@@ -346,7 +346,7 @@ Condition.addupRule("payment", {
         }
     },
     "sales-isAffirm": {
-        label: "销售单确认",
+        label: "销售确认",
         type: "select",
         submitConfig: {
             name: "sales.isAffirm",
@@ -362,7 +362,7 @@ Condition.addupRule("payment", {
         }
     },
     "sales-affirmTime": {
-        label: "销售单确认时间",
+        label: "销售确认时间",
         type: "dateRangePicker",
         submitConfig: {
             name: "sales.affirmTime.range",
