@@ -778,6 +778,12 @@ public class MemberServiceImpl implements MemberService {
 			throw new FLException(140103, "活动物品数量超限");
 		}
 
+		// 校验:同一装修单下 decorationActivityItem.no 唯一,防止重复下单
+		String no = memberOrderVO.getPointOrderId();
+		if (decorationActivityItemDao.countDecorationActivityItem(orderId, no) > 0) {
+			throw new FLException(140104, "活动物品编号重复");
+		}
+
 		UserPO creater = userDao.queryUserByUserId(userId);
 
 		DecorationActivityItemPO decorationActivityItemPO = new DecorationActivityItemPO();
