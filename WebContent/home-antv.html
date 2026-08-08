@@ -47,7 +47,7 @@
 						<div class="row">
 							<div class="col-sm-12" id="ablockList"></div>
 						</div>
-						<div class="row">
+						<div class="row homemain-row">
 							<div class="col-sm-8">
 								<div class="row">
 									<div class="homePanel col-sm-6" id="fastlink">
@@ -386,9 +386,28 @@
     $(function(){
         $.loadScript(['js/com/reporter.js', 'js/home-antv.js', ]);
     });
-    
+
     $("#ace-settings-btn").on(ace.click_event, function () {
         $(this).toggleClass("open");
         $("#ace-settings-box").toggleClass("open")
     });
 </script>
+
+<style>
+    /* 首页排版优化:消除行内卡片高度差导致的留白,左右两栏等高 */
+    /* 主行(左主区 + 右栏)等高,避免右栏短一截留下方空白 */
+    #homePage > .homemain-row { display: flex; align-items: stretch; }
+    /* 左主区每个内部行用 flex,顶部对齐,卡片按内容自然高度,不再被强行拉到同行最高卡的高度 */
+    #homePage .homemain-row > .col-sm-8 > .row { display: flex; align-items: flex-start; }
+    /* 右栏卡片统一间距,压缩原本通知下方约 96px 的松散空隙 */
+    #homePage .homemain-row > .col-sm-4 > div { margin-bottom: 16px; }
+    #homePage .homemain-row > .col-sm-4 > div:last-child { margin-bottom: 0; }
+
+    /* 待办: 3 个 infobox 用 flex 横向排列,避免第三个换行把待办卡撑高 */
+    #homePage .infobox-container { display: flex; flex-wrap: nowrap; }
+    #homePage .infobox-container .infobox { flex: 1 1 0; min-width: 0; margin: 2px; }
+    /* 快捷区: 补 clearfix,修复 #linklist 高度塌陷(h=0)无法正确包裹浮动按钮 */
+    #homePage #linklist { overflow: hidden; }
+    /* 装修小贴士: 内容为空时去掉 blockquote 顶部 30px 留白 */
+    #homePage #bookList blockquote { padding-top: 10px; }
+</style>

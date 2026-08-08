@@ -59,7 +59,9 @@ $(function() {
                     var $mesg = $('<div></div>').addClass('dz-default dz-message').appendTo($zone);
                     var $span = $('<span></span>').text('无可用数据提供').appendTo($mesg);
                 }
-            }, null, false);
+            }, function() {
+                // 通知接口失败时静默降级,避免首页弹出全局"网络异常"
+            }, false);
 
         },
         loadActivities: function() {
@@ -81,7 +83,9 @@ $(function() {
                     var $span = $('<span></span>').text('无可用数据提供').appendTo($mesg);
                 }
 
-            }, null, false);
+            }, function() {
+                // 活动接口失败时静默降级,避免首页弹出全局"网络异常"
+            }, false);
 
         },
         noticeOptions: {
@@ -136,7 +140,12 @@ $(function() {
 
         });
 
-        com.focusPage("h4[name='versionCode']").after($(res.versionInfo ? res.versionInfo : "<p>版本信息</p>"));
+        com.focusPage("h4[name='versionCode']").after($('<div class="versionDetail" style="display:none;"></div>').append($(res.versionInfo ? res.versionInfo : "<p>版本信息</p>")));
+
+        // 版本信息降权:默认只显示版本号,点击版本号展开/收起正文,避免长篇更新说明占据过多首屏空间
+        com.focusPage("h4[name='versionCode']").css('cursor', 'pointer').off('click').on('click', function() {
+            com.focusPage('.versionDetail').slideToggle(150);
+        });
 
         com.focusPage(".lead").html(res.tips[Math.floor(Math.random() * res.tips.length)]);
 
@@ -165,6 +174,8 @@ $(function() {
                 layero.find('.layui-layer-btn').css('text-align', 'center');
             }
         }));
+    }, function() {
+        // 系统配置接口失败时静默降级,避免单接口故障导致首页弹出全局"网络异常"
     });
 
     com.post(api.system.queryModuleForLink, {
@@ -254,16 +265,22 @@ $(function() {
                 return false;
             });
         });
+    }, function() {
+        // 快捷链接接口失败时静默降级,保留默认首页入口即可
     });
 
     com.post(api.approval.countApprovalForSend, {}, function(res) {
 
         res.count && $("span[name='approvalSendCount']").text(res.count);
+    }, function() {
+        // 审批计数接口失败时不影响首页其他模块
     });
 
     com.post(api.approval.countApprovalForReceive, {}, function(res) {
 
         res.count && $("span[name='approvalReceiveCount']").text(res.count);
+    }, function() {
+        // 审批计数接口失败时不影响首页其他模块
     });
 
     com.charts("designtop", "designtop", api.home.library, $.extend({}, {
@@ -476,7 +493,9 @@ $(function() {
                     });
                 });
                 callback(events);
-            }, null);// 把从后台取出的数据进行封装以后在页面上以fullCalendar的方式进行显示
+            }, function() {
+                // 日历事件接口失败时静默降级,避免弹出全局"网络异常"
+            });// 把从后台取出的数据进行封装以后在页面上以fullCalendar的方式进行显示
         },
 
         viewDisplay: function(view) {
