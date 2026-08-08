@@ -329,7 +329,7 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 			throw new FLException(140103, "活动物品数量超限");
 		}
 
-		// 自动核销:atttype=1(线上)未核销的物品,签约时强制核销
+		// 自动核销:atttype=1(线上)初始态(state=0)物品,签约时强制核销(DAO层已限定仅初始态可核销)
 		decorationActivityItemDao.banchDecorationActivityItem(orderId, DecorationActivityItemPO.ATTTYPE_ONLINE_INT, DecorationActivityItemPO.STATUS_VERIFY_INT, Arrays.asList(DecorationActivityItemPO.STATUS_VERIFY_INT), creater.getUid());
 
 		// 刷新Session:确保原生SQL的UPDATE落库并清空一级缓存中可能存在的旧状态,避免后续amount统计读不到或被脏缓存覆盖

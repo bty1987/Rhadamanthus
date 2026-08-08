@@ -224,9 +224,9 @@ public class DecorationActivityItemDaoImpl extends DaoImpl<DecorationActivityIte
 	@Override
 	public int countDecorationActivityItem(String orderId, short atttype) {
 
-		String sql = "SELECT COUNT(*) FROM decoration.decorationactivityitem WHERE orderId = :orderId AND atttype = :atttype";
+		String sql = "SELECT COUNT(*) FROM decoration.decorationactivityitem WHERE orderId = :orderId AND atttype = :atttype AND state <> :state";
 
-		Object result = session().createSQLQuery(sql).setString("orderId", orderId).setShort("atttype", atttype).setMaxResults(1).uniqueResult();
+		Object result = session().createSQLQuery(sql).setString("orderId", orderId).setShort("atttype", atttype).setShort("state", DecorationActivityItemPO.STATUS_UNVALID_INT).setMaxResults(1).uniqueResult();
 
 		if (result == null) return 0;
 
@@ -237,11 +237,11 @@ public class DecorationActivityItemDaoImpl extends DaoImpl<DecorationActivityIte
 	}
 
 	@Override
-	public long countDecorationActivityItem(String orderId, String no) {
+	public long countDecorationActivityItem(String no) {
 
-		String sql = "SELECT COUNT(*) FROM decoration.decorationactivityitem WHERE orderId = :orderId AND no = :no";
+		String sql = "SELECT COUNT(*) FROM decoration.decorationactivityitem WHERE no = :no AND state <> :state";
 
-		Object result = session().createSQLQuery(sql).setString("orderId", orderId).setString("no", no).setMaxResults(1).uniqueResult();
+		Object result = session().createSQLQuery(sql).setString("no", no).setShort("state", DecorationActivityItemPO.STATUS_UNVALID_INT).setMaxResults(1).uniqueResult();
 
 		if (result == null) return 0L;
 
@@ -257,7 +257,7 @@ public class DecorationActivityItemDaoImpl extends DaoImpl<DecorationActivityIte
 		StringBuffer sql = new StringBuffer();
 
 		sql.append("update decoration.decorationactivityitem set state = :state, ruid = :ruid, receiveTime = :receiveTime, content = :content");
-		sql.append(" where orderId = :orderId and atttype = :atttype");
+		sql.append(" where orderId = :orderId and atttype = :atttype and state = :initState");
 
 		if (excludeStates != null && !excludeStates.isEmpty()) {
 			sql.append(" and state not in (:excludeStates)");
@@ -271,6 +271,7 @@ public class DecorationActivityItemDaoImpl extends DaoImpl<DecorationActivityIte
 		sqlQuery.setString("content", "签约自动核销");
 		sqlQuery.setString("orderId", orderId);
 		sqlQuery.setShort("atttype", atttype);
+		sqlQuery.setShort("initState", DecorationActivityItemPO.STATUS_INIT_INT);
 
 		if (excludeStates != null && !excludeStates.isEmpty()) {
 			sqlQuery.setParameterList("excludeStates", excludeStates);
