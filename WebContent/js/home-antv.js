@@ -140,12 +140,7 @@ $(function() {
 
         });
 
-        com.focusPage("h4[name='versionCode']").after($('<div class="versionDetail" style="display:none;"></div>').append($(res.versionInfo ? res.versionInfo : "<p>版本信息</p>")));
-
-        // 版本信息降权:默认只显示版本号,点击版本号展开/收起正文,避免长篇更新说明占据过多首屏空间
-        com.focusPage("h4[name='versionCode']").css('cursor', 'pointer').off('click').on('click', function() {
-            com.focusPage('.versionDetail').slideToggle(150);
-        });
+        com.focusPage("h4[name='versionCode']").after($(res.versionInfo ? res.versionInfo : "<p>版本信息</p>"));
 
         com.focusPage(".lead").html(res.tips[Math.floor(Math.random() * res.tips.length)]);
 
