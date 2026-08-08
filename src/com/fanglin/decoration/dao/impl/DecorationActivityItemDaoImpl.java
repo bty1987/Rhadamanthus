@@ -237,6 +237,21 @@ public class DecorationActivityItemDaoImpl extends DaoImpl<DecorationActivityIte
 	}
 
 	@Override
+	public long countDecorationActivityItem(String orderId, String no) {
+
+		String sql = "SELECT COUNT(*) FROM decoration.decorationactivityitem WHERE orderId = :orderId AND no = :no";
+
+		Object result = session().createSQLQuery(sql).setString("orderId", orderId).setString("no", no).setMaxResults(1).uniqueResult();
+
+		if (result == null) return 0L;
+
+		if (result instanceof BigDecimal) return ((BigDecimal) result).longValue();
+		if (result instanceof Number) return ((Number) result).longValue();
+
+		return 0L;
+	}
+
+	@Override
 	public int banchDecorationActivityItem(String orderId, short atttype, short targetState, List<Short> excludeStates, long receiverId) {
 
 		StringBuffer sql = new StringBuffer();

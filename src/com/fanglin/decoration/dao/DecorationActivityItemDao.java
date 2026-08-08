@@ -46,12 +46,21 @@ public interface DecorationActivityItemDao extends Dao<DecorationActivityItemPO>
 
 	/**
 	 * 统计指定订单 atttype 下的活动物品数量（全部状态）
-	 * 
+	 *
 	 * @param orderId 订单号
 	 * @param atttype 线上线下标识
 	 * @return 活动物品数量
 	 */
 	public int countDecorationActivityItem(String orderId, short atttype);
+
+	/**
+	 * 统计指定订单、no（线上活动物品编号）下的活动物品数量，用于唯一性校验
+	 *
+	 * @param orderId 订单号
+	 * @param no 活动物品编号
+	 * @return 活动物品数量
+	 */
+	public long countDecorationActivityItem(String orderId, String no);
 
 	/**
 	 * 批量核销:将指定订单 atttype 下、状态不在排除集合内的物品置为目标核销态
