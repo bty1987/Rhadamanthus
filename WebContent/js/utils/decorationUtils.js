@@ -655,9 +655,9 @@ var decorationUtils = {
 
             infopack.html("");
 
-            var couponCutSpan = $("<div></div>").attr("id", "_couponCut").addClass("col-sm-4").append($("<h4></h4>").html("券优惠:").append($('<strong></strong>').addClass("red").html(couponCut))).appendTo(infopack);
-            var thingCutSpan = $("<div></div>").attr("id", "_thingCut").addClass("col-sm-4").append($("<h4></h4>").html("物品优惠:").append($('<strong></strong>').addClass("red").html(thingCut))).appendTo(infopack);
-            var detailSpan = $("<div></div>").attr("id", "_detail").addClass("col-sm-4").append($("<h4></h4>").html("优惠总额:").append($('<strong></strong>').addClass("red").html(utils.accAdd(couponCut, thingCut)))).appendTo(infopack);
+            var couponCutSpan = $("<div></div>").attr("id", "_couponCut").addClass("col-md-4").css("border-left", "1px solid rgb(227, 227, 227)").append($("<h5></h5>").addClass("bigger-110 center").text("券优惠"), $("<h2></h2>").addClass("oid bigger center").append($("<b></b>").addClass("blue").html(couponCut))).appendTo(infopack);
+            var thingCutSpan = $("<div></div>").attr("id", "_thingCut").addClass("col-md-4").css("border-left", "1px solid rgb(227, 227, 227)").append($("<h5></h5>").addClass("bigger-110 center").text("物品优惠"), $("<h2></h2>").addClass("oid bigger center").append($("<b></b>").addClass("blue").html(thingCut))).appendTo(infopack);
+            var detailSpan = $("<div></div>").attr("id", "_detail").addClass("col-md-4").css("border-left", "1px solid rgb(227, 227, 227)").append($("<h5></h5>").addClass("bigger-110 center").text("优惠总额"), $("<h2></h2>").addClass("oid bigger center").append($("<b></b>").addClass("blue").html(utils.accAdd(couponCut, thingCut)))).appendTo(infopack);
 
         });
     },
