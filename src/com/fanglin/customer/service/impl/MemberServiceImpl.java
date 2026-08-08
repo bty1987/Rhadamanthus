@@ -774,7 +774,7 @@ public class MemberServiceImpl implements MemberService {
 		}
 
 		// 校验:atttype=1(线上)物品无论何种状态,每单仅限1件
-		if (decorationActivityItemDao.countDecorationActivityItemForAtttype(orderId, DecorationActivityItemPO.ATTTYPE_ONLINE_INT) > 0) {
+		if (decorationActivityItemDao.countDecorationActivityItem(orderId, DecorationActivityItemPO.ATTTYPE_ONLINE_INT) > 1) {
 			throw new FLException(140103, "活动物品数量超限");
 		}
 
