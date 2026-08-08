@@ -719,11 +719,10 @@ var com = {
             container = "fl-container";
         }
 
-        console.log('[diag] switchPage, url:', url, 'container:', container, 'exists:', $('#' + container).length);
+        // 拼接时间戳避免 ajax 加载页面时命中浏览器缓存,导致部署更新后仍显示旧页面
+        var cacheUrl = url + (url.indexOf('?') > -1 ? '&' : '?') + '_=' + new Date().getTime();
 
-        $("#" + container).load(url, data, function(response, status, xhr) {
-
-            console.log('[diag] switchPage load complete, status:', status, 'response length:', response ? response.length : 0);
+        $("#" + container).load(cacheUrl, data, function(response, status, xhr) {
 
             callback && callback(response, status, xhr);
         });
@@ -736,8 +735,6 @@ var com = {
      * @param features 显示内容
      */
     loadPage: function(page, $features) {
-
-        console.log('[diag] loadPage called, page:', page, '#homeNav:', $('#homeNav').length, '#operateTab:', $('#operateTab').length, '.flpage.tab-content:', $('.flpage.tab-content').length);
 
         if (!page)
             return false;
