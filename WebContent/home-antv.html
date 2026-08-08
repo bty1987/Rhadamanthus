@@ -410,4 +410,12 @@
     #homePage #linklist { overflow: hidden; }
     /* 装修小贴士: 内容为空时去掉 blockquote 顶部 30px 留白 */
     #homePage #bookList blockquote { padding-top: 10px; }
+
+    /* 卡片撑满列容器: 列容器纵向 flex,widget-box 撑满高度,消除矮卡被同行最高卡撑高后的内部底部留白 */
+    #homePage .homemain-row .col-sm-6,
+    #homePage .homemain-row .col-sm-4 > div { display: flex; flex-direction: column; }
+    #homePage .homemain-row .widget-box { height: 100%; }
+
+    /* 待办计数数字加粗,作为高优先级信息更醒目 */
+    #homePage .infobox-data-number { font-weight: 700; }
 </style>
