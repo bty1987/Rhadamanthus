@@ -61,11 +61,58 @@ CREATE TABLE IF NOT EXISTS `metric_payment_daily` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='财务收款日级汇总(指标体系)';
 
 -- ============================================================
+-- D3 装修履约-施工: metric_construction_monthly 施工月级汇总
+-- 数据源: construction.construction + construction.constructioninfo + decoration.decoration(取company)
+-- 维度: stat_month × company（按开工月/完工月统计）
+-- ============================================================
+
+CREATE TABLE IF NOT EXISTS `metric_construction_monthly` (
+    `cmid`               BIGINT       NOT NULL AUTO_INCREMENT COMMENT '主键',
+    `stat_month`         CHAR(7)      NOT NULL                COMMENT '统计月份 yyyy-MM',
+    `company`            INT          NOT NULL                COMMENT '公司ID',
+    `start_count`        BIGINT       NOT NULL DEFAULT 0      COMMENT '开工量(startTime归月)',
+    `finish_count`       BIGINT       NOT NULL DEFAULT 0      COMMENT '完工量(process=1且finishTime归月)',
+    `ongoing_count`      BIGINT       NOT NULL DEFAULT 0      COMMENT '在建数(开工且未完工)',
+    `avg_actual_period`  BIGINT       NOT NULL DEFAULT 0      COMMENT '平均实际工期(天)',
+    `avg_plan_period`    BIGINT       NOT NULL DEFAULT 0      COMMENT '平均计划工期(天)',
+    `overdue_count`      BIGINT       NOT NULL DEFAULT 0      COMMENT '超期数(实际>计划)',
+
+    PRIMARY KEY (`cmid`),
+    UNIQUE KEY `uk_month_company` (`stat_month`, `company`),
+    KEY `idx_company` (`company`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='施工履约月级汇总(指标体系)';
+
+-- ============================================================
+-- D3 装修履约-报价: metric_quotation_monthly 报价偏差月级汇总
+-- 数据源: quotation.quotation(默认报价) + decoration.decoration(签约单)
+-- 维度: stat_month × company（按签约月）
+-- ============================================================
+
+CREATE TABLE IF NOT EXISTS `metric_quotation_monthly` (
+    `qmid`                BIGINT       NOT NULL AUTO_INCREMENT COMMENT '主键',
+    `stat_month`          CHAR(7)      NOT NULL                COMMENT '统计月份 yyyy-MM(签约月)',
+    `company`             INT          NOT NULL                COMMENT '公司ID',
+    `quotation_count`     BIGINT       NOT NULL DEFAULT 0      COMMENT '报价单量',
+    `avg_quotation_amount` BIGINT      NOT NULL DEFAULT 0      COMMENT '平均报价额(分)',
+    `avg_sign_amount`     BIGINT       NOT NULL DEFAULT 0      COMMENT '平均签约额(分)',
+    `avg_diff_amount`     BIGINT       NOT NULL DEFAULT 0      COMMENT '平均偏差额(签约-报价,分)',
+
+    PRIMARY KEY (`qmid`),
+    UNIQUE KEY `uk_month_company` (`stat_month`, `company`),
+    KEY `idx_company` (`company`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='报价偏差月级汇总(指标体系)';
+
+-- ============================================================
 -- 验证: 部署后可执行以下语句确认数据已生成
 -- SELECT COUNT(*) FROM report.metric_decoration_daily;
 -- SELECT stat_date, company, measure_count, sign_count, sign_amount
 --   FROM report.metric_decoration_daily ORDER BY stat_date DESC LIMIT 10;
 -- SELECT stat_date, company, type, payment_type, count, amount
 --   FROM report.metric_payment_daily ORDER BY stat_date DESC LIMIT 10;
+-- SELECT stat_month, company, start_count, finish_count, avg_actual_period, overdue_count
+--   FROM report.metric_construction_monthly ORDER BY stat_month DESC LIMIT 10;
+-- SELECT stat_month, company, quotation_count, avg_quotation_amount, avg_sign_amount, avg_diff_amount
+--   FROM report.metric_quotation_monthly ORDER BY stat_month DESC LIMIT 10;
 -- ============================================================
+
 
