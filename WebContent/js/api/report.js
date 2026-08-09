@@ -31,6 +31,9 @@ $.extend(api.index, {
     },
     fulfillmentReportIndex: {
         url: "/views/report/fulfillmentReport.html"
+    },
+    materialSalesReportIndex: {
+        url: "/views/report/materialSalesReport.html"
     }
 });
 
@@ -278,6 +281,20 @@ $.extend(api, {
         },
         refreshQuotationMetric: {
             url: "refreshQuotationMetric.do",
+            demo: true,
+        },
+
+        // ---- D4 主材经营（数据源 report.metric_sales_monthly）----
+        querySalesTrend: {
+            url: "querySalesTrend.do",
+            demo: true,
+        },
+        querySalesCategoryDist: {
+            url: "querySalesCategoryDist.do",
+            demo: true,
+        },
+        refreshSalesMetric: {
+            url: "refreshSalesMetric.do",
             demo: true,
         },
 

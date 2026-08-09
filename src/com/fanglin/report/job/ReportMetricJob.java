@@ -21,6 +21,7 @@ import com.fanglin.report.service.impl.ConstructionMetricCalculator;
 import com.fanglin.report.service.impl.DecorationMetricCalculator;
 import com.fanglin.report.service.impl.PaymentMetricCalculator;
 import com.fanglin.report.service.impl.QuotationMetricCalculator;
+import com.fanglin.report.service.impl.SalesMetricCalculator;
 
 @Component
 public class ReportMetricJob {
@@ -39,6 +40,9 @@ public class ReportMetricJob {
 	@Autowired
 	private QuotationMetricCalculator quotationMetricCalculator;
 
+	@Autowired
+	private SalesMetricCalculator salesMetricCalculator;
+
 	/**
 	 * 每日凌晨 1:30 重算装修指标汇总。
 	 *
@@ -55,7 +59,8 @@ public class ReportMetricJob {
 			paymentMetricCalculator.rebuild();
 			constructionMetricCalculator.rebuild();
 			quotationMetricCalculator.rebuild();
-			// TODO: salesMetricCalculator.rebuild(); ...
+			salesMetricCalculator.rebuild();
+			// 阶段三主题域待追加: customer/production/inventory/approval/market/salary ...
 
 			logger.info("[metric-refresh] job finished at {}", new Date());
 		} catch (Throwable t) {

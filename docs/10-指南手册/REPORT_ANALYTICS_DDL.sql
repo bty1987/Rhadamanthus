@@ -103,6 +103,25 @@ CREATE TABLE IF NOT EXISTS `metric_quotation_monthly` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='报价偏差月级汇总(指标体系)';
 
 -- ============================================================
+-- D4 主材经营: metric_sales_monthly 销售月级汇总
+-- 数据源: sales.sales (排除作废 status!=4)
+-- 维度: stat_month × company × category（品类：橱柜/全屋定制/电器/瓷砖...）
+-- ============================================================
+
+CREATE TABLE IF NOT EXISTS `metric_sales_monthly` (
+    `smid`          BIGINT       NOT NULL AUTO_INCREMENT COMMENT '主键',
+    `stat_month`    CHAR(7)      NOT NULL                COMMENT '统计月份 yyyy-MM',
+    `company`       INT          NOT NULL                COMMENT '公司ID',
+    `category`      VARCHAR(32)  NOT NULL                COMMENT '品类(空品类归未分类)',
+    `sales_count`   BIGINT       NOT NULL DEFAULT 0      COMMENT '销售单量',
+    `total_amount`  BIGINT       NOT NULL DEFAULT 0      COMMENT '销售总额(分)',
+
+    PRIMARY KEY (`smid`),
+    UNIQUE KEY `uk_month_company_category` (`stat_month`, `company`, `category`),
+    KEY `idx_company` (`company`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='主材销售月级汇总(指标体系)';
+
+-- ============================================================
 -- 验证: 部署后可执行以下语句确认数据已生成
 -- SELECT COUNT(*) FROM report.metric_decoration_daily;
 -- SELECT stat_date, company, measure_count, sign_count, sign_amount
