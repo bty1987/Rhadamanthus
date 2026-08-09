@@ -1,4 +1,4 @@
-package com.fanglin.report.analytics.domain;
+package com.fanglin.report.service.impl;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -6,18 +6,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.fanglin.report.analytics.dao.DecorationMetricDao;
+import com.fanglin.report.dao.DecorationMetricDao;
 
 /**
- * 装修主题域计算器：封装 {@link DecorationMetricDao#rebuild()} 的调用。
+ * 装修指标计算器：封装 {@link DecorationMetricDao#rebuild()} 的调用。
  *
- * <p>被 {@code MetricRefreshJob}（定时）和 {@code DecorationAnalyticsAction}（手动刷新）共用，
+ * <p>被 {@code ReportMetricJob}（定时）和 {@code DecorationMetricAction}（手动刷新）共用，
  * 保证两边走同一套聚合逻辑。
  */
 @Component
-public class DecorationDomainCalculator {
+public class DecorationMetricCalculator {
 
-	private static final Logger logger = LoggerFactory.getLogger(DecorationDomainCalculator.class);
+	private static final Logger logger = LoggerFactory.getLogger(DecorationMetricCalculator.class);
 
 	@Autowired
 	private DecorationMetricDao decorationMetricDao;

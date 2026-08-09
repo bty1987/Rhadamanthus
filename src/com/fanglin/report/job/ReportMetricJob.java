@@ -7,7 +7,7 @@
  * <p>启用前置条件：ApplicationContext.xml 已配置 &lt;task:annotation-driven/&gt;（已存在）。
  * 参考 log.job.ActionLogArchiveJob 写法：任务不抛异常，失败仅记日志，次日自动重试。
  */
-package com.fanglin.report.analytics.job;
+package com.fanglin.report.job;
 
 import java.util.Date;
 
@@ -17,15 +17,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import com.fanglin.report.analytics.domain.DecorationDomainCalculator;
+import com.fanglin.report.service.impl.DecorationMetricCalculator;
 
 @Component
-public class MetricRefreshJob {
+public class ReportMetricJob {
 
-	private static final Logger logger = LoggerFactory.getLogger(MetricRefreshJob.class);
+	private static final Logger logger = LoggerFactory.getLogger(ReportMetricJob.class);
 
 	@Autowired
-	private DecorationDomainCalculator decorationDomainCalculator;
+	private DecorationMetricCalculator decorationMetricCalculator;
 
 	/**
 	 * 每日凌晨 1:30 重算装修指标汇总。
@@ -39,8 +39,8 @@ public class MetricRefreshJob {
 		logger.info("[metric-refresh] job started at {}", new Date());
 
 		try {
-			decorationDomainCalculator.rebuild();
-			// TODO: paymentDomainCalculator.rebuild(); salesDomainCalculator.rebuild(); ...
+			decorationMetricCalculator.rebuild();
+			// TODO: paymentMetricCalculator.rebuild(); salesMetricCalculator.rebuild(); ...
 
 			logger.info("[metric-refresh] job finished at {}", new Date());
 		} catch (Throwable t) {

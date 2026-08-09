@@ -1,4 +1,4 @@
-package com.fanglin.report.analytics.action;
+package com.fanglin.report.action;
 
 import java.util.List;
 
@@ -11,12 +11,12 @@ import org.springframework.stereotype.Controller;
 
 import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
-import com.fanglin.report.analytics.service.DecorationAnalyticsService;
-import com.fanglin.report.analytics.vo.MetricPointVO;
-import com.fanglin.report.analytics.vo.MetricTrendVO;
+import com.fanglin.report.service.DecorationMetricService;
+import com.fanglin.report.vo.MetricPointVO;
+import com.fanglin.report.vo.MetricTrendVO;
 
 /**
- * 装修销售转化分析报表入口。
+ * 装修销售转化指标报表入口。
  *
  * <p>4 个查询（漏斗/状态分布/签单额趋势/装修类型分布）+ 1 个手动刷新（重算汇总表）。
  * 数据来源 report.metric_decoration_daily，由定时任务每日凌晨刷新。
@@ -24,12 +24,12 @@ import com.fanglin.report.analytics.vo.MetricTrendVO;
 @ParentPackage("base")
 @Namespace("/")
 @Controller
-public class DecorationAnalyticsAction extends BaseListAction {
+public class DecorationMetricAction extends BaseListAction {
 
 	private static final long serialVersionUID = 1L;
 
 	@Autowired
-	private DecorationAnalyticsService decorationAnalyticsService;
+	private DecorationMetricService decorationMetricService;
 
 	private List<MetricPointVO> funnel;
 
@@ -42,7 +42,7 @@ public class DecorationAnalyticsAction extends BaseListAction {
 	@Action(value = "queryDecorationFunnel", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryDecorationFunnel() throws FLException {
 
-		funnel = decorationAnalyticsService.queryFunnel(getFilters(), queryCompany());
+		funnel = decorationMetricService.queryFunnel(getFilters(), queryCompany());
 
 		return SUCCESS;
 	}
@@ -50,7 +50,7 @@ public class DecorationAnalyticsAction extends BaseListAction {
 	@Action(value = "queryDecorationStatusDist", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryDecorationStatusDist() throws FLException {
 
-		statusDist = decorationAnalyticsService.queryStatusDist(getFilters(), queryCompany());
+		statusDist = decorationMetricService.queryStatusDist(getFilters(), queryCompany());
 
 		return SUCCESS;
 	}
@@ -58,7 +58,7 @@ public class DecorationAnalyticsAction extends BaseListAction {
 	@Action(value = "queryDecorationSignTrend", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryDecorationSignTrend() throws FLException {
 
-		signTrend = decorationAnalyticsService.querySignTrend(getFilters(), queryCompany());
+		signTrend = decorationMetricService.querySignTrend(getFilters(), queryCompany());
 
 		return SUCCESS;
 	}
@@ -66,7 +66,7 @@ public class DecorationAnalyticsAction extends BaseListAction {
 	@Action(value = "queryDecorationTypeDist", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryDecorationTypeDist() throws FLException {
 
-		typeDist = decorationAnalyticsService.queryTypeDist(getFilters(), queryCompany());
+		typeDist = decorationMetricService.queryTypeDist(getFilters(), queryCompany());
 
 		return SUCCESS;
 	}
@@ -74,7 +74,7 @@ public class DecorationAnalyticsAction extends BaseListAction {
 	@Action(value = "refreshDecorationMetric", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String refreshDecorationMetric() throws FLException {
 
-		decorationAnalyticsService.refreshMetric();
+		decorationMetricService.refreshMetric();
 
 		return SUCCESS;
 	}

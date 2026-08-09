@@ -1,4 +1,4 @@
-package com.fanglin.report.analytics.po;
+package com.fanglin.report.po;
 
 import static javax.persistence.GenerationType.IDENTITY;
 
@@ -11,7 +11,7 @@ import javax.persistence.Table;
 /**
  * 装修销售转化日级汇总（report.metric_decoration_daily）。
  *
- * <p>由 {@code DecorationDomainCalculator.rebuild()} 每日全量重算，跨库只读聚合
+ * <p>由 {@code DecorationMetricCalculator.rebuild()} 每日全量重算，跨库只读聚合
  * {@code decoration.decoration}，{@code INSERT ... ON DUPLICATE KEY UPDATE} 幂等写入。
  * 唯一键 {@code (stat_date, company)} 保证重复跑不累加。
  *
@@ -21,9 +21,9 @@ import javax.persistence.Table;
  *   <li>签约额 signAmount：按 {@code contractTime} 归日（仅签约及以上单有合同时间）。</li>
  * </ul>
  *
- * <p>本表属于 report 全新 analytics 子域，与旧 {@code DecorationReportPO} 等互不干扰。
+ * <p>本表属于 report 模块的指标汇总体系，与旧 {@code DecorationReportPO} 等互不干扰。
  *
- * @see com.fanglin.report.analytics.domain.DecorationDomainCalculator
+ * @see com.fanglin.report.service.impl.DecorationMetricCalculator
  */
 @Entity
 @Table(name = "metric_decoration_daily", catalog = "report")
