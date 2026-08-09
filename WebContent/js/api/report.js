@@ -22,6 +22,9 @@ $.extend(api.index, {
     },
     rankIndex: {
         url: "/views/report/rank.html"
+    },
+    decorationFunnelReportIndex: {
+        url: "/views/report/decorationFunnelReport.html"
     }
 });
 
@@ -206,6 +209,28 @@ $.extend(api, {
                 result: "addReduceRankVOs",
                 args: ["total"]
             }],
+        },
+
+        // ---- 装修销售转化分析（analytics 子域，数据源 report.metric_decoration_daily）----
+        queryDecorationFunnel: {
+            url: "queryDecorationFunnel.do",
+            demo: true,
+        },
+        queryDecorationStatusDist: {
+            url: "queryDecorationStatusDist.do",
+            demo: true,
+        },
+        queryDecorationSignTrend: {
+            url: "queryDecorationSignTrend.do",
+            demo: true,
+        },
+        queryDecorationTypeDist: {
+            url: "queryDecorationTypeDist.do",
+            demo: true,
+        },
+        refreshDecorationMetric: {
+            url: "refreshDecorationMetric.do",
+            demo: true,
         },
 
     }
