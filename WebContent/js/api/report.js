@@ -25,6 +25,9 @@ $.extend(api.index, {
     },
     decorationFunnelReportIndex: {
         url: "/views/report/decorationFunnelReport.html"
+    },
+    paymentReportIndex: {
+        url: "/views/report/paymentReport.html"
     }
 });
 
@@ -230,6 +233,20 @@ $.extend(api, {
         },
         refreshDecorationMetric: {
             url: "refreshDecorationMetric.do",
+            demo: true,
+        },
+
+        // ---- 财务收款分析（数据源 report.metric_payment_daily）----
+        queryPaymentTrend: {
+            url: "queryPaymentTrend.do",
+            demo: true,
+        },
+        queryPaymentTypeDist: {
+            url: "queryPaymentTypeDist.do",
+            demo: true,
+        },
+        refreshPaymentMetric: {
+            url: "refreshPaymentMetric.do",
             demo: true,
         },
 

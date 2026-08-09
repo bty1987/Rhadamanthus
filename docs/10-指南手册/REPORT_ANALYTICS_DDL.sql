@@ -37,11 +37,35 @@ CREATE TABLE IF NOT EXISTS `metric_decoration_daily` (
     UNIQUE KEY `uk_date_company` (`stat_date`, `company`),
     KEY `idx_company` (`company`),
     KEY `idx_stat_date` (`stat_date`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='装修销售转化日级汇总(analytics子域)';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='装修销售转化日级汇总(指标体系)';
+
+-- ============================================================
+-- D7 财务资金: metric_payment_daily 收款日级汇总
+-- 数据源: payment.receipt (统一收据流水)
+-- 维度: stat_date × company × type(收/退) × paymentType(预付/装修/主材/其他)
+-- ============================================================
+
+CREATE TABLE IF NOT EXISTS `metric_payment_daily` (
+    `pmid`          BIGINT       NOT NULL AUTO_INCREMENT COMMENT '主键',
+    `stat_date`     DATE         NOT NULL                COMMENT '统计日期',
+    `company`       INT          NOT NULL                COMMENT '公司ID',
+    `type`          TINYINT      NOT NULL                COMMENT '0收款 1退款',
+    `payment_type`  TINYINT      NOT NULL                COMMENT '0预付款 1装修款 2主材款 3其他',
+    `count`         BIGINT       NOT NULL DEFAULT 0      COMMENT '笔数',
+    `amount`        BIGINT       NOT NULL DEFAULT 0      COMMENT '金额(分)',
+
+    PRIMARY KEY (`pmid`),
+    UNIQUE KEY `uk_date_company_type_ptype` (`stat_date`, `company`, `type`, `payment_type`),
+    KEY `idx_company` (`company`),
+    KEY `idx_stat_date` (`stat_date`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='财务收款日级汇总(指标体系)';
 
 -- ============================================================
 -- 验证: 部署后可执行以下语句确认数据已生成
 -- SELECT COUNT(*) FROM report.metric_decoration_daily;
 -- SELECT stat_date, company, measure_count, sign_count, sign_amount
 --   FROM report.metric_decoration_daily ORDER BY stat_date DESC LIMIT 10;
+-- SELECT stat_date, company, type, payment_type, count, amount
+--   FROM report.metric_payment_daily ORDER BY stat_date DESC LIMIT 10;
 -- ============================================================
+
