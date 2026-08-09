@@ -1,17 +1,17 @@
-package com.fanglin.report.analytics.service;
+package com.fanglin.report.service;
 
 import java.util.List;
 
 import com.fanglin.core.vo.Filter;
-import com.fanglin.report.analytics.vo.MetricPointVO;
-import com.fanglin.report.analytics.vo.MetricTrendVO;
+import com.fanglin.report.vo.MetricPointVO;
+import com.fanglin.report.vo.MetricTrendVO;
 
 /**
- * 装修销售转化分析服务。
+ * 装修销售转化指标服务。
  *
  * <p>查询 report.metric_decoration_daily 汇总表，供前端 4 维度报表使用。
  */
-public interface DecorationAnalyticsService {
+public interface DecorationMetricService {
 
 	/** 漏斗：量尺→定金→预签→签约→决算→完工各阶段累计订单数。 */
 	List<MetricPointVO> queryFunnel(List<Filter> filters, int company);

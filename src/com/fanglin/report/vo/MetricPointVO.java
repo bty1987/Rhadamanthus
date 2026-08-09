@@ -1,4 +1,4 @@
-package com.fanglin.report.analytics.vo;
+package com.fanglin.report.vo;
 
 import java.io.Serializable;
 

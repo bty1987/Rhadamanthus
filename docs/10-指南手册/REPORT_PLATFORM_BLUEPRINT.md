@@ -36,14 +36,18 @@
 ```
 新增（report 包内全新子域）          保留原样（碰都不碰）
 ─────────────────────────          ─────────────────────────
-report/analytics/  ← 全新分析子域    report/po/DecorationReportPO
-report/job/        ← 定时任务        report/po/DecorationRankPO
-report/po/metric/  ← 新汇总表PO      report/service/...Rank*Service
-report/dao/metric/ ← 新汇总表DAO     report/po/Zaterial*（死代码也留）
-report/vo/analytics/                 report/service/impl/*（含死方法）
-                                     report/decoration4construction 表
-report/metric_* 表 ← 新汇总表        report/decorationrank 表 等
+report/po/         ← 新增 *MetricPO   report/po/DecorationReportPO
+report/vo/         ← 新增 *MetricVO   report/po/DecorationRankPO
+report/dao/(impl/) ← 新增 *MetricDao  report/service/...Rank*Service
+report/service/(impl/) ← 新增          report/po/Zaterial*（死代码也留）
+   *MetricService + *MetricCalculator  report/service/impl/*（含死方法）
+report/action/     ← 新增 *MetricAction report/decoration4construction 表
+report/job/        ← 新增 ReportMetricJob report/decorationrank 表 等
+（新建子层，定时任务）
+report/metric_* 表 ← 新汇总表
 ```
+
+> 新增的指标类**整合进 report 标准五层**（po/vo/dao/service/action），与现有类并列，命名用 `*Metric*` 后缀区分。不另建 analytics 子包，避免割裂感。仅 `job/` 是 report 新增的子层（定时任务，参考 log.job）。
 
 > 后续所有章节中，凡涉及"事件投递 / 修改业务模块"的描述，均以本铁律为准——统一替换为"定时全量重算 + 跨库只读 SELECT"。
 
@@ -614,33 +618,39 @@ construction 工期/验收 + construction 返工 + customer 售后投诉/回访�
 
 > 遵守铁律：不改任何业务模块、不碰旧 report 代码。全部新增。
 
-### 6.1 包结构（新增 `com.fanglin.report.analytics` 分析子域）
+### 6.1 包结构（整合进 report 标准五层）
 
-在 report 包内全新子域，与旧代码完全隔离（旧代码原样保留）：
+新增的指标类**直接并入 report 既有五层目录**，与现有类并列，命名用 `*Metric*` 区分。不另建 analytics 子包，避免割裂。仅 `job/` 是 report 新增的子层：
 
 ```
 src/com/fanglin/report/
-├── action/                  # 现有（不动）
-├── service/                 # 现有（不动）
-├── dao/                     # 现有（不动）
-├── po/                      # 现有（不动）
-├── vo/                      # 现有（不动）
-│
-├── analytics/               # 🆕 全新分析子域（与上面完全隔离）
-│   ├── action/              # 🆕 AnalyticsAction 查询入口
-│   ├── service/             # 🆕 主题域查询服务（接口+impl）
-│   ├── dao/                 # 🆕 汇总表查询 DAO（接口+impl）
-│   ├── po/                  # 🆕 metric_* 汇总表 PO
-│   ├── vo/                  # 🆕 分析视图对象
-│   └── domain/              # 🆕 九大主题域的"计算器"
-│       ├── DecorationDomainCalculator.java   # 跑 decoration 跨库聚合
-│       ├── PaymentDomainCalculator.java      # 跑 payment 跨库聚合
-│       └── ...每域一个
-│   └── job/                 # 🆕 定时任务（@Scheduled）
-│       └── MetricRefreshJob.java             # 每日凌晨调各 Calculator
+├── action/
+│   ├── DecorationReportAction.java          # 现有（不动）
+│   └── DecorationMetricAction.java          # 🆕 指标报表入口（4查询+1刷新）
+├── service/
+│   ├── DecorationReportService.java         # 现有（不动）
+│   └── DecorationMetricService.java         # 🆕 指标查询服务接口
+│   └── impl/
+│       ├── DecorationReportServiceImpl.java # 现有（不动）
+│       ├── DecorationMetricServiceImpl.java # 🆕 指标查询服务实现
+│       └── DecorationMetricCalculator.java  # 🆕 跨库聚合计算器（每域一个）
+├── dao/
+│   ├── DecorationReportDao.java             # 现有（不动）
+│   └── DecorationMetricDao.java             # 🆕 汇总表聚合+查询 DAO
+│   └── impl/
+│       └── DecorationMetricDaoImpl.java     # 🆕
+├── po/
+│   ├── DecorationReportPO.java              # 现有（不动）
+│   └── DecorationDailyMetricPO.java         # 🆕 metric_decoration_daily 实体
+├── vo/
+│   ├── DecorationReportVO.java              # 现有（不动）
+│   ├── MetricPointVO.java                   # 🆕 通用指标点（漏斗/饼/柱）
+│   └── MetricTrendVO.java                   # 🆕 趋势指标点（折线）
+└── job/                                     # 🆕 新增子层（定时任务）
+    └── ReportMetricJob.java                 # 🆕 @Scheduled 每日凌晨调各 Calculator
 ```
 
-> 注意：domain 计算器是**核心**。每个 Calculator 内部跑跨库只读聚合 SQL（`SELECT ... FROM decoration.decoration WHERE ...`），把结果 `REPLACE INTO report.metric_*`。SQL 全在 report 包内，绝不改业务模块。
+> **Calculator 是核心**。每个 `*MetricCalculator` 内部跑跨库只读聚合 SQL（`SELECT ... FROM decoration.decoration WHERE ...`），把结果 `REPLACE INTO report.metric_*`。放在 `service/impl/` 下作为 Service 的内部协作组件。SQL 全在 report 包内，绝不改业务模块。后续主题域（payment/sales 等）同样按此模式在对应层追加 `*Metric*` 类。
 
 ### 6.2 数据采集：定时全量重算（替代已废弃的事件驱动）
 

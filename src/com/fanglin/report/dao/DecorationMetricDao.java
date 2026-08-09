@@ -1,12 +1,12 @@
-package com.fanglin.report.analytics.dao;
+package com.fanglin.report.dao;
 
 import java.util.List;
 
 import com.fanglin.core.dao.Dao;
 import com.fanglin.core.vo.Filter;
-import com.fanglin.report.analytics.po.DecorationDailyMetricPO;
-import com.fanglin.report.analytics.vo.MetricPointVO;
-import com.fanglin.report.analytics.vo.MetricTrendVO;
+import com.fanglin.report.po.DecorationDailyMetricPO;
+import com.fanglin.report.vo.MetricPointVO;
+import com.fanglin.report.vo.MetricTrendVO;
 
 /**
  * 装修指标汇总 DAO。

@@ -1,4 +1,4 @@
-package com.fanglin.report.analytics.service.impl;
+package com.fanglin.report.service.impl;
 
 import java.util.List;
 
@@ -7,21 +7,20 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.core.vo.Filter;
-import com.fanglin.report.analytics.dao.DecorationMetricDao;
-import com.fanglin.report.analytics.domain.DecorationDomainCalculator;
-import com.fanglin.report.analytics.service.DecorationAnalyticsService;
-import com.fanglin.report.analytics.vo.MetricPointVO;
-import com.fanglin.report.analytics.vo.MetricTrendVO;
+import com.fanglin.report.dao.DecorationMetricDao;
+import com.fanglin.report.service.DecorationMetricService;
+import com.fanglin.report.vo.MetricPointVO;
+import com.fanglin.report.vo.MetricTrendVO;
 
-@Service("decorationAnalyticsService")
+@Service("decorationMetricService")
 @Transactional(readOnly = true)
-public class DecorationAnalyticsServiceImpl implements DecorationAnalyticsService {
+public class DecorationMetricServiceImpl implements DecorationMetricService {
 
 	@Autowired
 	private DecorationMetricDao decorationMetricDao;
 
 	@Autowired
-	private DecorationDomainCalculator decorationDomainCalculator;
+	private DecorationMetricCalculator decorationMetricCalculator;
 
 	@Override
 	public List<MetricPointVO> queryFunnel(List<Filter> filters, int company) {
@@ -46,7 +45,7 @@ public class DecorationAnalyticsServiceImpl implements DecorationAnalyticsServic
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public void refreshMetric() {
-		decorationDomainCalculator.rebuild();
+		decorationMetricCalculator.rebuild();
 	}
 
 }

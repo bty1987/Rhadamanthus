@@ -1,4 +1,4 @@
-package com.fanglin.report.analytics.dao.impl;
+package com.fanglin.report.dao.impl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,10 +9,10 @@ import org.springframework.stereotype.Repository;
 
 import com.fanglin.core.dao.impl.DaoImpl;
 import com.fanglin.core.vo.Filter;
-import com.fanglin.report.analytics.dao.DecorationMetricDao;
-import com.fanglin.report.analytics.po.DecorationDailyMetricPO;
-import com.fanglin.report.analytics.vo.MetricPointVO;
-import com.fanglin.report.analytics.vo.MetricTrendVO;
+import com.fanglin.report.dao.DecorationMetricDao;
+import com.fanglin.report.po.DecorationDailyMetricPO;
+import com.fanglin.report.vo.MetricPointVO;
+import com.fanglin.report.vo.MetricTrendVO;
 
 /**
  * 装修指标汇总 DAO 实现。
