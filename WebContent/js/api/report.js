@@ -28,6 +28,9 @@ $.extend(api.index, {
     },
     paymentReportIndex: {
         url: "/views/report/paymentReport.html"
+    },
+    fulfillmentReportIndex: {
+        url: "/views/report/fulfillmentReport.html"
     }
 });
 
@@ -247,6 +250,34 @@ $.extend(api, {
         },
         refreshPaymentMetric: {
             url: "refreshPaymentMetric.do",
+            demo: true,
+        },
+
+        // ---- D3 装修履约：施工指标（数据源 report.metric_construction_monthly）----
+        queryConstructionStartFinishTrend: {
+            url: "queryConstructionStartFinishTrend.do",
+            demo: true,
+        },
+        queryConstructionPeriodTrend: {
+            url: "queryConstructionPeriodTrend.do",
+            demo: true,
+        },
+        queryConstructionOverdueDist: {
+            url: "queryConstructionOverdueDist.do",
+            demo: true,
+        },
+        refreshConstructionMetric: {
+            url: "refreshConstructionMetric.do",
+            demo: true,
+        },
+
+        // ---- D3 装修履约：报价偏差（数据源 report.metric_quotation_monthly）----
+        queryQuotationSignTrend: {
+            url: "queryQuotationSignTrend.do",
+            demo: true,
+        },
+        refreshQuotationMetric: {
+            url: "refreshQuotationMetric.do",
             demo: true,
         },
 
