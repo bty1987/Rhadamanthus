@@ -202,6 +202,10 @@ jQuery(function($) {
             if (com.validate("itemlist"))
                 return false;
 
+            // 仅交接单(type=3)提交后触发预算员自动分配,标签(type=4)等其他用途仅保存配置
+            var orderId = params.quotation.orderId;
+            var profileType = params.quotation.profile ? params.quotation.profile.type : params.quotation.type;
+
             var options = {};
 
             var items = com.focusPage(".item", "#itemlist");
@@ -262,13 +266,11 @@ jQuery(function($) {
                 }
             });
 
-            com.showConfirm("是否提交报价配置信息并自动分配?", function() {
+            var confirmMsg = (orderId && profileType == 3) ? "是否提交报价配置信息并自动分配?" : "是否提交报价配置信息?";
+
+            com.showConfirm(confirmMsg, function() {
 
                 com.post(api.quotation.handleQuotationProfile, options, function(res) {
-
-                    // 仅交接单(type=3)触发预算员自动分配,标签(type=4)等其他用途只保存
-                    var orderId = params.quotation.orderId;
-                    var profileType = params.quotation.profile ? params.quotation.profile.type : params.quotation.type;
 
                     if (orderId && profileType == 3) {
                         // 第一步：入待分配队列（独立事务，写 PENDING 记录）
