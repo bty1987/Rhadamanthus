@@ -34,6 +34,9 @@ $.extend(api.index, {
     },
     materialSalesReportIndex: {
         url: "/views/report/materialSalesReport.html"
+    },
+    customerReportIndex: {
+        url: "/views/report/customerReport.html"
     }
 });
 
@@ -295,6 +298,24 @@ $.extend(api, {
         },
         refreshSalesMetric: {
             url: "refreshSalesMetric.do",
+            demo: true,
+        },
+
+        // ---- D1 营销获客：客源转化（数据源 report.metric_customer_monthly）----
+        queryCustomerFunnelTrend: {
+            url: "queryCustomerFunnelTrend.do",
+            demo: true,
+        },
+        queryCustomerSourceDist: {
+            url: "queryCustomerSourceDist.do",
+            demo: true,
+        },
+        queryCustomerConvertTrend: {
+            url: "queryCustomerConvertTrend.do",
+            demo: true,
+        },
+        refreshCustomerMetric: {
+            url: "refreshCustomerMetric.do",
             demo: true,
         },
 
