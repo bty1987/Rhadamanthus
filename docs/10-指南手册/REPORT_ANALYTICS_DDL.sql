@@ -122,6 +122,27 @@ CREATE TABLE IF NOT EXISTS `metric_sales_monthly` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='主材销售月级汇总(指标体系)';
 
 -- ============================================================
+-- D1 营销获客: metric_customer_monthly 客源获客月级汇总
+-- 数据源: customer.customersource
+-- 维度: stat_month × company × source（来源渠道）
+-- ============================================================
+
+CREATE TABLE IF NOT EXISTS `metric_customer_monthly` (
+    `cmid`           BIGINT       NOT NULL AUTO_INCREMENT COMMENT '主键',
+    `stat_month`     CHAR(7)      NOT NULL                COMMENT '统计月份 yyyy-MM',
+    `company`        INT          NOT NULL                COMMENT '公司ID',
+    `source`         VARCHAR(64)  NOT NULL                COMMENT '来源渠道(空归未分类)',
+    `total_count`    BIGINT       NOT NULL DEFAULT 0      COMMENT '报备量(全部)',
+    `confirm_count`  BIGINT       NOT NULL DEFAULT 0      COMMENT '确认量(status>=3)',
+    `convert_count`  BIGINT       NOT NULL DEFAULT 0      COMMENT '转单量(status=5)',
+    `invalid_count`  BIGINT       NOT NULL DEFAULT 0      COMMENT '失效量(status=1)',
+
+    PRIMARY KEY (`cmid`),
+    UNIQUE KEY `uk_month_company_source` (`stat_month`, `company`, `source`),
+    KEY `idx_company` (`company`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='客源获客月级汇总(指标体系)';
+
+-- ============================================================
 -- 验证: 部署后可执行以下语句确认数据已生成
 -- SELECT COUNT(*) FROM report.metric_decoration_daily;
 -- SELECT stat_date, company, measure_count, sign_count, sign_amount
