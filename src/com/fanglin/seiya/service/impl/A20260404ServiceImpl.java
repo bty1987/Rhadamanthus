@@ -98,7 +98,7 @@ public class A20260404ServiceImpl implements A20260404Service {
 			supplierPO.setUserName(userName);
 			supplierPO.setCurrentName(userName);
 			supplierPO.setPhone(phone);
-			supplierPO.setOldUserId(creditCode); // oldUserId = 统一信用编码
+			supplierPO.setIdentity(creditCode); // oldUserId = 统一信用编码
 
 			supplierDao.update(supplierPO);
 			logger.info("更新供应商成功: uid={}, userId={}", supplierPO.getUid(), supplierPO.getUserId());
@@ -147,12 +147,12 @@ public class A20260404ServiceImpl implements A20260404Service {
 			supplierPO.setCurrentName(userName);
 			supplierPO.setUserName(userName);
 			supplierPO.setPhone(phone);
-			supplierPO.setOldUserId(creditCode); // oldUserId = 统一信用编码
+			supplierPO.setIdentity(creditCode); // oldUserId = 统一信用编码
 
 			// gender/identity 为 NOT NULL 且无默认值，外部同步数据不含这两项，给空串占位
 			// （与生产 user 表既有空串占位数据一致，不伪造性别/身份证信息）
 			supplierPO.setGender("");
-			supplierPO.setIdentity("");
+			supplierPO.setOldUserId("");
 
 			// 设置默认密码
 			SystemConfigPO passwordConfig = systemConfigDao.querySystemConfig("password", company);
