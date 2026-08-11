@@ -62,13 +62,18 @@ $(function () {
     com.datetime(goods.items.executeTimes, "time", false);
     goods.btns.saveBtn.click(saveRecord);
 
-    goods.items.type.bindData([{
+    // 厂商使用的页面(默认入口, 无 type 参数)只能创建"商品", 不能是"套餐"; 仅高级/基本版才开放套餐选项
+    var typeDatas = [{
         gid: 0,
         goods: "商品"
-    }, {
-        gid: 1,
-        goods: "套餐"
-    }], "gid", "goods");
+    }];
+    if (goods.pageType) {
+        typeDatas.push({
+            gid: 1,
+            goods: "套餐"
+        });
+    }
+    goods.items.type.bindData(typeDatas, "gid", "goods");
 
     goods.items.atttype.bindData(constant.data().goodsPool.atttype.datas, 'key', 'value');
 
