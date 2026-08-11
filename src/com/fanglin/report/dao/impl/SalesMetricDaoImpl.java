@@ -16,9 +16,9 @@ import com.fanglin.report.vo.MetricPointVO;
 
 /**
  * 主材销售指标汇总 DAO 实现。
- *
- * <p>{@link #rebuild()} 跨库只读聚合 sales.sales，按 createTime 归月，排除作废单（status != 4）。
- * 空品类归为"未分类"。
+ * 
+ * <p>
+ * {@link #rebuild()} 跨库只读聚合 sales.sales，按 createTime 归月，排除作废单（status != 4）。 空品类归为"未分类"。
  */
 @Repository("salesMetricDao")
 public class SalesMetricDaoImpl extends DaoImpl<SalesMonthlyMetricPO> implements SalesMetricDao {
@@ -124,7 +124,6 @@ public class SalesMetricDaoImpl extends DaoImpl<SalesMonthlyMetricPO> implements
 		return sb.toString();
 	}
 
-	@SuppressWarnings("unchecked")
 	private List<MetricPointVO> toPoints(List<Object[]> rows) {
 		List<MetricPointVO> result = new ArrayList<MetricPointVO>();
 		for (Object[] row : rows) {

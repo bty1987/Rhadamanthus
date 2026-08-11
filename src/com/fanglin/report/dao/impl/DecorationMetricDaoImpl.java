@@ -16,11 +16,12 @@ import com.fanglin.report.vo.MetricTrendVO;
 
 /**
  * 装修指标汇总 DAO 实现。
- *
- * <p>{@link #rebuild()} 跨库只读聚合 decoration.decoration，幂等写入本表。
- * 两条 SQL 分别按 createTime（状态计数+类型）和 contractTime（签约额）归日。
- *
- * <p>查询方法从 report.metric_decoration_daily 聚合，解析 {@code startTime/endTime} 过滤。
+ * 
+ * <p>
+ * {@link #rebuild()} 跨库只读聚合 decoration.decoration，幂等写入本表。 两条 SQL 分别按 createTime（状态计数+类型）和 contractTime（签约额）归日。
+ * 
+ * <p>
+ * 查询方法从 report.metric_decoration_daily 聚合，解析 {@code startTime/endTime} 过滤。
  */
 @Repository("decorationMetricDao")
 public class DecorationMetricDaoImpl extends DaoImpl<DecorationDailyMetricPO> implements DecorationMetricDao {
@@ -30,10 +31,8 @@ public class DecorationMetricDaoImpl extends DaoImpl<DecorationDailyMetricPO> im
 	}
 
 	/**
-	 * 全量重算。按 createTime 归日统计各状态计数与类型分布，按 contractTime 归日统计签约额。
-	 * INSERT ... ON DUPLICATE KEY UPDATE 保证幂等（唯一键 stat_date+company）。
+	 * 全量重算。按 createTime 归日统计各状态计数与类型分布，按 contractTime 归日统计签约额。 INSERT ... ON DUPLICATE KEY UPDATE 保证幂等（唯一键 stat_date+company）。
 	 */
-	@SuppressWarnings("unchecked")
 	@Override
 	public void rebuild() {
 
@@ -226,7 +225,6 @@ public class DecorationMetricDaoImpl extends DaoImpl<DecorationDailyMetricPO> im
 		return sb.toString();
 	}
 
-	@SuppressWarnings("unchecked")
 	private List<MetricPointVO> toPoints(List<Object[]> rows) {
 		List<MetricPointVO> result = new ArrayList<MetricPointVO>();
 		for (Object[] row : rows) {

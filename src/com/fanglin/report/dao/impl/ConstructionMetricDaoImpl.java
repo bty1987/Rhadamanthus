@@ -16,9 +16,9 @@ import com.fanglin.report.vo.MetricPointVO;
 
 /**
  * 施工履约指标汇总 DAO 实现。
- *
- * <p>{@link #rebuild()} 三表 JOIN：construction(constructioninfo) + decoration(取 company)。
- * 两条 SQL 分别按 startTime(开工量+工期+在建+超期) 和 finishTime(完工量) 归月。
+ * 
+ * <p>
+ * {@link #rebuild()} 三表 JOIN：construction(constructioninfo) + decoration(取 company)。 两条 SQL 分别按 startTime(开工量+工期+在建+超期) 和 finishTime(完工量) 归月。
  */
 @Repository("constructionMetricDao")
 public class ConstructionMetricDaoImpl extends DaoImpl<ConstructionMonthlyMetricPO> implements ConstructionMetricDao {
@@ -180,7 +180,6 @@ public class ConstructionMetricDaoImpl extends DaoImpl<ConstructionMonthlyMetric
 		return sb.toString();
 	}
 
-	@SuppressWarnings("unchecked")
 	private List<MetricPointVO> toPoints(List<Object[]> rows) {
 		List<MetricPointVO> result = new ArrayList<MetricPointVO>();
 		for (Object[] row : rows) {

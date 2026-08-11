@@ -16,9 +16,9 @@ import com.fanglin.report.vo.MetricPointVO;
 
 /**
  * 客户获客指标汇总 DAO 实现。
- *
- * <p>{@link #rebuild()} 跨库只读聚合 customer.customersource，按 createTime 归月，
- * 按 status 统计报备/确认/转单/失效，按 source 分渠道。空来源归"未分类"。
+ * 
+ * <p>
+ * {@link #rebuild()} 跨库只读聚合 customer.customersource，按 createTime 归月， 按 status 统计报备/确认/转单/失效，按 source 分渠道。空来源归"未分类"。
  */
 @Repository("customerMetricDao")
 public class CustomerMetricDaoImpl extends DaoImpl<CustomerMonthlyMetricPO> implements CustomerMetricDao {
@@ -146,7 +146,6 @@ public class CustomerMetricDaoImpl extends DaoImpl<CustomerMonthlyMetricPO> impl
 		return sb.toString();
 	}
 
-	@SuppressWarnings("unchecked")
 	private List<MetricPointVO> toPoints(List<Object[]> rows) {
 		List<MetricPointVO> result = new ArrayList<MetricPointVO>();
 		for (Object[] row : rows) {
