@@ -37,6 +37,9 @@ $.extend(api.index, {
     },
     customerReportIndex: {
         url: "/views/report/customerReport.html"
+    },
+    inventoryReportIndex: {
+        url: "/views/report/inventoryReport.html"
     }
 });
 
@@ -316,6 +319,20 @@ $.extend(api, {
         },
         refreshCustomerMetric: {
             url: "refreshCustomerMetric.do",
+            demo: true,
+        },
+
+        // ---- D6 仓储物流（数据源 report.metric_inventory_monthly）----
+        queryInventoryInOutTrend: {
+            url: "queryInventoryInOutTrend.do",
+            demo: true,
+        },
+        queryInventoryTypeDist: {
+            url: "queryInventoryTypeDist.do",
+            demo: true,
+        },
+        refreshInventoryMetric: {
+            url: "refreshInventoryMetric.do",
             demo: true,
         },
 

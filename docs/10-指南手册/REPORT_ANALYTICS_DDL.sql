@@ -143,6 +143,25 @@ CREATE TABLE IF NOT EXISTS `metric_customer_monthly` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='客源获客月级汇总(指标体系)';
 
 -- ============================================================
+-- D6 仓储物流: metric_inventory_monthly 出入库月级汇总
+-- 数据源: inventory.manifest (已确认 status=1)
+-- 维度: stat_month × company × type × direction（0入库/1出库/2双向）
+-- ============================================================
+
+CREATE TABLE IF NOT EXISTS `metric_inventory_monthly` (
+    `imid`           BIGINT       NOT NULL AUTO_INCREMENT COMMENT '主键',
+    `stat_month`     CHAR(7)      NOT NULL                COMMENT '统计月份 yyyy-MM',
+    `company`        INT          NOT NULL                COMMENT '公司ID',
+    `type`           TINYINT      NOT NULL                COMMENT '出入库类型(1进货/2进退/3出货/7辅料...)',
+    `direction`      TINYINT      NOT NULL                COMMENT '方向: 0入库 1出库 2双向(调拨/套合)',
+    `manifest_count` BIGINT       NOT NULL DEFAULT 0      COMMENT '单据量',
+
+    PRIMARY KEY (`imid`),
+    UNIQUE KEY `uk_month_company_type_direction` (`stat_month`, `company`, `type`, `direction`),
+    KEY `idx_company` (`company`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='出入库月级汇总(指标体系)';
+
+-- ============================================================
 -- 验证: 部署后可执行以下语句确认数据已生成
 -- SELECT COUNT(*) FROM report.metric_decoration_daily;
 -- SELECT stat_date, company, measure_count, sign_count, sign_amount
