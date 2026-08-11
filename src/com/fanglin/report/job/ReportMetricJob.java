@@ -20,6 +20,7 @@ import org.springframework.stereotype.Component;
 import com.fanglin.report.service.impl.ConstructionMetricCalculator;
 import com.fanglin.report.service.impl.CustomerMetricCalculator;
 import com.fanglin.report.service.impl.DecorationMetricCalculator;
+import com.fanglin.report.service.impl.InventoryMetricCalculator;
 import com.fanglin.report.service.impl.PaymentMetricCalculator;
 import com.fanglin.report.service.impl.QuotationMetricCalculator;
 import com.fanglin.report.service.impl.SalesMetricCalculator;
@@ -47,6 +48,9 @@ public class ReportMetricJob {
 	@Autowired
 	private CustomerMetricCalculator customerMetricCalculator;
 
+	@Autowired
+	private InventoryMetricCalculator inventoryMetricCalculator;
+
 	/**
 	 * 每日凌晨 1:30 重算装修指标汇总。
 	 *
@@ -65,7 +69,8 @@ public class ReportMetricJob {
 			quotationMetricCalculator.rebuild();
 			salesMetricCalculator.rebuild();
 			customerMetricCalculator.rebuild();
-			// 阶段三主题域待追加: production/inventory/approval/salary ...
+			inventoryMetricCalculator.rebuild();
+			// 阶段三主题域待追加: approval/salary ...
 
 			logger.info("[metric-refresh] job finished at {}", new Date());
 		} catch (Throwable t) {
