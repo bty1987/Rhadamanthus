@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import com.fanglin.report.service.impl.ApprovalMetricCalculator;
 import com.fanglin.report.service.impl.ConstructionMetricCalculator;
 import com.fanglin.report.service.impl.CustomerMetricCalculator;
 import com.fanglin.report.service.impl.DecorationMetricCalculator;
@@ -51,6 +52,9 @@ public class ReportMetricJob {
 	@Autowired
 	private InventoryMetricCalculator inventoryMetricCalculator;
 
+	@Autowired
+	private ApprovalMetricCalculator approvalMetricCalculator;
+
 	/**
 	 * 每日凌晨 1:30 重算装修指标汇总。
 	 *
@@ -70,7 +74,8 @@ public class ReportMetricJob {
 			salesMetricCalculator.rebuild();
 			customerMetricCalculator.rebuild();
 			inventoryMetricCalculator.rebuild();
-			// 阶段三主题域待追加: approval/salary ...
+			approvalMetricCalculator.rebuild();
+			// 阶段三主题域待追加: salary ...
 
 			logger.info("[metric-refresh] job finished at {}", new Date());
 		} catch (Throwable t) {
