@@ -1,5 +1,5 @@
 /**
- * 装修销售转化报表。
+ * 装修销售转化报表（echarts 版）。
  *
  * 4 维度图表（均来自 report.metric_decoration_daily 汇总表）：
  *   ① 漏斗图：量尺→定金→预签→签约→决算→完工
@@ -7,7 +7,7 @@
  *   ③ 折线图：签约额月度趋势
  *   ④ 柱状图：装修类型分布（半包/整装/大包）
  *
- * 数据每天凌晨由 MetricRefreshJob 全量重算，"刷新数据"按钮可即时手动重算。
+ * echarts 全局已在 index.html 引入，无需页面加载。
  */
 $(function() {
 
@@ -59,22 +59,18 @@ $(function() {
 
         var options = decorationFunnel.options;
 
-        // ① 漏斗图
         com.post(api.report.queryDecorationFunnel, options, function(res) {
             renderFunnel(res.funnel);
         });
 
-        // ② 状态分布饼图
         com.post(api.report.queryDecorationStatusDist, options, function(res) {
             renderPie(res.statusDist);
         });
 
-        // ③ 签约额趋势
         com.post(api.report.queryDecorationSignTrend, options, function(res) {
             renderTrend(res.signTrend);
         });
 
-        // ④ 装修类型分布
         com.post(api.report.queryDecorationTypeDist, options, function(res) {
             renderType(res.typeDist);
         });
@@ -85,36 +81,21 @@ $(function() {
 
         var data = [];
         $.each(funnel, function(i, v) {
-            data.push([v.name, v.value]);
+            data.push({ name: v.name, value: v.value });
         });
 
-        com.focusPage('#funnelChart').highcharts({
-            chart: {
-                type: 'funnel',
-                marginRight: 100
-            },
-            title: {
-                text: '装修销售转化漏斗'
-            },
-            credits: {
-                enabled: false
-            },
-            plotOptions: {
-                series: {
-                    dataLabels: {
-                        enabled: true,
-                        format: '<b>{point.name}</b>: {point.y:,.0f}',
-                        color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
-                    },
-                    neckWidth: '30%',
-                    neckHeight: '25%'
-                }
-            },
-            legend: {
-                enabled: false
-            },
+        var chart = echarts.init(com.focusPage('#funnelChart')[0]);
+        chart.setOption({
+            title: { text: '装修销售转化漏斗', left: 'center' },
+            tooltip: { trigger: 'item', formatter: '{b}: {c}' },
             series: [{
-                name: '订单数',
+                type: 'funnel',
+                left: '10%',
+                right: '10%',
+                top: 60,
+                bottom: 30,
+                width: '80%',
+                label: { show: true, position: 'inside', formatter: '{b}: {c}' },
                 data: data
             }]
         });
@@ -125,37 +106,19 @@ $(function() {
 
         var data = [];
         $.each(statusDist, function(i, v) {
-            data.push([v.name, v.value]);
+            data.push({ name: v.name, value: v.value });
         });
 
-        com.focusPage('#statusPie').highcharts({
-            chart: {
-                plotBackgroundColor: null,
-                plotBorderWidth: null,
-                plotShadow: false
-            },
-            title: {
-                text: '订单状态分布'
-            },
-            credits: {
-                enabled: false
-            },
-            tooltip: {
-                pointFormat: '{series.name}: <b>{point.y:,.0f} ({point.percentage:.1f}%)</b>'
-            },
-            plotOptions: {
-                pie: {
-                    allowPointSelect: true,
-                    cursor: 'pointer',
-                    dataLabels: {
-                        enabled: true,
-                        format: '<b>{point.name}</b>: {point.percentage:.1f} %'
-                    }
-                }
-            },
+        var chart = echarts.init(com.focusPage('#statusPie')[0]);
+        chart.setOption({
+            title: { text: '订单状态分布', left: 'center' },
+            tooltip: { trigger: 'item', formatter: '{b}: {c} ({d}%)' },
+            legend: { orient: 'vertical', left: 'left', top: 'middle' },
             series: [{
                 type: 'pie',
-                name: '订单数',
+                radius: '60%',
+                center: ['55%', '55%'],
+                label: { formatter: '{b}: {d}%' },
                 data: data
             }]
         });
@@ -164,38 +127,25 @@ $(function() {
     // 签约额趋势折线
     function renderTrend(signTrend) {
 
-        var categories = [];
+        var dates = [];
         var amounts = [];
 
         $.each(signTrend, function(i, v) {
-            categories.push(v.date);
+            dates.push(v.date);
             amounts.push(v.amount / 100); // 分→元
         });
 
-        com.focusPage('#trendChart').highcharts({
-            chart: {
-                type: 'line'
-            },
-            title: {
-                text: '签约额月度趋势'
-            },
-            credits: {
-                enabled: false
-            },
-            xAxis: {
-                categories: categories
-            },
-            yAxis: {
-                title: {
-                    text: '签约额 (元)'
-                }
-            },
-            tooltip: {
-                valueSuffix: ' 元'
-            },
+        var chart = echarts.init(com.focusPage('#trendChart')[0]);
+        chart.setOption({
+            title: { text: '签约额月度趋势', left: 'center' },
+            tooltip: { trigger: 'axis', valueFormatter: function(v) { return v + ' 元'; } },
+            xAxis: { type: 'category', data: dates },
+            yAxis: { type: 'value', name: '签约额(元)' },
             series: [{
                 name: '签约额',
-                data: amounts
+                type: 'line',
+                data: amounts,
+                smooth: true
             }]
         });
     }
@@ -203,37 +153,23 @@ $(function() {
     // 装修类型分布柱状
     function renderType(typeDist) {
 
-        var categories = [];
+        var names = [];
         var counts = [];
 
         $.each(typeDist, function(i, v) {
-            categories.push(v.name);
+            names.push(v.name);
             counts.push(v.value);
         });
 
-        com.focusPage('#typeChart').highcharts({
-            chart: {
-                type: 'column'
-            },
-            title: {
-                text: '装修类型分布'
-            },
-            credits: {
-                enabled: false
-            },
-            xAxis: {
-                categories: categories
-            },
-            yAxis: {
-                title: {
-                    text: '订单数'
-                }
-            },
-            tooltip: {
-                valueSuffix: ' 单'
-            },
+        var chart = echarts.init(com.focusPage('#typeChart')[0]);
+        chart.setOption({
+            title: { text: '装修类型分布', left: 'center' },
+            tooltip: { trigger: 'axis', valueFormatter: function(v) { return v + ' 单'; } },
+            xAxis: { type: 'category', data: names },
+            yAxis: { type: 'value', name: '订单数' },
             series: [{
                 name: '订单数',
+                type: 'bar',
                 data: counts
             }]
         });
