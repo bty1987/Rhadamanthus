@@ -46,6 +46,11 @@ $(function() {
         renderAll();
     });
 
+    // 页面加载默认填充当前月份并自动查询
+    var now = moment();
+    com.focusPage("#dateRangeSearch").val(now.startOf('month').format('YYYY/MM/DD') + ' - ' + now.format('YYYY/MM/DD'));
+    com.focusPage("#fl_btn_searchDiv").trigger("click");
+
     // 刷新数据按钮：手动触发重算，完成后自动查询
     com.focusPage("#fl_btn_refresh").on("click", function() {
 

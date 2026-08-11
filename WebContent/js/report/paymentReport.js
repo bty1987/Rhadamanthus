@@ -38,6 +38,11 @@ $(function() {
         renderAll();
     });
 
+    // 页面加载默认填充当前月份并自动查询
+    var now = moment();
+    com.focusPage("#dateRangeSearch").val(now.startOf('month').format('YYYY/MM/DD') + ' - ' + now.format('YYYY/MM/DD'));
+    com.focusPage("#fl_btn_searchDiv").trigger("click");
+
     com.focusPage("#fl_btn_refresh").on("click", function() {
         com.post(api.report.refreshPaymentMetric, {}, function() {
             com.showAlert(com.info, "数据刷新成功");
