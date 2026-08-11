@@ -96,7 +96,7 @@ public class ConstructionMetricDaoImpl extends DaoImpl<ConstructionMonthlyMetric
 		List<Object[]> rows = query.list();
 		List<MetricDualTrendVO> result = new ArrayList<MetricDualTrendVO>();
 		for (Object[] row : rows) {
-			result.add(new MetricDualTrendVO((String) row[0], ((Number) row[1]).longValue(), ((Number) row[2]).longValue()));
+			result.add(new MetricDualTrendVO((String) row[0], toLong(row[1]), toLong(row[2])));
 		}
 		return result;
 	}
@@ -123,7 +123,7 @@ public class ConstructionMetricDaoImpl extends DaoImpl<ConstructionMonthlyMetric
 		List<Object[]> rows = query.list();
 		List<MetricDualTrendVO> result = new ArrayList<MetricDualTrendVO>();
 		for (Object[] row : rows) {
-			result.add(new MetricDualTrendVO((String) row[0], ((Number) row[1]).longValue(), ((Number) row[2]).longValue()));
+			result.add(new MetricDualTrendVO((String) row[0], toLong(row[1]), toLong(row[2])));
 		}
 		return result;
 	}
@@ -183,9 +183,14 @@ public class ConstructionMetricDaoImpl extends DaoImpl<ConstructionMonthlyMetric
 	private List<MetricPointVO> toPoints(List<Object[]> rows) {
 		List<MetricPointVO> result = new ArrayList<MetricPointVO>();
 		for (Object[] row : rows) {
-			result.add(new MetricPointVO((String) row[0], ((Number) row[1]).longValue()));
+			result.add(new MetricPointVO((String) row[0], toLong(row[1])));
 		}
 		return result;
+	}
+
+	/** 安全转 long，null 返回 0。SQL 聚合(SUM)无匹配行时返回 NULL。 */
+	private long toLong(Object obj) {
+		return obj == null ? 0L : ((Number) obj).longValue();
 	}
 
 }
