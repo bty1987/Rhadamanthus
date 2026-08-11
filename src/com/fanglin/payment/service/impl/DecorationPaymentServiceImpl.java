@@ -40,7 +40,6 @@ import com.fanglin.decoration.service.DecorationAdditionService;
 import com.fanglin.decoration.vo.DecorationVO;
 import com.fanglin.dingding.service.DingTalkMessageService;
 import com.fanglin.information.po.MessageCueuingPO;
-import com.fanglin.information.po.MessageQueuingPO;
 import com.fanglin.information.po.MessagePO;
 import com.fanglin.information.service.MessageService;
 import com.fanglin.payment.dao.AdvancePaymentDao;
@@ -337,7 +336,7 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 		decorationActivityItemDao.flush();
 
 		// 投递核销事件:线上活动物品签约自动核销完成,通知下游(messagequeuing 表,消费端按 operation 分发)
-		messageQueuingDao.save(new MessageQueuingPO().init(orderId, "consumeDecorationActivityItem", "{\"orderId\":\"" + orderId + "\",\"userId\":\"" + createUserId + "\",\"event\":\"ACTIVITY_ITEM_VERIFIED\",\"atttype\":" + DecorationActivityItemPO.ATTTYPE_ONLINE_INT + ",\"targetState\":" + DecorationActivityItemPO.STATUS_VERIFY_INT + (decorationPO.getBusitype() != null ? ",\"busiTypeName\":\"" + decorationPO.getBusitype().getName() + "\"" : "") + "}"));
+		messageQueuingDao.save(new MessageCueuingPO().init(orderId, "consumeDecorationActivityItem", "{\"orderId\":\"" + orderId + "\",\"userId\":\"" + createUserId + "\",\"event\":\"ACTIVITY_ITEM_VERIFIED\",\"atttype\":" + DecorationActivityItemPO.ATTTYPE_ONLINE_INT + ",\"targetState\":" + DecorationActivityItemPO.STATUS_VERIFY_INT + (decorationPO.getBusitype() != null ? ",\"busiTypeName\":\"" + decorationPO.getBusitype().getName() + "\"" : "") + "}"));
 
 		// 获取当前订单的活动项的总额
 		long couponCut = decorationActivityItemDao.amountDecorationActivityItem(orderId, DecorationActivityItemPO.ISPAYMENT_CAL_INT);

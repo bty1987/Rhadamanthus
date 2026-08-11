@@ -16,9 +16,9 @@ import com.fanglin.report.vo.MetricTrendVO;
 
 /**
  * 财务收款指标汇总 DAO 实现。
- *
- * <p>{@link #rebuild()} 跨库只读聚合 payment.receipt（统一收据流水），按 collectTime/company/type/paymentType 分组，
- * 幂等写入本表。查询方法按 startTime/endTime 过滤。
+ * 
+ * <p>
+ * {@link #rebuild()} 跨库只读聚合 payment.receipt（统一收据流水），按 collectTime/company/type/paymentType 分组， 幂等写入本表。查询方法按 startTime/endTime 过滤。
  */
 @Repository("paymentMetricDao")
 public class PaymentMetricDaoImpl extends DaoImpl<PaymentDailyMetricPO> implements PaymentMetricDao {
@@ -49,13 +49,11 @@ public class PaymentMetricDaoImpl extends DaoImpl<PaymentDailyMetricPO> implemen
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
 	public List<MetricTrendVO> queryCollectTrend(List<Filter> filters, int company) {
 		return queryTrend(filters, company, 0); // type=0 收款
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
 	public List<MetricTrendVO> queryRefundTrend(List<Filter> filters, int company) {
 		return queryTrend(filters, company, 1); // type=1 退款
 	}
@@ -150,7 +148,6 @@ public class PaymentMetricDaoImpl extends DaoImpl<PaymentDailyMetricPO> implemen
 		return sb.toString();
 	}
 
-	@SuppressWarnings("unchecked")
 	private List<MetricTrendVO> toTrend(List<Object[]> rows) {
 		List<MetricTrendVO> result = new ArrayList<MetricTrendVO>();
 		for (Object[] row : rows) {
@@ -159,7 +156,6 @@ public class PaymentMetricDaoImpl extends DaoImpl<PaymentDailyMetricPO> implemen
 		return result;
 	}
 
-	@SuppressWarnings("unchecked")
 	private List<MetricPointVO> toPoints(List<Object[]> rows) {
 		List<MetricPointVO> result = new ArrayList<MetricPointVO>();
 		for (Object[] row : rows) {
