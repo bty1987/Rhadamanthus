@@ -40,6 +40,9 @@ $.extend(api.index, {
     },
     inventoryReportIndex: {
         url: "/views/report/inventoryReport.html"
+    },
+    approvalReportIndex: {
+        url: "/views/report/approvalReport.html"
     }
 });
 
@@ -333,6 +336,20 @@ $.extend(api, {
         },
         refreshInventoryMetric: {
             url: "refreshInventoryMetric.do",
+            demo: true,
+        },
+
+        // ---- D9 运营管理：审批效率（数据源 report.metric_approval_monthly）----
+        queryApprovalTrend: {
+            url: "queryApprovalTrend.do",
+            demo: true,
+        },
+        queryApprovalTypeDist: {
+            url: "queryApprovalTypeDist.do",
+            demo: true,
+        },
+        refreshApprovalMetric: {
+            url: "refreshApprovalMetric.do",
             demo: true,
         },
 

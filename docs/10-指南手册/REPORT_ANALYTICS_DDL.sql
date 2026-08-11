@@ -175,3 +175,23 @@ CREATE TABLE IF NOT EXISTS `metric_inventory_monthly` (
 -- ============================================================
 
 
+
+-- ============================================================
+-- D9 运营管理: metric_approval_monthly 审批月级汇总
+-- 数据源: approval.approval (209万条)
+-- 维度: stat_month × company × type（审批类型）
+-- ============================================================
+
+CREATE TABLE IF NOT EXISTS `metric_approval_monthly` (
+    `amid`              BIGINT       NOT NULL AUTO_INCREMENT COMMENT '主键',
+    `stat_month`        CHAR(7)      NOT NULL                COMMENT '统计月份 yyyy-MM',
+    `company`           INT          NOT NULL                COMMENT '公司ID',
+    `type`              TINYINT      NOT NULL                COMMENT '审批类型(20客源/10销售退款/8装修活动...)',
+    `total_count`       BIGINT       NOT NULL DEFAULT 0      COMMENT '审批总量',
+    `reject_count`      BIGINT       NOT NULL DEFAULT 0      COMMENT '拒绝量(status=2)',
+    `avg_duration_hours` BIGINT      NOT NULL DEFAULT 0      COMMENT '平均审批耗时(小时)',
+
+    PRIMARY KEY (`amid`),
+    UNIQUE KEY `uk_month_company_type` (`stat_month`, `company`, `type`),
+    KEY `idx_company` (`company`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='审批运营月级汇总(指标体系)';
