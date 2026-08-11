@@ -243,8 +243,8 @@
     };
 
     // 增减标签按钮: 以 addreduce.arId 作为 qid, type=5 进入 quotationProfile
-    var btnAddReduceTag = {
-        name: "增减标签",
+    var tagbtn = {
+        name: "标签",
         clazz: "btn-purple",
         handle: function(v) {
 
@@ -258,7 +258,7 @@
         }
     };
 
-    var btnAccount = {
+    var accountbtn = {
         name: "决算",
         clazz: "btn-pink",
         handle: function(v) {
@@ -271,7 +271,7 @@
 
     if (addReduce.pageType == null) {
 
-        var linebtns = [btnMake, viewbtn, submitbtn, cancelbtn, allocationbtn, specialbtn, norefundbtn, affirmbtn, deletebtn, btnAddReduceTag, ];
+        var linebtns = [btnMake, viewbtn, submitbtn, cancelbtn, allocationbtn, specialbtn, norefundbtn, affirmbtn, deletebtn, tagbtn, ];
 
         com.focusPage('#fl-statement').statement("报价", "增减单").show();
         com.focusPage('#decorationInfo').show();
@@ -408,6 +408,9 @@
 
         if (addReduce.pageConfig.pageBtn.contains("view"))
             linebtns.push(viewbtn);
+        
+        if (addReduce.pageConfig.pageBtn.contains("tag"))
+            linebtns.push(tagbtn);
 
         if (addReduce.pageConfig.pageBtn.contains("submit"))
             linebtns.push(submitbtn);
@@ -766,7 +769,7 @@
 
     if (addReduce.pageType == "account") {
 
-        var linebtns = [btnAccount];
+        var linebtns = [accountbtn];
 
         com.focusPage("#pagenation").hide();
 

@@ -862,7 +862,7 @@
         }
     };
 
-    var btnQuotationTag = {
+    var btnTag = {
         name: "报价标签",
         clazz: "btn-purple",
         handle: function(v) {
@@ -908,7 +908,7 @@
             type: "newline"
         }, btnFinish, btnAudit, btnSubmit, btnDefault, btnLock, btnUnlock, btnDelete, {
             type: "newline"
-        }, btnSelection, btnNormtion, btnRecord, btnPrint];
+        }, btnSelection, btnNormtion, btnRecord, btnPrint, btnTag];
 
         com.focusPage('#fl-statement').statement("报价", "报价").show();
         com.focusPage('#decorationInfo').show();
@@ -1018,8 +1018,8 @@
         if (quotation.pageConfig.pageBtn.contains("btnInfo"))
             cardbtns.push(btnInfo);
 
-        if (quotation.pageConfig.pageBtn.contains("btnQuotationTag"))
-            cardbtns.push(btnQuotationTag);
+        if (quotation.pageConfig.pageBtn.contains("btnTag"))
+            cardbtns.push(btnTag);
 
         com.focusPage("#quotationIndexPageContent").removeClass("page-content");
 
