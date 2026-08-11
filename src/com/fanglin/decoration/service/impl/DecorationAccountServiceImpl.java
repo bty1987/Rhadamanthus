@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.approval.dao.ApprovalDao;
 import com.fanglin.core.interceptor.FLException;
+import com.fanglin.core.security.SensitiveDataHelper;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.customer.service.DecorationService;
 import com.fanglin.decoration.dao.DecorationDao;
@@ -22,8 +23,8 @@ import com.fanglin.decoration.po.DecorationAccountPO;
 import com.fanglin.decoration.po.DecorationAccountStatusPO;
 import com.fanglin.decoration.po.DecorationOperatePO;
 import com.fanglin.decoration.po.DecorationPO;
-import com.fanglin.decoration.service.DecorationAccountStatusService;
 import com.fanglin.decoration.service.DecorationAccountService;
+import com.fanglin.decoration.service.DecorationAccountStatusService;
 import com.fanglin.decoration.vo.DecorationAccountStatusVO;
 import com.fanglin.decoration.vo.DecorationAccountVO;
 import com.fanglin.decoration.vo.DecorationVO;
@@ -36,7 +37,6 @@ import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.FormatUtil;
 import com.fanglin.utils.Paging;
-import com.fanglin.core.security.SensitiveDataHelper;
 import com.fanglin.wechat.service.WeChatAppService;
 import com.fanglin.wechat.vo.WeChatPhoneInfoVO;
 
@@ -112,7 +112,15 @@ public class DecorationAccountServiceImpl implements DecorationAccountService {
 	@Override
 	public DecorationAccountVO queryDecorationAccount(DecorationAccountVO decorationAccountVO) {
 
+		if (decorationAccountVO == null || decorationAccountVO.getOrderId() == null) {
+			throw new FLException(140081, "决算信息不存在");
+		}
+
 		DecorationAccountPO decorationAccountPO = decorationAccountDao.queryDecorationAccount(decorationAccountVO.getOrderId());
+
+		if (decorationAccountPO == null) {
+			throw new FLException(140081, "决算信息不存在");
+		}
 
 		decorationAccountVO = new DecorationAccountVO();
 
@@ -144,15 +152,15 @@ public class DecorationAccountServiceImpl implements DecorationAccountService {
 
 		if (decorationAccountPO == null) {
 
-				decorationAccountPO = new DecorationAccountPO();
-				BeanUtil.copyProperties(decorationAccountVO, decorationAccountPO, Arrays.asList("decoration", "accountStatus"));
+			decorationAccountPO = new DecorationAccountPO();
+			BeanUtil.copyProperties(decorationAccountVO, decorationAccountPO, Arrays.asList("decoration", "accountStatus"));
 
-				decorationAccountDao.merge(decorationAccountPO);
-			} else {
+			decorationAccountDao.merge(decorationAccountPO);
+		} else {
 
-				BeanUtil.copyProperties(decorationAccountVO, decorationAccountPO, Arrays.asList("decoration", "accountStatus"));
+			BeanUtil.copyProperties(decorationAccountVO, decorationAccountPO, Arrays.asList("decoration", "accountStatus"));
 
-				decorationAccountDao.update(decorationAccountPO);
+			decorationAccountDao.update(decorationAccountPO);
 		}
 
 	}
