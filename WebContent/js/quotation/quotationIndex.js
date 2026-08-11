@@ -863,7 +863,7 @@
     };
 
     var btnTag = {
-        name: "报价标签",
+        name: "标签",
         clazz: "btn-purple",
         handle: function(v) {
 

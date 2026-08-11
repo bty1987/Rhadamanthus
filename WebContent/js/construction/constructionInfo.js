@@ -360,7 +360,7 @@ jQuery(function($) {
                 }
             },
             constructionTag: {
-                name: "工程标签",
+                name: "标签",
                 clazz: "btn-inverse",
                 handle: function(v) {
 
