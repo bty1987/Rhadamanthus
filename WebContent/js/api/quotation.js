@@ -2507,6 +2507,10 @@ $.extend(api, {
                 args: ["addReduce.accountDiscount", "addReduce.accountManageDiscount", "addReduce.accountTaxDiscount"],
             }
         },
+        updateAddReduceForSalary: {
+            url: "updateAddReduceForSalary.do",
+            type: "update"
+        },
         submitAddReduce: {
             url: "submitAddReduce.do",
             intercept: true,

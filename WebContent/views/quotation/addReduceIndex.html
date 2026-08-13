@@ -91,54 +91,91 @@
 			</div>
 		</div>
 	</div>
-	<div class="modal fade" id="addReduceAccountModal" tabindex="-1">
-		<div class="modal-dialog">
-			<div class="modal-content">
-				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal">
-						<span>&times;</span><span class="sr-only">Close</span>
-					</button>
-					<h4 class="modal-title" id="addReduceAccountDialog">决算</h4>
-				</div>
-	
-				<div class="modal-body">
-					<form class="form-horizontal">
-						<div class="form-group">
-							<label class="col-sm-3 control-label no-padding-right" for="accountDiscount">决算折扣</label>
-							<div class="col-sm-9">
-								<input type="text" id="accountDiscount" class="col-xs-10 col-sm-5 v_float_3"/>
+		<div class="modal fade" id="addReduceAccountModal" tabindex="-1">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal">
+							<span>&times;</span><span class="sr-only">Close</span>
+						</button>
+						<h4 class="modal-title" id="addReduceAccountDialog">决算</h4>
+					</div>
+
+					<div class="modal-body">
+						<form class="form-horizontal">
+							<div class="form-group">
+								<label class="col-sm-3 control-label no-padding-right" for="accountDiscount">决算折扣</label>
+								<div class="col-sm-9">
+									<input type="text" id="accountDiscount" class="col-xs-10 col-sm-5 v_float_3"/>
+								</div>
 							</div>
-						</div>
-						<div class="space-4"></div>
-						
-						<div class="form-group">
-                            <label class="col-sm-3 control-label no-padding-right" for="accountManageDiscount" data-i18n="page.quotation.label.discountRate">管理费折扣</label>
-                            <div class="col-sm-9">
-                                <input type="checkbox" id="accountManageDiscount" class="ace ace-switch ace-switch-5">
-                                <span class="lbl discount-lbl"></span>
-                            </div>
-                        </div>
-                        <div class="space-4"></div>
-                        
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label no-padding-right" for="accountTaxDiscount">税金折扣</label>
-                            <div class="col-sm-9">
-                                <input type="checkbox" id="accountTaxDiscount" class="ace ace-switch ace-switch-5">
-                                <span class="lbl discount-lbl"></span>
-                            </div>
-                        </div>
-                        <div class="space-4"></div>
-					</form>
+							<div class="space-4"></div>
+
+							<div class="form-group">
+	                            <label class="col-sm-3 control-label no-padding-right" for="accountManageDiscount" data-i18n="page.quotation.label.discountRate">管理费折扣</label>
+	                            <div class="col-sm-9">
+	                                <input type="checkbox" id="accountManageDiscount" class="ace ace-switch ace-switch-5">
+	                                <span class="lbl discount-lbl"></span>
+	                            </div>
+	                        </div>
+	                        <div class="space-4"></div>
+
+	                        <div class="form-group">
+	                            <label class="col-sm-3 control-label no-padding-right" for="accountTaxDiscount">税金折扣</label>
+	                            <div class="col-sm-9">
+	                                <input type="checkbox" id="accountTaxDiscount" class="ace ace-switch ace-switch-5">
+	                                <span class="lbl discount-lbl"></span>
+	                            </div>
+	                        </div>
+	                        <div class="space-4"></div>
+						</form>
+					</div>
+
+					<div class="modal-footer">
+						<button type="button" id="saveAccountBtn" class="btn btn-primary" data-i18n="msg.save">保存</button>
+						<button type="button" id="cancel" class="btn btn-default" data-dismiss="modal" data-i18n="msg.cancel">取消</button>
+					</div>
 				</div>
-	
-				<div class="modal-footer">
-					<button type="button" id="saveAccountBtn" class="btn btn-primary" data-i18n="msg.save">保存</button>
-					<button type="button" id="cancel" class="btn btn-default" data-dismiss="modal" data-i18n="msg.cancel">取消</button>
+			</div>
+		</div>
+		<div class="modal fade" id="addReduceSalaryModal" tabindex="-1" data-backdrop="static">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal">
+							<span>&times;</span><span class="sr-only">Close</span>
+						</button>
+						<h4 class="modal-title" id="addReduceSalaryDialog">工费标识</h4>
+					</div>
+
+					<div class="modal-body">
+						<form class="form-horizontal">
+							<div class="form-group">
+								<label class="col-sm-3 control-label no-padding-right">工费标识</label>
+								<div class="col-sm-9">
+									<label class="radio-inline">
+										<input type="radio" name="isSalary" value="0" class="ace"/>
+										<span class="lbl">未开</span>
+									</label>
+									<label class="radio-inline">
+										<input type="radio" name="isSalary" value="1" class="ace"/>
+										<span class="lbl">已开</span>
+									</label>
+								</div>
+							</div>
+							<div class="space-4"></div>
+						</form>
+					</div>
+
+					<div class="modal-footer">
+						<button type="button" id="saveSalaryBtn" class="btn btn-primary" data-i18n="msg.save">保存</button>
+						<button type="button" id="cancelSalaryBtn" class="btn btn-default" data-dismiss="modal" data-i18n="msg.cancel">取消</button>
+					</div>
 				</div>
 			</div>
 		</div>
 	</div>
-</div>
+
 
 <div id="layerPopUp" class="portlet box page-content"></div>
 

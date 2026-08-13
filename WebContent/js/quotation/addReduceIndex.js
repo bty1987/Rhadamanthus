@@ -22,13 +22,15 @@
 
         modals: {
             addReduceModal: com.focusPage("#addReduceModal"),
-            addReduceAccountModal: com.focusPage("#addReduceAccountModal")
+            addReduceAccountModal: com.focusPage("#addReduceAccountModal"),
+            addReduceSalaryModal: com.focusPage("#addReduceSalaryModal")
         },
 
         btns: {
             saveBtn: com.focusPage("#saveBtn").on("click", saveData),
             payBtn: com.focusPage("#payBtn").on("click", unpay),
-            saveAccountBtn: com.focusPage("#saveAccountBtn").on("click", saveAccount)
+            saveAccountBtn: com.focusPage("#saveAccountBtn").on("click", saveAccount),
+            saveSalaryBtn: com.focusPage("#saveSalaryBtn").on("click", saveSalary)
         },
 
         editFlag: false,
@@ -269,9 +271,23 @@
         }
     };
 
+    var salarybtn = {
+        name: "工费",
+        clazz: "btn-inverse",
+        handle: function(v) {
+
+            addReduce.arid = v.arId;
+
+            com.focusPage('input[name="isSalary"]', addReduce.modals.addReduceSalaryModal).removeAttr("checked");
+            com.focusPage('input[name="isSalary"][value="' + v.isSalary + '"]', addReduce.modals.addReduceSalaryModal).prop("checked", true);
+
+            addReduce.modals.addReduceSalaryModal.modal("show");
+        }
+    };
+
     if (addReduce.pageType == null) {
 
-        var linebtns = [btnMake, viewbtn, submitbtn, cancelbtn, allocationbtn, specialbtn, norefundbtn, affirmbtn, deletebtn, tagbtn, ];
+        var linebtns = [btnMake, viewbtn, submitbtn, cancelbtn, allocationbtn, specialbtn, norefundbtn, affirmbtn, deletebtn, tagbtn, salarybtn, ];
 
         com.focusPage('#fl-statement').statement("报价", "增减单").show();
         com.focusPage('#decorationInfo').show();
@@ -432,6 +448,8 @@
 
         if (addReduce.pageConfig.pageBtn.contains("delete"))
             linebtns.push(deletebtn);
+
+        linebtns.push(salarybtn);
 
         searcher.base("condList", "pagenation", "resultList", api.quotation.pageAddReduce);
         searcher.condition(addReduce.pageConfig.condArr);
@@ -769,7 +787,7 @@
 
     if (addReduce.pageType == "account") {
 
-        var linebtns = [accountbtn];
+        var linebtns = [accountbtn, salarybtn];
 
         com.focusPage("#pagenation").hide();
 
@@ -1185,6 +1203,27 @@
             searcher.doSearch();
 
             addReduce.modals.addReduceAccountModal.modal("hide");
+        });
+    }
+
+    function saveSalary() {
+
+        var isSalary = com.focusPage('input[name="isSalary"]:checked', addReduce.modals.addReduceSalaryModal).val();
+
+        if (isSalary == null || isSalary == undefined) {
+            com.showAlert(com.error, "请选择工费标识");
+            return false;
+        }
+
+        com.post(api.quotation.updateAddReduceForSalary, {
+            "addReduce.arId": addReduce.arid,
+            "addReduce.isSalary": isSalary
+        }, function(res) {
+
+            com.showAlert(com.info, "操作成功");
+            searcher.doSearch();
+
+            addReduce.modals.addReduceSalaryModal.modal("hide");
         });
     }
 

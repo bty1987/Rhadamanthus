@@ -402,6 +402,23 @@ public class AddReduceServiceImpl implements AddReduceService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
+	public int updateAddReduceForSalary(AddReduceVO addReduceVO) throws FLException {
+
+		AddReducePO addReducePO = addReduceDao.get(addReduceVO.getArId());
+
+		if (addReducePO == null) {
+			throw new FLException(200060, "增减单不存在");
+		}
+
+		addReducePO.setIsSalary(addReduceVO.getIsSalary() != null && addReduceVO.getIsSalary() == AddReducePO.ISSALARY_MARKED_INT ? AddReducePO.ISSALARY_MARKED_INT : AddReducePO.ISSALARY_NONE_INT);
+
+		addReduceDao.update(addReducePO);
+
+		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
 	public int submitAddReduce(AddReduceVO addReduceVO, List<AddReduceVO> addReduceVOs, String userId) throws FLException {
 
 		String orderId = addReduceVO.getOrderId();
