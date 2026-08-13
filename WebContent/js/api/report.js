@@ -43,6 +43,9 @@ $.extend(api.index, {
     },
     approvalReportIndex: {
         url: "/views/report/approvalReport.html"
+    },
+    salaryReportIndex: {
+        url: "/views/report/salaryReport.html"
     }
 });
 
@@ -350,6 +353,20 @@ $.extend(api, {
         },
         refreshApprovalMetric: {
             url: "refreshApprovalMetric.do",
+            demo: true,
+        },
+
+        // ---- D8 人力薪酬（数据源 report.metric_salary_monthly）----
+        querySalaryMetricTrend: {
+            url: "querySalaryMetricTrend.do",
+            demo: true,
+        },
+        querySalaryWorkerTypeDist: {
+            url: "querySalaryWorkerTypeDist.do",
+            demo: true,
+        },
+        refreshSalaryMetric: {
+            url: "refreshSalaryMetric.do",
             demo: true,
         },
 

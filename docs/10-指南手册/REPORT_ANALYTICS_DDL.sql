@@ -195,3 +195,22 @@ CREATE TABLE IF NOT EXISTS `metric_approval_monthly` (
     UNIQUE KEY `uk_month_company_type` (`stat_month`, `company`, `type`),
     KEY `idx_company` (`company`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='审批运营月级汇总(指标体系)';
+
+-- ============================================================
+-- D8 人力薪酬: metric_salary_monthly 工人工费月级汇总
+-- 数据源: salary.workersalary (仅status=1通过)
+-- 维度: stat_month × company × twotype（工种：1工费/2增项/3油工奖励...）
+-- ============================================================
+
+CREATE TABLE IF NOT EXISTS `metric_salary_monthly` (
+    `smid`          BIGINT       NOT NULL AUTO_INCREMENT COMMENT '主键',
+    `stat_month`    CHAR(7)      NOT NULL                COMMENT '统计月份 yyyy-MM',
+    `company`       INT          NOT NULL                COMMENT '公司ID',
+    `twotype`       TINYINT      NOT NULL                COMMENT '工种(1工费/2增项/3油工奖励/4维修款...)',
+    `salary_count`  BIGINT       NOT NULL DEFAULT 0      COMMENT '工费单量',
+    `total_salary`  BIGINT       NOT NULL DEFAULT 0      COMMENT '实发总额(分)',
+
+    PRIMARY KEY (`smid`),
+    UNIQUE KEY `uk_month_company_twotype` (`stat_month`, `company`, `twotype`),
+    KEY `idx_company` (`company`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='工人工费月级汇总(指标体系)';
