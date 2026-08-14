@@ -14,7 +14,7 @@
             addReduceType: com.focusPage("#addReduceType"),
             atttype: com.focusPage("#addReduceAtttype"),
             paytype: com.focusPage("#paytype"),
-            
+
             accountDiscount: com.focusPage("#accountDiscount"),
             accountManageDiscount: com.focusPage("#accountManageDiscount"),
             accountTaxDiscount: com.focusPage("#accountTaxDiscount"),
@@ -255,7 +255,14 @@
 
             com.popup4page("#layerPopUp", api.index.quotationProfile4detailIndex.url, "增减标签", null, null, function() {
 
-                params.quotation = { orderId: orderId, qid: arId, type: 5, profile: { type: 5 } };
+                params.quotation = {
+                    orderId: orderId,
+                    qid: arId,
+                    type: 5,
+                    profile: {
+                        type: 5
+                    }
+                };
             });
         }
     };
@@ -287,7 +294,7 @@
 
     if (addReduce.pageType == null) {
 
-        var linebtns = [btnMake, viewbtn, submitbtn, cancelbtn, allocationbtn, specialbtn, norefundbtn, affirmbtn, deletebtn, tagbtn, salarybtn, ];
+        var linebtns = [btnMake, viewbtn, submitbtn, cancelbtn, allocationbtn, specialbtn, norefundbtn, affirmbtn, tagbtn, salarybtn, deletebtn, ];
 
         com.focusPage('#fl-statement').statement("报价", "增减单").show();
         com.focusPage('#decorationInfo').show();
@@ -424,7 +431,7 @@
 
         if (addReduce.pageConfig.pageBtn.contains("view"))
             linebtns.push(viewbtn);
-        
+
         if (addReduce.pageConfig.pageBtn.contains("tag"))
             linebtns.push(tagbtn);
 
@@ -445,11 +452,12 @@
 
         if (addReduce.pageConfig.pageBtn.contains("affirm"))
             linebtns.push(affirmbtn);
+        
+        if (addReduce.pageConfig.pageBtn.contains("salary"))
+            linebtns.push(salarybtn);
 
         if (addReduce.pageConfig.pageBtn.contains("delete"))
             linebtns.push(deletebtn);
-
-        linebtns.push(salarybtn);
 
         searcher.base("condList", "pagenation", "resultList", api.quotation.pageAddReduce);
         searcher.condition(addReduce.pageConfig.condArr);
