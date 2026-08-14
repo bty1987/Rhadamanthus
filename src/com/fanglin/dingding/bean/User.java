@@ -21,7 +21,9 @@ public class User {
 	private String mobile;
 	
 	private String email;
-	
+
+	private String orgEmail;
+
 	private String openId;
 	
 	private int status;
@@ -108,6 +110,14 @@ public class User {
 
 	public void setEmail(String email) {
 		this.email = email;
+	}
+
+	public String getOrgEmail() {
+		return orgEmail;
+	}
+
+	public void setOrgEmail(String orgEmail) {
+		this.orgEmail = orgEmail;
 	}
 
 	public String getOpenId() {
