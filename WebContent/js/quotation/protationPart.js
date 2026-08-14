@@ -201,7 +201,7 @@ var protationPart = (function() {
 
             var _quotePrice = utils.accAdd(quo.basicParams["protation.quotePrice"], quo.basicParams["protation.activityPrice"]);
 
-            var _discout = utils.changeThrDecimal(utils.accDiv(utils.accSub(_quotePrice, quo.basicParams["protation.preferPrice"]), _quotePrice));
+            var _discout = _quotePrice == 0 ? 10 : utils.changeThrDecimal(utils.accDiv(utils.accSub(_quotePrice, quo.basicParams["protation.preferPrice"]), _quotePrice));
 
             _discout = _discout < 0 ? 0 : _discout > 1 ? 1 : _discout;
 
@@ -251,7 +251,7 @@ var protationPart = (function() {
                 });
             }
 
-            var _manageDiscount = utils.changeThrDecimal(utils.accDiv(utils.accSub(_managePrice, quo.basicParams["protation.manageProfit"]), _managePrice));
+            var _manageDiscount = _managePrice == 0 ? 10 : utils.changeThrDecimal(utils.accDiv(utils.accSub(_managePrice, quo.basicParams["protation.manageProfit"]), _managePrice));
 
             _manageDiscount = _manageDiscount < 0 ? 0 : _manageDiscount > 1 ? 1 : _manageDiscount;
 
