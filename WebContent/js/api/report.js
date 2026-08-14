@@ -46,6 +46,9 @@ $.extend(api.index, {
     },
     salaryReportIndex: {
         url: "/views/report/salaryReport.html"
+    },
+    orderPanoramaIndex: {
+        url: "/views/report/orderPanorama.html"
     }
 });
 
@@ -367,6 +370,12 @@ $.extend(api, {
         },
         refreshSalaryMetric: {
             url: "refreshSalaryMetric.do",
+            demo: true,
+        },
+
+        // ---- 阶段四·跨模块联动：一户全景穿透（实时查询，非汇总表）----
+        queryOrderPanorama: {
+            url: "queryOrderPanorama.do",
             demo: true,
         },
 

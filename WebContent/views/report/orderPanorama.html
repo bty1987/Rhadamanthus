@@ -1,0 +1,21 @@
+<div class="page-content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div id="searchDiv">
+                <div class="fl_search clearfix">
+                    <span class="col-xs-3">
+                        <label data-i18n="page.report.panorama.orderId">订单编号:</label>
+                        <input type="text" id="orderIdSearch" style="width: 60%" placeholder="输入装修单编号">
+                    </span>
+                    <button id="fl_btn_searchDiv" class="btn btn-sm btn-info btn-search" data-i18n="msg.query">查询</button>
+                </div>
+            </div>
+
+            <div id="panoramaWrap"></div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $.loadScript(['js/report/orderPanorama.js']);
+</script>
