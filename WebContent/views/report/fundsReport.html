@@ -1,0 +1,39 @@
+<link rel="stylesheet" href="assets/ace/css/daterangepicker.css" />
+<div class="page-content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div id="searchDiv">
+                <div class="fl_search clearfix">
+                    <span class="col-xs-3">
+                        <label data-i18n="page.report.funds.dateRange">统计区间:</label>
+                        <input type="text" name="date-range-picker" id="dateRangeSearch" style="width: 70%">
+                    </span>
+                    <button id="fl_btn_searchDiv" class="btn btn-sm btn-info btn-search" data-i18n="msg.query">查询</button>
+                    <button id="fl_btn_refresh" class="btn btn-sm btn-warning" data-i18n="page.report.funds.refresh">刷新数据</button>
+                </div>
+            </div>
+
+            <div class="alert alert-info" style="margin-bottom: 10px">
+                口径说明：报价额 / 签约额按<b>签约月</b>统计，收款 / 退款按<b>收款月</b>统计，两条时间轴并行对比资金流转。
+            </div>
+
+            <div class="row">
+                <div class="col-sm-12">
+                    <div id="fundsTrendChart" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+                </div>
+            </div>
+
+            <hr>
+
+            <div class="row">
+                <div class="col-sm-12">
+                    <div id="rateChart" style="min-width: 310px; height: 350px; margin: 0 auto"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $.loadScript(['assets/altogether/js/date-time/moment.min.js', 'assets/altogether/js/date-time/daterangepicker.min.js', 'js/report/fundsReport.js']);
+</script>
