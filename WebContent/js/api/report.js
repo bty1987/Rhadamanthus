@@ -49,6 +49,9 @@ $.extend(api.index, {
     },
     orderPanoramaIndex: {
         url: "/views/report/orderPanorama.html"
+    },
+    fundsReportIndex: {
+        url: "/views/report/fundsReport.html"
     }
 });
 
@@ -376,6 +379,16 @@ $.extend(api, {
         // ---- 阶段四·跨模块联动：一户全景穿透（实时查询，非汇总表）----
         queryOrderPanorama: {
             url: "queryOrderPanorama.do",
+            demo: true,
+        },
+
+        // ---- 阶段四·跨模块联动：资金闭环（数据源 report.metric_funds_monthly）----
+        queryFundsTrend: {
+            url: "queryFundsTrend.do",
+            demo: true,
+        },
+        refreshFundsMetric: {
+            url: "refreshFundsMetric.do",
             demo: true,
         },
 

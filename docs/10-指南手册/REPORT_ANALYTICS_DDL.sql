@@ -214,3 +214,24 @@ CREATE TABLE IF NOT EXISTS `metric_salary_monthly` (
     UNIQUE KEY `uk_month_company_twotype` (`stat_month`, `company`, `twotype`),
     KEY `idx_company` (`company`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='工人工费月级汇总(指标体系)';
+
+-- ============================================================
+-- 阶段四·跨模块联动: metric_funds_monthly 资金闭环月级汇总
+-- 数据源: quotation+decoration(签约月) / payment.receipt(收款月)
+-- 维度: stat_month × company
+-- 口径: 报价/签约按contractTime归月, 收款/退款按collectTime归月(双时间轴)
+-- ============================================================
+
+CREATE TABLE IF NOT EXISTS `metric_funds_monthly` (
+    `fmid`            BIGINT       NOT NULL AUTO_INCREMENT COMMENT '主键',
+    `stat_month`      CHAR(7)      NOT NULL                COMMENT '统计月份 yyyy-MM',
+    `company`         INT          NOT NULL                COMMENT '公司ID',
+    `quotation_total` BIGINT       NOT NULL DEFAULT 0      COMMENT '总报价额(分,按签约月)',
+    `sign_total`      BIGINT       NOT NULL DEFAULT 0      COMMENT '总签约额(分,按签约月)',
+    `collect_total`   BIGINT       NOT NULL DEFAULT 0      COMMENT '总收款(分,按收款月)',
+    `refund_total`    BIGINT       NOT NULL DEFAULT 0      COMMENT '总退款(分,按收款月)',
+
+    PRIMARY KEY (`fmid`),
+    UNIQUE KEY `uk_month_company` (`stat_month`, `company`),
+    KEY `idx_company` (`company`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='资金闭环月级汇总(指标体系)';
