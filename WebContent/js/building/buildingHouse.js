@@ -191,7 +191,7 @@ jQuery(function($) {
 
         // buildingHouse 复用 building.building 状态枚举：
         // 0=待审核 1=签约 2=失效 3=通过 4=驳回（见 communion.constant building.building.status）
-        var ST = constant.building().building.status;
+        var constant.building().building = constant.building().building.status;
 
         return {
             check: {
@@ -269,7 +269,7 @@ jQuery(function($) {
             record: {
                 name: "跟进记录",
                 clazz: "btn-danger",
-                show: function(v) { return v.status == ST.STATUS_SIGN_INT || v.status == ST.STATUS_PASS_INT; },
+                show: function(v) { return v.status == constant.building().building.STATUS_SIGN_INT || v.status == constant.building().building.STATUS_PASS_INT; },
                 handle: function(v) {
                     params.building.buildingHouse = v;
                     params.building.flag = true;
@@ -281,16 +281,16 @@ jQuery(function($) {
                 name: "状态",
                 type: "switch",
                 clazz: "status-lbl",
-                show: function(v) { return v.status != ST.STATUS_INIT_INT && v.status != ST.STATUS_SIGN_INT; },
+                show: function(v) { return v.status != constant.building().building.STATUS_INIT_INT && v.status != constant.building().building.STATUS_SIGN_INT; },
                 init: function(v) {
-                    return v.status == ST.STATUS_INIT_INT || v.status == ST.STATUS_PASS_INT || v.status == ST.STATUS_REJECT_INT;
+                    return v.status == constant.building().building.STATUS_INIT_INT || v.status == constant.building().building.STATUS_PASS_INT || v.status == constant.building().building.STATUS_REJECT_INT;
                 },
                 handle: function(v, check) {
                     if (check) {
-                        updateBuildingHouseStatus(v.hsid, ST.STATUS_DISABLE_INT);
+                        updateBuildingHouseStatus(v.hsid, constant.building().building.STATUS_DISABLE_INT);
                     } else {
-                        if (v.status != ST.STATUS_SIGN_INT) {
-                            updateBuildingHouseStatus(v.hsid, ST.STATUS_INIT_INT);
+                        if (v.status != constant.building().building.STATUS_SIGN_INT) {
+                            updateBuildingHouseStatus(v.hsid, constant.building().building.STATUS_INIT_INT);
                         } else {
                             com.showAlert(com.warning, "当前房源已签约不能修改状态");
                         }
