@@ -1272,10 +1272,46 @@ var Searcher = function() {
                             return true;
                         }
 
-                        if (value.type == "newline" || !value.prop)
+                        if (value.type == "newline") {
+                            $info = $('<div></div>').css("padding", "5px").appendTo($main);
                             return true;
+                        }
 
                         if (value.show && typeof value.show == 'function' && !value.show(v))
+                            return true;
+
+                        if (value.type == "img") {
+
+                            var $urldiv = $('<div style="border: 1px solid #ccc; float :left;"></div>').css({
+                                "width": "75px",
+                                "height": "75px",
+                                "margin-right": "10px"
+                            }).prependTo($main);
+                            var img = $('<img />').appendTo($urldiv);
+                            com.showImg(img, getElement(v, value.prop.split('.')), 75, 75, '', null, 0);
+
+                            return true;
+                        }
+
+                        if (value.type == "qrcode") {
+
+                            var $imgDiv = $('<div style="border: 1px solid rgb(204, 204, 204); float: left; width: 75px; height: 75px; margin-right: 10px;"></div>').prependTo($main);
+                            $imgDiv.qrcode({
+                                render: "canvas",
+                                width: 75,
+                                height: 75,
+                                text: value.prop(v)
+                            });
+
+                            return true;
+                        }
+
+                        if (value.type == "custom" && value.render && typeof value.render == "function") {
+                            value.render($main, v, $info, $title);
+                            return true;
+                        }
+
+                        if (!value.prop)
                             return true;
 
                         var info = "";
@@ -1285,7 +1321,17 @@ var Searcher = function() {
                         else
                             info = getElement(v, value.prop.split('.'), value.dataset);
 
-                        $('<label></label>').attr('for', 'form-field').addClass(value.clazz).text(value.name + ": " + info).appendTo($('<div></div>').appendTo($info));
+                        // i18n:card 模式字段 label 透明翻译(与 line 对齐)
+                        var _cname = window.i18n ? i18n.tAuto(value.name) : value.name;
+
+                        var $fieldDiv = $('<div></div>').appendTo($info);
+                        var $fieldLabel = $('<label></label>').attr('for', 'form-field').addClass(value.clazz).text(_cname + ": " + info).appendTo($fieldDiv);
+
+                        if (value.click && typeof value.click == "function") {
+                            $fieldLabel.click(function() {
+                                value.click($(this), v);
+                            }).css("cursor", "pointer");
+                        }
                     });
 
                     $.each(basicConf.linevent, function(index, button) {
@@ -1420,6 +1466,8 @@ var Searcher = function() {
 
                 var rowLinevents = [];
                 var maxLinevent = 0;
+                var maxButton = 0;
+                var maxSwitch = 0;
 
                 var getTableCellText = function(lineprop, v) {
 
@@ -1486,6 +1534,16 @@ var Searcher = function() {
                         if (button.show && !button.show(v))
                             return true;
 
+                        // switch 无 name,不参与按钮名过滤,始终可见
+                        if (button.type == "switch") {
+                            linevents.push({
+                                key: k,
+                                button: button,
+                                name: ""
+                            });
+                            return true;
+                        }
+
                         var btnName = typeof button.name == 'function' ? button.name(v) : button.name;
 
                         if (btnName == null || btnName == undefined)
@@ -1503,12 +1561,48 @@ var Searcher = function() {
 
                 var renderLinevents = function($td, linevents, index) {
 
-                    var directLinevents = linevents.slice(0, 2);
-                    var moreLinevents = linevents.slice(2);
+                    // switch 渲染为开关且始终直显,不进"更多"下拉;普通按钮维持前2直显+更多
+                    var switchLinevents = [];
+                    var buttonLinevents = [];
 
-                    $.each(directLinevents, function(i, linevent) {
+                    $.each(linevents, function(i, linevent) {
+
+                        if (linevent.button.type == "switch")
+                            switchLinevents.push(linevent);
+                        else
+                            buttonLinevents.push(linevent);
+                    });
+
+                    var directLinevents = buttonLinevents.slice(0, 2);
+                    var moreLinevents = buttonLinevents.slice(2);
+
+                    $.each(switchLinevents.concat(directLinevents), function(i, linevent) {
 
                         var data = basicConf.lastData && basicConf.lastData[index] ? basicConf.lastData[index] : null;
+
+                        if (linevent.button.type == "switch") {
+
+                            // 初始态必须走 attr 而非 prop:laytable.init 会把 td innerHTML 序列化后重建,prop 状态不进序列化
+                            // label 包裹使整个开关药丸可点(ace 的 input 本体是透明 18px 覆盖层)
+                            var $switchLabel = $('<label></label>').css({ 'margin': '0px 4px 0px 2px', 'cursor': 'pointer' }).appendTo($td);
+                            var $switch = $('<input/>').attr({
+                                "type": "checkbox",
+                                // lay-ignore:豁免 layui form 模块接管(layui 会把视图内 checkbox 换成皮肤组件,导致原生 click/change 失效)
+                                "lay-ignore": "",
+                                "data-index": index,
+                                "data-event": linevent.key,
+                                "data-resulter": basicConf.$resulter
+                            }).addClass('ace ace-switch ace-switch-5 searcher-table-switch').appendTo($switchLabel);
+
+                            if (linevent.button.init && typeof linevent.button.init == 'function' && linevent.button.init(data))
+                                $switch.attr("checked", "checked");
+
+                            // lbl 必须紧跟 input,CSS 通过 input+.lbl::before 绘制开关文案
+                            $('<span></span>').addClass('lbl ' + (linevent.button.clazz || "isOrNot")).appendTo($switchLabel);
+
+                            return true;
+                        }
+
                         var btnClazz = typeof linevent.button.clazz == 'function' ? linevent.button.clazz(data) : linevent.button.clazz;
 
                         $('<a></a>').addClass('btn btn-minier ' + btnClazz + ' searcher-table-action').css('margin', '0px 1px').attr({
@@ -1533,10 +1627,22 @@ var Searcher = function() {
 
                     rowLinevents[i] = visibleLinevents(v);
                     maxLinevent = Math.max(maxLinevent, rowLinevents[i].length);
+
+                    var _switchCount = 0;
+
+                    $.each(rowLinevents[i], function(j, linevent) {
+
+                        if (linevent.button.type == "switch")
+                            _switchCount += 1;
+                    });
+
+                    maxSwitch = Math.max(maxSwitch, _switchCount);
+                    maxButton = Math.max(maxButton, rowLinevents[i].length - _switchCount);
                 });
 
                 var hasLinevent = maxLinevent > 0;
                 var tableProps = [];
+                var checkboxFields = {}; // checkbox 列 field -> lineprop 配置,供 document 委托事件回查
 
                 $.each(basicConf.lineprop, function(i, v) {
 
@@ -1565,7 +1671,8 @@ var Searcher = function() {
                     var prop = $.extend({}, v);
 
                     if (!prop.field) {
-                        prop.field = typeof prop.prop == 'string' ? prop.prop.replace(/[^A-Za-z0-9_]/g, '_') : "__searcherField" + i;
+                        // checkbox 列字段名强制唯一:layui 静态解析按 field 覆盖取值,与其他列同名会丢单元格内容
+                        prop.field = v.type == "checkbox" ? "__searcherCheck" + i : (typeof prop.prop == 'string' ? prop.prop.replace(/[^A-Za-z0-9_]/g, '_') : "__searcherField" + i);
                     }
 
                     prop.width = getTableWidth(v, prop);
@@ -1574,6 +1681,9 @@ var Searcher = function() {
                         source: v,
                         prop: prop
                     });
+
+                    if (v.type == "checkbox")
+                        checkboxFields[prop.field] = v;
                 });
 
                 for (var ti = tableProps.length - 1; ti >= 0; ti--) {
@@ -1592,7 +1702,16 @@ var Searcher = function() {
 
                     if (v.prop.toolbar)
                         v.prop.toolbar = "#" + basicConf.$resulter + "tools";
-                    var headerTh = $('<th></th>').attr("lay-data", JSON.stringify(v.prop)).appendTo(headerTr);
+
+                    var layData = v.prop;
+
+                    // checkbox 列必须剥离 type:layui 会把 type=checkbox 的列当自带多选列渲染,丢弃单元格里的自定义内容
+                    if (v.source.type == "checkbox") {
+                        layData = $.extend({}, v.prop);
+                        delete layData.type;
+                    }
+
+                    var headerTh = $('<th></th>').attr("lay-data", JSON.stringify(layData)).appendTo(headerTr);
                     // i18n:table 模式列头透明翻译
                     var _thname = window.i18n ? i18n.tAuto(v.prop.name) : v.prop.name;
                     var headerSpan = $('<span></span>').html(_thname).appendTo(headerTh);
@@ -1601,7 +1720,8 @@ var Searcher = function() {
                 if (hasLinevent) {
                     var toolsTh = $('<th></th>').attr("lay-data", JSON.stringify({
                         field: "__searcherTools",
-                        width: maxLinevent > 2 ? 180 : 140,
+                        // 开关(56px pill)始终直显,单独计入宽度;普通按钮维持原 140/180 档
+                        width: (maxButton > 2 ? 180 : maxButton > 0 ? 140 : 20) + maxSwitch * 62,
                         fixed: "right"
                     })).appendTo(headerTr);
                     $('<span></span>').html("功能").appendTo(toolsTh);
@@ -1616,30 +1736,29 @@ var Searcher = function() {
 
                     var $liLine = $('<tr></tr>').appendTo(dataTbody);
 
-                    $.each(tableProps, function(i, d) {
+                    $.each(tableProps, function(j, d) {
 
                         var info = getTableCellText(d.source, v);
                         var clazz = typeof d.source.clazz == 'function' ? d.source.clazz(v) : d.source.clazz;
                         var $td = $('<td></td>').appendTo($liLine);
 
                         if (d.source.type == "checkbox") {
+
                             var props = getCheckboxProps(d.source, v);
+
+                            // lay-ignore:豁免 layui form 模块接管(同 switch)
+                            props["lay-ignore"] = "";
+                            props["data-index"] = i;
+                            props["data-field"] = d.prop.field;
+                            props["data-resulter"] = basicConf.$resulter;
+
                             var $label = $('<label></label>').appendTo($td);
-                            var $input = $('<input>').attr(props).appendTo($label);
+                            var $input = $('<input>').attr(props).addClass('searcher-table-check').appendTo($label);
                             $('<span></span>').addClass(d.source.lblClazz || 'lbl blue bigger-150').appendTo($label);
 
-                            if (d.source.checked && typeof d.source.checked == 'function')
-                                $input.prop("checked", d.source.checked(v));
-
-                            if (d.source.click && typeof d.source.click == 'function')
-                                $input.click(function() {
-                                    d.source.click($(this), v);
-                                });
-
-                            if (d.source.change && typeof d.source.change == 'function')
-                                $input.change(function() {
-                                    d.source.change($(this), v);
-                                });
+                            // 初始态必须走 attr:laytable.init 把 td innerHTML 序列化后重建,prop 状态不进序列化
+                            if (d.source.checked && typeof d.source.checked == 'function' && d.source.checked(v))
+                                $input.attr("checked", "checked");
 
                             return true;
                         }
@@ -1677,7 +1796,17 @@ var Searcher = function() {
                     $('.searcher-table-more-menu').remove();
 
                     var index = $(this).attr('data-index');
-                    var linevents = (rowLinevents[index] || []).slice(2);
+
+                    // 更多菜单只收普通按钮:switch 已在 renderLinevents 中全部直显
+                    var menuLinevents = [];
+
+                    $.each(rowLinevents[index] || [], function(j, linevent) {
+
+                        if (linevent.button.type != "switch")
+                            menuLinevents.push(linevent);
+                    });
+
+                    var linevents = menuLinevents.slice(2);
 
                     if (!linevents.length)
                         return false;
@@ -1730,6 +1859,57 @@ var Searcher = function() {
                     linevent.handle(data, $(this));
 
                     return false;
+                });
+
+                // switch 开关:laytable.init 序列化重建表格,直绑事件会丢失,统一走 document 委托
+                $(document).off('click' + eventNamespace, '.searcher-table-switch').on('click' + eventNamespace, '.searcher-table-switch', function(e) {
+
+                    if ($(this).attr('data-resulter') != basicConf.$resulter)
+                        return true;
+
+                    var index = $(this).attr('data-index');
+                    var linevent = basicConf.linevent[$(this).attr('data-event')];
+                    var data = basicConf.lastData && basicConf.lastData[index] ? basicConf.lastData[index] : null;
+
+                    if (!linevent || !linevent.handle || !data)
+                        return false;
+
+                    if (linevent.show && !linevent.show(data))
+                        return false;
+
+                    linevent.handle(data, $(this).prop("checked"));
+
+                    // 不能 return false:checkbox 勾选切换是默认激活行为,preventDefault 会把开关弹回原状态
+                    return true;
+                });
+
+                // checkbox 同理:直绑 click/change 经不住 laytable.init 重建,走 document 委托回查配置
+                $(document).off('click' + eventNamespace, '.searcher-table-check').on('click' + eventNamespace, '.searcher-table-check', function(e) {
+
+                    if ($(this).attr('data-resulter') != basicConf.$resulter)
+                        return true;
+
+                    var source = checkboxFields[$(this).attr('data-field')];
+                    var data = basicConf.lastData && basicConf.lastData[$(this).attr('data-index')] ? basicConf.lastData[$(this).attr('data-index')] : null;
+
+                    if (source && data && source.click && typeof source.click == 'function')
+                        source.click($(this), data);
+
+                    return true;
+                });
+
+                $(document).off('change' + eventNamespace, '.searcher-table-check').on('change' + eventNamespace, '.searcher-table-check', function(e) {
+
+                    if ($(this).attr('data-resulter') != basicConf.$resulter)
+                        return true;
+
+                    var source = checkboxFields[$(this).attr('data-field')];
+                    var data = basicConf.lastData && basicConf.lastData[$(this).attr('data-index')] ? basicConf.lastData[$(this).attr('data-index')] : null;
+
+                    if (source && data && source.change && typeof source.change == 'function')
+                        source.change($(this), data);
+
+                    return true;
                 });
 
                 $(document).off('click' + closeNamespace).on('click' + closeNamespace, function(e) {
