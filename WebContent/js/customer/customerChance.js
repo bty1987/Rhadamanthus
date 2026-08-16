@@ -1075,7 +1075,7 @@ jQuery(function($) {
 
     }, null, false);
 
-    com.initTypeahead('belonger', api.personel.queryUserByPinyin, "pinyinName", {
+    com.initTypeahead('belonger', api.customer.queryCustomerUserRuleByPinyin, "pinyinName", {
         "user.status": 0,
         "user.dept.did": (((customerChance.depage == "dept" || customerChance.depage == "user") && ruleflag != null) ? params.userInfo.user.dept.did : null),
         "user.dept.fatherDept.did": (customerChance.depage == "region" && ruleflag != null ? params.userInfo.user.dept.fatherDept.did : null),

@@ -1,5 +1,6 @@
 package com.fanglin.customer.action;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.struts2.convention.annotation.Action;
@@ -9,10 +10,14 @@ import org.apache.struts2.convention.annotation.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
+import com.fanglin.common.vo.KeyValueVO;
+import com.fanglin.communion.vo.DepartmentTypeVO;
 import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.customer.service.CustomerUserRuleService;
 import com.fanglin.customer.vo.CustomerUserRuleVO;
+import com.fanglin.personel.vo.UserBaseVO;
+import com.fanglin.personel.vo.UserVO;
 
 @ParentPackage("base")
 @Namespace("/")
@@ -28,6 +33,14 @@ public class CustomerUserRuleAction extends BaseListAction {
 
 	private CustomerUserRuleVO customerUserRule;
 
+	private UserVO user;
+
+	private DepartmentTypeVO departmentType;
+
+	private String pinyinName;
+
+	private List<KeyValueVO> autoFillKeyValue;
+
 	@Action(value = "pageCustomerUserRule", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageCustomerUserRule() throws FLException {
 
@@ -40,6 +53,14 @@ public class CustomerUserRuleAction extends BaseListAction {
 	public String queryCustomerUserRule() throws FLException {
 
 		customerUserRule = customerUserRuleService.queryCustomerUserRule(customerUserRule);
+
+		return SUCCESS;
+	}
+
+	@Action(value = "queryCustomerUserRuleByPinyin", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryCustomerUserRuleByPinyin() throws FLException {
+
+		packageUserName(customerUserRuleService.queryCustomerUserRuleByPinyin(pinyinName, user, departmentType, queryCompany()));
 
 		return SUCCESS;
 	}
@@ -98,6 +119,57 @@ public class CustomerUserRuleAction extends BaseListAction {
 
 	public void setCustomerUserRule(CustomerUserRuleVO customerUserRule) {
 		this.customerUserRule = customerUserRule;
+	}
+
+	private void packageUserName(List<UserBaseVO> users) {
+		for (UserBaseVO userBaseVO : users) {
+			KeyValueVO keyValueVO = new KeyValueVO();
+
+			StringBuffer value = new StringBuffer();
+			value.append(userBaseVO.getCurrentName());
+			value.append("-");
+			value.append(userBaseVO.getDept().getName());
+
+			keyValueVO.setKey(userBaseVO.getUserId());
+			keyValueVO.setValue(value.toString());
+
+			getAutoFillKeyValue().add(keyValueVO);
+		}
+	}
+
+	public UserVO getUser() {
+		return user;
+	}
+
+	public void setUser(UserVO user) {
+		this.user = user;
+	}
+
+	public DepartmentTypeVO getDepartmentType() {
+		return departmentType;
+	}
+
+	public void setDepartmentType(DepartmentTypeVO departmentType) {
+		this.departmentType = departmentType;
+	}
+
+	public String getPinyinName() {
+		return pinyinName;
+	}
+
+	public void setPinyinName(String pinyinName) {
+		this.pinyinName = pinyinName;
+	}
+
+	public List<KeyValueVO> getAutoFillKeyValue() {
+		if (autoFillKeyValue == null) {
+			autoFillKeyValue = new ArrayList<KeyValueVO>();
+		}
+		return autoFillKeyValue;
+	}
+
+	public void setAutoFillKeyValue(List<KeyValueVO> autoFillKeyValue) {
+		this.autoFillKeyValue = autoFillKeyValue;
 	}
 
 }

@@ -5,6 +5,7 @@ import java.util.List;
 import com.fanglin.core.dao.Dao;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.customer.po.CustomerUserRulePO;
+import com.fanglin.personel.po.UserPO;
 import com.fanglin.utils.Paging;
 
 public interface CustomerUserRuleDao extends Dao<CustomerUserRulePO> {
@@ -12,6 +13,8 @@ public interface CustomerUserRuleDao extends Dao<CustomerUserRulePO> {
 	public List<CustomerUserRulePO> pageCustomerUserRule(Paging paging, List<Filter> filters, int company);
 
 	public CustomerUserRulePO queryCustomerUserRule(Integer uid);
+
+	public List<UserPO> queryCustomerUserRuleByPinyin(Paging paging, String pinyin, Short status, Integer company, Integer dtid, Integer did, Integer rid);
 
 	public CustomerUserRulePO pullCustomerUserRule(int company);
 
