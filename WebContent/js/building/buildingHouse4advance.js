@@ -216,10 +216,6 @@ jQuery(function($) {
 
     var linebtns = (function() {
 
-        // buildingHouse 复用 building.building 状态枚举：
-        // 0=待审核 1=签约 2=失效 3=通过 4=驳回（见 communion.constant building.building.status）
-        var constant.building().building = constant.building().building.status;
-
         return {
             drawing: {
                 name: "图片",
