@@ -46,11 +46,31 @@ $(function() {
         });
     });
 
+    // 导出Excel：审批月度宽表
+    com.focusPage("#fl_btn_export").on("click", function() {
+
+        if (!approvalReport.approvalTrend || approvalReport.approvalTrend.length == 0) {
+            com.showAlert(com.warning, "请先查询数据");
+            return false;
+        }
+
+        var list = [];
+        $.each(approvalReport.approvalTrend, function(i, v) {
+            list.push({ date: v.date, total: v.value1, reject: v.value2 });
+        });
+
+        $.exceler({
+            column: [["月份", "date"], ["审批总量", "total"], ["拒绝量", "reject"]],
+            list: list
+        });
+    });
+
     function renderAll() {
 
         var options = approvalReport.options;
 
         com.post(api.report.queryApprovalTrend, options, function(res) {
+            approvalReport.approvalTrend = res.approvalTrend;
             renderTrend(res.approvalTrend);
         });
 

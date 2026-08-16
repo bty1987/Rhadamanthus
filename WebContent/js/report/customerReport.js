@@ -48,11 +48,43 @@ $(function() {
         });
     });
 
+    // 导出Excel：获客月度宽表（报备/确认/转单）
+    com.focusPage("#fl_btn_export").on("click", function() {
+
+        if (!customerReport.funnelTrend || customerReport.funnelTrend.length == 0) {
+            com.showAlert(com.warning, "请先查询数据");
+            return false;
+        }
+
+        var convertMap = {};
+        if (customerReport.convertTrend) {
+            $.each(customerReport.convertTrend, function(i, v) {
+                convertMap[v.name] = v.value;
+            });
+        }
+
+        var list = [];
+        $.each(customerReport.funnelTrend, function(i, v) {
+            list.push({
+                date: v.date,
+                total: v.value1,
+                confirm: v.value2,
+                convert: convertMap[v.date] || 0
+            });
+        });
+
+        $.exceler({
+            column: [["月份", "date"], ["报备量", "total"], ["确认量", "confirm"], ["转单量", "convert"]],
+            list: list
+        });
+    });
+
     function renderAll() {
 
         var options = customerReport.options;
 
         com.post(api.report.queryCustomerFunnelTrend, options, function(res) {
+            customerReport.funnelTrend = res.funnelTrend;
             renderFunnelTrend(res.funnelTrend);
         });
 
@@ -61,6 +93,7 @@ $(function() {
         });
 
         com.post(api.report.queryCustomerConvertTrend, options, function(res) {
+            customerReport.convertTrend = res.convertTrend;
             renderConvertChart(res.convertTrend);
         });
     }

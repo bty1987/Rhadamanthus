@@ -46,11 +46,31 @@ $(function() {
         });
     });
 
+    // 导出Excel：工费月度宽表
+    com.focusPage("#fl_btn_export").on("click", function() {
+
+        if (!salaryReport.salaryTrend || salaryReport.salaryTrend.length == 0) {
+            com.showAlert(com.warning, "请先查询数据");
+            return false;
+        }
+
+        var list = [];
+        $.each(salaryReport.salaryTrend, function(i, v) {
+            list.push({ date: v.date, count: v.value1, amount: v.value2 / 100 });
+        });
+
+        $.exceler({
+            column: [["月份", "date"], ["工费单量", "count"], ["实发总额(元)", "amount"]],
+            list: list
+        });
+    });
+
     function renderAll() {
 
         var options = salaryReport.options;
 
         com.post(api.report.querySalaryMetricTrend, options, function(res) {
+            salaryReport.salaryTrend = res.salaryTrend;
             renderTrend(res.salaryTrend);
         });
 
