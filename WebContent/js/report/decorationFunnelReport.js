@@ -57,6 +57,25 @@ $(function() {
         });
     });
 
+    // 导出Excel：导出签单趋势月度表
+    com.focusPage("#fl_btn_export").on("click", function() {
+
+        if (!decorationFunnel.signTrend || decorationFunnel.signTrend.length == 0) {
+            com.showAlert(com.warning, "请先查询数据");
+            return false;
+        }
+
+        var list = [];
+        $.each(decorationFunnel.signTrend, function(i, v) {
+            list.push({ date: v.date, amount: v.amount / 100 });
+        });
+
+        $.exceler({
+            column: [["月份", "date"], ["签约额(元)", "amount"]],
+            list: list
+        });
+    });
+
     function renderAll() {
 
         var options = decorationFunnel.options;
@@ -70,6 +89,7 @@ $(function() {
         });
 
         com.post(api.report.queryDecorationSignTrend, options, function(res) {
+            decorationFunnel.signTrend = res.signTrend;
             renderTrend(res.signTrend);
         });
 

@@ -47,11 +47,38 @@ $(function() {
         });
     });
 
+    // 导出Excel：收退款月度宽表
+    com.focusPage("#fl_btn_export").on("click", function() {
+
+        if (!paymentReport.collectTrend || paymentReport.collectTrend.length == 0) {
+            com.showAlert(com.warning, "请先查询数据");
+            return false;
+        }
+
+        var list = [];
+        $.each(paymentReport.collectTrend, function(i, v) {
+            list.push({
+                date: v.date,
+                collect: v.amount / 100,
+                refund: paymentReport.refundTrend[i] ? paymentReport.refundTrend[i].amount / 100 : 0,
+                net: paymentReport.netTrend[i] ? paymentReport.netTrend[i].amount / 100 : 0
+            });
+        });
+
+        $.exceler({
+            column: [["月份", "date"], ["收款(元)", "collect"], ["退款(元)", "refund"], ["净收款(元)", "net"]],
+            list: list
+        });
+    });
+
     function renderAll() {
 
         var options = paymentReport.options;
 
         com.post(api.report.queryPaymentTrend, options, function(res) {
+            paymentReport.collectTrend = res.collectTrend;
+            paymentReport.refundTrend = res.refundTrend;
+            paymentReport.netTrend = res.netTrend;
             renderTrend(res.collectTrend, res.refundTrend, res.netTrend);
         });
 

@@ -47,11 +47,31 @@ $(function() {
         });
     });
 
+    // 导出Excel：销售月度宽表
+    com.focusPage("#fl_btn_export").on("click", function() {
+
+        if (!materialSales.salesTrend || materialSales.salesTrend.length == 0) {
+            com.showAlert(com.warning, "请先查询数据");
+            return false;
+        }
+
+        var list = [];
+        $.each(materialSales.salesTrend, function(i, v) {
+            list.push({ date: v.date, count: v.value1, amount: v.value2 / 100 });
+        });
+
+        $.exceler({
+            column: [["月份", "date"], ["销售单量", "count"], ["销售总额(元)", "amount"]],
+            list: list
+        });
+    });
+
     function renderAll() {
 
         var options = materialSales.options;
 
         com.post(api.report.querySalesTrend, options, function(res) {
+            materialSales.salesTrend = res.salesTrend;
             renderTrend(res.salesTrend);
         });
 

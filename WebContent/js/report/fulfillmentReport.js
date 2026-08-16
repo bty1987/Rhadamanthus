@@ -56,15 +56,50 @@ $(function() {
         return options;
     }
 
+    // 导出Excel：开工完工+工期月度宽表
+    com.focusPage("#fl_btn_export").on("click", function() {
+
+        if (!fulfillment.startFinishTrend || fulfillment.startFinishTrend.length == 0) {
+            com.showAlert(com.warning, "请先查询数据");
+            return false;
+        }
+
+        var periodMap = {};
+        if (fulfillment.periodTrend) {
+            $.each(fulfillment.periodTrend, function(i, v) {
+                periodMap[v.date] = v;
+            });
+        }
+
+        var list = [];
+        $.each(fulfillment.startFinishTrend, function(i, v) {
+            var p = periodMap[v.date] || {};
+            list.push({
+                date: v.date,
+                start: v.value1,
+                finish: v.value2,
+                actualPeriod: p.value1 || 0,
+                planPeriod: p.value2 || 0
+            });
+        });
+
+        $.exceler({
+            column: [["月份", "date"], ["开工量", "start"], ["完工量", "finish"], ["实际工期(天)", "actualPeriod"], ["计划工期(天)", "planPeriod"]],
+            list: list
+        });
+    });
+
     function renderAll() {
 
         var options = fulfillment.options;
 
         com.post(api.report.queryConstructionStartFinishTrend, options, function(res) {
+            fulfillment.startFinishTrend = res.startFinishTrend;
             renderDualLine('startFinishChart', '开工/完工趋势', res.startFinishTrend, '开工量', '完工量', '单');
         });
 
         com.post(api.report.queryConstructionPeriodTrend, options, function(res) {
+            fulfillment.periodTrend = res.periodTrend;
             renderDualLine('periodChart', '工期对比（实际 vs 计划）', res.periodTrend, '实际工期', '计划工期', '天');
         });
 

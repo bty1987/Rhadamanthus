@@ -47,11 +47,31 @@ $(function() {
         });
     });
 
+    // 导出Excel：出入库月度宽表
+    com.focusPage("#fl_btn_export").on("click", function() {
+
+        if (!inventoryReport.inOutTrend || inventoryReport.inOutTrend.length == 0) {
+            com.showAlert(com.warning, "请先查询数据");
+            return false;
+        }
+
+        var list = [];
+        $.each(inventoryReport.inOutTrend, function(i, v) {
+            list.push({ date: v.date, inCount: v.value1, outCount: v.value2 });
+        });
+
+        $.exceler({
+            column: [["月份", "date"], ["入库单据量", "inCount"], ["出库单据量", "outCount"]],
+            list: list
+        });
+    });
+
     function renderAll() {
 
         var options = inventoryReport.options;
 
         com.post(api.report.queryInventoryInOutTrend, options, function(res) {
+            inventoryReport.inOutTrend = res.inOutTrend;
             renderInOutTrend(res.inOutTrend);
         });
 

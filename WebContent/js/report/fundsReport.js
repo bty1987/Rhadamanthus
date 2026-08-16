@@ -46,11 +46,37 @@ $(function() {
         });
     });
 
+    // 导出Excel：资金闭环月度宽表
+    com.focusPage("#fl_btn_export").on("click", function() {
+
+        if (!fundsReport.fundsTrend || fundsReport.fundsTrend.length == 0) {
+            com.showAlert(com.warning, "请先查询数据");
+            return false;
+        }
+
+        var list = [];
+        $.each(fundsReport.fundsTrend, function(i, v) {
+            list.push({
+                date: v.date,
+                quotation: v.quotationTotal / 100,
+                sign: v.signTotal / 100,
+                collect: v.collectTotal / 100,
+                refund: v.refundTotal / 100
+            });
+        });
+
+        $.exceler({
+            column: [["月份", "date"], ["报价额(元)", "quotation"], ["签约额(元)", "sign"], ["实收款(元)", "collect"], ["退款(元)", "refund"]],
+            list: list
+        });
+    });
+
     function renderAll() {
 
         var options = fundsReport.options;
 
         com.post(api.report.queryFundsTrend, options, function(res) {
+            fundsReport.fundsTrend = res.fundsTrend;
             renderFundsTrend(res.fundsTrend);
             renderRate(res.fundsTrend);
         });
