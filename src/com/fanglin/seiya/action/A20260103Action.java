@@ -35,6 +35,7 @@ import com.fanglin.core.interceptor.FLException;
 import com.fanglin.customer.service.CustomerChanceService;
 import com.fanglin.customer.service.CustomerCompanyRuleService;
 import com.fanglin.customer.service.CustomerDeptRuleService;
+import com.fanglin.customer.service.CustomerUserRuleService;
 import com.fanglin.customer.vo.CustomerChanceVO;
 import com.fanglin.customer.vo.CustomerCompanyRuleVO;
 import com.fanglin.customer.vo.CustomerDeptRuleVO;
@@ -72,6 +73,9 @@ public class A20260103Action extends BaseListAction {
 
 	@Autowired
 	private CustomerCompanyRuleService customerCompanyRuleService;
+
+	@Autowired
+	private CustomerUserRuleService customerUserRuleService;
 
 	@Autowired
 	private UserService userService;
@@ -597,7 +601,7 @@ public class A20260103Action extends BaseListAction {
 		List<SimpleUserVO> resultList = new ArrayList<SimpleUserVO>();
 
 		// 查询用户列表
-		List<UserBaseVO> users = userService.queryUserByPinyin(pinyinName, user, departmentType, orgId);
+		List<UserBaseVO> users = customerUserRuleService.queryCustomerUserRuleByPinyin(pinyinName, user, departmentType, orgId);
 
 		if (users != null && !users.isEmpty()) {
 			for (UserBaseVO u : users) {

@@ -4,15 +4,22 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.SQLQuery;
+import org.hibernate.criterion.Disjunction;
+import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.type.StandardBasicTypes;
+import org.hibernate.type.Type;
 import org.springframework.stereotype.Repository;
 
 import com.fanglin.core.dao.impl.DaoImpl;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.customer.dao.CustomerUserRuleDao;
 import com.fanglin.customer.po.CustomerUserRulePO;
+import com.fanglin.personel.po.UserPO;
+import com.fanglin.system.po.RolePO;
 import com.fanglin.utils.Paging;
 
 @Repository("customerUserRuleDao")
@@ -39,6 +46,59 @@ public class CustomerUserRuleDaoImpl extends DaoImpl<CustomerUserRulePO> impleme
 	@Override
 	public CustomerUserRulePO queryCustomerUserRule(Integer uid) {
 		return (CustomerUserRulePO) session().createCriteria(CustomerUserRulePO.class).createAlias("user", "user").add(Restrictions.eq("user.uid", uid)).add(Restrictions.ne("status", CustomerUserRulePO.STATUS_DISABLE_INT)).setMaxResults(1).uniqueResult();
+	}
+
+	@Override
+	public List<UserPO> queryCustomerUserRuleByPinyin(Paging paging, String pinyin, Short status, Integer company, Integer dtid, Integer did, Integer rid) {
+
+		PagingQuery<UserPO> query = pagingQuery(paging, UserPO.class);
+
+		if (company != null) {
+			query.add(Restrictions.eq("company", company));
+		}
+
+		query.add(Restrictions.eq("type", UserPO.TYPE_USER_INT));
+
+		query.alias("role", "role");
+		query.alias("dept", "dept");
+		query.alias("dept.type", "dept.type");
+
+		if (StringUtils.isNotEmpty(pinyin)) {
+
+			Disjunction disjunction = Restrictions.disjunction();
+
+			disjunction.add(Restrictions.like("currentName", pinyin, MatchMode.ANYWHERE));
+			disjunction.add(Restrictions.like("pinYin", pinyin, MatchMode.ANYWHERE));
+			disjunction.add(Restrictions.like("userId", pinyin, MatchMode.ANYWHERE));
+
+			query.add(disjunction);
+		}
+
+		query.add(Restrictions.ne("role.no", RolePO.SUPER_NO_STR));
+
+		if (dtid != 0) {
+			query.add(Restrictions.eq("dept.type.dtid", dtid));
+		}
+
+		if (did != null) {
+			query.add(Restrictions.eq("dept.did", did));
+		}
+
+		if (rid != null) {
+			query.alias("dept.fatherDept", "fatherDept").add(Restrictions.eq("fatherDept.did", rid));
+		}
+
+		if (status != 3) {
+			query.add(Restrictions.eq("status", status));
+		}
+
+		if (company != null) {
+			query.add(Restrictions.sqlRestriction("not exists (select 1 from customer.customeruserrule cur where cur.uid = {alias}.uid and cur.company = ? and cur.status = ?)", new Object[] { company, CustomerUserRulePO.STATUS_ADVANCE_INVALID_INT }, new Type[] { StandardBasicTypes.INTEGER, StandardBasicTypes.SHORT }));
+		} else {
+			query.add(Restrictions.sqlRestriction("not exists (select 1 from customer.customeruserrule cur where cur.uid = {alias}.uid and cur.status = ?)", CustomerUserRulePO.STATUS_ADVANCE_INVALID_INT, StandardBasicTypes.SHORT));
+		}
+
+		return query.list();
 	}
 
 	@Override

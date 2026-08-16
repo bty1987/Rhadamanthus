@@ -302,6 +302,10 @@ $.extend(api, {
                 args: ["measureNum", "contractNum", "contractPrice", "materialPrice", "designPrice", "predisPrice", "score", "rank", "chance", "surplus", "polling"]
             }]
         },
+        queryCustomerUserRuleByPinyin: {
+            url: "queryCustomerUserRuleByPinyin.do",
+            type: "query"
+        },
         addCustomerUserRule: {
             url: "addCustomerUserRule.do",
             type: "update",

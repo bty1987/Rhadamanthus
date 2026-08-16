@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.fanglin.communion.dao.DepartmentTypeDao;
+import com.fanglin.communion.po.DepartmentTypePO;
 import com.fanglin.communion.vo.DepartmentTypeVO;
 import com.fanglin.communion.vo.DepartmentVO;
 import com.fanglin.communion.vo.DutyVO;
@@ -23,10 +25,14 @@ import com.fanglin.customer.vo.CustomerUserRuleVO;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserBaseVO;
+import com.fanglin.personel.vo.UserVO;
+import com.fanglin.system.dao.CompanyDao;
 import com.fanglin.system.dao.SystemConfigDao;
+import com.fanglin.system.po.CompanyPO;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.Paging;
+import com.fanglin.utils.SystemConfig;
 
 @Service("customerUserRuleService")
 @Transactional(readOnly = true)
@@ -43,6 +49,12 @@ public class CustomerUserRuleServiceImpl implements CustomerUserRuleService {
 
 	@Autowired
 	private SystemConfigDao systemConfigDao;
+
+	@Autowired
+	private CompanyDao companyDao;
+
+	@Autowired
+	private DepartmentTypeDao departmentTypeDao;
 
 	@Override
 	public void pageCustomerUserRule(Paging paging, List<Filter> filters, CustomerUserRuleVO customerUserRule, int company) {
@@ -87,6 +99,59 @@ public class CustomerUserRuleServiceImpl implements CustomerUserRuleService {
 		CustomerUserRuleVO customerUserRuleVO = new CustomerUserRuleVO(new UserBaseVO(new DutyVO(), new DepartmentVO(new DepartmentTypeVO(), new DepartmentVO())), new UserBaseVO(new DutyVO(), new DepartmentVO(new DepartmentTypeVO(), new DepartmentVO())));
 
 		return customerUserRulePO.ptv(customerUserRuleVO);
+	}
+
+	@Override
+	public List<UserBaseVO> queryCustomerUserRuleByPinyin(String pinyinName, UserVO userVO, DepartmentTypeVO departmentType, Integer company) throws FLException {
+
+		CompanyPO companyPO = null;
+
+		if (company != null) {
+			companyPO = companyDao.get(company);
+		}
+
+		if (SystemConfig.getInt("multicompany", 0) == 0) {
+			company = null;
+		}
+
+		List<UserBaseVO> userBaseVOs = new ArrayList<UserBaseVO>();
+
+		Paging paging = new Paging(0, 10);
+
+		if (userVO == null) {
+			userVO = new UserVO();
+		}
+
+		if (userVO.getStatus() == null) {
+			userVO.setStatus(UserPO.STATUS_ONJOB_INT);
+		}
+
+		int dtid = 0;
+
+		if (departmentType != null && departmentType.getName() != null && departmentType.getName().length() != 0) {
+			DepartmentTypePO departmentTypePO = departmentTypeDao.queryDepartmentTypeByName(departmentType.getName());
+			if (departmentTypePO != null) dtid = departmentTypePO.getDtid();
+		}
+
+		Integer did = null;
+
+		if (userVO.getDept() != null && userVO.getDept().getDid() != null) {
+			did = userVO.getDept().getDid();
+		}
+
+		Integer rid = null;
+
+		if (userVO.getDept() != null && userVO.getDept().getFatherDept() != null && userVO.getDept().getFatherDept().getDid() != null) {
+			rid = userVO.getDept().getFatherDept().getDid();
+		}
+
+		List<UserPO> userPOs = customerUserRuleDao.queryCustomerUserRuleByPinyin(paging, pinyinName, userVO.getStatus(), company, dtid, did, rid);
+
+		for (UserPO userPO : userPOs) {
+			userBaseVOs.add(new UserBaseVO(new DutyVO(), new DepartmentVO(new DepartmentVO())).ptv(userPO, companyPO == null ? null : companyPO.getName()));
+		}
+
+		return userBaseVOs;
 	}
 
 	@Override
