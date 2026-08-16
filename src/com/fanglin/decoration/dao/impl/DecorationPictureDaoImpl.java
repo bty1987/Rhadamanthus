@@ -31,9 +31,7 @@ public class DecorationPictureDaoImpl extends DaoImpl<DecorationPicturePO> imple
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<DecorationPicturePO> queryDecorationPictureByOrderId(String orderId) {
-		return createCriteria(DecorationPicturePO.class)
-				.add(Restrictions.eq(DecorationPicturePO.COLUMN_ORDERID_STR, orderId))
-				.list();
+		return createCriteria(DecorationPicturePO.class).add(Restrictions.eq(DecorationPicturePO.COLUMN_ORDERID_STR, orderId)).add(Restrictions.in(DecorationPicturePO.COLUMN_STATUS_STR, new Short[] { DecorationPicturePO.STATUS_ENABLE_INT, DecorationPicturePO.STATUS_CONFIRM_SHOW_INT })).list();
 	}
 
 	@Override
@@ -55,7 +53,7 @@ public class DecorationPictureDaoImpl extends DaoImpl<DecorationPicturePO> imple
 	public int countDecorationPictureForValid(String orderId, Integer type) {
 
 		String sql = "select count(*) from decoration.decorationpicture where orderId = :orderId and type = :type and status in (:status)";
-		BigInteger count = (BigInteger) session().createSQLQuery(sql).setString("orderId", orderId).setInteger("type", type).setParameterList("status", new Short[] {DecorationPicturePO.STATUS_ENABLE_INT, DecorationPicturePO.STATUS_CONFIRM_SHOW_INT}).uniqueResult();
+		BigInteger count = (BigInteger) session().createSQLQuery(sql).setString("orderId", orderId).setInteger("type", type).setParameterList("status", new Short[] { DecorationPicturePO.STATUS_ENABLE_INT, DecorationPicturePO.STATUS_CONFIRM_SHOW_INT }).uniqueResult();
 
 		return count.intValue();
 	}
