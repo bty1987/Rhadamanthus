@@ -253,7 +253,7 @@ public class DecorationInfoServiceImpl implements DecorationInfoService {
 			if (decorationInfoVO.getSourceStatus() == DecorationPO.DESIGN_STATUS_MINI_INT) daynum = daynum + 3;
 
 			if (decorationInfoVO.getSourceStatus() == DecorationPO.DESIGN_STATUS_MORE_INT && constructionInfoPO != null) {
-				daynum = daynum + Arith.div(constructionInfoPO.getDesignPeriod(), 300, Arith.ROUND_FLOOR) / 1000;
+				daynum = daynum + Arith.mul(constructionInfoPO.getDesignPeriod(), 40) / 100; // designPeriod千分位存储(天*1000), mul去scale后*40/100=周期40%, 不足1天舍去
 			}
 
 			Timestamp currentTime = DateUtil.getDateToTimestamp(new Date());
@@ -273,8 +273,8 @@ public class DecorationInfoServiceImpl implements DecorationInfoService {
 				if (decorationInfoVO.getSourceStatus() == DecorationPO.DESIGN_STATUS_MINI_INT) {
 					constructionInfoPO.setDesignTime(DateUtil.getDateToTimestamp(DateUtil.plusDay(new Date(designTime.getTime()), 3)));
 				} else if (decorationInfoVO.getSourceStatus() == DecorationPO.DESIGN_STATUS_MORE_INT && constructionInfoPO.getDesignPeriod() != 0) {
-					Date newDesignTime = new Date(designTime.getTime() + Arith.mul(constructionInfoPO.getDesignPeriod(), 400) * 60 * 1000);
-					constructionInfoPO.setDesignTime(DateUtil.getDateToTimestamp(newDesignTime));
+					int designDays = Arith.mul(constructionInfoPO.getDesignPeriod(), 40) / 100;
+					constructionInfoPO.setDesignTime(DateUtil.getDateToTimestamp(DateUtil.plusDay(new Date(designTime.getTime()), designDays)));
 				}
 
 				int constructionOverdueDays = DateUtil.diffDay(designTime, currentTime);
