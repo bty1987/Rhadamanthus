@@ -1,5 +1,11 @@
 var NORMRICE_ITEM_STATUS_CONFIRMED_INT = 2;
 
+var ADDREDUCE_TYPE_ADD_INT = 0;
+var ADDREDUCE_PAYTYPE_PAY_INT = 0;
+var ADDREDUCE_STATUS_PAYED_INT = 2;
+var ADDREDUCE_STATUS_CONFIRMED_INT = 3;
+var ADDREDUCE_ISSALARY_MARKED_INT = 1;
+
 function printHeader(headStr) {
 
     var quotation = quotationUtils.quotationDetail.quotation;
@@ -415,16 +421,21 @@ jQuery(function($) {
     if ((params.quotation.subtype & 4) == 4) {
 
         var options = {
-            "addReduce.orderId": params.quotation.orderId
-        };
-
-        if (params.quotation.pageType != null) {
-            options["addReduce.status"] = 0;
+            "addReduce.orderId": params.quotation.orderId,
+            "addReduce.status": 0
         };
 
         com.post(api.quotation.queryAddReduceNormrice, options, function(res) {
 
-            addreduces = res.addReduces;
+            addreduces = [];
+
+            $.each(res.addReduces, function(i, v) {
+
+                // 需付款增项: 已付款/已确认 或 已标识工费(isSalary)才显示并累计, 未付款未标识的不打印
+                if (params.quotation.pageType == null && v.type == ADDREDUCE_TYPE_ADD_INT && v.paytype == ADDREDUCE_PAYTYPE_PAY_INT && v.status != ADDREDUCE_STATUS_PAYED_INT && v.status != ADDREDUCE_STATUS_CONFIRMED_INT && v.isSalary != ADDREDUCE_ISSALARY_MARKED_INT) return true;
+
+                addreduces.push(v);
+            });
         }, null, false);
     }
 
