@@ -134,6 +134,14 @@ public class A20251208Action extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "syncSupervisorForPlatforPm", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String syncSupervisorForPlatforPm() throws FLException {
+
+		a20251208Service.syncSupervisorForPlatforPm(construction, queryUserId());
+
+		return SUCCESS;
+	}
+
 	@Action(value = "beginConstructionForPlatforPm", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String beginConstructionForPlatforPm() throws FLException {
 
@@ -154,6 +162,14 @@ public class A20251208Action extends BaseListAction {
 	public String updateAcceptanceForPlatforPm() throws FLException {
 
 		a20251208Service.updateAcceptanceForPlatforPm(acceptance);
+
+		return SUCCESS;
+	}
+
+	@Action(value = "syncAcceptanceForPlatforPm", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String syncAcceptanceForPlatforPm() throws FLException {
+
+		a20251208Service.syncAcceptanceForPlatforPm(acceptance);
 
 		return SUCCESS;
 	}
