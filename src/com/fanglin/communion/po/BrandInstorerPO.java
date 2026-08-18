@@ -23,6 +23,8 @@ public class BrandInstorerPO implements Serializable {
 
 	public static final String COLUMN_BID_STR = "brand.bid";
 
+	public static final String COLUMN_IUID_STR = "instorer.uid";
+
 	private long biid;
 
 	private UserPO instorer;
