@@ -5,6 +5,9 @@ var houseUtils = {
         var erri;
         $.each(arr, function(i, val) {
 
+            if (i % 2 == 1 && (val == '0' || val == '1')) {
+                return; // 分隔符占位项("选择",key为0/1):不拼接,也不吞下一个数据段
+            }
             if (val != 0 || val == '') {
                 if (i != erri + 1) {
                     str = str + val;
