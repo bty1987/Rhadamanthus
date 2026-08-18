@@ -33,8 +33,10 @@ import com.fanglin.communion.vo.VillageVO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.security.SensitiveDataHelper;
 import com.fanglin.customer.dao.CustomerChanceDao;
+import com.fanglin.customer.dao.CustomerChanceOrderDao;
 import com.fanglin.customer.dao.CustomerSourceDao;
 import com.fanglin.customer.dao.CustomerSourceRecordDao;
+import com.fanglin.customer.po.CustomerChanceOrderPO;
 import com.fanglin.customer.po.CustomerChancePO;
 import com.fanglin.customer.po.CustomerSourcePO;
 import com.fanglin.customer.po.CustomerSourceRecordPO;
@@ -56,6 +58,9 @@ public class A20260103ServiceImpl implements A20260103Service {
 
 	@Autowired
 	private CustomerChanceDao customerChanceDao;
+
+	@Autowired
+	private CustomerChanceOrderDao customerChanceOrderDao;
 
 	@Autowired
 	private CustomerSourceDao customerSourceDao;
@@ -457,6 +462,49 @@ public class A20260103ServiceImpl implements A20260103Service {
 
 		// 5. 保存更新
 		decorationDao.update(decorationPO);
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public void updateCustomerChanceForSF(String orderId, String customerno) throws FLException {
+
+		// 1. 参数校验
+		if (orderId == null || orderId.trim().isEmpty()) {
+			throw new FLException(400013, "装修单号不能为空");
+		}
+
+		if (customerno == null || customerno.trim().isEmpty()) {
+			throw new FLException(400034, "客户编号不能为空");
+		}
+
+		// 2. 经 customerchanceorder 映射（ccid <-> orderId）定位订单关联的客户机会
+		List<CustomerChanceOrderPO> chanceOrderPOs = customerChanceOrderDao.queryCustomerChanceOrderByOrderId(orderId.trim());
+
+		if (chanceOrderPOs == null || chanceOrderPOs.isEmpty()) {
+			throw new FLException(330075, "客户机会不存在");
+		}
+
+		// 3. 一个订单可能关联多条机会（换单等场景），全部更新；映射悬空的跳过
+		int count = 0;
+
+		for (CustomerChanceOrderPO chanceOrderPO : chanceOrderPOs) {
+
+			CustomerChancePO customerChancePO = customerChanceDao.get(chanceOrderPO.getCcid());
+
+			if (customerChancePO == null) {
+				continue;
+			}
+
+			customerChancePO.setCustomerno(customerno.trim());
+
+			customerChanceDao.update(customerChancePO);
+
+			count++;
+		}
+
+		if (count == 0) {
+			throw new FLException(330075, "客户机会不存在");
+		}
 	}
 
 	/**

@@ -804,6 +804,38 @@ public class A20260103Action extends BaseListAction {
 		return SUCCESS;
 	}
 
+	/**
+	 * 更新客户机会客户编号接口
+	 *
+	 * 通过装修单号更新关联客户机会的客户编号（customerchance.customerno）
+	 *
+	 * 经 customerchanceorder 映射（ccid <-> orderId）定位，一个订单可能关联多条机会（换单等场景），全部更新
+	 *
+	 * 请求参数：
+	 * @orderId: 装修单号（必填）
+	 * @customerNo: 客户编号（必填，外部系统客户编号，亦可用参数名customerno）
+	 *
+	 * @return SUCCESS
+	 * @throws FLException 业务异常
+	 */
+	@Action(value = "updateCustomerChanceForSF", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false", "includeProperties", "errorCode,errorMsg,data.*" }) }, params = { "contentType", "text/html" })
+	public String updateCustomerChanceForSF() throws FLException {
+
+		// 初始化 data 对象
+		this.data = new HashMap<String, Object>();
+
+		// 调用 Service 层处理业务逻辑
+		a20260103Service.updateCustomerChanceForSF(orderId, customerNo);
+
+		// 设置返回参数
+		this.data.put("orderId", orderId);
+		this.data.put("customerNo", customerNo);
+		this.data.put("updateTime", new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new java.util.Date()));
+		this.data.put("message", "更新成功");
+
+		return SUCCESS;
+	}
+
 	// ==================== Getter and Setter ====================
 
 	@JSON(serialize = false)

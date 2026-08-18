@@ -104,4 +104,16 @@ public interface A20260103Service {
 	 */
 	void updateDecorationForSF(String orderId, String phone, String village, String houseNumber, Integer orgId, String userId) throws FLException;
 
+	/**
+	 * 通过装修单号更新关联客户机会的客户编号（customerno）
+	 *
+	 * 经 customerchanceorder 映射（ccid <-> orderId）定位订单关联的客户机会，
+	 * 一个订单可能关联多条机会（换单等场景），全部更新；无关联机会则报错
+	 *
+	 * @param orderId 装修单编号（必填）
+	 * @param customerno 客户编号（必填，外部系统客户编号）
+	 * @throws FLException 业务异常
+	 */
+	void updateCustomerChanceForSF(String orderId, String customerno) throws FLException;
+
 }
