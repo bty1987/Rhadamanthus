@@ -38,4 +38,14 @@ public class BrandInstorerDaoImpl extends DaoImpl<BrandInstorerPO> implements Br
 		return query.list();
 	}
 
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<BrandInstorerPO> queryBrandInstorerByIuid(long iuid) {
+		Criteria query = session().createCriteria(BrandInstorerPO.class);
+
+		query.add(Restrictions.eq(BrandInstorerPO.COLUMN_IUID_STR, iuid));
+
+		return query.list();
+	}
+
 }

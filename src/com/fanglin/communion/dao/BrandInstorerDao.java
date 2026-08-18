@@ -20,4 +20,6 @@ public interface BrandInstorerDao extends Dao<BrandInstorerPO> {
 
 	List<BrandInstorerPO> queryBrandInstorer(long bid);
 
+	List<BrandInstorerPO> queryBrandInstorerByIuid(long iuid);
+
 }
