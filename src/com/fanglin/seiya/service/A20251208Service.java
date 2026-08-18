@@ -31,9 +31,13 @@ public interface A20251208Service {
 
 	public void deleteConstructerForPlatforPm(ConstructerVO constructer) throws FLException;
 
+	public void syncSupervisorForPlatforPm(ConstructionVO construction, String userId) throws FLException;
+
 	public int beginConstructionForPlatforPm(ConstructionVO construction, String queryUserId, int queryCompany) throws FLException;
 
 	public void syncConstructionForPlatforPm(ConstructionVO construction) throws FLException;
+
+	public int syncAcceptanceForPlatforPm(AcceptanceVO acceptanceVO) throws FLException;
 
 	public int updateAcceptanceForPlatforPm(AcceptanceVO acceptanceVO) throws FLException;
 

@@ -38,6 +38,7 @@ import com.fanglin.construction.po.ConstructionCostPO;
 import com.fanglin.construction.po.ConstructionInfoPO;
 import com.fanglin.construction.po.ConstructionPO;
 import com.fanglin.construction.po.ConstructionSchedulePO;
+import com.fanglin.construction.service.ConstructionService;
 import com.fanglin.construction.service.ConstructionScheduleService;
 import com.fanglin.construction.vo.AcceptanceVO;
 import com.fanglin.construction.vo.ConstructerVO;
@@ -137,6 +138,9 @@ public class A20251208ServiceImpl implements A20251208Service {
 
 	@Autowired
 	private ConstructionScheduleService constructionScheduleService;
+
+	@Autowired
+	private ConstructionService constructionService;
 
 	@Autowired
 	private MessageService messageService;
@@ -760,18 +764,69 @@ public class A20251208ServiceImpl implements A20251208Service {
 	@Transactional(rollbackFor = Exception.class)
 	public void syncConstructionScheduleForPlatforPm(ConstructionScheduleVO constructionScheduleVO) throws FLException {
 
-		ConstructionSchedulePO constructionSchedulePO = constructionScheduleDao.get(constructionScheduleVO.getCsid());
+		ConstructionSchedulePO constructionSchedulePO = null;
 
-		if (constructionSchedulePO == null) {
-			throw new FLException(120024, "工程环节不存在");
+		Long cnid = constructionScheduleVO.getCnid();
+
+		if (cnid == null && constructionScheduleVO.getNode() != null) {
+			cnid = constructionScheduleVO.getNode().getCnid();
 		}
 
-		constructionSchedulePO.setPrecheck(constructionScheduleVO.getPrecheck());
-		constructionSchedulePO.setPostcheck(constructionScheduleVO.getPostcheck());
-		constructionSchedulePO.setStacheck(constructionScheduleVO.getStacheck());
-		constructionSchedulePO.setFincheck(constructionScheduleVO.getFincheck());
+		if (constructionScheduleVO.getCsid() != null) {
+			constructionSchedulePO = constructionScheduleDao.get(constructionScheduleVO.getCsid());
+		}
+
+		if (constructionSchedulePO == null && constructionScheduleVO.getCid() != null && cnid != null) {
+			constructionSchedulePO = constructionScheduleDao.queryConstructionScheduleByCid(constructionScheduleVO.getCid(), cnid);
+		}
+
+		if (constructionSchedulePO == null && constructionScheduleVO.getOrderId() != null && cnid != null) {
+			constructionSchedulePO = constructionScheduleDao.queryConstructionScheduleByOrderId(constructionScheduleVO.getOrderId(), cnid);
+		}
+
+		constructionScheduleVO.setCnid(cnid);
+
+		if (constructionSchedulePO == null) {
+			constructionSchedulePO = addConstructionSchedule(constructionScheduleVO);
+		}
+
+		if (constructionScheduleVO.getPrecheck() != null) constructionSchedulePO.setPrecheck(constructionScheduleVO.getPrecheck());
+		if (constructionScheduleVO.getPostcheck() != null) constructionSchedulePO.setPostcheck(constructionScheduleVO.getPostcheck());
+		if (constructionScheduleVO.getStacheck() != null) constructionSchedulePO.setStacheck(constructionScheduleVO.getStacheck());
+		if (constructionScheduleVO.getFincheck() != null) constructionSchedulePO.setFincheck(constructionScheduleVO.getFincheck());
+
+		if (constructionScheduleVO.getAccessoryLimit() != null) constructionSchedulePO.setAccessoryLimit(constructionScheduleVO.getAccessoryLimit());
+		if (constructionScheduleVO.getSalaryLimit() != null) {
+			int salaryLimitTotal = constructionScheduleVO.getSalaryLimitTotal() == null ? constructionSchedulePO.getSalaryLimitTotal() : constructionScheduleVO.getSalaryLimitTotal();
+
+			if (constructionScheduleVO.getSalaryLimit() > Arith.add(constructionSchedulePO.getSalaryLimit(), salaryLimitTotal)) {
+				throw new FLException(120035, "工费浮动已达上限");
+			}
+
+			constructionSchedulePO.setSalaryLimit(constructionScheduleVO.getSalaryLimit());
+		}
+		if (constructionScheduleVO.getAccessoryTotal() != null) constructionSchedulePO.setAccessoryTotal(constructionScheduleVO.getAccessoryTotal());
+		if (constructionScheduleVO.getSalaryTotal() != null) constructionSchedulePO.setSalaryTotal(constructionScheduleVO.getSalaryTotal());
+		if (constructionScheduleVO.getSalaryLimitTotal() != null) constructionSchedulePO.setSalaryLimitTotal(constructionScheduleVO.getSalaryLimitTotal());
+		if (constructionScheduleVO.getPeriod() != null) constructionSchedulePO.setPeriod(constructionScheduleVO.getPeriod());
+		if (constructionScheduleVO.getPrenum() != null) constructionSchedulePO.setPrenum(constructionScheduleVO.getPrenum());
+		if (constructionScheduleVO.getPostnum() != null) constructionSchedulePO.setPostnum(constructionScheduleVO.getPostnum());
+		if (constructionScheduleVO.getPreStartTime() != null) constructionSchedulePO.setPreStartTime(constructionScheduleVO.getPreStartTime());
+		if (constructionScheduleVO.getPreEndTime() != null) constructionSchedulePO.setPreEndTime(constructionScheduleVO.getPreEndTime());
+		if (constructionScheduleVO.getStartTime() != null) constructionSchedulePO.setStartTime(constructionScheduleVO.getStartTime());
+		if (constructionScheduleVO.getEndTime() != null) constructionSchedulePO.setEndTime(constructionScheduleVO.getEndTime());
+		if (constructionScheduleVO.getStatus() != null) constructionSchedulePO.setStatus(constructionScheduleVO.getStatus());
+		if (constructionScheduleVO.getCheckout() != null) constructionSchedulePO.setCheckout(constructionScheduleVO.getCheckout());
+		if (constructionScheduleVO.getSchedule() != null) constructionSchedulePO.setSchedule(constructionScheduleVO.getSchedule());
+		if (constructionScheduleVO.getWorkStatus() != null) constructionSchedulePO.setWorkStatus(constructionScheduleVO.getWorkStatus());
+		if (constructionScheduleVO.getScheduleStatus() != null) constructionSchedulePO.setScheduleStatus(constructionScheduleVO.getScheduleStatus());
 
 		constructionScheduleDao.saveOrUpdate(constructionSchedulePO);
+
+		constructionScheduleVO.setCsid(constructionSchedulePO.getCsid());
+		constructionScheduleVO.setCid(constructionSchedulePO.getCid());
+		constructionScheduleVO.setOrderId(constructionSchedulePO.getOrderId());
+		constructionScheduleVO.setCnid(constructionSchedulePO.getNode().getCnid());
 	}
 
 	@Override
@@ -846,7 +901,7 @@ public class A20251208ServiceImpl implements A20251208Service {
 
 		ConstructerPO constructerPO = null;
 
-		if (constructerVO.getUser() == null && constructerVO.getUser().getUserId() == null) {
+		if (constructerVO.getUser() == null || constructerVO.getUser().getUserId() == null) {
 			constructerPO = constructerDao.get(constructerVO.getCrid());
 		} else {
 			UserPO userPO = userDao.queryUserByUserId(constructerVO.getUser().getUserId());
@@ -977,31 +1032,64 @@ public class A20251208ServiceImpl implements A20251208Service {
 		ConstructionPO constructionPO = constructionDao.queryConstructionByOrderId(orderId);
 
 		if (constructionPO == null) {
+			constructionPO = new ConstructionPO(decorationPO);
+			constructionPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
+			constructionPO.setStartTime(constructionVO.getStartTime() == null ? DateUtil.getDateToTimestamp(new Date()) : constructionVO.getStartTime());
+
+			if (decorationPO.getSupervisor() != null) constructionPO.setSupervisor(decorationPO.getSupervisor());
+
+			setConstruction(constructionPO, constructionVO);
+			setConstructionLimit(constructionPO, constructionVO, decorationPO);
+
+			constructionDao.save(constructionPO);
+			constructionDao.flush();
+		} else {
+			setConstruction(constructionPO, constructionVO);
+			setConstructionLimit(constructionPO, constructionVO);
+
+			constructionDao.update(constructionPO);
+		}
+
+		syncConstructionInfo(constructionPO, decorationPO);
+
+		constructionVO.setCid(constructionPO.getCid());
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public void syncSupervisorForPlatforPm(ConstructionVO constructionVO, String userId) throws FLException {
+
+		syncConstructionForPlatforPm(constructionVO);
+
+		ConstructionPO constructionPO = constructionDao.queryConstructionByOrderId(constructionVO.getOrderId());
+
+		if (constructionPO == null) {
 			throw new FLException(120020, "工程信息不存在");
 		}
 
-		ConstructionCostPO constructionCostPO = constructionCostDao.queryConstructionCost(decorationPO.getHouse().getBuildArea(), decorationPO.getCompany());
+		if (constructionVO.getSupervisor() == null || constructionVO.getSupervisor().getUserId() == null) return;
 
-		SystemConfigPO accessoryLimit = systemConfigDao.querySystemConfig("accessoryLimit", decorationPO.getCompany());
-		SystemConfigPO salaryLimit = systemConfigDao.querySystemConfig("salaryLimit", decorationPO.getCompany());
-		SystemConfigPO salaryLimitTotal = systemConfigDao.querySystemConfig("WORKER_SALARY_LIMIT_TOTAL_INT", decorationPO.getCompany());
+		UserPO supervisor = userDao.queryUserByUserId(constructionVO.getSupervisor().getUserId());
 
-		if (constructionCostPO == null) {
-			constructionPO.setAccessoryLimit(accessoryLimit == null ? ConstructionCostPO.ACCESSORY_DEFAULT_LONG : Long.valueOf(accessoryLimit.getValue()));
-			constructionPO.setSalaryLimit(salaryLimit == null ? ConstructionCostPO.SALARY_DEFAULT_LONG : Long.valueOf(salaryLimit.getValue()));
-			constructionPO.setSalaryLimitTotal(salaryLimitTotal == null ? ConstructionCostPO.SALARY_DEFAULT_LONG : Long.valueOf(salaryLimitTotal.getValue()));
-		} else {
-			constructionPO.setAccessoryLimit(constructionCostPO.getAccessory());
-			constructionPO.setSalaryLimit(constructionCostPO.getSalary());
-			constructionPO.setSalaryLimitTotal(constructionCostPO.getSalary());
+		if (supervisor == null) {
+			throw new FLException(220005, "员工不存在");
 		}
 
-		constructionDao.update(constructionPO);
+		constructionVO.setCid(constructionPO.getCid());
+
+		constructionService.updateConstructionByOrderId(constructionVO, null, userId);
 	}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public int updateAcceptanceForPlatforPm(AcceptanceVO acceptanceVO) throws FLException {
+
+		return syncAcceptanceForPlatforPm(acceptanceVO);
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int syncAcceptanceForPlatforPm(AcceptanceVO acceptanceVO) throws FLException {
 
 		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(acceptanceVO.getOrderId());
 
@@ -1067,5 +1155,107 @@ public class A20251208ServiceImpl implements A20251208Service {
 		} else {
 			constructionNodeService.updateConstructionNode(constructionNodeVO);
 		}
+	}
+
+	private ConstructionSchedulePO addConstructionSchedule(ConstructionScheduleVO constructionScheduleVO) throws FLException {
+
+		ConstructionPO constructionPO = null;
+
+		if (constructionScheduleVO.getCid() != null) {
+			constructionPO = constructionDao.queryConstructionByCid(constructionScheduleVO.getCid());
+		} else if (constructionScheduleVO.getOrderId() != null) {
+			constructionPO = constructionDao.queryConstructionByOrderId(constructionScheduleVO.getOrderId());
+		}
+
+		if (constructionPO == null) {
+			throw new FLException(120020, "工程信息不存在");
+		}
+
+		ConstructionNodePO constructionNodePO = null;
+
+		if (constructionScheduleVO.getNode() != null && constructionScheduleVO.getNode().getCnid() != null) {
+			constructionNodePO = constructionNodeDao.get(constructionScheduleVO.getNode().getCnid());
+		} else if (constructionScheduleVO.getCnid() != null) {
+			constructionNodePO = constructionNodeDao.get(constructionScheduleVO.getCnid());
+		}
+
+		if (constructionNodePO == null) {
+			throw new FLException(120034, "工程节点不存在");
+		}
+
+		ConstructionSchedulePO constructionSchedulePO = new ConstructionSchedulePO(constructionPO.getCid(), constructionPO.getDecoration().getOrderId()).init(constructionNodePO);
+
+		if (constructionSchedulePO.getPeriod() == 0) constructionSchedulePO.setPeriod(constructionNodePO.getTimeLimit());
+
+		constructionSchedulePO.setStatus(ConstructionSchedulePO.STATUS_INIT_INT);
+		constructionSchedulePO.setCheckout(ConstructionSchedulePO.CHECKOUT_VALID_INT);
+		constructionSchedulePO.setWorkStatus(ConstructionSchedulePO.WORKSTATUS_INIT_INT);
+
+		constructionScheduleDao.save(constructionSchedulePO);
+
+		return constructionSchedulePO;
+	}
+
+	private void setConstruction(ConstructionPO constructionPO, ConstructionVO constructionVO) {
+
+		if (constructionVO.getCnid() != null) constructionPO.setCnid(constructionVO.getCnid());
+		if (constructionVO.getSchedule() != null) constructionPO.setSchedule(constructionVO.getSchedule());
+		if (constructionVO.getProcess() != null) constructionPO.setProcess(constructionVO.getProcess());
+		if (constructionVO.getPeriod() != null) constructionPO.setPeriod(constructionVO.getPeriod());
+		if (constructionVO.getAccessory() != null) constructionPO.setAccessory(constructionVO.getAccessory());
+		if (constructionVO.getAccessoryTotal() != null) constructionPO.setAccessoryTotal(constructionVO.getAccessoryTotal());
+		if (constructionVO.getSalaryTotal() != null) constructionPO.setSalaryTotal(constructionVO.getSalaryTotal());
+		if (constructionVO.getCreateTime() != null) constructionPO.setCreateTime(constructionVO.getCreateTime());
+		if (constructionVO.getPreStartTime() != null) constructionPO.setPreStartTime(constructionVO.getPreStartTime());
+		if (constructionVO.getPreEndTime() != null) constructionPO.setPreEndTime(constructionVO.getPreEndTime());
+		if (constructionVO.getStartTime() != null) constructionPO.setStartTime(constructionVO.getStartTime());
+		if (constructionVO.getEndTime() != null) constructionPO.setEndTime(constructionVO.getEndTime());
+		if (constructionVO.getFinishTime() != null) constructionPO.setFinishTime(constructionVO.getFinishTime());
+		if (constructionVO.getProcessTime() != null) constructionPO.setProcessTime(constructionVO.getProcessTime());
+		if (constructionVO.getWorkStatus() != null) constructionPO.setWorkStatus(constructionVO.getWorkStatus());
+		if (constructionVO.getScheduleStatus() != null) constructionPO.setScheduleStatus(constructionVO.getScheduleStatus());
+		if (constructionVO.getBalanceStatus() != null) constructionPO.setBalanceStatus(constructionVO.getBalanceStatus());
+		if (constructionVO.getTerminalStatus() != null) constructionPO.setTerminalStatus(constructionVO.getTerminalStatus());
+	}
+
+	private void setConstructionLimit(ConstructionPO constructionPO, ConstructionVO constructionVO, DecorationPO decorationPO) {
+
+		if (constructionVO.getAccessoryLimit() != null) constructionPO.setAccessoryLimit(constructionVO.getAccessoryLimit());
+		if (constructionVO.getSalaryLimit() != null) constructionPO.setSalaryLimit(constructionVO.getSalaryLimit());
+		if (constructionVO.getSalaryLimitTotal() != null) constructionPO.setSalaryLimitTotal(constructionVO.getSalaryLimitTotal());
+
+		if (constructionVO.getAccessoryLimit() != null && constructionVO.getSalaryLimit() != null && constructionVO.getSalaryLimitTotal() != null) return;
+		if (constructionPO.getAccessoryLimit() != 0 && constructionPO.getSalaryLimit() != 0 && constructionPO.getSalaryLimitTotal() != 0) return;
+
+		ConstructionCostPO constructionCostPO = constructionCostDao.queryConstructionCost(decorationPO.getHouse().getBuildArea(), decorationPO.getCompany());
+		SystemConfigPO accessoryLimit = systemConfigDao.querySystemConfig("accessoryLimit", decorationPO.getCompany());
+		SystemConfigPO salaryLimit = systemConfigDao.querySystemConfig("salaryLimit", decorationPO.getCompany());
+		SystemConfigPO salaryLimitTotal = systemConfigDao.querySystemConfig("WORKER_SALARY_LIMIT_TOTAL_INT", decorationPO.getCompany());
+
+		if (constructionVO.getAccessoryLimit() == null && constructionPO.getAccessoryLimit() == 0) constructionPO.setAccessoryLimit(constructionCostPO == null ? (accessoryLimit == null ? ConstructionCostPO.ACCESSORY_DEFAULT_LONG : Long.valueOf(accessoryLimit.getValue())) : constructionCostPO.getAccessory());
+		if (constructionVO.getSalaryLimit() == null && constructionPO.getSalaryLimit() == 0) constructionPO.setSalaryLimit(constructionCostPO == null ? (salaryLimit == null ? ConstructionCostPO.SALARY_DEFAULT_LONG : Long.valueOf(salaryLimit.getValue())) : constructionCostPO.getSalary());
+		if (constructionVO.getSalaryLimitTotal() == null && constructionPO.getSalaryLimitTotal() == 0) constructionPO.setSalaryLimitTotal(constructionCostPO == null ? (salaryLimitTotal == null ? ConstructionCostPO.SALARY_DEFAULT_LONG : Long.valueOf(salaryLimitTotal.getValue())) : constructionCostPO.getSalary());
+	}
+
+	private void setConstructionLimit(ConstructionPO constructionPO, ConstructionVO constructionVO) {
+
+		if (constructionVO.getAccessoryLimit() != null) constructionPO.setAccessoryLimit(constructionVO.getAccessoryLimit());
+		if (constructionVO.getSalaryLimit() != null) constructionPO.setSalaryLimit(constructionVO.getSalaryLimit());
+		if (constructionVO.getSalaryLimitTotal() != null) constructionPO.setSalaryLimitTotal(constructionVO.getSalaryLimitTotal());
+	}
+
+	private void syncConstructionInfo(ConstructionPO constructionPO, DecorationPO decorationPO) {
+
+		ConstructionInfoPO constructionInfoPO = constructionInfoDao.queryConstructionInfoByOrderId(decorationPO.getOrderId());
+
+		if (constructionInfoPO == null) {
+			constructionInfoPO = new ConstructionInfoPO();
+			constructionInfoPO.setOrderId(decorationPO.getOrderId());
+		}
+
+		if (constructionInfoPO.getInitDesignTime() == null) constructionInfoPO.setInitDesignTime(decorationPO.getContractTime());
+
+		constructionInfoPO.setCid(constructionPO.getCid());
+		constructionInfoDao.saveOrUpdate(constructionInfoPO);
 	}
 }

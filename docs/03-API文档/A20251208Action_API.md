@@ -1,6 +1,6 @@
 # A20251208Action 平台项目对接接口文档
 
-> 最后更新：2026-06-30
+> 最后更新：2026-08-18
 >
 > **控制器**: `com.fanglin.seiya.action.A20251208Action`
 >
@@ -29,10 +29,11 @@
   - [6. syncConstructionScheduleForPlatforPm](#6-syncconstructionscheduleforplatforpm--同步工程环节)
   - [7. addConstructerForPlatforPm](#7-addconstructerforplatforpm--新增施工工人)
   - [8. deleteConstructerForPlatforPm](#8-deleteconstructerforplatforpm--删除施工工人)
-  - [9. beginConstructionForPlatforPm](#9-beginconstructionforplatforpm--工程开工排期)
-  - [10. syncConstructionForPlatforPm](#10-syncconstructionforplatforpm--同步工程成本限额)
-  - [11. updateAcceptanceForPlatforPm](#11-updateacceptanceforplatforpm--更新工程验收)
-  - [12. syncConstructionNodeForPlatforPm](#12-syncconstructionnodeforplatforpm--同步工程节点)
+  - [9. syncSupervisorForPlatforPm](#9-syncsupervisorforplatforpm--同步工程监理)
+  - [10. beginConstructionForPlatforPm](#10-beginconstructionforplatforpm--工程开工排期)
+  - [11. syncConstructionForPlatforPm](#11-syncconstructionforplatforpm--同步工程单)
+  - [12. updateAcceptanceForPlatforPm / syncAcceptanceForPlatforPm](#12-updateacceptanceforplatforpm--syncacceptanceforplatforpm--同步工程验收)
+  - [13. syncConstructionNodeForPlatforPm](#13-syncconstructionnodeforplatforpm--同步工程节点)
 - [四、错误码速查表](#四错误码速查表)
 - [五、变更记录](#五变更记录)
 
@@ -262,21 +263,35 @@ if (SystemConfig.getString("communion") == null) {
 
 | 参数名 | 类型 | 必填 | 说明 |
 |--------|------|:----:|------|
-| `constructionSchedule.csid` | Long | **是** | 工程环节 ID |
+| `constructionSchedule.csid` | Long | 三选一定位 | 工程环节 ID |
+| `constructionSchedule.cid` + `cnid` | Long + Long | 三选一定位 | 工程 ID + 基础节点 ID |
+| `constructionSchedule.orderId` + `cnid` | String + Long | 三选一定位 | 装修单号 + 基础节点 ID |
 | `constructionSchedule.precheck` | Integer | 否 | 开工前装修款比例阈值（‰） |
 | `constructionSchedule.postcheck` | Integer | 否 | 完工后装修款比例阈值（‰） |
 | `constructionSchedule.stacheck` | Integer | 否 | 开工前销售款比例阈值（‰） |
 | `constructionSchedule.fincheck` | Integer | 否 | 完工后销售款比例阈值（‰） |
+| `constructionSchedule.accessoryLimit` | Integer | 否 | 材料浮动额 |
+| `constructionSchedule.salaryLimit` | Integer | 否 | 工费浮动额 |
+| `constructionSchedule.accessoryTotal` | Integer | 否 | 材料限额 |
+| `constructionSchedule.salaryTotal` | Integer | 否 | 工费限额 |
+| `constructionSchedule.salaryLimitTotal` | Integer | 否 | 工费浮动总上限 |
+| `constructionSchedule.period/prenum/postnum` | Integer | 否 | 工期、前置天数、后置天数 |
+| `constructionSchedule.preStartTime/preEndTime/startTime/endTime` | Timestamp | 否 | 预计/实际开完工时间 |
+| `constructionSchedule.status/checkout/schedule/workStatus/scheduleStatus` | Short | 否 | 环节状态、款项校验、排序、施工状态、排期状态 |
 
 #### 业务逻辑
 
-按 csid 定位环节，更新 4 个比例阈值字段。仅用于平台侧维护环节的款项门槛。
+按 `csid`、`cid+cnid` 或 `orderId+cnid` 定位环节；存在则仅更新传入字段，不传的字段保持原值。不存在时按单个基础节点创建一个 `ConstructionSchedulePO`，再应用传入字段。
+
+该接口合并参考接口 `updateConstructionScheduleForScal`（款项比例）与 `updateConstructionScheduleForNorm`（材料/工费浮动额、限额）；不支持删除，也不做批量新增。
 
 #### 异常场景
 
 | 错误码 | 错误信息 | 触发条件 |
 |:------:|---------|:---------|
-| 120024 | 工程环节不存在 | csid 查不到 |
+| 120020 | 工程信息不存在 | 新增环节时工程查不到 |
+| 120034 | 工程节点不存在 | 新增环节时基础节点查不到 |
+| 120035 | 工费浮动已达上限 | 传入 `salaryLimit` 超过当前工费浮动额 + 工费浮动总上限 |
 
 ---
 
@@ -321,8 +336,6 @@ if (SystemConfig.getString("communion") == null) {
 **方法位置**: `A20251208Action.java:129-135`
 **Service**: `deleteConstructerForPlatforPm`
 
-> 注意：源码 `ServiceImpl:849` 的判断 `constructerVO.getUser() == null && constructerVO.getUser().getUserId() == null` 存在 **空指针风险**（`&&` 左边为 true 时右边必 NPE），实际语义应为按 `crid` 定位；调用方建议**始终传 `crid`** 走分支一。
-
 #### 请求参数
 
 | 参数名 | 类型 | 必填 | 说明 |
@@ -347,10 +360,40 @@ if (SystemConfig.getString("communion") == null) {
 
 ---
 
-### 9. beginConstructionForPlatforPm — 工程开工排期
+### 9. syncSupervisorForPlatforPm — 同步工程监理
+
+**路径**: `/syncSupervisorForPlatforPm`
+**方法位置**: `A20251208Action.java:137-143`
+**Service**: `syncSupervisorForPlatforPm`
+
+#### 请求参数
+
+| 参数名 | 类型 | 必填 | 说明 |
+|--------|------|:----:|------|
+| `construction.orderId` | String | **是** | 装修单号 |
+| `construction.supervisor.userId` | String | 否 | 监理工号；为空时仅确保工程单存在，不变更监理 |
+| `construction` 其他字段 | - | 否 | 同 `syncConstructionForPlatforPm`，用于同步时补写工程字段 |
+
+#### 业务逻辑
+
+1. 先调用 `syncConstructionForPlatforPm`，保证工程单存在。
+2. `supervisor.userId` 为空时直接返回，不做监理变更。
+3. 校验监理工号存在后，复用 `ConstructionService.updateConstructionByOrderId` 的监理变更逻辑：更新 `construction.supervisor`、`decoration.supervisor`，写施工记录、下发监理变更消息，并按参考逻辑处理服务/销售协作人。
+
+#### 异常场景
+
+| 错误码 | 错误信息 | 触发条件 |
+|:------:|---------|:---------|
+| 140013 | 装修单不存在 | decorationPO 查不到 |
+| 120020 | 工程信息不存在 | 参考监理变更逻辑要求的工程/工程信息查不到 |
+| 220005 | 员工不存在 | 监理工号查不到 |
+
+---
+
+### 10. beginConstructionForPlatforPm — 工程开工排期
 
 **路径**: `/beginConstructionForPlatforPm`
-**方法位置**: `A20251208Action.java:137-143`
+**方法位置**: `A20251208Action.java:145-151`
 **Service**: `beginConstructionForPlatforPm`（**唯一使用 `queryCompany()` 的接口**）
 
 #### 请求参数
@@ -377,10 +420,10 @@ if (SystemConfig.getString("communion") == null) {
 
 ---
 
-### 10. syncConstructionForPlatforPm — 同步工程成本限额
+### 11. syncConstructionForPlatforPm — 同步工程单
 
 **路径**: `/syncConstructionForPlatforPm`
-**方法位置**: `A20251208Action.java:145-151`
+**方法位置**: `A20251208Action.java:153-159`
 **Service**: `syncConstructionForPlatforPm`
 
 #### 请求参数
@@ -388,28 +431,31 @@ if (SystemConfig.getString("communion") == null) {
 | 参数名 | 类型 | 必填 | 说明 |
 |--------|------|:----:|------|
 | `construction.orderId` | String | **是** | 装修单号 |
+| `construction.cid/cnid/schedule/process/period/accessory` | - | 否 | 工程主信息字段，传入则更新 |
+| `construction.accessoryLimit/salaryLimit/salaryLimitTotal` | Long | 否 | 材料额、工费额、工费总额上限；传入则更新 |
+| `construction.accessoryTotal/salaryTotal` | Long | 否 | 材料/工费已用或统计额；传入则更新 |
+| `construction.preStartTime/preEndTime/startTime/endTime/finishTime/processTime` | Timestamp | 否 | 工程时间字段，传入则更新 |
+| `construction.workStatus/scheduleStatus/balanceStatus/terminalStatus` | Short | 否 | 工程状态快照字段，传入则更新 |
 
 #### 业务逻辑
 
-1. 按 orderId 查 `decorationPO`（否则 `140013`）与 `constructionPO`（否则 `120020`）。
-2. 按 `house.buildArea` + 公司查 `ConstructionCostPO`（成本阶梯表）：
-   - **命中**：用成本表的 `accessory / salary` 设置工程的辅材限额、工费限额、工费总限额。
-   - **未命中**：回退到 `config.accessoryLimit` / `config.salaryLimit` / `config.WORKER_SALARY_LIMIT_TOTAL_INT`（均有默认值）。
+1. 按 `orderId` 校验装修单存在，否则 `140013`。
+2. 工程单不存在时创建 `ConstructionPO`，写入创建/开工时间、装修单默认监理，按房屋面积参考 `ConstructionCostPO` 或系统配置补默认材料/工费限额，并补齐 `ConstructionInfoPO.cid`。
+3. 工程单已存在时只更新外部传入字段，不传的字段保持原值。
 
 #### 异常场景
 
 | 错误码 | 错误信息 | 触发条件 |
 |:------:|---------|:---------|
-| 140013 | 订单不存在 | decorationPO 查不到 |
-| 120020 | 工程信息不存在 | constructionPO 查不到 |
+| 140013 | 装修单不存在 | decorationPO 查不到 |
 
 ---
 
-### 11. updateAcceptanceForPlatforPm — 更新工程验收
+### 12. updateAcceptanceForPlatforPm / syncAcceptanceForPlatforPm — 同步工程验收
 
-**路径**: `/updateAcceptanceForPlatforPm`
-**方法位置**: `A20251208Action.java:153-159`
-**Service**: `updateAcceptanceForPlatforPm`
+**路径**: `/syncAcceptanceForPlatforPm`（推荐） / `/updateAcceptanceForPlatforPm`（兼容旧入口）
+**方法位置**: `A20251208Action.java:169-175` / `A20251208Action.java:161-167`
+**Service**: `syncAcceptanceForPlatforPm`；旧 `updateAcceptanceForPlatforPm` 委托到该方法
 
 #### 请求参数
 
@@ -421,40 +467,42 @@ if (SystemConfig.getString("communion") == null) {
 #### 业务逻辑
 
 1. 校验装修单存在。
-2. **款项校验**：`paySacle < config.CONSTRUCTION_ACCEPTANCE_LIMIT_INT`（缺省 80）→ `120018`。
-3. 按 orderId 查 `AcceptancePO`：不存在则新建（`acceptanceTime = now`）。
-4. 拷贝 VO → PO，`saveOrUpdate`。
-5. 推进装修单 `projectStatus = FINISH`；推进工程 `endTime`/`finishTime`，`process` 若为 INIT 则置 FINISH。
+2. 款项校验：`paySacle < config.CONSTRUCTION_ACCEPTANCE_LIMIT_INT`（缺省 80）→ `120018`。
+3. 按 `orderId` 查 `AcceptancePO`：不存在则新建，存在则更新；`acceptanceTime` 为空时补当前时间。
+4. 拷贝 VO 到 PO 后 `saveOrUpdate`。
+5. 参考 `AcceptanceService.updateAcceptance` 推进装修单 `projectStatus = FINISH`，推进工程 `endTime/finishTime/process`。
+6. 当前同步入口暂不直接创建事件 `messagequeuing/messagecueuing` 数据。
 
 #### 异常场景
 
 | 错误码 | 错误信息 | 触发条件 |
 |:------:|---------|:---------|
-| 140013 | 订单不存在 | decorationPO 查不到 |
+| 140013 | 装修单不存在 | decorationPO 查不到 |
 | 120018 | 装修款比例不足 | `paySacle < acceptanceLimit` |
 | 120020 | 工程信息不存在 | constructionPO 查不到 |
 
 ---
 
-### 12. syncConstructionNodeForPlatforPm — 同步工程节点
+### 13. syncConstructionNodeForPlatforPm — 同步工程节点
 
 **路径**: `/syncConstructionNodeForPlatforPm`
-**方法位置**: `A20251208Action.java:161-167`
+**方法位置**: `A20251208Action.java:177-183`
 **Service**: `syncConstructionNodeForPlatforPm`
 
 #### 请求参数
 
 | 参数名 | 类型 | 必填 | 说明 |
 |--------|------|:----:|------|
-| `constructionNode.cnid` | Integer | 否 | 节点 ID（空则新增，有则更新） |
-| `constructionNode` 其他字段 | - | 是 | 节点信息（name/sort/timeLimit/process/mark 等） |
+| `constructionNode.cnid` | Long | 否 | 节点 ID；为空或查不到时新增，有则更新 |
+| `constructionNode` 其他字段 | - | 是 | 节点信息（name/sort/timeLimit/process/mark/account、比例和限额等） |
 
 #### 业务逻辑
 
-- `cnid` 为空或查不到 → 调 `constructionNodeService.addConstructionNode`（新增）。
-- 否则 → 调 `constructionNodeService.updateConstructionNode`（更新）。
+- `cnid` 为空或查不到 → 调 `constructionNodeService.addConstructionNode` 新增。
+- 否则 → 调 `constructionNodeService.updateConstructionNode` 更新。
+- 不调用 `updateConstructionNodeForStatus`，基础节点禁用不在本次同步范围内。
 
-> 节点的具体字段与校验逻辑详见 `ConstructionNodeService`，本接口仅做转发。
+> 节点的具体字段与校验逻辑详见 `ConstructionNodeService`，本接口仅做新增/编辑转发。
 
 ---
 
