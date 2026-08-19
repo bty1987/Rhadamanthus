@@ -520,7 +520,7 @@ var decorationUtils = {
 
             var $liLine = $('<li></li>').addClass('item-orange clearfix');
 
-            var $h4 = $('<h4></h4>').addClass('oid blue').append($('<b></b>').html("总金额:" + utils.changeThrDecimal($total + $oalesTotal)));
+            var $h4 = $('<h4></h4>').addClass('oid blue').append($('<b></b>').html("总金额:" + utils.changeThrDecimal($total + $oalesScaleTotal)));
             var $salesTotalH4 = $('<h4></h4>').addClass('oid blue').append($('<b></b>').html("场内总额:" + $total));
             var $couponPrice = $('<h4></h4>').addClass('oid blue').append($('<b></b>').html("优惠券:" + $coupon));
             var $TotalNetReceiptsTotalPrice = $('<h4></h4>').addClass('oid blue').append($('<b></b>').html("场内实收总额:" + $totalSalesAndMaterial));
