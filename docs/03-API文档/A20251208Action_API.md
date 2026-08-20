@@ -1,6 +1,6 @@
 # A20251208Action 平台项目对接接口文档
 
-> 最后更新：2026-08-18
+> 最后更新：2026-08-20
 >
 > **控制器**: `com.fanglin.seiya.action.A20251208Action`
 >
@@ -76,13 +76,53 @@ if (SystemConfig.getString("communion") == null) {
 
 #### 请求参数
 
+**`userInfo.user.*`（用户主体，UserVO）**
+
 | 参数名 | 类型 | 必填 | 说明 |
 |--------|------|:----:|------|
-| `userInfo` | UserInfoVO | **是** | 人员信息载体（含 user、gender、fangliner 等） |
-| `userInfo.user` | UserVO | **是** | 用户主体（userId / phone / identity / loginId / dept.did / duty.did / currentName / operateTime / status） |
+| `userInfo.user.userId` | String | 更新必填 | 工号；按此查 `UserInfoPO` 分流新增/更新。新增时系统自动生成工号（`FL-`/`{简称}U-`+5位流水）并回填返回，传入值不生效 |
+| `userInfo.user.loginId` | String | 新增必填 | 登录名；新增时查重（重复抛 `190013`）并写入 `user.loginId`；更新时忽略不修改 |
+| `userInfo.user.userName` | String | 否 | 员工姓名（旧字段，建议传 `currentName`） |
+| `userInfo.user.currentName` | String | 新增必填 | 当前姓名；用于生成拼音、员工经历记录 |
+| `userInfo.user.phone` | String | 建议 | 联系电话；新增时与 `identity` 联合查重（命中则回填 uid 直接返回，不报错） |
+| `userInfo.user.identity` | String | 建议 | 身份证号；查重用途同上 |
 | `userInfo.user.dept.did` | Integer | **是** | 目标部门 ID（必须存在且有父分区） |
 | `userInfo.user.duty.did` | Integer | **是** | 目标职位 ID |
-| `userInfo.fangliner.userId` | String | 否 | 介绍人工号（传则关联） |
+| `userInfo.user.status` | Short | 更新建议 | 在职状态：`0`=在职（开启 extranet），`1`=离职（关登录、清角色/公司关联）；与部门/职位任一变更即写员工经历 |
+| `userInfo.user.operateTime` | Timestamp | 否 | 业务发生时间（落 `userExperience.operateTime`）；缺省取当前时间 |
+| `userInfo.user.gender` | String | 否 | 性别（旧字段；新增时会被 `userInfo.gender` 推导值覆盖：0=女，其他=男） |
+| `userInfo.user.isPrefor` | Short | 否 | 是否正式调转（该接口不消费，仅 `tranUserForPlatforPm` 使用） |
+| `userInfo.user` 其余字段 | - | 否 | `oldUserId/pinYin/userPhoto/identityPathF/identityPathB/dutyName/companys` 等经 `BeanUtil.copyProperties` 原样拷贝；`role/dept/duty/uid/userId/loginId/password/isLogin/company/extranet` 由服务端控制，传入无效 |
+
+**`userInfo.*`（扩展信息，UserInfoVO，经 BeanUtil 拷入 UserInfoPO，排除 `user`/`fangliner`）**
+
+| 参数名 | 类型 | 必填 | 说明 |
+|--------|------|:----:|------|
+| `userInfo.gender` | Integer | 否 | 性别：`0`=女，非 0=男（新增分支写 `user.gender`） |
+| `userInfo.level` | Short | 否 | 级别 |
+| `userInfo.political` | Short | 否 | 政治面貌 |
+| `userInfo.nation` | String | 否 | 民族 |
+| `userInfo.hobby` | String | 否 | 爱好 |
+| `userInfo.qq` | String | 否 | QQ |
+| `userInfo.wechat` | String | 否 | 微信 |
+| `userInfo.email` | String | 否 | 邮箱 |
+| `userInfo.isMarried` | Short | 否 | 婚姻状况 |
+| `userInfo.isBirth` | Short | 否 | 生育状况 |
+| `userInfo.isHouseLoan` | Short | 否 | 房贷 |
+| `userInfo.isCarLoan` | Short | 否 | 车贷 |
+| `userInfo.isCarID` / `isPassID` / `isHMID` / `isTWID` | Short | 否 | 证件持有标记（驾照/护照/港澳/台湾） |
+| `userInfo.householdType` | Integer | 否 | 户口类型 |
+| `userInfo.hometownAddress` | String | 否 | 籍贯地址 |
+| `userInfo.address` | String | 否 | 现住址 |
+| `userInfo.lover` | String | 否 | 配偶 |
+| `userInfo.claner` / `clanerCom` | String | 否 | 家属/家属单位 |
+| `userInfo.emergencyMan` / `emergencyPhone` | String | 否 | 紧急联系人/电话 |
+| `userInfo.employWay` | Short | 否 | 用工方式 |
+| `userInfo.employType` | Short | 否 | 用工类型 |
+| `userInfo.jobYears` | Integer | 否 | 工龄 |
+| `userInfo.recommendMan` | String | 否 | 推荐人 |
+| `userInfo.fangliner.userId` | String | 否 | 介绍人工号（传则关联 `UserInfoPO.fangliner`） |
+| `userInfo` 时间字段 | String/Timestamp | 否 | `firstTime/entryTime/boardTime/hireTime/fireTime/tranTime` 可传；新增时 `hireTime` 强制取当前时间 |
 
 #### 业务逻辑
 
@@ -129,7 +169,10 @@ if (SystemConfig.getString("communion") == null) {
 | 参数名 | 类型 | 必填 | 说明 |
 |--------|------|:----:|------|
 | `approve` | String | **是** | 审批结果，必须等于 `"agree"` 才执行 |
-| `user` | UserVO | **是** | `user.userId`（目标人员工号）、`user.dept.did`（新部门）、`user.isPrefor`、`user.operateTime` |
+| `user.userId` | String | **是** | 目标人员工号 |
+| `user.dept.did` | Integer | 否 | 新部门 ID；传入才变更部门（校验存在+有父分区），不传仅记录调职经历 |
+| `user.isPrefor` | Short | 否 | 是否正式调转（落 `userExperience.isPrefor`） |
+| `user.operateTime` | Timestamp | 否 | 业务发生时间（落 `userExperience.operateTime`）；缺省取当前时间 |
 
 #### 业务逻辑
 
@@ -266,6 +309,7 @@ if (SystemConfig.getString("communion") == null) {
 | `constructionSchedule.csid` | Long | 三选一定位 | 工程环节 ID |
 | `constructionSchedule.cid` + `cnid` | Long + Long | 三选一定位 | 工程 ID + 基础节点 ID |
 | `constructionSchedule.orderId` + `cnid` | String + Long | 三选一定位 | 装修单号 + 基础节点 ID |
+| `constructionSchedule.node.cnid` | Long | cnid 缺省时备用 | 基础节点 ID；顶层 `cnid` 为空时取此值参与定位 |
 | `constructionSchedule.precheck` | Integer | 否 | 开工前装修款比例阈值（‰） |
 | `constructionSchedule.postcheck` | Integer | 否 | 完工后装修款比例阈值（‰） |
 | `constructionSchedule.stacheck` | Integer | 否 | 开工前销售款比例阈值（‰） |
@@ -326,7 +370,7 @@ if (SystemConfig.getString("communion") == null) {
 | 120024 | 工程环节不存在 | 环节查不到 |
 | 120026 | 工程环节未开工 | 环节状态为 INIT |
 | 220005 | 员工不存在 | 工人工号查不到 |
-| 120001 | 当前工人已经添加,不能重复添加同一工人 | 重复添加 |
+| 120001 | 工人已添加,不可重复添加 | 重复添加 |
 
 ---
 
@@ -370,9 +414,31 @@ if (SystemConfig.getString("communion") == null) {
 
 | 参数名 | 类型 | 必填 | 说明 |
 |--------|------|:----:|------|
-| `construction.orderId` | String | **是** | 装修单号 |
-| `construction.supervisor.userId` | String | 否 | 监理工号；为空时仅确保工程单存在，不变更监理 |
-| `construction` 其他字段 | - | 否 | 同 `syncConstructionForPlatforPm`，用于同步时补写工程字段 |
+| `construction.orderId` | String | **是** | 装修单号（内部先执行 `syncConstructionForPlatforPm` 保证工程单存在） |
+| `construction.supervisor.userId` | String | 否 | 监理工号；为空时仅同步工程单，不变更监理 |
+| `construction.cnid` | Long | 否 | 当前节点 ID（传入则更新） |
+| `construction.schedule` | Integer | 否 | 当前节点排序（传入则更新） |
+| `construction.process` | Short | 否 | 工程进度：`0`=在施，`1`=完工（传入则更新） |
+| `construction.period` | Integer | 否 | 工期（天，传入则更新） |
+| `construction.accessory` | Short | 否 | 材料开关（传入则更新） |
+| `construction.accessoryLimit` | Long | 否 | 材料限额（传入则更新） |
+| `construction.accessoryTotal` | Long | 否 | 材料额（传入则更新） |
+| `construction.salaryLimit` | Long | 否 | 工费限额（传入则更新） |
+| `construction.salaryLimitTotal` | Long | 否 | 工费总上限（传入则更新） |
+| `construction.salaryTotal` | Long | 否 | 工费额（传入则更新） |
+| `construction.createTime` | Timestamp | 否 | 创建时间（传入则更新） |
+| `construction.preStartTime` | Timestamp | 否 | 预计开工时间（传入则更新） |
+| `construction.preEndTime` | Timestamp | 否 | 预计完工时间（传入则更新） |
+| `construction.startTime` | Timestamp | 否 | 开工时间（传入则更新；新建工程单时作开工时间） |
+| `construction.endTime` | Timestamp | 否 | 完工时间（传入则更新） |
+| `construction.finishTime` | Timestamp | 否 | 竣工时间（传入则更新） |
+| `construction.processTime` | Timestamp | 否 | 进度变更时间（传入则更新） |
+| `construction.workStatus` | Short | 否 | 施工状态（传入则更新） |
+| `construction.scheduleStatus` | Short | 否 | 排期状态（传入则更新） |
+| `construction.balanceStatus` | Short | 否 | 结算状态（传入则更新） |
+| `construction.terminalStatus` | Short | 否 | 终结状态（传入则更新） |
+
+> 监理变更时 `construction.cid` 由服务端回填，调用方无需传。
 
 #### 业务逻辑
 
@@ -431,11 +497,30 @@ if (SystemConfig.getString("communion") == null) {
 | 参数名 | 类型 | 必填 | 说明 |
 |--------|------|:----:|------|
 | `construction.orderId` | String | **是** | 装修单号 |
-| `construction.cid/cnid/schedule/process/period/accessory` | - | 否 | 工程主信息字段，传入则更新 |
-| `construction.accessoryLimit/salaryLimit/salaryLimitTotal` | Long | 否 | 材料额、工费额、工费总额上限；传入则更新 |
-| `construction.accessoryTotal/salaryTotal` | Long | 否 | 材料/工费已用或统计额；传入则更新 |
-| `construction.preStartTime/preEndTime/startTime/endTime/finishTime/processTime` | Timestamp | 否 | 工程时间字段，传入则更新 |
-| `construction.workStatus/scheduleStatus/balanceStatus/terminalStatus` | Short | 否 | 工程状态快照字段，传入则更新 |
+| `construction.cnid` | Long | 否 | 当前节点 ID（传入则更新） |
+| `construction.schedule` | Integer | 否 | 当前节点排序（传入则更新） |
+| `construction.process` | Short | 否 | 工程进度：`0`=在施，`1`=完工（传入则更新） |
+| `construction.period` | Integer | 否 | 工期（天，传入则更新） |
+| `construction.accessory` | Short | 否 | 材料开关（传入则更新） |
+| `construction.accessoryLimit` | Long | 否 | 材料限额（传入则更新；新建时未传则按房屋面积查 `ConstructionCostPO` 或系统配置 `accessoryLimit` 补默认值） |
+| `construction.accessoryTotal` | Long | 否 | 材料额（传入则更新） |
+| `construction.salaryLimit` | Long | 否 | 工费限额（传入则更新；新建时未传则按 `salaryLimit` 配置/`ConstructionCostPO` 补默认值） |
+| `construction.salaryLimitTotal` | Long | 否 | 工费总上限（传入则更新；新建时未传则按 `WORKER_SALARY_LIMIT_TOTAL_INT` 配置补默认值） |
+| `construction.salaryTotal` | Long | 否 | 工费额（传入则更新） |
+| `construction.createTime` | Timestamp | 否 | 创建时间（传入则更新；新建时缺省 now） |
+| `construction.preStartTime` | Timestamp | 否 | 预计开工时间（传入则更新） |
+| `construction.preEndTime` | Timestamp | 否 | 预计完工时间（传入则更新） |
+| `construction.startTime` | Timestamp | 否 | 开工时间（传入则更新；新建时缺省 now） |
+| `construction.endTime` | Timestamp | 否 | 完工时间（传入则更新） |
+| `construction.finishTime` | Timestamp | 否 | 竣工时间（传入则更新） |
+| `construction.processTime` | Timestamp | 否 | 进度变更时间（传入则更新） |
+| `construction.workStatus` | Short | 否 | 施工状态（传入则更新） |
+| `construction.scheduleStatus` | Short | 否 | 排期状态（传入则更新） |
+| `construction.balanceStatus` | Short | 否 | 结算状态（传入则更新） |
+| `construction.terminalStatus` | Short | 否 | 终结状态（传入则更新） |
+| `construction.supervisor` | UserBaseVO | 否 | 该接口**不消费**（仅 `syncSupervisorForPlatforPm` 使用）；新建时监理取装修单默认监理 |
+
+> 响应回填：`construction.cid`（工程 ID）。
 
 #### 业务逻辑
 
@@ -459,10 +544,50 @@ if (SystemConfig.getString("communion") == null) {
 
 #### 请求参数
 
+> 定位与时间由服务端控制：按 `orderId` 查 `AcceptancePO` 定位，`acceptanceTime` 为空时自动补当前日期（格式 `yyyy-MM-dd`）。
+
 | 参数名 | 类型 | 必填 | 说明 |
 |--------|------|:----:|------|
 | `acceptance.orderId` | String | **是** | 装修单号 |
-| `acceptance` 其他字段 | - | 否 | 验收信息（`BeanUtil.copyProperties` 整体覆盖） |
+| `acceptance.acceptanceTime` | String | 否 | 验收时间（`yyyy-MM-dd`；不传自动补当前日期） |
+| `acceptance.customer` | String | 否 | 客户姓名 |
+| `acceptance.orderAddr` | String | 否 | 工程地址 |
+| `acceptance.designer` | String | 否 | 设计师 |
+| `acceptance.contractCode` | String | 否 | 合同编号 |
+| `acceptance.waterwayQuality` | Integer | 否 | 水路-工程质量评分 |
+| `acceptance.waterwayServer` | Integer | 否 | 水路-服务评分 |
+| `acceptance.waterwayHygiene` | Integer | 否 | 水路-卫生评分 |
+| `acceptance.waterwayDes` | String | 否 | 水路-评语 |
+| `acceptance.circuitQuality` | Integer | 否 | 电路-工程质量评分 |
+| `acceptance.circuitServer` | Integer | 否 | 电路-服务评分 |
+| `acceptance.circuitHygiene` | Integer | 否 | 电路-卫生评分 |
+| `acceptance.circuitDes` | String | 否 | 电路-评语 |
+| `acceptance.bricklayQuality` | Integer | 否 | 瓦工-工程质量评分 |
+| `acceptance.bricklayServer` | Integer | 否 | 瓦工-服务评分 |
+| `acceptance.bricklayHygiene` | Integer | 否 | 瓦工-卫生评分 |
+| `acceptance.bricklayDes` | String | 否 | 瓦工-评语 |
+| `acceptance.carpentQuality` | Integer | 否 | 木工-工程质量评分 |
+| `acceptance.carpentServer` | Integer | 否 | 木工-服务评分 |
+| `acceptance.carpentHygiene` | Integer | 否 | 木工-卫生评分 |
+| `acceptance.carpentDes` | String | 否 | 木工-评语 |
+| `acceptance.oilQuality` | Integer | 否 | 油工-工程质量评分 |
+| `acceptance.oilServer` | Integer | 否 | 油工-服务评分 |
+| `acceptance.oilHygiene` | Integer | 否 | 油工-卫生评分 |
+| `acceptance.oilDes` | String | 否 | 油工-评语 |
+| `acceptance.supervisId` | String | 否 | 监理工号 |
+| `acceptance.supervisName` | String | 否 | 监理姓名 |
+| `acceptance.supervisQuality` | Integer | 否 | 监理-质量评分 |
+| `acceptance.supervisServer` | Integer | 否 | 监理-服务评分 |
+| `acceptance.supervisHygiene` | Integer | 否 | 监理-卫生评分 |
+| `acceptance.supervisDes` | String | 否 | 监理-评语 |
+| `acceptance.materialQuality` | Integer | 否 | 材料-质量评分 |
+| `acceptance.materialServer` | Integer | 否 | 材料-服务评分 |
+| `acceptance.materialDes` | String | 否 | 材料-评语 |
+| `acceptance.question` | String | 否 | 存在问题 |
+| `acceptance.propose` | String | 否 | 整改建议 |
+| `acceptance.multiple` | Integer | 否 | 综合评定 |
+| `acceptance.Integerernal` | Integer | 否 | 内部评定 |
+| `acceptance.actId` | Integer | 否 | 验收记录 ID（不用于定位，传不传无效果） |
 
 #### 业务逻辑
 
@@ -491,18 +616,37 @@ if (SystemConfig.getString("communion") == null) {
 
 #### 请求参数
 
-| 参数名 | 类型 | 必填 | 说明 |
-|--------|------|:----:|------|
-| `constructionNode.cnid` | Long | 否 | 节点 ID；为空或查不到时新增，有则更新 |
-| `constructionNode` 其他字段 | - | 是 | 节点信息（name/sort/timeLimit/process/mark/account、比例和限额等） |
+> 同一动作字段在新增/更新两个分支的消费范围不同（新增走 `addConstructionNode`，更新走 `updateConstructionNode`），下表"分支"列标注：**A**=仅新增消费，**U**=仅更新消费，A/U=两者均消费。
+
+| 参数名 | 类型 | 分支 | 必填 | 说明 |
+|--------|------|:----:|:----:|------|
+| `constructionNode.cnid` | Long | - | 否 | 节点 ID；为空或查不到时走新增，否则走更新 |
+| `constructionNode.name` | String | A | 新增必填 | 节点名称（更新分支不修改名称） |
+| `constructionNode.precheck` | Integer | U | 否 | 开工前装修款比例阈值（‰）；新增时强制 0 |
+| `constructionNode.postcheck` | Integer | U | 否 | 完工后装修款比例阈值（‰）；新增时强制 0 |
+| `constructionNode.stacheck` | Integer | U | 否 | 开工前销售款比例阈值（‰）；新增时强制 0 |
+| `constructionNode.fincheck` | Integer | U | 否 | 完工后销售款比例阈值（‰）；新增时强制 0 |
+| `constructionNode.timeLimit` | Integer | U | 否 | 工期（天）；新增时强制 0 |
+| `constructionNode.startalk` | String | A/U | 否 | 进场播报文案 |
+| `constructionNode.endtalk` | String | A/U | 否 | 完工播报文案 |
+| `constructionNode.kino` | String | A/U | 否 | 关联业务编码 |
+| `constructionNode.kiname` | String | A/U | 否 | 关联业务名称 |
+| `constructionNode.mark` | Short | A/U | 否 | 节点标记：`1`=开工节点（MARK_START），`2`=竣工节点（MARK_FINISH） |
+| `constructionNode.account` | Short | A/U | 否 | 记账标记：`0`=不记账（缺省），`1`=记账 |
+| `constructionNode.accessoryLimit` | Integer | A/U | 否 | 节点级材料限额 |
+| `constructionNode.salaryLimit` | Integer | A/U | 否 | 节点级工费限额 |
+| `constructionNode.process` | Short | A/U | 否 | 所属进程组 |
+| `constructionNode.proset` | Short | A/U | 否 | 进程集合 |
+| `constructionNode.startSurvey.stid` | Integer | U | 否 | 开工问卷模板 ID（更新时传入则绑定，否则置空） |
+| `constructionNode.endSurvey.stid` | Integer | U | 否 | 完工问卷模板 ID（更新时传入则绑定，否则置空） |
+| `constructionNode.sort` | Short | - | - | 排序；**两个分支均不消费**（历史字段，传入无效） |
+| `constructionNode.checkout` / `status` / `company` | - | - | - | 该接口不消费 |
 
 #### 业务逻辑
 
-- `cnid` 为空或查不到 → 调 `constructionNodeService.addConstructionNode` 新增。
-- 否则 → 调 `constructionNodeService.updateConstructionNode` 更新。
+- `cnid` 为空或查不到 → 调 `constructionNodeService.addConstructionNode` 新增（比例阈值/工期强制 0，写 `NODE_CREATED` 消息队列事件）。
+- 否则 → 调 `constructionNodeService.updateConstructionNode` 更新（注意：`name` 与 `sort` 不会被更新；两个问卷字段传 `stid` 才绑定、不传会被置空），写 `NODE_UPDATED` 消息队列事件。
 - 不调用 `updateConstructionNodeForStatus`，基础节点禁用不在本次同步范围内。
-
-> 节点的具体字段与校验逻辑详见 `ConstructionNodeService`，本接口仅做新增/编辑转发。
 
 ---
 
@@ -547,3 +691,13 @@ if (SystemConfig.getString("communion") == null) {
 - 初始版本：基于 `A20251208Action.java` + `A20251208ServiceImpl.java` 输出完整 12 个接口文档
 - 覆盖人员管理（3 个）+ 施工管理（9 个）两大类
 - 标注已知问题：`deleteConstructerForPlatforPm` 中 `ServiceImpl:849` 的条件判断存在空指针风险，建议调用方优先传 `crid`
+
+### 2026-08-20
+- 参数全量化：消除所有"参考其他接口"式参数描述，逐一展开为完整字段表
+  - `saveOrUpdateUserForPlatforPm`：展开 `userInfo.user.*`（UserVO）与 `userInfo.*`（UserInfoVO）全字段，标注 BeanUtil 拷贝排除项与服务端控制项
+  - `tranUserForPlatforPm`：`user.*` 字段逐行列出
+  - `syncSupervisorForPlatforPm` / `syncConstructionForPlatforPm`：`construction.*` 全字段逐行列出（两者消费范围差异已标注）
+  - `syncAcceptanceForPlatforPm`：`acceptance.*`（AcceptanceVO）38 个字段全量列出（水路/电路/瓦工/木工/油工/监理/材料七组评分）
+  - `syncConstructionNodeForPlatforPm`：`constructionNode.*` 全字段，按新增/更新分支标注消费范围（新增不消费比例阈值与工期，更新不改 name/sort，问卷不传置空）
+- 补充 `syncConstructionScheduleForPlatforPm` 的 `node.cnid` 备用定位方式
+- 修正 120001 错误消息与 error.md 一致（"工人已添加,不可重复添加"）
