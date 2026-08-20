@@ -16,22 +16,17 @@ import com.fanglin.report.vo.MetricPointVO;
 
 /**
  * 仓储物流指标汇总 DAO 实现。
- *
- * <p>{@link #rebuild()} 跨库只读聚合 inventory.manifest，按 manifestTime 归月。
- * 出入库方向映射（基于 ManifestPO 常量）：
+ * 
+ * <p>
+ * {@link #rebuild()} 跨库只读聚合 inventory.manifest，按 manifestTime 归月。 出入库方向映射（基于 ManifestPO 常量）：
  * <ul>
- *   <li>入库(direction=0)：1进货CG / 4出返XB / 6采购PU / 8辅退AR / 11盘盈CP / 5调拨DB / 9套合PM</li>
- *   <li>出库(direction=1)：2进退CR / 3出货XG / 7辅料AS / 12盘亏CL / 5调拨DB / 9套合PM</li>
+ * <li>入库(direction=0)：1进货CG / 4出返XB / 6采购PU / 8辅退AR / 11盘盈CP / 5调拨DB / 9套合PM</li>
+ * <li>出库(direction=1)：2进退CR / 3出货XG / 7辅料AS / 12盘亏CL / 5调拨DB / 9套合PM</li>
  * </ul>
  * 调拨(DB)与套合(PM)既入库又出库，归"双向"用 direction=2 标记。
  */
 @Repository("inventoryMetricDao")
 public class InventoryMetricDaoImpl extends DaoImpl<InventoryMonthlyMetricPO> implements InventoryMetricDao {
-
-	// 出入库方向：入库类 type
-	private static final String IN_TYPES = "1,4,6,8,11";
-	// 出库类 type
-	private static final String OUT_TYPES = "2,3,7,12";
 
 	public InventoryMetricDaoImpl() {
 		super(InventoryMonthlyMetricPO.class);
@@ -161,7 +156,6 @@ public class InventoryMetricDaoImpl extends DaoImpl<InventoryMonthlyMetricPO> im
 		return sb.toString();
 	}
 
-	@SuppressWarnings("unchecked")
 	private List<MetricPointVO> toPoints(List<Object[]> rows) {
 		List<MetricPointVO> result = new ArrayList<MetricPointVO>();
 		for (Object[] row : rows) {

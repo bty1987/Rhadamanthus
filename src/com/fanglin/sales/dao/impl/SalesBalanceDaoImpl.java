@@ -79,7 +79,7 @@ public class SalesBalanceDaoImpl extends DaoImpl<SalesBalancePO> implements Sale
 
 		PagingQuery<SalesBalancePO> query = pagingQuery(paging, SalesBalancePO.class);
 
-		query.alias("sales", "sales").add(Restrictions.or(query.alias("sales.supplier", "supplier").getCriterion("supplier.uid", uid, "eq"), query.alias("sales.brand", "brand").getCriterion("brand.supplier.uid", uid, "eq")));
+		query.alias("sales", "sales").add(Restrictions.or(query.alias("brand", "brand").getCriterion("brand.supplier.uid", uid, "eq"), Restrictions.or(query.alias("sales.supplier", "supplier").getCriterion("supplier.uid", uid, "eq"), query.alias("sales.brand", "salesbrand").getCriterion("salesbrand.supplier.uid", uid, "eq"))));
 
 		queryFilterExcute(query, filters);
 
