@@ -142,18 +142,18 @@ jQuery(function() {
         var goods = sales.leftitems.goods.val();
         var goodsNo = sales.leftitems.goodsNo.val();
 
-        var $purchase = price.purchase;
         var $confine = price.confine;
 
         var $selling = sales.leftitems.selling.val(); // 折让价
         var $disPrice = sales.leftitems.disPrice.val(); // 折扣价
+        var $purchase = getControlPrice(price);
         var $discount = sales.leftitems.discount.val(); // 折扣
         var $num = sales.leftitems.num.val();
         var $total = sales.leftitems.total.val();
 
         var $otherStatus = $selling != $disPrice ? 1 : 0;
 
-        if (price.ctype == 0 && $disPrice < price.purchase) {
+        if (price.ctype == 0 && parseFloat($disPrice) < parseFloat($purchase)) {
             com.showAlert(com.warning, "折扣价低于控价");
             return false;
         }
@@ -391,6 +391,17 @@ jQuery(function() {
             sales.leftitems.total.val(utils.changeThrDecimal(utils.accMul(parseFloat(sales.leftitems.selling.val()), parseFloat(sales.leftitems.num.val()))));
             sales.leftitems.postDis.val(utils.changeThrDecimal((utils.accDiv(parseFloat(sales.leftitems.selling.val()), parseFloat(sales.leftitems.disPrice.val()))).toFixed(2)));
         }
+    }
+
+    function getControlPrice(price) {
+
+        var purchase = parseFloat(price.purchase);
+
+        if (purchase > 0 && purchase < 1) {
+            return utils.changeThrDecimal(utils.accMul(parseFloat(price.selling), utils.accAdd(1, purchase)));
+        }
+
+        return price.purchase;
     }
 
     function cycTotal() {
