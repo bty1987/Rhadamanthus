@@ -117,7 +117,10 @@ public class A20260404ServiceImpl implements A20260404Service {
 			supplierPO.setUserName(userName);
 			supplierPO.setCurrentName(userName);
 			supplierPO.setPhone(phone);
-			supplierPO.setIdentity(creditCode); // oldUserId = 统一信用编码
+			// identity 为 NOT NULL：未传 creditCode 时跳过更新（避免置 NULL 违反约束），传空串视同清空
+			if (creditCode != null) {
+				supplierPO.setIdentity(creditCode);
+			}
 
 			supplierDao.update(supplierPO);
 			logger.info("更新供应商成功: uid={}, userId={}", supplierPO.getUid(), supplierPO.getUserId());
@@ -166,12 +169,10 @@ public class A20260404ServiceImpl implements A20260404Service {
 			supplierPO.setCurrentName(userName);
 			supplierPO.setUserName(userName);
 			supplierPO.setPhone(phone);
-			supplierPO.setIdentity(creditCode); // oldUserId = 统一信用编码
 
-			// gender/identity 为 NOT NULL 且无默认值，外部同步数据不含这两项，给空串占位
-			// （与生产 user 表既有空串占位数据一致，不伪造性别/身份证信息）
+			// gender/identity 为 NOT NULL 且无默认值：gender 给空串占位，identity 落统一信用编码（未传时空串占位，防 NULL 拒插）
 			supplierPO.setGender("");
-			supplierPO.setOldUserId("");
+			supplierPO.setIdentity(creditCode == null ? "" : creditCode);
 
 			// 设置默认密码
 			SystemConfigPO passwordConfig = systemConfigDao.querySystemConfig("password", company);
@@ -243,25 +244,29 @@ public class A20260404ServiceImpl implements A20260404Service {
 		}
 
 		// 2. 解析品牌编号列表（去重保序）并逐个定位品牌
+		// brands 未传(null/空白)返回 null，表示本次只同步人员信息、不动品牌绑定
 		List<String> brandNos = parseBrandNos(brands);
 
 		Map<Long, BrandPO> brandPOMap = new LinkedHashMap<Long, BrandPO>();
 
-		for (String no : brandNos) {
+		if (brandNos != null) {
 
-			BrandPO brandPO = brandDao.queryBrandByNo(no);
+			for (String no : brandNos) {
 
-			if (brandPO == null) {
-				logger.warn("品牌不存在: no={}", no);
-				throw new FLException(400029, "品牌不存在");
+				BrandPO brandPO = brandDao.queryBrandByNo(no);
+
+				if (brandPO == null) {
+					logger.warn("品牌不存在: no={}", no);
+					throw new FLException(400029, "品牌不存在");
+				}
+
+				// 品牌归属一致性：直属厂商与传入厂商不一致时告警不阻断（brandSupplier 多对多允许跨厂商绑定）
+				if (brandPO.getSupplier() != null && brandPO.getSupplier().getUid() != supplierPO.getUid()) {
+					logger.warn("品牌归属厂商与传入厂商不一致: no={}, brandOcuid={}, supplierUserId={}", no, brandPO.getSupplier().getUid(), supplierUserId);
+				}
+
+				brandPOMap.put(brandPO.getBid(), brandPO);
 			}
-
-			// 品牌归属一致性：直属厂商与传入厂商不一致时告警不阻断（brandSupplier 多对多允许跨厂商绑定）
-			if (brandPO.getSupplier() != null && brandPO.getSupplier().getUid() != supplierPO.getUid()) {
-				logger.warn("品牌归属厂商与传入厂商不一致: no={}, brandOcuid={}, supplierUserId={}", no, brandPO.getSupplier().getUid(), supplierUserId);
-			}
-
-			brandPOMap.put(brandPO.getBid(), brandPO);
 		}
 
 		// 3. 通过编号(userId)判断驻店员是否存在
@@ -332,9 +337,10 @@ public class A20260404ServiceImpl implements A20260404Service {
 			instorerPO.setUserName(userName);
 			instorerPO.setPhone(phone);
 
-			// gender/oldUserId 为 NOT NULL 且无默认值，外部同步数据不含这两项，给空串占位
-			// （与生产 user 表既有空串占位数据一致，不伪造性别/身份证信息）
+			// gender/identity/oldUserId 为 NOT NULL 且无默认值，外部同步数据不含这几项，给空串占位
+			// （与生产 user 表既有空串占位数据一致，不伪造性别/身份证信息；identity 列即用户表证件号字段，驻店员同步不采集）
 			instorerPO.setGender("");
+			instorerPO.setIdentity("");
 			instorerPO.setOldUserId("");
 
 			// 设置默认密码
@@ -373,46 +379,49 @@ public class A20260404ServiceImpl implements A20260404Service {
 			userInfoDao.save(userInfoPO);
 		}
 
-		// 11. 品牌绑定全量对齐：以本次 brands 列表为准，补缺删多
-		List<BrandInstorerPO> existPOs = brandInstorerDao.queryBrandInstorerByIuid(instorerPO.getUid());
+		// 11. 品牌绑定全量对齐：仅当传入 brands 时执行，以本次列表为准补缺删多；未传不动存量绑定
+		if (brandNos != null) {
 
-		Map<Long, BrandInstorerPO> existMap = new HashMap<Long, BrandInstorerPO>();
+			List<BrandInstorerPO> existPOs = brandInstorerDao.queryBrandInstorerByIuid(instorerPO.getUid());
 
-		for (BrandInstorerPO existPO : existPOs) {
-			if (existPO.getBrand() != null) {
-				existMap.put(existPO.getBrand().getBid(), existPO);
-			}
-		}
+			Map<Long, BrandInstorerPO> existMap = new HashMap<Long, BrandInstorerPO>();
 
-		for (BrandPO brandPO : brandPOMap.values()) {
-
-			BrandInstorerPO existPO = existMap.remove(brandPO.getBid());
-
-			if (existPO == null) {
-				BrandInstorerPO brandInstorerPO = new BrandInstorerPO();
-				brandInstorerPO.setInstorer(instorerPO);
-				brandInstorerPO.setBrand(brandPO);
-				brandInstorerPO.setAgentName(agentName);
-				brandInstorerPO.setAgentPhone(agentPhone);
-
-				brandInstorerDao.save(brandInstorerPO);
-				logger.info("新增品牌绑定: iuid={}, bid={}, no={}", instorerPO.getUid(), brandPO.getBid(), brandPO.getNo());
-			} else if (agentName != null || agentPhone != null) {
-				// 代理信息传入才覆盖，未传不动
-				if (agentName != null) {
-					existPO.setAgentName(agentName);
+			for (BrandInstorerPO existPO : existPOs) {
+				if (existPO.getBrand() != null) {
+					existMap.put(existPO.getBrand().getBid(), existPO);
 				}
-				if (agentPhone != null) {
-					existPO.setAgentPhone(agentPhone);
-				}
-
-				brandInstorerDao.update(existPO);
 			}
-		}
 
-		for (BrandInstorerPO stalePO : existMap.values()) {
-			brandInstorerDao.delete(stalePO);
-			logger.info("删除多余品牌绑定: biid={}, iuid={}, bid={}", stalePO.getBiid(), instorerPO.getUid(), stalePO.getBrand() == null ? null : stalePO.getBrand().getBid());
+			for (BrandPO brandPO : brandPOMap.values()) {
+
+				BrandInstorerPO existPO = existMap.remove(brandPO.getBid());
+
+				if (existPO == null) {
+					BrandInstorerPO brandInstorerPO = new BrandInstorerPO();
+					brandInstorerPO.setInstorer(instorerPO);
+					brandInstorerPO.setBrand(brandPO);
+					brandInstorerPO.setAgentName(agentName);
+					brandInstorerPO.setAgentPhone(agentPhone);
+
+					brandInstorerDao.save(brandInstorerPO);
+					logger.info("新增品牌绑定: iuid={}, bid={}, no={}", instorerPO.getUid(), brandPO.getBid(), brandPO.getNo());
+				} else if (agentName != null || agentPhone != null) {
+					// 代理信息传入才覆盖，未传不动
+					if (agentName != null) {
+						existPO.setAgentName(agentName);
+					}
+					if (agentPhone != null) {
+						existPO.setAgentPhone(agentPhone);
+					}
+
+					brandInstorerDao.update(existPO);
+				}
+			}
+
+			for (BrandInstorerPO stalePO : existMap.values()) {
+				brandInstorerDao.delete(stalePO);
+				logger.info("删除多余品牌绑定: biid={}, iuid={}, bid={}", stalePO.getBiid(), instorerPO.getUid(), stalePO.getBrand() == null ? null : stalePO.getBrand().getBid());
+			}
 		}
 
 		// 12. 返回结果
@@ -423,33 +432,38 @@ public class A20260404ServiceImpl implements A20260404Service {
 		result.put("userName", instorerPO.getUserName());
 		result.put("supplierUserId", supplierPO.getUserId());
 
-		List<Map<String, Object>> brandResults = new ArrayList<Map<String, Object>>();
+		if (brandNos != null) {
 
-		for (BrandPO brandPO : brandPOMap.values()) {
+			List<Map<String, Object>> brandResults = new ArrayList<Map<String, Object>>();
 
-			Map<String, Object> brandResult = new HashMap<String, Object>();
-			brandResult.put("bid", brandPO.getBid());
-			brandResult.put("no", brandPO.getNo());
-			brandResult.put("name", brandPO.getName());
+			for (BrandPO brandPO : brandPOMap.values()) {
 
-			brandResults.add(brandResult);
+				Map<String, Object> brandResult = new HashMap<String, Object>();
+				brandResult.put("bid", brandPO.getBid());
+				brandResult.put("no", brandPO.getNo());
+				brandResult.put("name", brandPO.getName());
+
+				brandResults.add(brandResult);
+			}
+
+			result.put("brands", brandResults);
 		}
-
-		result.put("brands", brandResults);
 
 		return result;
 	}
 
 	/**
 	 * 解析品牌编号列表：JSON数组字符串 -> 去重保序的编号列表
+	 * brands 未传(null/空白)返回 null，表示调用方本次不管理品牌绑定；
+	 * 传入但非法(非JSON数组)或解析后为空(如"[]")仍抛 400033，防止显式空列表触发全量删除
 	 */
 	private List<String> parseBrandNos(String brands) throws FLException {
 
-		List<String> brandNos = new ArrayList<String>();
-
 		if (brands == null || brands.trim().isEmpty()) {
-			throw new FLException(400033, "品牌列表不能为空且必须为JSON数组格式");
+			return null;
 		}
+
+		List<String> brandNos = new ArrayList<String>();
 
 		try {
 			List<String> nos = JSON.parseArray(brands.trim(), String.class);

@@ -107,7 +107,7 @@ public class A20260404Action extends BaseListAction {
 	 * 同步驻店人员数据接口
 	 *
 	 * 通过编号(userId)判断是否存在：存在且类型为驻店员则更新，不存在则创建；存在但非驻店员则报错
-	 * 同时以 brands 品牌编号列表为准全量对齐品牌绑定关系（补缺删多），并校验所属厂商有效性
+	 * 传入 brands 时以品牌编号列表为准全量对齐品牌绑定关系（补缺删多）；brands 未传时跳过品牌绑定管理（不新增/不删除/不改代理信息）
 	 *
 	 * @return SUCCESS
 	 * @throws FLException 业务异常
@@ -131,9 +131,8 @@ public class A20260404Action extends BaseListAction {
 		if (supplierUserId == null || supplierUserId.trim().isEmpty()) {
 			throw new FLException(400027, "厂商编号不能为空");
 		}
-		if (brands == null || brands.trim().isEmpty()) {
-			throw new FLException(400033, "品牌列表不能为空且必须为JSON数组格式");
-		}
+
+		// brands 非必填：未传(null/空白)时 Service 跳过品牌绑定管理；传入但格式非法/空数组仍报 400033
 
 		// 调用服务层处理
 		Map<String, Object> result = a20260404Service.syncInstorer(userId, userName, phone, company, supplierUserId, brands, agentName, agentPhone);
