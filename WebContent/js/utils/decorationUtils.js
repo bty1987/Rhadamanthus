@@ -178,6 +178,11 @@ var decorationUtils = {
                 });
 
                 // 已购品牌汇总
+                if (v.status == constant.sales().oales.STATUS_INVALID_INI) {
+                    $liLine.append($h4).append($ulProperty).append($ulStyle).append($divBtnBlock).appendTo($uloales);
+                    return true;
+                }
+
                 if (purCategory.indexOf(v.category) == -1) {
                     purCategory.push(v.category);
                 }
