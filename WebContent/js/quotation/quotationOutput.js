@@ -547,7 +547,16 @@ function printWorkTable(workType, merge) {
     contentHtml += '<table style="font-size: 12px" width="100%" bgcolor="#000000" border="1" cellpadding="1" cellspacing="0">';
     contentHtml += '<tbody><tr bgcolor="#FFFFFF">';
     contentHtml += '<td width="8%" align="center">序号</td>';
-    contentHtml += '<td width="52%" align="center">项目名称</td>';
+
+    if (merge) {
+        // 合并模式: 无功能区维度, 项目名称列加宽
+        contentHtml += '<td width="52%" align="center">项目名称</td>';
+    } else {
+        // 拆分模式: 功能区以列呈现(每行项目带功能区单元格), 不插功能区小节标题行
+        contentHtml += '<td width="22%" align="center">功能区</td>';
+        contentHtml += '<td width="30%" align="center">项目名称</td>';
+    }
+
     contentHtml += '<td width="10%" align="center">单位</td>';
     contentHtml += '<td width="10%" align="center">数量</td>';
     contentHtml += '<td width="10%" align="center">增加量</td>';
@@ -593,20 +602,15 @@ function printWorkTable(workType, merge) {
                 itemIndex++;
             });
         } else {
-            // 拆分模式: 工种下按功能区分小节, 每小节带浅灰功能区头
+            // 拆分模式: 功能区以列呈现, 同功能区相邻排列(同功能区内相同项目仍累加数量)
             $.each(groupItemsByArea(v), function(g, group) {
-
-                contentHtml += '<tr bgcolor="#EEEEEE">';
-                contentHtml += '<td colspan="6" style="padding-left: 12px;">';
-                contentHtml += '<div align="left"><b>[' + group.areaName + ']</b></div>';
-                contentHtml += '</td>';
-                contentHtml += '</tr>';
 
                 $.each(group.items, function(j, qv) {
 
                     contentHtml += '<tr bgcolor="#FFFFFF">';
                     contentHtml += '<td width="8%" align="center">' + (itemIndex + 1) + '</td>';
-                    contentHtml += '<td width="52%" align="center">' + qv.itemName + "(" + qv.typestr + ")" + '</td>';
+                    contentHtml += '<td width="22%" align="center">' + group.areaName + '</td>';
+                    contentHtml += '<td width="30%" align="center">' + qv.itemName + "(" + qv.typestr + ")" + '</td>';
                     contentHtml += '<td width="10%" align="center">' + qv.measurementUnit + '</td>';
                     contentHtml += '<td width="10%" align="center">' + qv.num + '</td>';
                     contentHtml += '<td width="10%" align="center"></td>';
