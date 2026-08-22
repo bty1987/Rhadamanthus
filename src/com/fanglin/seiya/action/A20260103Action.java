@@ -809,7 +809,7 @@ public class A20260103Action extends BaseListAction {
 	 *
 	 * 通过装修单号更新关联客户机会的客户编号（customerchance.customerno）
 	 *
-	 * 经 customerchanceorder 映射（ccid <-> orderId）定位，一个订单可能关联多条机会（换单等场景），全部更新
+	 * 直接按 customerchance.orderId 定位（不走 customerchanceorder 映射）：存在则更新，不存在报 330075
 	 *
 	 * 请求参数：
 	 * @orderId: 装修单号（必填）
