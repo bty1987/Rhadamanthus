@@ -1001,6 +1001,7 @@ var quotationUtils = {
                     "type": 31,
                     "itemtype": [0, 1, 2],
                     "workType": i.split('-')[1],
+                    "merge": false,
                 };
 
                 params.quotation.quotation = {
