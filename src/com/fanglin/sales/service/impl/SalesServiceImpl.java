@@ -237,6 +237,11 @@ public class SalesServiceImpl implements SalesService {
 	}
 
 	@Override
+	public List<SalesVO> querySalesByOrderId(SalesVO salesVO) {
+		return pageSales(salesDao.querySalesByOrderId(salesVO.getOrderId()));
+	}
+
+	@Override
 	public SalesVO querySalesBySid(SalesVO salesVO) throws FLException {
 
 		SalesPO salesPO = salesDao.get(salesVO.getSid());

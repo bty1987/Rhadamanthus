@@ -22,6 +22,8 @@ public interface SalesBalanceDao extends Dao<SalesBalancePO> {
 
 	public List<SalesBalancePO> querySalesBalance(long sid, short checkStatus);
 
+	public List<SalesBalancePO> querySalesBalanceByOrderId(String orderId, List<Long> sids, short type, short onetype);
+
 	public SalesBalancePO querySalesBalance(long sid, short type, short onetype);
 
 	public SalesBalancePO querySalesBalance(long sid, long bid, short type, short onetype);

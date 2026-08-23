@@ -19,6 +19,8 @@ public interface SalesBalanceService {
 
 	public void pageSalesBalanceForCheck(Paging paging, List<Filter> filters, SalesBalanceVO salesBalanceVO, int pompany) throws FLException;
 
+	public List<SalesBalanceVO> querySalesBalanceByOrderId(List<Long> sids, SalesBalanceVO salesBalanceVO);
+
 	public int updateSalesBalanceForVBalance(SalesBalanceVO salesBalanceVO) throws FLException;
 
 	public int updateSalesBalanceForPBalance(SalesBalanceVO salesBalanceVO) throws FLException;

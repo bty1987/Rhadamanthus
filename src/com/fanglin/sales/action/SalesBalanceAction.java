@@ -77,6 +77,14 @@ public class SalesBalanceAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "querySalesBalanceByOrderId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String querySalesBalanceByOrderId() throws FLException {
+
+		salesBalances = salesBalanceService.querySalesBalanceByOrderId(sid, salesBalance);
+
+		return SUCCESS;
+	}
+
 	@Action(value = "querySalesBalanceItemBySbid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String querySalesBalanceItemBySbid() throws FLException {
 

@@ -80,7 +80,12 @@ var decorationUtils = {
                 var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
                 var $btnSub = $('<a></a>').addClass(' btn btn-minier btn-yellow').html('子项');
 
-                var propertyArr = [["品类:", v.category, "grey"], ["品牌:", v.brand.name, "grey"], ["定金:", v.depositpay, "blue"], ["补款:", v.fullpay, "blue"], ["总额:", v.total, "blue"], ["当前总额:", v.amount, "blue"], ["优惠券:", v.coupon, "blue"], ["券信息:", v.couponInfo ? v.couponInfo.split('#').join(' ') : "", "grey"], ["定金状态:", $depositpayStatus[v.depositpayStatus], "red"], ["补款状态:", $fullpayStatus[v.fullpayStatus], "red"], ["状态:", $statues[v.status], "red"], ["结算状态:", $balanceStatuses[v.balanceStatus], "red"], ["类型:", constant.sales().sales.type.keys[v.type], "red"], ["创建时间:", v.createTime, "green "], ["补款时间:", v.fullpayTime, "green "], ["结算时间:", v.balanceTime, "green "], ["完结时间:", v.finishTime, "green "], ["完结人:", v.finisher.currentName, "blue"]];
+                var propertyArr = [["品类:", v.category, "grey"], ["品牌:", v.brand.name, "grey"], ["定金:", v.depositpay, "blue"], ["补款:", v.fullpay, "blue"], ["总额:", v.total, "blue"], ["当前总额:", v.amount, "blue"], ["优惠券:", salesReceiptMap[v.sid] ? salesReceiptMap[v.sid].coupon : 0, "blue"], ["券信息:", salesReceiptMap[v.sid] ? salesReceiptMap[v.sid].couponInfo : "", "grey"], ["定金状态:", $depositpayStatus[v.depositpayStatus], "red"], ["补款状态:", $fullpayStatus[v.fullpayStatus], "red"], ["状态:", $statues[v.status], "red"], ["结算状态:", $balanceStatuses[v.balanceStatus], "red"], ["类型:", constant.sales().sales.type.keys[v.type], "red"], ["创建时间:", v.createTime, "green "], ["补款时间:", v.fullpayTime, "green "], ["结算时间:", v.balanceTime, "green "], ["完结时间:", v.finishTime, "green "], ["完结人:", v.finisher.currentName, "blue"]];
+
+                // 国补单(type=1)利润=总价-结算值(salesbalance.balance,type=0/onetype=0),无购货结算行显示-
+                if (v.type == 1) {
+                    propertyArr.splice(6, 0, ["利润额:", salesBalanceMap[v.sid] != null ? utils.changeThrDecimal(utils.accSub(v.total, salesBalanceMap[v.sid])) : "-", "blue"]);
+                }
 
                 $.each(propertyArr, function(index, value) {
 
@@ -100,7 +105,7 @@ var decorationUtils = {
 
                     com.popup4page("#layerPopUp", "/views/sales/salesItem.html", "子项", '', function() {
 
-                        seacher.doSearch();
+                        loadSalesResult();
                     });
                 });
 
@@ -121,34 +126,95 @@ var decorationUtils = {
 
         })();
 
-        var seacher = new Searcher();
+        var saleses = [];
+        var salesReceiptMap = {};// 销售单收款券:sid -> {coupon, couponInfo},取salesReceipt的券
+        var salesBalanceMap = {};// 国补单(type=1)sid -> 购货结算行balance,用于计算利润
 
-        seacher.init(null, "condList", api.sales.pageSalesByOrderId, function(data) {
+        com.post(api.payment.querySalesPaymentByOrderId, {
+            "salesPayment.sales.orderId": decorationDetail.orderId
+        }, function(res) {
 
-            displayFunc.init('salesResultList' + dataPage + '', data);
-            // 分页显示/隐藏
-            $("#pagenation").removeClass("hidden");
-            $("a[href=#salesResultList" + dataPage + "]").click(function() {
+            salesPayments = res.salesPayments;
+        }, null, false);
 
-                if (data != null) {
-                    $("#pagenation").removeClass("hidden");
+        var loadSalesResult = function() {
+
+            com.post(api.sales.querySalesByOrderId, {
+                "sales.orderId": decorationDetail.orderId
+            }, function(res) {
+
+                saleses = res.saleses;
+            }, null, false);
+
+            // 收款券映射,批量收款同一收款单(srId)只计一次
+            salesReceiptMap = {};
+            var receiptFlags = {};
+
+            if (salesPayments && salesPayments.length) {
+
+                $.each(salesPayments, function(i, v) {
+
+                    if (v.status == constant.payment().salesPayment.STATUS_INIT_INT)
+                        return true;
+
+                    var salesReceipt = v.salesReceipt;
+
+                    if (salesReceipt.srId != null && receiptFlags[salesReceipt.srId])
+                        return true;
+                    receiptFlags[salesReceipt.srId] = true;
+
+                    if (salesReceipt.coupon == null || salesReceipt.coupon == "0")
+                        return true;
+
+                    var _coupon = [2, 3, 8].contains(v.type) ? salesReceipt.coupon : -salesReceipt.coupon;
+
+                    if (salesReceiptMap[v.sales.sid]) {
+                        salesReceiptMap[v.sales.sid].coupon = utils.changeThrDecimal(utils.accAdd(salesReceiptMap[v.sales.sid].coupon, _coupon));
+                        salesReceiptMap[v.sales.sid].couponInfo += " " + salesReceipt.couponInfo.split('#').join(' ');
+                    } else {
+                        salesReceiptMap[v.sales.sid] = {
+                            "coupon": utils.changeThrDecimal(_coupon),
+                            "couponInfo": salesReceipt.couponInfo.split('#').join(' ')
+                        };
+                    }
+                });
+            }
+
+            salesBalanceMap = {};
+
+            var sids = [];
+
+            saleses && $.each(saleses, function(i, v) {
+
+                if (v.type == 1) {
+                    sids.push(v.sid);
                 }
             });
-            $("a[href=#fanglinMaterialPayments" + dataPage + "]").click(function() {
 
-                $("#pagenation").addClass("hidden");
-            });
-            $("a[href=#salesMaterialPayments" + dataPage + "]").click(function() {
+            if (sids.length) {
 
-                $("#pagenation").addClass("hidden");
-            });
-            $("a[href=#oalesResultList" + dataPage + "]").click(function() {
+                var options = {
+                    "salesBalance.sales.orderId": decorationDetail.orderId,
+                    "salesBalance.type": 0,
+                    "salesBalance.onetype": 0
+                };
 
-                $("#pagenation").addClass("hidden");
-            });
-        }, "pagenation", 'salesResultList' + dataPage + 'PostData', {
-            "sales.orderId": decorationDetail.orderId
-        });
+                $.each(sids, function(i, sid) {
+                    options["sid[" + i + "]"] = sid;
+                });
+
+                com.post(api.sales.querySalesBalanceByOrderId, options, function(res) {
+
+                    $.each(res.salesBalances, function(i, v) {
+                        salesBalanceMap[v.sales.sid] = v.balance;
+                    });
+                }, null, false);
+            }
+
+            saleses.length == 0 ? noData("salesResultList" + dataPage) : displayFunc.init('salesResultList' + dataPage + '', saleses);
+        };
+
+        loadSalesResult();
 
         com.post(api.sales.queryOalesByOrderId, {
             "oales.decoration.orderId": decorationDetail.orderId
@@ -344,13 +410,6 @@ var decorationUtils = {
                 }
             });
         }
-
-        com.post(api.payment.querySalesPaymentByOrderId, {
-            "salesPayment.sales.orderId": decorationDetail.orderId
-        }, function(res) {
-
-            salesPayments = res.salesPayments;
-        }, null, false);
 
         com.post(api.data.queryCategory, {}, function(res) {
 

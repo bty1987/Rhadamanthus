@@ -33,6 +33,8 @@ public class SalesAction extends BaseListAction {
 
 	private SalesVO sales;
 
+	private List<SalesVO> saleses;
+
 	private List<Long> sids;
 
 	private List<SalesItemVO> salesItems;
@@ -115,6 +117,14 @@ public class SalesAction extends BaseListAction {
 	public String pageSalesByOrderId() throws FLException {
 
 		salesService.pageSalesByOrderId(getPaging(), getFilters(), queryCompany(), queryUserId(), sales.getOrderId());
+
+		return SUCCESS;
+	}
+
+	@Action(value = "querySalesByOrderId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String querySalesByOrderId() throws FLException {
+
+		saleses = salesService.querySalesByOrderId(sales);
 
 		return SUCCESS;
 	}
@@ -309,6 +319,14 @@ public class SalesAction extends BaseListAction {
 
 	public void setSales(SalesVO sales) {
 		this.sales = sales;
+	}
+
+	public List<SalesVO> getSaleses() {
+		return saleses;
+	}
+
+	public void setSaleses(List<SalesVO> saleses) {
+		this.saleses = saleses;
 	}
 
 	public List<SalesItemVO> getSalesItems() {

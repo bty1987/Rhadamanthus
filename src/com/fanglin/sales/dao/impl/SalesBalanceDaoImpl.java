@@ -3,6 +3,7 @@ package com.fanglin.sales.dao.impl;
 import java.math.BigInteger;
 import java.util.List;
 
+import org.hibernate.Criteria;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
@@ -113,6 +114,17 @@ public class SalesBalanceDaoImpl extends DaoImpl<SalesBalancePO> implements Sale
 	@SuppressWarnings("unchecked")
 	public List<SalesBalancePO> querySalesBalance(long sid, short checkStatus) {
 		return session().createCriteria(SalesBalancePO.class).createAlias("sales", "sales").add(Restrictions.eq("sales.sid", sid)).add(Restrictions.eq("checkStatus", checkStatus)).list();
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<SalesBalancePO> querySalesBalanceByOrderId(String orderId, List<Long> sids, short type, short onetype) {
+
+		Criteria query = session().createCriteria(SalesBalancePO.class).createAlias("sales", "sales").add(Restrictions.eq("sales.orderId", orderId)).add(Restrictions.eq("type", type)).add(Restrictions.eq("onetype", onetype));
+
+		if (sids != null && sids.size() > 0) query.add(Restrictions.in("sales.sid", sids));
+
+		return query.list();
 	}
 
 	@Override
