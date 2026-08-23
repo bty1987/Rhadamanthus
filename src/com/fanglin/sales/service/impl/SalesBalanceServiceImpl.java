@@ -192,6 +192,20 @@ public class SalesBalanceServiceImpl implements SalesBalanceService {
 	}
 
 	@Override
+	public List<SalesBalanceVO> querySalesBalanceByOrderId(List<Long> sids, SalesBalanceVO salesBalanceVO) {
+
+		if (salesBalanceVO == null || salesBalanceVO.getSales() == null || salesBalanceVO.getSales().getOrderId() == null) return new ArrayList<SalesBalanceVO>();
+
+		short type = 0;
+		short onetype = 0;
+
+		if (salesBalanceVO.getType() != null) type = salesBalanceVO.getType();
+		if (salesBalanceVO.getOnetype() != null) onetype = salesBalanceVO.getOnetype();
+
+		return pageSalesBalance(salesBalanceDao.querySalesBalanceByOrderId(salesBalanceVO.getSales().getOrderId(), sids, type, onetype));
+	}
+
+	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public int updateSalesBalanceForVBalance(SalesBalanceVO salesBalanceVO) throws FLException {
 

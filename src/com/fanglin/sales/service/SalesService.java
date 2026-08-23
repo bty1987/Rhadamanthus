@@ -31,6 +31,8 @@ public interface SalesService {
 
 	public void pageSalesByOrderId(Paging paging, List<Filter> filter, int company, String userId, String orderId);
 
+	public List<SalesVO> querySalesByOrderId(SalesVO salesVO);
+
 	public SalesVO querySalesBySid(SalesVO salesVO) throws FLException;
 
 	public SalesVO querySalesByNo(SalesVO salesVO) throws FLException;

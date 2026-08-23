@@ -467,6 +467,18 @@ $.extend(api, {
             }
         },
 
+        querySalesBalanceByOrderId: {
+            url: "querySalesBalanceByOrderId.do",
+            type: "query",
+            tranargs: [{
+                result: "salesBalances",
+                args: ["balance"]
+            }, {
+                result: "salesBalances-sales",
+                args: ["total"]
+            }]
+        },
+
         updateSalesBalanceForPBalance: {
             url: "updateSalesBalanceForPBalance.do",
             intercept: true,
@@ -666,6 +678,14 @@ $.extend(api, {
             type: "query",
             tranargs: [{
                 result: "paging-data",
+                args: ["total", "maling", "coupon", "depositpay", "fullpay", "amount", "venderMaling"]
+            }]
+        },
+        querySalesByOrderId: {
+            url: "querySalesByOrderId.do",
+            type: "query",
+            tranargs: [{
+                result: "saleses",
                 args: ["total", "maling", "coupon", "depositpay", "fullpay", "amount", "venderMaling"]
             }]
         },
