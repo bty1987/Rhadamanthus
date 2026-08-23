@@ -80,7 +80,7 @@ var decorationUtils = {
                 var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
                 var $btnSub = $('<a></a>').addClass(' btn btn-minier btn-yellow').html('子项');
 
-                var propertyArr = [["品类:", v.category, "grey"], ["品牌:", v.brand.name, "grey"], ["定金:", v.depositpay, "blue"], ["补款:", v.fullpay, "blue"], ["总额:", v.total, "blue"], ["当前总额:", v.amount, "blue"], ["定金状态:", $depositpayStatus[v.depositpayStatus], "red"], ["补款状态:", $fullpayStatus[v.fullpayStatus], "red"], ["状态:", $statues[v.status], "red"], ["结算状态:", $balanceStatuses[v.balanceStatus], "red"], ["类型:", constant.sales().sales.type.keys[v.type], "red"], ["创建时间:", v.createTime, "green "], ["补款时间:", v.fullpayTime, "green "], ["结算时间:", v.balanceTime, "green "], ["完结时间:", v.finishTime, "green "], ["完结人:", v.finisher.currentName, "blue"]];
+                var propertyArr = [["品类:", v.category, "grey"], ["品牌:", v.brand.name, "grey"], ["定金:", v.depositpay, "blue"], ["补款:", v.fullpay, "blue"], ["总额:", v.total, "blue"], ["当前总额:", v.amount, "blue"], ["优惠券:", v.coupon, "blue"], ["券信息:", v.couponInfo ? v.couponInfo.split('#').join(' ') : "", "grey"], ["定金状态:", $depositpayStatus[v.depositpayStatus], "red"], ["补款状态:", $fullpayStatus[v.fullpayStatus], "red"], ["状态:", $statues[v.status], "red"], ["结算状态:", $balanceStatuses[v.balanceStatus], "red"], ["类型:", constant.sales().sales.type.keys[v.type], "red"], ["创建时间:", v.createTime, "green "], ["补款时间:", v.fullpayTime, "green "], ["结算时间:", v.balanceTime, "green "], ["完结时间:", v.finishTime, "green "], ["完结人:", v.finisher.currentName, "blue"]];
 
                 $.each(propertyArr, function(index, value) {
 
@@ -167,7 +167,7 @@ var decorationUtils = {
                 var $divBtnBlock = $('<div></div>').addClass('clearfix col-sm-12');
                 var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
 
-                var propertyArr = [["品类:", v.category, "grey"], ["品牌:", v.brand, "grey"], ["总额:", v.total, "blue"], ["计入配比:", constant.sales().oales.isScale.keys[v.isScale], "red"], ["计入积分:", constant.sales().oales.isActivity.keys[v.isActivity], "red"], ["备注:", v.comment, "grey"]];
+                var propertyArr = [["品类:", v.category, "grey"], ["品牌:", v.brand, "grey"], ["总额:", v.total, "blue"], ["利润额:", v.profit, "blue"], ["类型:", constant.sales().oales.type.keys[v.type], "red"], ["计入配比:", constant.sales().oales.isScale.keys[v.isScale], "red"], ["计入积分:", constant.sales().oales.isActivity.keys[v.isActivity], "red"], ["复核时间:", v.checkTime, "green"], ["备注:", v.comment, "grey"]];
 
                 $.each(propertyArr, function(index, value) {
 
@@ -189,6 +189,9 @@ var decorationUtils = {
 
                 $liLine.append($h4).append($ulProperty).append($ulStyle).append($divBtnBlock).appendTo($uloales);
 
+                // 退货(type=1)取负,购货(type=0)为正,品牌金额按类型加减
+                var _refer = v.type == constant.sales().oales.TYPE_REFUND_INT ? -v.total : v.total;
+
                 var $oalesBrands = com.focusPage("[name='" + v.brand + "_o']");
 
                 if ($oalesBrands.length > 0) {
@@ -197,14 +200,14 @@ var decorationUtils = {
                     var $brandTotal = com.focusPage($oalesBrand.find("[name='total']")[0]);
 
                     var _value = parseFloat($brandTotal.attr('value'));
-                    var _total = utils.changeThrDecimal(_value + v.total);
+                    var _total = utils.changeThrDecimal(_value + _refer);
 
                     $brandTotal.attr("value", _total);
                     $brandTotal.html(_total);
 
-                    $oalesTotal = utils.changeThrDecimal($oalesTotal + v.total);
+                    $oalesTotal = utils.changeThrDecimal($oalesTotal + _refer);
                     if (v.isScale == 0) {
-                        $oalesScaleTotal = utils.changeThrDecimal($oalesScaleTotal + v.total);
+                        $oalesScaleTotal = utils.changeThrDecimal($oalesScaleTotal + _refer);
                     }
 
                 } else {
@@ -216,14 +219,14 @@ var decorationUtils = {
                     $('<b></b>').html(v.category).addClass("grey").appendTo($('<strong></strong>').html("品类:").appendTo($('<li></li>').appendTo($ulProperty_2)));
                     $('<b></b>').html(v.brand).addClass("grey").appendTo($('<strong></strong>').html("品牌:").appendTo($('<li></li>').appendTo($ulProperty_2)));
                     $('<b></b>').html(constant.sales().oales.atttype.keys[v.atttype]).addClass("red").appendTo($('<strong></strong>').html("类型:").appendTo($('<li></li>').appendTo($ulProperty_2)));
-                    $('<b></b>').attr("name", "total").attr("value", v.total).html(v.total).addClass("blue").appendTo($('<strong></strong>').html("金额:").appendTo($('<li></li>').appendTo($ulProperty_2)));
+                    $('<b></b>').attr("name", "total").attr("value", _refer).html(_refer).addClass("blue").appendTo($('<strong></strong>').html("金额:").appendTo($('<li></li>').appendTo($ulProperty_2)));
                     $('<b></b>').html(constant.data().brand.atttype.keys[v.branding.atttype]).addClass("red").appendTo($('<strong></strong>').html("类型:").appendTo($('<li></li>').appendTo($ulProperty_2)));
 
                     $liLine_2.append($h4_2).append($ulProperty_2).appendTo($uloalesBrand);
 
-                    $oalesTotal = utils.changeThrDecimal($oalesTotal + v.total);
+                    $oalesTotal = utils.changeThrDecimal($oalesTotal + _refer);
                     if (v.isScale == 0) {
-                        $oalesScaleTotal = utils.changeThrDecimal($oalesScaleTotal + v.total);
+                        $oalesScaleTotal = utils.changeThrDecimal($oalesScaleTotal + _refer);
                     }
                 }
             });
@@ -304,6 +307,7 @@ var decorationUtils = {
 
                     var $materialBrand = com.focusPage($materialBrands[0]);
                     var $brandTotal = com.focusPage($materialBrand.find("[name='total']")[0]);
+                    var $brandCoupon = com.focusPage($materialBrand.find("[name='coupon']")[0]);
 
                     var _value = parseFloat($brandTotal.attr('value'));
                     var _refer = [2, 3, 8].contains(v.paymentType) ? v.referMoney : -v.referMoney;
@@ -312,6 +316,10 @@ var decorationUtils = {
 
                     $brandTotal.attr("value", _total);
                     $brandTotal.html(_total);
+
+                    var _couponTotal = utils.changeThrDecimal(parseFloat($brandCoupon.attr('value')) + _coupon);
+                    $brandCoupon.attr("value", _couponTotal);
+                    $brandCoupon.html(_couponTotal);
 
                     $total = utils.changeThrDecimal($total + _refer);
                     $coupon = utils.changeThrDecimal($coupon + _coupon);
@@ -327,6 +335,7 @@ var decorationUtils = {
                     $('<b></b>').html(v.category).addClass("grey").appendTo($('<strong></strong>').html("品类:").appendTo($('<li></li>').appendTo($ulProperty)));
                     $('<b></b>').html(v.brand).addClass("grey").appendTo($('<strong></strong>').html("品牌:").appendTo($('<li></li>').appendTo($ulProperty)));
                     $('<b></b>').attr("name", "total").attr("value", _refer).html(_refer).addClass("blue").appendTo($('<strong></strong>').html("金额:").appendTo($('<li></li>').appendTo($ulProperty)));
+                    $('<b></b>').attr("name", "coupon").attr("value", _coupon).html(_coupon).addClass("blue").appendTo($('<strong></strong>').html("优惠券:").appendTo($('<li></li>').appendTo($ulProperty)));
 
                     $liLine.append($h4).append($ulProperty).appendTo($ulbrand);
 
@@ -445,6 +454,7 @@ var decorationUtils = {
 
                     var $salesBrand = com.focusPage($salesBrands[0]);
                     var $brandTotal = com.focusPage($salesBrand.find("[name='total']")[0]);
+                    var $brandCoupon = com.focusPage($salesBrand.find("[name='coupon']")[0]);
 
                     var _value = parseFloat($brandTotal.attr('value'));
                     var _refer = [2, 3, 8].contains(v.type) ? v.referMoney : -v.referMoney;
@@ -453,6 +463,10 @@ var decorationUtils = {
 
                     $brandTotal.attr("value", _total);
                     $brandTotal.html(_total);
+
+                    var _couponTotal = utils.changeThrDecimal(parseFloat($brandCoupon.attr('value')) + _coupon);
+                    $brandCoupon.attr("value", _couponTotal);
+                    $brandCoupon.html(_couponTotal);
 
                     $total = utils.changeThrDecimal($total + _refer);
                     $coupon = utils.changeThrDecimal($coupon + _coupon);
@@ -468,6 +482,7 @@ var decorationUtils = {
                     $('<b></b>').html(v.sales.category).addClass("grey").appendTo($('<strong></strong>').html("品类:").appendTo($('<li></li>').appendTo($ulProperty)));
                     $('<b></b>').html(v.sales.brand.name).addClass("grey").appendTo($('<strong></strong>').html("品牌:").appendTo($('<li></li>').appendTo($ulProperty)));
                     $('<b></b>').attr("name", "total").attr("value", _refer).html(_refer).addClass("blue").appendTo($('<strong></strong>').html("金额:").appendTo($('<li></li>').appendTo($ulProperty)));
+                    $('<b></b>').attr("name", "coupon").attr("value", _coupon).html(_coupon).addClass("blue").appendTo($('<strong></strong>').html("优惠券:").appendTo($('<li></li>').appendTo($ulProperty)));
 
                     $liLine.append($h4).append($ulProperty).appendTo($ulbrand);
 
