@@ -114,7 +114,7 @@ $(function() {
                 var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-yellow').html('编辑');
                 var $btnDelete = $('<a></a>').addClass('btn btn-minier btn-success').html('删除');
 
-                var propertyArr = [["商品品类:", v.goods.category, "grey"], ["商品颜色:", v.color.name, "grey"], ["商品规格:", v.format.info, "grey"], ["售价:", v.selling, "blue"], ["折扣价:", v.disPrice, "blue"], ["折让价:", v.price, "blue"], ["数量:", v.num, "blue itemnum"], ["总价:", v.total, "blue"], ["结算值:", v.cvalue, "blue"], ["结算方式:", v.ctype == 0 ? "底价" : "点位", "red"], ["类型:", v.priceType == "0" ? "正价" : "特价", "red"]];
+                var propertyArr = [["商品品类:", v.goods.category, "grey"], ["商品颜色:", v.color.name, "grey"], ["商品规格:", v.format.info, "grey"], ["售价:", v.selling, "blue", "hide"], ["折扣价:", v.disPrice, "blue", "hide"], ["折让价:", v.price, "blue", "hide"], ["数量:", v.num, "blue itemnum"], ["总价:", v.total, "blue"], ["结算值:", v.cvalue, "blue", "hide"], ["结算方式:", v.ctype == 0 ? "底价" : "点位", "red", "hide"], ["类型:", v.priceType == "0" ? "正价" : "特价", "red"]];
 
                 // 如果是套餐明细，添加标识
                 if (isPackage) {
@@ -127,6 +127,11 @@ $(function() {
                 $.each(propertyArr, function(index, value) {
 
                     var $liProperty = $('<li></li>');
+
+                    if (value[3]) {
+                        $liProperty.addClass(value[3]);
+                    }
+
                     $('<strong></strong>').html(value[0]).appendTo($liProperty);
                     $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
                     $liProperty.appendTo($ulProperty);
