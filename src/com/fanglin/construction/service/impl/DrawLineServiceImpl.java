@@ -37,6 +37,8 @@ import com.fanglin.construction.service.DrawLineService;
 import com.fanglin.construction.vo.DrawLineVO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
+import com.fanglin.customer.dao.CustomerChanceDao;
+import com.fanglin.customer.po.CustomerChancePO;
 import com.fanglin.data.common.dao.ConstructionNodeDao;
 import com.fanglin.data.common.dao.ConstructionPeriodDao;
 import com.fanglin.data.common.dao.DrawLineGroupDao;
@@ -72,6 +74,9 @@ import com.fanglin.utils.Paging;
 @Service("decorationDrawLineService")
 @Transactional(readOnly = true)
 public class DrawLineServiceImpl implements DrawLineService {
+
+	@Autowired
+	private CustomerChanceDao customerChanceDao;
 
 	@Autowired
 	private DecorationDao decorationDao;
@@ -263,7 +268,7 @@ public class DrawLineServiceImpl implements DrawLineService {
 				constructionPO.setSupervisor(decorationPO.getSupervisor());
 			}
 
-			messageQueuingDao.save(new MessageCueuingPO().init(orderId, "beginConstruction", "{\"orderId\":\"" + orderId + "\",\"status\":\"1\",\"event\":\"PROJECT_STATUS_CHANGED\"" + (constructionPO.getDecoration() != null && constructionPO.getDecoration().getBusitype() != null ? ",\"busiTypeName\":\"" + constructionPO.getDecoration().getBusitype().getName() + "\"" : "") + "}"));
+			messageQueuingDao.save(new MessageCueuingPO().init(orderId, "beginConstruction", "{\"orderId\":\"" + orderId + "\",\"status\":\"1\",\"event\":\"PROJECT_STATUS_CHANGED\"" + (constructionPO.getDecoration() != null && constructionPO.getDecoration().getBusitype() != null ? ",\"busiTypeName\":\"" + constructionPO.getDecoration().getBusitype().getName() + "\"" : "") + buildCcidArgs(orderId) + "}"));
 		}
 
 		if (drawLineVO.getDecoration() != null && drawLineVO.getDecoration().getSupervisor() != null && drawLineVO.getDecoration().getSupervisor().getUserId() != null) {
@@ -411,7 +416,7 @@ public class DrawLineServiceImpl implements DrawLineService {
 		if (constructionPO == null) {
 			constructionPO = new ConstructionPO(decorationPO);
 
-			messageQueuingDao.save(new MessageCueuingPO().init(orderId, "beginConstruction", "{\"orderId\":\"" + orderId + "\",\"status\":\"1\",\"event\":\"PROJECT_STATUS_CHANGED\"" + (constructionPO.getDecoration() != null && constructionPO.getDecoration().getBusitype() != null ? ",\"busiTypeName\":\"" + constructionPO.getDecoration().getBusitype().getName() + "\"" : "") + "}"));
+			messageQueuingDao.save(new MessageCueuingPO().init(orderId, "beginConstruction", "{\"orderId\":\"" + orderId + "\",\"status\":\"1\",\"event\":\"PROJECT_STATUS_CHANGED\"" + (constructionPO.getDecoration() != null && constructionPO.getDecoration().getBusitype() != null ? ",\"busiTypeName\":\"" + constructionPO.getDecoration().getBusitype().getName() + "\"" : "") + buildCcidArgs(orderId) + "}"));
 		}
 
 		ConstructionCostPO constructionCostPO = constructionCostDao.queryConstructionCost(drawLinePO.getDecoration().getHouse().getBuildArea(), decorationPO.getCompany());
@@ -673,7 +678,7 @@ public class DrawLineServiceImpl implements DrawLineService {
 		if (constructionPO == null) {
 			constructionPO = new ConstructionPO(decorationPO);
 
-			messageQueuingDao.save(new MessageCueuingPO().init(orderId, "beginConstruction", "{\"orderId\":\"" + orderId + "\",\"status\":\"1\",\"event\":\"PROJECT_STATUS_CHANGED\"" + (constructionPO.getDecoration() != null && constructionPO.getDecoration().getBusitype() != null ? ",\"busiTypeName\":\"" + constructionPO.getDecoration().getBusitype().getName() + "\"" : "") + "}"));
+			messageQueuingDao.save(new MessageCueuingPO().init(orderId, "beginConstruction", "{\"orderId\":\"" + orderId + "\",\"status\":\"1\",\"event\":\"PROJECT_STATUS_CHANGED\"" + (constructionPO.getDecoration() != null && constructionPO.getDecoration().getBusitype() != null ? ",\"busiTypeName\":\"" + constructionPO.getDecoration().getBusitype().getName() + "\"" : "") + buildCcidArgs(orderId) + "}"));
 		}
 
 		ConstructionCostPO constructionCostPO = constructionCostDao.queryConstructionCost(decorationPO.getHouse().getBuildArea(), decorationPO.getCompany());
@@ -771,4 +776,12 @@ public class DrawLineServiceImpl implements DrawLineService {
 		return 0;
 	}
 
+	private String buildCcidArgs(String orderId) {
+
+		if (orderId == null) return "";
+
+		CustomerChancePO customerChancePO = customerChanceDao.queryCustomerChance(orderId);
+
+		return customerChancePO != null ? ",\"ccid\":" + customerChancePO.getCcid() : "";
+	}
 }

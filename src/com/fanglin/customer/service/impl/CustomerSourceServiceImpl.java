@@ -694,7 +694,7 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 			if (customerChancePO.getRegion().getManager() != null) messageService.sendMessage(customerChancePO.getRegion().getManager().getUserId(), null, message, MessagePO.TYPE_SEND_CUSTOMER_INT, customerChancePO.getRegion().getManager().getCompany());
 
 			dingTalkMessageService.sendDing(customerChancePO.getBelonger().getUserId(), "您有新的客源信息, 请尽快到方林办公小程序或钉钉信息平台查看.", CompanyPO.TYPE_HEADQUARTER_INT);
-			messageQueuingDao.save(new MessageCueuingPO().init(customerChancePO.getOrderId(), "addCustomerLead", "{\"orderId\":\"" + customerChancePO.getOrderId() + "\",\"ccid\":" + customerChancePO.getCcid() + ",\"csid\":" + customerSourcePO.getCsid() + ",\"event\":\"CUSTOMER_CHANCE_AUTO_ASSIGNED\"}"));
+			messageQueuingDao.save(new MessageCueuingPO().init(customerChancePO.getOrderId(), "addCustomerLead", "{\"orderId\":\"" + customerChancePO.getOrderId() + "\",\"ccid\":" + customerChancePO.getCcid() + ",\"csid\":" + customerSourcePO.getCsid() + ",\"event\":\"CUSTOMER_CHANCE_AUTO_ASSIGNED\"" + buildCustomernoArgs(customerChancePO) + "}"));
 
 			return;
 		}
@@ -739,7 +739,7 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 
 			if (customerChancePO.getRegion().getManager() != null) messageService.sendMessage(customerChancePO.getRegion().getManager().getUserId(), null, message, MessagePO.TYPE_SEND_CUSTOMER_INT, customerChancePO.getRegion().getManager().getCompany());
 
-			messageQueuingDao.save(new MessageCueuingPO().init(customerChancePO.getOrderId(), "addCustomerLead", "{\"orderId\":\"" + customerChancePO.getOrderId() + "\",\"ccid\":" + customerChancePO.getCcid() + ",\"csid\":" + customerSourcePO.getCsid() + ",\"event\":\"CUSTOMER_CHANCE_REGION_ASSIGNED\"}"));
+			messageQueuingDao.save(new MessageCueuingPO().init(customerChancePO.getOrderId(), "addCustomerLead", "{\"orderId\":\"" + customerChancePO.getOrderId() + "\",\"ccid\":" + customerChancePO.getCcid() + ",\"csid\":" + customerSourcePO.getCsid() + ",\"event\":\"CUSTOMER_CHANCE_REGION_ASSIGNED\"" + buildCustomernoArgs(customerChancePO) + "}"));
 
 			return;
 		}
@@ -792,7 +792,7 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 			if (customerChancePO.getDepartment().getManager() != null) messageService.sendMessage(customerChancePO.getDepartment().getManager().getUserId(), null, message, MessagePO.TYPE_SEND_CUSTOMER_INT, customerChancePO.getDepartment().getManager().getCompany());
 			if (customerChancePO.getRegion().getManager() != null) messageService.sendMessage(customerChancePO.getRegion().getManager().getUserId(), null, message, MessagePO.TYPE_SEND_CUSTOMER_INT, customerChancePO.getRegion().getManager().getCompany());
 
-			messageQueuingDao.save(new MessageCueuingPO().init(customerChancePO.getOrderId(), "addCustomerLead", "{\"orderId\":\"" + customerChancePO.getOrderId() + "\",\"ccid\":" + customerChancePO.getCcid() + ",\"csid\":" + customerSourcePO.getCsid() + ",\"event\":\"CUSTOMER_CHANCE_DEPT_ASSIGNED\"}"));
+			messageQueuingDao.save(new MessageCueuingPO().init(customerChancePO.getOrderId(), "addCustomerLead", "{\"orderId\":\"" + customerChancePO.getOrderId() + "\",\"ccid\":" + customerChancePO.getCcid() + ",\"csid\":" + customerSourcePO.getCsid() + ",\"event\":\"CUSTOMER_CHANCE_DEPT_ASSIGNED\"" + buildCustomernoArgs(customerChancePO) + "}"));
 
 			return;
 		}
@@ -849,7 +849,7 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 			if (customerChancePO.getDepartment().getManager() != null) messageService.sendMessage(customerChancePO.getDepartment().getManager().getUserId(), null, message, MessagePO.TYPE_SEND_CUSTOMER_INT, customerChancePO.getDepartment().getManager().getCompany());
 			if (customerChancePO.getRegion().getManager() != null) messageService.sendMessage(customerChancePO.getRegion().getManager().getUserId(), null, message, MessagePO.TYPE_SEND_CUSTOMER_INT, customerChancePO.getRegion().getManager().getCompany());
 
-			messageQueuingDao.save(new MessageCueuingPO().init(customerChancePO.getOrderId(), "addCustomerLead", "{\"orderId\":\"" + customerChancePO.getOrderId() + "\",\"ccid\":" + customerChancePO.getCcid() + ",\"csid\":" + customerSourcePO.getCsid() + ",\"event\":\"CUSTOMER_CHANCE_USER_ASSIGNED\"}"));
+			messageQueuingDao.save(new MessageCueuingPO().init(customerChancePO.getOrderId(), "addCustomerLead", "{\"orderId\":\"" + customerChancePO.getOrderId() + "\",\"ccid\":" + customerChancePO.getCcid() + ",\"csid\":" + customerSourcePO.getCsid() + ",\"event\":\"CUSTOMER_CHANCE_USER_ASSIGNED\"" + buildCustomernoArgs(customerChancePO) + "}"));
 
 			return;
 		}
@@ -869,5 +869,12 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 		if (DecorationPO.BALANCESTATUS_CONDUCT_INT == decorationPO.getBalanceStatus()) return null;
 
 		return customerChancePO;
+	}
+
+	private String buildCustomernoArgs(CustomerChancePO customerChancePO) {
+
+		String customerno = customerChancePO == null ? null : customerChancePO.getCustomerno();
+
+		return (customerno != null && !customerno.isEmpty()) ? ",\"customerNo\":\"" + customerno + "\"" : "";
 	}
 }

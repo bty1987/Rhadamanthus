@@ -27,6 +27,8 @@ import com.fanglin.communion.po.CustomerPO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.security.SensitiveDataHelper;
 import com.fanglin.core.vo.Filter;
+import com.fanglin.customer.dao.CustomerChanceDao;
+import com.fanglin.customer.po.CustomerChancePO;
 import com.fanglin.customer.service.DecorationService;
 import com.fanglin.data.common.dao.PaymentScaleItemDao;
 import com.fanglin.data.common.dao.PaymentTypeDao;
@@ -79,6 +81,9 @@ import com.fanglin.wechat.vo.WeChatPhoneInfoVO;
 @Service("decorationPaymentService")
 @Transactional(readOnly = true)
 public class DecorationPaymentServiceImpl implements DecorationPaymentService {
+
+	@Autowired
+	private CustomerChanceDao customerChanceDao;
 
 	@Autowired
 	private DecorationDao decorationDao;
@@ -336,7 +341,7 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 		decorationActivityItemDao.flush();
 
 		// 投递核销事件:线上活动物品签约自动核销完成,通知下游(messagequeuing 表,消费端按 operation 分发)
-		messageQueuingDao.save(new MessageCueuingPO().init(orderId, "consumeDecorationActivityItem", "{\"orderId\":\"" + orderId + "\",\"userId\":\"" + createUserId + "\",\"event\":\"ACTIVITY_ITEM_VERIFIED\",\"atttype\":" + DecorationActivityItemPO.ATTTYPE_ONLINE_INT + ",\"targetState\":" + DecorationActivityItemPO.STATUS_VERIFY_INT + (decorationPO.getBusitype() != null ? ",\"busiTypeName\":\"" + decorationPO.getBusitype().getName() + "\"" : "") + "}"));
+		messageQueuingDao.save(new MessageCueuingPO().init(orderId, "consumeDecorationActivityItem", "{\"orderId\":\"" + orderId + "\",\"userId\":\"" + createUserId + "\",\"event\":\"ACTIVITY_ITEM_VERIFIED\",\"atttype\":" + DecorationActivityItemPO.ATTTYPE_ONLINE_INT + ",\"targetState\":" + DecorationActivityItemPO.STATUS_VERIFY_INT + (decorationPO.getBusitype() != null ? ",\"busiTypeName\":\"" + decorationPO.getBusitype().getName() + "\"" : "") + buildCcidArgs(orderId) + "}"));
 
 		// 获取当前订单的活动项的总额
 		long couponCut = decorationActivityItemDao.amountDecorationActivityItem(orderId, DecorationActivityItemPO.ISPAYMENT_CAL_INT);
@@ -574,14 +579,14 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 			decorationPO.setStatus(DecorationPO.STATUS_DEPOSIT_INT);
 			decorationPO.setDepositTime(DateUtil.getDateToTimestamp(new Date()));
 			// 生成消息提示数据
-			messageQueuingDao.save(new MessageCueuingPO().init(orderId, "collectDecorationPayment", "{\"orderId\":\"" + orderId + "\",\"dpid\":" + decorationPaymentVO.getDpid() + ",\"userId\":\"" + userId + ",\"event\":\"PAYMENT_COLLECTED\"" + (decorationPO.getBusitype() != null ? ",\"busiTypeName\":\"" + decorationPO.getBusitype().getName() + "\"" : "") + "}"));
+			messageQueuingDao.save(new MessageCueuingPO().init(orderId, "collectDecorationPayment", "{\"orderId\":\"" + orderId + "\",\"dpid\":" + decorationPaymentVO.getDpid() + ",\"userId\":\"" + userId + ",\"event\":\"PAYMENT_COLLECTED\"" + (decorationPO.getBusitype() != null ? ",\"busiTypeName\":\"" + decorationPO.getBusitype().getName() + "\"" : "") + buildCcidArgs(orderId) + "}"));
 		}
 
 		String paymentType = decorationPaymentPO.getPaymentType();
 
 		// 设计费收款时生成消息提示数据
 		if (paymentType.equals(DecorationPaymentPO.PAYMENTTYPE_DESIGN_STR)) {
-			messageQueuingDao.save(new MessageCueuingPO().init(orderId, "collectDecorationPayment", "{\"orderId\":\"" + orderId + "\",\"dpid\":" + decorationPaymentVO.getDpid() + ",\"userId\":\"" + userId + ",\"event\":\"PAYMENT_COLLECTED\"" + (decorationPO.getBusitype() != null ? ",\"busiTypeName\":\"" + decorationPO.getBusitype().getName() + "\"" : "") + "}"));
+			messageQueuingDao.save(new MessageCueuingPO().init(orderId, "collectDecorationPayment", "{\"orderId\":\"" + orderId + "\",\"dpid\":" + decorationPaymentVO.getDpid() + ",\"userId\":\"" + userId + ",\"event\":\"PAYMENT_COLLECTED\"" + (decorationPO.getBusitype() != null ? ",\"busiTypeName\":\"" + decorationPO.getBusitype().getName() + "\"" : "") + buildCcidArgs(orderId) + "}"));
 		}
 
 		if (paymentType.contains(DecorationPaymentPO.PAYMENTTYPE_REFUND_STR) || paymentType.equals(DecorationPaymentPO.PAYMENTTYPE_REDUCE_STR)) {
@@ -1060,4 +1065,12 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 		decorationService.sendMessage(orderId, "装修收款", String.format("装修待付款金额%.3f元", Arith.div(decorationPaymentPO.getReferMoney(), 1000.0)), String.format("pages/payment/confirm/confirm?orderId=%s&pid=%s&paymentType=1", orderId, decorationPaymentPO.getDpid()));
 	}
 
+	private String buildCcidArgs(String orderId) {
+
+		if (orderId == null) return "";
+
+		CustomerChancePO customerChancePO = customerChanceDao.queryCustomerChance(orderId);
+
+		return customerChancePO != null ? ",\"ccid\":" + customerChancePO.getCcid() : "";
+	}
 }

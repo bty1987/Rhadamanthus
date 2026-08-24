@@ -27,6 +27,8 @@ import com.fanglin.communion.vo.CustomerVO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.security.SensitiveDataHelper;
 import com.fanglin.core.vo.Filter;
+import com.fanglin.customer.dao.CustomerChanceDao;
+import com.fanglin.customer.po.CustomerChancePO;
 import com.fanglin.customer.service.DecorationService;
 import com.fanglin.data.common.dao.ConstructionNodeDao;
 import com.fanglin.data.po.ConstructionNodePO;
@@ -67,6 +69,9 @@ import com.fanglin.log.context.ActionLogContext;
 @Service("paymentService")
 @Transactional(readOnly = true)
 public class PaymentServiceImpl implements PaymentService {
+
+	@Autowired
+	private CustomerChanceDao customerChanceDao;
 
 	@Autowired
 	private PaymentDao paymentDao;
@@ -281,7 +286,7 @@ public class PaymentServiceImpl implements PaymentService {
 				decorationPO.setStatus(DecorationPO.STATUS_DEPOSIT_INT);
 				decorationPO.setDepositTime(DateUtil.getDateToTimestamp(new Date()));
 				// 生成消息提示数据
-				messageQueuingDao.save(new MessageCueuingPO().init(paymentVO.getOrderId(), "collectPayment", "{\"orderId\":\"" + paymentVO.getOrderId() + "\",\"userId\":\"" + userId + ",\"event\":\"PAYMENT_COLLECTED\"" + (decorationPO.getBusitype() != null ? ",\"busiTypeName\":\"" + decorationPO.getBusitype().getName() + "\"" : "") + "}"));
+				messageQueuingDao.save(new MessageCueuingPO().init(paymentVO.getOrderId(), "collectPayment", "{\"orderId\":\"" + paymentVO.getOrderId() + "\",\"userId\":\"" + userId + ",\"event\":\"PAYMENT_COLLECTED\"" + (decorationPO.getBusitype() != null ? ",\"busiTypeName\":\"" + decorationPO.getBusitype().getName() + "\"" : "") + buildCcidArgs(paymentVO.getOrderId()) + "}"));
 			}
 
 			decorationDao.update(decorationPO);
@@ -812,5 +817,14 @@ public class PaymentServiceImpl implements PaymentService {
 		}
 
 		return aid;
+	}
+
+	private String buildCcidArgs(String orderId) {
+
+		if (orderId == null) return "";
+
+		CustomerChancePO customerChancePO = customerChanceDao.queryCustomerChance(orderId);
+
+		return customerChancePO != null ? ",\"ccid\":" + customerChancePO.getCcid() : "";
 	}
 }

@@ -25,6 +25,8 @@ import com.fanglin.construction.service.AcceptanceService;
 import com.fanglin.construction.vo.AcceptanceVO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.security.SensitiveDataHelper;
+import com.fanglin.customer.dao.CustomerChanceDao;
+import com.fanglin.customer.po.CustomerChancePO;
 import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.information.po.MessageCueuingPO;
@@ -37,6 +39,9 @@ import com.fanglin.utils.DateUtil;
 @Service("acceptanceService")
 @Transactional(readOnly = true)
 public class AcceptanceServiceImpl implements AcceptanceService {
+
+	@Autowired
+	private CustomerChanceDao customerChanceDao;
 
 	@Autowired
 	private AcceptanceDao acceptanceDao;
@@ -154,8 +159,17 @@ public class AcceptanceServiceImpl implements AcceptanceService {
 		constructionDao.update(constructionPO);
 
 		messageQueuingDao.save(new MessageQueuingPO().init(orderId, "updateAcceptance", "{\"orderId\":\"" + orderId + "\",\"status\":\"2\",\"event\":\"PROJECT_STATUS_CHANGED\"" + (constructionPO.getDecoration() != null && constructionPO.getDecoration().getBusitype() != null ? ",\"busiTypeName\":\"" + constructionPO.getDecoration().getBusitype().getName() + "\"" : "") + "}"));
-		messageQueuingDao.save(new MessageCueuingPO().init(orderId, "updateAcceptance", "{\"orderId\":\"" + orderId + "\",\"status\":\"2\",\"event\":\"PROJECT_STATUS_CHANGED\"" + (constructionPO.getDecoration() != null && constructionPO.getDecoration().getBusitype() != null ? ",\"busiTypeName\":\"" + constructionPO.getDecoration().getBusitype().getName() + "\"" : "") + "}"));
+		messageQueuingDao.save(new MessageCueuingPO().init(orderId, "updateAcceptance", "{\"orderId\":\"" + orderId + "\",\"status\":\"2\",\"event\":\"PROJECT_STATUS_CHANGED\"" + (constructionPO.getDecoration() != null && constructionPO.getDecoration().getBusitype() != null ? ",\"busiTypeName\":\"" + constructionPO.getDecoration().getBusitype().getName() + "\"" : "") + buildCcidArgs(orderId) + "}"));
 
 		return 0;
+	}
+
+	private String buildCcidArgs(String orderId) {
+
+		if (orderId == null) return "";
+
+		CustomerChancePO customerChancePO = customerChanceDao.queryCustomerChance(orderId);
+
+		return customerChancePO != null ? ",\"ccid\":" + customerChancePO.getCcid() : "";
 	}
 }

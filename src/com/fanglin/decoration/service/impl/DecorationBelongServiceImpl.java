@@ -26,8 +26,10 @@ import com.fanglin.communion.po.DepartmentPO;
 import com.fanglin.communion.vo.DepartmentVO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.security.SensitiveDataHelper;
+import com.fanglin.customer.dao.CustomerChanceDao;
 import com.fanglin.customer.dao.CustomerChanceOrderDao;
 import com.fanglin.customer.po.CustomerChanceOrderPO;
+import com.fanglin.customer.po.CustomerChancePO;
 import com.fanglin.customer.service.DecorationService;
 import com.fanglin.decoration.dao.DecorationAdditionDao;
 import com.fanglin.decoration.dao.DecorationBelongDao;
@@ -77,6 +79,9 @@ public class DecorationBelongServiceImpl implements DecorationBelongService {
 
 	@Autowired
 	private CustomerChanceOrderDao customerChanceOrderDao;
+
+	@Autowired
+	private CustomerChanceDao customerChanceDao;
 
 	@Override
 	public List<DecorationBelongVO> queryDecorationBelong(DecorationBelongVO decorationBelongVO) {
@@ -427,6 +432,7 @@ public class DecorationBelongServiceImpl implements DecorationBelongService {
 		String orderId = decorationPO.getOrderId();
 		String originOrderId = "";
 		String targetOrderId = "";
+		String customerno = "";
 
 		if (invalidCcid != null && invalidCcid > 0) {
 			CustomerChanceOrderPO chanceOrder = customerChanceOrderDao.queryCustomerChanceOrder(invalidCcid);
@@ -436,8 +442,11 @@ public class DecorationBelongServiceImpl implements DecorationBelongService {
 		if (activeCcid != null && activeCcid > 0) {
 			CustomerChanceOrderPO chanceOrder = customerChanceOrderDao.queryCustomerChanceOrder(activeCcid);
 			if (chanceOrder != null) targetOrderId = chanceOrder.getOrderId();
+
+			CustomerChancePO customerChancePO = customerChanceDao.get(activeCcid);
+			if (customerChancePO != null && customerChancePO.getCustomerno() != null && !customerChancePO.getCustomerno().isEmpty()) customerno = customerChancePO.getCustomerno();
 		}
 
-		return "{\"orderId\":\"" + orderId + "\",\"userId\":\"" + userPO.getUserId() + "\",\"belongType\":" + type + ",\"event\":\"" + (type == DecorationBelongPO.BELONGTYPE_DESIGN_INT ? "TEAM_DESIGNER_CHANGED" : "TEAM_SALESMAN_CHANGED") + "\"" + (decorationPO.getBusitype() != null ? ",\"busiTypeName\":\"" + decorationPO.getBusitype().getName() + "\"" : "") + ",\"originOrderId\":\"" + originOrderId + "\",\"targetOrderId\":\"" + targetOrderId + "\",\"mergeFlag\":" + mergeFlag + "}";
+		return "{\"orderId\":\"" + orderId + "\",\"userId\":\"" + userPO.getUserId() + "\",\"belongType\":" + type + ",\"event\":\"" + (type == DecorationBelongPO.BELONGTYPE_DESIGN_INT ? "TEAM_DESIGNER_CHANGED" : "TEAM_SALESMAN_CHANGED") + "\"" + (decorationPO.getBusitype() != null ? ",\"busiTypeName\":\"" + decorationPO.getBusitype().getName() + "\"" : "") + ",\"originOrderId\":\"" + originOrderId + "\",\"targetOrderId\":\"" + targetOrderId + "\",\"mergeFlag\":" + mergeFlag + (activeCcid != null && activeCcid > 0 ? ",\"ccid\":" + activeCcid : "") + (customerno.isEmpty() ? "" : ",\"customerNo\":\"" + customerno + "\"") + "}";
 	}
 }

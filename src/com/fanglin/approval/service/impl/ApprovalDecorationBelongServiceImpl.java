@@ -425,6 +425,6 @@ public class ApprovalDecorationBelongServiceImpl implements ApprovalDecorationBe
 			if (chanceOrder != null) targetOrderId = chanceOrder.getOrderId();
 		}
 
-		return "{\"orderId\":\"" + orderId + "\",\"userId\":\"" + userId + "\",\"belongType\":" + belongType + ",\"event\":\"" + (belongType == DecorationBelongPO.BELONGTYPE_DESIGN_INT ? "TEAM_DESIGNER_CHANGED" : "TEAM_SALESMAN_CHANGED") + "\"" + (decorationPO.getBusitype() != null ? ",\"busiTypeName\":\"" + decorationPO.getBusitype().getName() + "\"" : "") + ",\"originOrderId\":\"" + originOrderId + "\",\"targetOrderId\":\"" + targetOrderId + "\",\"mergeFlag\":" + mergeFlag + "}";
+		return "{\"orderId\":\"" + orderId + "\",\"userId\":\"" + userId + "\",\"belongType\":" + belongType + ",\"event\":\"" + (belongType == DecorationBelongPO.BELONGTYPE_DESIGN_INT ? "TEAM_DESIGNER_CHANGED" : "TEAM_SALESMAN_CHANGED") + "\"" + (decorationPO.getBusitype() != null ? ",\"busiTypeName\":\"" + decorationPO.getBusitype().getName() + "\"" : "") + ",\"originOrderId\":\"" + originOrderId + "\",\"targetOrderId\":\"" + targetOrderId + "\",\"mergeFlag\":" + mergeFlag + (activeCcid != null && activeCcid > 0 ? ",\"ccid\":" + activeCcid : "") + "}";
 	}
 }
