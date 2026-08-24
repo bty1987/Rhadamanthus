@@ -82,7 +82,7 @@ var decorationUtils = {
 
                 var propertyArr = [["品类:", v.category, "grey"], ["品牌:", v.brand.name, "grey"], ["定金:", v.depositpay, "blue"], ["补款:", v.fullpay, "blue"], ["总额:", v.total, "blue"], ["当前总额:", v.amount, "blue"], ["优惠券:", salesReceiptMap[v.sid] ? salesReceiptMap[v.sid].coupon : 0, "blue"], ["券信息:", salesReceiptMap[v.sid] ? salesReceiptMap[v.sid].couponInfo : "", "grey"], ["定金状态:", $depositpayStatus[v.depositpayStatus], "red"], ["补款状态:", $fullpayStatus[v.fullpayStatus], "red"], ["状态:", $statues[v.status], "red"], ["结算状态:", $balanceStatuses[v.balanceStatus], "red"], ["类型:", constant.sales().sales.type.keys[v.type], "red"], ["创建时间:", v.createTime, "green "], ["补款时间:", v.fullpayTime, "green "], ["结算时间:", v.balanceTime, "green "], ["完结时间:", v.finishTime, "green "], ["完结人:", v.finisher.currentName, "blue"]];
 
-                // 国补单(type=1)利润=总价-结算值(salesbalance.balance,type=0/onetype=0),无购货结算行显示-
+                // 国补单(type=1)利润=总价-结算值(salesbalance.pbalance,type=0/onetype=0),无购货结算行显示-
                 if (v.type == 1) {
                     propertyArr.splice(6, 0, ["利润额:", salesBalanceMap[v.sid] != null ? utils.changeThrDecimal(utils.accSub(v.total, salesBalanceMap[v.sid])) : "-", "blue"]);
                 }
@@ -128,7 +128,7 @@ var decorationUtils = {
 
         var saleses = [];
         var salesReceiptMap = {};// 销售单收款券:sid -> {coupon, couponInfo},取salesReceipt的券
-        var salesBalanceMap = {};// 国补单(type=1)sid -> 购货结算行balance,用于计算利润
+        var salesBalanceMap = {};// 国补单(type=1)sid -> 购货结算行pbalance,用于计算利润
 
         com.post(api.payment.querySalesPaymentByOrderId, {
             "salesPayment.sales.orderId": decorationDetail.orderId
@@ -206,7 +206,7 @@ var decorationUtils = {
                 com.post(api.sales.querySalesBalanceByOrderId, options, function(res) {
 
                     $.each(res.salesBalances, function(i, v) {
-                        salesBalanceMap[v.sales.sid] = v.balance;
+                        salesBalanceMap[v.sales.sid] = v.pbalance;
                     });
                 }, null, false);
             }
