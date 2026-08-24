@@ -26,6 +26,8 @@ import com.fanglin.common.dao.ServiceRecordDao;
 import com.fanglin.common.po.ServiceRecordPO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.security.SensitiveDataHelper;
+import com.fanglin.customer.dao.CustomerChanceDao;
+import com.fanglin.customer.po.CustomerChancePO;
 import com.fanglin.customer.service.DecorationService;
 import com.fanglin.decoration.dao.DecorationActivityItemDao;
 import com.fanglin.decoration.dao.DecorationActivityRecordDao;
@@ -56,6 +58,9 @@ import com.fanglin.wechat.vo.WeChatPhoneInfoVO;
 public class DecorationActivityItemServiceImpl implements DecorationActivityItemService {
 
 	private static final Logger log = LoggerFactory.getLogger(DecorationActivityItemServiceImpl.class);
+
+	@Autowired
+	private CustomerChanceDao customerChanceDao;
 
 	@Autowired
 	private DecorationActivityItemDao decorationActivityItemDao;
@@ -522,7 +527,7 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 		subDecorationForCut(decorationPO, decorationActivityItemPO);
 
 		// 生成消息队列数据
-		messageQueuingDao.save(new MessageCueuingPO().init(decorationActivityItemPO.getOrderId(), "consumeDecorationActivityItem", "{\"orderId\":\"" + decorationActivityItemPO.getOrderId() + "\",\"daiId\":\"" + decorationActivityItemPO.getDaiId() + "\",\"status\":\"" + DecorationActivityItemPO.STATUS_VERIFY_INT + "\",\"userId\":\"" + userId + "\",\"event\":\"ACTIVITY_ITEM_VERIFIED\"" + (decorationPO.getBusitype() != null ? ",\"busiTypeName\":\"" + decorationPO.getBusitype().getName() + "\"" : "") + "}"));
+		messageQueuingDao.save(new MessageCueuingPO().init(decorationActivityItemPO.getOrderId(), "consumeDecorationActivityItem", "{\"orderId\":\"" + decorationActivityItemPO.getOrderId() + "\",\"daiId\":\"" + decorationActivityItemPO.getDaiId() + "\",\"status\":\"" + DecorationActivityItemPO.STATUS_VERIFY_INT + "\",\"userId\":\"" + userId + "\",\"event\":\"ACTIVITY_ITEM_VERIFIED\"" + (decorationPO.getBusitype() != null ? ",\"busiTypeName\":\"" + decorationPO.getBusitype().getName() + "\"" : "") + buildCcidArgs(decorationActivityItemPO.getOrderId()) + "}"));
 
 		return 0;
 	}
@@ -661,5 +666,14 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 		decorationPO.setFactPrice(Arith.sub(decorationPO.getOrderTotalPrice(), couponCut));
 
 		decorationDao.update(decorationPO);
+	}
+
+	private String buildCcidArgs(String orderId) {
+
+		if (orderId == null) return "";
+
+		CustomerChancePO customerChancePO = customerChanceDao.queryCustomerChance(orderId);
+
+		return customerChancePO != null ? ",\"ccid\":" + customerChancePO.getCcid() : "";
 	}
 }

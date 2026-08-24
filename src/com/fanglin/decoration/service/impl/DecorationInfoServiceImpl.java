@@ -364,7 +364,7 @@ public class DecorationInfoServiceImpl implements DecorationInfoService {
 				customerSourceRecordDao.save(new CustomerSourceRecordPO().init(customerSourcePO.getCsid(), customerChancePO.getCcid(), String.format("referOrderId: %s -> %s", oldReferOrderId, decorationInfoVO.getReferOrderId()), CustomerSourceRecordPO.TYPE_REFER_INT, operater));
 
 				// 生成消息提示数据
-				messageQueuingDao.save(new MessageCueuingPO().init(decorationVO.getOrderId(), "referDecorationInfo", "{\"orderId\":\"" + decorationVO.getOrderId() + "\",\"referOrderId\":\"" + decorationInfoVO.getReferOrderId() + "\",\"oldReferOrderId\":\"" + oldReferOrderId + "\",\"userId\":\"" + userId + "\",\"event\":\"REFER_ADDED\",\"source\":\"customerSource\"}"));
+				messageQueuingDao.save(new MessageCueuingPO().init(decorationVO.getOrderId(), "referDecorationInfo", "{\"orderId\":\"" + decorationVO.getOrderId() + "\",\"referOrderId\":\"" + decorationInfoVO.getReferOrderId() + "\",\"oldReferOrderId\":\"" + oldReferOrderId + "\",\"userId\":\"" + userId + "\",\"event\":\"REFER_ADDED\",\"source\":\"customerSource\"" + buildCustomernoArgs(customerChancePO) + "}"));
 
 				return 0;
 			}
@@ -386,7 +386,7 @@ public class DecorationInfoServiceImpl implements DecorationInfoService {
 			customerOriginRecordDao.save(new CustomerOriginRecordPO().init(customerOriginPO.getCsid(), String.format("referOrderId: %s -> %s", oldReferOrderId, decorationInfoVO.getReferOrderId()), CustomerOriginRecordPO.TYPE_REFER_INT, operater));
 
 			// 生成消息提示数据
-			messageQueuingDao.save(new MessageCueuingPO().init(decorationVO.getOrderId(), "referDecorationInfo", "{\"orderId\":\"" + decorationVO.getOrderId() + "\",\"referOrderId\":\"" + decorationInfoVO.getReferOrderId() + "\",\"oldReferOrderId\":\"" + oldReferOrderId + "\",\"userId\":\"" + userId + "\",\"event\":\"REFER_ADDED\",\"source\":\"customerOrigin\"}"));
+			messageQueuingDao.save(new MessageCueuingPO().init(decorationVO.getOrderId(), "referDecorationInfo", "{\"orderId\":\"" + decorationVO.getOrderId() + "\",\"referOrderId\":\"" + decorationInfoVO.getReferOrderId() + "\",\"oldReferOrderId\":\"" + oldReferOrderId + "\",\"userId\":\"" + userId + "\",\"event\":\"REFER_ADDED\",\"source\":\"customerOrigin\"" + buildCustomernoArgs(customerChancePO) + "}"));
 
 			return 0;
 		}
@@ -405,7 +405,7 @@ public class DecorationInfoServiceImpl implements DecorationInfoService {
 		decorationOperateDao.save(new DecorationOperatePO().refer(decorationVO.getOrderId(), operater, String.format("referOrderId: %s -> %s", oldReferOrderId, decorationInfoVO.getReferOrderId())));
 
 		// 生成消息提示数据
-		messageQueuingDao.save(new MessageCueuingPO().init(decorationVO.getOrderId(), "referDecorationInfo", "{\"orderId\":\"" + decorationVO.getOrderId() + "\",\"referOrderId\":\"" + decorationInfoVO.getReferOrderId() + "\",\"oldReferOrderId\":\"" + (oldReferOrderId != null ? oldReferOrderId : "") + "\",\"userId\":\"" + userId + "\",\"event\":\"REFER_ADDED\",\"source\":\"decorationInfo\"}"));
+		messageQueuingDao.save(new MessageCueuingPO().init(decorationVO.getOrderId(), "referDecorationInfo", "{\"orderId\":\"" + decorationVO.getOrderId() + "\",\"referOrderId\":\"" + decorationInfoVO.getReferOrderId() + "\",\"oldReferOrderId\":\"" + (oldReferOrderId != null ? oldReferOrderId : "") + "\",\"userId\":\"" + userId + "\",\"event\":\"REFER_ADDED\",\"source\":\"decorationInfo\"" + buildCustomernoArgs(customerChancePO) + "}"));
 
 		return 0;
 	}
@@ -442,7 +442,7 @@ public class DecorationInfoServiceImpl implements DecorationInfoService {
 				customerSourceRecordDao.save(new CustomerSourceRecordPO().init(customerChancePO.getSource().getCsid(), customerChancePO.getCcid(), String.format("referOrderId: %s -> null", oldReferOrderId), CustomerSourceRecordPO.TYPE_REFER_INT, operater));
 
 				// 生成消息提示数据
-				messageQueuingDao.save(new MessageCueuingPO().init(decorationVO.getOrderId(), "deleteReferDecorationInfo", "{\"orderId\":\"" + decorationVO.getOrderId() + "\",\"referOrderId\":\"" + decorationInfoVO.getReferOrderId() + "\",\"oldReferOrderId\":\"" + oldReferOrderId + "\",\"userId\":\"" + userId + "\",\"event\":\"REFER_DELETED\",\"source\":\"customerSource\"}"));
+				messageQueuingDao.save(new MessageCueuingPO().init(decorationVO.getOrderId(), "deleteReferDecorationInfo", "{\"orderId\":\"" + decorationVO.getOrderId() + "\",\"referOrderId\":\"" + decorationInfoVO.getReferOrderId() + "\",\"oldReferOrderId\":\"" + oldReferOrderId + "\",\"userId\":\"" + userId + "\",\"event\":\"REFER_DELETED\",\"source\":\"customerSource\"" + buildCustomernoArgs(customerChancePO) + "}"));
 
 				return 0;
 			}
@@ -462,7 +462,7 @@ public class DecorationInfoServiceImpl implements DecorationInfoService {
 				customerSourceRecordDao.save(new CustomerSourceRecordPO().init(customerChancePO1.getSource().getCsid(), customerChancePO1.getCcid(), String.format("referOrderId: %s -> null", oldReferOrderId), CustomerSourceRecordPO.TYPE_REFER_INT, operater));
 
 				// 生成消息提示数据
-				messageQueuingDao.save(new MessageCueuingPO().init(decorationVO.getOrderId(), "deleteReferDecorationInfo", "{\"orderId\":\"" + decorationVO.getOrderId() + "\",\"referOrderId\":\"" + decorationInfoVO.getReferOrderId() + "\",\"oldReferOrderId\":\"" + oldReferOrderId + "\",\"userId\":\"" + userId + "\",\"event\":\"REFER_DELETED\",\"source\":\"customerSource\"}"));
+				messageQueuingDao.save(new MessageCueuingPO().init(decorationVO.getOrderId(), "deleteReferDecorationInfo", "{\"orderId\":\"" + decorationVO.getOrderId() + "\",\"referOrderId\":\"" + decorationInfoVO.getReferOrderId() + "\",\"oldReferOrderId\":\"" + oldReferOrderId + "\",\"userId\":\"" + userId + "\",\"event\":\"REFER_DELETED\",\"source\":\"customerSource\"" + buildCustomernoArgs(customerChancePO) + "}"));
 
 				return 0;
 			}
@@ -483,7 +483,7 @@ public class DecorationInfoServiceImpl implements DecorationInfoService {
 				customerOriginRecordDao.save(new CustomerOriginRecordPO().init(customerOriginPO.getCsid(), String.format("referOrderId: %s -> null", oldReferOrderId), CustomerOriginRecordPO.TYPE_REFER_INT, operater));
 
 				// 生成消息提示数据
-				messageQueuingDao.save(new MessageCueuingPO().init(decorationVO.getOrderId(), "deleteReferDecorationInfo", "{\"orderId\":\"" + decorationVO.getOrderId() + "\",\"referOrderId\":\"" + decorationInfoVO.getReferOrderId() + "\",\"oldReferOrderId\":\"" + oldReferOrderId + "\",\"userId\":\"" + userId + "\",\"event\":\"REFER_DELETED\",\"source\":\"customerOrigin\"}"));
+				messageQueuingDao.save(new MessageCueuingPO().init(decorationVO.getOrderId(), "deleteReferDecorationInfo", "{\"orderId\":\"" + decorationVO.getOrderId() + "\",\"referOrderId\":\"" + decorationInfoVO.getReferOrderId() + "\",\"oldReferOrderId\":\"" + oldReferOrderId + "\",\"userId\":\"" + userId + "\",\"event\":\"REFER_DELETED\",\"source\":\"customerOrigin\"" + buildCustomernoArgs(customerChancePO) + "}"));
 
 				return 0;
 			}
@@ -504,7 +504,7 @@ public class DecorationInfoServiceImpl implements DecorationInfoService {
 				customerOriginRecordDao.save(new CustomerOriginRecordPO().init(customerOriginPO1.getCsid(), String.format("referOrderId: %s -> null", oldReferOrderId), CustomerOriginRecordPO.TYPE_REFER_INT, operater));
 
 				// 生成消息提示数据
-				messageQueuingDao.save(new MessageCueuingPO().init(decorationVO.getOrderId(), "deleteReferDecorationInfo", "{\"orderId\":\"" + decorationVO.getOrderId() + "\",\"referOrderId\":\"" + decorationInfoVO.getReferOrderId() + "\",\"oldReferOrderId\":\"" + oldReferOrderId + "\",\"userId\":\"" + userId + "\",\"event\":\"REFER_DELETED\",\"source\":\"customerOrigin\"}"));
+				messageQueuingDao.save(new MessageCueuingPO().init(decorationVO.getOrderId(), "deleteReferDecorationInfo", "{\"orderId\":\"" + decorationVO.getOrderId() + "\",\"referOrderId\":\"" + decorationInfoVO.getReferOrderId() + "\",\"oldReferOrderId\":\"" + oldReferOrderId + "\",\"userId\":\"" + userId + "\",\"event\":\"REFER_DELETED\",\"source\":\"customerOrigin\"" + buildCustomernoArgs(customerChancePO) + "}"));
 
 				return 0;
 			}
@@ -521,7 +521,7 @@ public class DecorationInfoServiceImpl implements DecorationInfoService {
 			decorationOperateDao.save(new DecorationOperatePO().unrefer(decorationVO.getOrderId(), operater, String.format("referOrderId: %s -> null", oldReferOrderId)));
 
 			// 生成消息提示数据
-			messageQueuingDao.save(new MessageCueuingPO().init(decorationVO.getOrderId(), "deleteReferDecorationInfo", "{\"orderId\":\"" + decorationVO.getOrderId() + "\",\"referOrderId\":\"" + decorationInfoVO.getReferOrderId() + "\",\"oldReferOrderId\":\"" + oldReferOrderId + "\",\"userId\":\"" + userId + "\",\"event\":\"REFER_DELETED\",\"source\":\"decorationInfo\"}"));
+			messageQueuingDao.save(new MessageCueuingPO().init(decorationVO.getOrderId(), "deleteReferDecorationInfo", "{\"orderId\":\"" + decorationVO.getOrderId() + "\",\"referOrderId\":\"" + decorationInfoVO.getReferOrderId() + "\",\"oldReferOrderId\":\"" + oldReferOrderId + "\",\"userId\":\"" + userId + "\",\"event\":\"REFER_DELETED\",\"source\":\"decorationInfo\"" + buildCustomernoArgs(customerChancePO) + "}"));
 
 			return 0;
 		}
@@ -537,11 +537,20 @@ public class DecorationInfoServiceImpl implements DecorationInfoService {
 			decorationOperateDao.save(new DecorationOperatePO().unrefer(decorationInfoVO.getReferOrderId(), operater, String.format("referOrderId: %s -> null", oldReferOrderId)));
 
 			// 生成消息提示数据
-			messageQueuingDao.save(new MessageCueuingPO().init(decorationVO.getOrderId(), "deleteReferDecorationInfo", "{\"orderId\":\"" + decorationVO.getOrderId() + "\",\"referOrderId\":\"" + decorationInfoVO.getReferOrderId() + "\",\"oldReferOrderId\":\"" + oldReferOrderId + "\",\"userId\":\"" + userId + "\",\"event\":\"REFER_DELETED\",\"source\":\"decorationInfo\"}"));
+			messageQueuingDao.save(new MessageCueuingPO().init(decorationVO.getOrderId(), "deleteReferDecorationInfo", "{\"orderId\":\"" + decorationVO.getOrderId() + "\",\"referOrderId\":\"" + decorationInfoVO.getReferOrderId() + "\",\"oldReferOrderId\":\"" + oldReferOrderId + "\",\"userId\":\"" + userId + "\",\"event\":\"REFER_DELETED\",\"source\":\"decorationInfo\"" + buildCustomernoArgs(customerChancePO) + "}"));
 
 			return 0;
 		}
 
 		return 0;
+	}
+
+	private String buildCustomernoArgs(CustomerChancePO customerChancePO) {
+
+		if (customerChancePO == null) return "";
+
+		String customerno = customerChancePO.getCustomerno();
+
+		return ",\"ccid\":" + customerChancePO.getCcid() + (customerno != null && !customerno.isEmpty() ? ",\"customerNo\":\"" + customerno + "\"" : "");
 	}
 }

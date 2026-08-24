@@ -37,6 +37,8 @@ import com.fanglin.communion.po.CustomerPhonePO;
 import com.fanglin.communion.po.DepartmentPO;
 import com.fanglin.communion.po.DepartmentPartnerPO;
 import com.fanglin.communion.po.HousePO;
+import com.fanglin.customer.dao.CustomerChanceDao;
+import com.fanglin.customer.po.CustomerChancePO;
 import com.fanglin.log.context.ActionLogContext;
 import com.fanglin.communion.po.ServiceNodePO;
 import com.fanglin.communion.vo.CustomerVO;
@@ -108,6 +110,9 @@ import com.fanglin.utils.Paging;
 @Service("decorationServiceO")
 @Transactional(readOnly = true)
 public class DecorationServiceImpl implements DecorationService {
+
+	@Autowired
+	private CustomerChanceDao customerChanceDao;
 
 	@Autowired
 	private CompanyDao companyDao;
@@ -1491,7 +1496,7 @@ public class DecorationServiceImpl implements DecorationService {
 		// 生成消息队列数据
 		messageQueuingDao.save(new MessageQueuingPO().init(decorationPO.getOrderId(), "obsoleteDecoration", "{\"orderId\":\"" + decorationPO.getOrderId() + "\",\"userId\":\"" + userId + "\",\"event\":\"CUSTOMER_STATUS_CHANGED\"" + (decorationPO.getBusitype() != null ? ",\"busiTypeName\":\"" + decorationPO.getBusitype().getName() + "\"" : "") + "}"));
 		// 生成消息提示数据
-		messageQueuingDao.save(new MessageCueuingPO().init(decorationPO.getOrderId(), "obsoleteDecoration", "{\"orderId\":\"" + decorationPO.getOrderId() + "\",\"userId\":\"" + userId + "\",\"event\":\"CUSTOMER_STATUS_CHANGED\"" + (decorationPO.getBusitype() != null ? ",\"busiTypeName\":\"" + decorationPO.getBusitype().getName() + "\"" : "") + "}"));
+		messageQueuingDao.save(new MessageCueuingPO().init(decorationPO.getOrderId(), "obsoleteDecoration", "{\"orderId\":\"" + decorationPO.getOrderId() + "\",\"userId\":\"" + userId + "\",\"event\":\"CUSTOMER_STATUS_CHANGED\"" + (decorationPO.getBusitype() != null ? ",\"busiTypeName\":\"" + decorationPO.getBusitype().getName() + "\"" : "") + buildCcidArgs(decorationPO.getOrderId()) + "}"));
 	}
 
 	@Override
@@ -1628,7 +1633,7 @@ public class DecorationServiceImpl implements DecorationService {
 		// 生成消息队列数据
 		messageQueuingDao.save(new MessageQueuingPO().init(orderId, "terminalDecoration", "{\"orderId\":\"" + orderId + "\",\"userId\":\"" + userId + "\",\"event\":\"CUSTOMER_STATUS_CHANGED\"" + (decorationPO.getBusitype() != null ? ",\"busiTypeName\":\"" + decorationPO.getBusitype().getName() + "\"" : "") + "}"));
 		// 生成消息提示数据
-		messageQueuingDao.save(new MessageCueuingPO().init(orderId, "terminalDecoration", "{\"orderId\":\"" + orderId + "\",\"userId\":\"" + userId + "\",\"event\":\"CUSTOMER_STATUS_CHANGED\"" + (decorationPO.getBusitype() != null ? ",\"busiTypeName\":\"" + decorationPO.getBusitype().getName() + "\"" : "") + "}"));
+		messageQueuingDao.save(new MessageCueuingPO().init(orderId, "terminalDecoration", "{\"orderId\":\"" + orderId + "\",\"userId\":\"" + userId + "\",\"event\":\"CUSTOMER_STATUS_CHANGED\"" + (decorationPO.getBusitype() != null ? ",\"busiTypeName\":\"" + decorationPO.getBusitype().getName() + "\"" : "") + buildCcidArgs(orderId) + "}"));
 	}
 
 	@Override
@@ -1866,4 +1871,12 @@ public class DecorationServiceImpl implements DecorationService {
 		return decorationVO;
 	}
 
+	private String buildCcidArgs(String orderId) {
+
+		if (orderId == null) return "";
+
+		CustomerChancePO customerChancePO = customerChanceDao.queryCustomerChance(orderId);
+
+		return customerChancePO != null ? ",\"ccid\":" + customerChancePO.getCcid() : "";
+	}
 }
