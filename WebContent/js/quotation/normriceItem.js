@@ -8,14 +8,21 @@ jQuery(function($) {
         STATUS_CONFIRMED_INT: 2,
         STATUS_REJECTED_INT: 3,
 
+        // 附加项图片 (quotationPicture: atttype=3附加项图片, type=1钉钉媒体图片, status=0有效)
+        ATTTYPE_PICTURE_INT: 3,
+        PICTURE_TYPE_DING_INT: 1,
+        PICTURE_STATUS_YES_SHORT: 0,
+
         // 业务参数
         orderId: params.quotation.orderId,
         cnid: params.construction.constructionSchedule ? params.construction.constructionSchedule.cnid : null,
         currentQid: null,
+        currentPictureItem: null,
 
         // 缓存元素
         modals: {
-            addNormriceItemModal: com.focusPage('#addNormriceItemModal')
+            addNormriceItemModal: com.focusPage('#addNormriceItemModal'),
+            pictureModal: com.focusPage('#normriceItemPictureModal')
         },
 
         btns: {
@@ -97,6 +104,21 @@ jQuery(function($) {
 
     // 保存按钮
     normriceItem.btns.saveNormriceItem.bindClick(saveNormriceItem);
+
+    // 图片按钮 (事件委托)
+    normriceItem.items.normriceItemResultList.on('click', '.btn-picture-normriceitem', function() {
+
+        normriceItem.currentPictureItem = {
+            npiid: $(this).data('npiid'),
+            qiid: $(this).data('qiid')
+        };
+
+        loadPictures(normriceItem.currentPictureItem.npiid);
+        normriceItem.modals.pictureModal.modal('show');
+    });
+
+    // 上传图片按钮 (页面初始化一次)
+    initUploadBtn();
 
     // 确认附加项 (事件委托)
     normriceItem.items.normriceItemResultList.on('click', '.btn-confirm-normriceitem', function() {
@@ -270,17 +292,95 @@ jQuery(function($) {
     // 根据状态返回操作按钮 HTML
     function getActionHtml(v) {
 
+        var pictureBtn = '<button type="button" class="btn btn-minier btn-info btn-picture-normriceitem" data-npiid="' + v.npiid + '" data-qiid="' + (v.qiid || '') + '">图片</button> ';
+
         if (v.status == normriceItem.STATUS_CONFIRMED_INT) {
-            return '<button type="button" class="btn btn-minier btn-danger btn-reject-normriceitem" data-npiid="' + v.npiid + '">驳回</button>';
+            return pictureBtn + '<button type="button" class="btn btn-minier btn-danger btn-reject-normriceitem" data-npiid="' + v.npiid + '">驳回</button>';
         }
 
         if (v.status == normriceItem.STATUS_REJECTED_INT) {
-            return '<span class="label label-default arrowed-in">-</span>';
+            return pictureBtn + '<span class="label label-default arrowed-in">-</span>';
         }
 
-        return '<button type="button" class="btn btn-minier btn-primary btn-confirm-normriceitem" data-npiid="' + v.npiid + '">确认</button> ' +
+        return pictureBtn + '<button type="button" class="btn btn-minier btn-primary btn-confirm-normriceitem" data-npiid="' + v.npiid + '">确认</button> ' +
             '<button type="button" class="btn btn-minier btn-danger btn-reject-normriceitem" data-npiid="' + v.npiid + '">驳回</button> ' +
             '<button type="button" class="btn btn-minier btn-yellow btn-delete-normriceitem" data-npiid="' + v.npiid + '">删除</button>';
+    }
+
+    // 加载附加项图片 (quotationPicture.qid=附加项npiid, atttype=3附加项图片类型)
+    function loadPictures(npiid) {
+
+        com.focusPage('#normriceItemDrawing').html("");
+
+        com.post(api.quotation.queryQuotationPicture, {
+            "quotationPicture.qid": npiid,
+            "quotationPicture.atttype": normriceItem.ATTTYPE_PICTURE_INT
+        }, function(data) {
+
+            var quotationPictures = data.quotationPictures;
+            if (quotationPictures && quotationPictures.length) {
+                $.each(quotationPictures, function(i, value) {
+
+                    if (value.status == normriceItem.PICTURE_STATUS_YES_SHORT) {
+                        appendGalleryElement(value);
+                    }
+                });
+
+                com.popup4photos(com.focusPage("#normriceItemDrawing"));
+            }
+        }, null, false);
+    }
+
+    // 渲染单张图片 (含删除按钮)
+    function appendGalleryElement(value) {
+
+        var gallery = com.focusPage("#normriceItemDrawing");
+        var imgLi = $("<li></li>").attr("id", "gallery_li" + value.qpid).addClass("text-center col-sm-4").css("border", "0px").css("border-color", "white").css("padding", "0px").css("height", "150px").css("width", "150px").appendTo(gallery);
+        var img = $('<img/>');
+        var $imgA = $('<a></a>').attr('data-rel', 'colorbox').addClass('cboxElement').attr('href', com.showImg(img, value.path, 200, 200, '200x200')).attr('target', '_blank').append(img).appendTo(imgLi);
+        var imgA = $("<a></a>").addClass('cboxElement').attr("target", "_blank").css("height", "150px").append(img).appendTo(imgLi);
+        com.showImg(img, value.path, 150, 150, value.name, null, value.type);
+        var toolsDiv = $("<div></div>").addClass("tools tools-bottom").appendTo(imgLi);
+        var toolsA = $("<a></a>").attr("href", "#").on("click", function() {
+
+            com.post(api.quotation.deleteQuotationPicture, {
+                "quotationPicture.qpid": value.qpid
+            }, function(res) {
+
+                com.focusPage("#gallery_li" + value.qpid).remove();
+            });
+        }).appendTo(toolsDiv);
+        $("<i></i>").addClass("icon-remove red").appendTo(toolsA);
+    }
+
+    // 上传图片 (批量接口 quotationPictures[i], name取路径最后一段, type=1钉钉媒体图片, atttype=3附加项)
+    function initUploadBtn() {
+
+        com.uploadify("#normriceItemUpload", "上传图片", api.common.uploadImg, 'btn btn-success', '*.jpg;*.jpeg;*.gif;*.png', {
+            'uploadType': 0
+        }, 5, function(data) {
+
+            if (!normriceItem.currentPictureItem) return;
+
+            var path = data.resUrl;
+
+            var options = {
+                "quotationPictures[0].orderId": normriceItem.orderId,
+                "quotationPictures[0].qid": normriceItem.currentPictureItem.npiid,
+                "quotationPictures[0].areaName": "",
+                "quotationPictures[0].qiid": normriceItem.currentPictureItem.qiid,
+                "quotationPictures[0].name": path.split('/').pop(),
+                "quotationPictures[0].path": path,
+                "quotationPictures[0].filesize": 0,
+                "quotationPictures[0].type": normriceItem.PICTURE_TYPE_DING_INT,
+                "quotationPictures[0].atttype": normriceItem.ATTTYPE_PICTURE_INT
+            };
+
+            com.post(api.quotation.addQuotationPicture, options, function(res) {
+
+                loadPictures(normriceItem.currentPictureItem.npiid);
+            });
+        });
     }
 
 });
