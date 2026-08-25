@@ -119,6 +119,10 @@ jQuery(function($) {
 
     management.items.orderIdForHidden = com.focusPage("#orderIdForHidden");
 
+    management.items.mchNo = com.focusPage("#mchNo");
+    management.items.bsCheckoutPublickey = com.focusPage("#bsCheckoutPublickey");
+    management.items.bsPrivateKey = com.focusPage("#bsPrivateKey");
+
     management.items.orderIdForResetDesign = com.focusPage("#orderIdForResetDesign");
 
     management.decorationForOrderIdModal = com.focusPage("#decorationForOrderIdModal").on('hide.bs.modal', function(e) {
@@ -264,6 +268,12 @@ jQuery(function($) {
     });
 
     management.hiddenDecorationModal = com.focusPage("#hiddenDecorationModal").on('hide.bs.modal', function(e) {
+
+        com.cleanItems(management.items);
+        com.clearValidator();
+    });
+
+    management.updateCibPayChannelModal = com.focusPage("#updateCibPayChannelModal").on('hide.bs.modal', function(e) {
 
         com.cleanItems(management.items);
         com.clearValidator();
@@ -501,6 +511,11 @@ jQuery(function($) {
     com.focusPage("#checkoutConstructionSchedule").click(function() {
 
         management.checkoutConstructionScheduleModal.modal("show");
+    });
+
+    com.focusPage("#updateCibPayChannel").click(function() {
+
+        management.updateCibPayChannelModal.modal("show");
     });
 
     com.focusPage("#saveOrderIdBtn").click(function() {
@@ -937,6 +952,26 @@ jQuery(function($) {
         });
 
         management.changeDecorationForPayScaleModal.modal("hide");
+    });
+
+    com.focusPage("#saveCibPayChannelBtn").click(function() {
+
+        if (com.validate("updateCibPayChannelModal")) {
+            return false;
+        }
+
+        var options = {
+            "mchNo": management.items.mchNo.val(),
+            "bsCheckoutPublickey": management.items.bsCheckoutPublickey.val(),
+            "bsPrivateKey": management.items.bsPrivateKey.val()
+        };
+
+        com.post(api.payment.updateKey, options, function(res) {
+
+            com.showAlert(com.info, "操作成功");
+
+            management.updateCibPayChannelModal.modal("hide");
+        });
     });
 
     com.focusPage("#saveHiddenDecorationBtn").click(function() {
