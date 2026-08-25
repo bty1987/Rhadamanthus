@@ -815,6 +815,23 @@ $(function() {
             searcher.doSearch();
             salesPayment.modals.collectModal.modal("hide");
             com.showAlert(com.info, "操作成功")
+
+            // 收款完成后直接确认,与装修款/预付款保持一致(退款/更新款项不确认)
+            if (url == api.payment.collectSalesPayment || url == api.payment.collectSalesPayments) {
+
+                var confirmOptions = {};
+
+                if (url == api.payment.collectSalesPayments && salesPayment.spids && salesPayment.spids.length > 0) {
+                    $.each(salesPayment.spids, function(i, v) {
+                        confirmOptions["spids[" + i + "]"] = v;
+                    });
+                } else {
+                    confirmOptions["spids[0]"] = payment.spid;
+                }
+
+                com.post(api.payment.confirmSalesPayment, confirmOptions, function(confirmRes) {
+                });
+            }
         });
     }
 
