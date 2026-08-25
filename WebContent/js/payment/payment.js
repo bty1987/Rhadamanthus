@@ -900,6 +900,15 @@ jQuery(function($) {
             searcher.doSearch();
             payment.modals.collectModal.modal("hide");
 
+            // 预付款收款完成后直接确认,与装修款收款后调confirmDecorationPayment保持一致
+            if (payment.typeUpdate == 0) {
+                com.post(api.payment.confirmPayment, {
+                    "paymentIds[0]": res.payment.pid
+                }, function(confirmRes) {
+
+                });
+            }
+
             if (decorationOrPayment.paymentType && decorationOrPayment.paymentType == "收款") {
                 com.showConfirm("是否需要打印当前收款对应的收据信息?", function(result) {
 
