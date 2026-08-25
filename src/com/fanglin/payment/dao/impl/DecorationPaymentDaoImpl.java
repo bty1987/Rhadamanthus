@@ -172,6 +172,8 @@ public class DecorationPaymentDaoImpl extends DaoImpl<DecorationPaymentPO> imple
 				query.add(query.getCriterion("collecter.currentName", data, op));
 			} else if ("paymentStatus".equals(field)) {
 				query.add(query.getCriterion("paymentStatus", Short.valueOf(data), op));
+			} else if ("paymentType".equals(field)) {
+				query.add(query.getCriterion("paymentType", data, op));
 			} else if ("oneType".equals(field)) {
 				query.add(query.getCriterion("oneType", Short.valueOf(data), op));
 			} else if ("collectTime".equals(field) && "between".equals(op)) {

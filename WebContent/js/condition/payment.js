@@ -109,6 +109,102 @@ Condition.addupRule("payment", {
             valuePath: "value"
         }
     },
+    "advancePaymentType" : {
+        label: "类型",
+        type: "select",
+        submitConfig: {
+            name: "paymentType",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: null,
+            postData: {},
+            listPath: constant.payment().advancePayment.paymentType.datas,
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+    "status" : {
+        label: "状态",
+        type: "select",
+        submitConfig: {
+            name: "status",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: null,
+            postData: {},
+            listPath: constant.payment().payment.status.datas,
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+    "decorationPayment-paymentType" : {
+        label: "类型",
+        type: "select",
+        submitConfig: {
+            name: "paymentType",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: api.data.queryPaymentType,
+            postData: {},
+            listPath: "paymentTypes",
+            keyPath: "name",
+            valuePath: "name"
+        }
+    },
+    "decorationPayment-paymentStatus" : {
+        label: "状态",
+        type: "select",
+        submitConfig: {
+            name: "paymentStatus",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: null,
+            postData: {},
+            listPath: constant.payment().decorationPayment.paymentStatus.datas,
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+    "salesPayment-type" : {
+        label: "类型",
+        type: "select",
+        submitConfig: {
+            name: "type",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: null,
+            postData: {},
+            listPath: constant.payment().salespayment.type.datas,
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+    "salesPayment-status" : {
+        label: "状态",
+        type: "select",
+        submitConfig: {
+            name: "status",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: null,
+            postData: {},
+            listPath: constant.payment().salesPayment.status.datas,
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
     "receiptType" : {
         label:"收据类型",
         type: "select",
