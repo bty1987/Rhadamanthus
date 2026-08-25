@@ -27,6 +27,16 @@ public class QuotationPicturePO implements Serializable {
 
 	public static final short STATUS_DEL_SHORT = 1;
 
+	// type 媒体来源类型: 1=钉钉媒体图片(api.common.uploadImg上传)
+	public static final short TYPE_DING_INT = 1;
+
+	// atttype 业务归属类型: 0=默认(历史存量未分类) 1=选材(selectionItem) 3=附加项(normriceItem)
+	public static final short ATTTYPE_INIT_INT = 0;
+
+	public static final short ATTTYPE_SELECT_INT = 1;
+
+	public static final short ATTTYPE_QUOTA_INT = 3;
+
 	private long qpid;
 
 	private String orderId;
