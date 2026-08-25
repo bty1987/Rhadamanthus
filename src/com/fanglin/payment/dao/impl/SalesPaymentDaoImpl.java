@@ -160,7 +160,7 @@ public class SalesPaymentDaoImpl extends DaoImpl<SalesPaymentPO> implements Sale
 			} else if ("company".equals(field)) {
 				query.add(query.getCriterion(field, Integer.valueOf(data), op));
 			} else if ("type".equals(field)) {
-				List<Short> type = JSONArray.parseArray(data, Short.class);
+				List<Short> type = JSONArray.parseArray(data.startsWith("[") ? data : "[" + data + "]", Short.class);
 				query.add(query.getCriterion(field, type, op));
 			} else if ("refunds.isAffirm".equals(field)) {
 				query.alias("salesRefunds", "refunds").add(query.getCriterion("refunds.isAffirm", Short.valueOf(data), op));
