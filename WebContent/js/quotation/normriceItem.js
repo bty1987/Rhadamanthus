@@ -337,9 +337,9 @@ jQuery(function($) {
         var gallery = com.focusPage("#normriceItemDrawing");
         var imgLi = $("<li></li>").attr("id", "gallery_li" + value.qpid).addClass("text-center col-sm-4").css("border", "0px").css("border-color", "white").css("padding", "0px").css("height", "150px").css("width", "150px").appendTo(gallery);
         var img = $('<img/>');
-        var $imgA = $('<a></a>').attr('data-rel', 'colorbox').addClass('cboxElement').attr('href', com.showImg(img, value.path, 200, 200, '200x200')).attr('target', '_blank').append(img).appendTo(imgLi);
+        var $imgA = $('<a></a>').attr('data-rel', 'colorbox').addClass('cboxElement').attr('href', com.showImg(img, value.path, 200, 200, '200x200', null, value.type)).attr('target', '_blank').append(img).appendTo(imgLi);
         var imgA = $("<a></a>").addClass('cboxElement').attr("target", "_blank").css("height", "150px").append(img).appendTo(imgLi);
-        com.showImg(img, value.path, 150, 150, value.name, null, value.type);
+        com.showImg(img, value.path, 150, 150, '150x150', null, value.type);
         var toolsDiv = $("<div></div>").addClass("tools tools-bottom").appendTo(imgLi);
         var toolsA = $("<a></a>").attr("href", "#").on("click", function() {
 
