@@ -17,6 +17,7 @@ import com.fanglin.customer.vo.MemberActivityVO;
 import com.fanglin.customer.vo.MemberGoodsVO;
 import com.fanglin.customer.vo.MemberOrderItemVO;
 import com.fanglin.customer.vo.MemberOrderVO;
+import com.fanglin.customer.vo.MemberPointDetailVO;
 import com.fanglin.customer.vo.MemberPointVO;
 import com.fanglin.customer.vo.MemberVO;
 
@@ -37,6 +38,10 @@ public class MemberAction extends BaseListAction {
 	private Map<String, List<MemberVO>> resultMap;
 
 	private List<MemberPointVO> memberPoints;
+
+	private List<MemberPointDetailVO> decorationPointDetails;
+
+	private List<MemberPointDetailVO> materialPointDetails;
 
 	private MemberActivityVO memberActivity;
 
@@ -62,6 +67,18 @@ public class MemberAction extends BaseListAction {
 	public String queryMemberPoint() throws FLException {
 
 		memberPoints = memberService.queryMemberPoint(memberPoints);
+
+		return SUCCESS;
+	}
+
+	@Action(value = "queryMemberPointDetail", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryMemberPointDetail() throws FLException {
+
+		if (memberPoints != null && !memberPoints.isEmpty() && memberPoints.get(0).getOrderId() != null) {
+			String orderId = memberPoints.get(0).getOrderId();
+			decorationPointDetails = memberService.queryDecorationIntegralDetailByOrderId(orderId);
+			materialPointDetails = memberService.queryMaterialIntegralDetailByOrderId(orderId);
+		}
 
 		return SUCCESS;
 	}
@@ -200,6 +217,22 @@ public class MemberAction extends BaseListAction {
 
 	public void setResultMap(Map<String, List<MemberVO>> resultMap) {
 		this.resultMap = resultMap;
+	}
+
+	public List<MemberPointDetailVO> getDecorationPointDetails() {
+		return decorationPointDetails;
+	}
+
+	public void setDecorationPointDetails(List<MemberPointDetailVO> decorationPointDetails) {
+		this.decorationPointDetails = decorationPointDetails;
+	}
+
+	public List<MemberPointDetailVO> getMaterialPointDetails() {
+		return materialPointDetails;
+	}
+
+	public void setMaterialPointDetails(List<MemberPointDetailVO> materialPointDetails) {
+		this.materialPointDetails = materialPointDetails;
 	}
 
 }

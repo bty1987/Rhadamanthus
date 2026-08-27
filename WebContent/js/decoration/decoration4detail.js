@@ -2,6 +2,7 @@ jQuery(function($) {
 
     var decorationDetail = {
         orderId: null,
+        pageType: "detail",// 页面标识:传递给salesItem等弹窗用于按入口区分(主材节点子项5字段仅本页隐藏)
         orderStatus: 0,
         orderType: "",
         orderTypeness: "",
@@ -1792,6 +1793,8 @@ jQuery(function($) {
                 decorationUtils.salesActivityItemInfo(decorationDetail.orderId, decorationDetail.salesActivityItems, salesActivityItem, wizard);
                 decorationUtils.memberActivityItemInfo(decorationDetail.orderId, decorationDetail.memberActivityItems, decorationActivity, wizard);
 
+                initActivityIntegral(decorationDetail.orderId);
+
                 break;
             case "belong":
                 decorationUtils.initDecorationBelong(decorationDetail.orderId, 0);
@@ -1830,6 +1833,76 @@ jQuery(function($) {
                 decorationUtils.initUsers(decorationDetail, decorationDetail.orderId);
                 break;
         }
+    }
+
+    // 活动信息节点积分:可用装修/冻结装修/主材三个展示位 + 装修/主材明细弹窗
+    function initActivityIntegral(orderId) {
+
+        com.post(api.customer.queryMemberPoint, {
+            "memberPoints[0].orderId": orderId
+        }, function(res) {
+
+            var memberPoint = res.memberPoints && res.memberPoints[0];
+
+            if (memberPoint) {
+                com.focusPage("#decorationIntegral").text(memberPoint.decorationPoint);
+                com.focusPage("#freezeDecorationIntegral").text(memberPoint.freezeDecorationPoint);
+                com.focusPage("#materialIntegral").text(memberPoint.materialPoint);
+            }
+        });
+
+        com.focusPage("#decorationIntegralDetailBtn").unbind('click').click(function() {
+            showIntegralDetail(orderId, "decorationPointDetails", "装修积分明细");
+        });
+
+        com.focusPage("#materialIntegralDetailBtn").unbind('click').click(function() {
+            showIntegralDetail(orderId, "materialPointDetails", "主材积分明细");
+        });
+    }
+
+    function showIntegralDetail(orderId, key, title) {
+
+        com.post(api.customer.queryMemberPointDetail, {
+            "memberPoints[0].orderId": orderId
+        }, function(res) {
+
+            com.focusPage("#integralDetailDialog").text(title);
+
+            var $list = com.focusPage("#integralDetailList").html("");
+
+            if (!res[key] || res[key].length == 0) {
+                $('<li></li>').addClass('item-orange clearfix').append($('<h4></h4>').addClass('oid center').html("无可用数据提供")).appendTo($list);
+            } else {
+
+                $.each(res[key], function(index, value) {
+
+                    var $liLine = $('<li></li>').addClass('item-orange clearfix');
+                    var $h4 = $('<h4></h4>').addClass('oid').append($('<b></b>').html(value.typeName));
+                    var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
+
+                    var propertyArr = [["金额:", value.money, "blue"], ["倍数:", utils.changeThrDecimal(value.multiple / 1000), "blue"], ["积分:", value.point, "blue"], ["状态:", value.status == null ? "-" : integralStatus(key, value.status), "red"], ["时间:", value.time == null ? "-" : value.time, "green"]];
+
+                    $.each(propertyArr, function(index, value) {
+
+                        var $liProperty = $('<li></li>');
+                        $('<strong></strong>').html(value[0]).appendTo($liProperty);
+                        $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
+                        $liProperty.appendTo($ulProperty);
+                    });
+
+                    $liLine.append($h4).append($ulProperty).appendTo($list);
+                });
+            }
+
+            com.focusPage("#integralDetailModal").modal('show');
+        });
+    }
+
+    function integralStatus(key, status) {
+
+        var statuses = key == "decorationPointDetails" ? ["未付款", "已付款", "已确认", "申请中", "历史"] : ["初始", "已付款", "已确认", "已取消"];
+
+        return statuses[status] == null ? "-" : statuses[status];
     }
 
     function showQRCode(type) {

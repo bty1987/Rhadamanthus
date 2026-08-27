@@ -980,6 +980,25 @@ $.extend(api, {
                 args: ["balance", "point"]
             }]
         },
+        queryMemberPoint: {
+            url: "queryMemberPoint.do",
+            type: "query",
+            tranargs: [{
+                result: "memberPoints",
+                args: ["decorationPoint", "freezeDecorationPoint", "materialPoint"]
+            }]
+        },
+        queryMemberPointDetail: {
+            url: "queryMemberPointDetail.do",
+            type: "query",
+            tranargs: [{
+                result: "decorationPointDetails",
+                args: ["money", "point"]
+            }, {
+                result: "materialPointDetails",
+                args: ["money", "point"]
+            }]
+        },
         createPointAccount: {
             url: "createPointAccount.do"
         },
