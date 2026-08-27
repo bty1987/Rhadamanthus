@@ -17,6 +17,9 @@ import com.fanglin.data.quotation.dao.NormaddDao;
 import com.fanglin.data.quotation.service.NormaddService;
 import com.fanglin.data.quotation.service.QuotationNamingRuleService;
 import com.fanglin.data.quotation.vo.NormaddVO;
+import com.fanglin.decoration.dao.DecorationDao;
+import com.fanglin.decoration.po.DecorationPO;
+import com.fanglin.decoration.vo.DecorationVO;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.Paging;
 
@@ -26,6 +29,9 @@ public class NormaddServiceImpl implements NormaddService {
 
 	@Autowired
 	private NormaddDao normaddDao;
+
+	@Autowired
+	private DecorationDao decorationDao;
 
 	@Autowired
 	private QuotationNamingRuleService quotationNamingRuleService;
@@ -53,15 +59,26 @@ public class NormaddServiceImpl implements NormaddService {
 	}
 
 	@Override
-	public List<NormaddVO> queryNormadd(NormaddVO normaddVO, int company) {
+	public List<NormaddVO> queryNormadd(NormaddVO normaddVO, DecorationVO decorationVO, int company) throws FLException {
 
 		Long cnid = null;
+		int queryCompany = company;
 
 		if (normaddVO != null && normaddVO.getConstructionNode() != null) {
 			cnid = normaddVO.getConstructionNode().getCnid();
 		}
 
-		List<NormaddPO> normaddPOs = normaddDao.queryNormadd(cnid, company);
+		if (decorationVO != null && decorationVO.getOrderId() != null) {
+			DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(decorationVO.getOrderId());
+
+			if (decorationPO == null) {
+				throw new FLException(140013, "装修单不存在");
+			}
+
+			queryCompany = decorationPO.getCompany();
+		}
+
+		List<NormaddPO> normaddPOs = normaddDao.queryNormadd(cnid, queryCompany);
 		List<NormaddVO> normaddVOs = new ArrayList<NormaddVO>();
 
 		NormaddVO normadd;

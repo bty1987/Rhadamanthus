@@ -13,6 +13,7 @@ import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.data.quotation.service.NormaddService;
 import com.fanglin.data.quotation.vo.NormaddVO;
+import com.fanglin.decoration.vo.DecorationVO;
 
 @ParentPackage("base")
 @Namespace("/")
@@ -25,8 +26,10 @@ public class NormaddAction extends BaseListAction{
 	private NormaddService normaddService; 
 	
 	private List<NormaddVO> normadds;
-	
+
 	private NormaddVO normadd;
+
+	private DecorationVO decoration;
 	
 	@Action(value = "pageNormadd", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageNormadd() throws FLException {
@@ -39,7 +42,7 @@ public class NormaddAction extends BaseListAction{
 	@Action(value = "queryNormadd", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryNormadd() throws FLException {
 
-		normadds = normaddService.queryNormadd(normadd, queryCompany());
+		normadds = normaddService.queryNormadd(normadd, decoration, queryCompany());
 
 		return SUCCESS;
 	}
@@ -90,5 +93,13 @@ public class NormaddAction extends BaseListAction{
 
 	public void setNormadd(NormaddVO normadd) {
 		this.normadd = normadd;
+	}
+
+	public DecorationVO getDecoration() {
+		return decoration;
+	}
+
+	public void setDecoration(DecorationVO decoration) {
+		this.decoration = decoration;
 	}
 }
