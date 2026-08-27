@@ -4,6 +4,7 @@ $(function() {
 
         sid: params.sales.sales.sid,
         dompany: params.sales.dompany,
+        type: params.sales.type,
 
         sales: null,
         salesItem: null,
@@ -114,8 +115,8 @@ $(function() {
                 var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-yellow').html('编辑');
                 var $btnDelete = $('<a></a>').addClass('btn btn-minier btn-success').html('删除');
 
-                // 仅销售单列表页(type=sales)进入显示售价/折扣价/折让价/结算值/结算方式,其余入口(装修详情/活动页等)隐藏
-                var priceHide = salesItem.dompany == "sales" ? "" : "hide";
+                // 仅装修详情页(decoration4detail主材节点,dompany=dompany且pageType=detail)入口隐藏售价/折扣价/折让价/结算值/结算方式,其余入口(含decoration4account/销售列表/活动页)显示
+                var priceHide = salesItem.dompany == "dompany" && salesItem.type == "detail" ? "hide" : "";
 
                 var propertyArr = [["商品品类:", v.goods.category, "grey"], ["商品颜色:", v.color.name, "grey"], ["商品规格:", v.format.info, "grey"], ["售价:", v.selling, "blue", priceHide], ["折扣价:", v.disPrice, "blue", priceHide], ["折让价:", v.price, "blue", priceHide], ["数量:", v.num, "blue itemnum"], ["总价:", v.total, "blue"], ["结算值:", v.cvalue, "blue", priceHide], ["结算方式:", v.ctype == 0 ? "底价" : "点位", "red", priceHide], ["类型:", v.priceType == "0" ? "正价" : "特价", "red"]];
 
