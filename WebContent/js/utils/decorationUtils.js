@@ -102,6 +102,7 @@ var decorationUtils = {
 
                     params.sales.sales = v;
                     params.sales.dompany = "dompany";
+                    params.sales.type = decorationDetail.pageType;
 
                     com.popup4page("#layerPopUp", "/views/sales/salesItem.html", "子项", '', function() {
 

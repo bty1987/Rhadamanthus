@@ -183,6 +183,7 @@ $(function() {
 
         params.sales.sales = v;
         params.sales.dompany = sales.pageType;
+        params.sales.type = sales.pageType;
 
         com.popup4page("#layerPopUp", "views/sales/salesItem.html", "项目", '', function() {
 
