@@ -551,6 +551,16 @@ var decorationUtils = {
             });
         }
 
+        // 品牌汇总券为0不显示(品牌行增量累加,循环结束后统一清理)
+        $.each($ulbrand.children('li'), function(index, li) {
+
+            var $couponB = com.focusPage(li).find("[name='coupon']");
+
+            if ($couponB.length > 0 && parseFloat($couponB.attr('value')) == 0) {
+                $couponB.closest('li').remove();
+            }
+        });
+
         purCategory.length == 0 ? noData("materialPurchasedCategory" + dataPage) : drawLineCategory(purCategory, $purchasedCategory);
         drawLineCategory(unpCategory, $unpurchasedCategory);
 
@@ -601,7 +611,7 @@ var decorationUtils = {
 
             var $h4 = $('<h4></h4>').addClass('oid blue').append($('<b></b>').html("总金额:" + utils.changeThrDecimal($total + $oalesScaleTotal)));
             var $salesTotalH4 = $('<h4></h4>').addClass('oid blue').append($('<b></b>').html("场内总额:" + $total));
-            var $couponPrice = $('<h4></h4>').addClass('oid blue').append($('<b></b>').html("优惠券:" + $coupon));
+            var $couponPrice = $coupon != 0 ? $('<h4></h4>').addClass('oid blue').append($('<b></b>').html("优惠券:" + $coupon)) : null;
             var $TotalNetReceiptsTotalPrice = $('<h4></h4>').addClass('oid blue').append($('<b></b>').html("场内实收总额:" + $totalSalesAndMaterial));
             var $TotalDepositPrice = $('<h4></h4>').addClass('oid blue').append($('<b></b>').html("定金总额:" + ($totalDeposit)));
             var $oalesH4 = $('<h4></h4>').addClass('oid blue').append($('<b></b>').html("外销总额:" + $oalesTotal));
