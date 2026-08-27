@@ -36,6 +36,7 @@ import com.fanglin.customer.vo.MemberActivityVO;
 import com.fanglin.customer.vo.MemberGoodsVO;
 import com.fanglin.customer.vo.MemberOrderItemVO;
 import com.fanglin.customer.vo.MemberOrderVO;
+import com.fanglin.customer.vo.MemberPointDetailVO;
 import com.fanglin.customer.vo.MemberPointVO;
 import com.fanglin.customer.vo.MemberVO;
 import com.fanglin.decoration.dao.DecorationActivityDao;
@@ -288,36 +289,59 @@ public class MemberServiceImpl implements MemberService {
 
 			String orderId = memberPointVO.getOrderId();
 
-			DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(orderId);
-
-			if (decorationPO == null) continue;
-
-			long amount = Math.abs(pointAccountDao.amountDecorationPoint(orderId));
-			long amountMaterial = Math.abs(pointAccountDao.amountMaterialPoint(orderId));
-
-			long dpoint = 0l;
-			long spoint = 0l;
-			long point = 0l;
-
-			dpoint = memberDao.amountMemberPointForDecoration(orderId);
-			spoint = memberDao.amountMemberPointForMaterial(orderId);
-
-			long subDecorationPoint = Arith.sub(dpoint, amount);
-			long subMaterialPoint = Arith.sub(spoint, amountMaterial);
-			memberPointVO.setDecorationPoint(Arith.mul(subDecorationPoint, 1l));
-			memberPointVO.setMaterialPoint(Arith.mul(subMaterialPoint, 1l));
-
-			AdvancePaymentPO advancePaymentPO = advancePaymentDao.queryAdvancePaymentByOrderId(orderId);
-
-			memberPointVO.setFreezeDecorationPoint(Arith.mul(Arith.add(advancePaymentPO != null ? advancePaymentPO.getBalance() : 0, Arith.sub(memberDao.totalMemberPointForDecoration(orderId), dpoint)), 1l));
-			memberPointVO.setFreezeMaterialPoint(Arith.mul(Arith.add(advancePaymentPO != null ? advancePaymentPO.getMaterialBalance() : 0, Arith.sub(memberDao.totalMemberPointForMaterial(orderId), spoint)), 1l));
-
-			point = Arith.add(memberPointVO.getDecorationPoint(), memberPointVO.getMaterialPoint());
-
-			memberPointVO.setOperatePoint(point);
+			// 可用装修积分:合同款(sort!=0)应收额*活动倍数;冻结装修积分:预付款余额*活动倍数;主材积分:主材预付款收款额*活动倍数
+			memberPointVO.setDecorationPoint(memberDao.amountDecorationIntegralByOrderId(orderId));
+			memberPointVO.setFreezeDecorationPoint(memberDao.amountFreezeDecorationIntegralByOrderId(orderId));
+			memberPointVO.setMaterialPoint(memberDao.amountMaterialIntegralByOrderId(orderId));
+			memberPointVO.setFreezeMaterialPoint(0l);
+			memberPointVO.setOperatePoint(Arith.add(memberPointVO.getDecorationPoint(), memberPointVO.getMaterialPoint()));
 		}
 
 		return memberPointFOs;
+	}
+
+	@Override
+	public List<MemberPointDetailVO> queryDecorationIntegralDetailByOrderId(String orderId) {
+
+		List<MemberPointDetailVO> detailVOs = new ArrayList<MemberPointDetailVO>();
+
+		for (Object[] row : memberDao.queryDecorationIntegralDetailByOrderId(orderId)) {
+
+			MemberPointDetailVO detailVO = new MemberPointDetailVO();
+
+			detailVO.setTypeName(row[0] == null ? "" : (String) row[0]);
+			detailVO.setMoney(((Number) row[1]).longValue());
+			detailVO.setStatus(row[2] == null ? null : Short.valueOf(((Number) row[2]).shortValue()));
+			detailVO.setMultiple(((Number) row[3]).intValue());
+			detailVO.setPoint(((Number) row[4]).longValue());
+			detailVO.setTime((Timestamp) row[5]);
+
+			detailVOs.add(detailVO);
+		}
+
+		return detailVOs;
+	}
+
+	@Override
+	public List<MemberPointDetailVO> queryMaterialIntegralDetailByOrderId(String orderId) {
+
+		List<MemberPointDetailVO> detailVOs = new ArrayList<MemberPointDetailVO>();
+
+		for (Object[] row : memberDao.queryMaterialIntegralDetailByOrderId(orderId)) {
+
+			MemberPointDetailVO detailVO = new MemberPointDetailVO();
+
+			detailVO.setTypeName("主材预付款");
+			detailVO.setMoney(((Number) row[0]).longValue());
+			detailVO.setMultiple(((Number) row[1]).intValue());
+			detailVO.setPoint(((Number) row[2]).longValue());
+			detailVO.setStatus(row[3] == null ? null : Short.valueOf(((Number) row[3]).shortValue()));
+			detailVO.setTime((Timestamp) row[4]);
+
+			detailVOs.add(detailVO);
+		}
+
+		return detailVOs;
 	}
 
 	/**
