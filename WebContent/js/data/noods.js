@@ -1,9 +1,14 @@
 $(function() {
 
+    var pageType = params['urlLoadParams'].type; // group=集团版(完整表单自建),缺省/company=公司版(选择集团定材创建,仅浮动量可编辑)
+
     var noods = {
+
         nid: null,
 
         pnid: null,
+
+        calc: null,
 
         items: {
             noodSel: com.focusPage("#noodSel"),
@@ -20,7 +25,7 @@ $(function() {
         },
     };
 
-    // 引用集团定材:选中后名称/售价/结算价只读回填(集团快照),仅浮动量可编辑
+    // 引用集团定材(公司版创建入口):选中后名称/售价/结算价只读回填(集团快照),仅浮动量可编辑
     com.initTypeahead('noodSel', api.data.queryNoodsForGroup, "noods.name", {}, "noodes", "nid", "name", function(list, key, value) {
 
         $.each(list, function(i, v) {
@@ -161,7 +166,14 @@ $(function() {
         noods.pnid = null;
         noods.calc = null;
 
-        com.focusPage("#noodSel").closest(".form-group").show();
+        // group=完整表单自建;company=选择集团定材创建,名称/售价/结算价初始只读待选择回填
+        var isCompany = pageType != 'group';
+
+        com.focusPage("#noodSel").closest(".form-group").toggle(isCompany);
+
+        noods.items.name.prop("readonly", isCompany);
+        noods.items.selling.prop("readonly", isCompany);
+        noods.items.balance.prop("readonly", isCompany);
 
         noods.modals.updateNoodsModal.modal("show");
     });
@@ -216,8 +228,14 @@ $(function() {
             "noods.surplus": noods.items.surplus.val(),
         };
 
-        // 引用集团定材创建:携带 pnid 与集团 calc 快照(后端 addNoods 随 copyProperties 落库)
-        if (noods.nid == null && noods.pnid != null) {
+        // 公司版创建必须引用集团定材(pnid+calc快照随提交);集团版/group为完整表单自建
+        if (noods.nid == null && pageType != 'group') {
+
+            if (noods.pnid == null) {
+                com.showAlert(com.error, "请选择集团定材");
+                return false;
+            }
+
             options["noods.pnid"] = noods.pnid;
             options["noods.calc"] = noods.calc;
         }
