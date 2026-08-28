@@ -55,6 +55,8 @@ public class ConstructionPO implements Serializable {
 
 	public static final short PROCESS_FINISH_INT = 1;
 
+	public static final short BALANCE_STATUS_UNBALANCE_INT = 0;
+
 	public static final short BALANCE_STATUS_BALANCE_INT = 1;
 
 	private long cid;

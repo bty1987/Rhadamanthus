@@ -501,6 +501,27 @@ jQuery(function($) {
             return btnVisible("balance") && (v.accessory == constant.construction().construction.ISACCESSORY_ENABLE_INT);
         }
     }, {
+        name: "结算驳回",
+        clazz: "btn-danger",
+        handle: function(v) {
+
+            com.showConfirm("是否驳回工程结算,驳回后工程单可继续创建普通工费", function() {
+
+                com.post(api.construction.rejectConstructionForBalance, {
+                    "construction.cid": v.cid
+                }, function(res) {
+
+                    searcher.doSearch();
+                });
+            });
+
+            return false;
+        },
+        show: function(v) {
+
+            return btnVisible("balanceReject") && (v.accessory == constant.construction().construction.ISACCESSORY_ENABLE_INT);
+        }
+    }, {
         name: "终止",
         clazz: "btn-yellow",
         handle: function(v) {

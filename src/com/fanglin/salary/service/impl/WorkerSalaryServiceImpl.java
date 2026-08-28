@@ -201,6 +201,10 @@ public class WorkerSalaryServiceImpl implements WorkerSalaryService {
 				throw new FLException(120020, "工程信息不存在");
 			}
 
+			if (constructionPO.getBalanceStatus() == ConstructionPO.BALANCE_STATUS_BALANCE_INT && constructionSchedulePO.getPlanStatus() != ConstructionSchedulePO.PLAN_STATUS_PLAN_INT) {
+				throw new FLException(280017, "工程单已结算,普通工费不可操作");
+			}
+
 			long salaryTotal = Arith.add(constructionPO.getSalaryTotal(), workerSalaryVO.getMoney());
 
 			if (salaryTotal > constructionPO.getSalaryLimit()) {
