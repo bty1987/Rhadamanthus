@@ -148,6 +148,10 @@ public class AddReduceItemServiceImpl implements AddReduceItemService {
 			throw new FLException(200061, "增减单状态不可操作");
 		}
 
+		if (addReducePO.getIsSalary() == AddReducePO.ISSALARY_MARKED_INT) {
+			throw new FLException(200064, "增减单已开工费,不可操作");
+		}
+
 		addReducePO.ptvadvance(addReduceVO);
 
 		QuotationFunctionAreaPO quotationFunctionAreaPO = quotationFunctionAreaDao.get(addReduceItemVO.getQuotationFunctionAreaId());
@@ -224,6 +228,10 @@ public class AddReduceItemServiceImpl implements AddReduceItemService {
 			throw new FLException(140018, "增减项不存在");
 		}
 
+		if (addReducePO.getIsSalary() == AddReducePO.ISSALARY_MARKED_INT) {
+			throw new FLException(200064, "增减单已开工费,不可操作");
+		}
+
 		AddReduceItemPO addReduceItemPO = addReduceItemDao.get(addReduceItemVO.getAriId());
 
 		if (addReduceItemPO == null) {
@@ -246,6 +254,23 @@ public class AddReduceItemServiceImpl implements AddReduceItemService {
 	public int updateAddReduceItemForIndex(List<AddReduceItemVO> addReduceItemVOs) throws FLException {
 
 		for (AddReduceItemVO addReduceItemVO : addReduceItemVOs) {
+
+			AddReduceItemPO addReduceItemPO = addReduceItemDao.get(addReduceItemVO.getAriId());
+
+			if (addReduceItemPO == null) {
+				throw new FLException(140036, "增减项目不存在");
+			}
+
+			AddReducePO addReducePO = addReduceDao.get(addReduceItemPO.getArId());
+
+			if (addReducePO == null) {
+				throw new FLException(200060, "增减单不存在");
+			}
+
+			if (addReducePO.getIsSalary() == AddReducePO.ISSALARY_MARKED_INT) {
+				throw new FLException(200064, "增减单已开工费,不可操作");
+			}
+
 			addReduceItemDao.updateAddReduceItemForIndex(addReduceItemVO.getAriId(), addReduceItemVO.getIndex());
 		}
 
@@ -264,6 +289,10 @@ public class AddReduceItemServiceImpl implements AddReduceItemService {
 
 		if (addReducePO.getStatus() != AddReducePO.STATUS_UNSUBMIT_INT) {
 			throw new FLException(200061, "增减单状态不可操作");
+		}
+
+		if (addReducePO.getIsSalary() == AddReducePO.ISSALARY_MARKED_INT) {
+			throw new FLException(200064, "增减单已开工费,不可操作");
 		}
 
 		QuotationPO quotationPO = quotationDao.queryQuotationForDefaultByOrderId(addReducePO.getOrderId());
