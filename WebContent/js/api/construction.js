@@ -215,6 +215,9 @@ $.extend(api, {
         balanceConstruction: {
             url: "balanceConstruction.do"
         },
+        rejectConstructionForBalance: {
+            url: "rejectConstructionForBalance.do"
+        },
 
         pageConstructionSchedule: {
             url: "pageConstructionSchedule.do",

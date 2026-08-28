@@ -144,6 +144,14 @@ public class ConstructionAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "rejectConstructionForBalance", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String rejectConstructionForBalance() throws FLException {
+
+		constructionService.rejectConstructionForBalance(construction, queryUserId());
+
+		return SUCCESS;
+	}
+
 	public ConstructionVO getConstruction() {
 		return construction;
 	}

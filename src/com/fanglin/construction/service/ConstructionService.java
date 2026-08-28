@@ -45,4 +45,6 @@ public interface ConstructionService {
 
 	public int balanceConstruction(ConstructionVO constructionVO, String userId) throws FLException;
 
+	public int rejectConstructionForBalance(ConstructionVO constructionVO, String userId) throws FLException;
+
 }

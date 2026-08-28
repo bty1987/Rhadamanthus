@@ -376,4 +376,29 @@ public class ConstructionServiceImpl implements ConstructionService {
 		return 0;
 	}
 
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int rejectConstructionForBalance(ConstructionVO constructionVO, String userId) throws FLException {
+
+		ConstructionPO constructionPO = constructionDao.get(constructionVO.getCid());
+
+		if (constructionPO == null) {
+			throw new FLException(120020, "工程信息不存在");
+		}
+
+		if (constructionPO.getBalanceStatus() != ConstructionPO.BALANCE_STATUS_BALANCE_INT) {
+			throw new FLException(280018, "工程单未结算,不可驳回");
+		}
+
+		UserPO balancer = userDao.queryUserByUserId(userId);
+
+		constructionPO.setBalanceStatus(ConstructionPO.BALANCE_STATUS_UNBALANCE_INT);
+		constructionPO.setBalancer(balancer);
+		constructionPO.setBalanceTime(DateUtil.getDateToTimestamp(new Date()));
+
+		constructionDao.update(constructionPO);
+
+		return 0;
+	}
+
 }
