@@ -286,7 +286,7 @@ public class PaymentServiceImpl implements PaymentService {
 				decorationPO.setStatus(DecorationPO.STATUS_DEPOSIT_INT);
 				decorationPO.setDepositTime(DateUtil.getDateToTimestamp(new Date()));
 				// 生成消息提示数据
-				messageQueuingDao.save(new MessageCueuingPO().init(paymentVO.getOrderId(), "collectPayment", "{\"orderId\":\"" + paymentVO.getOrderId() + "\",\"userId\":\"" + userId + ",\"event\":\"PAYMENT_COLLECTED\"" + (decorationPO.getBusitype() != null ? ",\"busiTypeName\":\"" + decorationPO.getBusitype().getName() + "\"" : "") + buildCcidArgs(paymentVO.getOrderId()) + "}"));
+				messageQueuingDao.save(new MessageCueuingPO().init(paymentVO.getOrderId(), "collectPayment", "{\"orderId\":\"" + paymentVO.getOrderId() + "\",\"userId\":\"" + userId + "\",\"event\":\"PAYMENT_COLLECTED\"" + (decorationPO.getBusitype() != null ? ",\"busiTypeName\":\"" + decorationPO.getBusitype().getName() + "\"" : "") + buildCcidArgs(paymentVO.getOrderId()) + "}"));
 			}
 
 			decorationDao.update(decorationPO);

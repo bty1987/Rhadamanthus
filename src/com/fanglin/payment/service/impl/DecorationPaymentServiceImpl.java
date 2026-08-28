@@ -579,14 +579,14 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 			decorationPO.setStatus(DecorationPO.STATUS_DEPOSIT_INT);
 			decorationPO.setDepositTime(DateUtil.getDateToTimestamp(new Date()));
 			// 生成消息提示数据
-			messageQueuingDao.save(new MessageCueuingPO().init(orderId, "collectDecorationPayment", "{\"orderId\":\"" + orderId + "\",\"dpid\":" + decorationPaymentVO.getDpid() + ",\"userId\":\"" + userId + ",\"event\":\"PAYMENT_COLLECTED\"" + (decorationPO.getBusitype() != null ? ",\"busiTypeName\":\"" + decorationPO.getBusitype().getName() + "\"" : "") + buildCcidArgs(orderId) + "}"));
+			messageQueuingDao.save(new MessageCueuingPO().init(orderId, "collectDecorationPayment", "{\"orderId\":\"" + orderId + "\",\"dpid\":" + decorationPaymentVO.getDpid() + ",\"userId\":\"" + userId + "\",\"event\":\"PAYMENT_COLLECTED\"" + (decorationPO.getBusitype() != null ? ",\"busiTypeName\":\"" + decorationPO.getBusitype().getName() + "\"" : "") + buildCcidArgs(orderId) + "}"));
 		}
 
 		String paymentType = decorationPaymentPO.getPaymentType();
 
 		// 设计费收款时生成消息提示数据
 		if (paymentType.equals(DecorationPaymentPO.PAYMENTTYPE_DESIGN_STR)) {
-			messageQueuingDao.save(new MessageCueuingPO().init(orderId, "collectDecorationPayment", "{\"orderId\":\"" + orderId + "\",\"dpid\":" + decorationPaymentVO.getDpid() + ",\"userId\":\"" + userId + ",\"event\":\"PAYMENT_COLLECTED\"" + (decorationPO.getBusitype() != null ? ",\"busiTypeName\":\"" + decorationPO.getBusitype().getName() + "\"" : "") + buildCcidArgs(orderId) + "}"));
+			messageQueuingDao.save(new MessageCueuingPO().init(orderId, "collectDecorationPayment", "{\"orderId\":\"" + orderId + "\",\"dpid\":" + decorationPaymentVO.getDpid() + ",\"userId\":\"" + userId + "\",\"event\":\"PAYMENT_COLLECTED\"" + (decorationPO.getBusitype() != null ? ",\"busiTypeName\":\"" + decorationPO.getBusitype().getName() + "\"" : "") + buildCcidArgs(orderId) + "}"));
 		}
 
 		if (paymentType.contains(DecorationPaymentPO.PAYMENTTYPE_REFUND_STR) || paymentType.equals(DecorationPaymentPO.PAYMENTTYPE_REDUCE_STR)) {
