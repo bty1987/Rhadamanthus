@@ -1321,6 +1321,14 @@ $.extend(api, {
                 args: ["selling", "balance", "surplus"]
             }]
         },
+        queryNoodsForGroup: {
+            url: "queryNoodsForGroup.do",
+            type: "query",
+            tranargs: [{
+                result: "noodes",
+                args: ["selling", "balance", "surplus"]
+            }]
+        },
         addNoods: {
             url: "addNoods.do",
             type: "update",

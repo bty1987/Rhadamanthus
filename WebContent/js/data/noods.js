@@ -3,7 +3,10 @@ $(function() {
     var noods = {
         nid: null,
 
+        pnid: null,
+
         items: {
+            noodSel: com.focusPage("#noodSel"),
             name: com.focusPage("#name"),
             selling: com.focusPage("#selling"),
             balance: com.focusPage("#balance"),
@@ -16,6 +19,26 @@ $(function() {
             saveBtn: com.focusPage("#saveBtn"),
         },
     };
+
+    // 引用集团定材:选中后名称/售价/结算价只读回填(集团快照),仅浮动量可编辑
+    com.initTypeahead('noodSel', api.data.queryNoodsForGroup, "noods.name", {}, "noodes", "nid", "name", function(list, key, value) {
+
+        $.each(list, function(i, v) {
+
+            if (v.nid == key) {
+
+                noods.pnid = v.nid;
+
+                noods.items.name.val(v.name).prop("readonly", true);
+                noods.items.selling.val(v.selling).prop("readonly", true);
+                noods.items.balance.val(v.balance).prop("readonly", true);
+
+                noods.calc = v.calc;
+            }
+        });
+
+        return value;
+    });
 
     var searcher = new Searcher();
 
@@ -41,11 +64,21 @@ $(function() {
         handle: function(v) {
 
             noods.nid = v.nid;
+            noods.pnid = v.pnid;
 
             noods.items.name.val(v.name);
             noods.items.selling.val(v.selling);
             noods.items.balance.val(v.balance);
             noods.items.surplus.val(v.surplus);
+
+            // 引用行(pnid>0)名称/售价/结算价为集团快照,仅浮动量可编辑;自建行全字段可编辑
+            var readonly = v.pnid != null && v.pnid > 0;
+
+            noods.items.name.prop("readonly", readonly);
+            noods.items.selling.prop("readonly", readonly);
+            noods.items.balance.prop("readonly", readonly);
+
+            com.focusPage("#noodSel").closest(".form-group").hide();
 
             noods.modals.updateNoodsModal.modal("show");
 
@@ -125,6 +158,10 @@ $(function() {
     com.focusPage('#addNoods').on("click", function() {
 
         noods.nid = null;
+        noods.pnid = null;
+        noods.calc = null;
+
+        com.focusPage("#noodSel").closest(".form-group").show();
 
         noods.modals.updateNoodsModal.modal("show");
     });
@@ -133,6 +170,13 @@ $(function() {
 
         com.clearValidator();
         com.cleanItems(noods.items);
+
+        noods.pnid = null;
+        noods.calc = null;
+
+        noods.items.name.prop("readonly", false);
+        noods.items.selling.prop("readonly", false);
+        noods.items.balance.prop("readonly", false);
     });
 
     com.focusPage('#exNoods').on("click", function() {
@@ -172,9 +216,16 @@ $(function() {
             "noods.surplus": noods.items.surplus.val(),
         };
 
+        // 引用集团定材创建:携带 pnid 与集团 calc 快照(后端 addNoods 随 copyProperties 落库)
+        if (noods.nid == null && noods.pnid != null) {
+            options["noods.pnid"] = noods.pnid;
+            options["noods.calc"] = noods.calc;
+        }
+
         if (noods.nid != null) {
             url = api.data.updateNoods;
             options['noods.nid'] = noods.nid;
+            options['noods.pnid'] = noods.pnid != null ? noods.pnid : 0;
         }
 
         com.post(url, options, function(res) {

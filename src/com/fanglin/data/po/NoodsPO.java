@@ -29,6 +29,8 @@ public class NoodsPO implements Serializable {
 
 	private long nid;
 
+	private long pnid; // 上级定材:0=集团行/自建行,>0=引用行(指向集团行nid,名称等字段为集团快照)
+
 	private String name;
 
 	private int selling;
@@ -61,6 +63,15 @@ public class NoodsPO implements Serializable {
 
 	public void setNid(long nid) {
 		this.nid = nid;
+	}
+
+	@Column(name = "pnid")
+	public long getPnid() {
+		return pnid;
+	}
+
+	public void setPnid(long pnid) {
+		this.pnid = pnid;
 	}
 
 	@Column(name = "name")

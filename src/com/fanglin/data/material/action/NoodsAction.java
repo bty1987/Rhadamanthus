@@ -52,6 +52,14 @@ public class NoodsAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "queryNoodsForGroup", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryNoodsForGroup() throws FLException {
+
+		noodes = noodsService.queryNoodsForGroup(noods);
+
+		return SUCCESS;
+	}
+
 	@Action(value = "addNoods", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addNoods() throws FLException {
 
