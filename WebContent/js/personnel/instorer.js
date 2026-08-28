@@ -3,15 +3,12 @@ $(function() {
     var instorer = {
 
         btns: {
-            saveBtn: com.focusPage("#saveUserBtn"),
-
-            advanceSaveBtn: com.focusPage("#advanceSaveBtn")
+            saveBtn: com.focusPage("#saveUserBtn")
         },
 
         modals: {
             addInstorerModal: com.focusPage("#addInstorerModal"),
-            showInstorerModal: com.focusPage("#showInstorerModal"),
-            advanceModal: com.focusPage("#instorerAdvanceModal")
+            showInstorerModal: com.focusPage("#showInstorerModal")
         },
 
         items: {
@@ -22,30 +19,10 @@ $(function() {
             deptSel: com.focusPage("#deptSel", "#addInstorerModal"),
             dutySel: com.focusPage("#dutySel", "#addInstorerModal"),
             statusSel: com.focusPage("#statusSel", "#addInstorerModal"),
-            oldUserId: com.focusPage("#oldUserId", "#addInstorerModal"),
-
-            isLogin: com.focusPage("#isLogin").switchBtn("isOrNot"),
-            ips: com.focusPage("#ips").switchBtn("isOrNot"),
-            macs: com.focusPage("#macs").switchBtn("isOrNot"),
-            qcode: com.focusPage("#qcode").switchBtn("isOrNot"),
-            webs: com.focusPage("#webs").switchBtn("isOrNot"),
-            pcs: com.focusPage("#pcs").switchBtn("isOrNot"),
-
-            roleSel: com.focusPage("#roleSel", "#instorerAdvanceModal"),
-            oldcompany: com.focusPage("#oldcompany", "#instorerAdvanceModal"),
-            company: com.focusPage("#company", "#instorerAdvanceModal")
+            oldUserId: com.focusPage("#oldUserId", "#addInstorerModal")
         },
 
-        deptType: {},
-        statusType: {},
-
-        roleList: {},
-
-        userId: null,
-        company: null,
         instorerUid: null,
-
-        pageType: params['urlLoadParams'].type,
     };
 
     instorer.modals.addInstorerModal.on('hidden.bs.modal', function(e) {
@@ -58,16 +35,9 @@ $(function() {
 
     instorer.items.statusSel = com.focusPage("#statusSel").bindData(constant.personel().user.status.datas, "key", "value");
 
-    com.initTypeahead("roleSel", api.system.queryRoleByName, 'role.name', {}, "roleList", 'rid', 'name');
-
     com.post(api.communion.queryDepartmentType, {}, function(res) {
 
         instorer.items.deptTypeSel.bindData(res.departmentTypes, "dtid", "name");
-    }, null, false);
-
-    com.post(api.system.queryCompany, {}, function(res) {
-
-        instorer.items.company.bindData(res.companys, "cid", "name");
     }, null, false);
 
     instorer.items.loginId.on("blur", function() {
@@ -109,8 +79,6 @@ $(function() {
     }).trigger("change");
 
     instorer.btns.saveBtn.on("click", saveData);
-
-    instorer.btns.advanceSaveBtn.on("click", saveAdvance);
 
     var lineprops = (function() {
 
@@ -157,68 +125,43 @@ $(function() {
                 }, function(res) {
 
                     bindUserInfo(res.userInfo);
-                    com.focusPage("#checkUserInfo").modal('show');
+                    com.focusPage("#showInstorerModal").modal('show');
                 });
             }
         };
 
-        if (instorer.pageType == 'manage') {
-            btns.edit = {
-                name: "编辑",
-                clazz: "btn-yellow",
-                handle: function(v) {
+        // 权配(updateUserForAdvance)未接入:其 user.companys 参数要求 AES 加密串,明文 cid 后端解密必失败,与 app 版页面保持一致暂不提供
+        btns.edit = {
+            name: "编辑",
+            clazz: "btn-yellow",
+            handle: function(v) {
 
-                    com.focusPage("#addInstorerModal").find("h4").html("编辑厂商");
-                    com.focusPage("#addInstorerModal").find(".form-group").addClass("hide");
-                    com.focusPage(".show").removeClass("hide");
-                    instorer.items.userName.val(v.userName);
-                    instorer.items.phone.val(v.phone);
-                    instorer.items.oldUserId.val(v.oldUserId);
-                    instorer.instorerUid = v.uid;
-                    instorer.modals.addInstorerModal.modal("show");
-                }
-            };
-            btns.right = {
-                name: "权配",
-                clazz: "btn-success",
-                handle: function(v) {
+                com.focusPage("#addInstorerModal").find("h4").html("编辑驻店人员");
+                com.focusPage("#addInstorerModal").find(".form-group").addClass("hide");
+                com.focusPage(".show").removeClass("hide");
+                instorer.items.userName.val(v.userName);
+                instorer.items.phone.val(v.phone);
+                instorer.items.oldUserId.val(v.oldUserId);
+                instorer.instorerUid = v.uid;
+                instorer.modals.addInstorerModal.modal("show");
+            }
+        };
+        btns.resetPassword = {
+            name: "重置密码",
+            clazz: "btn-danger",
+            handle: function(v) {
 
-                    showAdvance(v.userId);
-                }
-            };
-            btns.resetPassword = {
-                name: "重置密码",
-                clazz: "btn-danger",
-                handle: function(v) {
+                resetPassword(v.userId, v.userName);
+            }
+        };
+        btns.defaultPassword = {
+            name: "默认密码",
+            clazz: "btn-warning",
+            handle: function(v) {
 
-                    resetPassword(v.userId, v.userName);
-                }
-            };
-            btns.defaultPassword = {
-                name: "默认密码",
-                clazz: "btn-warning",
-                handle: function(v) {
-
-                    defaultPassword(v.userId, v.userName);
-                }
-            };
-        } else {
-            btns.edit = {
-                name: "编辑",
-                clazz: "btn-yellow",
-                handle: function(v) {
-
-                    com.focusPage("#addInstorerModal").find("h4").html("编辑厂商");
-                    com.focusPage("#addInstorerModal").find(".form-group").addClass("hide");
-                    com.focusPage(".show").removeClass("hide");
-                    instorer.items.userName.val(v.userName);
-                    instorer.items.phone.val(v.phone);
-                    instorer.items.oldUserId.val(v.oldUserId);
-                    instorer.instorerUid = v.uid;
-                    instorer.modals.addInstorerModal.modal("show");
-                }
-            };
-        }
+                defaultPassword(v.userId, v.userName);
+            }
+        };
 
         return btns;
     })();
@@ -239,7 +182,7 @@ $(function() {
 
     com.focusPage('a[name="addInstorer"]', '#pagenation').click(function() {
 
-        com.focusPage("#addInstorerModal").find("h4").html("添加厂商");
+        com.focusPage("#addInstorerModal").find("h4").html("添加驻店人员");
         instorer.modals.addInstorerModal.modal("show");
     });
 
@@ -257,7 +200,6 @@ $(function() {
             "instorer.identity": "",
             "instorer.phone": instorer.items.phone.val(),
 
-            "instorer.dtid": instorer.items.deptTypeSel.val(),
             "instorer.dept.did": instorer.items.deptSel.val(),
             "instorer.duty.did": instorer.items.dutySel.val(),
             "instorer.status": instorer.items.statusSel.val()
@@ -312,11 +254,11 @@ $(function() {
         com.focusPage("#loginIdCheck").html($userInfo.user.loginId);
         com.focusPage("#companyCheck").html(com.checkNull($userInfo.user.companys, "无"));
 
-        com.focusPage("#deptTypeSelCheck").html($userInfo.user.duty.departmentType.name);
-        com.focusPage("#deptSelCheck").html($userInfo.user.dept.name);
-        com.focusPage("#dutySelCheck").html($userInfo.user.duty.name);
+        com.focusPage("#deptTypeSelCheck").html(com.checkNull($userInfo.user.duty && $userInfo.user.duty.departmentType ? $userInfo.user.duty.departmentType.name : "", "无"));
+        com.focusPage("#deptSelCheck").html(com.checkNull($userInfo.user.dept ? $userInfo.user.dept.name : "", "无"));
+        com.focusPage("#dutySelCheck").html(com.checkNull($userInfo.user.duty ? $userInfo.user.duty.name : "", "无"));
 
-        com.focusPage("#statusSelCheck").html(user.statusType[$userInfo.user.status].value);
+        com.focusPage("#statusSelCheck").html(com.checkNull(constant.personel().user.status.keys[$userInfo.user.status], "无"));
         com.focusPage("#employWaySelCheck").html(com.checkNull($userInfo.employWay, "无"));
         com.focusPage("#employTypeSelCheck").html(com.checkNull($userInfo.employType, "无"));
         com.focusPage("#recommendManCheck").html(com.checkNull($userInfo.recommendMan, "无"));
@@ -331,61 +273,6 @@ $(function() {
         com.focusPage("#salaryCheck").html($userInfo.salary);
         com.focusPage("#bankCheck").html(com.checkNull($userInfo.bank, "无"));
         com.focusPage("#bankCardNumCheck").html(com.checkNull($userInfo.bankCardNum, "无"));
-    }
-
-    function showAdvance(userId) {
-
-        instorer.userId = userId;
-
-        var options = {
-            "user.userId": userId
-        };
-
-        com.post(api.personel.queryUserByUserId, options, function(res) {
-
-            var user = res.user;
-
-            instorer.items.isLogin.prop("checked", (user.isLogin & constant.personel.user.ISLOGIN_FIP_INT) == constant.personel.user.ISLOGIN_FIP_INT);
-            instorer.items.macs.prop("checked", (user.extranet & constant.personel.user.EXTRANET_MAC_INT) == constant.personel.user.EXTRANET_MAC_INT);
-            instorer.items.ips.prop("checked", (user.extranet & constant.personel.user.EXTRANET_IP_INT) == constant.personel.user.EXTRANET_IP_INT);
-            instorer.items.qcode.prop("checked", (user.extranet & constant.personel.user.EXTRANET_QCODE_INT) == constant.personel.user.EXTRANET_QCODE_INT);
-            instorer.items.webs.prop("checked", (user.extranet & constant.personel.user.EXTRANET_WEB_INT) == constant.personel.user.EXTRANET_WEB_INT);
-            instorer.items.pcs.prop("checked", (user.extranet & constant.personel.user.EXTRANET_PC_INT) == constant.personel.user.EXTRANET_PC_INT);
-
-            instorer.items.oldcompany.val(user.companys);
-            com.updateTypeahead("roleSel", user.role.rid, user.role.name);
-
-            instorer.modals.advanceModal.modal("show");
-
-        }, null, false);
-    }
-
-    function saveAdvance() {
-
-        var extranet = constant.personel.user.EXTRANET_NONE_INT;
-
-        extranet += (instorer.items.macs.prop("checked") ? constant.personel.user.EXTRANET_MAC_INT : constant.personel.user.EXTRANET_NONE_INT);
-        extranet += (instorer.items.ips.prop("checked") ? constant.personel.user.EXTRANET_IP_INT : constant.personel.user.EXTRANET_NONE_INT);
-        extranet += (instorer.items.qcode.prop("checked") ? constant.personel.user.EXTRANET_QCODE_INT : constant.personel.user.EXTRANET_NONE_INT);
-        extranet += (instorer.items.webs.prop("checked") ? constant.personel.user.EXTRANET_WEB_INT : constant.personel.user.EXTRANET_NONE_INT);
-        extranet += (instorer.items.pcs.prop("checked") ? constant.personel.user.EXTRANET_PC_INT : constant.personel.user.EXTRANET_NONE_INT);
-
-        var options = {
-            "user.userId": instorer.userId,
-            "user.isLogin": instorer.items.isLogin.prop("checked") ? constant.personel.user.ISLOGIN_FIP_INT : constant.personel.user.ISLOGIN_NOT_INT,
-            "user.extranet": extranet,
-            "user.role.rid": com.typeahead("roleSel"),
-            "user.companys": instorer.items.company.val()
-        };
-
-        com.post(api.personel.updateUserForAdvance, options, function(res) {
-
-            com.showAlert(com.info, "提交成功");
-        });
-
-        instorer.modals.advanceModal.modal("hide");
-
-        return false;
     }
 
     function resetPassword(userId, userName) {
