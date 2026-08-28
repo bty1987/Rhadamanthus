@@ -6,105 +6,6 @@
 	</div>
 </div>
 
-<div class="modal fade" id="instorerAdvanceModal" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal"><span>&times;</span><span class="sr-only">Close</span></button>
-                <h4 class="modal-title" data-i18n="page.personnel.label.userConfig">员工信息配置</h4>
-            </div>
-            <div class="modal-body">
-                <form class="form-horizontal">
-                
-                    <div class="form-group">
-                        <label class="col-sm-3 control-label no-padding-right" for="isLogin" data-i18n="page.personnel.label.canLogin">可否登陆系统</label>
-                        <div class="col-sm-9">
-                            <input type="checkbox" id="isLogin" class="col-sm-7 col-xs-10 ace ace-switch ace-switch-5"/>
-                            <span class="lbl isOrNot"></span>
-                        </div>
-                    </div>
-                    <div class="space-4"></div>
-                    
-                    <div class="form-group">
-                        <label class="col-sm-3 control-label no-padding-right" for="qcode">扫码控制</label>
-                        <div class="col-sm-9">
-                            <input type="checkbox" id="qcode" class="col-sm-7 col-xs-10 ace ace-switch ace-switch-5"/>
-                            <span class="lbl isOrNot"></span>
-                        </div>
-                    </div>
-                    <div class="space-4"></div>
-
-                    <div class="form-group">
-                        <label class="col-sm-3 control-label no-padding-right" for="ips">IP控制</label>
-                        <div class="col-sm-9">
-                            <input type="checkbox" id="ips" class="col-sm-7 col-xs-10 ace ace-switch ace-switch-5"/>
-                            <span class="lbl isOrNot"></span>
-                        </div>
-                    </div>
-                    <div class="space-4"></div>
-
-                    <div class="form-group">
-                        <label class="col-sm-3 control-label no-padding-right" for="macs">MAC控制</label>
-                        <div class="col-sm-9">
-                            <input type="checkbox" id="macs" class="col-sm-7 col-xs-10 ace ace-switch ace-switch-5"/>
-                            <span class="lbl isOrNot"></span>
-                        </div>
-                    </div>
-                    <div class="space-4"></div>
-                    
-                    <div class="form-group">
-                        <label class="col-sm-3 control-label no-padding-right" for="webs">WEB控制</label>
-                        <div class="col-sm-9">
-                            <input type="checkbox" id="webs" class="col-sm-7 col-xs-10 ace ace-switch ace-switch-5"/>
-                            <span class="lbl isOrNot"></span>
-                        </div>
-                    </div>
-                    <div class="space-4"></div>
-                    
-                    <div class="form-group">
-                        <label class="col-sm-3 control-label no-padding-right" for="pcs">PC控制</label>
-                        <div class="col-sm-9">
-                            <input type="checkbox" id="pcs" class="col-sm-7 col-xs-10 ace ace-switch ace-switch-5"/>
-                            <span class="lbl isOrNot"></span>
-                        </div>
-                    </div>
-                    <div class="space-4"></div>
-                    
-                    <div class="form-group">
-                        <label class="col-sm-3 control-label no-padding-right" for="roleSel" data-i18n="page.personnel.label.role">角色</label>
-                        <div class="col-sm-9">
-                            <input type="text" id="roleSel" class="col-sm-7 col-xs-10 v_typeahead v_required" data-toggle="popover" data-placement="bottom" data-trigger="manual" />
-                        </div>
-                    </div>
-                    <div class="space-4"></div>
-
-                    <div class="form-group">
-                        <label class="col-sm-3 control-label no-padding-right" for="oldcompany" data-i18n="page.personnel.label.currentCompany">现在公司</label>
-                        <div class="col-sm-9">
-                            <input type="text"  id="oldcompany" class="col-sm-7 col-xs-10 v_required" data-toggle="popover" readonly="readonly" data-trigger='manual'/>
-                        </div>
-                    </div>
-
-                    <div class="space-4"></div>
-
-                    <div class="form-group">
-                        <label class="col-sm-3 control-label no-padding-right" for="company" data-i18n="page.personnel.label.modifyCompanyTo">公司修改为</label>
-                        <div class="col-sm-9">
-                            <select class="col-sm-7 col-xs-10 v_required" id="company" data-toggle="popover" data-trigger='manual' ></select>
-                        </div>
-                    </div>
-                    <div class="space-4"></div>
-
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" id="advanceSaveBtn" class="btn btn-primary" data-i18n="msg.submit">提交</button>
-                <button type="button" id="advanceCancelBtn" class="btn btn-default" data-dismiss="modal" data-i18n="msg.cancel">取消</button>
-            </div>
-        </div>
-    </div>
-</div>
-
 <div class="modal fade" id="addInstorerModal" tabindex="-1">
 	<div class="modal-dialog">
 		<div class="modal-content col-md-12">
@@ -112,7 +13,7 @@
 				<button type="button" class="close" data-dismiss="modal">
 					<span id="closeModel">&times;</span><span class="sr-only">Close</span>
 				</button>
-				<h4 class="modal-title">添加厂商</h4>
+				<h4 class="modal-title">添加驻店人员</h4>
 			</div>
 			<div class="modal-body">
 				<div class="timeline-items">
@@ -204,7 +105,7 @@
 				<button type="button" class="close" data-dismiss="modal">
 					<span>&times;</span><span class="sr-only">Close</span>
 				</button>
-				<h4 class="modal-title" id="checkUserInfoDialog" data-i18n="page.personnel.label.personInfo">人员信息</h4>
+				<h4 class="modal-title" id="checkUserInfoDialog" data-i18n="page.personnel.label.personInfo">驻店人员信息</h4>
 			</div>
 			<div class="modal-body">
 				<div class="timeline-items">
