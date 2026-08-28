@@ -321,6 +321,10 @@ public class AddReduceServiceImpl implements AddReduceService {
 			throw new FLException(200060, "增减单不存在");
 		}
 
+		if (addReducePO.getIsSalary() == AddReducePO.ISSALARY_MARKED_INT) {
+			throw new FLException(200064, "增减单已开工费,不可操作");
+		}
+
 		addReducePO.setUndisPrice(addReduceVO.getUndisPrice());
 		addReducePO.setDisPrice(addReduceVO.getDisPrice());
 		addReducePO.setUncalPrice(addReduceVO.getUncalPrice());
@@ -345,6 +349,10 @@ public class AddReduceServiceImpl implements AddReduceService {
 
 		if (addReducePO.getStatus() != AddReducePO.STATUS_UNSUBMIT_INT) {
 			throw new FLException(200061, "增减单状态不可操作");
+		}
+
+		if (addReducePO.getIsSalary() == AddReducePO.ISSALARY_MARKED_INT) {
+			throw new FLException(200064, "增减单已开工费,不可操作");
 		}
 
 		addReducePO.setDiscount(addReduceVO.getDiscount());
@@ -402,7 +410,7 @@ public class AddReduceServiceImpl implements AddReduceService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int updateAddReduceForSalary(AddReduceVO addReduceVO) throws FLException {
+	public int openAddReduceForSalary(AddReduceVO addReduceVO) throws FLException {
 
 		AddReducePO addReducePO = addReduceDao.get(addReduceVO.getArId());
 
@@ -410,7 +418,28 @@ public class AddReduceServiceImpl implements AddReduceService {
 			throw new FLException(200060, "增减单不存在");
 		}
 
-		addReducePO.setIsSalary(addReduceVO.getIsSalary() != null && addReduceVO.getIsSalary() == AddReducePO.ISSALARY_MARKED_INT ? AddReducePO.ISSALARY_MARKED_INT : AddReducePO.ISSALARY_NONE_INT);
+		addReducePO.setIsSalary(AddReducePO.ISSALARY_MARKED_INT);
+
+		addReduceDao.update(addReducePO);
+
+		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int rejectAddReduceForSalary(AddReduceVO addReduceVO) throws FLException {
+
+		AddReducePO addReducePO = addReduceDao.get(addReduceVO.getArId());
+
+		if (addReducePO == null) {
+			throw new FLException(200060, "增减单不存在");
+		}
+
+		if (addReducePO.getIsSalary() != AddReducePO.ISSALARY_MARKED_INT) {
+			throw new FLException(200065, "增减单未开工费,不可驳回");
+		}
+
+		addReducePO.setIsSalary(AddReducePO.ISSALARY_NONE_INT);
 
 		addReduceDao.update(addReducePO);
 
@@ -702,6 +731,10 @@ public class AddReduceServiceImpl implements AddReduceService {
 
 		if (addReducePO.getStatus() != AddReducePO.STATUS_UNSUBMIT_INT) {
 			throw new FLException(200061, "增减单状态不可操作");
+		}
+
+		if (addReducePO.getIsSalary() == AddReducePO.ISSALARY_MARKED_INT) {
+			throw new FLException(200064, "增减单已开工费,不可操作");
 		}
 
 		if (selectionItemDao.countSelectionItem(addReducePO.getOrderId(), addReducePO.getArId()) > 0) {

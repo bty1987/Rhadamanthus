@@ -2507,8 +2507,12 @@ $.extend(api, {
                 args: ["addReduce.accountDiscount", "addReduce.accountManageDiscount", "addReduce.accountTaxDiscount"],
             }
         },
-        updateAddReduceForSalary: {
-            url: "updateAddReduceForSalary.do",
+        openAddReduceForSalary: {
+            url: "openAddReduceForSalary.do",
+            type: "update"
+        },
+        rejectAddReduceForSalary: {
+            url: "rejectAddReduceForSalary.do",
             type: "update"
         },
         submitAddReduce: {

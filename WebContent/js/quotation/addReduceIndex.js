@@ -22,15 +22,13 @@
 
         modals: {
             addReduceModal: com.focusPage("#addReduceModal"),
-            addReduceAccountModal: com.focusPage("#addReduceAccountModal"),
-            addReduceSalaryModal: com.focusPage("#addReduceSalaryModal")
+            addReduceAccountModal: com.focusPage("#addReduceAccountModal")
         },
 
         btns: {
             saveBtn: com.focusPage("#saveBtn").on("click", saveData),
             payBtn: com.focusPage("#payBtn").on("click", unpay),
-            saveAccountBtn: com.focusPage("#saveAccountBtn").on("click", saveAccount),
-            saveSalaryBtn: com.focusPage("#saveSalaryBtn").on("click", saveSalary)
+            saveAccountBtn: com.focusPage("#saveAccountBtn").on("click", saveAccount)
         },
 
         editFlag: false,
@@ -278,23 +276,45 @@
         }
     };
 
-    var salarybtn = {
-        name: "工费",
+    var salaryOpenbtn = {
+        name: "工费已开",
         clazz: "btn-inverse",
         handle: function(v) {
 
-            addReduce.arid = v.arId;
+            com.showConfirm("是否确认开工费,开工费后增减单不可删除、总额和项目不可变更", function() {
 
-            com.focusPage('input[name="isSalary"]', addReduce.modals.addReduceSalaryModal).removeAttr("checked");
-            com.focusPage('input[name="isSalary"][value="' + v.isSalary + '"]', addReduce.modals.addReduceSalaryModal).prop("checked", true);
+                com.post(api.quotation.openAddReduceForSalary, {
+                    "addReduce.arId": v.arId
+                }, function(res) {
 
-            addReduce.modals.addReduceSalaryModal.modal("show");
+                    com.showAlert(com.info, "操作成功");
+                    searcher.doSearch();
+                });
+            });
+        }
+    };
+
+    var salaryRejectbtn = {
+        name: "工费驳回",
+        clazz: "btn-inverse",
+        handle: function(v) {
+
+            com.showConfirm("是否驳回工费,驳回后增减单恢复可操作", function() {
+
+                com.post(api.quotation.rejectAddReduceForSalary, {
+                    "addReduce.arId": v.arId
+                }, function(res) {
+
+                    com.showAlert(com.info, "操作成功");
+                    searcher.doSearch();
+                });
+            });
         }
     };
 
     if (addReduce.pageType == null) {
 
-        var linebtns = [btnMake, viewbtn, submitbtn, cancelbtn, allocationbtn, specialbtn, norefundbtn, affirmbtn, tagbtn, salarybtn, deletebtn, ];
+        var linebtns = [btnMake, viewbtn, submitbtn, cancelbtn, allocationbtn, specialbtn, norefundbtn, affirmbtn, tagbtn, salaryOpenbtn, salaryRejectbtn, deletebtn, ];
 
         com.focusPage('#fl-statement').statement("报价", "增减单").show();
         com.focusPage('#decorationInfo').show();
@@ -453,8 +473,11 @@
         if (addReduce.pageConfig.pageBtn.contains("affirm"))
             linebtns.push(affirmbtn);
         
-        if (addReduce.pageConfig.pageBtn.contains("salary"))
-            linebtns.push(salarybtn);
+        if (addReduce.pageConfig.pageBtn.contains("salaryOpen"))
+            linebtns.push(salaryOpenbtn);
+
+        if (addReduce.pageConfig.pageBtn.contains("salaryReject"))
+            linebtns.push(salaryRejectbtn);
 
         if (addReduce.pageConfig.pageBtn.contains("delete"))
             linebtns.push(deletebtn);
@@ -795,7 +818,7 @@
 
     if (addReduce.pageType == "account") {
 
-        var linebtns = [accountbtn, salarybtn];
+        var linebtns = [accountbtn, salaryOpenbtn, salaryRejectbtn];
 
         com.focusPage("#pagenation").hide();
 
@@ -1211,27 +1234,6 @@
             searcher.doSearch();
 
             addReduce.modals.addReduceAccountModal.modal("hide");
-        });
-    }
-
-    function saveSalary() {
-
-        var isSalary = com.focusPage('input[name="isSalary"]:checked', addReduce.modals.addReduceSalaryModal).val();
-
-        if (isSalary == null || isSalary == undefined) {
-            com.showAlert(com.error, "请选择工费标识");
-            return false;
-        }
-
-        com.post(api.quotation.updateAddReduceForSalary, {
-            "addReduce.arId": addReduce.arid,
-            "addReduce.isSalary": isSalary
-        }, function(res) {
-
-            com.showAlert(com.info, "操作成功");
-            searcher.doSearch();
-
-            addReduce.modals.addReduceSalaryModal.modal("hide");
         });
     }
 

@@ -132,10 +132,18 @@ public class AddReduceAction extends BaseListAction {
 		return SUCCESS;
 	}
 
-	@Action(value = "updateAddReduceForSalary", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String updateAddReduceForSalary() throws FLException {
+	@Action(value = "openAddReduceForSalary", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String openAddReduceForSalary() throws FLException {
 
-		addReduceService.updateAddReduceForSalary(addReduce);
+		addReduceService.openAddReduceForSalary(addReduce);
+
+		return SUCCESS;
+	}
+
+	@Action(value = "rejectAddReduceForSalary", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String rejectAddReduceForSalary() throws FLException {
+
+		addReduceService.rejectAddReduceForSalary(addReduce);
 
 		return SUCCESS;
 	}
