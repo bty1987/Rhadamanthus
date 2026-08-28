@@ -8,6 +8,8 @@ public class NoodsVO implements Serializable {
 
 	private Long nid;
 
+	private Long pnid;
+
 	private String name;
 
 	private Integer selling;
@@ -32,6 +34,14 @@ public class NoodsVO implements Serializable {
 
 	public void setNid(Long nid) {
 		this.nid = nid;
+	}
+
+	public Long getPnid() {
+		return pnid;
+	}
+
+	public void setPnid(Long pnid) {
+		this.pnid = pnid;
 	}
 
 	public String getName() {

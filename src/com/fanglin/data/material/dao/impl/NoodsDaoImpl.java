@@ -37,6 +37,12 @@ public class NoodsDaoImpl extends DaoImpl<NoodsPO> implements NoodsDao {
 		return session().createCriteria(NoodsPO.class).add(Restrictions.eq(NoodsPO.COLUMN_STATUS_STR, NoodsPO.STATUS_ENABLE_INT)).add(Restrictions.eq(NoodsPO.COLUMN_COMPANY_STR, company)).add(Restrictions.ilike(NoodsPO.COLUMN_NAME_STR, name, MatchMode.ANYWHERE)).setMaxResults(limit).list();
 	}
 
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<NoodsPO> queryNoodsForGroup(String name, int limit) {
+		return session().createCriteria(NoodsPO.class).add(Restrictions.eq(NoodsPO.COLUMN_STATUS_STR, NoodsPO.STATUS_ENABLE_INT)).add(Restrictions.eq(NoodsPO.COLUMN_COMPANY_STR, 0)).add(Restrictions.ilike(NoodsPO.COLUMN_NAME_STR, name, MatchMode.ANYWHERE)).setMaxResults(limit).list();
+	}
+
 	private void queryFilterExcute(PagingQuery<NoodsPO> query, List<Filter> filters) {
 
 		if (filters == null) return;

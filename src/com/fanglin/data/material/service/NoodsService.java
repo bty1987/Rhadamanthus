@@ -15,6 +15,8 @@ public interface NoodsService {
 
 	public List<NoodsVO> queryNoodsByName(NoodsVO noodsVO, int company);
 
+	public List<NoodsVO> queryNoodsForGroup(NoodsVO noodsVO);
+
 	public int addNoods(NoodsVO noodsVO, int company) throws FLException;
 
 	public int updateNoods(NoodsVO noodsVO) throws FLException;

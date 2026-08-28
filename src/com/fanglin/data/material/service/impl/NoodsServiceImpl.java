@@ -73,6 +73,24 @@ public class NoodsServiceImpl implements NoodsService {
 	}
 
 	@Override
+	public List<NoodsVO> queryNoodsForGroup(NoodsVO noodsVO) {
+
+		List<NoodsPO> noodsPOs = noodsDao.queryNoodsForGroup(noodsVO.getName(), 10);
+		List<NoodsVO> noodsVOs = new ArrayList<NoodsVO>();
+
+		for (NoodsPO noodsPO : noodsPOs) {
+
+			NoodsVO noodsVO2 = new NoodsVO();
+
+			BeanUtil.copyProperties(noodsPO, noodsVO2);
+
+			noodsVOs.add(noodsVO2);
+		}
+
+		return noodsVOs;
+	}
+
+	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public int addNoods(NoodsVO noodsVO, int company) throws FLException {
 
