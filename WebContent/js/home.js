@@ -396,36 +396,3 @@ function loadMessageCount() {
         console.log("get message count fail...");
     });
 }
-
-// 系统运行时长:起点为系统上线日(生产 communion.version 最早发版记录 2015-01-01 00:00:00),纯前端折算无请求
-var SYSTEM_START_YEAR = 2015;
-
-function renderSystemUptime() {
-
-    var now = new Date();
-
-    var years = now.getFullYear() - SYSTEM_START_YEAR;
-
-    var anniversary = new Date(SYSTEM_START_YEAR + years, 0, 1, 0, 0, 0);
-
-    if (anniversary > now) {
-        years -= 1;
-        anniversary = new Date(SYSTEM_START_YEAR + years, 0, 1, 0, 0, 0);
-    }
-
-    var rest = now - anniversary;
-
-    var days = Math.floor(rest / 86400000);
-    var hours = Math.floor(rest % 86400000 / 3600000);
-    var minutes = Math.floor(rest % 3600000 / 60000);
-    var seconds = Math.floor(rest % 60000 / 1000);
-
-    var pad = function(n) {
-        return n < 10 ? '0' + n : '' + n;
-    };
-
-    $("#systemUptime").text('系统已稳定运行 ' + years + ' 年 ' + days + ' 天 ' + pad(hours) + ':' + pad(minutes) + ':' + pad(seconds));
-}
-
-renderSystemUptime();
-setInterval(renderSystemUptime, 1000);
