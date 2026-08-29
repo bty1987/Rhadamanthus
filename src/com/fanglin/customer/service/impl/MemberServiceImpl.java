@@ -50,9 +50,7 @@ import com.fanglin.information.dao.ActivityDao;
 import com.fanglin.information.dao.AwardStockDao;
 import com.fanglin.information.po.ActivityPO;
 import com.fanglin.information.po.AwardStockPO;
-import com.fanglin.payment.dao.AdvancePaymentDao;
 import com.fanglin.payment.dao.DecorationPaymentDao;
-import com.fanglin.payment.po.AdvancePaymentPO;
 import com.fanglin.payment.po.DecorationPaymentPO;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
@@ -72,9 +70,6 @@ public class MemberServiceImpl implements MemberService {
 
 	@Autowired
 	private DecorationDao decorationDao;
-
-	@Autowired
-	private AdvancePaymentDao advancePaymentDao;
 
 	@Autowired
 	private CustomerDao customerDao;

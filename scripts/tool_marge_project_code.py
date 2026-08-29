@@ -142,7 +142,7 @@ infos = [
 
     {"source": "12.Personnel\\Foreground\\js\\api\\", "target": "99.Foreground\\js\\api\\", "workspace": "WebContent\\js\\api\\", "files": ["personel.js"]},
     {"source": "12.Personnel\\Foreground\\js\\condition\\", "target": "99.Foreground\\js\\condition\\", "workspace": "WebContent\\js\\condition\\", "files": ["personel.js"]},
-    {"source": "12.Personnel\\Foreground\\js\\personel\\", "target": "99.Foreground\\js\\personel\\", "workspace": "WebContent\\js\\personel\\"},
+    {"source": "12.Personnel\\Foreground\\js\\personel\\", "target": "99.Foreground\\js\\personnel\\", "workspace": "WebContent\\js\\personnel\\"},
     {"source": "12.Personnel\\Foreground\\js\\contract\\", "target": "99.Foreground\\js\\contract", "workspace": "WebContent\\js\\contract\\", "files": ["contract.js"]},
     {"source": "12.Personnel\\Foreground\\js\\utils\\", "target": "99.Foreground\\js\\utils\\", "workspace": "WebContent\\js\\utils\\", "files": ["userUtils.js"]},
     {"source": "12.Personnel\\Foreground\\ds\\", "target": "99.Foreground\\ds\\", "workspace": "WebContent\\ds\\", "files": ["personel.json"]},
