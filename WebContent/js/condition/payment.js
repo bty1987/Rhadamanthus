@@ -151,7 +151,9 @@ Condition.addupRule("payment", {
         },
         dataSource: {
             url: api.data.queryPaymentType,
-            postData: {},
+            postData: {
+                "paymentType.type": 1
+            },
             listPath: "paymentTypes",
             keyPath: "name",
             valuePath: "name"
