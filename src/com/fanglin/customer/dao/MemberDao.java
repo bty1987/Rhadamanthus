@@ -15,14 +15,14 @@ public interface MemberDao extends Dao<PointAccountPO> {
 
 	public long amountMemberPointForMaterial(String orderId);
 
-	public long amountDecorationIntegralByOrderId(String orderId);
+	public long amountDecorationPointByOrderId(String orderId);
 
-	public long amountFreezeDecorationIntegralByOrderId(String orderId);
+	public long amountDecorationPointForFreezeByOrderId(String orderId);
 
-	public long amountMaterialIntegralByOrderId(String orderId);
+	public long amountMaterialPointByOrderId(String orderId);
 
-	public List<Object[]> queryDecorationIntegralDetailByOrderId(String orderId);
+	public List<Object[]> queryDecorationPointDetailByOrderId(String orderId);
 
-	public List<Object[]> queryMaterialIntegralDetailByOrderId(String orderId);
+	public List<Object[]> queryMaterialPointDetailByOrderId(String orderId);
 
 }

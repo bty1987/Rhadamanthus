@@ -76,8 +76,8 @@ public class MemberAction extends BaseListAction {
 
 		if (memberPoints != null && !memberPoints.isEmpty() && memberPoints.get(0).getOrderId() != null) {
 			String orderId = memberPoints.get(0).getOrderId();
-			decorationPointDetails = memberService.queryDecorationIntegralDetailByOrderId(orderId);
-			materialPointDetails = memberService.queryMaterialIntegralDetailByOrderId(orderId);
+			decorationPointDetails = memberService.queryDecorationPointDetailByOrderId(orderId);
+			materialPointDetails = memberService.queryMaterialPointDetailByOrderId(orderId);
 		}
 
 		return SUCCESS;
