@@ -85,6 +85,14 @@ public class OalesPaymentDaoImpl extends DaoImpl<OalesPaymentPO> implements Oale
 
 		if (filters == null) return;
 
+		for (Filter filter : filters) {
+
+			// decoration.orderId经oales点前缀链会拼出无法解析的criterion,转到根上orderId冗余列(与oales表orderId全量一致)
+			if ("decoration.orderId".equals(filter.getField())) {
+				filter.setField(OalesPaymentPO.COLUMN_ORDERID_STR);
+			}
+		}
+
 		OalesDaoImpl.queryFilterExecute(query, filters, "oales");
 
 		for (Filter filter : filters) {
