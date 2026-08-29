@@ -285,9 +285,9 @@ public class MemberServiceImpl implements MemberService {
 			String orderId = memberPointVO.getOrderId();
 
 			// 可用装修积分:合同款(sort!=0)应收额*活动倍数;冻结装修积分:预付款余额*活动倍数;主材积分:主材预付款收款额*活动倍数
-			memberPointVO.setDecorationPoint(memberDao.amountDecorationIntegralByOrderId(orderId));
-			memberPointVO.setFreezeDecorationPoint(memberDao.amountFreezeDecorationIntegralByOrderId(orderId));
-			memberPointVO.setMaterialPoint(memberDao.amountMaterialIntegralByOrderId(orderId));
+			memberPointVO.setDecorationPoint(memberDao.amountDecorationPointByOrderId(orderId));
+			memberPointVO.setFreezeDecorationPoint(memberDao.amountDecorationPointForFreezeByOrderId(orderId));
+			memberPointVO.setMaterialPoint(memberDao.amountMaterialPointByOrderId(orderId));
 			memberPointVO.setFreezeMaterialPoint(0l);
 			memberPointVO.setOperatePoint(Arith.add(memberPointVO.getDecorationPoint(), memberPointVO.getMaterialPoint()));
 		}
@@ -296,11 +296,11 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	@Override
-	public List<MemberPointDetailVO> queryDecorationIntegralDetailByOrderId(String orderId) {
+	public List<MemberPointDetailVO> queryDecorationPointDetailByOrderId(String orderId) {
 
 		List<MemberPointDetailVO> detailVOs = new ArrayList<MemberPointDetailVO>();
 
-		for (Object[] row : memberDao.queryDecorationIntegralDetailByOrderId(orderId)) {
+		for (Object[] row : memberDao.queryDecorationPointDetailByOrderId(orderId)) {
 
 			MemberPointDetailVO detailVO = new MemberPointDetailVO();
 
@@ -318,11 +318,11 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	@Override
-	public List<MemberPointDetailVO> queryMaterialIntegralDetailByOrderId(String orderId) {
+	public List<MemberPointDetailVO> queryMaterialPointDetailByOrderId(String orderId) {
 
 		List<MemberPointDetailVO> detailVOs = new ArrayList<MemberPointDetailVO>();
 
-		for (Object[] row : memberDao.queryMaterialIntegralDetailByOrderId(orderId)) {
+		for (Object[] row : memberDao.queryMaterialPointDetailByOrderId(orderId)) {
 
 			MemberPointDetailVO detailVO = new MemberPointDetailVO();
 

@@ -53,7 +53,7 @@ public class MemberDaoImpl extends DaoImpl<PointAccountPO> implements MemberDao 
 	}
 
 	@Override
-	public long amountDecorationIntegralByOrderId(String orderId) {
+	public long amountDecorationPointByOrderId(String orderId) {
 
 		String sql = "SELECT SUM(dp.referMoney*a.multiple/1000) from payment.decorationpayment dp, decoration.decorationactivity da, information.activity a where dp.orderId = :orderId and dp.sort != 0 and dp.orderId = da.orderId and da.aid = a.aid and a.atttype = 1";
 		BigDecimal sqlQuery = (BigDecimal) session().createSQLQuery(sql).setString("orderId", orderId).uniqueResult();
@@ -62,7 +62,7 @@ public class MemberDaoImpl extends DaoImpl<PointAccountPO> implements MemberDao 
 	}
 
 	@Override
-	public long amountFreezeDecorationIntegralByOrderId(String orderId) {
+	public long amountDecorationPointForFreezeByOrderId(String orderId) {
 
 		String sql = "SELECT ap.balance*a.multiple/1000 from payment.advancepayment ap, decoration.decorationactivity da, information.activity a where ap.orderId = :orderId and ap.orderId = da.orderId and da.aid = a.aid and a.atttype = 1";
 		BigDecimal sqlQuery = (BigDecimal) session().createSQLQuery(sql).setString("orderId", orderId).uniqueResult();
@@ -71,7 +71,7 @@ public class MemberDaoImpl extends DaoImpl<PointAccountPO> implements MemberDao 
 	}
 
 	@Override
-	public long amountMaterialIntegralByOrderId(String orderId) {
+	public long amountMaterialPointByOrderId(String orderId) {
 
 		String sql = "SELECT SUM(p.recharge*a.multiple/1000) from payment.payment p, information.activity a where p.orderId = :orderId and p.type = 1 and p.paymentType = 2 and p.status != 3 and p.aid = a.aid";
 		BigDecimal sqlQuery = (BigDecimal) session().createSQLQuery(sql).setString("orderId", orderId).uniqueResult();
@@ -81,7 +81,7 @@ public class MemberDaoImpl extends DaoImpl<PointAccountPO> implements MemberDao 
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<Object[]> queryDecorationIntegralDetailByOrderId(String orderId) {
+	public List<Object[]> queryDecorationPointDetailByOrderId(String orderId) {
 
 		String sql = "SELECT dp.paymentType, dp.referMoney, dp.paymentStatus, a.multiple, dp.referMoney*a.multiple/1000, dp.createTime from payment.decorationpayment dp, decoration.decorationactivity da, information.activity a where dp.orderId = :orderId and dp.sort != 0 and dp.orderId = da.orderId and da.aid = a.aid and a.atttype = 1 order by dp.dpid";
 		return session().createSQLQuery(sql).setString("orderId", orderId).list();
@@ -89,9 +89,9 @@ public class MemberDaoImpl extends DaoImpl<PointAccountPO> implements MemberDao 
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<Object[]> queryMaterialIntegralDetailByOrderId(String orderId) {
+	public List<Object[]> queryMaterialPointDetailByOrderId(String orderId) {
 
-		String sql = "SELECT p.recharge, a.multiple, p.recharge*a.multiple/1000, p.status, p.collectTime from payment.payment p, information.activity a where p.orderId = :orderId and p.type = 1 and p.paymentType = 2 and p.status != 3 and p.aid = a.aid order by p.pid";
+		String sql = "SELECT p.recharge, a.multiple, p.recharge*a.multiple/1000, p.status, p.createTime from payment.payment p, information.activity a where p.orderId = :orderId and p.type = 1 and p.paymentType = 2 and p.status != 3 and p.aid = a.aid order by p.pid";
 		return session().createSQLQuery(sql).setString("orderId", orderId).list();
 	}
 
