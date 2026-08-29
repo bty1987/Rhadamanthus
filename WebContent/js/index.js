@@ -635,6 +635,24 @@ $(function() {
         return false;
     });
 
+    $("#btn-scroll-fame").attr({
+        "mid": "famewall",
+        "menuText": "功勋墙",
+        "icon": "icon-trophy"
+    }).on("click", function(e) {
+
+        var $this = $(this);
+
+        foldMenu();
+        navControl($this);
+
+        com.loadPage(api.index.famewall.url, $this);
+
+        $.breadcrumb('icon-trophy', ['功勋墙']);
+
+        return false;
+    });
+
     $("#btn-scroll-license").attr({
         "mid": "license",
         "menuText": "License",
