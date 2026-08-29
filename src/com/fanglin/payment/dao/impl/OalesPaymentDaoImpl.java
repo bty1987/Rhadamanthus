@@ -49,7 +49,7 @@ public class OalesPaymentDaoImpl extends DaoImpl<OalesPaymentPO> implements Oale
 		PagingQuery<OalesPaymentPO> query = pagingQuery(new Paging(), OalesPaymentPO.class);
 
 		if (orderId != null && orderId != "") {
-			query.alias("oales", "oales").add(Restrictions.eq(OalesPaymentPO.COLUMN_OALES_ORDERID_STR, orderId));
+			query.add(Restrictions.eq(OalesPaymentPO.COLUMN_ORDERID_STR, orderId));
 		}
 
 		queryFilterExecute(query, filters);

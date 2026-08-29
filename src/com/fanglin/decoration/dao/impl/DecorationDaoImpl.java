@@ -330,9 +330,14 @@ public class DecorationDaoImpl extends DaoImpl<DecorationPO> implements Decorati
 			prefix = "";
 		}
 
+		String propPrefix = "";
+
 		if (!"".equals(prefix)) {
 
-			query.alias(prefix, prefix);
+			String alias = prefix.substring(prefix.lastIndexOf('.') + 1);
+
+			query.alias(prefix, alias);
+			propPrefix = String.format("%s.", alias);
 			prefix = String.format("%s.", prefix);
 		}
 
@@ -394,7 +399,7 @@ public class DecorationDaoImpl extends DaoImpl<DecorationPO> implements Decorati
 			}
 
 			if ("decoration.orderId".equals(field)) {
-				query.add(query.getCriterion(String.format("%sorderId", prefix), data, op));
+				query.add(query.getCriterion(String.format("%sorderId", propPrefix), data, op));
 			} else if ("decoration.customer.no".equals(field)) {
 				query.add(query.getCriterion("customer.no", data, op));
 			} else if ("decoration.customer.cid".equals(field)) {
@@ -404,15 +409,15 @@ public class DecorationDaoImpl extends DaoImpl<DecorationPO> implements Decorati
 			} else if ("decoration.house.hid".equals(field)) {
 				query.add(query.getCriterion("house.hid", Long.valueOf(data), op));
 			} else if ("decoration.houseClass".equals(field)) {
-				query.add(query.getCriterion(String.format("%shouseClass", prefix), data, op));
+				query.add(query.getCriterion(String.format("%shouseClass", propPrefix), data, op));
 			} else if ("decoration.houseType".equals(field)) {
-				query.add(query.getCriterion(String.format("%shouseType", prefix), data, op));
+				query.add(query.getCriterion(String.format("%shouseType", propPrefix), data, op));
 			} else if ("decoration.status".equals(field)) {
-				query.add(query.getCriterion(String.format("%sstatus", prefix), Short.valueOf(data), op));
+				query.add(query.getCriterion(String.format("%sstatus", propPrefix), Short.valueOf(data), op));
 			} else if ("decoration.statuses".equals(field)) {
-				query.add(query.getCriterion(String.format("%sstatus", prefix), filter.getShorts(), op));
+				query.add(query.getCriterion(String.format("%sstatus", propPrefix), filter.getShorts(), op));
 			} else if ("decoration.otherStatus".equals(field)) {
-				query.add(query.getCriterion(String.format("%sotherStatus", prefix), data, "and"));
+				query.add(query.getCriterion(String.format("%sotherStatus", propPrefix), data, "and"));
 			} else if ("decoration.designer.userId".equals(field)) {
 				query.add(query.getCriterion("designer.userId", data, op));
 			} else if ("decoration.salesman.userId".equals(field)) {
@@ -446,7 +451,7 @@ public class DecorationDaoImpl extends DaoImpl<DecorationPO> implements Decorati
 			} else if ("decoration.village.name".equals(field)) {
 				query.add(query.getCriterion("village.name", data, op));
 			} else if ("decoration.company".equals(field)) {
-				query.add(query.getCriterion(String.format("%scompany", prefix), CompanyServiceImpl.decode(filter.getData()), op));
+				query.add(query.getCriterion(String.format("%scompany", propPrefix), CompanyServiceImpl.decode(filter.getData()), op));
 			} else if ("decoration.salesman.department.name".equals(field)) {
 				query.add(query.getCriterion("salesDept.name", data, op));
 			} else if ("decoration.designer.department.name".equals(field)) {
@@ -456,52 +461,52 @@ public class DecorationDaoImpl extends DaoImpl<DecorationPO> implements Decorati
 			} else if ("decoration.salesman.region.no".equals(field)) {
 				query.add(query.getCriterion("salesmanRegion.no", data, op));
 			} else if ("decoration.orderType".equals(field)) {
-				query.add(query.getCriterion(String.format("%stypeness", prefix), Short.valueOf(data), op));
+				query.add(query.getCriterion(String.format("%stypeness", propPrefix), Short.valueOf(data), op));
 			} else if ("decoration.busitype.no".equals(field)) {
 				query.add(query.getCriterion("busitype.no", Integer.valueOf(data), op));
 			} else if ("decoration.houseArea".equals(field)) {
 				int dataF = Integer.parseInt(data);
 				query.add(query.getCriterion("house.buildArea", Arith.mul(dataF, 1000000), op));
 			} else if ("decoration.designStatus".equals(field)) {
-				query.add(query.getCriterion(String.format("%sdesignStatus", prefix), Short.valueOf(data), op));
+				query.add(query.getCriterion(String.format("%sdesignStatus", propPrefix), Short.valueOf(data), op));
 			} else if ("decoration.projectStatus".equals(field)) {
-				query.add(query.getCriterion(String.format("%sprojectStatus", prefix), Long.valueOf(data), op));
+				query.add(query.getCriterion(String.format("%sprojectStatus", propPrefix), Long.valueOf(data), op));
 			} else if ("decoration.sourceStatus".equals(field)) {
-				query.add(query.getCriterion(String.format("%ssourceStatus", prefix), Short.valueOf(data), op));
+				query.add(query.getCriterion(String.format("%ssourceStatus", propPrefix), Short.valueOf(data), op));
 			} else if ("decoration.repairStatus".equals(field)) {
-				query.add(query.getCriterion(String.format("%srepairStatus", prefix), Short.valueOf(data), op));
+				query.add(query.getCriterion(String.format("%srepairStatus", propPrefix), Short.valueOf(data), op));
 			} else if ("decoration.balanceStatus".equals(field)) {
-				query.add(query.getCriterion(String.format("%sbalanceStatus", prefix), Short.valueOf(data), op));
+				query.add(query.getCriterion(String.format("%sbalanceStatus", propPrefix), Short.valueOf(data), op));
 			} else if ("decoration.createTime.range".equals(field)) {
-				query.timeranges(String.format("%screateTime", prefix), String.format("%screateTime", prefix), data);
+				query.timeranges(String.format("%screateTime", propPrefix), String.format("%screateTime", propPrefix), data);
 			} else if ("decoration.issueTime.range".equals(field)) {
-				query.timeranges(String.format("%saddition.issueTime", prefix), String.format("%sissueTime", prefix), data);
+				query.timeranges(String.format("%saddition.issueTime", propPrefix), String.format("%sissueTime", propPrefix), data);
 			} else if ("decoration.meetTime.range".equals(field)) {
-				query.timeranges(String.format("%saddition.meetTime", prefix), String.format("%smeetTime", prefix), data);
+				query.timeranges(String.format("%saddition.meetTime", propPrefix), String.format("%smeetTime", propPrefix), data);
 			} else if ("decoration.measureTime.range".equals(field)) {
-				query.timeranges(String.format("%smeasureTime", prefix), String.format("%smeasureTime", prefix), data);
+				query.timeranges(String.format("%smeasureTime", propPrefix), String.format("%smeasureTime", propPrefix), data);
 			} else if ("decoration.belongTime.range".equals(field)) {
-				query.timeranges(String.format("%saddition.belongTime", prefix), String.format("%sbelongTime", prefix), data);
+				query.timeranges(String.format("%saddition.belongTime", propPrefix), String.format("%sbelongTime", propPrefix), data);
 			} else if ("decoration.depositTime.range".equals(field)) {
-				query.timeranges(String.format("%sdepositTime", prefix), String.format("%sdepositTime", prefix), data);
+				query.timeranges(String.format("%sdepositTime", propPrefix), String.format("%sdepositTime", propPrefix), data);
 			} else if ("decoration.precontractTime.range".equals(field)) {
-				query.timeranges(String.format("%sprecontractTime", prefix), String.format("%sprecontractTime", prefix), data);
+				query.timeranges(String.format("%sprecontractTime", propPrefix), String.format("%sprecontractTime", propPrefix), data);
 			} else if ("decoration.signTime.range".equals(field)) {
-				query.timeranges(String.format("%scontractTime", prefix), String.format("%scontractTime", prefix), data);
+				query.timeranges(String.format("%scontractTime", propPrefix), String.format("%scontractTime", propPrefix), data);
 			} else if ("decoration.recontractTime.range".equals(field)) {
-				query.timeranges(String.format("%srecontractTime", prefix), String.format("%srecontractTime", prefix), data);
+				query.timeranges(String.format("%srecontractTime", propPrefix), String.format("%srecontractTime", propPrefix), data);
 			} else if ("decoration.accountTime.range".equals(field)) {
-				query.timeranges(String.format("%saccountTime", prefix), String.format("%saccountTime", prefix), data);
+				query.timeranges(String.format("%saccountTime", propPrefix), String.format("%saccountTime", propPrefix), data);
 			} else if ("decoration.designTime.range".equals(field)) {
-				query.timeranges(String.format("%ssdesignTime", prefix), String.format("%sedesignTime", prefix), data);
+				query.timeranges(String.format("%ssdesignTime", propPrefix), String.format("%sedesignTime", propPrefix), data);
 			} else if ("decoration.sdesignTime.range".equals(field)) {
-				query.timeranges(String.format("%ssdesignTime", prefix), String.format("%ssdesignTime", prefix), data);
+				query.timeranges(String.format("%ssdesignTime", propPrefix), String.format("%ssdesignTime", propPrefix), data);
 			} else if ("decoration.edesignTime.range".equals(field)) {
-				query.timeranges(String.format("%sedesignTime", prefix), String.format("%sedesignTime", prefix), data);
+				query.timeranges(String.format("%sedesignTime", propPrefix), String.format("%sedesignTime", propPrefix), data);
 			} else if ("decoration.balanceTime.range".equals(field)) {
-				query.timeranges(String.format("%sbalanceTime", prefix), String.format("%sbalanceTime", prefix), data);
+				query.timeranges(String.format("%sbalanceTime", propPrefix), String.format("%sbalanceTime", propPrefix), data);
 			} else if ("decoration.terminalTime.range".equals(field)) {
-				query.timeranges(String.format("%sterminalTime", prefix), String.format("%sterminalTime", prefix), data);
+				query.timeranges(String.format("%sterminalTime", propPrefix), String.format("%sterminalTime", propPrefix), data);
 			}
 		}
 	}
