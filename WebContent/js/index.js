@@ -1294,7 +1294,7 @@ function renderSystemUptime() {
         return n < 10 ? '0' + n : '' + n;
     };
 
-    $("#systemUptime").text('系统已稳定运行 ' + years + ' 年 ' + days + ' 天 ' + pad(hours) + ':' + pad(minutes) + ':' + pad(seconds));
+    $("#systemUptime").text('系统已稳定运行 ' + years + ' 年 ' + days + ' 天 ' + pad(hours) + ' 时 ' + pad(minutes) + ' 分 ' + pad(seconds) + ' 秒');
 }
 
 renderSystemUptime();
