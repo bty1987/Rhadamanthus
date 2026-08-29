@@ -41,6 +41,9 @@ $.extend(api.index, {
     license: {
         url: "/license.html"
     },
+    famewall: {
+        url: "/famewall.html"
+    },
     roleModule: {
         url: "/views/system/module4role.html"
     },
