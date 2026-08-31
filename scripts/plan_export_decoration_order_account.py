@@ -24,10 +24,10 @@ class Exporter(Util):
             v.name AS `楼盘`,
             h.housenumber as `楼号`,
             c.name AS `客户名`,
-            eu.userId AS `方案设计工号`,
-            eu.currentName AS `方案设计`,
             h.buildArea AS `建筑面积`,
             h.innerArea AS `计价面积`,
+            eu.userId AS `方案设计工号`,
+            eu.currentName AS `方案设计`,
             d.contractTime AS `签单时间`,
             d.accountTime AS `决算时间`,
             communion.kv('decoration', 'decoration', 'status', d.status) AS `状态`,
@@ -36,6 +36,10 @@ class Exporter(Util):
             u.userId AS `归属人工号`,
             u.currentName AS `归属人`,
             db.type AS `归属类型`,
+            ur.no AS `分区编号`,
+            ur.name AS `分区名称`,
+            ud.no AS `部门编号`,
+            ud.name AS `部门名称`,
             communion.kv('decoration', 'decorationbelong', 'defaultflag', db.defaultflag) AS `是否默认`,
             db.rate AS `归属比例`,
             da.paidupMatching AS `决算实花配比`,
@@ -56,6 +60,8 @@ class Exporter(Util):
                 LEFT JOIN communion.company AS cc ON d.company = cc.cid
                 LEFT JOIN decoration.decorationbelong AS db ON (d.orderId = db.orderId and db.status = 0)
                 LEFT JOIN communion.user AS u ON db.buid = u.uid
+                LEFT JOIN communion.department AS ud ON u.deptId = ud.did
+                LEFT JOIN communion.department AS ur ON ud.fdid = ur.did
             WHERE
                 d.accountTime >= '%s 00:00:00' AND
                 d.accountTime <= '%s 23:59:59' 
@@ -116,8 +122,9 @@ class Exporter(Util):
             workbook, sheet = self.createWorkbook("装修决算信息")
 
             tableHead = [
-                "装修单号", "楼盘", "楼号", "客户名", "方案设计工号", "方案设计", "建筑面积", "计价面积", "签单时间", "决算时间", 
-                "订单状态", "工程状态", "订单类型", "归属人工号", "归属人", "归属类型", "是否默认", "归属比例", "决算实花配比", "公司"
+                "装修单号", "楼盘", "楼号", "客户名", "建筑面积", "计价面积", "方案设计工号", "方案设计", "签单时间", "决算时间",
+                "订单状态", "工程状态", "订单类型", "归属人工号", "归属人", "归属类型", "分区编号", "分区名称", "部门编号", "部门名称",
+                "是否默认", "归属比例", "决算实花配比", "公司"
             ]
 
             self.createTableHead(sheet, tableHead)
@@ -134,13 +141,13 @@ class Exporter(Util):
 
                     rows = list(v)
 
-                    self.divNum(rows, [6, 7, 17, 18])
+                    self.divNum(rows, [4, 5, 21, 22])
 
-                    rates = float(rows[17])
+                    rates = float(rows[21] or 0)
 
-                    rows[13] = self.decorationbelongType[rows[15]]
+                    rows[15] = self.decorationbelongType.get(rows[15], rows[15])
 
-                    rows[18] = rows[18] * rates
+                    rows[22] = (rows[22] or 0) * rates
 
                     self.createTableHead(sheet, rows, count)
                     count += 1

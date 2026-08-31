@@ -24,32 +24,44 @@ class Exporter(Util):
             v.name AS `楼盘`,
             h.housenumber as `楼号`,
             c.name AS `客户名`,
+            h.buildArea AS `建筑面积`,
+            h.innerArea AS `计价面积`,
             du.userId AS `设计师工号`,
             du.currentName AS `设计师`,
             su.userId AS `业务员工号`,
             su.currentName AS `业务员`,
             eu.userId AS `方案设计工号`,
             eu.currentName AS `方案设计`,
-            h.buildArea AS `建筑面积`,
-            h.innerArea AS `计价面积`,
             d.contractTime AS `签单时间`,
             d.balanceTime AS `内决时间`,
             communion.kv("decoration", "decoration", "status", d.status) AS `订单状态`,
             communion.kv("decoration", "decoration", "projectStatus", d.projectStatus) AS `工程状态`,
-            communion.kv("decoration", "decoration", "typeness", d.typeness) AS `订单类型`
+            communion.kv("decoration", "decoration", "typeness", d.typeness) AS `订单类型`,
+            u.userId AS `归属人工号`,
+            u.currentName AS `归属人`,
+            db.type AS `归属类型`,
+            ur.no AS `分区编号`,
+            ur.name AS `分区名称`,
+            ud.no AS `部门编号`,
+            ud.name AS `部门名称`,
+            db.rate AS `归属比例`
         """
 
         self.SQL_EXPORT_DECORATION_BALANCE = """
             SELECT
                 %s
             FROM
-                decoration.decoration d,
+                decoration.decoration d
                 LEFT JOIN communion.house h ON d.hid = h.hid
                 LEFT JOIN communion.village v ON h.vid = v.vid
                 LEFT JOIN communion.customer c ON d.customerid = c.cid
                 LEFT JOIN communion.user du ON d.dsuid = du.uid
                 LEFT JOIN communion.user eu ON d.euid = eu.uid
                 LEFT JOIN communion.user su ON d.smuid = su.uid
+                LEFT JOIN decoration.decorationbelong db ON (d.orderId = db.orderId AND db.status = 0)
+                LEFT JOIN communion.user u ON db.buid = u.uid
+                LEFT JOIN communion.department ud ON u.deptId = ud.did
+                LEFT JOIN communion.department ur ON ud.fdid = ur.did
             WHERE
                 d.balanceTime >= '%s 00:00:00' AND 
                 d.balanceTime <= '%s 23:59:59'
@@ -108,8 +120,10 @@ class Exporter(Util):
             workbook, sheet = self.createWorkbook("装修内决信息")
             
             tableHead = [
-                "装修单号", "楼盘", "楼号", "客户名", "设计师工号", "设计师", "业务员工号", "业务员", "方案设计工号", "方案设计", 
-                "建筑面积", "计价面积", "签单时间", "内决时间", "订单状态", "工程状态", "订单类型"
+                "装修单号", "楼盘", "楼号", "客户名", "建筑面积", "计价面积",
+                "设计师工号", "设计师", "业务员工号", "业务员", "方案设计工号", "方案设计",
+                "签单时间", "内决时间", "订单状态", "工程状态", "订单类型",
+                "归属人工号", "归属人", "归属类型", "分区编号", "分区名称", "部门编号", "部门名称", "归属比例"
             ]
 
             self.createTableHead(sheet, tableHead)
@@ -126,7 +140,9 @@ class Exporter(Util):
 
                     rows = list(v)
                     
-                    self.divNum(rows, [10, 11])
+                    self.divNum(rows, [4, 5, 24])
+
+                    rows[19] = self.decorationbelongType.get(rows[19], rows[19])
 
                     if (rows[12] is None): rows[12] = ""
                     if (rows[13] is None): rows[13] = ""
