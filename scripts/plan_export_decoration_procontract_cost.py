@@ -45,7 +45,9 @@ class Exporter(Util):
             pq.advanceProfit AS `特殊优惠`,
             communion.kv('decoration', 'decoration', 'status', d.status) AS `状态`,
             d.couponcut AS '券优惠',
-            d.thingcut AS '物品优惠'
+            d.thingcut AS '物品优惠',
+            co.name AS `公司`,
+            d.precontractTime AS `预签时间`
         """
 
         self.SQL_QUERY_STR = """
@@ -53,13 +55,14 @@ class Exporter(Util):
                 %s
             FROM
                 decoration.decoration d
-                LEFT JOIN communion.house h ON d.hid = h.hid 
-                LEFT JOIN communion.village v ON h.vid = v.vid 
+                LEFT JOIN communion.house h ON d.hid = h.hid
+                LEFT JOIN communion.village v ON h.vid = v.vid
                 LEFT JOIN communion.user du ON d.dsuid = du.uid
                 LEFT JOIN communion.department dd ON du.deptid = dd.did
                 LEFT JOIN communion.department dr ON dd.fdid = dr.did
                 LEFT JOIN quotation.protation pq ON (d.orderId = pq.orderId AND pq.defaults = 1)
                 LEFT JOIN quotation.protationitem pqi ON pq.pid = pqi.pid
+                LEFT JOIN communion.company co ON d.company = co.cid
             WHERE
                 d.precontractTime >= '%s 00:00:00' AND
                 d.precontractTime <= '%s 23:59:59' AND pq.pid is not null
@@ -92,20 +95,23 @@ class Exporter(Util):
         row[24] = row[11] - row[17] + row[18]
         row[25] = ((1 - row[23] / (row[24] - coupon - thing)) if (row[24] - coupon - thing) else 0)
 
+        row.insert(26, ((1 - row[23] / row[24]) if row[24] else 0))
+
         row.append(status)
         row.append(coupon)
         row.append(thing)
 
-        self.divNum(row, [10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 27, 28])
+        self.divNum(row, [10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 30, 31])
 
         return row
 
     def main(self, pid, args, company):
 
         tableheads = [
-            "装修单号", "楼盘", "楼号", "设计分区编号", "设计分区", "设计部编号", "设计部", "设计师编号", "设计师", "预签产品", 
-            "面积", "预签总额", "工程成本", "主材成本", "功能区成本", "个性化成本", "减项成本", "赋能增补额", "减项增补额", "减通额", 
-            "优惠额", "管理优惠", "特殊优惠", "预签成本", "提成基数", "毛利率", "装修状态", "券优惠", "物品优惠"
+            "装修单号", "楼盘", "楼号", "设计分区编号", "设计分区", "设计部编号", "设计部", "设计师编号", "设计师", "预签产品",
+            "面积", "预签总额", "工程成本", "主材成本", "功能区成本", "个性化成本", "减项成本", "赋能增补额", "减项增补额", "减通额",
+            "优惠额", "管理优惠", "特殊优惠", "预签成本", "提成基数", "毛利率", "预签优惠前毛利率", "公司", "预签时间",
+            "装修状态", "券优惠", "物品优惠"
         ]
 
         self.getDBCursor(self.host, self.username, self.password, self.charset)

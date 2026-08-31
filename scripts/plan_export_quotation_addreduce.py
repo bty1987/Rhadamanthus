@@ -36,6 +36,8 @@ class Exporter(Util):
             communion.kv('quotation', 'addreduce', 'paytype', ar.paytype),
             communion.kv('quotation', 'addreduce', 'status', ar.status),
             ar.total,
+            (SELECT GROUP_CONCAT(DISTINCT o2.title SEPARATOR '、') FROM quotation.quotationprofile qp2 JOIN quotation.quotationprofileitem i2 ON i2.qpid = qp2.qpid AND i2.name = '变更原因' JOIN quotation.quotationprofileoption o2 ON o2.qpiid = i2.qpiid AND o2.checked = 1 WHERE qp2.type = 5 AND qp2.qid = ar.arId) '变更原因',
+            (SELECT GROUP_CONCAT(DISTINCT o2.title SEPARATOR '、') FROM quotation.quotationprofile qp2 JOIN quotation.quotationprofileitem i2 ON i2.qpid = qp2.qpid AND i2.name = '减免原因' JOIN quotation.quotationprofileoption o2 ON o2.qpiid = i2.qpiid AND o2.checked = 1 WHERE qp2.type = 5 AND qp2.qid = ar.arId) '减免原因',
             ar.createTime,
             %s
             ar.sendtime,
@@ -99,8 +101,8 @@ class Exporter(Util):
                 return False
                 
             tableHead = [
-                "装修单号", "楼盘", "楼号", "建筑面积", "计价面积", "设计分区", "设计部", "设计师工号", "设计师", "监理工号", 
-                "监理", "类型", "业务类型", "付款类型", "付款状态", "总价", "创建时间", "公司"
+                "装修单号", "楼盘", "楼号", "建筑面积", "计价面积", "设计分区", "设计部", "设计师工号", "设计师", "监理工号",
+                "监理", "类型", "业务类型", "付款类型", "付款状态", "总价", "变更原因", "减免原因", "创建时间"
             ]
             
             field = "ar.createTime"
@@ -117,7 +119,7 @@ class Exporter(Util):
                 field = "dr.collectTime"
                 tableHead = tableHead + ["收款时间", ]
                 
-            tableHead = tableHead + ["推送时间", "确认时间", ]
+            tableHead = tableHead + ["推送时间", "确认时间", "公司", ]
 
             sqlcount = self.SQL_QUERY_HANDLE % ("count(*)", joint, field, startTime, field, endTime, self.company("d.company", company))
 
