@@ -181,6 +181,10 @@ public class OccessoriesServiceImpl implements OccessoriesService {
 			throw new FLException(140013, "装修单不存在");
 		}
 
+		if (decorationPO.getProjectStatus() == DecorationPO.PROJECTSTATUS_FINISH_INT) {
+			throw new FLException(260089, "工程已验收,辅料已锁定");
+		}
+
 		int company = decorationPO.getCompany();
 
 		CompanyPO companyPO = companyDao.get(company);

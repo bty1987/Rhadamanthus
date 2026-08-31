@@ -252,6 +252,50 @@
 
 </div>
 
+<div id="importSoods" style="display: none;" class="page-content">
+    <div class="row-fluid">
+        <form class="form-horizontal" novalidate="novalidate" id="importSoodsForm">
+
+            <div class="form-group alert alert-danger">
+                <p data-i18n="page.data.hint.uploadTextField">上传字段均为文本类型</p>
+                <p>上传格式: 商品编号 名称 规格 数量 售价 成本 结算价 类型</p>
+                <p data-i18n="page.data.hint.uploadFormat">注意: 上传文件中请填写具体内容, 不显示表头</p>
+            </div>
+
+            <div class="form-group">
+                <ul class="flex-table center">
+                    <li>
+                        <div class="line-wrap content col8">
+                            <div class="cell">商品编号</div>
+                            <div class="cell">名称</div>
+                            <div class="cell">规格</div>
+                            <div class="cell">数量</div>
+                            <div class="cell" data-i18n="page.data.label.sellPrice">售价</div>
+                            <div class="cell">成本</div>
+                            <div class="cell" data-i18n="page.data.label.balancePrice">结算价</div>
+                            <div class="cell">类型</div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="line-wrap content col8">
+                            <div class="cell">JF-ZSH-A013</div>
+                            <div class="cell">森盛-装饰画-A013</div>
+                            <div class="cell">30*40</div>
+                            <div class="cell">2</div>
+                            <div class="cell">110</div>
+                            <div class="cell">100</div>
+                            <div class="cell">95</div>
+                            <div class="cell">0</div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+
+        </form>
+    </div>
+
+</div>
+
 <div class="form-group hide" style="margin: 0px;" id="uploaddiv">
     <div id="fileUpload" class="hide">
         <label class="col-sm-3 control-label no-padding-right" for="attachment"></label>

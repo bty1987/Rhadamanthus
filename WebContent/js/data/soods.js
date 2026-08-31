@@ -235,6 +235,10 @@ $(function() {
         $('<i></i>').addClass('icon-download-alt bigger-110').appendTo($upda);
         $('<span></span>').text('批量更新').appendTo($upda);
 
+        var $importa = $('<a></a>').addClass('btn btn-minier btn-warning pull-left').attr('name', 'importSoods').css("margin", "0px 3px");
+        $('<i></i>').addClass('icon-upload-alt bigger-110').appendTo($importa);
+        $('<span></span>').text('导入').appendTo($importa);
+
         var $starta = $('<a></a>').addClass('btn btn-minier btn-success pull-left').attr('name', 'start').css("margin", "0px 3px");
         $('<i></i>').addClass('icon-ok bigger-110').appendTo($starta);
         $('<span></span>').text('启用').appendTo($starta);
@@ -267,6 +271,16 @@ $(function() {
             com.popup4model("#updateMa", "批量更新");
         });
 
+        $importa.click(function() {
+            soods.keyword = "import_data_soods";
+            var form = com.focusPage("#importSoodsForm");
+            com.focusPage("#uploaddiv").removeClass("hide").appendTo(form);
+            com.focusPage("#fileUpload").removeClass("hide");
+            soods.btns.importBtn.removeClass("hide");
+            soods.btns.exportBtn.addClass("hide");
+            com.popup4model("#importSoods", "导入选材");
+        });
+
         $starta.click(function() {
             batchUpdateStatus(0);
         });
@@ -278,7 +292,7 @@ $(function() {
         if (soods.pageType == "basic") {
             return [$adda];
         } else {
-            return [$impa, $upda, $starta, $stopa];
+            return [$impa, $upda, $importa, $starta, $stopa];
         }
     });
     searcher.line(function(v) { return v.goods.name; }, lineprops, linebtns).render();
