@@ -42,9 +42,9 @@ import com.fanglin.decoration.dao.DecorationContractDao;
 import com.fanglin.decoration.dao.DecorationContractRecordDao;
 import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.dao.DecorationOperateDao;
+import com.fanglin.decoration.po.DecorationAccountStatusPO;
 import com.fanglin.decoration.po.DecorationActivityItemPO;
 import com.fanglin.decoration.po.DecorationActivityPO;
-import com.fanglin.decoration.po.DecorationAccountStatusPO;
 import com.fanglin.decoration.po.DecorationAdditionPO;
 import com.fanglin.decoration.po.DecorationBelongPO;
 import com.fanglin.decoration.po.DecorationContractPO;
@@ -58,8 +58,8 @@ import com.fanglin.decoration.vo.DecorationVO;
 import com.fanglin.fadada.signature.Signature;
 import com.fanglin.information.dao.MessageQueuingDao;
 import com.fanglin.information.po.MessageCueuingPO;
-import com.fanglin.information.po.MessageQueuingPO;
 import com.fanglin.information.po.MessagePO;
+import com.fanglin.information.po.MessageQueuingPO;
 import com.fanglin.information.service.MessageService;
 import com.fanglin.payment.dao.DecorationPaymentDao;
 import com.fanglin.payment.po.DecorationPaymentPO;
@@ -543,7 +543,7 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 		}
 
 		if (constructionInfoPO.getKeyTime() == null) {
-			throw new FLException(120031, "未配置预计领取钥匙时间");
+			// throw new FLException(120031, "未配置预计领取钥匙时间");
 		}
 
 		if (constructionInfoPO.getDrawlineTime() == null) {
