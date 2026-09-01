@@ -9,10 +9,13 @@ import org.apache.struts2.convention.annotation.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
+import com.fanglin.common.vo.TopVO;
 import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.report.service.DecorationRankService;
+import com.fanglin.report.service.HomeRankService;
 import com.fanglin.report.service.MaterialRankService;
+import com.fanglin.report.vo.HomeRankVO;
 
 @ParentPackage("base")
 @Namespace("/")
@@ -27,6 +30,9 @@ public class RankAction extends BaseListAction {
 	@Autowired
 	private MaterialRankService materialRankService;
 
+	@Autowired
+	private HomeRankService homeRankService;
+
 	private String decorationRank;
 
 	private String decorationPlace;
@@ -34,6 +40,23 @@ public class RankAction extends BaseListAction {
 	private String materialRank;
 
 	private String materialPlace;
+
+	private HomeRankVO homeRank;
+
+	private List<TopVO> tops;
+
+	@Action(value = "queryHomeRankForTop", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryHomeRankForTop() throws FLException {
+
+		if (homeRank == null) {
+			homeRank = new HomeRankVO();
+		}
+
+		tops = homeRankService.queryHomeRankForTop(homeRank.getType(), homeRank.getMonth(), queryCompany());
+
+		return SUCCESS;
+
+	}
 
 	@Action(value = "queryRankForPlace", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryRankForPlace() throws FLException {
@@ -83,6 +106,22 @@ public class RankAction extends BaseListAction {
 
 	public void setMaterialPlace(String materialPlace) {
 		this.materialPlace = materialPlace;
+	}
+
+	public HomeRankVO getHomeRank() {
+		return homeRank;
+	}
+
+	public void setHomeRank(HomeRankVO homeRank) {
+		this.homeRank = homeRank;
+	}
+
+	public List<TopVO> getTops() {
+		return tops;
+	}
+
+	public void setTops(List<TopVO> tops) {
+		this.tops = tops;
 	}
 
 }
