@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>萤石摄像头接入说明书 - 方向三</title>
+<style>
+@page { size: A4; margin: 0; }
+* { box-sizing: border-box; }
+body { margin: 0; background:#d9d6cf; color:#202427; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif; }
+.page { width:210mm; height:297mm; margin:16px auto; background:#fffffb; padding:16mm 16mm 13mm; position:relative; box-shadow:0 18px 42px rgba(33, 39, 45, .16); overflow:hidden; }
+.header { display:grid; grid-template-columns: 1fr 48mm; gap:8mm; align-items:start; }
+.eyebrow { font-size:10px; color:#8a563c; font-weight:800; letter-spacing:.08em; text-transform:uppercase; }
+h1 { margin:3mm 0 0; font-size:30px; line-height:1.14; letter-spacing:0; }
+.intro { margin-top:5mm; font-size:14px; line-height:1.75; color:#58616a; }
+.device { border:1px solid #cfd5d8; border-radius:8px; padding:4mm; background:#f4f7f6; }
+.screen { height:42mm; border-radius:5px; background:linear-gradient(135deg,#273136,#617071); position:relative; overflow:hidden; }
+.screen:before { content:""; position:absolute; left:8mm; right:8mm; bottom:9mm; height:12mm; border-top:3px solid rgba(255,255,255,.5); border-left:2px solid rgba(255,255,255,.35); transform:skew(-16deg); }
+.play { position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); width:12mm; height:12mm; border:2px solid rgba(255,255,255,.85); border-radius:50%; }
+.play:after { content:""; position:absolute; left:4.4mm; top:3mm; border-left:4mm solid #fff; border-top:3mm solid transparent; border-bottom:3mm solid transparent; }
+.device p { margin:3mm 0 0; font-size:10.5px; line-height:1.5; color:#59656b; }
+.journey { margin-top:10mm; display:grid; grid-template-columns: 30mm 1fr; gap:5mm 7mm; align-items:start; }
+.time { font-size:11px; color:#8a563c; font-weight:800; border-top:1px solid #cbb9aa; padding-top:3mm; }
+.event { border-top:1px solid #d9dedb; padding-top:3mm; min-height:24mm; }
+.event h2 { margin:0 0 2mm; font-size:15px; }
+.event p { margin:0; font-size:11.5px; line-height:1.65; color:#56616a; }
+.rules { margin-top:9mm; display:grid; grid-template-columns:1fr 1fr 1fr; gap:4mm; }
+.rule { background:#f8f1e8; border-radius:6px; padding:4mm; min-height:33mm; }
+.rule b { display:block; color:#8a563c; font-size:13px; margin-bottom:2mm; }
+.rule span { font-size:10.5px; line-height:1.55; color:#5e6265; }
+.footer { position:absolute; left:16mm; right:16mm; bottom:10mm; border-top:1px solid #ded9d0; padding-top:3mm; display:flex; justify-content:space-between; color:#7a7b77; font-size:10px; }
+</style>
+</head>
+<body>
+<section class="page">
+  <header class="header">
+    <div>
+      <div class="eyebrow">Customer Journey</div>
+      <h1>萤石摄像头接入说明书</h1>
+      <div class="intro">方向三从客户体验出发：客户真正需要的不是一直盯直播，而是用更轻的方式确认“今天有变化、节点有记录、问题能反馈”。因此把“图片集播放”放在直播与视频之间。</div>
+    </div>
+    <div class="device"><div class="screen"><div class="play"></div></div><p>前台以直播、今日快看、节点影集组成透明工地入口。</p></div>
+  </header>
+
+  <main class="journey">
+    <div class="time">打开页面</div><div class="event"><h2>我的工地</h2><p>客户看到当前施工阶段、摄像头状态、今日快看和直播入口。离线、非可见时间、未开通权限都有明确状态。</p></div>
+    <div class="time">日常查看</div><div class="event"><h2>图片集自动播放</h2><p>后台定时抓图，前台像幻灯片一样播放。客户不用等视频生成，也不用每次打开直播。</p></div>
+    <div class="time">节点完成</div><div class="event"><h2>节点影集</h2><p>水电、瓦工、木工、油工等节点完成时自动抓图并归档，客户从通知进入节点快看。</p></div>
+    <div class="time">重场景</div><div class="event"><h2>按需生成视频</h2><p>竣工交付、外部分享、宣传案例、争议证据再生成 MP4，避免第一阶段背上过重的视频生产成本。</p></div>
+  </main>
+
+  <section class="rules">
+    <div class="rule"><b>图片太少</b><span>展示图片集，不自动播放，避免空转。</span></div>
+    <div class="rule"><b>图片适中</b><span>3-12 张自动播放，每张 1.5-2 秒。</span></div>
+    <div class="rule"><b>图片太多</b><span>按时间均匀抽取 12-20 张，其余进入完整图片集。</span></div>
+  </section>
+
+  <footer class="footer"><span>Rhadamanthus · Construction Camera</span><span>Direction 3 / Customer Journey</span></footer>
+</section>
+</body>
+</html>
