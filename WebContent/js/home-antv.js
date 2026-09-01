@@ -278,25 +278,36 @@ $(function() {
         // 审批计数接口失败时不影响首页其他模块
     });
 
-    com.charts("designtop", "designtop", api.home.library, $.extend({}, {
-        "redis": 1,
-        "type": 0,
-        "api": "report.decoration.cs8",
-        "company": params.company.cid,
-    }), "", {}, null, params.reporter.top);
+    var renderHomeRank = function(elementId, type, unit) {
 
-    com.charts("salestop", "salestop", api.home.library, $.extend({}, {
-        "redis": 1,
-        "type": 1,
-        "api": "report.decoration.cs8",
-        "company": params.company.cid,
-    }), "", {}, null, params.reporter.top);
+        if (!com.focusPage("#" + elementId).length)
+            return false;
 
-    com.charts("worktop", "worktop", api.home.library, $.extend({}, {
-        "redis": 1,
-        "api": "report.construction.ccs10",
-        "company": params.company.cid,
-    }), "", {}, null, params.reporter.top);
+        com.post(api.report.queryHomeRankForTop, {
+            "homeRank.type": type,
+        }, function(res) {
+
+            var options = [];
+
+            $.each(res.tops || [], function(i, v) {
+                options.push({
+                    "key": v.topName,
+                    "value": v.topValue + unit,
+                    "photo": v.topImg || "",
+                });
+            });
+
+            params.reporter.top({ "option": options }, com.focusPage("#" + elementId));
+        }, function() {
+            // 排名接口失败时静默降级,不影响首页其他模块
+        });
+
+        return true;
+    };
+
+    renderHomeRank("designtop", 0, "万");
+    renderHomeRank("salestop", 1, "万");
+    renderHomeRank("worktop", 2, "个");
 
     loadMessageCount();
 

@@ -65,6 +65,10 @@ $.extend(api, {
             demo: true,
         },
 
+        queryHomeRankForTop: {
+            url: "queryHomeRankForTop.do",
+        },
+
         queryDecorationRank: {
             url: "queryDecorationRank.do",
             demo: true,
