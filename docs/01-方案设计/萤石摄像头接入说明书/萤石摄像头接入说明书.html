@@ -1,0 +1,265 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>萤石摄像头接入说明书</title>
+<style>
+@page { size: A4; margin: 0; }
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body { background: #d7dbe0; color: #17212b; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif; }
+.page { width: 210mm; height: 297mm; margin: 16px auto; background: #fbfbf7; padding: 16mm 16mm 13mm; position: relative; box-shadow: 0 18px 45px rgba(18, 34, 52, .16); overflow: hidden; page-break-after: always; }
+@media print { body { background: #fff; } .page { margin: 0; box-shadow: none; } }
+.topline { display: grid; grid-template-columns: 1fr auto; align-items: start; border-bottom: 1px solid #283848; padding-bottom: 8mm; }
+.kicker { font-size: 10px; letter-spacing: .12em; color: #60717e; text-transform: uppercase; }
+h1 { margin: 4mm 0 0; font-size: 30px; line-height: 1.16; letter-spacing: 0; font-weight: 760; color: #14202b; }
+h2 { margin: 0; font-size: 21px; line-height: 1.25; letter-spacing: 0; color: #14202b; }
+h3 { margin: 0 0 2mm; font-size: 14px; line-height: 1.35; color: #132431; }
+p { margin: 0; color: #55626c; font-size: 11.5px; line-height: 1.68; }
+ul, ol { margin: 0; padding-left: 5mm; color: #55626c; font-size: 11.3px; line-height: 1.62; }
+li + li { margin-top: 1.2mm; }
+strong { color: #bf4d2e; }
+.version { text-align: right; font-size: 10.5px; color: #52616f; line-height: 1.75; }
+.page-title { display: grid; grid-template-columns: 1fr auto; gap: 8mm; align-items: end; border-bottom: 2px solid #17212b; padding-bottom: 5mm; margin-bottom: 7mm; }
+.page-no { font-size: 10px; color: #bf4d2e; font-weight: 800; letter-spacing: .08em; }
+.section-title { font-size: 13px; font-weight: 760; margin: 0 0 4mm; color: #192b38; }
+.summary { margin: 10mm 0 8mm; display: grid; grid-template-columns: 1.08fr .92fr; gap: 8mm; }
+.lead { font-size: 16.5px; line-height: 1.75; font-weight: 650; color: #1b2a35; }
+.quote { border-left: 3px solid #bf4d2e; padding: 2mm 0 2mm 5mm; color: #3d4d58; font-size: 12.5px; line-height: 1.65; }
+.grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 5mm; }
+.grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4mm; }
+.card { border: 1px solid #d5d8d3; border-radius: 6px; padding: 4.6mm; background: #fffef9; }
+.card b { display: block; font-size: 14px; margin-bottom: 2mm; color: #132431; }
+.card p { font-size: 11.1px; line-height: 1.62; }
+.compact-card { border: 1px solid #d5d8d3; border-radius: 6px; padding: 4mm; background: #fffef9; min-height: 27mm; }
+.compact-card b { display: block; margin-bottom: 1.5mm; font-size: 13px; color: #132431; }
+.compact-card span { display: block; color: #59656e; font-size: 10.6px; line-height: 1.52; }
+.band { margin-top: 8mm; border-top: 2px solid #17212b; border-bottom: 1px solid #bcc3c8; padding: 5.5mm 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: 4mm; }
+.step { position: relative; }
+.step:after { content: ""; position: absolute; right: -2.5mm; top: 9px; width: 14px; height: 1px; background: #bf4d2e; }
+.step:last-child:after { display: none; }
+.num { font-size: 10px; color: #bf4d2e; font-weight: 800; }
+.step h3 { margin: 1mm 0 1.5mm; font-size: 12.5px; }
+.step p { font-size: 10.2px; line-height: 1.48; }
+.table { width: 100%; border-collapse: collapse; font-size: 10.8px; color: #3f4c55; }
+.table th { text-align: left; background: #eef0eb; color: #1c2d39; font-weight: 760; border: 1px solid #d5d8d3; padding: 2.8mm; }
+.table td { vertical-align: top; border: 1px solid #d5d8d3; padding: 2.6mm 2.8mm; line-height: 1.5; }
+.table.small td, .table.small th { font-size: 10.2px; padding: 2.3mm 2.5mm; }
+.flow { display: grid; gap: 3.4mm; }
+.flow-row { display: grid; grid-template-columns: 34mm 1fr 40mm; align-items: stretch; border: 1px solid #d5d8d3; background: #fffef9; border-radius: 6px; overflow: hidden; }
+.flow-tag { background: #eef0eb; color: #bf4d2e; font-size: 11px; font-weight: 800; display: flex; align-items: center; justify-content: center; padding: 3mm; }
+.flow-mid { padding: 3.5mm 4mm; }
+.flow-mid b { font-size: 13px; display: block; margin-bottom: 1mm; }
+.flow-mid span, .flow-risk { font-size: 10.6px; line-height: 1.5; color: #59656e; }
+.flow-risk { padding: 3.5mm 3mm; border-left: 1px solid #e2e1d9; }
+.callout { margin-top: 5mm; padding: 4mm 4.5mm; border-left: 3px solid #bf4d2e; background: #fff6ed; font-size: 11.2px; line-height: 1.62; color: #45545e; }
+.timeline { display: grid; grid-template-columns: 27mm 1fr; gap: 0 6mm; }
+.time { border-top: 1px solid #cbb9aa; padding-top: 3mm; color: #bf4d2e; font-size: 11px; font-weight: 800; }
+.event { border-top: 1px solid #d9ddd8; padding-top: 3mm; padding-bottom: 4.2mm; min-height: 24mm; }
+.event b { display: block; font-size: 13.2px; color: #14202b; margin-bottom: 1.5mm; }
+.event span { color: #56636d; font-size: 10.8px; line-height: 1.58; }
+.footer { position: absolute; left: 16mm; right: 16mm; bottom: 9mm; display: flex; justify-content: space-between; font-size: 9.6px; color: #7a858d; border-top: 1px solid #d9ddd8; padding-top: 3.2mm; }
+.mt-4 { margin-top: 4mm; } .mt-5 { margin-top: 5mm; } .mt-6 { margin-top: 6mm; } .mt-7 { margin-top: 7mm; } .mt-8 { margin-top: 8mm; }
+</style>
+</head>
+<body>
+
+<section class="page">
+  <header class="topline">
+    <div>
+      <div class="kicker">Camera Integration Brief</div>
+      <h1>萤石摄像头接入说明书</h1>
+    </div>
+    <div class="version">A4 说明文档<br>管理决策版<br>2026-08-21</div>
+  </header>
+
+  <div class="summary">
+    <div class="lead">把摄像头接入定义为<strong>工地视频资源服务</strong>，第一阶段先跑通直播、抓图与图片集播放，真实视频生成只放在竣工交付、分享传播和证据归档等重场景。</div>
+    <div class="quote">核心原则：后台负责设备绑定、抓图、存储、授权和素材组织；前台负责图片集播放体验；视频生成作为按需增强能力。</div>
+  </div>
+
+  <h2 class="section-title">一页看懂：先轻后重的接入边界</h2>
+  <div class="grid-2">
+    <div class="card"><b>客户看什么</b><p>实时直播、今日快看、节点影集、全部图片。客户日常最关心现场是否变化，不必默认生成 MP4。</p></div>
+    <div class="card"><b>后台管什么</b><p>绑定设备、配置客户可见时间、主动抓图、图片审核、在线巡检、访问日志。</p></div>
+    <div class="card"><b>系统怎么接</b><p>后端代理萤石接口，统一管理 accessToken、设备通道、播放地址、抓图结果和权限校验。</p></div>
+    <div class="card"><b>后续扩什么</b><p>节点自动影集、回放、事件告警、竣工视频、多厂商适配和施工日报。</p></div>
+  </div>
+
+  <div class="band">
+    <div class="step"><div class="num">01</div><h3>绑定摄像头</h3><p>按装修单 orderId / 施工单 cid 绑定 deviceSerial 与 channelNo。</p></div>
+    <div class="step"><div class="num">02</div><h3>生成临时地址</h3><p>客户请求直播时后端校验权限，再向萤石换取播放 URL。</p></div>
+    <div class="step"><div class="num">03</div><h3>抓图入库</h3><p>客户、内部人员、节点事件或定时任务触发抓图，转存 OSS。</p></div>
+    <div class="step"><div class="num">04</div><h3>前台播放</h3><p>图片太多时按时间均匀抽取，形成可播放图片集。</p></div>
+  </div>
+
+  <footer class="footer"><span>Rhadamanthus · Construction Camera</span><span>01 / Executive Summary</span></footer>
+</section>
+
+<section class="page">
+  <div class="page-title"><div><div class="kicker">Objective</div><h2>业务目标与系统落点</h2></div><div class="page-no">02</div></div>
+  <div class="grid-2">
+    <div class="card"><b>客户侧目标</b><p>客户希望快速知道现场是否施工、今天是否有变化、当前节点是否推进、问题是否可以留证。日常使用更偏“快速确认”，不是持续盯直播。</p></div>
+    <div class="card"><b>内部管理目标</b><p>远程巡检、节点图片留档、客户反馈证据补充、摄像头在线巡检，以及后续施工日报、工地日历、竣工视频。</p></div>
+  </div>
+  <div class="callout">产品边界：第一阶段不做完整视频生产平台，先跑通“摄像头绑定 -> 授权观看 -> 抓图入库 -> 图片集展示 -> 前台播放”。</div>
+  <h3 class="mt-7">当前系统可复用落点</h3>
+  <table class="table mt-4">
+    <thead><tr><th>系统能力</th><th>可复用点</th><th>接入说明</th></tr></thead>
+    <tbody>
+      <tr><td>装修单</td><td><code>orderId</code></td><td>客户和业务的主关联对象，也是客户授权校验核心。</td></tr>
+      <tr><td>施工单</td><td><code>cid</code></td><td>摄像头更适合挂到施工现场，与施工进度、节点图片联动。</td></tr>
+      <tr><td>施工节点</td><td><code>csid / cnid / schedule</code></td><td>节点开工、完工、验收可触发抓图并归档。</td></tr>
+      <tr><td>施工图片</td><td><code>constructiondrawing</code></td><td>承接抓图后的长期图片资料，不直接表达设备与播放状态。</td></tr>
+      <tr><td>客户通知</td><td><code>customernotice</code></td><td>节点完成后可通知客户查看图片、影集或后续视频。</td></tr>
+      <tr><td>OSS / SystemConfig</td><td>临时 URL / 三方配置</td><td>抓图转存、封面图访问、萤石 appKey/appSecret 配置。</td></tr>
+    </tbody>
+  </table>
+  <footer class="footer"><span>Rhadamanthus · Construction Camera</span><span>02 / Objective</span></footer>
+</section>
+
+<section class="page">
+  <div class="page-title"><div><div class="kicker">Architecture</div><h2>萤石接入链路与目标架构</h2></div><div class="page-no">03</div></div>
+  <div class="flow">
+    <div class="flow-row"><div class="flow-tag">Client</div><div class="flow-mid"><b>客户侧 H5 / 小程序</b><span>展示直播、今日快看、节点影集、图片集播放和问题反馈。前端不接触厂商凭证。</span></div><div class="flow-risk">关注播放协议和小程序合法域名。</div></div>
+    <div class="flow-row"><div class="flow-tag">ERP</div><div class="flow-mid"><b>Rhadamanthus 摄像头业务接口</b><span>校验客户与订单关系，控制可见时间，组织播放序列，记录直播、抓图、分享访问日志。</span></div><div class="flow-risk">权限必须在后端完成。</div></div>
+    <div class="flow-row"><div class="flow-tag">Provider</div><div class="flow-mid"><b>CameraProvider 厂商适配层</b><span>封装 accessToken、直播地址、抓图、回放和在线状态查询。业务层不直接依赖萤石字段。</span></div><div class="flow-risk">预留多厂商 provider。</div></div>
+    <div class="flow-row"><div class="flow-tag">YS7</div><div class="flow-mid"><b>萤石开放平台</b><span>按 appKey/appSecret 获取 accessToken，再基于 deviceSerial + channelNo 获取直播、抓图、回放能力。</span></div><div class="flow-risk">上线前核对账号权限与套餐。</div></div>
+  </div>
+  <div class="callout">后端必须代理厂商接口：appSecret、accessToken、设备验证码、长期播放地址都不应暴露到客户前端。客户前端只拿短时有效的播放 URL 或系统授权后的图片地址。</div>
+  <h3 class="mt-6">推荐调用方式</h3>
+  <div class="band mt-4">
+    <div class="step"><div class="num">01</div><h3>客户请求</h3><p>携带 orderId、cameraId 进入直播或影集页面。</p></div>
+    <div class="step"><div class="num">02</div><h3>后端校验</h3><p>校验客户身份、订单关系、可见时间和能力开关。</p></div>
+    <div class="step"><div class="num">03</div><h3>厂商调用</h3><p>刷新或读取 accessToken，调用直播、抓图或回放接口。</p></div>
+    <div class="step"><div class="num">04</div><h3>返回内容</h3><p>返回临时 URL、图片列表或播放序列，并写访问日志。</p></div>
+  </div>
+  <footer class="footer"><span>Rhadamanthus · Construction Camera</span><span>03 / Architecture</span></footer>
+</section>
+
+<section class="page">
+  <div class="page-title"><div><div class="kicker">Data & API</div><h2>数据模型与接口摘要</h2></div><div class="page-no">04</div></div>
+  <h3>核心数据表</h3>
+  <table class="table small mt-4">
+    <thead><tr><th>表</th><th>用途</th><th>关键字段</th></tr></thead>
+    <tbody>
+      <tr><td><code>camera</code></td><td>摄像头设备与订单/施工单绑定。</td><td>orderId、constructionId、provider、deviceSerial、channelNo、openLive、openCapture、openAlbum、visibleStart/End、company</td></tr>
+      <tr><td><code>cameramedia</code></td><td>抓图、视频和影集素材。</td><td>orderId、cameraId、csid、cnid、mediaType、source、originUrl、mediaUrl、captureTime、visible</td></tr>
+      <tr><td><code>cameraaccess</code></td><td>客户与内部人员访问日志。</td><td>orderId、cameraId、viewerType、viewerId、action、result、ip、userAgent、createTime</td></tr>
+      <tr><td><code>cameraalbum</code></td><td>影集精选结果，可第一阶段实时计算，后续再落库。</td><td>orderId、cameraId、type、title、coverUrl、itemCount、duration、visible</td></tr>
+      <tr><td><code>cameravideo</code></td><td>真实 MP4 成品与生成任务。</td><td>orderId、cameraId、type、coverUrl、videoUrl、duration、imageCount、status</td></tr>
+    </tbody>
+  </table>
+  <h3 class="mt-7">第一阶段接口</h3>
+  <table class="table small mt-4">
+    <thead><tr><th>接口</th><th>用途</th><th>处理重点</th></tr></thead>
+    <tbody>
+      <tr><td><code>queryConstructionCameraByOrderId.do</code></td><td>查询订单摄像头列表。</td><td>后台/客户侧都可使用，但返回字段应按权限裁剪。</td></tr>
+      <tr><td><code>queryConstructionCameraLiveUrl.do</code></td><td>获取直播播放地址。</td><td>校验客户与订单关系、openLive、可见时间段，再向萤石换取临时 URL。</td></tr>
+      <tr><td><code>captureConstructionCamera.do</code></td><td>主动或事件触发抓图。</td><td>按 triggerType 记录来源，客户触发必须限流，关键图片转存 OSS。</td></tr>
+      <tr><td><code>queryConstructionCameraMedia.do</code></td><td>查询图片集。</td><td>按日期、节点、摄像头、可见性筛选。</td></tr>
+      <tr><td><code>queryConstructionCameraPlayList.do</code></td><td>返回前台可播放图片序列。</td><td>图片太多时后端按时间均匀抽取精选序列。</td></tr>
+    </tbody>
+  </table>
+  <footer class="footer"><span>Rhadamanthus · Construction Camera</span><span>04 / Data & API</span></footer>
+</section>
+
+<section class="page">
+  <div class="page-title"><div><div class="kicker">Capture</div><h2>抓图触发与留档策略</h2></div><div class="page-no">05</div></div>
+  <div class="grid-2">
+    <div class="card"><b>客户主动触发</b><p>点击“刷新现场图片”“保存当前画面”或提交问题反馈时触发。必须按客户、摄像头、订单做 30-60 秒限流，并设置每日上限。</p></div>
+    <div class="card"><b>内部人员触发</b><p>监理、项目经理、质检远程巡检时主动抓图。可少受客户限流影响，但必须完整记录操作日志。</p></div>
+    <div class="card"><b>施工节点触发</b><p>节点开工、完工、验收、返工开始、返工完成时自动抓图。属于高价值资料，建议长期保存并挂到施工图片。</p></div>
+    <div class="card"><b>定时或告警触发</b><p>定时抓图形成施工日报和工地日历。设备离线、上线、遮挡、移动侦测可作为内部告警，默认不直接推给客户。</p></div>
+  </div>
+  <h3 class="mt-7">统一抓图服务</h3>
+  <table class="table small mt-4">
+    <thead><tr><th>triggerType</th><th>说明</th><th>建议处理</th></tr></thead>
+    <tbody>
+      <tr><td><code>customer</code></td><td>客户主动刷新/反馈截图。</td><td>限流、校验可见时间、可绑定反馈记录。</td></tr>
+      <tr><td><code>user</code></td><td>内部人员主动抓图。</td><td>记录操作者，可归档为巡检资料。</td></tr>
+      <tr><td><code>node</code></td><td>施工节点事件触发。</td><td>长期保存，同步施工图片。</td></tr>
+      <tr><td><code>schedule</code></td><td>定时任务抓图。</td><td>普通图片可设置 30/60/90 天保留。</td></tr>
+      <tr><td><code>alarm</code></td><td>设备事件或告警触发。</td><td>默认内部可见，避免误报和隐私争议。</td></tr>
+    </tbody>
+  </table>
+  <div class="callout">定时抓图建议从每天 4 次开始：09:00、11:30、14:00、17:00。不要高频抓图，避免接口频率、存储成本和隐私压力过早放大。</div>
+  <footer class="footer"><span>Rhadamanthus · Construction Camera</span><span>05 / Capture Strategy</span></footer>
+</section>
+
+<section class="page">
+  <div class="page-title"><div><div class="kicker">Album First</div><h2>图片集播放优先，视频按需生成</h2></div><div class="page-no">06</div></div>
+  <div class="lead" style="font-size:15px; margin-bottom:6mm;">日常客户感知不需要默认生成视频。图片集加前台自动播放已经足够轻、快、可控；真正的视频生成留给竣工、分享、宣传、证据归档等高价值场景。</div>
+  <table class="table mt-4">
+    <thead><tr><th>图片数量</th><th>展示方式</th><th>说明</th></tr></thead>
+    <tbody>
+      <tr><td>0 张</td><td>空状态</td><td>提示“今日暂无现场图片”，避免误导客户。</td></tr>
+      <tr><td>1-2 张</td><td>图片集</td><td>不自动播放，只展示图片与拍摄时间。</td></tr>
+      <tr><td>3-12 张</td><td>自动播放</td><td>每张 1.5-2 秒，形成“今日快看”。</td></tr>
+      <tr><td>13-30 张</td><td>全量或精选播放</td><td>可降低停留时间，也可按时间段抽取。</td></tr>
+      <tr><td>30 张以上</td><td>精选播放 + 全部图片</td><td>后端按时间均匀抽取 12-20 张，其余进入完整图片集。</td></tr>
+    </tbody>
+  </table>
+  <div class="grid-3 mt-7">
+    <div class="compact-card"><b>今日快看</b><span>定时抓图后自动形成，客户打开即可看，不等待生成任务。</span></div>
+    <div class="compact-card"><b>节点影集</b><span>节点开工、完工、验收抓图，按施工阶段组织。</span></div>
+    <div class="compact-card"><b>真实视频</b><span>竣工交付、外部分享、宣传案例、争议证据再异步生成 MP4。</span></div>
+  </div>
+  <h3 class="mt-7">视频生成边界</h3>
+  <table class="table small mt-4">
+    <thead><tr><th>模板</th><th>图片数量</th><th>时长</th><th>场景</th></tr></thead>
+    <tbody>
+      <tr><td>日报视频</td><td>4-8 张</td><td>8-15 秒</td><td>每日工地回顾，后续可选。</td></tr>
+      <tr><td>节点视频</td><td>10-30 张</td><td>15-45 秒</td><td>节点交付或客户通知。</td></tr>
+      <tr><td>全周期视频</td><td>每节点 5-10 张</td><td>60-120 秒</td><td>竣工交付和客户分享。</td></tr>
+      <tr><td>异常视频</td><td>事件前后若干张</td><td>10-20 秒</td><td>争议、投诉或告警留证。</td></tr>
+    </tbody>
+  </table>
+  <footer class="footer"><span>Rhadamanthus · Construction Camera</span><span>06 / Album First</span></footer>
+</section>
+
+<section class="page">
+  <div class="page-title"><div><div class="kicker">Permission</div><h2>权限、隐私与运营控制</h2></div><div class="page-no">07</div></div>
+  <h3>客户查看必须满足</h3>
+  <div class="grid-3 mt-4">
+    <div class="compact-card"><b>身份有效</b><span>客户已登录，或分享 token 有效且未过期。</span></div>
+    <div class="compact-card"><b>订单匹配</b><span>客户与 orderId 存在合法关系，不允许跨订单查看。</span></div>
+    <div class="compact-card"><b>设备启用</b><span>摄像头状态启用，且对应能力开关开启。</span></div>
+    <div class="compact-card"><b>时间可见</b><span>当前时间在 visibleStart 与 visibleEnd 范围内。</span></div>
+    <div class="compact-card"><b>状态允许</b><span>施工中可开通直播，竣工后默认关闭实时直播。</span></div>
+    <div class="compact-card"><b>日志完整</b><span>直播、抓图、影集、分享均记录访问日志。</span></div>
+  </div>
+  <h3 class="mt-7">敏感数据处理</h3>
+  <table class="table small mt-4">
+    <thead><tr><th>数据</th><th>风险</th><th>处理方式</th></tr></thead>
+    <tbody>
+      <tr><td>appSecret / accessToken</td><td>暴露后可调用厂商接口。</td><td>仅后端保存和使用，前端不返回。</td></tr>
+      <tr><td>设备序列号 / 验证码</td><td>可定位设备和通道。</td><td>验证码加密存储，序列号按权限裁剪返回。</td></tr>
+      <tr><td>播放地址</td><td>长期外泄会绕过权限。</td><td>短时有效，过期重新获取。</td></tr>
+      <tr><td>客户分享链接</td><td>可能被转发扩散。</td><td>设置有效期、访问次数和访问日志。</td></tr>
+    </tbody>
+  </table>
+  <div class="callout">隐私策略：夜间默认关闭直播和抓图；告警图片默认内部可见；后台可隐藏不适合客户查看的图片；竣工后关闭实时直播，只保留历史资料。</div>
+  <footer class="footer"><span>Rhadamanthus · Construction Camera</span><span>07 / Permission</span></footer>
+</section>
+
+<section class="page">
+  <div class="page-title"><div><div class="kicker">Roadmap</div><h2>分阶段实施与验收</h2></div><div class="page-no">08</div></div>
+  <div class="timeline">
+    <div class="time">阶段 1</div><div class="event"><b>基础闭环</b><span>后台绑定摄像头，客户获取直播地址，客户/内部人员主动抓图，图片转存 OSS，访问日志完整记录。不做回放、视频生成、告警回调。</span></div>
+    <div class="time">阶段 2</div><div class="event"><b>定时抓图与图片集播放</b><span>定时任务生成今日图片，前台播放“今日快看”，图片太多时后端返回精选序列，后台可管理图片可见性。</span></div>
+    <div class="time">阶段 3</div><div class="event"><b>施工节点影集</b><span>节点开工、完工、验收触发抓图，节点图片归档到施工图片，节点完成后可生成客户通知。</span></div>
+    <div class="time">阶段 4</div><div class="event"><b>回放与事件告警</b><span>接入录像回放、最近 24 小时/7 天回放、萤石事件回调、离线提醒和内部告警图片。</span></div>
+    <div class="time">阶段 5</div><div class="event"><b>视频生成</b><span>竣工全周期视频、节点交付视频、投诉证据视频，使用异步任务生成 MP4 并上传 OSS。</span></div>
+  </div>
+  <h3 class="mt-6">第一阶段验收标准</h3>
+  <div class="grid-2 mt-4">
+    <div class="card"><b>客户侧</b><p>客户只能看到自己订单的摄像头；可获取直播地址并播放；可主动抓图且受限流控制；非可见时间段不能查看。</p></div>
+    <div class="card"><b>后台侧</b><p>可绑定设备、启停直播、配置可见时间、内部主动抓图归档；抓图入库并转存 OSS；访问日志完整。</p></div>
+  </div>
+  <footer class="footer"><span>Rhadamanthus · Construction Camera</span><span>08 / Roadmap</span></footer>
+</section>
+
+</body>
+</html>

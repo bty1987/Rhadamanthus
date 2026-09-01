@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>萤石摄像头接入说明书 - 方向二</title>
+<style>
+@page { size: A4; margin: 0; }
+* { box-sizing: border-box; }
+body { margin: 0; background: #cfd5dc; color: #101820; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif; }
+.page { width: 210mm; height: 297mm; margin: 16px auto; background: #f7f9fa; padding: 15mm 14mm; position: relative; box-shadow: 0 18px 45px rgba(20, 32, 43, .18); overflow: hidden; }
+.grid-bg { position:absolute; inset:0; background-image: linear-gradient(#e4e8eb 1px, transparent 1px), linear-gradient(90deg, #e4e8eb 1px, transparent 1px); background-size: 8mm 8mm; opacity:.55; }
+.content { position: relative; z-index:1; }
+.header { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom: 9mm; }
+.label { background:#1b5c63; color:#fff; padding: 2mm 3mm; border-radius:4px; font-size:10px; font-weight:760; }
+h1 { width: 130mm; margin:0; font-size: 28px; line-height:1.18; letter-spacing:0; }
+.subtitle { margin-top:4mm; width:132mm; font-size:13px; line-height:1.7; color:#52606a; }
+.stack { display:grid; gap:4mm; margin: 8mm 0; }
+.layer { display:grid; grid-template-columns: 34mm 1fr 34mm; min-height: 25mm; align-items:center; border:1px solid #bac5cb; background:rgba(255,255,255,.82); border-radius:6px; overflow:hidden; }
+.layer .tag { height:100%; display:flex; align-items:center; justify-content:center; background:#e9f0f0; color:#1b5c63; font-size:12px; font-weight:800; }
+.layer .mid { padding:4mm 5mm; }
+.layer h2 { margin:0 0 2mm; font-size:15px; }
+.layer p { margin:0; font-size:11px; line-height:1.58; color:#596771; }
+.layer .risk { font-size:10px; color:#a2462f; padding:0 4mm; line-height:1.45; }
+.columns { display:grid; grid-template-columns: 1fr 1fr; gap:5mm; margin-top:7mm; }
+.box { background:#101820; color:#f7f9fa; border-radius:6px; padding:5mm; min-height:39mm; }
+.box h3 { margin:0 0 3mm; font-size:14px; color:#cfe2dd; }
+.box ul { margin:0; padding-left:4mm; font-size:10.8px; line-height:1.65; color:#d5dddf; }
+.note { margin-top:6mm; padding:4mm; border-left:3px solid #d0733f; background:#fff8ef; font-size:11.5px; line-height:1.65; color:#4b5962; }
+.footer { position:absolute; left:14mm; right:14mm; bottom:10mm; border-top:1px solid #bec8ce; padding-top:3mm; display:flex; justify-content:space-between; font-size:10px; color:#68747c; z-index:1; }
+</style>
+</head>
+<body>
+<section class="page">
+  <div class="grid-bg"></div>
+  <div class="content">
+    <header class="header">
+      <div>
+        <h1>萤石摄像头接入说明书</h1>
+        <div class="subtitle">方向二把文档做成“架构蓝图”：先讲边界，再讲链路，再落到接口、数据和实施阶段，适合研发与实施评审。</div>
+      </div>
+      <div class="label">Architecture</div>
+    </header>
+
+    <div class="stack">
+      <div class="layer"><div class="tag">Client</div><div class="mid"><h2>客户侧 H5 / 小程序</h2><p>直播、今日快看、节点影集、图片集播放、问题反馈。前台负责播放体验，不保存厂商凭证。</p></div><div class="risk">关注播放协议兼容与域名白名单</div></div>
+      <div class="layer"><div class="tag">ERP</div><div class="mid"><h2>Rhadamanthus 摄像头业务接口</h2><p>校验客户与 orderId 关系，控制可见时间，组织播放序列，记录直播/抓图/分享访问日志。</p></div><div class="risk">权限必须在后端完成</div></div>
+      <div class="layer"><div class="tag">Provider</div><div class="mid"><h2>CameraProvider 厂商适配层</h2><p>封装萤石 accessToken、直播地址、抓图、回放、在线状态查询。业务层不直接依赖萤石字段。</p></div><div class="risk">预留多厂商 provider</div></div>
+      <div class="layer"><div class="tag">YS7</div><div class="mid"><h2>萤石开放平台</h2><p>按 appKey/appSecret 获取 accessToken，再基于 deviceSerial + channelNo 获取直播、抓图、回放能力。</p></div><div class="risk">上线前核对账号权限与套餐</div></div>
+    </div>
+
+    <div class="columns">
+      <div class="box"><h3>第一阶段接口</h3><ul><li>queryConstructionCameraByOrderId.do</li><li>queryConstructionCameraLiveUrl.do</li><li>captureConstructionCamera.do</li><li>queryConstructionCameraPlayList.do</li></ul></div>
+      <div class="box"><h3>第一阶段数据</h3><ul><li>camera：设备与订单绑定</li><li>cameramedia：抓图与素材</li><li>cameraaccess：访问日志</li><li>album 可先实时计算，后续再落库</li></ul></div>
+    </div>
+
+    <div class="note">设计判断：日常查看优先使用图片集播放。图片少则直接展示，图片适中则自动播放，图片过多则按时间均匀抽取；真实 MP4 只在竣工、分享、宣传、证据归档时生成。</div>
+  </div>
+  <footer class="footer"><span>Rhadamanthus · Construction Camera</span><span>Direction 2 / Architecture Blueprint</span></footer>
+</section>
+</body>
+</html>
