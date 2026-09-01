@@ -16,7 +16,7 @@ import com.fanglin.camera.dao.ConstructionCameraDao;
 import com.fanglin.camera.po.ConstructionCameraAccessPO;
 import com.fanglin.camera.po.ConstructionCameraPO;
 import com.fanglin.camera.service.ConstructionCameraService;
-import com.fanglin.camera.service.provider.CameraProviderService;
+import com.fanglin.camera.provider.CameraProviderService;
 import com.fanglin.camera.vo.ConstructionCameraLiveVO;
 import com.fanglin.camera.vo.ConstructionCameraVO;
 import com.fanglin.construction.dao.ConstructionDao;
