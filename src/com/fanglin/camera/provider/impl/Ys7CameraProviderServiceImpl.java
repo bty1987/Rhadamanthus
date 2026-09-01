@@ -1,4 +1,4 @@
-package com.fanglin.camera.service.provider.impl;
+package com.fanglin.camera.provider.impl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.fanglin.camera.po.ConstructionCameraPO;
-import com.fanglin.camera.service.provider.CameraProviderService;
+import com.fanglin.camera.provider.CameraProviderService;
 import com.fanglin.camera.vo.ConstructionCameraLiveVO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.security.AESHelper;

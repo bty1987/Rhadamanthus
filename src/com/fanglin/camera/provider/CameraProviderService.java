@@ -1,4 +1,4 @@
-package com.fanglin.camera.service.provider;
+package com.fanglin.camera.provider;
 
 import com.fanglin.camera.po.ConstructionCameraPO;
 import com.fanglin.camera.vo.ConstructionCameraLiveVO;

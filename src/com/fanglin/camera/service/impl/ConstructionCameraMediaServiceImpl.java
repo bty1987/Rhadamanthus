@@ -19,7 +19,7 @@ import com.fanglin.camera.po.ConstructionCameraAccessPO;
 import com.fanglin.camera.po.ConstructionCameraMediaPO;
 import com.fanglin.camera.po.ConstructionCameraPO;
 import com.fanglin.camera.service.ConstructionCameraMediaService;
-import com.fanglin.camera.service.provider.CameraProviderService;
+import com.fanglin.camera.provider.CameraProviderService;
 import com.fanglin.camera.vo.ConstructionCameraMediaVO;
 import com.fanglin.camera.vo.ConstructionCameraPlayVO;
 import com.fanglin.camera.vo.ConstructionCameraVO;
