@@ -704,6 +704,40 @@ $.extend(api, {
         },
         queryConstructionFunctionByName: {
             url: "queryConstructionFunctionByName.do"
+        },
+
+        pageConstructionCamera: {
+            url: "pageConstructionCamera.do"
+        },
+        queryConstructionCameraByOrderId: {
+            url: "queryConstructionCameraByOrderId.do"
+        },
+        queryConstructionCameraLiveUrl: {
+            url: "queryConstructionCameraLiveUrl.do"
+        },
+        addConstructionCamera: {
+            url: "addConstructionCamera.do"
+        },
+        updateConstructionCamera: {
+            url: "updateConstructionCamera.do"
+        },
+        updateConstructionCameraForStatus: {
+            url: "updateConstructionCameraForStatus.do"
+        },
+        updateConstructionCameraForVisible: {
+            url: "updateConstructionCameraForVisible.do"
+        },
+        deleteConstructionCamera: {
+            url: "deleteConstructionCamera.do"
+        },
+        queryConstructionCameraMedia: {
+            url: "queryConstructionCameraMedia.do"
+        },
+        queryConstructionCameraPlayList: {
+            url: "queryConstructionCameraPlayList.do"
+        },
+        captureConstructionCamera: {
+            url: "captureConstructionCamera.do"
         }
 
     }
