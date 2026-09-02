@@ -48,6 +48,7 @@ public class Ys7CameraProviderServiceImpl implements CameraProviderService {
 		params.add(new BasicNameValuePair("channelNo", String.valueOf(cameraPO.getChannelNo())));
 		params.add(new BasicNameValuePair("protocol", protocol == null || protocol.length() == 0 ? PROTOCOL_HLS_STR : protocol));
 		params.add(new BasicNameValuePair("quality", "1"));
+		params.add(new BasicNameValuePair("suportH265", "1"));
 
 		JSONObject response = HttpUtil.httpPost(host(company) + "/api/lapp/v2/live/address/get", params);
 
