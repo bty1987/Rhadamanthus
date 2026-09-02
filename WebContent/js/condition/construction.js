@@ -495,6 +495,15 @@ Condition.addupRule("construction", {
             validate: null
         }
     },
+    "info-initDesignTime": {
+        label: "初始设计完成",
+        type: "dateRangePicker",
+        submitConfig: {
+            name: "initDesignTime",
+            op: "between",
+            validate: null
+        }
+    },
     "info-sdesignTimeRange": {
         label: "合同方案确认",
         type: "dateRangePicker",

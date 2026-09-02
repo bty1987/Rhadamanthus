@@ -448,7 +448,7 @@ jQuery(function($) {
         options["constructionInfo.isIssue"] = 0;
     }
 
-    searcher.set("condList", "pagenation", "resultList", pageConfig.apiPage || api.construction.pageConstructionInfo, options, pageConfig.condArr.length > 0 ? pageConfig.condArr : ['decoration-orderId', 'decoration-village', 'decoration-houseNumber', 'decoration-designer', 'decoration-supervisor', 'decoration-houseType', 'decoration-designStatus', 'decoration-statuses', 'decoration-projectStatus', "construction-info-keyTime", "construction-info-drawlineTime", "construction-info-finishTime", "construction-info-designTime", "construction-info-issueTime", "decoration-sdesignTime", "decoration-edesignTime", "construction-info-isIssue", "construction-info-isCheck"], "constructionInfoPostData", null, false, buttons);
+    searcher.set("condList", "pagenation", "resultList", pageConfig.apiPage || api.construction.pageConstructionInfo, options, pageConfig.condArr.length > 0 ? pageConfig.condArr : ['decoration-orderId', 'decoration-village', 'decoration-houseNumber', 'decoration-designer', 'decoration-supervisor', 'decoration-houseType', 'decoration-designStatus', 'decoration-statuses', 'decoration-projectStatus', "construction-info-keyTime", "construction-info-drawlineTime", "construction-info-finishTime", "construction-info-designTime", "construction-info-issueTime", "construction-info-initDesignTime", "decoration-sdesignTime", "decoration-edesignTime", "construction-info-isIssue", "construction-info-isCheck"], "constructionInfoPostData", null, false, buttons);
     searcher.line("decoration.orderId", lineprops, linebtns).render();
 
     com.focusPage("#export").click(function() {

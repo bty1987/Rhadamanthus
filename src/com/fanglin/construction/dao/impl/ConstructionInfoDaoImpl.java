@@ -80,6 +80,8 @@ public class ConstructionInfoDaoImpl extends DaoImpl<ConstructionInfoPO> impleme
 				query.timeranges(ConstructionInfoDO.COLUMN_DESIGNTIME_STR, data);
 			} else if ("issueTime".equals(field)) {
 				query.timeranges("issueTime", data);
+			} else if ("initDesignTime".equals(field)) {
+				query.timeranges("initDesignTime", data);
 			}
 		}
 	}
