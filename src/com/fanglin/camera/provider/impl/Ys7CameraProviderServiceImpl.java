@@ -34,6 +34,8 @@ public class Ys7CameraProviderServiceImpl implements CameraProviderService {
 
 	private static final String PROTOCOL_HLS_STR = "2";
 
+	private static final String PROTOCOL_EZOPEN_STR = "ezopen";
+
 	@Autowired
 	private SystemConfigDao systemConfigDao;
 
@@ -42,13 +44,15 @@ public class Ys7CameraProviderServiceImpl implements CameraProviderService {
 
 		String accessToken = getAccessToken(company);
 
+		boolean ezopen = PROTOCOL_EZOPEN_STR.equals(protocol);
+
 		List<BasicNameValuePair> params = new ArrayList<BasicNameValuePair>();
 		params.add(new BasicNameValuePair("accessToken", accessToken));
 		params.add(new BasicNameValuePair("deviceSerial", cameraPO.getDeviceSerial()));
 		params.add(new BasicNameValuePair("channelNo", String.valueOf(cameraPO.getChannelNo())));
-		params.add(new BasicNameValuePair("protocol", protocol == null || protocol.length() == 0 ? PROTOCOL_HLS_STR : protocol));
+		params.add(new BasicNameValuePair("protocol", ezopen || protocol == null || protocol.length() == 0 ? PROTOCOL_HLS_STR : protocol));
 		params.add(new BasicNameValuePair("quality", "1"));
-		params.add(new BasicNameValuePair("suportH265", "0"));
+		params.add(new BasicNameValuePair("supportH265", "1"));
 
 		JSONObject response = HttpUtil.httpPost(host(company) + "/api/lapp/v2/live/address/get", params);
 
@@ -61,8 +65,10 @@ public class Ys7CameraProviderServiceImpl implements CameraProviderService {
 		ConstructionCameraLiveVO liveVO = new ConstructionCameraLiveVO();
 		liveVO.setCameraId(cameraPO.getCcid());
 		liveVO.setUrl(data.getString("url"));
-		liveVO.setProtocol(protocol == null || protocol.length() == 0 ? PROTOCOL_HLS_STR : protocol);
+		liveVO.setProtocol(ezopen ? PROTOCOL_EZOPEN_STR : (protocol == null || protocol.length() == 0 ? PROTOCOL_HLS_STR : protocol));
 		liveVO.setExpireTime(data.getString("expireTime"));
+		liveVO.setEzopenUrl("ezopen://open.ys7.com/" + cameraPO.getDeviceSerial() + "/" + cameraPO.getChannelNo() + ".live");
+		liveVO.setAccessToken(accessToken);
 
 		return liveVO;
 	}

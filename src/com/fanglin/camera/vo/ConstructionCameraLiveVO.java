@@ -14,6 +14,10 @@ public class ConstructionCameraLiveVO implements Serializable {
 
 	private String expireTime;
 
+	private String ezopenUrl;
+
+	private String accessToken;
+
 	public Long getCameraId() {
 		return cameraId;
 	}
@@ -44,6 +48,22 @@ public class ConstructionCameraLiveVO implements Serializable {
 
 	public void setExpireTime(String expireTime) {
 		this.expireTime = expireTime;
+	}
+
+	public String getEzopenUrl() {
+		return ezopenUrl;
+	}
+
+	public void setEzopenUrl(String ezopenUrl) {
+		this.ezopenUrl = ezopenUrl;
+	}
+
+	public String getAccessToken() {
+		return accessToken;
+	}
+
+	public void setAccessToken(String accessToken) {
+		this.accessToken = accessToken;
 	}
 
 }
