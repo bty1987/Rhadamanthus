@@ -1,88 +1,103 @@
 package com.fanglin.report.service.impl;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.FutureTask;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.common.vo.TopVO;
-import com.fanglin.report.dao.HomeRankDao;
 import com.fanglin.report.service.HomeRankService;
 
 /**
- * 首页排名服务实现。
+ * 首页排名服务实现：结果缓存 + single-flight 查询去重。
  *
- * <p>聚合结果按 company+type+month 进程内缓存 5 分钟：首页访问频率高而榜单变化频率低，
- * 缓存把每次页面打开的跨库聚合收敛为低频查询。
+ * <p>本类不开启事务：并发冷启动同一 key 时仅一个请求真正执行聚合查询（事务在
+ * {@link HomeRankLoader} 内短暂开启），其余请求等待复用其结果，等待期间不占用数据库连接。
+ * <p>查询失败不缓存结果且在途任务即时出队，下一个请求重新发起查询。
  */
 @Service("homeRankService")
 public class HomeRankServiceImpl implements HomeRankService {
 
-	private static final int TOP = 10;
-
 	private static final long CACHE_TTL = 5 * 60 * 1000L;
 
-	private static final long TEN_THOUSAND = 10000000L;
-
 	@Autowired
-	private HomeRankDao homeRankDao;
+	private HomeRankLoader homeRankLoader;
 
-	private final Map<String, CacheBox> caches = new ConcurrentHashMap<String, CacheBox>();
+	private final Map<String, CacheEntry> caches = new ConcurrentHashMap<String, CacheEntry>();
+
+	private final Map<String, FutureTask<List<TopVO>>> inflights = new ConcurrentHashMap<String, FutureTask<List<TopVO>>>();
 
 	@Override
-	@Transactional(rollbackFor = Exception.class)
 	public List<TopVO> queryHomeRankForTop(Short type, Integer month, int company) {
 
 		short rankType = type == null ? TYPE_DESIGNER_INT : type;
 		int rankMonth = month == null ? currentMonth() : month;
 
-		String key = company + ":" + rankType + ":" + rankMonth;
+		final String key = company + ":" + rankType + ":" + rankMonth;
+		final short finalType = rankType;
+		final int finalMonth = rankMonth;
+		final int finalCompany = company;
 
-		CacheBox cache = caches.get(key);
-		if (cache != null && System.currentTimeMillis() - cache.at < CACHE_TTL) {
-			return cache.tops;
+		CacheEntry entry = caches.get(key);
+		if (entry != null && System.currentTimeMillis() - entry.at < CACHE_TTL) {
+			return entry.tops;
 		}
 
-		List<TopVO> tops;
-		if (rankType == TYPE_SUPERVISOR_INT) {
-			tops = toTops(homeRankDao.querySupervisorSiteRankForTop(pastYear(), TOP, company), false);
-		} else {
-			tops = rankType == TYPE_SALESMAN_INT
-					? toTops(homeRankDao.querySalesmanSignRankForTop(monthStartTime(rankMonth), monthEndTime(rankMonth), TOP, company), true)
-					: toTops(homeRankDao.queryDesignerSignRankForTop(monthStartTime(rankMonth), monthEndTime(rankMonth), TOP, company), true);
+		FutureTask<List<TopVO>> task = new FutureTask<List<TopVO>>(new java.util.concurrent.Callable<List<TopVO>>() {
+
+			public List<TopVO> call() {
+
+				List<TopVO> tops = homeRankLoader.queryHomeRankForTop(finalType, finalMonth, finalCompany);
+
+				caches.put(key, new CacheEntry(System.currentTimeMillis(), tops));
+
+				return tops;
+			}
+		});
+
+		FutureTask<List<TopVO>> running = inflights.putIfAbsent(key, task);
+
+		if (running == null) { // 本请求为执行者,同步执行并承担事务开销
+
+			running = task;
+
+			try {
+				running.run();
+			} finally {
+				inflights.remove(key, task);
+			}
 		}
 
-		caches.put(key, new CacheBox(System.currentTimeMillis(), tops));
-
-		return tops;
+		return await(key, running);
 	}
 
-	private List<TopVO> toTops(List<Object[]> rows, boolean amount) {
+	private List<TopVO> await(String key, FutureTask<List<TopVO>> task) {
 
-		List<TopVO> tops = new ArrayList<TopVO>();
+		try {
+			return task.get();
+		} catch (ExecutionException e) {
 
-		for (Object[] row : rows) {
+			// 执行者失败:等待者收到同一异常,结果不落缓存,在途任务已由执行者出队,下个请求重试
+			Throwable cause = e.getCause() == null ? e : e.getCause();
 
-			TopVO top = new TopVO();
-			top.setTopId((String) row[0]);
-			top.setTopName((String) row[1]);
-			top.setTopImg(row[2] == null ? "" : (String) row[2]);
-			top.setTopValue(amount
-					? BigDecimal.valueOf((Long) row[3]).divide(BigDecimal.valueOf(TEN_THOUSAND), 2, RoundingMode.HALF_UP).floatValue()
-					: ((Number) row[3]).floatValue());
+			if (cause instanceof RuntimeException) {
+				throw (RuntimeException) cause;
+			}
 
-			tops.add(top);
+			if (cause instanceof Error) {
+				throw (Error) cause;
+			}
+
+			throw new IllegalStateException(cause);
+		} catch (InterruptedException e) {
+			Thread.currentThread().interrupt();
+			throw new IllegalStateException("home rank query interrupted", e);
 		}
-
-		return tops;
 	}
 
 	private int currentMonth() {
@@ -92,40 +107,13 @@ public class HomeRankServiceImpl implements HomeRankService {
 		return calendar.get(Calendar.YEAR) * 100 + calendar.get(Calendar.MONTH) + 1;
 	}
 
-	private String monthStartTime(int month) {
-		return String.format("%04d-%02d-01", month / 100, month % 100);
-	}
-
-	private String monthEndTime(int month) {
-
-		int year = month / 100;
-		int mon = month % 100;
-
-		if (mon == 12) {
-			year++;
-			mon = 1;
-		} else {
-			mon++;
-		}
-
-		return String.format("%04d-%02d-01", year, mon);
-	}
-
-	private String pastYear() {
-
-		Calendar calendar = Calendar.getInstance();
-		calendar.add(Calendar.YEAR, -1);
-
-		return new SimpleDateFormat("yyyy-MM-dd").format(calendar.getTime());
-	}
-
-	private static class CacheBox {
+	private static class CacheEntry {
 
 		private final long at;
 
 		private final List<TopVO> tops;
 
-		private CacheBox(long at, List<TopVO> tops) {
+		private CacheEntry(long at, List<TopVO> tops) {
 			this.at = at;
 			this.tops = tops;
 		}
