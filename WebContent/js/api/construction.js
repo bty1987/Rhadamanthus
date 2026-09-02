@@ -79,6 +79,9 @@ $.extend(api.index, {
     constructionAccessoryIndex: {
         url: "/views/construction/accessory.html"
     },
+    constructionCameraIndex: {
+        url: "/views/construction/constructionCamera.html"
+    },
     constructionPlan2print: {
         url: "/views/construction/constructionPlan2print.html"
     },
