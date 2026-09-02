@@ -180,6 +180,37 @@ Condition.addupRule("construction", {
             validate: null
         }
     },
+    "camera-deviceSerial": {
+        label: "设备号",
+        type: "text",
+        submitConfig: {
+            name: "deviceSerial",
+            op: "cn",
+            validate: null
+        }
+    },
+    "camera-onlineStatus": {
+        label: "在线状态",
+        type: "select",
+        submitConfig: {
+            name: "onlineStatus",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: null,
+            postData: null,
+            listPath: [{
+                key: "0",
+                value: "未知"
+            }, {
+                key: "1",
+                value: "在线"
+            }],
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
     "finishTime": {
         label: "验收时间",
         type: "dateRangePicker",

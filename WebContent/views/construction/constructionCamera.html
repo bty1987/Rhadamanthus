@@ -1,0 +1,194 @@
+<div>
+    <div class="row">
+        <div class="col-xs-12">
+            <div id="condList" class="fl_search clearfix"></div>
+            <div id="resultList" class="clearfix tab-pane active"></div>
+            <div id="pagenation" class="fl-page-wrap clearfix"></div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="cameraModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span>&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title" id="cameraModalTitle">绑定施工摄像头</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal">
+                        <input type="hidden" id="ccid" />
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right orange" for="orderId">装修单号</label>
+                            <div class="col-sm-9">
+                                <input type="text" id="orderId" class="col-xs-10 col-sm-6 v_required" data-toggle="popover" data-trigger="manual" />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right orange" for="deviceSerial">设备序列号</label>
+                            <div class="col-sm-9">
+                                <input type="text" id="deviceSerial" class="col-xs-10 col-sm-6 v_required" data-toggle="popover" data-trigger="manual" />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right" for="channelNo">通道号</label>
+                            <div class="col-sm-9">
+                                <input type="text" id="channelNo" class="col-xs-10 col-sm-6 v_number" data-toggle="popover" data-trigger="manual" />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right" for="name">名称</label>
+                            <div class="col-sm-9">
+                                <input type="text" id="name" maxlength="64" class="col-xs-10 col-sm-6" data-toggle="popover" data-trigger="manual" />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right" for="provider">厂商</label>
+                            <div class="col-sm-9">
+                                <select id="provider" class="col-xs-10 col-sm-6"></select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right" for="verifyCode">设备验证码</label>
+                            <div class="col-sm-9">
+                                <input type="password" id="verifyCode" maxlength="64" class="col-xs-10 col-sm-6" autocomplete="new-password" data-toggle="popover" data-trigger="manual" />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right" for="visibleStart">可见开始</label>
+                            <div class="col-sm-9 bootstrap-timepicker">
+                                <input type="text" id="visibleStart" class="timepicker col-xs-10 col-sm-6" data-toggle="popover" data-trigger="manual" />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right" for="visibleEnd">可见结束</label>
+                            <div class="col-sm-9 bootstrap-timepicker">
+                                <input type="text" id="visibleEnd" class="timepicker col-xs-10 col-sm-6" data-toggle="popover" data-trigger="manual" />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right" for="openLive">直播</label>
+                            <div class="col-sm-9">
+                                <select id="openLive" class="col-xs-10 col-sm-6"></select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right" for="openCapture">抓图</label>
+                            <div class="col-sm-9">
+                                <select id="openCapture" class="col-xs-10 col-sm-6"></select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right" for="openAlbum">图片集</label>
+                            <div class="col-sm-9">
+                                <select id="openAlbum" class="col-xs-10 col-sm-6"></select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right" for="openPlayback">回放</label>
+                            <div class="col-sm-9">
+                                <select id="openPlayback" class="col-xs-10 col-sm-6"></select>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="saveCameraBtn" class="btn btn-primary" data-i18n="msg.save">保存</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal" data-i18n="msg.cancel">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="liveModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span>&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title">施工直播</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <select id="liveProtocol" class="col-xs-12"></select>
+                        </div>
+                        <div class="col-sm-3">
+                            <button type="button" id="loadLiveBtn" class="btn btn-sm btn-primary">获取直播地址</button>
+                        </div>
+                        <div class="col-sm-6">
+                            <a id="openLiveUrl" class="btn btn-sm btn-success pull-right" target="_blank" href="javascript:void(0);">打开直播地址</a>
+                        </div>
+                    </div>
+                    <div class="space-6"></div>
+                    <video id="liveVideo" class="col-xs-12" style="height: 420px; background: #111; padding: 0;" controls autoplay></video>
+                    <div class="clearfix"></div>
+                    <div class="space-6"></div>
+                    <textarea id="liveUrl" class="col-xs-12" rows="2" readonly="readonly" style="resize: none;"></textarea>
+                    <div class="clearfix"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="mediaModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span>&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title">图片集</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <input id="mediaStartTime" class="col-xs-12" type="text" placeholder="开始日期" />
+                        </div>
+                        <div class="col-sm-3">
+                            <input id="mediaEndTime" class="col-xs-12" type="text" placeholder="结束日期" />
+                        </div>
+                        <div class="col-sm-2">
+                            <input id="mediaCount" class="col-xs-12 v_number" type="text" placeholder="数量" />
+                        </div>
+                        <div class="col-sm-4">
+                            <button type="button" id="loadMediaBtn" class="btn btn-sm btn-primary">查询图片集</button>
+                            <button type="button" id="playMediaBtn" class="btn btn-sm btn-success">播放</button>
+                            <button type="button" id="pauseMediaBtn" class="btn btn-sm btn-warning">暂停</button>
+                        </div>
+                    </div>
+                    <div class="space-6"></div>
+                    <div id="mediaStage" class="text-center" style="height: 420px; background: #f5f5f5; border: 1px solid #ddd; overflow: hidden;"></div>
+                    <div class="space-6"></div>
+                    <ul id="mediaThumbs" class="ace-thumbnails clearfix"></ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="captureModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span>&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title">抓图结果</h4>
+                </div>
+                <div class="modal-body">
+                    <div id="captureResult" class="text-center"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $.loadScript(['js/utils/constructionPageUtils.js', 'js/construction/constructionCamera.js']);
+</script>
