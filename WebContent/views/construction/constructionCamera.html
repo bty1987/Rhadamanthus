@@ -131,8 +131,11 @@
                         </div>
                     </div>
                     <div class="space-6"></div>
-                    <video id="liveVideo" class="col-xs-12" style="height: 420px; background: #111; padding: 0;" controls autoplay></video>
+                    <div id="livePlayer" class="col-xs-12" style="height: 420px; background: #111; padding: 0;">
+                        <video id="liveVideo" style="width: 100%; height: 420px; background: #111; padding: 0;" controls autoplay></video>
+                    </div>
                     <div class="clearfix"></div>
+                    <div id="liveStatus" class="grey" style="line-height: 24px;"></div>
                     <div class="space-6"></div>
                     <textarea id="liveUrl" class="col-xs-12" rows="2" readonly="readonly" style="resize: none;"></textarea>
                     <div class="clearfix"></div>
