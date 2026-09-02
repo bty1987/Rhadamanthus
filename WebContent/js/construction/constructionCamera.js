@@ -8,6 +8,9 @@ jQuery(function($) {
         playTimer: null,
         livePlayerObj: null,
         liveHlsObj: null,
+        liveEzuikitCallbacks: [],
+        liveEzuikitLoading: false,
+        liveEzuikitScripts: ["https://unpkg.com/ezuikit-js@9.0.20/ezuikit.js", "assets/ezuikit/ezuikit.js"],
         livePlayerLoading: false,
         livePlayerCallbacks: [],
         livePlayerScript: "https://open.ys7.com/sdk/js/2.0/ezuikit.js",
@@ -47,6 +50,7 @@ jQuery(function($) {
             liveProtocol: com.focusPage("#liveProtocol"),
             livePlayer: com.focusPage("#livePlayer"),
             liveVideo: com.focusPage("#liveVideo"),
+            livePlayerBox: com.focusPage("#livePlayerBox"),
             liveStatus: com.focusPage("#liveStatus"),
             liveUrl: com.focusPage("#liveUrl"),
             openLiveUrl: com.focusPage("#openLiveUrl"),
@@ -61,7 +65,7 @@ jQuery(function($) {
 
     var openStatus = [{key: 0, value: "关闭"}, {key: 1, value: "开启"}];
     var providers = [{key: "ys7", value: "萤石"}];
-    var protocols = [{key: "2", value: "HLS"}, {key: "1", value: "萤石播放"}];
+    var protocols = [{key: "ezopen", value: "萤石播放器"}, {key: "2", value: "HLS"}, {key: "1", value: "RTMP"}];
 
     constructionCamera.items.provider.bindData(providers, "key", "value");
     constructionCamera.items.openLive.bindData(openStatus, "key", "value");
@@ -211,7 +215,7 @@ jQuery(function($) {
         constructionCamera.items.visibleStart.val("08:00:00");
         constructionCamera.items.visibleEnd.val("18:00:00");
         constructionCamera.items.mediaCount.val("20");
-        constructionCamera.items.liveProtocol.val("2");
+        constructionCamera.items.liveProtocol.val("ezopen");
     }
 
     function clearCameraItems() {
@@ -301,27 +305,31 @@ jQuery(function($) {
 
         com.post(api.construction.queryConstructionCameraLiveUrl, {
             "constructionCamera.ccid": constructionCamera.current.ccid,
-            "protocol": constructionCamera.items.liveProtocol.val() || "2"
+            "protocol": constructionCamera.items.liveProtocol.val() || "ezopen"
         }, function(res) {
-            var live = res.constructionCameraLive || {};
-            var url = live.url || "";
-
-            constructionCamera.items.liveUrl.val(url);
-            constructionCamera.items.openLiveUrl.attr("href", url || "javascript:void(0);");
-
-            renderLive(url);
+            renderLive(res.constructionCameraLive || {});
         });
     }
 
-    function renderLive(url) {
-        var type = liveType(url);
+    function renderLive(live) {
+        var url = live.url || "";
 
         resetLivePlayer(false);
+
+        constructionCamera.items.liveUrl.val(url);
+        constructionCamera.items.openLiveUrl.attr("href", url || "javascript:void(0);");
+
+        if (constructionCamera.items.liveProtocol.val() == "ezopen" && live.ezopenUrl && live.accessToken) {
+            playEzopenLive(live);
+            return;
+        }
 
         if (!url) {
             liveStatus("暂无直播地址");
             return;
         }
+
+        var type = liveType(url);
 
         if (type == "native") {
             playNativeLive(url);
@@ -405,8 +413,105 @@ jQuery(function($) {
                 if (video.play) video.play();
             });
             constructionCamera.liveHlsObj.on(Hls.Events.ERROR, function(event, data) {
-                if (data && data.fatal) liveStatus("HLS播放失败, 请切换为萤石播放方式");
+                if (data && data.fatal) liveStatus("HLS播放失败(设备可能为H.265编码), 请切换萤石播放器后重试");
             });
+        });
+    }
+
+    function playEzopenLive(live) {
+        liveStatus("正在加载萤石播放器");
+
+        loadEzuikitPlayer(function(loaded) {
+            if (!loaded) {
+                liveStatus("萤石播放器加载失败");
+                return;
+            }
+
+            try {
+                constructionCamera.items.liveVideo.hide();
+                constructionCamera.items.livePlayerBox.show();
+
+                var width = Math.floor(constructionCamera.items.livePlayerBox.width()) || 870;
+
+                constructionCamera.livePlayerObj = new EZUIKit.EZUIKitPlayer({
+                    id: "livePlayerBox",
+                    accessToken: live.accessToken,
+                    url: live.ezopenUrl,
+                    template: "simple",
+                    width: width,
+                    height: 420,
+                    handleError: function(e) {
+                        liveStatus("萤石播放器提示: " + ((e && (e.msg || e.retmsg || e.message)) || "播放异常"));
+                    }
+                });
+
+                liveStatus("萤石播放器播放中");
+            } catch (e) {
+                liveStatus("萤石播放器初始化失败: " + (e && e.message ? e.message : ""));
+            }
+        });
+    }
+
+    function loadEzuikitPlayer(callback) {
+        if (window.EZUIKit && window.EZUIKit.EZUIKitPlayer) {
+            callback(true);
+            return;
+        }
+
+        constructionCamera.liveEzuikitCallbacks.push(callback);
+
+        if (constructionCamera.liveEzuikitLoading) return;
+
+        constructionCamera.liveEzuikitLoading = true;
+
+        loadEzuikitScript(0);
+    }
+
+    function loadEzuikitScript(index) {
+        if (index >= constructionCamera.liveEzuikitScripts.length) {
+            notifyEzuikitPlayer(false);
+            return;
+        }
+
+        var done = false;
+        var script = document.createElement("script");
+        script.src = constructionCamera.liveEzuikitScripts[index];
+
+        var timer = setTimeout(function() {
+            if (done) return;
+            done = true;
+            loadEzuikitScript(index + 1);
+        }, 10000);
+
+        script.onload = function() {
+            if (done) return;
+            done = true;
+            clearTimeout(timer);
+
+            if (window.EZUIKit && window.EZUIKit.EZUIKitPlayer) {
+                notifyEzuikitPlayer(true);
+            } else {
+                loadEzuikitScript(index + 1);
+            }
+        };
+        script.onerror = function() {
+            if (done) return;
+            done = true;
+            clearTimeout(timer);
+            loadEzuikitScript(index + 1);
+        };
+
+        document.getElementsByTagName("head")[0].appendChild(script);
+    }
+
+    function notifyEzuikitPlayer(loaded) {
+        var callbacks = constructionCamera.liveEzuikitCallbacks;
+
+        constructionCamera.liveEzuikitLoading = false;
+        constructionCamera.liveEzuikitCallbacks = [];
+
+        $.each(callbacks, function(i, callback) {
+            callback(loaded);
         });
     }
 
@@ -523,6 +628,7 @@ jQuery(function($) {
         if (constructionCamera.livePlayerObj) {
             try {
                 if (constructionCamera.livePlayerObj.stop) constructionCamera.livePlayerObj.stop();
+                if (constructionCamera.livePlayerObj.destroy) constructionCamera.livePlayerObj.destroy();
             } catch (e) {}
         }
 
@@ -534,8 +640,9 @@ jQuery(function($) {
 
         constructionCamera.livePlayerObj = null;
         constructionCamera.liveHlsObj = null;
-        constructionCamera.items.livePlayer.empty().append($('<video id="liveVideo" style="width: 100%; height: 420px; background: #111; padding: 0;" controls autoplay></video>'));
+        constructionCamera.items.livePlayer.empty().append($('<video id="liveVideo" style="width: 100%; height: 420px; background: #111; padding: 0;" controls autoplay></video>')).append($('<div id="livePlayerBox" style="width: 100%; height: 420px; background: #111; display: none;"></div>'));
         constructionCamera.items.liveVideo = com.focusPage("#liveVideo");
+        constructionCamera.items.livePlayerBox = com.focusPage("#livePlayerBox");
         constructionCamera.items.liveStatus.text("");
 
         if (clearInfo) {
