@@ -144,14 +144,6 @@ jQuery(function($) {
 
     searcher.line("name", lineprops, linebtns).render();
 
-    com.post(api.data.countContract, {}, function(res) {
-
-        if (res.count > constant.data().contract.CONTRACT_COUNT_LIMIT_INT) {
-
-            com.focusPage('#addContract', '#pagenation').hide();
-        }
-    });
-
     com.focusPage('#addContract', '#pagenation').on("click", function() {
 
         contract.cid = null;

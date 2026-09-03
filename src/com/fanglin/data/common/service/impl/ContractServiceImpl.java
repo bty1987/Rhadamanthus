@@ -15,8 +15,6 @@ import com.fanglin.data.common.service.ContractService;
 import com.fanglin.data.common.vo.ContractVO;
 import com.fanglin.data.po.ContractPO;
 import com.fanglin.fadada.signature.Signature;
-import com.fanglin.system.dao.SystemConfigDao;
-import com.fanglin.system.po.SystemConfigPO;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.Paging;
 
@@ -26,9 +24,6 @@ public class ContractServiceImpl implements ContractService {
 
 	@Autowired
 	private ContractDao contractDao;
-
-	@Autowired
-	private SystemConfigDao systemConfigDao;
 
 	@Override
 	public void pageContract(Paging paging, List<Filter> filters, int company) {
@@ -86,12 +81,6 @@ public class ContractServiceImpl implements ContractService {
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public int addContract(ContractVO contractVO, int company) throws FLException {
-
-		SystemConfigPO count = systemConfigDao.querySystemConfig("CONTRACT_COUNT_LIMIT_INT", company);
-
-		if (contractDao.countContract(company) > (count == null ? 64 : Integer.parseInt(count.getValue()))) {
-			throw new FLException(110017, "资源数已达上限");
-		}
 
 		if (contractDao.countContract(contractVO.getNo()) > 0) {
 			throw new FLException(130043, "合同模版已存在");
