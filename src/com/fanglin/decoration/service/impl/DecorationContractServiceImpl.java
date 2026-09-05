@@ -562,7 +562,7 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 			customerUserRulePO = customerUserRuleDao.queryCustomerUserRule(decorationPO.getDesigner().getUid());
 
 			if (customerUserRulePO == null) {
-				customerUserRulePO = new CustomerUserRulePO(decorationPO.getDesigner(), operater);
+				customerUserRulePO = new CustomerUserRulePO().init(decorationPO.getDesigner(), operater, decorationPO.getCompany());
 
 				customerUserRuleDao.save(customerUserRulePO);
 			}
@@ -570,12 +570,17 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 
 		if (decorationBusitypePO.getIsAward() == DecorationBusitypePO.ISAWARD_AWARD_DEPT_INT) {
 
-			customerUserRulePO = customerUserRuleDao.queryCustomerUserRule(decorationPO.getDesigner().getDept().getManager().getUid());
+			UserPO manager = decorationPO.getDesigner().getDept() != null ? decorationPO.getDesigner().getDept().getManager() : null;
 
-			if (customerUserRulePO == null && decorationPO.getDesigner().getDept().getManager() != null) {
-				customerUserRulePO = new CustomerUserRulePO(decorationPO.getDesigner().getDept().getManager(), operater);
+			if (manager != null) {
 
-				customerUserRuleDao.save(customerUserRulePO);
+				customerUserRulePO = customerUserRuleDao.queryCustomerUserRule(manager.getUid());
+
+				if (customerUserRulePO == null) {
+					customerUserRulePO = new CustomerUserRulePO().init(manager, operater, decorationPO.getCompany());
+
+					customerUserRuleDao.save(customerUserRulePO);
+				}
 			}
 		}
 

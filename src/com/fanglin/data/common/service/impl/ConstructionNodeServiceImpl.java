@@ -128,7 +128,11 @@ public class ConstructionNodeServiceImpl implements ConstructionNodeService {
 		constructionNodePO.setProcess(constructionNodeVO.getProcess());
 		constructionNodePO.setProset(constructionNodeVO.getProset());
 
+		constructionNodePO.setCompany(constructionNodeVO.getCompany() == null ? 0 : constructionNodeVO.getCompany());
+
 		constructionNodeDao.save(constructionNodePO);
+
+		constructionNodeVO.setCnid(constructionNodePO.getCnid());
 
 		// 生成消息队列数据
 		messageQueuingDao.save(new MessageQueuingPO().init(null, "addConstructionNode", "{\"cnid\":" + constructionNodePO.getCnid() + ",\"event\":\"NODE_CREATED\"}"));
