@@ -243,6 +243,7 @@ infos = [
     {"source": "36.Log\\Background\\log\\", "target": "src\\com\\fanglin\\log\\"},
     
     {"source": "37.Wecom\\Background\\", "target": "src\\com\\fanglin\\wecom\\"},
+    {"source": "38.Camera\\Background\\", "target": "src\\com\\fanglin\\camera\\"},
 
     {"source": "99.Foreground\\js\\api\\", "target": "WebContent\\js\\api\\"},
     {"source": "99.Foreground\\js\\com\\", "target": "WebContent\\js\\com\\"},

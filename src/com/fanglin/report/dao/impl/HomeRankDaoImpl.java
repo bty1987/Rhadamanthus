@@ -11,8 +11,9 @@ import com.fanglin.report.dao.HomeRankDao;
 
 /**
  * 首页排名 DAO 实现：native SQL 跨库只读聚合（decoration / construction / communion 同实例）。
- *
- * <p>签单业绩按 contractTime 范围过滤可命中 decoration.indexelv 索引，避免全表扫描。
+ * 
+ * <p>
+ * 签单业绩按 contractTime 范围过滤可命中 decoration.indexelv 索引，避免全表扫描。
  */
 @Repository("homeRankDao")
 public class HomeRankDaoImpl extends DaoImpl<Object> implements HomeRankDao {
@@ -61,6 +62,7 @@ public class HomeRankDaoImpl extends DaoImpl<Object> implements HomeRankDao {
 		return query.list();
 	}
 
+	@SuppressWarnings("unchecked")
 	private List<Object[]> querySignRankForTop(String column, String startTime, String endTime, int top, int company) {
 
 		StringBuilder sql = new StringBuilder();
