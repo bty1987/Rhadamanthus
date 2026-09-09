@@ -708,6 +708,7 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 			}
 
 			customerChancePO.setType(CustomerChancePO.ATTTYPE_REGION_INT);
+			customerChancePO.setBusitype(busitype);
 			customerChancePO.setRegion(region);
 			customerChancePO.setCompany(region.getCompany());
 
@@ -753,6 +754,7 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 			}
 
 			customerChancePO.setType(CustomerChancePO.ATTTYPE_DEPT_INT);
+			customerChancePO.setBusitype(busitype);
 			customerChancePO.setDepartment(dept);
 			customerChancePO.setRegion(dept.getFatherDept());
 			customerChancePO.setCompany(dept.getCompany());
@@ -813,6 +815,7 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 
 			customerChancePO.setIsIssue(CustomerChancePO.ISISSUE_ISSUED_INT);
 			customerChancePO.setType(CustomerChancePO.ATTTYPE_USER_INT);
+			customerChancePO.setBusitype(busitype);
 			customerChancePO.setBelonger(belonger);
 			customerChancePO.setDepartment(belonger.getDept());
 			customerChancePO.setRegion(belonger.getDept().getFatherDept());
