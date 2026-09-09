@@ -191,6 +191,8 @@ jQuery(function($) {
     
     updateMaterialPrice();
 
+    com.focusPage("#con-material-rate", "#form").bindData(constant.decoration().decorationContract.commonRatio.datas, 'key', 'value').val("1:1.5");
+
     com.focusPage("#preservation").unbind("click").on('click', function() {
 
         if (com.validate('form'))
