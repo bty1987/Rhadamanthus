@@ -614,6 +614,9 @@ $.extend(api, {
         updateOccessoriesForRemark: {
             url: "updateOccessoriesForRemark.do",
         },
+        cancelOccessories: {
+            url: "cancelOccessories.do"
+        },
         deleteOccessories: {
             url: "deleteOccessories.do"
         },
