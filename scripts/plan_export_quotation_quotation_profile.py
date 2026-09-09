@@ -33,7 +33,9 @@ class Exporter(Util):
             cu.currentName '创建人',
             qp.createTime '创建时间',
             CASE qp.status WHEN 0 THEN '初始' WHEN 1 THEN '发送' WHEN 2 THEN '完成' END '状态',
-            communion.kv('quotation', 'quotationprofile', 'type', qp.type) '用途',
+            CASE WHEN i.name IS NULL OR i.name = '' THEN '(无题目)' ELSE i.name END '题目',
+            CASE i.type WHEN 0 THEN '文本' WHEN 1 THEN '输入' WHEN 2 THEN '单选' WHEN 3 THEN '多选' WHEN 4 THEN '日期' END '题型',
+            CASE WHEN i.type IN (2, 3) THEN (SELECT GROUP_CONCAT(o.title ORDER BY o.qpoid SEPARATOR '、') FROM quotation.quotationprofileoption o WHERE o.qpiid = i.qpiid AND o.checked = 1) ELSE i.content END '答案',
             co.name '公司'
         """
 
@@ -42,6 +44,7 @@ class Exporter(Util):
                 %s
             FROM
                 quotation.quotationprofile qp
+                LEFT JOIN quotation.quotationprofileitem i ON i.qpid = qp.qpid
                 LEFT JOIN quotation.quotation q ON qp.qid = q.qid
                 LEFT JOIN data.surveytemplate st ON qp.tid = st.stid
                 LEFT JOIN decoration.decoration d ON qp.orderId = d.orderId
@@ -81,7 +84,7 @@ class Exporter(Util):
 
         tableHead = [
             "装修单号", "楼盘", "楼号", "计价面积", "设计分区", "设计部", "设计师", "报价名称",
-            "标签模板", "标签名称", "创建人", "创建时间", "状态", "用途", "公司"
+            "标签模板", "标签名称", "创建人", "创建时间", "状态", "题目", "题型", "答案", "公司"
         ]
         sql = self.sqler(args, int(company))
 
@@ -92,6 +95,7 @@ if __name__ == '__main__':
     """
         导出报价单标签说明:
             根据查询条件,以分页拿数据的方式导出报价单标签(quotation.quotationprofile, type=4)信息;并上传到文件服务器中,可从任务页面上点击下载即可;
+            行粒度为标签题目:join quotationprofileitem 后每题一行;单选/多选(type=2/3)答案取勾选项(quotationprofileoption.checked=1按qpoid序拼接),文本/输入(type=0/1)答案取item.content;
             当该脚本执行出现异常时,将跟新进度为失败并记录到log文件中上传至文件服务器中;
         1.传入必须参数说明
             1.pid           information.plan的主键;

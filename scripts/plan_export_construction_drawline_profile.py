@@ -31,13 +31,9 @@ class Exporter(Util):
             dg.name '放线小组',
             dl.applayTime '申请时间',
             dl.actualTime '放线时间',
-            (SELECT GROUP_CONCAT(DISTINCT o.title SEPARATOR '、') FROM construction.drawlineprofileitem i JOIN construction.drawlineprofileoption o ON o.dpiid = i.dpiid AND o.checked = 1 WHERE i.dpid = dp.dpid AND i.name = '施工图问题') '施工图问题',
-            (SELECT GROUP_CONCAT(DISTINCT o.title SEPARATOR '、') FROM construction.drawlineprofileitem i JOIN construction.drawlineprofileoption o ON o.dpiid = i.dpiid AND o.checked = 1 WHERE i.dpid = dp.dpid AND i.name = '橱柜图问题') '橱柜图问题',
-            (SELECT GROUP_CONCAT(DISTINCT o.title SEPARATOR '、') FROM construction.drawlineprofileitem i JOIN construction.drawlineprofileoption o ON o.dpiid = i.dpiid AND o.checked = 1 WHERE i.dpid = dp.dpid AND i.name = '效果图问题') '效果图问题',
-            (SELECT GROUP_CONCAT(DISTINCT o.title SEPARATOR '、') FROM construction.drawlineprofileitem i JOIN construction.drawlineprofileoption o ON o.dpiid = i.dpiid AND o.checked = 1 WHERE i.dpid = dp.dpid AND i.name = '销售单问题') '销售单问题',
-            (SELECT GROUP_CONCAT(DISTINCT o.title SEPARATOR '、') FROM construction.drawlineprofileitem i JOIN construction.drawlineprofileoption o ON o.dpiid = i.dpiid AND o.checked = 1 WHERE i.dpid = dp.dpid AND i.name = '具备开工条件截图问题') '具备开工条件截图问题',
-            (SELECT GROUP_CONCAT(DISTINCT o.title SEPARATOR '、') FROM construction.drawlineprofileitem i JOIN construction.drawlineprofileoption o ON o.dpiid = i.dpiid AND o.checked = 1 WHERE i.dpid = dp.dpid AND i.name = '修改方式') '修改方式',
-            (SELECT GROUP_CONCAT(DISTINCT o.title SEPARATOR '、') FROM construction.drawlineprofileitem i JOIN construction.drawlineprofileoption o ON o.dpiid = i.dpiid AND o.checked = 1 WHERE i.dpid = dp.dpid AND i.name = '审核结果') '审核结果',
+            CASE WHEN i.name IS NULL OR i.name = '' THEN '(无题目)' ELSE i.name END '题目',
+            CASE i.type WHEN 0 THEN '文本' WHEN 1 THEN '输入' WHEN 2 THEN '单选' WHEN 3 THEN '多选' WHEN 4 THEN '日期' END '题型',
+            CASE WHEN i.type IN (2, 3) THEN (SELECT GROUP_CONCAT(o.title ORDER BY o.dpoid SEPARATOR '、') FROM construction.drawlineprofileoption o WHERE o.dpiid = i.dpiid AND o.checked = 1) ELSE i.content END '答案',
             st.name '标签模板',
             cu.currentName '创建人',
             dp.createTime '创建时间',
@@ -50,6 +46,7 @@ class Exporter(Util):
                 %s
             FROM
                 construction.drawlineprofile dp
+                LEFT JOIN construction.drawlineprofileitem i ON i.dpid = dp.dpid
                 LEFT JOIN construction.drawline dl ON dp.dlid = dl.dlid
                 LEFT JOIN data.drawlinegroup dg ON dl.dgid = dg.gid
                 LEFT JOIN data.surveytemplate st ON dp.tid = st.stid
@@ -91,8 +88,7 @@ class Exporter(Util):
 
         tableHead = [
             "装修单号", "楼盘", "楼号", "计价面积", "设计分区", "设计部", "设计师", "监理", "放线小组",
-            "申请时间", "放线时间", "施工图问题", "橱柜图问题", "效果图问题", "销售单问题",
-            "具备开工条件截图问题", "修改方式", "审核结果", "标签模板", "创建人", "创建时间", "状态", "公司"
+            "申请时间", "放线时间", "题目", "题型", "答案", "标签模板", "创建人", "创建时间", "状态", "公司"
         ]
         sql = self.sqler(args, int(company))
 
@@ -103,7 +99,8 @@ if __name__ == '__main__':
     """
         导出放线标签说明:
             根据查询条件,以分页拿数据的方式导出放线标签(construction.drawlineprofile)信息;并上传到文件服务器中,可从任务页面上点击下载即可;
-            含放线方案标签与预交会标签两类模板,以"标签模板"列区分;问题项答案取标签表单勾选选项(drawlineprofileitem+drawlineprofileoption checked=1)聚合;
+            含放线方案标签与预交会标签两类模板,以"标签模板"列区分;
+            行粒度为标签题目:join drawlineprofileitem 后每题一行;单选/多选(type=2/3)答案取勾选项(drawlineprofileoption.checked=1按dpoid序拼接),文本/输入(type=0/1)答案取item.content;
             dlid关联construction.drawline(259/325标签dlid=0无关联,放线小组/申请时间/放线时间为空);放线时间为YYYYMMDD整型,与导出放线脚本口径一致;
             当该脚本执行出现异常时,将跟新进度为失败并记录到log文件中上传至文件服务器中;
         1.传入必须参数说明

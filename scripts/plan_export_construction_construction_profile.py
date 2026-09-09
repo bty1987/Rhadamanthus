@@ -34,7 +34,9 @@ class Exporter(Util):
             d.sdesignTime '合同方案确认时间',
             CASE ci.handoverStatus WHEN 0 THEN '未交接' WHEN 1 THEN '已交接' WHEN 2 THEN '不验证' END '交接状态',
             ci.handoverTime '交接时间',
-            (SELECT GROUP_CONCAT(DISTINCT o.title SEPARATOR '、') FROM construction.constructionprofileitem i JOIN construction.constructionprofileoption o ON o.cpiid = i.cpiid AND o.checked = 1 WHERE i.cpid = cp.cpid AND i.name = '审核结果') '审核结果',
+            CASE WHEN i.name IS NULL OR i.name = '' THEN '(无题目)' ELSE i.name END '题目',
+            CASE i.type WHEN 0 THEN '文本' WHEN 1 THEN '输入' WHEN 2 THEN '单选' WHEN 3 THEN '多选' WHEN 4 THEN '日期' END '题型',
+            CASE WHEN i.type IN (2, 3) THEN (SELECT GROUP_CONCAT(o.title ORDER BY o.cpoid SEPARATOR '、') FROM construction.constructionprofileoption o WHERE o.cpiid = i.cpiid AND o.checked = 1) ELSE i.content END '答案',
             co.name '公司'
         """
 
@@ -43,6 +45,7 @@ class Exporter(Util):
                 %s
             FROM
                 construction.constructionprofile cp
+                LEFT JOIN construction.constructionprofileitem i ON i.cpid = cp.cpid
                 LEFT JOIN construction.constructioninfo ci ON cp.orderId = ci.orderId
                 LEFT JOIN decoration.decoration d ON cp.orderId = d.orderId
                 LEFT JOIN communion.house h ON d.hid = h.hid
@@ -86,7 +89,7 @@ class Exporter(Util):
 
         tableHead = [
             "装修单号", "楼盘", "楼号", "计价面积", "设计分区", "设计部", "设计师", "房屋类型",
-            "预算员", "监理", "签单时间", "合同方案确认时间", "交接状态", "交接时间", "审核结果", "公司"
+            "预算员", "监理", "签单时间", "合同方案确认时间", "交接状态", "交接时间", "题目", "题型", "答案", "公司"
         ]
 
         if type == "0":
@@ -112,7 +115,8 @@ if __name__ == '__main__':
         导出工程标签说明:
             根据查询条件,以分页拿数据的方式导出工程标签(construction.constructionprofile, 预交会标签)信息;并上传到文件服务器中,可从任务页面上点击下载即可;
             type=0按标签创建时间(constructionprofile.createTime), type=1按交接时间(constructioninfo.handoverTime)过滤;
-            合同方案确认时间取decoration.sdesignTime(与工程信息页面口径一致);审核结果取标签表单勾选选项(constructionprofileitem+constructionprofileoption checked=1)聚合;
+            合同方案确认时间取decoration.sdesignTime(与工程信息页面口径一致);
+            行粒度为标签题目:join constructionprofileitem 后每题一行;单选/多选(type=2/3)答案取勾选项(constructionprofileoption.checked=1按cpoid序拼接),文本/输入(type=0/1)答案取item.content;
             当该脚本执行出现异常时,将跟新进度为失败并记录到log文件中上传至文件服务器中;
         1.传入必须参数说明
             1.type          0:创建时间 1:交接时间;
