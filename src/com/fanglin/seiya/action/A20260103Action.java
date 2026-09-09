@@ -91,6 +91,11 @@ public class A20260103Action extends BaseListAction {
 	private String customerNo;
 
 	/**
+	 * 客户机会ID - 对应 customerChance.ccid, 定位优先级高于orderId
+	 */
+	private Integer ccid;
+
+	/**
 	 * 尺源编码 - 对应 source.no
 	 */
 	private String adornCode;
@@ -809,10 +814,11 @@ public class A20260103Action extends BaseListAction {
 	 *
 	 * 通过装修单号更新关联客户机会的客户编号（customerchance.customerno）
 	 *
-	 * 直接按 customerchance.orderId 定位（不走 customerchanceorder 映射）：存在则更新，不存在报 330075
+	 * 定位客户机会：ccid优先（主键直查），未传ccid时按 customerchance.orderId 定位（不走 customerchanceorder 映射）：存在则更新，不存在报 330075
 	 *
 	 * 请求参数：
-	 * @orderId: 装修单号（必填）
+	 * @ccid: 客户机会ID（可选，优先级高于orderId，传入后orderId可不传）
+	 * @orderId: 装修单号（ccid未传时必填）
 	 * @customerNo: 客户编号（必填，外部系统客户编号，亦可用参数名customerno）
 	 *
 	 * @return SUCCESS
@@ -825,9 +831,10 @@ public class A20260103Action extends BaseListAction {
 		this.data = new HashMap<String, Object>();
 
 		// 调用 Service 层处理业务逻辑
-		a20260103Service.updateCustomerChanceForSF(orderId, customerNo);
+		a20260103Service.updateCustomerChanceForSF(ccid == null ? 0 : ccid, orderId, customerNo);
 
 		// 设置返回参数
+		this.data.put("ccid", ccid);
 		this.data.put("orderId", orderId);
 		this.data.put("customerNo", customerNo);
 		this.data.put("updateTime", new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new java.util.Date()));
@@ -858,6 +865,15 @@ public class A20260103Action extends BaseListAction {
 
 	public void setCustomerno(String customerno) {
 		this.customerNo = customerno;
+	}
+
+	@JSON(serialize = false)
+	public Integer getCcid() {
+		return ccid;
+	}
+
+	public void setCcid(Integer ccid) {
+		this.ccid = ccid;
 	}
 
 	@JSON(serialize = false)

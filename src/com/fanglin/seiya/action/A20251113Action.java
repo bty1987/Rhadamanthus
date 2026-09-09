@@ -34,6 +34,8 @@ public class A20251113Action extends BaseListAction {
 
 	private String osstoken;
 
+	private String accessToken;
+
 	private String socialCode;
 
 	private String socialState;
@@ -54,6 +56,14 @@ public class A20251113Action extends BaseListAction {
 	public String exchangeAuthCode() throws FLException {
 
 		osstoken = a20251113Service.exchangeAuthCode(osstoken);
+
+		return SUCCESS;
+	}
+
+	@Action(value = "exchangeAuthCodeForToken", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String exchangeAuthCodeForToken() throws FLException {
+
+		osstoken = a20251113Service.exchangeAuthCodeForToken(accessToken);
 
 		return SUCCESS;
 	}
@@ -88,6 +98,14 @@ public class A20251113Action extends BaseListAction {
 
 	public void setOsstoken(String osstoken) {
 		this.osstoken = osstoken;
+	}
+
+	public String getAccessToken() {
+		return accessToken;
+	}
+
+	public void setAccessToken(String accessToken) {
+		this.accessToken = accessToken;
 	}
 
 	public String getUserId() {

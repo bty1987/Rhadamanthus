@@ -461,10 +461,10 @@ public class A20260103ServiceImpl implements A20260103Service {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void updateCustomerChanceForSF(String orderId, String customerno) throws FLException {
+	public void updateCustomerChanceForSF(long ccid, String orderId, String customerno) throws FLException {
 
-		// 1. 参数校验
-		if (orderId == null || orderId.trim().isEmpty()) {
+		// 1. 参数校验: ccid与orderId至少传一个
+		if (ccid == 0 && (orderId == null || orderId.trim().isEmpty())) {
 			throw new FLException(400013, "装修单号不能为空");
 		}
 
@@ -472,8 +472,14 @@ public class A20260103ServiceImpl implements A20260103Service {
 			throw new FLException(400034, "客户编号不能为空");
 		}
 
-		// 2. 直接按 customerchance.orderId 定位客户机会（不走 customerchanceorder 映射）
-		CustomerChancePO customerChancePO = customerChanceDao.queryCustomerChance(orderId.trim());
+		// 2. 定位客户机会: ccid优先(主键直查), 未传时按 customerchance.orderId 定位(不走 customerchanceorder 映射)
+		CustomerChancePO customerChancePO = null;
+
+		if (ccid != 0) {
+			customerChancePO = customerChanceDao.get(ccid);
+		} else {
+			customerChancePO = customerChanceDao.queryCustomerChance(orderId.trim());
+		}
 
 		// 3. 存在直接更新客户编号，不存在报错
 		if (customerChancePO == null) {
