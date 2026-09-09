@@ -132,7 +132,17 @@ $(function() {
     }, {
         field: "village",
         name: "楼盘",
-        prop: "decoration.house.village.name",
+        prop: function(v) {
+
+            var village = v.decoration && v.decoration.house && v.decoration.house.village;
+
+            if (village == null) return "";
+
+            var city = village.cityProper && village.cityProper.city ? village.cityProper.city.name : "";
+            var proper = village.cityProper ? village.cityProper.name : "";
+
+            return (city ? city + "-" : "") + (proper ? proper + "-" : "") + village.name;
+        },
         clazz: "grey"
     }, {
         field: "houseNumber",
@@ -525,6 +535,30 @@ $(function() {
         show: function(v) {
 
             return true;
+        }
+    }, {
+        name: "作废",
+        clazz: "btn-danger",
+        handle: function(v) {
+
+            com.showConfirm("确定要作废外辅单 " + v.no + " 吗？作废后单据保留但不可再操作。", function() {
+
+                var options = {
+                    "occessories.oid": v.oid,
+                };
+
+                com.post(api.inventory.cancelOccessories, options, function(data) {
+
+                    com.showAlert(com.info, "操作成功");
+                    searcher.doSearch();
+                });
+            });
+
+            return false;
+        },
+        show: function(v) {
+
+            return v.status < constant.inventory().occessories.STATUS_RECEIVE_INT;
         }
     }, {
         name: "删除",

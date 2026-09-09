@@ -151,6 +151,14 @@ public class OccessoriesAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "cancelOccessories", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String cancelOccessories() throws FLException {
+
+		occessoriesService.cancelOccessories(occessories);
+
+		return SUCCESS;
+	}
+
 	@Action(value = "deleteOccessories", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String deleteOccessories() throws FLException {
 

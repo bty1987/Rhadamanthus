@@ -551,6 +551,27 @@ public class OccessoriesServiceImpl implements OccessoriesService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
+	public int cancelOccessories(OccessoriesVO occessoriesVO) throws FLException {
+
+		OccessoriesPO occessoriesPO = occessoriesDao.get(occessoriesVO.getOid());
+
+		if (occessoriesPO == null) {
+			throw new FLException(260023, "辅料单不存在");
+		}
+
+		if (occessoriesPO.getStatus() >= OccessoriesPO.STATUS_RECEIVE_INT) {
+			throw new FLException(260024, "辅料单状态不可操作");
+		}
+
+		occessoriesPO.setStatus(OccessoriesPO.STATUS_CANCEL_INT);
+
+		occessoriesDao.update(occessoriesPO);
+
+		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
 	public int deleteOccessories(OccessoriesVO occessoriesVO) throws FLException {
 
 		OccessoriesPO occessoriesPO = occessoriesDao.get(occessoriesVO.getOid());
