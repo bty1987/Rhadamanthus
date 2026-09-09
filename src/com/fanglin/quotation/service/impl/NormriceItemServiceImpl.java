@@ -106,7 +106,7 @@ public class NormriceItemServiceImpl implements NormriceItemService {
 
 			normriceItemPO.setName(normaddPO.getName());
 			normriceItemPO.setUnit(normaddPO.getUnit());
-			normriceItemPO.setTrannum(0);
+			normriceItemPO.setTrannum(1000);
 			normriceItemPO.setSalary(normaddPO.getPrice());
 
 			normriceItemDao.save(normriceItemPO);
