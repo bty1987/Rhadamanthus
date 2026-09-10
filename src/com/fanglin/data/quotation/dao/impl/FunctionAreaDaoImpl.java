@@ -51,6 +51,12 @@ public class FunctionAreaDaoImpl extends DaoImpl<FunctionAreaPO> implements Func
 		return (FunctionAreaPO) session().createCriteria(FunctionAreaPO.class).add(Restrictions.eq("no", no)).add(Restrictions.eq("quotationVersion.no", versionId)).uniqueResult();
 	}
 
+	@Override
+	public int countFunctionAreaByFunctionAreaType(String functionAreaType) {
+		return ((Number) createCriteria(FunctionAreaPO.class).add(Restrictions.eq("functionAreaType", functionAreaType)).setProjection(org.hibernate.criterion.Projections.rowCount()).uniqueResult()).intValue();
+	}
+
+
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {
 
 		if (filters == null)

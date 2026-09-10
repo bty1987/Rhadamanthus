@@ -45,6 +45,11 @@ $(function() {
 
     functionArea.items.type.bindData(constant.data().functionArea.type.datas, 'key', 'value');
 
+    com.post(api.quotation.queryFunctionAreaType, {}, function(res) {
+
+        functionArea.items.functionAreaType.bindData(res.functionAreaTypes, "name", "name", "未分类");
+    });
+
     com.post(api.quotation.queryQuotationVersion, {}, function(res) {
 
         functionArea.items.versionId.bindData(res.quotationVersions, "no", "name");
@@ -125,9 +130,7 @@ $(function() {
                 name: "编辑",
                 clazz: "btn-yellow",
                 handle: function(v) {
-                    com.showConfirm("功能区的类型修改,会清空以前包含的报价项,是否确认修改?", function() {
-                        editFunctionArea(v);
-                    });
+                    editFunctionArea(v);
                 }
             },
             assign: {

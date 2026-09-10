@@ -23,9 +23,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.data.po.FunctionAreaPO;
+import com.fanglin.data.po.FunctionAreaTypePO;
 import com.fanglin.data.po.QuotationItemPO;
 import com.fanglin.data.po.QuotationPricePO;
 import com.fanglin.data.quotation.dao.FunctionAreaDao;
+import com.fanglin.data.quotation.dao.FunctionAreaTypeDao;
 import com.fanglin.data.quotation.dao.QuotationPriceDao;
 import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.po.DecorationPO;
@@ -56,6 +58,9 @@ public class QuotationFunctionAreaServiceImpl implements QuotationFunctionAreaSe
 
 	@Autowired
 	private FunctionAreaDao functionAreaDao;
+
+	@Autowired
+	private FunctionAreaTypeDao functionAreaTypeDao;
 
 	@Autowired
 	private QuotationPriceDao quotationPriceDao;
@@ -344,6 +349,21 @@ public class QuotationFunctionAreaServiceImpl implements QuotationFunctionAreaSe
 
 		if (quotationFunctionAreaPO == null) {
 			throw new FLException(200012, "功能区不存在");
+		}
+
+		// functionAreaType 空间类型字典值,报价侧可改(不回写模板);历史计价口径值存量透传不拦,仅变更时校验;不传(null)保持原值
+		if (quotationFunctionAreaVO.getFunctionAreaType() != null) {
+
+			if (!quotationFunctionAreaVO.getFunctionAreaType().equals(quotationFunctionAreaPO.getFunctionAreaType())) {
+
+				FunctionAreaTypePO functionAreaTypePO = functionAreaTypeDao.queryFunctionAreaTypeByName(quotationFunctionAreaVO.getFunctionAreaType());
+
+				if (functionAreaTypePO == null || functionAreaTypePO.getStatus() != FunctionAreaTypePO.STATUS_ENABLE_INT) {
+					throw new FLException(200116, "功能区类型不存在");
+				}
+			}
+
+			quotationFunctionAreaPO.setFunctionAreaType(quotationFunctionAreaVO.getFunctionAreaType());
 		}
 
 		quotationFunctionAreaPO.setFunctionAreaName(quotationFunctionAreaVO.getFunctionAreaName());

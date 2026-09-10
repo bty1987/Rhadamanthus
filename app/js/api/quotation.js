@@ -270,6 +270,29 @@ $.extend(api, {
             url: "deleteFunctionArea.do"
         },
 
+        pageFunctionAreaType: {
+            url: "pageFunctionAreaType.do",
+            type: "query"
+        },
+        queryFunctionAreaType: {
+            url: "queryFunctionAreaType.do",
+            type: "query"
+        },
+        addFunctionAreaType: {
+            url: "addFunctionAreaType.do",
+            type: "update"
+        },
+        updateFunctionAreaType: {
+            url: "updateFunctionAreaType.do",
+            type: "update"
+        },
+        updateFunctionAreaTypeForStatus: {
+            url: "updateFunctionAreaTypeForStatus.do"
+        },
+        deleteFunctionAreaType: {
+            url: "deleteFunctionAreaType.do"
+        },
+
         queryFunctionAreaOtem: {
             url: "queryFunctionAreaOtem.do"
         },

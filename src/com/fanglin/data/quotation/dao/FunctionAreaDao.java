@@ -26,4 +26,6 @@ public interface FunctionAreaDao extends Dao<FunctionAreaPO> {
 
 	public FunctionAreaPO queryFunctionArea(String functionAreaId, String versionId);
 
+	public int countFunctionAreaByFunctionAreaType(String functionAreaType);
+
 }

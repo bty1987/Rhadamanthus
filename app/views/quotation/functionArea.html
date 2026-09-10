@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<!-- app/views/quotation/functionArea.html —— 子功能区配置（版本内功能区：类型/总价/排序；量房参数 otem；分配报价项） -->
+<html lang="zh-CN"><head><meta charset="utf-8"><title>子功能区</title>
+<link rel="stylesheet" href="../../layui/css/layui.css"><link rel="stylesheet" href="../../css/app.css"></head>
+<body><div class="app-page">
+    <div class="app-search"><form class="layui-form" id="searchForm"><div class="layui-form-item">
+        <div class="layui-inline"><label class="layui-form-label">版本</label><div class="layui-input-inline"><select name="version.no" data-op="eq" id="sVersion"><option value="">全部</option></select></div></div>
+        <div class="layui-inline"><label class="layui-form-label">名称</label><div class="layui-input-inline"><input name="name" data-op="cn" class="layui-input" placeholder="名称"></div></div>
+        <div class="layui-inline"><button type="button" class="layui-btn" id="btnSearch"><i class="layui-icon layui-icon-search"></i>查询</button><button type="button" class="layui-btn layui-btn-primary" id="btnReset">重置</button></div>
+    </div></form></div>
+    <div class="app-toolbar" style="padding:0 15px 10px;">
+        <button type="button" class="layui-btn layui-btn-sm" id="btnAdd"><i class="layui-icon layui-icon-add-1"></i>添加</button>
+    </div>
+    <div class="app-table"><table id="resultTable" lay-filter="resultTable"></table></div>
+    <div id="pagenation" class="app-pagenation"></div>
+    <script type="text/html" id="rowToolbar">
+        <button class="layui-btn layui-btn-xs layui-btn-warm" lay-event="otem">量房参数</button>
+        <button class="layui-btn layui-btn-xs" lay-event="edit">编辑</button>
+        <button class="layui-btn layui-btn-xs layui-btn-normal" lay-event="assign">分配报价项</button>
+        <button class="layui-btn layui-btn-xs {{ d.status == 0 ? '' : 'layui-btn-primary' }}" lay-event="status">{{ d.status == 0 ? '启用' : '禁用' }}</button>
+    </script>
+
+    <div id="editBox" style="display:none;padding:20px 30px;">
+        <form class="layui-form" lay-filter="editForm">
+            <div class="layui-form-item" id="noItem"><label class="layui-form-label">编号</label><div class="layui-input-inline"><input id="no" class="layui-input" placeholder="编号"></div></div>
+            <div class="layui-form-item"><label class="layui-form-label">名称</label><div class="layui-input-inline"><input id="name" class="layui-input" placeholder="名称"></div></div>
+            <div class="layui-form-item"><label class="layui-form-label">报价版本</label><div class="layui-input-inline"><select id="versionId"></select></div></div>
+            <div class="layui-form-item"><label class="layui-form-label">功能区类型</label><div class="layui-input-inline"><select id="functionAreaType"></select></div></div>
+            <div class="layui-form-item"><label class="layui-form-label">排序</label><div class="layui-input-inline"><input id="functionAreaOrder" class="layui-input" placeholder="排序"></div></div>
+            <div class="layui-form-item"><label class="layui-form-label">类型</label><div class="layui-input-inline"><select id="type"><option value="0">管理</option><option value="1">工程量</option><option value="2">功能区总额</option><option value="3">不计算</option><option value="4">成本</option><option value="5">非业绩</option><option value="6">隐藏</option><option value="7">综合</option></select></div></div>
+            <div class="layui-form-item"><label class="layui-form-label">总价</label><div class="layui-input-inline"><input id="total" class="layui-input" placeholder="总价（功能区总额时填写）" disabled></div></div>
+        </form>
+    </div>
+
+    <div id="otemBox" style="display:none;padding:15px 25px;">
+        <div style="margin-bottom:10px;">
+            <button type="button" class="layui-btn layui-btn-sm" id="textBtn"><i class="layui-icon layui-icon-note"></i>文本</button>
+            <button type="button" class="layui-btn layui-btn-sm" id="radioBtn"><i class="layui-icon layui-icon-radio"></i>单选</button>
+            <button type="button" class="layui-btn layui-btn-sm" id="checkBtn"><i class="layui-icon layui-icon-forms"></i>多选</button>
+            <button type="button" class="layui-btn layui-btn-sm" id="inputBtn"><i class="layui-icon layui-icon-edit"></i>输入框</button>
+        </div>
+        <div id="itemlist" style="max-height:50vh;overflow:auto;"></div>
+    </div>
+</div>
+<script src="../../layui/layui.js"></script><script src="../../js/app/config.js"></script><script src="../../js/app/server.js"></script><script src="../../js/app/utils.js"></script><script src="../../js/app/post.js"></script><script src="../../js/app/api.js"></script><script src="../../js/app/core.js"></script><script src="../../js/app/validate.js"></script><script src="../../js/app/bootstrap.js"></script><script src="../../js/quotation/quotation-common.js"></script><script src="../../js/quotation/functionArea.js"></script>
+</body></html>
