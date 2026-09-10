@@ -1252,20 +1252,9 @@ var QuotationDetail = (function() {
                 com.closeTip();
             });
 
-            var that = this;
-            var _showModal = function() {
-                com.focusPage("#functionAreaType4Area").val(that.nowEditDomain.attr('data-fareatype') || '');
-                quo.quoModals.$domainEditModal.modal("show");
-            };
+            com.focusPage("#functionAreaType4Area").val($domain.attr('data-fareatype') || '');
 
-            if (com.focusPage("#functionAreaType4Area").data("bound")) {
-                _showModal();
-            } else {
-                com.post(api.quotation.queryFunctionAreaType, {}, function(res) {
-                    com.focusPage("#functionAreaType4Area").bindData(res.functionAreaTypes, "name", "name", "未分类").data("bound", true);
-                    _showModal();
-                });
-            }
+            quo.quoModals.$domainEditModal.modal("show");
 
             return false;
         },
@@ -5000,6 +4989,10 @@ var QuotationDetail = (function() {
 
     return {
         init: function() {
+
+            com.post(api.quotation.queryFunctionAreaType, {}, function(res) {
+                com.focusPage("#functionAreaType4Area").bindData(res.functionAreaTypes, "name", "name", "未分类");
+            });
 
             quo.orderid = params.quotation.orderId;
             quo.quotationid = params.quotation.quotation.qid;
