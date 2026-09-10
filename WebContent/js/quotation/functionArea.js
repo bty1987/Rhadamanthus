@@ -141,6 +141,14 @@ $(function() {
                     com.popup4page("#functionAreaItemPopUp", "/views/quotation/functionAreaItem.html", "功能区-报价项");
                 }
             },
+            category: {
+                name: "品类",
+                clazz: "btn-purple",
+                handle: function(v) {
+                    params.data.functionArea = v;
+                    com.popup4page("#functionAreaCategoryPopUp", "/views/quotation/functionAreaCategory.html", "功能区-品类规格");
+                }
+            },
             status: {
                 name: "状态",
                 type: "switch",

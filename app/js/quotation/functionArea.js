@@ -200,6 +200,9 @@ layui.use(['table', 'laypage', 'form', 'layer', 'jquery'], function () {
         } else if (obj.event === 'assign') {
             app.params.data = $.extend({}, app.params.data, { functionArea: v });
             app.popup('views/quotation/functionAreaItem.html', '功能区-报价项', null, { area: ['85%', '85%'] });
+        } else if (obj.event === 'category') {
+            app.params.data = $.extend({}, app.params.data, { functionArea: v });
+            app.popup('views/quotation/functionAreaCategory.html', '功能区-品类规格', null, { area: ['85%', '85%'] });
         } else if (obj.event === 'status') {
             app.post(api.quotation.updateFunctionAreaForStatus, { 'functionArea.faid': v.faid, 'functionArea.status': v.status == 0 ? 1 : 0 }, function () {
                 app.showAlert(app.info, '操作成功'); query(state.page);
