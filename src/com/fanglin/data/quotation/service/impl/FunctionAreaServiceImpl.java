@@ -24,9 +24,10 @@ import com.fanglin.common.service.CountingService;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.data.po.FunctionAreaPO;
+import com.fanglin.data.po.FunctionAreaTypePO;
 import com.fanglin.data.po.QuotationVersionPO;
 import com.fanglin.data.quotation.dao.FunctionAreaDao;
-import com.fanglin.data.quotation.dao.FunctionAreaItemDao;
+import com.fanglin.data.quotation.dao.FunctionAreaTypeDao;
 import com.fanglin.data.quotation.dao.QuotationVersionDao;
 import com.fanglin.data.quotation.service.FunctionAreaService;
 import com.fanglin.data.quotation.vo.FunctionAreaVO;
@@ -48,7 +49,7 @@ public class FunctionAreaServiceImpl implements FunctionAreaService {
 	private FunctionAreaDao functionAreaDao;
 
 	@Autowired
-	private FunctionAreaItemDao functionAreaItemDao;
+	private FunctionAreaTypeDao functionAreaTypeDao;
 
 	@Autowired
 	private QuotationVersionDao quotationVersionDao;
@@ -139,6 +140,13 @@ public class FunctionAreaServiceImpl implements FunctionAreaService {
 			throw new FLException(200022, "报价版本不存在");
 		}
 
+		checkFunctionAreaType(functionAreaVO.getFunctionAreaType());
+
+		// functionAreaType 列 NOT NULL,未选类型时置空串(=未分类)
+		if (functionAreaVO.getFunctionAreaType() == null) {
+			functionAreaVO.setFunctionAreaType("");
+		}
+
 		functionAreaPO = new FunctionAreaPO();
 
 		int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_QUOTATION_FUNCTION_AREA_INT, CountingPO.COUNTING_DATE_SILNLE_STR, company);
@@ -167,8 +175,9 @@ public class FunctionAreaServiceImpl implements FunctionAreaService {
 			throw new FLException(200012, "功能区不存在");
 		}
 
-		if (!functionAreaPO.getFunctionAreaType().equals(functionAreaVO.getFunctionAreaType())) { // 功能区的类型改变时
-			functionAreaItemDao.deleteFunctionAreaItem(functionAreaPO.getFaid());
+		// functionAreaType 已改造为空间类型字典值(历史计价口径值存量原样保留,透传不拦),仅变更时校验新值
+		if (functionAreaVO.getFunctionAreaType() != null && !functionAreaVO.getFunctionAreaType().equals(functionAreaPO.getFunctionAreaType())) {
+			checkFunctionAreaType(functionAreaVO.getFunctionAreaType());
 		}
 
 		BeanUtil.copyProperties(functionAreaVO, functionAreaPO, Arrays.asList("no", "version"));
@@ -204,6 +213,17 @@ public class FunctionAreaServiceImpl implements FunctionAreaService {
 		functionAreaDao.deleteById(functionAreaVO.getFaid());
 
 		return 0;
+	}
+
+	private void checkFunctionAreaType(String functionAreaType) throws FLException {
+
+		if (functionAreaType == null || "".equals(functionAreaType)) return;
+
+		FunctionAreaTypePO functionAreaTypePO = functionAreaTypeDao.queryFunctionAreaTypeByName(functionAreaType);
+
+		if (functionAreaTypePO == null || functionAreaTypePO.getStatus() != FunctionAreaTypePO.STATUS_ENABLE_INT) {
+			throw new FLException(200116, "功能区类型不存在");
+		}
 	}
 
 }

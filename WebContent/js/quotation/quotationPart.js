@@ -1252,7 +1252,20 @@ var QuotationDetail = (function() {
                 com.closeTip();
             });
 
-            quo.quoModals.$domainEditModal.modal("show");
+            var that = this;
+            var _showModal = function() {
+                com.focusPage("#functionAreaType4Area").val(that.nowEditDomain.attr('data-fareatype') || '');
+                quo.quoModals.$domainEditModal.modal("show");
+            };
+
+            if (com.focusPage("#functionAreaType4Area").data("bound")) {
+                _showModal();
+            } else {
+                com.post(api.quotation.queryFunctionAreaType, {}, function(res) {
+                    com.focusPage("#functionAreaType4Area").bindData(res.functionAreaTypes, "name", "name", "未分类").data("bound", true);
+                    _showModal();
+                });
+            }
 
             return false;
         },
@@ -1292,10 +1305,12 @@ var QuotationDetail = (function() {
 
                 var _dname = com.focusPage("#functionAreaName").val();
                 var _dorder = com.focusPage("#functionAreaOrder").val();
+                var _dfatype = com.focusPage("#functionAreaType4Area").val();
 
                 var _params = $.extend({}, {
                     "quotationFunctionArea.functionAreaName": _dname,
                     "quotationFunctionArea.functionAreaOrder": _dorder,
+                    "quotationFunctionArea.functionAreaType": _dfatype,
                     "quotationFunctionArea.qfaId": that.nowEditDomain.attr('data-qfaid'),
                 }, quo.basicParams);
 
@@ -1308,6 +1323,7 @@ var QuotationDetail = (function() {
                     $dname.html(_dname);
                     $dOrder.html(_dorder);
                     that.nowEditDomain.attr('data-dlevel', _dorder);
+                    that.nowEditDomain.attr('data-fareatype', _dfatype);
                     that.insertDomainByOrder(_dorder, that.nowEditDomain, $domains, true);
 
                     var _index = that.nowEditDomain.index();
@@ -4131,6 +4147,7 @@ var QuotationDetail = (function() {
                 "data-qfaId": dv.qfaId,// 报价项中的功能区ID
                 "data-areaType": dv.type, // 类型
                 "data-total": dv.total,
+                "data-fareatype": dv.functionAreaType,
             }).css({
                 "margin-bottom": "20px"
             });
