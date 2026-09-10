@@ -293,6 +293,31 @@ $.extend(api, {
             url: "deleteFunctionAreaType.do"
         },
 
+        queryFunctionAreaCategoryByFaid: {
+            url: "queryFunctionAreaCategoryByFaid.do",
+            type: "query"
+        },
+        addFunctionAreaCategory: {
+            url: "addFunctionAreaCategory.do",
+            type: "update"
+        },
+        deleteFunctionAreaCategory: {
+            url: "deleteFunctionAreaCategory.do",
+            type: "update"
+        },
+        addFunctionAreaFormat: {
+            url: "addFunctionAreaFormat.do",
+            type: "update"
+        },
+        updateFunctionAreaFormat: {
+            url: "updateFunctionAreaFormat.do",
+            type: "update"
+        },
+        deleteFunctionAreaFormat: {
+            url: "deleteFunctionAreaFormat.do",
+            type: "update"
+        },
+
         queryFunctionAreaOtem: {
             url: "queryFunctionAreaOtem.do"
         },

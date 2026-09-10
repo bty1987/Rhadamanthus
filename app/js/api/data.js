@@ -27,6 +27,7 @@ $.extend(api, { data: {
 
     // ===== 品类 category =====
     pageCategory:    { url: 'pageCategory.do' },
+    queryCategory:   { url: 'queryCategory.do', type: 'query' },
     addCategory:     { url: 'addCategory.do' },
     updateCategory:  { url: 'updateCategory.do' },
 
