@@ -68,6 +68,12 @@ public class UserContractPO implements Serializable, Contract {
 
 	private String download;
 
+	// 电子签厂商：1=法大大 2=e签宝（见 com.fanglin.elecsign.enums.ElecsignProvider），存量默认1
+	private Short provider;
+
+	// 厂商流程号（e签宝专用：upload/generate 后存 fileId，签署建流后覆盖为 signFlowId；法大大不使用）
+	private String flowId;
+
 	private String viewpdf;
 
 	private int filesize;
@@ -309,6 +315,34 @@ public class UserContractPO implements Serializable, Contract {
 	@Override
 	public void status(short status) {
 		this.status = status;
+	}
+
+	@Override
+	public String flowId() {
+		return flowId;
+	}
+
+	@Override
+	public void flowId(String flowId) {
+		this.flowId = flowId;
+	}
+
+	@Column(name = "provider")
+	public Short getProvider() {
+		return provider;
+	}
+
+	public void setProvider(Short provider) {
+		this.provider = provider;
+	}
+
+	@Column(name = "flowid")
+	public String getFlowId() {
+		return flowId;
+	}
+
+	public void setFlowId(String flowId) {
+		this.flowId = flowId;
 	}
 
 }

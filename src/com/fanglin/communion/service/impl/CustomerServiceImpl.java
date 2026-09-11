@@ -9,6 +9,10 @@
 
 package com.fanglin.communion.service.impl;
 
+import com.fanglin.elecsign.enums.ElecsignProvider;
+import com.fanglin.elecsign.enums.ElecsignScene;
+import com.fanglin.elecsign.router.ElecsignRouter;
+import com.fanglin.elecsign.service.ElecsignService;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -35,7 +39,6 @@ import com.fanglin.communion.vo.CustomerVO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.security.SensitiveDataHelper;
 import com.fanglin.core.vo.Filter;
-import com.fanglin.fadada.signature.Signature;
 import com.fanglin.information.dao.MessageQueuingDao;
 import com.fanglin.information.po.MessageCueuingPO;
 import com.fanglin.information.po.MessageQueuingPO;
@@ -52,6 +55,8 @@ import com.fanglin.utils.PinYin4Util;
 @Transactional(readOnly = true)
 public class CustomerServiceImpl implements CustomerService {
 
+	@Autowired
+	private ElecsignRouter elecsignRouter;
 	@Autowired
 	private CustomerDao customerDao;
 
@@ -526,7 +531,7 @@ public class CustomerServiceImpl implements CustomerService {
 		}
 
 		if (customerPO.getSignno() == null || "".equals(customerPO.getSignno())) {
-			customerPO.setSignno(Signature.register(customerPO.getNo()));
+			customerPO.setSignno(routeForAuth(customerPO).register(customerPO.getNo()));
 		}
 
 		customerDao.update(customerPO);
@@ -574,7 +579,7 @@ public class CustomerServiceImpl implements CustomerService {
 		}
 
 		if (customerPO.getSignno() == null || "".equals(customerPO.getSignno())) {
-			customerPO.setSignno(Signature.register(customerPO.getNo()));
+			customerPO.setSignno(routeForAuth(customerPO).register(customerPO.getNo()));
 		}
 
 		if (customerPO.getAuthurl() != null && !"".equals(customerPO.getAuthurl())) {
@@ -589,9 +594,9 @@ public class CustomerServiceImpl implements CustomerService {
 			type = 1;
 		}
 
-		JSONObject info = Signature.authenticate(customerPO.getSignno(), customerPO.getName(), SensitiveDataHelper.decrypt(customerPO.getPhone()), authno, type);
+		JSONObject info = elecsignRouter.route(customerPO.getProvider()).authenticate(customerPO.getSignno(), customerPO.getName(), SensitiveDataHelper.decrypt(customerPO.getPhone()), authno, type);
 
-		String redirect = Signature.decode(info.getString("url"));
+		String redirect = elecsignRouter.route(customerPO.getProvider()).decode(info.getString("url"));
 
 		customerPO.setToken(info.getString("transactionNo"));
 
@@ -614,7 +619,7 @@ public class CustomerServiceImpl implements CustomerService {
 			throw new FLException(130184, "客户状态不可操作");
 		}
 
-		JSONObject info = Signature.person(customerPO.getToken());
+		JSONObject info = elecsignRouter.route(customerPO.getProvider()).person(customerPO.getToken());
 
 		JSONObject person = info.getJSONObject("person");
 
@@ -679,7 +684,7 @@ public class CustomerServiceImpl implements CustomerService {
 			throw new FLException(130178, "客户信息不存在");
 		}
 
-		Signature.signature(customerPO.getSignno(), imgbase);
+		elecsignRouter.route(customerPO.getProvider()).signature(customerPO.getSignno(), imgbase);
 
 		customerPO.setSignPath(customerVO.getSignPath());
 
@@ -745,6 +750,16 @@ public class CustomerServiceImpl implements CustomerService {
 		}
 
 		customerAccountDao.save(newAccount);
+	}
+
+	/** 电子签路由（实名/印章场景：按PO公司×AUTH场景配置路由，并把厂商记录到 PO provider 字段） */
+	private ElecsignService routeForAuth(CustomerPO customerPO) throws FLException {
+
+		ElecsignProvider provider = elecsignRouter.resolveProvider(customerPO.getCompany(), ElecsignScene.AUTH);
+
+		customerPO.setProvider(provider.code());
+
+		return elecsignRouter.route(provider);
 	}
 
 }

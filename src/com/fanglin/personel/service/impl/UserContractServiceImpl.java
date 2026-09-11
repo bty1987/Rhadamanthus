@@ -9,6 +9,10 @@
 
 package com.fanglin.personel.service.impl;
 
+import com.fanglin.elecsign.enums.ElecsignProvider;
+import com.fanglin.elecsign.enums.ElecsignScene;
+import com.fanglin.elecsign.router.ElecsignRouter;
+import com.fanglin.elecsign.service.ElecsignService;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -23,7 +27,6 @@ import com.fanglin.core.interceptor.FLException;
 import com.fanglin.data.common.vo.ContractVO;
 import com.fanglin.data.common.vo.SignetVO;
 import com.fanglin.decoration.po.DecorationContractPO;
-import com.fanglin.fadada.signature.Signature;
 import com.fanglin.personel.dao.UserContractDao;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserContractPO;
@@ -39,6 +42,8 @@ import com.fanglin.utils.DateUtil;
 @Transactional(readOnly = true)
 public class UserContractServiceImpl implements UserContractService {
 
+	@Autowired
+	private ElecsignRouter elecsignRouter;
 	@Autowired
 	private UserContractDao userContractDao;
 
@@ -108,7 +113,7 @@ public class UserContractServiceImpl implements UserContractService {
 			SystemConfigPO isv = systemConfigDao.querySystemConfig("isv");
 			url = String.format("%s/signature.html?cid=%d&type=2&module=personel", isv.getValue(), userPO.getUid());
 		} else if (type == DecorationContractPO.TYPE_SIGN_INT && status == DecorationContractPO.STATUS_VALID_INT) {
-			url = Signature.extsign(userPO.getSignNo(), userContractPO);
+			url = routeForRecord(userContractPO).extsign(userPO.getSignNo(), userContractPO);
 		} else if (type == DecorationContractPO.TYPE_VIEW_INT && status == DecorationContractPO.STATUS_VALID_INT) {
 			url = userContractPO.getViewpdf();
 		} else if (type == DecorationContractPO.TYPE_DOWNLOAD_INT && status == DecorationContractPO.STATUS_SIGN_INT) {
@@ -129,7 +134,7 @@ public class UserContractServiceImpl implements UserContractService {
 			throw new FLException(190028, "合同不存在");
 		}
 
-		return Signature.view(userContractPO);
+		return routeForRecord(userContractPO).view(userContractPO);
 	}
 
 	@Override
@@ -145,7 +150,7 @@ public class UserContractServiceImpl implements UserContractService {
 			throw new FLException(190029, "合同不可操作");
 		}
 
-		Signature.autosign(signetVO.getSignno(), signetVO.getKeyword(), userContractPO, signetVO.getSignid());
+		routeForRecord(userContractPO).autosign(signetVO.getSignno(), signetVO.getKeyword(), userContractPO, signetVO.getSignid());
 
 		userContractPO.setComsignTime(DateUtil.getDateToTimestamp(new Date()));
 
@@ -169,7 +174,7 @@ public class UserContractServiceImpl implements UserContractService {
 
 		UserPO userPO = userDao.get(userContractPO.getUid());
 
-		return Signature.extsign(userPO.getSignNo(), userContractPO);
+		return routeForRecord(userContractPO).extsign(userPO.getSignNo(), userContractPO);
 	}
 
 	@Override
@@ -192,7 +197,7 @@ public class UserContractServiceImpl implements UserContractService {
 
 		JSONObject params = JSONObject.parseObject(data);
 
-		Signature.generate(userContractPO, params, null);
+		routeForCreate(userContractPO, 0).generate(userContractPO, params, null);
 
 		return 0;
 	}
@@ -299,6 +304,25 @@ public class UserContractServiceImpl implements UserContractService {
 		userContractDao.delete(userContractPO);
 
 		return 0;
+	}
+
+	/** 电子签路由（生成/上传：重签按记录厂商，首签按公司×场景配置并记录厂商到合同 provider 字段） */
+	private ElecsignService routeForCreate(UserContractPO userContractPO, int company) throws FLException {
+
+		if (userContractPO.getProvider() != null) {
+			return elecsignRouter.route(userContractPO.getProvider());
+		}
+
+		ElecsignProvider provider = elecsignRouter.resolveProvider(company, ElecsignScene.USER);
+
+		userContractPO.setProvider(provider.code());
+
+		return elecsignRouter.route(provider);
+	}
+
+	/** 电子签路由（签署/查看/归档：按合同记录的厂商路由，保证全链路厂商一致与历史可回溯；null 视同法大大） */
+	private ElecsignService routeForRecord(UserContractPO userContractPO) throws FLException {
+		return elecsignRouter.route(userContractPO.getProvider());
 	}
 
 }
