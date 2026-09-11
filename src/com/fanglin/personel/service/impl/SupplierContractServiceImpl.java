@@ -1,5 +1,9 @@
 package com.fanglin.personel.service.impl;
 
+import com.fanglin.elecsign.enums.ElecsignProvider;
+import com.fanglin.elecsign.enums.ElecsignScene;
+import com.fanglin.elecsign.router.ElecsignRouter;
+import com.fanglin.elecsign.service.ElecsignService;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -17,7 +21,6 @@ import com.fanglin.data.common.vo.ContractVO;
 import com.fanglin.data.common.vo.SignetVO;
 import com.fanglin.data.common.vo.SupplierSignetVO;
 import com.fanglin.decoration.po.DecorationContractPO;
-import com.fanglin.fadada.signature.Signature;
 import com.fanglin.personel.dao.SupplierContractDao;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.SupplierContractPO;
@@ -32,6 +35,8 @@ import com.fanglin.utils.DateUtil;
 @Transactional(readOnly = true)
 public class SupplierContractServiceImpl implements SupplierContractService {
 
+	@Autowired
+	private ElecsignRouter elecsignRouter;
 	@Autowired
 	private SupplierContractDao supplierContractDao;
 
@@ -75,7 +80,7 @@ public class SupplierContractServiceImpl implements SupplierContractService {
 			throw new FLException(190028, "合同不存在");
 		}
 
-		return Signature.view(supplierContractPO);
+		return routeForRecord(supplierContractPO).view(supplierContractPO);
 	}
 
 	@Override
@@ -91,7 +96,7 @@ public class SupplierContractServiceImpl implements SupplierContractService {
 			throw new FLException(190029, "合同不可操作");
 		}
 
-		Signature.autosign(signetVO.getSignno(), signetVO.getKeyword(), supplierContractPO, signetVO.getSignid());
+		routeForRecord(supplierContractPO).autosign(signetVO.getSignno(), signetVO.getKeyword(), supplierContractPO, signetVO.getSignid());
 
 		supplierContractPO.setComsignTime(DateUtil.getDateToTimestamp(new Date()));
 
@@ -113,7 +118,7 @@ public class SupplierContractServiceImpl implements SupplierContractService {
 			throw new FLException(190029, "合同不可操作");
 		}
 
-		return Signature.extsign(supplierSignetVO.getSignno(), supplierContractPO);
+		return routeForRecord(supplierContractPO).extsign(supplierSignetVO.getSignno(), supplierContractPO);
 	}
 
 	@Override
@@ -154,7 +159,7 @@ public class SupplierContractServiceImpl implements SupplierContractService {
 		JSONObject params = JSONObject.parseObject(data);
 		JSONArray tables = JSON.parseArray(table);
 
-		Signature.generate(supplierContractPO, params, tables);
+		routeForCreate(supplierContractPO, 0).generate(supplierContractPO, params, tables);
 
 		supplierContractDao.update(supplierContractPO);
 
@@ -266,6 +271,25 @@ public class SupplierContractServiceImpl implements SupplierContractService {
 		supplierContractDao.delete(supplierContractPO);
 
 		return 0;
+	}
+
+	/** 电子签路由（生成/上传：重签按记录厂商，首签按公司×场景配置并记录厂商到合同 provider 字段） */
+	private ElecsignService routeForCreate(SupplierContractPO supplierContractPO, int company) throws FLException {
+
+		if (supplierContractPO.getProvider() != null) {
+			return elecsignRouter.route(supplierContractPO.getProvider());
+		}
+
+		ElecsignProvider provider = elecsignRouter.resolveProvider(company, ElecsignScene.SUPPLIER);
+
+		supplierContractPO.setProvider(provider.code());
+
+		return elecsignRouter.route(provider);
+	}
+
+	/** 电子签路由（签署/查看/归档：按合同记录的厂商路由，保证全链路厂商一致与历史可回溯；null 视同法大大） */
+	private ElecsignService routeForRecord(SupplierContractPO supplierContractPO) throws FLException {
+		return elecsignRouter.route(supplierContractPO.getProvider());
 	}
 
 }

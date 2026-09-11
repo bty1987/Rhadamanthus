@@ -1,5 +1,9 @@
 package com.fanglin.data.common.service.impl;
 
+import com.fanglin.elecsign.enums.ElecsignProvider;
+import com.fanglin.elecsign.enums.ElecsignScene;
+import com.fanglin.elecsign.router.ElecsignRouter;
+import com.fanglin.elecsign.service.ElecsignService;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -15,7 +19,6 @@ import com.fanglin.data.common.service.SupplierSignetService;
 import com.fanglin.data.common.vo.SupplierSignetVO;
 import com.fanglin.data.po.SignetPO;
 import com.fanglin.data.po.SupplierSignetPO;
-import com.fanglin.fadada.signature.Signature;
 import com.fanglin.system.service.impl.CompanyServiceImpl;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.Paging;
@@ -24,6 +27,8 @@ import com.fanglin.utils.Paging;
 @Transactional(readOnly = true)
 public class SupplierSignetServiceImpl implements SupplierSignetService {
 
+	@Autowired
+	private ElecsignRouter elecsignRouter;
 	@Autowired
 	private SupplierSignetDao supplierSignetDao;
 
@@ -127,7 +132,7 @@ public class SupplierSignetServiceImpl implements SupplierSignetService {
 
 		signetPO.setNo(supplierSignetPO.getNo());
 
-		Signature.register(signetPO);
+		routeForAuth(signetPO).register(signetPO);
 
 		supplierSignetPO.setStatus(SignetPO.STATUS_REGIST_INT);
 		supplierSignetPO.setSignno(signetPO.getSignno());
@@ -156,7 +161,7 @@ public class SupplierSignetServiceImpl implements SupplierSignetService {
 		signetPO.setSignno(supplierSignetPO.getSignno());
 		signetPO.setName(supplierSignetPO.getName());
 
-		String path = Signature.authenticate(signetPO);
+		String path = elecsignRouter.route(signetPO.getProvider()).authenticate(signetPO);
 
 		supplierSignetPO.setStatus(SignetPO.STATUS_AUTH_INT);
 		supplierSignetPO.setToken(signetPO.getToken());
@@ -187,7 +192,7 @@ public class SupplierSignetServiceImpl implements SupplierSignetService {
 
 		signetPO.setToken(supplierSignetPO.getToken());
 
-		Signature.company(signetPO);
+		elecsignRouter.route(signetPO.getProvider()).company(signetPO);
 
 		supplierSignetPO.setStatus(SignetPO.STATUS_CONFIRM_INT);
 
@@ -209,7 +214,7 @@ public class SupplierSignetServiceImpl implements SupplierSignetService {
 			throw new FLException(130047, "签章状态不可操作");
 		}
 
-		Signature.signature(supplierSignetPO.getSignno(), supplierSignetVO.getData());
+		elecsignRouter.route(supplierSignetPO.getProvider()).signature(supplierSignetPO.getSignno(), supplierSignetVO.getData());
 
 		return 0;
 	}
@@ -233,7 +238,7 @@ public class SupplierSignetServiceImpl implements SupplierSignetService {
 		signetPO.setToken(supplierSignetPO.getToken());
 		signetPO.setSignno(supplierSignetPO.getSignno());
 
-		String path = Signature.beforeauto(signetPO);
+		String path = elecsignRouter.route(signetPO.getProvider()).beforeauto(signetPO);
 
 		supplierSignetVO.setPath(path);
 
@@ -328,4 +333,14 @@ public class SupplierSignetServiceImpl implements SupplierSignetService {
 
 		return 0;
 	}
+	/** 电子签路由（实名/印章场景：按PO公司×AUTH场景配置路由，并把厂商记录到 PO provider 字段） */
+	private ElecsignService routeForAuth(SignetPO signetPO) throws FLException {
+
+		ElecsignProvider provider = elecsignRouter.resolveProvider(signetPO.getCompany(), ElecsignScene.AUTH);
+
+		signetPO.setProvider(provider.code());
+
+		return elecsignRouter.route(provider);
+	}
+
 }

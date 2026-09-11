@@ -1,5 +1,9 @@
 package com.fanglin.decoration.service.impl;
 
+import com.fanglin.elecsign.enums.ElecsignProvider;
+import com.fanglin.elecsign.enums.ElecsignScene;
+import com.fanglin.elecsign.router.ElecsignRouter;
+import com.fanglin.elecsign.service.ElecsignService;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -55,7 +59,6 @@ import com.fanglin.decoration.service.DecorationAccountStatusService;
 import com.fanglin.decoration.service.DecorationContractService;
 import com.fanglin.decoration.vo.DecorationContractVO;
 import com.fanglin.decoration.vo.DecorationVO;
-import com.fanglin.fadada.signature.Signature;
 import com.fanglin.information.dao.MessageQueuingDao;
 import com.fanglin.information.po.MessageCueuingPO;
 import com.fanglin.information.po.MessagePO;
@@ -82,6 +85,8 @@ import com.fanglin.utils.DateUtil;
 @Transactional(readOnly = true)
 public class DecorationContractServiceImpl implements DecorationContractService {
 
+	@Autowired
+	private ElecsignRouter elecsignRouter;
 	@Autowired
 	private CustomerChanceDao customerChanceDao;
 
@@ -179,7 +184,7 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 			throw new FLException(140067, "合同不存在");
 		}
 
-		return Signature.view(decorationContractPO);
+		return routeForRecord(decorationContractPO).view(decorationContractPO);
 	}
 
 	@Override
@@ -239,7 +244,7 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 			SystemConfigPO isv = systemConfigDao.querySystemConfig("isv");
 			url = String.format("%s/signature.html?cid=%d&name=%s", isv.getValue(), decorationPO.getCustomer().getCid(), decorationPO.getCustomer().getName());
 		} else if (type == DecorationContractPO.TYPE_SIGN_INT && status == DecorationContractPO.STATUS_VALID_INT) {
-			url = Signature.extsign(decorationPO.getCustomer().getSignno(), decorationContractPO);
+			url = routeForRecord(decorationContractPO).extsign(decorationPO.getCustomer().getSignno(), decorationContractPO);
 		} else if (type == DecorationContractPO.TYPE_VIEW_INT && status == DecorationContractPO.STATUS_VALID_INT) {
 			url = decorationContractPO.getViewpdf();
 		} else if (type == DecorationContractPO.TYPE_DOWNLOAD_INT && status == DecorationContractPO.STATUS_SIGN_INT) {
@@ -298,7 +303,7 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 
 		JSONArray tables = JSON.parseArray(table);
 
-		Signature.generate(decorationContractPO, params, tables);
+		routeForCreate(decorationContractPO, contractPO.getCompany()).generate(decorationContractPO, params, tables);
 
 		return 0;
 	}
@@ -342,7 +347,7 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 
 		JSONArray tables = JSON.parseArray(table);
 
-		Signature.generate(decorationContractPO, params, tables);
+		routeForCreate(decorationContractPO, 0).generate(decorationContractPO, params, tables);
 
 		return 0;
 	}
@@ -363,7 +368,7 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 			throw new FLException(130028, "合同状态不可操作");
 		}
 
-		Signature.autosign(signetPO.getSignno(), signetPO.getKeyword(), decorationContractPO, signetPO.getSignid());
+		routeForRecord(decorationContractPO).autosign(signetPO.getSignno(), signetPO.getKeyword(), decorationContractPO, signetPO.getSignid());
 
 		decorationContractPO.setComsignTime(DateUtil.getDateToTimestamp(new Date()));
 
@@ -387,7 +392,7 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 			throw new FLException(130028, "合同状态不可操作");
 		}
 
-		return Signature.extsign(customerPO.getSignno(), decorationContractPO);
+		return routeForRecord(decorationContractPO).extsign(customerPO.getSignno(), decorationContractPO);
 	}
 
 	@Override
@@ -467,7 +472,7 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 			throw new FLException(130028, "合同状态不可操作");
 		}
 
-		Signature.filing(decorationContractPO);
+		routeForRecord(decorationContractPO).filing(decorationContractPO);
 
 		UserPO filinner = userDao.queryUserByUserId(userId);
 
@@ -828,4 +833,23 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 
 		return customerChancePO != null ? ",\"ccid\":" + customerChancePO.getCcid() : "";
 	}
+	/** 电子签路由（生成/上传：重签按记录厂商，首签按公司×场景配置并记录厂商到合同 provider 字段） */
+	private ElecsignService routeForCreate(DecorationContractPO decorationContractPO, int company) throws FLException {
+
+		if (decorationContractPO.getProvider() != null) {
+			return elecsignRouter.route(decorationContractPO.getProvider());
+		}
+
+		ElecsignProvider provider = elecsignRouter.resolveProvider(company, ElecsignScene.DECORATION);
+
+		decorationContractPO.setProvider(provider.code());
+
+		return elecsignRouter.route(provider);
+	}
+
+	/** 电子签路由（签署/查看/归档：按合同记录的厂商路由，保证全链路厂商一致与历史可回溯；null 视同法大大） */
+	private ElecsignService routeForRecord(DecorationContractPO decorationContractPO) throws FLException {
+		return elecsignRouter.route(decorationContractPO.getProvider());
+	}
+
 }

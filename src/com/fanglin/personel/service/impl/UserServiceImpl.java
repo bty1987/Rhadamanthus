@@ -9,6 +9,10 @@
 
 package com.fanglin.personel.service.impl;
 
+import com.fanglin.elecsign.enums.ElecsignProvider;
+import com.fanglin.elecsign.enums.ElecsignScene;
+import com.fanglin.elecsign.router.ElecsignRouter;
+import com.fanglin.elecsign.service.ElecsignService;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -38,7 +42,6 @@ import com.fanglin.core.security.SensitiveDataHelper;
 import com.fanglin.core.security.SecurityCodeHelper;
 import com.fanglin.core.security.SecurityCodeHelper.SecurityCodeLevel;
 import com.fanglin.core.vo.Filter;
-import com.fanglin.fadada.signature.Signature;
 import com.fanglin.information.po.MessagePO;
 import com.fanglin.personel.dao.DutmentDao;
 import com.fanglin.personel.dao.UserCompanyDao;
@@ -87,6 +90,8 @@ public class UserServiceImpl implements UserService {
 
 	protected Logger logger = LoggerFactory.getLogger(getClass());
 
+	@Autowired
+	private ElecsignRouter elecsignRouter;
 	@Autowired
 	private CompanyDao companyDao;
 
@@ -1314,7 +1319,7 @@ public class UserServiceImpl implements UserService {
 		}
 
 		if (userPO.getSignNo() == null || "".equals(userPO.getSignNo())) {
-			userPO.setSignNo(Signature.register(FormatUtil.fillZero(userPO.getUid(), "00000000")));
+			userPO.setSignNo(routeForAuth(userPO).register(FormatUtil.fillZero(userPO.getUid(), "00000000")));
 		}
 
 		userDao.update(userPO);
@@ -1366,9 +1371,9 @@ public class UserServiceImpl implements UserService {
 
 		Short type = 0;
 
-		JSONObject info = Signature.authenticate(userPO.getSignNo(), userPO.getUserName(), userPO.getPhone(), userPO.getIdentity(), type);
+		JSONObject info = elecsignRouter.route(userPO.getProvider()).authenticate(userPO.getSignNo(), userPO.getUserName(), userPO.getPhone(), userPO.getIdentity(), type);
 
-		redirect = Signature.decode(info.getString("url"));
+		redirect = elecsignRouter.route(userPO.getProvider()).decode(info.getString("url"));
 
 		userPO.setToken(info.getString("transactionNo"));
 
@@ -1391,7 +1396,7 @@ public class UserServiceImpl implements UserService {
 			throw new FLException(190014, "人员状态不可操作");
 		}
 
-		JSONObject info = Signature.person(userPO.getToken());
+		JSONObject info = elecsignRouter.route(userPO.getProvider()).person(userPO.getToken());
 
 		JSONObject person = info.getJSONObject("person");
 
@@ -1425,11 +1430,21 @@ public class UserServiceImpl implements UserService {
 			throw new FLException(190005, "人员不存在");
 		}
 
-		Signature.signature(userPO.getSignNo(), imgbase);
+		elecsignRouter.route(userPO.getProvider()).signature(userPO.getSignNo(), imgbase);
 
 		userDao.update(userPO);
 
 		return 0;
+	}
+
+	/** 电子签路由（实名/印章场景：按PO公司×AUTH场景配置路由，并把厂商记录到 PO provider 字段） */
+	private ElecsignService routeForAuth(UserPO userPO) throws FLException {
+
+		ElecsignProvider provider = elecsignRouter.resolveProvider(userPO.getCompany(), ElecsignScene.AUTH);
+
+		userPO.setProvider(provider.code());
+
+		return elecsignRouter.route(provider);
 	}
 
 }

@@ -1,5 +1,9 @@
 package com.fanglin.payment.service.impl;
 
+import com.fanglin.elecsign.enums.ElecsignProvider;
+import com.fanglin.elecsign.enums.ElecsignScene;
+import com.fanglin.elecsign.router.ElecsignRouter;
+import com.fanglin.elecsign.service.ElecsignService;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -21,7 +25,6 @@ import com.fanglin.data.po.SignetPO;
 import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.fadada.bean.Contract;
-import com.fanglin.fadada.signature.Signature;
 import com.fanglin.payment.dao.PaymentContractDao;
 import com.fanglin.payment.po.PaymentContractPO;
 import com.fanglin.payment.service.PaymentContractService;
@@ -39,6 +42,8 @@ import com.fanglin.utils.Paging;
 @Transactional(readOnly = true)
 public class PaymentContractServiceImpl implements PaymentContractService {
 
+	@Autowired
+	private ElecsignRouter elecsignRouter;
 	@Autowired
 	private PaymentContractDao paymentContractDao;
 
@@ -166,7 +171,7 @@ public class PaymentContractServiceImpl implements PaymentContractService {
 			SystemConfigPO isv = systemConfigDao.querySystemConfig("isv");
 			url = String.format("%s/signature.html?cid=%d", isv.getValue(), decorationPO.getCustomer().getCid());
 		} else if (type == PaymentContractPO.TYPE_SIGN_INT && status == PaymentContractPO.STATUS_VALID_INT) {
-			url = Signature.extsign(decorationPO.getCustomer().getSignno(), (Contract) paymentContractPO);
+			url = routeForRecord(paymentContractPO).extsign(decorationPO.getCustomer().getSignno(), (Contract) paymentContractPO);
 		} else if (type == PaymentContractPO.TYPE_VIEW_INT && status == PaymentContractPO.STATUS_VALID_INT) {
 			url = paymentContractPO.getViewpdf();
 		} else if (type == PaymentContractPO.TYPE_DOWNLOAD_INT && status == PaymentContractPO.STATUS_SIGN_INT) {
@@ -188,7 +193,7 @@ public class PaymentContractServiceImpl implements PaymentContractService {
 
 		}
 
-		return Signature.view(paymentContractPO);
+		return routeForRecord(paymentContractPO).view(paymentContractPO);
 	}
 
 	@Override
@@ -207,7 +212,7 @@ public class PaymentContractServiceImpl implements PaymentContractService {
 			throw new FLException(150066, "合同状态不可操作");
 		}
 
-		Signature.autosign(signetPO.getSignno(), signetPO.getKeyword(), paymentContractPO, signetPO.getSignid(), Signature.KEYWORD_STRATEGY_LAST_STR);
+		routeForRecord(paymentContractPO).autosign(signetPO.getSignno(), signetPO.getKeyword(), paymentContractPO, signetPO.getSignid(), ElecsignService.KEYWORD_STRATEGY_LAST_STR);
 
 		paymentContractPO.setComsignTime(DateUtil.getDateToTimestamp(new Date()));
 
@@ -231,7 +236,7 @@ public class PaymentContractServiceImpl implements PaymentContractService {
 
 		CustomerPO customerPO = customerDao.get(customerVO.getCid());
 
-		return Signature.extsign(customerPO.getSignno(), paymentContractPO);
+		return routeForRecord(paymentContractPO).extsign(customerPO.getSignno(), paymentContractPO);
 	}
 
 	@Override
@@ -251,7 +256,7 @@ public class PaymentContractServiceImpl implements PaymentContractService {
 
 		paymentContractVO.setPcid(paymentContractPO.getPcid());
 
-		Signature.upload(paymentContractPO, paymentContractVO.getViewpdf());
+		routeForCreate(paymentContractPO, 0).upload(paymentContractPO, paymentContractVO.getViewpdf());
 
 		return paymentContractVO;
 	}
@@ -316,7 +321,7 @@ public class PaymentContractServiceImpl implements PaymentContractService {
 			throw new FLException(150066, "合同状态不可操作");
 		}
 
-		Signature.filing(paymentContractPO);
+		routeForRecord(paymentContractPO).filing(paymentContractPO);
 
 		UserPO filinner = userDao.queryUserByUserId(userId);
 
@@ -327,6 +332,25 @@ public class PaymentContractServiceImpl implements PaymentContractService {
 		paymentContractDao.update(paymentContractPO);
 
 		return 0;
+	}
+
+	/** 电子签路由（生成/上传：重签按记录厂商，首签按公司×场景配置并记录厂商到合同 provider 字段） */
+	private ElecsignService routeForCreate(PaymentContractPO paymentContractPO, int company) throws FLException {
+
+		if (paymentContractPO.getProvider() != null) {
+			return elecsignRouter.route(paymentContractPO.getProvider());
+		}
+
+		ElecsignProvider provider = elecsignRouter.resolveProvider(company, ElecsignScene.PAYMENT);
+
+		paymentContractPO.setProvider(provider.code());
+
+		return elecsignRouter.route(provider);
+	}
+
+	/** 电子签路由（签署/查看/归档：按合同记录的厂商路由，保证全链路厂商一致与历史可回溯；null 视同法大大） */
+	private ElecsignService routeForRecord(PaymentContractPO paymentContractPO) throws FLException {
+		return elecsignRouter.route(paymentContractPO.getProvider());
 	}
 
 }
