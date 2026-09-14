@@ -222,8 +222,12 @@ public class EsignClient {
 		return config == null ? null : config.getValue();
 	}
 
-	private byte[] md5(byte[] bytes) throws Exception {
-		return MessageDigest.getInstance("MD5").digest(bytes);
+	private byte[] md5(byte[] bytes) {
+		try {
+			return MessageDigest.getInstance("MD5").digest(bytes);
+		} catch (Exception e) {
+			throw new FLException(130097, "e签宝接口调用失败, MD5计算异常");
+		}
 	}
 
 	private String base64(byte[] bytes) {
