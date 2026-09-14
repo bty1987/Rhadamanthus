@@ -35,21 +35,16 @@ public interface Contract {
 
 	/**
 	 * 厂商流程号（e签宝专用：upload/generate 后存 fileId，签署建流后覆盖为 signFlowId；
-	 * 法大大不使用，恒为 null。default 方法保证既有实现类零改动，需要持久化的合同 PO 覆写之）。
+	 * 法大大不使用，恒为 null。需要持久化的合同 PO 实现之）。
 	 */
-	default public String flowId() {
-		return null;
-	}
+	public String flowId();
 
-	default public void flowId(String flowId) {
-	}
+	public void flowId(String flowId);
 
 	/**
-	 * 合同所属公司（e签宝实现用于读取该公司的厂商凭证；default 返回 0=全局凭证。
+	 * 合同所属公司（e签宝实现用于读取该公司的厂商凭证；默认返回 0=全局凭证。
 	 * 合同 PO 如有公司维度可覆写返回真实公司，e签宝实现即可支持公司级凭证）。
 	 */
-	default public int company() {
-		return 0;
-	}
+	public int company();
 
 }

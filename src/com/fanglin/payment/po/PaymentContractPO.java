@@ -261,6 +261,11 @@ public class PaymentContractPO implements Serializable, Contract {
 		this.flowId = flowId;
 	}
 
+	@Override
+	public int company() {
+		return 0;
+	}
+
 	@Column(name = "provider")
 	public Short getProvider() {
 		return provider;
