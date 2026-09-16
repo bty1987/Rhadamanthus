@@ -3,7 +3,9 @@ package com.fanglin.customer.service.impl;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -102,16 +104,25 @@ public class CustomerUserRuleServiceImpl implements CustomerUserRuleService {
 	}
 
 	@Override
-	public List<UserBaseVO> queryCustomerUserRuleByPinyin(String pinyinName, UserVO userVO, DepartmentTypeVO departmentType, Integer company) throws FLException {
+	public List<UserBaseVO> queryCustomerUserRuleByPinyin(String pinyinName, UserVO userVO, DepartmentTypeVO departmentType, List<Integer> companys) throws FLException {
 
 		CompanyPO companyPO = null;
 
-		if (company != null) {
-			companyPO = companyDao.get(company);
+		Map<Integer, String> companyNames = null;
+
+		if (companys != null && companys.size() == 1) {
+			companyPO = companyDao.get(companys.get(0));
+		} else if (companys != null && companys.size() > 1) {
+
+			companyNames = new HashMap<Integer, String>();
+
+			for (CompanyPO po : companyDao.queryCompanyByIds(companys)) {
+				companyNames.put(po.getCid(), po.getName());
+			}
 		}
 
 		if (SystemConfig.getInt("multicompany", 0) == 0) {
-			company = null;
+			companys = null;
 		}
 
 		List<UserBaseVO> userBaseVOs = new ArrayList<UserBaseVO>();
@@ -145,10 +156,13 @@ public class CustomerUserRuleServiceImpl implements CustomerUserRuleService {
 			rid = userVO.getDept().getFatherDept().getDid();
 		}
 
-		List<UserPO> userPOs = customerUserRuleDao.queryCustomerUserRuleByPinyin(paging, pinyinName, userVO.getStatus(), company, dtid, did, rid);
+		List<UserPO> userPOs = customerUserRuleDao.queryCustomerUserRuleByPinyin(paging, pinyinName, userVO.getStatus(), companys, dtid, did, rid);
 
 		for (UserPO userPO : userPOs) {
-			userBaseVOs.add(new UserBaseVO(new DutyVO(), new DepartmentVO(new DepartmentVO())).ptv(userPO, companyPO == null ? null : companyPO.getName()));
+
+			String companyName = companyPO != null ? companyPO.getName() : (companyNames != null ? companyNames.get(userPO.getCompany()) : null);
+
+			userBaseVOs.add(new UserBaseVO(new DutyVO(), new DepartmentVO(new DepartmentVO())).ptv(userPO, companyName));
 		}
 
 		return userBaseVOs;

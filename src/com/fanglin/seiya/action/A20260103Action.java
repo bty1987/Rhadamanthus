@@ -12,6 +12,7 @@
 package com.fanglin.seiya.action;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -606,7 +607,7 @@ public class A20260103Action extends BaseListAction {
 		List<SimpleUserVO> resultList = new ArrayList<SimpleUserVO>();
 
 		// 查询用户列表
-		List<UserBaseVO> users = customerUserRuleService.queryCustomerUserRuleByPinyin(pinyinName, user, departmentType, orgId);
+		List<UserBaseVO> users = customerUserRuleService.queryCustomerUserRuleByPinyin(pinyinName, user, departmentType, orgId == null ? null : Arrays.asList(orgId));
 
 		if (users != null && !users.isEmpty()) {
 			for (UserBaseVO u : users) {

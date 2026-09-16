@@ -18,6 +18,8 @@ import com.fanglin.customer.service.CustomerUserRuleService;
 import com.fanglin.customer.vo.CustomerUserRuleVO;
 import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.personel.vo.UserVO;
+import com.fanglin.right.po.CrossCompanyRightPO;
+import com.fanglin.right.service.CrossCompanyRightService;
 
 @ParentPackage("base")
 @Namespace("/")
@@ -28,6 +30,9 @@ public class CustomerUserRuleAction extends BaseListAction {
 
 	@Autowired
 	private CustomerUserRuleService customerUserRuleService;
+
+	@Autowired
+	private CrossCompanyRightService crossCompanyRightService;
 
 	private List<CustomerUserRuleVO> customerUserRules;
 
@@ -60,7 +65,9 @@ public class CustomerUserRuleAction extends BaseListAction {
 	@Action(value = "queryCustomerUserRuleByPinyin", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryCustomerUserRuleByPinyin() throws FLException {
 
-		packageUserName(customerUserRuleService.queryCustomerUserRuleByPinyin(pinyinName, user, departmentType, queryCompany()));
+		List<Integer> companys = crossCompanyRightService.queryCompanysForView(queryUserId(), queryCompany(), CrossCompanyRightPO.MODULE_CUSTOMER_STR);
+
+		packageUserName(customerUserRuleService.queryCustomerUserRuleByPinyin(pinyinName, user, departmentType, companys), companys.size() > 1);
 
 		return SUCCESS;
 	}
@@ -121,7 +128,7 @@ public class CustomerUserRuleAction extends BaseListAction {
 		this.customerUserRule = customerUserRule;
 	}
 
-	private void packageUserName(List<UserBaseVO> users) {
+	private void packageUserName(List<UserBaseVO> users, boolean crossCompany) {
 		for (UserBaseVO userBaseVO : users) {
 			KeyValueVO keyValueVO = new KeyValueVO();
 
@@ -129,6 +136,11 @@ public class CustomerUserRuleAction extends BaseListAction {
 			value.append(userBaseVO.getCurrentName());
 			value.append("-");
 			value.append(userBaseVO.getDept().getName());
+
+			if (crossCompany && userBaseVO.getCompany() != null && userBaseVO.getCompany().length() != 0) {
+				value.append("-");
+				value.append(userBaseVO.getCompany());
+			}
 
 			keyValueVO.setKey(userBaseVO.getUserId());
 			keyValueVO.setValue(value.toString());
