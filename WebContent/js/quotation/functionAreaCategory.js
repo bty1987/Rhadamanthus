@@ -15,7 +15,7 @@ $(function() {
 
     com.post(api.data.queryCategory, {}, function(res) {
 
-        categoryIds.bindData(res.categorys, "cid", "name");
+        categoryIds.bindData(res.categorys, "cid", "name", "请选择品类");
     });
 
     // 添加品类:弹窗选择后保存
@@ -86,21 +86,13 @@ $(function() {
         }
     };
 
-    var buttons = (function() {
-
-        var $adda = $('<a></a>').addClass('btn btn-minier btn-success pull-left').attr('name', 'addCategory').css("margin", "0px 3px");
-        var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
-        var $addspan = $('<span></span>').text('添加品类').appendTo($adda);
-
-        return [$adda];
-    })();
-
     var searcher = new Searcher();
 
     searcher.set("categoryCondList", "categoryPagenation", "categoryResultList",
         api.quotation.queryFunctionAreaCategoryByFaid,
         {"functionAreaCategory.faid": functionAreaCategory.postParam.faid},
-        [], null, "functionAreaCategorys", true, buttons);
+        [], null, "functionAreaCategorys", true, null);
+    searcher.button([{id: "addCategory", name: "添加品类", clazz: "btn-success", icon: "icon-plus"}]);
     searcher.line("categoryName", lineprops, linebtns).render();
 
     // 添加品类按钮:打开弹窗并清空上次选择
