@@ -4,11 +4,16 @@
 		<div id="fl-statement"></div>
 		<div class="col-xs-12">
 			<div class="form-inline" style="margin-bottom: 10px;">
+				<label for="categoryId" style="margin-right: 6px; font-weight: normal;">品类:</label>
 				<select id="categoryId" class="col-xs-10 col-sm-3" style="width: 200px;"></select>
-				<a id="addCategoryBtn" class="btn btn-minier btn-success"><i class="icon-plus bigger-110"></i>添加品类</a>
+				<a id="addCategoryBtn" class="btn btn-minier btn-success" style="margin-left: 8px;"><i class="icon-plus bigger-110"></i>添加品类</a>
 			</div>
 			<div id="categoryList"></div>
 		</div>
 	</div>
 
 </div>
+
+<script type="text/javascript">
+	$.loadScript(['js/quotation/functionAreaCategory.js']);
+</script>

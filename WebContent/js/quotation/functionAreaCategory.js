@@ -47,10 +47,9 @@ $(function() {
 
                 var $wrap = $('<div></div>').addClass('well well-sm').css({ "margin-bottom": "10px" }).appendTo($categoryList);
 
-                var $head = $('<h5></h5>').css({ "margin": "0 0 8px 0" }).appendTo($wrap);
+                var $head = $('<h5></h5>').css({ "margin": "0 0 8px 0", "padding-bottom": "4px", "border-bottom": "1px solid #e3e3e3" }).appendTo($wrap);
                 $head.append($('<strong></strong>').text(c.categoryName));
-                $head.append(' ');
-                $head.append($('<a></a>').addClass('btn btn-minier btn-danger').text('移除').on("click", function() {
+                $head.append($('<a></a>').addClass('btn btn-minier btn-danger pull-right').text('移除').on("click", function() {
 
                     com.showConfirm("移除品类将同时删除其下规格,是否确认?", function() {
 
@@ -67,10 +66,10 @@ $(function() {
                 var $table = $('<table></table>').addClass('table table-striped table-bordered table-hover').css({ "margin-bottom": "8px" }).appendTo($wrap);
                 var $thead = $('<thead></thead>').appendTo($table);
                 var $thr = $('<tr></tr>').appendTo($thead);
-                $('<th></th>').text('规格').appendTo($thr);
-                $('<th></th>').text('公司').appendTo($thr);
+                $('<th></th>').text('规格').css("width", "35%").appendTo($thr);
+                $('<th></th>').text('公司').css("width", "20%").appendTo($thr);
                 $('<th></th>').text('备注').appendTo($thr);
-                $('<th></th>').text('操作').css("width", "120px").appendTo($thr);
+                $('<th></th>').text('操作').css("width", "130px").appendTo($thr);
 
                 var $tbody = $('<tbody></tbody>').appendTo($table);
 
