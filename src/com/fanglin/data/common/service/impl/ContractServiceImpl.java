@@ -1,9 +1,5 @@
 package com.fanglin.data.common.service.impl;
 
-import com.fanglin.elecsign.enums.ElecsignProvider;
-import com.fanglin.elecsign.enums.ElecsignScene;
-import com.fanglin.elecsign.router.ElecsignRouter;
-import com.fanglin.elecsign.service.ElecsignService;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -18,6 +14,7 @@ import com.fanglin.data.common.dao.ContractDao;
 import com.fanglin.data.common.service.ContractService;
 import com.fanglin.data.common.vo.ContractVO;
 import com.fanglin.data.po.ContractPO;
+import com.fanglin.elecsign.router.ElecsignRouter;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.Paging;
 

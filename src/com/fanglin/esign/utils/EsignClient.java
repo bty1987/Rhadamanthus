@@ -37,20 +37,19 @@ import com.fanglin.system.po.SystemConfigPO;
 
 /**
  * e签宝 openapi v3 客户端。
- *
- * <p>纯 HTTP 实现（HttpURLConnection），不引入 e签宝 SDK，避免与既有依赖冲突。
- * 鉴权按 e签宝 v3 签名机制：待签名字符串 = Method + "\n" + Accept + "\n" + Content-MD5(有 body 时) + "\n"
- * + Content-Type + "\n" + Date + "\n" + PathAndParameters，以 AppSecret 做 HmacSHA256，
- * 请求头携带 X-Tsign-Open-App-Id / X-Tsign-Open-Auth-Mode / X-Tsign-Open-Ca-Signature / X-Tsign-Open-Ca-Timestamp。
- *
+ * 
+ * <p>
+ * 纯 HTTP 实现（HttpURLConnection），不引入 e签宝 SDK，避免与既有依赖冲突。 鉴权按 e签宝 v3 签名机制：待签名字符串 = Method + "\n" + Accept + "\n" + Content-MD5(有 body 时) + "\n" + Content-Type + "\n" + Date + "\n" + PathAndParameters，以 AppSecret 做 HmacSHA256， 请求头携带 X-Tsign-Open-App-Id / X-Tsign-Open-Auth-Mode / X-Tsign-Open-Ca-Signature / X-Tsign-Open-Ca-Timestamp。
+ * 
  * <h3>公司级配置（systemconfig，group=elecsign）</h3>
  * <ul>
- *   <li>{@code elecsign.appId}：e签宝应用ID（公司维度，回退 company=0 全局）</li>
- *   <li>{@code elecsign.appSecret}：e签宝应用密钥</li>
- *   <li>{@code elecsign.host}：openapi 地址，缺省 https://openapi.esign.cn</li>
+ * <li>{@code elecsign.appId}：e签宝应用ID（公司维度，回退 company=0 全局）</li>
+ * <li>{@code elecsign.appSecret}：e签宝应用密钥</li>
+ * <li>{@code elecsign.host}：openapi 地址，缺省 https://openapi.esign.cn</li>
  * </ul>
- *
- * <p>响应约定：{"code":0,"message":"成功","data":{...}}，code!=0 视为业务失败抛 130097。
+ * 
+ * <p>
+ * 响应约定：{"code":0,"message":"成功","data":{...}}，code!=0 视为业务失败抛 130097。
  */
 @Component("esignClient")
 public class EsignClient {
@@ -66,7 +65,7 @@ public class EsignClient {
 
 	/**
 	 * POST JSON 请求。
-	 *
+	 * 
 	 * @param company 公司 cid（读该公司 e签宝配置）
 	 * @param path 接口路径（如 /v3/sign-flow/create-by-file）
 	 * @param body 请求体（JSONObject，可为 null）
@@ -84,6 +83,7 @@ public class EsignClient {
 		return invoke(company, "GET", path, query);
 	}
 
+	@SuppressWarnings("unchecked")
 	private JSONObject invoke(int company, String method, String path, Object payload) throws FLException {
 
 		Config config = config(company);
