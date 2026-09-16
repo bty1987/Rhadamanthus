@@ -38,7 +38,7 @@ class Exporter(Util):
             o.deliveTime AS `送货时间`,
             o.receiveTime AS `到货时间`,
             o.balanceTime AS `结算时间`,
-            o.status AS `状态`,
+            communion.kv('inventory', 'occessories', 'status', o.status),
             oi.rbalance AS '原结算价',
             oi.vbalance AS '结算价',
             oi.sennum*oi.vbalance AS '结算金额',
@@ -97,7 +97,6 @@ class Exporter(Util):
 
         self.divNum(row, [4, 8, 9, 18, 19, 20])
 
-        row[17] = self.occessoriesStatus[row[17]]
         row[21] = self.isEnter[row[21]]
         row[22] = self.isLift[row[22]]
         row[23] = self.isExceed[row[23]]
