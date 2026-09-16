@@ -16,7 +16,7 @@ public interface CustomerUserRuleService {
 
 	public CustomerUserRuleVO queryCustomerUserRule(CustomerUserRuleVO customerUserRule) throws FLException;
 
-	public List<UserBaseVO> queryCustomerUserRuleByPinyin(String pinyinName, UserVO userVO, DepartmentTypeVO departmentType, Integer company) throws FLException;
+	public List<UserBaseVO> queryCustomerUserRuleByPinyin(String pinyinName, UserVO userVO, DepartmentTypeVO departmentType, List<Integer> companys) throws FLException;
 
 	public void addCustomerUserRule(CustomerUserRuleVO customerUserRule, String userId, int company) throws FLException;
 

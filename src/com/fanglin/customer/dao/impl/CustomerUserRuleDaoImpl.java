@@ -49,12 +49,14 @@ public class CustomerUserRuleDaoImpl extends DaoImpl<CustomerUserRulePO> impleme
 	}
 
 	@Override
-	public List<UserPO> queryCustomerUserRuleByPinyin(Paging paging, String pinyin, Short status, Integer company, Integer dtid, Integer did, Integer rid) {
+	public List<UserPO> queryCustomerUserRuleByPinyin(Paging paging, String pinyin, Short status, List<Integer> companys, Integer dtid, Integer did, Integer rid) {
 
 		PagingQuery<UserPO> query = pagingQuery(paging, UserPO.class);
 
-		if (company != null) {
-			query.add(Restrictions.eq("company", company));
+		if (companys != null && companys.size() == 1) {
+			query.add(Restrictions.eq("company", companys.get(0)));
+		} else if (companys != null && companys.size() > 1) {
+			query.add(Restrictions.in("company", companys));
 		}
 
 		query.add(Restrictions.eq("type", UserPO.TYPE_USER_INT));
@@ -92,8 +94,27 @@ public class CustomerUserRuleDaoImpl extends DaoImpl<CustomerUserRulePO> impleme
 			query.add(Restrictions.eq("status", status));
 		}
 
-		if (company != null) {
-			query.add(Restrictions.sqlRestriction("not exists (select 1 from customer.customeruserrule cur where cur.uid = {alias}.uid and cur.company = ? and cur.status = ?)", new Object[] { company, CustomerUserRulePO.STATUS_ADVANCE_INVALID_INT }, new Type[] { StandardBasicTypes.INTEGER, StandardBasicTypes.SHORT }));
+		if (companys != null && companys.size() == 1) {
+			query.add(Restrictions.sqlRestriction("not exists (select 1 from customer.customeruserrule cur where cur.uid = {alias}.uid and cur.company = ? and cur.status = ?)", new Object[] { companys.get(0), CustomerUserRulePO.STATUS_ADVANCE_INVALID_INT }, new Type[] { StandardBasicTypes.INTEGER, StandardBasicTypes.SHORT }));
+		} else if (companys != null) {
+
+			StringBuffer sql = new StringBuffer("not exists (select 1 from customer.customeruserrule cur where cur.uid = {alias}.uid and cur.status = ? and cur.company in (");
+
+			Object[] params = new Object[companys.size() + 1];
+			Type[] types = new Type[companys.size() + 1];
+
+			params[0] = CustomerUserRulePO.STATUS_ADVANCE_INVALID_INT;
+			types[0] = StandardBasicTypes.SHORT;
+
+			for (int i = 0; i < companys.size(); i++) {
+				sql.append(i == 0 ? "?" : ", ?");
+				params[i + 1] = companys.get(i);
+				types[i + 1] = StandardBasicTypes.INTEGER;
+			}
+
+			sql.append("))");
+
+			query.add(Restrictions.sqlRestriction(sql.toString(), params, types));
 		} else {
 			query.add(Restrictions.sqlRestriction("not exists (select 1 from customer.customeruserrule cur where cur.uid = {alias}.uid and cur.status = ?)", CustomerUserRulePO.STATUS_ADVANCE_INVALID_INT, StandardBasicTypes.SHORT));
 		}
