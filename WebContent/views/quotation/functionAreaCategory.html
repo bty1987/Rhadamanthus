@@ -4,15 +4,60 @@
 		<div id="fl-statement"></div>
 		<div class="col-xs-12">
 			<div class="form-inline" style="margin-bottom: 10px;">
-				<label for="categoryId" style="margin-right: 6px; font-weight: normal;">品类:</label>
-				<select id="categoryId" class="col-xs-10 col-sm-3" style="width: 200px;"></select>
-				<a id="addCategoryBtn" class="btn btn-minier btn-success" style="margin-left: 8px;"><i class="icon-plus bigger-110"></i>添加品类</a>
+				<label for="categoryId" style="font-weight: normal; margin-right: 4px;">品类:</label>
+				<select id="categoryId" style="width: 200px;"></select>
+				<a id="addCategoryBtn" class="btn btn-minier btn-success" style="margin-left: 6px;"><i class="icon-plus bigger-110"></i>添加品类</a>
 			</div>
-			<div id="categoryList"></div>
+			<div id="categoryCondList" class="fl_search clearfix"></div>
+			<div id="categoryResultList" class="clearfix tab-pane active"></div>
+			<div id="categoryPagenation" class="fl-page-wrap clearfix" style="text-align: center; max-width: 680px;"></div>
+		</div>
+	</div>
+
+	<div class="modal fade" id="formatModal" tabindex="-1">
+		<div class="modal-dialog" style="width: 720px;">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">
+						<span>&times;</span><span class="sr-only">Close</span>
+					</button>
+					<h4 class="modal-title">规格维护 - <span id="formatCategoryName" class="blue"></span></h4>
+				</div>
+				<div class="modal-body">
+					<table id="formatList" class="table table-striped table-bordered table-hover" style="margin-bottom: 0;">
+						<thead>
+							<tr>
+								<th style="width: 35%;">规格</th>
+								<th style="width: 20%;">公司</th>
+								<th>备注</th>
+								<th style="width: 130px;">操作</th>
+							</tr>
+						</thead>
+						<tbody></tbody>
+					</table>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+				</div>
+			</div>
 		</div>
 	</div>
 
 </div>
+
+<style type="text/css">
+	#formatList .cell-input {
+		width: 100%; height: auto; padding: 0; margin: 0;
+		border: none; background: transparent; box-shadow: none; outline: none;
+	}
+	#formatList .cell-input:focus {
+		background: #f4f9fd; box-shadow: 0 1px 0 #6fb3e0;
+	}
+	#formatList .add-row td {
+		background: #fcfcfc;
+		border-top: 1px dashed #ddd;
+	}
+</style>
 
 <script type="text/javascript">
 	$.loadScript(['js/quotation/functionAreaCategory.js']);
