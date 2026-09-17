@@ -67,6 +67,11 @@ public class CategoryDaoImpl extends DaoImpl<CategoryPO> implements CategoryDao 
 		return (CategoryPO) session().createCriteria(CategoryPO.class).add(Restrictions.eq(CategoryPO.COLUMN_NO_STR, no)).setMaxResults(1).uniqueResult();
 	}
 
+	@Override
+	public CategoryPO queryCategoryByName(String name) {
+		return (CategoryPO) session().createCriteria(CategoryPO.class).add(Restrictions.eq("name", name)).setMaxResults(1).uniqueResult();
+	}
+
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {
 
 		if (filters == null) return;

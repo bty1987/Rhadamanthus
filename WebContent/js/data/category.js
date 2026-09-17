@@ -90,7 +90,8 @@ jQuery(function($) {
     var linebtns = (function() {
 
         return {
-            edit: {name: "编辑", clazz: "btn-yellow", handle: function(v) { editCategory(v); }}
+            edit: {name: "编辑", clazz: "btn-yellow", handle: function(v) { editCategory(v); }},
+            format: {name: "规格", clazz: "btn-purple", handle: function(v) { openCategoryFormatModal(v); }}
         };
     })();
 
@@ -182,6 +183,128 @@ jQuery(function($) {
         });
 
         category.modal.modal("hide");
+    }
+
+    // ==================== 品类规格范围维护 ====================
+
+    var categoryFormat = {
+        current: {}
+    };
+
+    // 打开品类规格弹窗并加载列表
+    function openCategoryFormatModal(v) {
+
+        categoryFormat.current = v;
+
+        com.focusPage("#categoryFormatName").text(v.name);
+
+        com.post(api.data.queryCategoryFormatByCid, {
+            "categoryFormat.cid": v.cid
+        }, function(res) {
+
+            drawCategoryFormatList(res.categoryFormats || []);
+        });
+
+        com.focusPage("#categoryFormatModal").modal("show");
+    }
+
+    function drawCategoryFormatList(formats) {
+
+        var $tbody = com.focusPage("#categoryFormatList").find("tbody").empty();
+
+        if (formats.length == 0) {
+            var $emptyTr = $('<tr></tr>').appendTo($tbody);
+            $('<td></td>').attr("colspan", "3").css({"text-align": "center", "color": "#999", "padding": "14px 8px"}).text("暂无规格,可在下方添加").appendTo($emptyTr);
+        }
+
+        $.each(formats, function(i, cf) {
+            drawCategoryFormatRow($tbody, cf);
+        });
+
+        drawCategoryFormatAddRow($tbody);
+    }
+
+    function cellInput(value, placeholder) {
+
+        return $('<input type="text">').addClass("cell-input").attr("placeholder", placeholder).val(value == null ? '' : value);
+    }
+
+    // 已有规格行:行内编辑 + 保存/删除
+    function drawCategoryFormatRow($tbody, cf) {
+
+        var $tr = $('<tr></tr>').appendTo($tbody);
+
+        var $formatInput = cellInput(cf.format).appendTo($('<td></td>').appendTo($tr));
+        var $commentInput = cellInput(cf.comment, "备注").appendTo($('<td></td>').appendTo($tr));
+
+        var $btnTd = $('<td></td>').appendTo($tr);
+
+        $('<a></a>').addClass('btn btn-minier btn-yellow').text('保存').css("margin-right", "4px").appendTo($btnTd).on("click", function() {
+
+            if (!$.trim($formatInput.val())) {
+                com.showAlert(com.warning, "规格不能为空");
+                return false;
+            }
+
+            com.post(api.data.updateCategoryFormat, {
+                "categoryFormat.cfid": cf.cfid,
+                "categoryFormat.format": $.trim($formatInput.val()),
+                "categoryFormat.comment": $.trim($commentInput.val())
+            }, function() {
+
+                com.showAlert(com.info, "操作成功");
+            });
+        });
+
+        $('<a></a>').addClass('btn btn-minier btn-danger').text('删除').appendTo($btnTd).on("click", function() {
+
+            com.post(api.data.deleteCategoryFormat, {
+                "categoryFormat.cfid": cf.cfid
+            }, function() {
+
+                com.showAlert(com.info, "操作成功");
+                refreshCategoryFormatList();
+            });
+        });
+    }
+
+    // 新增规格行(表格底部)
+    function drawCategoryFormatAddRow($tbody) {
+
+        var $tr = $('<tr></tr>').addClass("add-row").appendTo($tbody);
+
+        var $formatInput = cellInput("", "规格").appendTo($('<td></td>').appendTo($tr));
+        var $commentInput = cellInput("", "备注").appendTo($('<td></td>').appendTo($tr));
+
+        var $btnTd = $('<td></td>').appendTo($tr);
+
+        $('<a></a>').addClass('btn btn-minier btn-success').text('添加').appendTo($btnTd).on("click", function() {
+
+            if (!$.trim($formatInput.val())) {
+                com.showAlert(com.warning, "规格不能为空");
+                return false;
+            }
+
+            com.post(api.data.addCategoryFormat, {
+                "categoryFormat.cid": categoryFormat.current.cid,
+                "categoryFormat.format": $.trim($formatInput.val()),
+                "categoryFormat.comment": $.trim($commentInput.val())
+            }, function() {
+
+                com.showAlert(com.info, "操作成功");
+                refreshCategoryFormatList();
+            });
+        });
+    }
+
+    function refreshCategoryFormatList() {
+
+        com.post(api.data.queryCategoryFormatByCid, {
+            "categoryFormat.cid": categoryFormat.current.cid
+        }, function(res) {
+
+            drawCategoryFormatList(res.categoryFormats || []);
+        });
     }
 
 });

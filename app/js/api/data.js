@@ -28,6 +28,10 @@ $.extend(api, { data: {
     // ===== 品类 category =====
     pageCategory:    { url: 'pageCategory.do' },
     queryCategory:   { url: 'queryCategory.do', type: 'query' },
+    queryCategoryFormatByCid: { url: 'queryCategoryFormatByCid.do' },
+    addCategoryFormat:        { url: 'addCategoryFormat.do' },
+    updateCategoryFormat:     { url: 'updateCategoryFormat.do' },
+    deleteCategoryFormat:     { url: 'deleteCategoryFormat.do' },
     addCategory:     { url: 'addCategory.do' },
     updateCategory:  { url: 'updateCategory.do' },
 

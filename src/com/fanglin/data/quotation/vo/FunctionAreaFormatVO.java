@@ -12,7 +12,7 @@ public class FunctionAreaFormatVO implements Serializable {
 
 	private String format;
 
-	private String company;
+	private String formula;
 
 	private String comment;
 
@@ -44,12 +44,12 @@ public class FunctionAreaFormatVO implements Serializable {
 		this.format = format;
 	}
 
-	public String getCompany() {
-		return company;
+	public String getFormula() {
+		return formula;
 	}
 
-	public void setCompany(String company) {
-		this.company = company;
+	public void setFormula(String formula) {
+		this.formula = formula;
 	}
 
 	public String getComment() {

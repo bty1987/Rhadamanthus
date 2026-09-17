@@ -9,6 +9,9 @@ $(function() {
         },
 
         current: {},
+
+        // 品类规格范围(品类规格字典,弹窗打开时按品类加载,规格下拉数据源)
+        categoryFormats: [],
     };
 
     var categoryIds = com.focusPage("#categoryId");
@@ -102,16 +105,23 @@ $(function() {
         com.focusPage("#categoryModal").modal("show");
     });
 
-    // 打开规格维护弹窗
+    // 打开规格维护弹窗(加载品类规格作为规格可选范围)
     function openFormatModal(v) {
 
         functionAreaCategory.current = v;
 
         com.focusPage("#formatCategoryName").text(v.categoryName);
 
-        initFormatList();
+        com.post(api.data.queryCategoryFormatByCid, {
+            "categoryFormat.cid": v.cid
+        }, function(res) {
 
-        com.focusPage("#formatModal").modal("show");
+            functionAreaCategory.categoryFormats = res.categoryFormats || [];
+
+            initFormatList();
+
+            com.focusPage("#formatModal").modal("show");
+        });
     }
 
     // 渲染弹窗内规格表格
@@ -138,28 +148,48 @@ $(function() {
         return $('<input type="text">').addClass("cell-input").attr("placeholder", placeholder).val(value == null ? '' : value);
     }
 
+    // 规格下拉:品类规格为选项;当前值不在品类规格内时附加原值选项(标灰提示),保存时后端校验拦截
+    function cellFormatSelect(currentValue) {
+
+        var $select = $('<select></select>').addClass("cell-input");
+
+        $('<option></option>').val("").text("请选择规格").appendTo($select);
+
+        $.each(functionAreaCategory.categoryFormats, function(i, cf) {
+            $('<option></option>').val(cf.format).text(cf.format).appendTo($select);
+        });
+
+        if (currentValue && $select.find('option[value="' + currentValue + '"]').length == 0) {
+            $('<option></option>').val(currentValue).text(currentValue + "(未在品类规格)").css("color", "#999").appendTo($select);
+        }
+
+        $select.val(currentValue == null ? "" : currentValue);
+
+        return $select;
+    }
+
     // 已有规格行:行内编辑 + 保存/删除
     function drawFormatRow($tbody, f) {
 
         var $tr = $('<tr></tr>').attr("ffid", f.ffid).appendTo($tbody);
 
-        var $formatInput = cellInput(f.format).appendTo($('<td></td>').appendTo($tr));
-        var $companyInput = cellInput(f.company).appendTo($('<td></td>').appendTo($tr));
+        var $formatSelect = cellFormatSelect(f.format).appendTo($('<td></td>').appendTo($tr));
+        var $formulaInput = cellInput(f.formula, "公式").appendTo($('<td></td>').appendTo($tr));
         var $commentInput = cellInput(f.comment).appendTo($('<td></td>').appendTo($tr));
 
         var $btnTd = $('<td></td>').appendTo($tr);
 
         $('<a></a>').addClass('btn btn-minier btn-yellow').text('保存').css("margin-right", "4px").appendTo($btnTd).on("click", function() {
 
-            if (!$.trim($formatInput.val())) {
-                com.showAlert(com.warning, "规格不能为空");
+            if (!$.trim($formatSelect.val())) {
+                com.showAlert(com.warning, "请选择规格");
                 return false;
             }
 
             com.post(api.quotation.updateFunctionAreaFormat, {
                 "functionAreaFormat.ffid": f.ffid,
-                "functionAreaFormat.format": $.trim($formatInput.val()),
-                "functionAreaFormat.company": $.trim($companyInput.val()),
+                "functionAreaFormat.format": $.trim($formatSelect.val()),
+                "functionAreaFormat.formula": $.trim($formulaInput.val()),
                 "functionAreaFormat.comment": $.trim($commentInput.val())
             }, function() {
 
@@ -184,23 +214,23 @@ $(function() {
 
         var $tr = $('<tr></tr>').addClass("add-row").appendTo($tbody);
 
-        var $formatInput = cellInput("", "规格").appendTo($('<td></td>').appendTo($tr));
-        var $companyInput = cellInput("", "公司").appendTo($('<td></td>').appendTo($tr));
+        var $formatSelect = cellFormatSelect("").appendTo($('<td></td>').appendTo($tr));
+        var $formulaInput = cellInput("", "公式").appendTo($('<td></td>').appendTo($tr));
         var $commentInput = cellInput("", "备注").appendTo($('<td></td>').appendTo($tr));
 
         var $btnTd = $('<td></td>').appendTo($tr);
 
         $('<a></a>').addClass('btn btn-minier btn-success').text('添加').appendTo($btnTd).on("click", function() {
 
-            if (!$.trim($formatInput.val())) {
-                com.showAlert(com.warning, "规格不能为空");
+            if (!$.trim($formatSelect.val())) {
+                com.showAlert(com.warning, "请选择规格");
                 return false;
             }
 
             com.post(api.quotation.addFunctionAreaFormat, {
                 "functionAreaFormat.fcid": functionAreaCategory.current.fcid,
-                "functionAreaFormat.format": $.trim($formatInput.val()),
-                "functionAreaFormat.company": $.trim($companyInput.val()),
+                "functionAreaFormat.format": $.trim($formatSelect.val()),
+                "functionAreaFormat.formula": $.trim($formulaInput.val()),
                 "functionAreaFormat.comment": $.trim($commentInput.val())
             }, function() {
 
