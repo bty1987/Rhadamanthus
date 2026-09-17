@@ -1053,7 +1053,11 @@ $(function() {
 
                     user.uid = v.uid;
 
+                    com.focusPage("#crossCompanyForm").empty();
+
                     var crossRights = [];
+
+                    user.modals.crossCompanyModal.modal("show");
 
                     com.post(api.right.queryCrossCompanyRightByUid, {
                         "crossCompanyRight.uid": v.uid
@@ -1064,21 +1068,30 @@ $(function() {
                         });
                     }, null, false);
 
-                    var $form = com.focusPage("#crossCompanyForm").empty();
-
                     $.each(user.crossModules, function(mi, mv) {
 
+                        // 加密cid掺随机数每次不同(FormatUtil.encodeCompany), 与usercompany一致按公司名匹配
                         var granted = [];
 
                         $.each(crossRights, function(ri, rv) {
                             if (rv.module == mv.module) {
                                 $.each(rv.companys || [], function(ci, cv) {
-                                    granted.push(cv.cid);
+                                    granted.push(cv.name);
                                 });
                             }
                         });
 
-                        var $group = $('<div class="form-group"></div>').appendTo($form);
+                        // 现有授权标签行, 对齐usercompany"现有公司权限"
+                        var $cur = $('<div class="form-group"></div>').appendTo(com.focusPage("#crossCompanyForm"));
+                        $('<label class="col-sm-3 control-label no-padding-right"></label>').html(mv.name + "·现有").appendTo($cur);
+                        var $curdiv = $('<div class="tags" style="border: 0"></div>').appendTo($cur);
+
+                        granted.length && $.each(granted, function(i, name) {
+                            $('<span class="tag"></span>').html(name).appendTo($curdiv);
+                        });
+
+                        // 勾选区
+                        var $group = $('<div class="form-group"></div>').appendTo(com.focusPage("#crossCompanyForm"));
                         $('<label class="col-sm-3 control-label no-padding-right"></label>').html(mv.name).appendTo($group);
                         var $div = $('<div class="tags" style="border: 0"></div>').appendTo($group);
 
@@ -1095,17 +1108,15 @@ $(function() {
                             var $span = $('<span></span>').addClass('lbl');
                             var $spans = $('<span></span>').html(va.name);
                             $tag.append($input).append($span).append($spans).appendTo($div);
-                            if (granted.indexOf(va.cid) != -1) {
+                            if (granted.indexOf(va.name) != -1) {
                                 $input.attr("checked", true);
                             }
                         });
 
                         if (mi < user.crossModules.length - 1) {
-                            $form.append($('<div class="space-4"></div>'));
+                            com.focusPage("#crossCompanyForm").append($('<div class="space-4"></div>'));
                         }
                     });
-
-                    user.modals.crossCompanyModal.modal("show");
                 }
             };
         }

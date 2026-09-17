@@ -83,7 +83,8 @@ public class MemberDaoImpl extends DaoImpl<PointAccountPO> implements MemberDao 
 	@SuppressWarnings("unchecked")
 	public List<Object[]> queryDecorationPointDetailByOrderId(String orderId) {
 
-		String sql = "SELECT dp.paymentType, dp.referMoney, dp.paymentStatus, a.multiple, dp.referMoney*a.multiple/1000, dp.createTime from payment.decorationpayment dp, decoration.decorationactivity da, information.activity a where dp.orderId = :orderId and dp.sort != 0 and dp.orderId = da.orderId and da.aid = a.aid and a.atttype = 1 order by dp.dpid";
+		// paymentStatus系tinyint(1), 驱动getObject映射Boolean, cast成整型绕开
+		String sql = "SELECT dp.paymentType, dp.referMoney, cast(dp.paymentStatus as signed), a.multiple, dp.referMoney*a.multiple/1000, dp.createTime from payment.decorationpayment dp, decoration.decorationactivity da, information.activity a where dp.orderId = :orderId and dp.sort != 0 and dp.orderId = da.orderId and da.aid = a.aid and a.atttype = 1 order by dp.dpid";
 		return session().createSQLQuery(sql).setString("orderId", orderId).list();
 	}
 
@@ -91,7 +92,8 @@ public class MemberDaoImpl extends DaoImpl<PointAccountPO> implements MemberDao 
 	@SuppressWarnings("unchecked")
 	public List<Object[]> queryMaterialPointDetailByOrderId(String orderId) {
 
-		String sql = "SELECT p.recharge, a.multiple, p.recharge*a.multiple/1000, p.status, p.createTime from payment.payment p, information.activity a where p.orderId = :orderId and p.type = 1 and p.paymentType = 2 and p.status in (1, 2) and p.aid = a.aid order by p.pid";
+		// status系tinyint(1), 驱动getObject映射Boolean, cast成整型绕开
+		String sql = "SELECT p.recharge, a.multiple, p.recharge*a.multiple/1000, cast(p.status as signed), p.createTime from payment.payment p, information.activity a where p.orderId = :orderId and p.type = 1 and p.paymentType = 2 and p.status in (1, 2) and p.aid = a.aid order by p.pid";
 		return session().createSQLQuery(sql).setString("orderId", orderId).list();
 	}
 
