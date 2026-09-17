@@ -20,12 +20,16 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.communion.dao.BrandDao;
+import com.fanglin.communion.dao.CategoryDao;
+import com.fanglin.communion.dao.CategoryFormatDao;
 import com.fanglin.communion.dao.ColorPoolDao;
 import com.fanglin.communion.dao.DataDrawingDao;
 import com.fanglin.communion.dao.FormatPoolDao;
 import com.fanglin.communion.dao.GoodsPoolDao;
 import com.fanglin.communion.dao.PricePoolDao;
 import com.fanglin.communion.po.BrandPO;
+import com.fanglin.communion.po.CategoryFormatPO;
+import com.fanglin.communion.po.CategoryPO;
 import com.fanglin.communion.po.ColorPoolPO;
 import com.fanglin.communion.po.DataDrawingPO;
 import com.fanglin.communion.po.FormatPoolPO;
@@ -69,6 +73,12 @@ public class GoodsServiceImpl implements GoodsService {
 
 	@Autowired
 	private BrandUserRightDao brandUserRightDao;
+
+	@Autowired
+	private CategoryDao categoryDao;
+
+	@Autowired
+	private CategoryFormatDao categoryFormatDao;
 
 	@Autowired
 	private BrandDao brandDao;
@@ -256,6 +266,9 @@ public class GoodsServiceImpl implements GoodsService {
 			throw new FLException(260046, "商品已存在");
 		}
 
+		// 品类已维护规格(communion.categoryformat)时,商品-整装创建的规格必须取自品类规格范围
+		checkFormatInCategoryScope(goodsVO);
+
 		GoodsPO goodsPO = new GoodsPO();
 
 		BeanUtil.copyProperties(goodsVO, goodsPO, Arrays.asList("accessoriesType", "zerokind", "onekind", "twokind", "thrkind"));
@@ -402,6 +415,29 @@ public class GoodsServiceImpl implements GoodsService {
 		goodsDao.update(goodsPO);
 
 		return 0;
+	}
+
+	/**
+	 * 商品创建规格范围校验:品类已维护规格(communion.categoryformat)时,规格必须取自品类规格集合;
+	 * 品类未维护规格时不约束(兼容自由录入)。
+	 */
+	private void checkFormatInCategoryScope(GoodsVO goodsVO) throws FLException {
+
+		if (goodsVO.getFormat() == null || "".equals(goodsVO.getFormat())) return;
+
+		CategoryPO categoryPO = categoryDao.queryCategoryByName(goodsVO.getCategory());
+
+		if (categoryPO == null) return;
+
+		List<CategoryFormatPO> categoryFormatPOs = categoryFormatDao.queryCategoryFormatByCid(categoryPO.getCid());
+
+		if (categoryFormatPOs.isEmpty()) return;
+
+		for (CategoryFormatPO categoryFormatPO : categoryFormatPOs) {
+			if (goodsVO.getFormat().equals(categoryFormatPO.getFormat())) return;
+		}
+
+		throw new FLException(200124, "规格不在品类规格范围");
 	}
 
 }

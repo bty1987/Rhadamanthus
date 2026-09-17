@@ -28,4 +28,6 @@ public interface CategoryDao extends Dao<CategoryPO> {
 
 	public CategoryPO queryCategoryByCategoryId(String categoryId);
 
+	public CategoryPO queryCategoryByName(String name);
+
 }

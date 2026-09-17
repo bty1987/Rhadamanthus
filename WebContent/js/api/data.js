@@ -207,6 +207,18 @@ $.extend(api, {
             url: "queryCategory.do",
             demo: true
         },
+        queryCategoryFormatByCid: {
+            url: "queryCategoryFormatByCid.do"
+        },
+        addCategoryFormat: {
+            url: "addCategoryFormat.do"
+        },
+        updateCategoryFormat: {
+            url: "updateCategoryFormat.do"
+        },
+        deleteCategoryFormat: {
+            url: "deleteCategoryFormat.do"
+        },
         queryCategoryByCId: {
             url: "queryCategoryByCId.do"
         },

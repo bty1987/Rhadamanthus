@@ -77,7 +77,74 @@ $(function () {
 
     goods.items.atttype.bindData(constant.data().goodsPool.atttype.datas, 'key', 'value');
 
+    // 品类规格联动:品类已维护规格(communion.categoryformat)时,规格改为下拉且取值受限;
+    // 未维护规格保持自由文本(存量行为不变)
+    goods.formatInputTpl = goods.items.format.clone();
+
+    goods.items.category.on("change", function () {
+        refreshFormatInput();
+    });
+
+    function refreshFormatInput(keepValue) {
+
+        var categoryName = goods.items.category.val();
+
+        var cid = null;
+
+        $.each(goods.categorys || [], function (i, c) {
+            if (c.categoryName == categoryName) cid = c.cid;
+        });
+
+        if (!cid) {
+            restoreFormatInput();
+            return;
+        }
+
+        com.post(api.data.queryCategoryFormatByCid, {
+            "categoryFormat.cid": cid
+        }, function (res) {
+
+            var formats = res.categoryFormats || [];
+
+            if (formats.length == 0) {
+                restoreFormatInput();
+                return;
+            }
+
+            var $select = $('<select></select>').attr({
+                "id": "format",
+                "name": "format",
+                "class": "col-xs-10 col-sm-7"
+            });
+
+            $('<option></option>').val("").text("请选择规格").appendTo($select);
+
+            $.each(formats, function (i, cf) {
+                $('<option></option>').val(cf.format).text(cf.format).appendTo($select);
+            });
+
+            if (keepValue) $select.val(keepValue);
+
+            goods.items.format.replaceWith($select);
+
+            goods.items.format = com.focusPage("#format");
+        });
+    }
+
+    function restoreFormatInput(value) {
+
+        var $input = goods.formatInputTpl.clone();
+
+        if (value != null) $input.val(value);
+
+        goods.items.format.replaceWith($input);
+
+        goods.items.format = com.focusPage("#format");
+    }
+
     com.post(api.data.queryCategory, {}, function (res) {
+
+        goods.categorys = res.categorys || [];
 
         goods.items.category.bindData(res.categorys, "categoryName", "categoryName");
     });
@@ -515,7 +582,7 @@ $(function () {
             goods.items.elevel.val(v.elevel);
             goods.items.material.val(v.material);
             goods.items.color.val(v.color);
-            goods.items.format.val(v.format);
+            restoreFormatInput(v.format);
             goods.items.model.val(v.model);
             goods.items.quality.val(v.quality);
             goods.items.atttype.val(v.atttype);
@@ -691,6 +758,8 @@ $(function () {
     com.focusPage('#add', '#gPagenation').on("click", function () {
 
         com.cleanItems(goods.items);
+
+        restoreFormatInput();
 
         readonly(null);
 

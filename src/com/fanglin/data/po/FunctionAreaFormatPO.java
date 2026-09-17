@@ -25,7 +25,7 @@ public class FunctionAreaFormatPO implements Serializable {
 
 	private String format;
 
-	private String company;
+	private String formula;
 
 	private String comment;
 
@@ -68,13 +68,13 @@ public class FunctionAreaFormatPO implements Serializable {
 		this.format = format;
 	}
 
-	@Column(name = "company")
-	public String getCompany() {
-		return company;
+	@Column(name = "formula")
+	public String getFormula() {
+		return formula;
 	}
 
-	public void setCompany(String company) {
-		this.company = company;
+	public void setFormula(String formula) {
+		this.formula = formula;
 	}
 
 	@Column(name = "comment")

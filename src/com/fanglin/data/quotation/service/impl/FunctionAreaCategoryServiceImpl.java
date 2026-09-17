@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.communion.dao.CategoryDao;
+import com.fanglin.communion.dao.CategoryFormatDao;
+import com.fanglin.communion.po.CategoryFormatPO;
 import com.fanglin.communion.po.CategoryPO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.data.po.FunctionAreaCategoryPO;
@@ -36,6 +38,9 @@ public class FunctionAreaCategoryServiceImpl implements FunctionAreaCategoryServ
 
 	@Autowired
 	private CategoryDao categoryDao;
+
+	@Autowired
+	private CategoryFormatDao categoryFormatDao;
 
 	@Override
 	public List<FunctionAreaCategoryVO> queryFunctionAreaCategoryByFaid(FunctionAreaCategoryVO functionAreaCategoryVO) {
@@ -129,11 +134,13 @@ public class FunctionAreaCategoryServiceImpl implements FunctionAreaCategoryServ
 			throw new FLException(200121, "功能区规格不存在");
 		}
 
+		checkFormatInCategoryScope(functionAreaCategoryPO.getCategory().getCid(), functionAreaFormatVO.getFormat());
+
 		FunctionAreaFormatPO functionAreaFormatPO = new FunctionAreaFormatPO();
 
 		functionAreaFormatPO.setFunctionAreaCategory(functionAreaCategoryPO);
 		functionAreaFormatPO.setFormat(functionAreaFormatVO.getFormat());
-		functionAreaFormatPO.setCompany(functionAreaFormatVO.getCompany());
+		functionAreaFormatPO.setFormula(functionAreaFormatVO.getFormula());
 		functionAreaFormatPO.setComment(functionAreaFormatVO.getComment());
 
 		functionAreaFormatDao.save(functionAreaFormatPO);
@@ -151,8 +158,10 @@ public class FunctionAreaCategoryServiceImpl implements FunctionAreaCategoryServ
 			throw new FLException(200121, "功能区规格不存在");
 		}
 
+		checkFormatInCategoryScope(functionAreaFormatPO.getFunctionAreaCategory().getCategory().getCid(), functionAreaFormatVO.getFormat());
+
 		functionAreaFormatPO.setFormat(functionAreaFormatVO.getFormat());
-		functionAreaFormatPO.setCompany(functionAreaFormatVO.getCompany());
+		functionAreaFormatPO.setFormula(functionAreaFormatVO.getFormula());
 		functionAreaFormatPO.setComment(functionAreaFormatVO.getComment());
 
 		functionAreaFormatDao.update(functionAreaFormatPO);
@@ -180,6 +189,23 @@ public class FunctionAreaCategoryServiceImpl implements FunctionAreaCategoryServ
 		}
 
 		return functionAreaCategoryPO;
+	}
+
+	/**
+	 * 功能区品类规格取值范围校验：品类已维护规格(communion.categoryformat)时，
+	 * 功能区规格必须取自品类规格集合；品类未维护规格时不约束（兼容自由录入）。
+	 */
+	private void checkFormatInCategoryScope(long cid, String format) throws FLException {
+
+		List<CategoryFormatPO> categoryFormatPOs = categoryFormatDao.queryCategoryFormatByCid(cid);
+
+		if (categoryFormatPOs.isEmpty()) return;
+
+		for (CategoryFormatPO categoryFormatPO : categoryFormatPOs) {
+			if (format.equals(categoryFormatPO.getFormat())) return;
+		}
+
+		throw new FLException(200124, "规格不在品类规格范围");
 	}
 
 	private FunctionAreaFormatPO checkFunctionAreaFormat(Long ffid) throws FLException {
