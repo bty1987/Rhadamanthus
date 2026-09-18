@@ -77,15 +77,30 @@ $(function () {
 
     goods.items.atttype.bindData(constant.data().goodsPool.atttype.datas, 'key', 'value');
 
-    // 品类规格联动:品类已维护规格(communion.categoryformat)时,规格改为下拉且取值受限;
-    // 未维护规格保持自由文本(存量行为不变)
+    // 品类规格联动(仅整装商品):品牌回填品类后,该品类已维护规格(communion.categoryformat)时,
+    // 规格改单选select且取值受限;非整装或品类无规格保持自由文本(存量行为不变)
     goods.formatInputTpl = goods.items.format.clone();
+
+    // 整装业务类型key(communion.constant: data/goodsPool/atttype, 0=基装 1=整装),运行时反查不硬编码
+    goods.wholeAtttype = Constant().keyOf("data", "goodsPool", "atttype", "整装");
 
     goods.items.category.on("change", function () {
         refreshFormatInput();
     });
 
+    goods.items.atttype.on("change", function () {
+        refreshFormatInput();
+    });
+
     function refreshFormatInput(keepValue) {
+
+        var format = keepValue != null ? keepValue : goods.items.format.val();
+
+        // 仅整装商品限制规格取值范围
+        if (goods.wholeAtttype == null || String(goods.items.atttype.val()) != String(goods.wholeAtttype)) {
+            restoreFormatInput(format);
+            return;
+        }
 
         var categoryName = goods.items.category.val();
 
@@ -96,7 +111,7 @@ $(function () {
         });
 
         if (!cid) {
-            restoreFormatInput();
+            restoreFormatInput(format);
             return;
         }
 
@@ -107,14 +122,16 @@ $(function () {
             var formats = res.categoryFormats || [];
 
             if (formats.length == 0) {
-                restoreFormatInput();
+                restoreFormatInput(format);
                 return;
             }
 
             var $select = $('<select></select>').attr({
                 "id": "format",
                 "name": "format",
-                "class": "col-xs-10 col-sm-7"
+                "class": "col-xs-10 col-sm-7 v_required",
+                "data-toggle": "popover",
+                "data-trigger": "manual"
             });
 
             $('<option></option>').val("").text("请选择规格").appendTo($select);
@@ -123,7 +140,12 @@ $(function () {
                 $('<option></option>').val(cf.format).text(cf.format).appendTo($select);
             });
 
-            if (keepValue) $select.val(keepValue);
+            // 存量规格不在品类规格集合时附加原值选项,编辑老商品不必被迫改规格
+            if (format && format != "" && $select.find("option[value='" + format + "']").length == 0) {
+                $('<option></option>').val(format).text(format + "(存量)").appendTo($select);
+            }
+
+            $select.val(format);
 
             goods.items.format.replaceWith($select);
 
@@ -145,8 +167,6 @@ $(function () {
     com.post(api.data.queryCategory, {}, function (res) {
 
         goods.categorys = res.categorys || [];
-
-        goods.items.category.bindData(res.categorys, "categoryName", "categoryName");
     });
 
     com.post(api.common.queryMeasurementUnit, {}, function (res) {
@@ -271,6 +291,8 @@ $(function () {
                 }, function (res) {
 
                     goods.items.category.val(res.brand.categoryName);
+
+                    refreshFormatInput();
                 });
             }
         });
@@ -582,10 +604,10 @@ $(function () {
             goods.items.elevel.val(v.elevel);
             goods.items.material.val(v.material);
             goods.items.color.val(v.color);
-            restoreFormatInput(v.format);
             goods.items.model.val(v.model);
             goods.items.quality.val(v.quality);
             goods.items.atttype.val(v.atttype);
+            refreshFormatInput(v.format);
 
             com.popup4model("#addLayer", "编辑");
         },
