@@ -1031,15 +1031,13 @@ var selectionDetail = (function() {
                 if (result == null) return true;
 
                 $li.prev('.fl-quo-item').find('.cell.num .cell-wrap').append(
-                    $('<span></span>').addClass('formula-num').css({
-                        'padding-left': '4px',
-                        'color': '#999'
-                    }).text('→' + result));
+                    $('<span></span>').addClass('formula-num blue').text('(' + result + ')'));
             });
         },
 
         evalFormula: function(expres, param) {
 
+            // 页面响应里参数字段已被tranargs÷1000(显示单位),代入前×1000还原库内毫米/平方毫米原值
             var variables = {
                 a: param.girth,
                 b: param.area,
@@ -1055,7 +1053,7 @@ var selectionDetail = (function() {
             expres = String(expres == null ? '' : expres);
 
             $.each(variables, function(key, value) {
-                expres = expres.replace(new RegExp('\\{' + key + '\\}', 'g'), value == null ? 0 : value);
+                expres = expres.replace(new RegExp('\\{' + key + '\\}', 'g'), value == null ? 0 : utils.accMul(value, 1000));
             });
 
             if (/\{[a-zA-Z]+\}/.test(expres)) return null;
