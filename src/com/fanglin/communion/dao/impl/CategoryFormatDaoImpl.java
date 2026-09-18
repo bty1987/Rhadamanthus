@@ -17,6 +17,7 @@ public class CategoryFormatDaoImpl extends DaoImpl<CategoryFormatPO> implements 
 	}
 
 	@Override
+	@SuppressWarnings("unchecked")
 	public List<CategoryFormatPO> queryCategoryFormatByCid(long cid) {
 		return session().createCriteria(CategoryFormatPO.class).createAlias("category", "category").add(Restrictions.eq("category.cid", cid)).list();
 	}

@@ -23,6 +23,7 @@ public class CrossCompanyRightDaoImpl extends DaoImpl<CrossCompanyRightPO> imple
 	}
 
 	@Override
+	@SuppressWarnings("unchecked")
 	public CrossCompanyRightPO queryCrossCompanyRight(String userId, String module) {
 
 		String sql = "select ccr.* from platform.crosscompanyright ccr, communion.user u where ccr.uid = u.uid and u.userId = :userId and ccr.module = :module";
