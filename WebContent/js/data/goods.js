@@ -77,6 +77,12 @@ $(function () {
 
     goods.items.atttype.bindData(constant.data().goodsPool.atttype.datas, 'key', 'value');
 
+    // url带atttype参数的页面实例(如 views/data/goods.html?atttype=1 整装商品库),业务类型默认选中该值
+    // bindData无占位会默认选中第一项(基装),导致整装库页面规格联动不生效
+    if (goods.pageAtttype != null && goods.pageAtttype != "") {
+        goods.items.atttype.val(goods.pageAtttype);
+    }
+
     // 品类规格联动(仅整装商品):品牌回填品类后,该品类已维护规格(communion.categoryformat)时,
     // 规格改单选select且取值受限;非整装或品类无规格保持自由文本(存量行为不变)
     goods.formatInputTpl = goods.items.format.clone();
@@ -782,6 +788,11 @@ $(function () {
         com.cleanItems(goods.items);
 
         restoreFormatInput();
+
+        // cleanItems会把业务类型重置回首项(基装),带参页面实例回填默认业务类型
+        if (goods.pageAtttype != null && goods.pageAtttype != "") {
+            goods.items.atttype.val(goods.pageAtttype);
+        }
 
         readonly(null);
 
