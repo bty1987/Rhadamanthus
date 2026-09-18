@@ -77,10 +77,12 @@ $(function () {
 
     goods.items.atttype.bindData(constant.data().goodsPool.atttype.datas, 'key', 'value');
 
-    // url带atttype参数的页面实例(如 views/data/goods.html?atttype=1 整装商品库),业务类型默认选中该值
-    // bindData无占位会默认选中第一项(基装),导致整装库页面规格联动不生效
+    // url带atttype参数的页面实例(如 views/data/goods.html?atttype=1 整装商品库):
+    // 业务类型由参数决定,创建/编辑弹窗不再显示业务类型选择,值固定预置为参数值
     if (goods.pageAtttype != null && goods.pageAtttype != "") {
         goods.items.atttype.val(goods.pageAtttype);
+
+        goods.items.atttype.closest(".form-group").hide();
     }
 
     // 品类规格联动(整装商品):整装库页面实例(?atttype=1)或业务类型选整装时,规格一律单选select;
@@ -89,8 +91,6 @@ $(function () {
 
     // 整装业务类型key(communion.constant: data/goodsPool/atttype, 0=基装 1=整装),运行时反查不硬编码
     goods.wholeAtttype = Constant().keyOf("data", "goodsPool", "atttype", "整装");
-
-    console.log("[goods] init: pageAtttype=" + goods.pageAtttype + ", wholeAtttype=" + goods.wholeAtttype + ", 表单atttype=" + goods.items.atttype.val());
 
     function isWholeAtttype() {
 
@@ -105,7 +105,6 @@ $(function () {
     });
 
     goods.items.atttype.on("change", function () {
-        console.log("[goods] 业务类型切换 -> " + goods.items.atttype.val());
         refreshFormatInput();
     });
 
@@ -113,10 +112,7 @@ $(function () {
 
         var format = keepValue != null ? String(keepValue) : String(goods.items.format.val() || "");
 
-        console.log("[goods] refreshFormatInput: keepValue=" + keepValue + ", format=" + format + ", isWhole=" + isWholeAtttype());
-
         if (!isWholeAtttype()) {
-            console.log("[goods] -> 自由文本(非整装)");
             restoreFormatInput(format);
             return;
         }
@@ -129,8 +125,6 @@ $(function () {
             if (c.name == categoryName) cid = c.cid;
         });
 
-        console.log("[goods] 品类=" + categoryName + ", cid=" + cid + ", categorys=" + (goods.categorys || []).length);
-
         // 整装一律select:先落占位壳,品类规格异步回填
         applyFormatSelect([], format, cid ? null : "请选择规格(选品牌后加载)");
 
@@ -142,11 +136,6 @@ $(function () {
         }, function (res) {
 
             var formats = res.categoryFormats || [];
-
-            console.log("[goods] queryCategoryFormatByCid cid=" + cid + ", formats=" + formats.length
-                + (formats.length ? "(" + $.map(formats, function (cf) {
-                    return cf.format;
-                }).join(",") + ")" : ""));
 
             applyFormatSelect(formats, format, formats.length ? null : "请选择规格(品类未维护)");
         });
@@ -190,8 +179,6 @@ $(function () {
         }
 
         $select.val(format);
-
-        console.log("[goods] select就位: 选项=" + formats.length + ", 选中=" + ($select.val() || ""));
     }
 
     function restoreFormatInput(value) {
@@ -208,10 +195,6 @@ $(function () {
     com.post(api.data.queryCategory, {}, function (res) {
 
         goods.categorys = res.categorys || [];
-
-        console.log("[goods] categorys=" + goods.categorys.length + ", sample=" + $.map(goods.categorys.slice(0, 3), function (c) {
-            return c.cid + ":" + c.name;
-        }).join(","));
     });
 
     com.post(api.common.queryMeasurementUnit, {}, function (res) {
@@ -336,8 +319,6 @@ $(function () {
                 }, function (res) {
 
                     goods.items.category.val(res.brand.categoryName);
-
-                    console.log("[goods] 品牌选定: bid=" + k + ", 品类=" + res.brand.categoryName);
 
                     refreshFormatInput();
                 });
