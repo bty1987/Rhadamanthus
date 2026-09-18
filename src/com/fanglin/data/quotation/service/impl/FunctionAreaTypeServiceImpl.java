@@ -32,9 +32,9 @@ public class FunctionAreaTypeServiceImpl implements FunctionAreaTypeService {
 	private FunctionAreaDao functionAreaDao;
 
 	@Override
-	public void pageFunctionAreaType(Paging paging, List<Filter> filters, int company) {
+	public void pageFunctionAreaType(Paging paging, List<Filter> filters) {
 
-		List<FunctionAreaTypePO> functionAreaTypePOs = functionAreaTypeDao.pageFunctionAreaType(paging, filters, company);
+		List<FunctionAreaTypePO> functionAreaTypePOs = functionAreaTypeDao.pageFunctionAreaType(paging, filters);
 		List<FunctionAreaTypeVO> functionAreaTypeVOs = new ArrayList<FunctionAreaTypeVO>();
 
 		for (FunctionAreaTypePO functionAreaTypePO : functionAreaTypePOs) {
@@ -50,9 +50,9 @@ public class FunctionAreaTypeServiceImpl implements FunctionAreaTypeService {
 	}
 
 	@Override
-	public List<FunctionAreaTypeVO> queryFunctionAreaType(int company) {
+	public List<FunctionAreaTypeVO> queryFunctionAreaType() {
 
-		List<FunctionAreaTypePO> functionAreaTypePOs = functionAreaTypeDao.queryFunctionAreaType(company);
+		List<FunctionAreaTypePO> functionAreaTypePOs = functionAreaTypeDao.queryFunctionAreaType();
 		List<FunctionAreaTypeVO> functionAreaTypeVOs = new ArrayList<FunctionAreaTypeVO>();
 
 		for (FunctionAreaTypePO functionAreaTypePO : functionAreaTypePOs) {
@@ -69,7 +69,7 @@ public class FunctionAreaTypeServiceImpl implements FunctionAreaTypeService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int addFunctionAreaType(FunctionAreaTypeVO functionAreaTypeVO, int company) throws FLException {
+	public int addFunctionAreaType(FunctionAreaTypeVO functionAreaTypeVO) throws FLException {
 
 		String name = checkName(functionAreaTypeVO.getName());
 
@@ -80,7 +80,7 @@ public class FunctionAreaTypeServiceImpl implements FunctionAreaTypeService {
 		FunctionAreaTypePO functionAreaTypePO = new FunctionAreaTypePO();
 
 		functionAreaTypePO.setName(name);
-		functionAreaTypePO.setCompany(company);
+		functionAreaTypePO.setCompany(0);
 		functionAreaTypePO.setStatus(FunctionAreaTypePO.STATUS_ENABLE_INT);
 
 		functionAreaTypeDao.save(functionAreaTypePO);

@@ -9,11 +9,11 @@ import com.fanglin.utils.Paging;
 
 public interface FunctionAreaTypeService {
 
-	public void pageFunctionAreaType(Paging paging, List<Filter> filters, int company);
+	public void pageFunctionAreaType(Paging paging, List<Filter> filters);
 
-	public List<FunctionAreaTypeVO> queryFunctionAreaType(int company) throws FLException;
+	public List<FunctionAreaTypeVO> queryFunctionAreaType() throws FLException;
 
-	public int addFunctionAreaType(FunctionAreaTypeVO functionAreaTypeVO, int company) throws FLException;
+	public int addFunctionAreaType(FunctionAreaTypeVO functionAreaTypeVO) throws FLException;
 
 	public int updateFunctionAreaType(FunctionAreaTypeVO functionAreaTypeVO) throws FLException;
 

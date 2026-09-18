@@ -9,9 +9,9 @@ import com.fanglin.utils.Paging;
 
 public interface FunctionAreaTypeDao extends Dao<FunctionAreaTypePO> {
 
-	public List<FunctionAreaTypePO> pageFunctionAreaType(Paging paging, List<Filter> filters, int company);
+	public List<FunctionAreaTypePO> pageFunctionAreaType(Paging paging, List<Filter> filters);
 
-	public List<FunctionAreaTypePO> queryFunctionAreaType(int company);
+	public List<FunctionAreaTypePO> queryFunctionAreaType();
 
 	public FunctionAreaTypePO queryFunctionAreaTypeByName(String name);
 
