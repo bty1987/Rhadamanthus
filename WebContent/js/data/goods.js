@@ -83,27 +83,40 @@ $(function () {
         goods.items.atttype.val(goods.pageAtttype);
     }
 
-    // 品类规格联动(仅整装商品):品牌回填品类后,该品类已维护规格(communion.categoryformat)时,
-    // 规格改单选select且取值受限;非整装或品类无规格保持自由文本(存量行为不变)
+    // 品类规格联动(整装商品):整装库页面实例(?atttype=1)或业务类型选整装时,规格一律单选select;
+    // 品类已维护规格(communion.categoryformat)则选项受限,未维护时仅占位;非整装保持自由文本(存量行为不变)
     goods.formatInputTpl = goods.items.format.clone();
 
     // 整装业务类型key(communion.constant: data/goodsPool/atttype, 0=基装 1=整装),运行时反查不硬编码
     goods.wholeAtttype = Constant().keyOf("data", "goodsPool", "atttype", "整装");
+
+    console.log("[goods] init: pageAtttype=" + goods.pageAtttype + ", wholeAtttype=" + goods.wholeAtttype + ", 表单atttype=" + goods.items.atttype.val());
+
+    function isWholeAtttype() {
+
+        if (goods.wholeAtttype == null)
+            return false;
+
+        return String(goods.pageAtttype) == String(goods.wholeAtttype) || String(goods.items.atttype.val()) == String(goods.wholeAtttype);
+    }
 
     goods.items.category.on("change", function () {
         refreshFormatInput();
     });
 
     goods.items.atttype.on("change", function () {
+        console.log("[goods] 业务类型切换 -> " + goods.items.atttype.val());
         refreshFormatInput();
     });
 
     function refreshFormatInput(keepValue) {
 
-        var format = keepValue != null ? keepValue : goods.items.format.val();
+        var format = keepValue != null ? String(keepValue) : String(goods.items.format.val() || "");
 
-        // 仅整装商品限制规格取值范围
-        if (goods.wholeAtttype == null || String(goods.items.atttype.val()) != String(goods.wholeAtttype)) {
+        console.log("[goods] refreshFormatInput: keepValue=" + keepValue + ", format=" + format + ", isWhole=" + isWholeAtttype());
+
+        if (!isWholeAtttype()) {
+            console.log("[goods] -> 自由文本(非整装)");
             restoreFormatInput(format);
             return;
         }
@@ -113,13 +126,16 @@ $(function () {
         var cid = null;
 
         $.each(goods.categorys || [], function (i, c) {
-            if (c.categoryName == categoryName) cid = c.cid;
+            if (c.name == categoryName) cid = c.cid;
         });
 
-        if (!cid) {
-            restoreFormatInput(format);
+        console.log("[goods] 品类=" + categoryName + ", cid=" + cid + ", categorys=" + (goods.categorys || []).length);
+
+        // 整装一律select:先落占位壳,品类规格异步回填
+        applyFormatSelect([], format, cid ? null : "请选择规格(选品牌后加载)");
+
+        if (!cid)
             return;
-        }
 
         com.post(api.data.queryCategoryFormatByCid, {
             "categoryFormat.cid": cid
@@ -127,36 +143,55 @@ $(function () {
 
             var formats = res.categoryFormats || [];
 
-            if (formats.length == 0) {
-                restoreFormatInput(format);
-                return;
-            }
+            console.log("[goods] queryCategoryFormatByCid cid=" + cid + ", formats=" + formats.length
+                + (formats.length ? "(" + $.map(formats, function (cf) {
+                    return cf.format;
+                }).join(",") + ")" : ""));
 
-            var $select = $('<select></select>').attr({
+            applyFormatSelect(formats, format, formats.length ? null : "请选择规格(品类未维护)");
+        });
+    }
+
+    function applyFormatSelect(formats, format, placeholder) {
+
+        var $select = goods.items.format;
+
+        if ($select[0] == undefined || $select[0].nodeName.toLowerCase() != "select") {
+
+            $select = $('<select></select>').attr({
                 "id": "format",
                 "name": "format",
-                "class": "col-xs-10 col-sm-7 v_required",
+                "class": "col-xs-10 col-sm-7",
                 "data-toggle": "popover",
                 "data-trigger": "manual"
             });
 
-            $('<option></option>').val("").text("请选择规格").appendTo($select);
-
-            $.each(formats, function (i, cf) {
-                $('<option></option>').val(cf.format).text(cf.format).appendTo($select);
-            });
-
-            // 存量规格不在品类规格集合时附加原值选项,编辑老商品不必被迫改规格
-            if (format && format != "" && $select.find("option[value='" + format + "']").length == 0) {
-                $('<option></option>').val(format).text(format + "(存量)").appendTo($select);
-            }
-
-            $select.val(format);
-
             goods.items.format.replaceWith($select);
 
             goods.items.format = com.focusPage("#format");
+
+            $select = goods.items.format;
+        }
+
+        $select.empty();
+
+        // 有可选项才强制必选(品类未维护规格时不拦截,后端空规格放行)
+        $select.toggleClass("v_required", formats.length > 0);
+
+        $('<option></option>').val("").text(placeholder || "请选择规格").appendTo($select);
+
+        $.each(formats, function (i, cf) {
+            $('<option></option>').val(cf.format).text(cf.format).appendTo($select);
         });
+
+        // 存量规格不在品类规格集合时附加原值选项,编辑老商品不必被迫改规格
+        if (format && format != "" && $select.find("option[value='" + format + "']").length == 0) {
+            $('<option></option>').val(format).text(format + "(存量)").appendTo($select);
+        }
+
+        $select.val(format);
+
+        console.log("[goods] select就位: 选项=" + formats.length + ", 选中=" + ($select.val() || ""));
     }
 
     function restoreFormatInput(value) {
@@ -173,6 +208,10 @@ $(function () {
     com.post(api.data.queryCategory, {}, function (res) {
 
         goods.categorys = res.categorys || [];
+
+        console.log("[goods] categorys=" + goods.categorys.length + ", sample=" + $.map(goods.categorys.slice(0, 3), function (c) {
+            return c.cid + ":" + c.name;
+        }).join(","));
     });
 
     com.post(api.common.queryMeasurementUnit, {}, function (res) {
@@ -297,6 +336,8 @@ $(function () {
                 }, function (res) {
 
                     goods.items.category.val(res.brand.categoryName);
+
+                    console.log("[goods] 品牌选定: bid=" + k + ", 品类=" + res.brand.categoryName);
 
                     refreshFormatInput();
                 });
@@ -787,12 +828,13 @@ $(function () {
 
         com.cleanItems(goods.items);
 
-        restoreFormatInput();
-
         // cleanItems会把业务类型重置回首项(基装),带参页面实例回填默认业务类型
         if (goods.pageAtttype != null && goods.pageAtttype != "") {
             goods.items.atttype.val(goods.pageAtttype);
         }
+
+        // 整装库实例开弹窗即select(占位壳),非整装页面内部回自由文本
+        refreshFormatInput();
 
         readonly(null);
 
