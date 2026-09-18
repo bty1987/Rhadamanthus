@@ -3217,7 +3217,7 @@ $(function() {
         }), function(res) {
 
             $.exceler({
-                column: [["装修单号", "orderId"], ['楼盘', 'house.village.name'], ['楼号', 'house.houseNumber'], ['客户名', 'customer.name'], ['设计部', 'designer.dept.name'], ['设计师编号', 'designer.userId'], ['设计师', 'designer.currentName'], ['业务部', 'salesman.dept.name'], ['业务员编号', 'salesman.userId'], ['业务员', 'salesman.currentName'], ['建筑面积', 'house.buildArea'], ['计价面积', 'house.innerArea'], ['实收额', 'factPrice'], ['预签额', 'precontractPrice'], ['合同报价', 'orderTotalPrice'], ['量房时间', 'measureTime'], ['预签时间', 'precontractTime'], ['签单时间', 'contractTime'], ['状态', 'status'], ['工程状态', 'projectStatus'], ['订单类型', 'typeness'], ['业务类型', 'busitype'], ['房屋类型', 'houseType']],
+                column: [["装修单号", "orderId"], ['楼盘', 'house.village.name'], ['楼号', 'house.houseNumber'], ['客户名', 'customer.name'], ['设计部', 'designer.dept.name'], ['设计师编号', 'designer.userId'], ['设计师', 'designer.currentName'], ['业务部', 'salesman.dept.name'], ['业务员编号', 'salesman.userId'], ['业务员', 'salesman.currentName'], ['建筑面积', 'house.buildArea'], ['计价面积', 'house.innerArea'], ['实收额', 'factPrice'], ['预签额', 'precontractPrice'], ['合同报价', 'orderTotalPrice'], ['量房时间', 'measureTime'], ['预签时间', 'precontractTime'], ['签单时间', 'contractTime'], ['重签时间', 'recontractTime'], ['状态', 'status'], ['工程状态', 'projectStatus'], ['订单类型', 'typeness'], ['业务类型', 'busitype'], ['房屋类型', 'houseType']],
                 list: res.paging.data
             }, function(v) {
 

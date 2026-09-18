@@ -326,7 +326,11 @@ jQuery(function($) {
 
     searcher.base("condList", "pagenation", "resultList", api.customer.pageCustomerChance);
 
-    searcher.condition(customerChance.depage != "source" ? ["customer-chance-orderId", "customer-chance-source-name", "customer-chance-customer-phone", "customer-chance-house-village-no", "customer-chance-house-houseNumber", "customer-chance-source-buildArea", "customer-chance-type", "customer-chance-status", "customer-chance-isFine", "customer-chance-belonger", "customer-chance-source-creater", "customer-chance-belonger-dept", "customer-chance-source-creater-dept", "customer-chance-finer", "customer-chance-source-createTime", "customer-chance-createTime", "customer-chance-fineTime", "customer-chance-source-houseAttr"] : []);
+    searcher.condition(customerChance.depage != "source" ? ["customer-chance-orderId", "customer-chance-source-name", "customer-chance-house-village-no", "customer-chance-house-houseNumber", "customer-chance-source-buildArea", "customer-chance-type", "customer-chance-status", "customer-chance-isFine", "customer-chance-belonger", "customer-chance-source-creater", "customer-chance-belonger-dept", "customer-chance-source-creater-dept", "customer-chance-finer", "customer-chance-source-createTime", "customer-chance-createTime", "customer-chance-fineTime", "customer-chance-source-houseAttr"].filter(function(c) {
+
+        // service页面(已接客源-客服): 低权限, 去掉敏感的电话条件
+        return !customerChance.service || c != "customer-chance-customer-phone";
+    }) : []);
 
     searcher.history(customerChance.depage + "customerChancePostData");
 
@@ -370,6 +374,9 @@ jQuery(function($) {
         prop: "source.name",
         clazz: "grey",
         click: function(btn, v) {
+
+            // service页面(已接客源-客服): 低权限, 禁止打开客户详情
+            if (customerChance.service) return false;
 
             tools.customer.info(btn, v.customer.cid);
         }
@@ -1048,6 +1055,17 @@ jQuery(function($) {
             return false;
         },
     }];
+
+    // service页面(已接客源-客服): 低权限, 仅保留"不校验/记录"行按钮
+    if (customerChance.service) {
+        $.each(linebtns, function(i, v) {
+            if (v.name != "不校验" && v.name != "记录") {
+                v.show = function() {
+                    return false;
+                };
+            }
+        });
+    }
 
     searcher.line("source.name", lineprops, linebtns).render();
 
