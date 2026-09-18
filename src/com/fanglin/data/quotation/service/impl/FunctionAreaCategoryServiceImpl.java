@@ -78,6 +78,33 @@ public class FunctionAreaCategoryServiceImpl implements FunctionAreaCategoryServ
 	}
 
 	@Override
+	public List<FunctionAreaFormatVO> queryFunctionAreaFormatByFacids(String facids) {
+
+		List<FunctionAreaFormatVO> functionAreaFormatVOs = new ArrayList<FunctionAreaFormatVO>();
+
+		List<Long> facidList = new ArrayList<Long>();
+
+		for (String facid : facids.split(",")) {
+			if (!facid.trim().isEmpty()) facidList.add(Long.parseLong(facid.trim()));
+		}
+
+		if (facidList.isEmpty()) return functionAreaFormatVOs;
+
+		for (FunctionAreaFormatPO functionAreaFormatPO : functionAreaFormatDao.queryFunctionAreaFormatByFacids(facidList)) {
+
+			FunctionAreaFormatVO functionAreaFormatVO = new FunctionAreaFormatVO();
+
+			BeanUtil.copyPropertie(functionAreaFormatPO, functionAreaFormatVO);
+
+			functionAreaFormatVO.setFcid(functionAreaFormatPO.getFunctionAreaCategory().getFcid());
+
+			functionAreaFormatVOs.add(functionAreaFormatVO);
+		}
+
+		return functionAreaFormatVOs;
+	}
+
+	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public int addFunctionAreaCategory(FunctionAreaCategoryVO functionAreaCategoryVO) throws FLException {
 

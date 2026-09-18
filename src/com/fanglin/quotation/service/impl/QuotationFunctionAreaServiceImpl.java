@@ -15,17 +15,21 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.core.interceptor.FLException;
+import com.fanglin.data.po.FunctionAreaCategoryPO;
 import com.fanglin.data.po.FunctionAreaPO;
 import com.fanglin.data.po.FunctionAreaTypePO;
 import com.fanglin.data.po.QuotationItemPO;
 import com.fanglin.data.po.QuotationPricePO;
+import com.fanglin.data.quotation.dao.FunctionAreaCategoryDao;
 import com.fanglin.data.quotation.dao.FunctionAreaDao;
 import com.fanglin.data.quotation.dao.FunctionAreaTypeDao;
 import com.fanglin.data.quotation.dao.QuotationPriceDao;
@@ -43,6 +47,7 @@ import com.fanglin.quotation.po.QuotationFunctionAreaPO;
 import com.fanglin.quotation.po.QuotationFunctionAreaParamPO;
 import com.fanglin.quotation.po.QuotationPO;
 import com.fanglin.quotation.service.QuotationFunctionAreaService;
+import com.fanglin.quotation.vo.QuotationFunctionAreaCategoryVO;
 import com.fanglin.quotation.vo.QuotationFunctionAreaItemVO;
 import com.fanglin.quotation.vo.QuotationFunctionAreaParamVO;
 import com.fanglin.quotation.vo.QuotationFunctionAreaVO;
@@ -58,6 +63,9 @@ public class QuotationFunctionAreaServiceImpl implements QuotationFunctionAreaSe
 
 	@Autowired
 	private FunctionAreaDao functionAreaDao;
+
+	@Autowired
+	private FunctionAreaCategoryDao functionAreaCategoryDao;
 
 	@Autowired
 	private FunctionAreaTypeDao functionAreaTypeDao;
@@ -91,6 +99,58 @@ public class QuotationFunctionAreaServiceImpl implements QuotationFunctionAreaSe
 
 	@Autowired
 	private DecorationDao decorationDao;
+
+	@Override
+	public List<QuotationFunctionAreaCategoryVO> queryFunctionAreaCategoryForQuotation(QuotationVO quotationVO) throws FLException {
+
+		List<QuotationFunctionAreaCategoryVO> quotationFunctionAreaCategoryVOs = new ArrayList<QuotationFunctionAreaCategoryVO>();
+
+		List<QuotationFunctionAreaPO> quotationFunctionAreaPOs = quotationFunctionAreaDao.queryQuotationFunctionAreaByQuotationId(quotationVO.getQid());
+
+		if (quotationFunctionAreaPOs.isEmpty()) return quotationFunctionAreaCategoryVOs;
+
+		// 报价功能区无模板faid外键,按 报价版本+功能区名 匹配模板功能区(同版同名取首条)
+		String versionId = quotationFunctionAreaPOs.get(0).getQuotation().getVersion().getNo();
+
+		Map<String, Long> faidByName = new HashMap<String, Long>();
+
+		for (FunctionAreaPO functionAreaPO : functionAreaDao.queryFunctionArea(versionId)) {
+			if (!faidByName.containsKey(functionAreaPO.getName())) faidByName.put(functionAreaPO.getName(), functionAreaPO.getFaid());
+		}
+
+		Map<Long, List<QuotationFunctionAreaPO>> areaPOsByFaid = new HashMap<Long, List<QuotationFunctionAreaPO>>();
+
+		for (QuotationFunctionAreaPO quotationFunctionAreaPO : quotationFunctionAreaPOs) {
+
+			Long faid = faidByName.get(quotationFunctionAreaPO.getFunctionAreaName());
+
+			if (faid == null) continue;
+
+			if (!areaPOsByFaid.containsKey(faid)) areaPOsByFaid.put(faid, new ArrayList<QuotationFunctionAreaPO>());
+
+			areaPOsByFaid.get(faid).add(quotationFunctionAreaPO);
+		}
+
+		if (areaPOsByFaid.isEmpty()) return quotationFunctionAreaCategoryVOs;
+
+		for (FunctionAreaCategoryPO functionAreaCategoryPO : functionAreaCategoryDao.queryFunctionAreaCategoryByFaids(new ArrayList<Long>(areaPOsByFaid.keySet()))) {
+
+			for (QuotationFunctionAreaPO quotationFunctionAreaPO : areaPOsByFaid.get(functionAreaCategoryPO.getFunctionArea().getFaid())) {
+
+				QuotationFunctionAreaCategoryVO quotationFunctionAreaCategoryVO = new QuotationFunctionAreaCategoryVO();
+
+				quotationFunctionAreaCategoryVO.setQfaId(quotationFunctionAreaPO.getQfaId());
+				quotationFunctionAreaCategoryVO.setFunctionAreaName(quotationFunctionAreaPO.getFunctionAreaName());
+				quotationFunctionAreaCategoryVO.setFcid(functionAreaCategoryPO.getFcid());
+				quotationFunctionAreaCategoryVO.setCid(functionAreaCategoryPO.getCategory().getCid());
+				quotationFunctionAreaCategoryVO.setCategoryName(functionAreaCategoryPO.getCategory().getName());
+
+				quotationFunctionAreaCategoryVOs.add(quotationFunctionAreaCategoryVO);
+			}
+		}
+
+		return quotationFunctionAreaCategoryVOs;
+	}
 
 	@Override
 	public List<QuotationFunctionAreaVO> queryQuotationFunctionAreaByQuotationId(QuotationVO quotationVO) throws FLException {

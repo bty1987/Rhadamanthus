@@ -9,6 +9,8 @@ public interface FunctionAreaFormatDao extends Dao<FunctionAreaFormatPO> {
 
 	public List<FunctionAreaFormatPO> queryFunctionAreaFormatByFacid(long facid);
 
+	public List<FunctionAreaFormatPO> queryFunctionAreaFormatByFacids(List<Long> facids);
+
 	public int deleteFunctionAreaFormatByFacid(long facid);
 
 }

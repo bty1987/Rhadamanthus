@@ -23,6 +23,12 @@ public class FunctionAreaFormatDaoImpl extends DaoImpl<FunctionAreaFormatPO> imp
 	}
 
 	@Override
+	@SuppressWarnings("unchecked")
+	public List<FunctionAreaFormatPO> queryFunctionAreaFormatByFacids(List<Long> facids) {
+		return createCriteria(FunctionAreaFormatPO.class).add(Restrictions.in("functionAreaCategory.fcid", facids)).list();
+	}
+
+	@Override
 	public int deleteFunctionAreaFormatByFacid(long facid) {
 		String sql = "delete from quotation.functionareaformat where facid = :facid";
 		return session().createSQLQuery(sql).setLong("facid", facid).executeUpdate();
