@@ -19,11 +19,9 @@ public class FunctionAreaTypeDaoImpl extends DaoImpl<FunctionAreaTypePO> impleme
 	}
 
 	@Override
-	public List<FunctionAreaTypePO> pageFunctionAreaType(Paging paging, List<Filter> filters, int company) {
+	public List<FunctionAreaTypePO> pageFunctionAreaType(Paging paging, List<Filter> filters) {
 
 		PagingQuery<FunctionAreaTypePO> query = pagingQuery(paging, FunctionAreaTypePO.class);
-
-		query.add(Restrictions.eq("company", company));
 
 		query.asc("fatId");
 
@@ -32,8 +30,8 @@ public class FunctionAreaTypeDaoImpl extends DaoImpl<FunctionAreaTypePO> impleme
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<FunctionAreaTypePO> queryFunctionAreaType(int company) {
-		return session().createCriteria(FunctionAreaTypePO.class).add(Restrictions.eq("company", company)).add(Restrictions.eq("status", FunctionAreaTypePO.STATUS_ENABLE_INT)).list();
+	public List<FunctionAreaTypePO> queryFunctionAreaType() {
+		return session().createCriteria(FunctionAreaTypePO.class).add(Restrictions.eq("status", FunctionAreaTypePO.STATUS_ENABLE_INT)).list();
 	}
 
 	@Override

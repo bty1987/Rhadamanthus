@@ -31,7 +31,7 @@ public class FunctionAreaTypeAction extends BaseListAction {
 	@Action(value = "pageFunctionAreaType", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageFunctionAreaType() throws FLException {
 
-		functionAreaTypeService.pageFunctionAreaType(getPaging(), getFilters(), queryCompany());
+		functionAreaTypeService.pageFunctionAreaType(getPaging(), getFilters());
 
 		return SUCCESS;
 	}
@@ -39,7 +39,7 @@ public class FunctionAreaTypeAction extends BaseListAction {
 	@Action(value = "queryFunctionAreaType", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryFunctionAreaType() throws FLException {
 
-		functionAreaTypes = functionAreaTypeService.queryFunctionAreaType(queryCompany());
+		functionAreaTypes = functionAreaTypeService.queryFunctionAreaType();
 
 		return SUCCESS;
 	}
@@ -47,7 +47,7 @@ public class FunctionAreaTypeAction extends BaseListAction {
 	@Action(value = "addFunctionAreaType", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addFunctionAreaType() throws FLException {
 
-		functionAreaTypeService.addFunctionAreaType(functionAreaType, queryCompany());
+		functionAreaTypeService.addFunctionAreaType(functionAreaType);
 
 		return SUCCESS;
 	}
