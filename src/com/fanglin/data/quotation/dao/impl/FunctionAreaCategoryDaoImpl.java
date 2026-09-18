@@ -23,6 +23,12 @@ public class FunctionAreaCategoryDaoImpl extends DaoImpl<FunctionAreaCategoryPO>
 	}
 
 	@Override
+	@SuppressWarnings("unchecked")
+	public List<FunctionAreaCategoryPO> queryFunctionAreaCategoryByFaids(List<Long> faids) {
+		return createCriteria(FunctionAreaCategoryPO.class).add(Restrictions.in("functionArea.faid", faids)).list();
+	}
+
+	@Override
 	public FunctionAreaCategoryPO queryFunctionAreaCategory(long faid, long cid) {
 		return (FunctionAreaCategoryPO) session().createCriteria(FunctionAreaCategoryPO.class).add(Restrictions.eq("functionArea.faid", faid)).add(Restrictions.eq("category.cid", cid)).setMaxResults(1).uniqueResult();
 	}

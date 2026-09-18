@@ -23,6 +23,7 @@ import org.springframework.stereotype.Controller;
 import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.quotation.service.QuotationFunctionAreaService;
+import com.fanglin.quotation.vo.QuotationFunctionAreaCategoryVO;
 import com.fanglin.quotation.vo.QuotationFunctionAreaVO;
 import com.fanglin.quotation.vo.QuotationVO;
 
@@ -42,10 +43,20 @@ public class QuotationFunctionAreaAction extends BaseListAction {
 
 	private QuotationFunctionAreaVO quotationFunctionArea;
 
+	private List<QuotationFunctionAreaCategoryVO> quotationFunctionAreaCategorys;
+
 	@Action(value = "queryQuotationFunctionAreaForCommonByQuotationId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryQuotationFunctionAreaForCommonByQuotationId() throws FLException {
 
 		quotationFunctionAreas = quotationFunctionAreaService.queryQuotationFunctionAreaForCommonByQuotationId(quotation);
+
+		return SUCCESS;
+	}
+
+	@Action(value = "queryFunctionAreaCategoryForQuotation", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryFunctionAreaCategoryForQuotation() throws FLException {
+
+		quotationFunctionAreaCategorys = quotationFunctionAreaService.queryFunctionAreaCategoryForQuotation(quotation);
 
 		return SUCCESS;
 	}
@@ -120,6 +131,14 @@ public class QuotationFunctionAreaAction extends BaseListAction {
 
 	public void setQuotationFunctionArea(QuotationFunctionAreaVO quotationFunctionArea) {
 		this.quotationFunctionArea = quotationFunctionArea;
+	}
+
+	public List<QuotationFunctionAreaCategoryVO> getQuotationFunctionAreaCategorys() {
+		return quotationFunctionAreaCategorys;
+	}
+
+	public void setQuotationFunctionAreaCategorys(List<QuotationFunctionAreaCategoryVO> quotationFunctionAreaCategorys) {
+		this.quotationFunctionAreaCategorys = quotationFunctionAreaCategorys;
 	}
 
 }

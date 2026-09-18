@@ -5,6 +5,7 @@ var selectionDetail = (function() {
         nowEditQuote: null,
         nowEditDomain: null,
         orderId: null,
+        areaParams: {},
         datasets: {
             status: {}
         },
@@ -591,11 +592,15 @@ var selectionDetail = (function() {
             com.post(api.quotation.addSelectionItem, option, function(res) {
 
                 res.selectionItem.goods.bid = soods.goods.bid;
+                res.selectionItem.goods.category = soods.goods.category;
+                res.selectionItem.goods.format = soods.goods.format;
 
                 painter.createSelectionItem(res.selectionItem);
                 painter.updateHeight(selection.nowEditQuote.next());
                 com.showAlert(com.info, "操作成功");
                 selectionItem.initSelectionItem();
+
+                formula.refresh();
             }, function(res) {
 
                 com.showAlert(com.error, res.errorMsg);
@@ -632,6 +637,8 @@ var selectionDetail = (function() {
                 $selectionItemLi.parent("div.alone").remove();
                 com.showAlert(com.info, "操作成功");
                 selectionItem.initSelectionItem();
+
+                formula.paintFormulaResults();
             }, function(res) {
 
                 com.showAlert(com.error, res.errorMsg);
@@ -890,6 +897,8 @@ var selectionDetail = (function() {
 
             $selectionItemLi.attr('data-siid', data.siid);
             $selectionItemLi.attr('data-bid', data.goods.bid);
+            $selectionItemLi.attr('data-category', data.goods.category);
+            $selectionItemLi.attr('data-format', data.goods.format);
             $selectionItemLi.attr('data-postprice', data.postprice);
             $selectionItemLi.attr('data-comment', data.comment);
 
@@ -904,6 +913,164 @@ var selectionDetail = (function() {
                 selectionItemNameDiv.height(quoteItemNameDiv.height());
             } else {
                 quoteItemNameDiv.height(selectionItemNameDiv.height());
+            }
+        }
+    };
+
+    // 选材公式:报价项已选材时,按 报价功能区->模板功能区(版本+名称)->品类(品牌品类名)->规格(商品规格) 匹配公式,
+    // 用功能区参数({a}周长{b}面积{c}举架{d}{e}洞面{f}{g}窗面{h}{i}梁,毫米/平方毫米,与报价页口径一致)求值,
+    // 结果追加在报价项数量旁(仅展示不落库);基础数据一次拉取(品类粒度),规格仅对命中品类批量查询
+    var formula = {
+
+        categoryByArea: {}, // qfaId -> [{fcid, categoryName}]
+        formatsByFcid: {}, // fcid -> {format: 公式表达式}
+
+        loadFormulaInfos: function() {
+
+            if (!selection.basicParams['selection.qid']) return;
+
+            com.post(api.quotation.queryFunctionAreaCategoryForQuotation, {
+                'quotation.qid': selection.basicParams['selection.qid']
+            }, function(res) {
+
+                formula.categoryByArea = {};
+
+                $.each(res.quotationFunctionAreaCategorys || [], function(i, v) {
+
+                    (formula.categoryByArea[v.qfaId] = formula.categoryByArea[v.qfaId] || []).push({
+                        fcid: v.fcid,
+                        categoryName: v.categoryName
+                    });
+                });
+
+                formula.refresh();
+            }, null, false);
+        },
+
+        // 收集当前已选材行命中的品类fcid,缺失规格批量补查(IN)后重绘
+        refresh: function() {
+
+            var fcids = [];
+
+            com.focusPage('#selectionBox li.fl-quo-item[data-siid]').each(function() {
+
+                var $li = $(this);
+                var ids = ($li.attr('id') || '').split('-');
+
+                if (ids.length != 3 || ids[2] != String(constant.quotation().selectionItem.TYPE_QUOTATION_INT)) return true;
+
+                var category = $li.attr('data-category');
+
+                $.each(formula.categoryByArea[ids[0]] || [], function(i, c) {
+                    if (c.categoryName == category && fcids.indexOf(c.fcid) == -1) fcids.push(c.fcid);
+                });
+            });
+
+            var need = [];
+
+            $.each(fcids, function(i, fcid) {
+                if (formula.formatsByFcid[fcid] == undefined) need.push(fcid);
+            });
+
+            if (need.length == 0) {
+                formula.paintFormulaResults();
+                return;
+            }
+
+            // 先占位防重复请求,失败时清掉
+            $.each(need, function(i, fcid) {
+                formula.formatsByFcid[fcid] = {};
+            });
+
+            com.post(api.quotation.queryFunctionAreaFormatByFacids, {
+                'facids': need.join(',')
+            }, function(res) {
+
+                $.each(res.functionAreaFormats || [], function(i, v) {
+                    if (v.fcid != null && v.format) formula.formatsByFcid[v.fcid][v.format] = v.formula;
+                });
+
+                formula.paintFormulaResults();
+            }, function() {
+
+                $.each(need, function(i, fcid) {
+                    delete formula.formatsByFcid[fcid];
+                });
+            }, false);
+        },
+
+        paintFormulaResults: function() {
+
+            com.focusPage('#selectionBox .formula-num').remove();
+
+            com.focusPage('#selectionBox li.fl-quo-item[data-siid]').each(function() {
+
+                var $li = $(this);
+                var ids = ($li.attr('id') || '').split('-');
+
+                if (ids.length != 3 || ids[2] != String(constant.quotation().selectionItem.TYPE_QUOTATION_INT)) return true;
+
+                var category = $li.attr('data-category');
+                var format = $li.attr('data-format');
+                var param = selection.areaParams[ids[0]];
+
+                if (!category || !format || !param) return true;
+
+                var expres = null;
+
+                $.each(formula.categoryByArea[ids[0]] || [], function(i, c) {
+                    if (c.categoryName == category && formula.formatsByFcid[c.fcid]) {
+                        expres = formula.formatsByFcid[c.fcid][format] || expres;
+                    }
+                });
+
+                if (!expres) return true;
+
+                var result = formula.evalFormula(expres, param);
+
+                if (result == null) return true;
+
+                $li.prev('.fl-quo-item').find('.cell.num .cell-wrap').append(
+                    $('<span></span>').addClass('formula-num').css({
+                        'padding-left': '4px',
+                        'color': '#999'
+                    }).text('→' + result));
+            });
+        },
+
+        evalFormula: function(expres, param) {
+
+            var variables = {
+                a: param.girth,
+                b: param.area,
+                c: param.height,
+                d: param.holeLength,
+                e: param.holeHeight,
+                f: param.windowLength,
+                g: param.windowHeight,
+                h: param.beamLength,
+                i: param.beamHeight
+            };
+
+            expres = String(expres == null ? '' : expres);
+
+            $.each(variables, function(key, value) {
+                expres = expres.replace(new RegExp('\\{' + key + '\\}', 'g'), value == null ? 0 : value);
+            });
+
+            if (/\{[a-zA-Z]+\}/.test(expres)) return null;
+
+            expres = expres.replace(/!\s*\(/g, 'Math.ceil(');
+
+            try {
+
+                var result = new Function('return function(){return ' + expres + '}')()();
+
+                if (typeof result != 'number' || isNaN(result) || !isFinite(result)) return null;
+
+                return utils.changeThrDecimal(result);
+            } catch (e) {
+                return null;
             }
         }
     };
@@ -1072,6 +1239,8 @@ var selectionDetail = (function() {
                     }, null, false);
 
                     selection.init();
+
+                    formula.loadFormulaInfos();
                 }
             }
 
@@ -1086,6 +1255,9 @@ var selectionDetail = (function() {
                 var $ul = $('<ul></ul>').addClass('fl-quo-list list');
 
                 if (type === constant.quotation().selectionItem.TYPE_QUOTATION_INT) {
+
+                    selection.areaParams[functionArea.qfaId] = functionArea.quotationFunctionAreaParam;
+
                     $.each(functionArea.quotationFunctionAreaItems, function(i, v) {
 
                         if (!subtypes.includes(v.subtype)) {

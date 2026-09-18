@@ -290,6 +290,14 @@ $.extend(api, {
             url: "queryFunctionAreaCategoryByFaid.do",
             type: "query"
         },
+        queryFunctionAreaCategoryForQuotation: {
+            url: "queryFunctionAreaCategoryForQuotation.do",
+            type: "query"
+        },
+        queryFunctionAreaFormatByFacids: {
+            url: "queryFunctionAreaFormatByFacids.do",
+            type: "query"
+        },
         addFunctionAreaCategory: {
             url: "addFunctionAreaCategory.do",
             type: "update"

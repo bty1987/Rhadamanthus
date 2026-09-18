@@ -29,12 +29,24 @@ public class FunctionAreaCategoryAction extends BaseAction {
 
 	private FunctionAreaFormatVO functionAreaFormat;
 
+	private String facids;
+
 	private List<FunctionAreaCategoryVO> functionAreaCategorys;
+
+	private List<FunctionAreaFormatVO> functionAreaFormats;
 
 	@Action(value = "queryFunctionAreaCategoryByFaid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryFunctionAreaCategoryByFaid() throws FLException {
 
 		functionAreaCategorys = functionAreaCategoryService.queryFunctionAreaCategoryByFaid(functionAreaCategory);
+
+		return SUCCESS;
+	}
+
+	@Action(value = "queryFunctionAreaFormatByFacids", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryFunctionAreaFormatByFacids() throws FLException {
+
+		functionAreaFormats = functionAreaCategoryService.queryFunctionAreaFormatByFacids(facids);
 
 		return SUCCESS;
 	}
@@ -101,6 +113,22 @@ public class FunctionAreaCategoryAction extends BaseAction {
 
 	public void setFunctionAreaCategorys(List<FunctionAreaCategoryVO> functionAreaCategorys) {
 		this.functionAreaCategorys = functionAreaCategorys;
+	}
+
+	public String getFacids() {
+		return facids;
+	}
+
+	public void setFacids(String facids) {
+		this.facids = facids;
+	}
+
+	public List<FunctionAreaFormatVO> getFunctionAreaFormats() {
+		return functionAreaFormats;
+	}
+
+	public void setFunctionAreaFormats(List<FunctionAreaFormatVO> functionAreaFormats) {
+		this.functionAreaFormats = functionAreaFormats;
 	}
 
 }

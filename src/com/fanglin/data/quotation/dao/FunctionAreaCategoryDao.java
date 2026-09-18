@@ -9,6 +9,8 @@ public interface FunctionAreaCategoryDao extends Dao<FunctionAreaCategoryPO> {
 
 	public List<FunctionAreaCategoryPO> queryFunctionAreaCategoryByFaid(long faid);
 
+	public List<FunctionAreaCategoryPO> queryFunctionAreaCategoryByFaids(List<Long> faids);
+
 	public FunctionAreaCategoryPO queryFunctionAreaCategory(long faid, long cid);
 
 }
