@@ -1,0 +1,114 @@
+<div id="fl-statement">
+    <div class="page-header">
+        <h1>
+            <span id="pageTitle">签约准备</span>
+            <small>签约前前置条件检查与轻操作</small>
+        </h1>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xs-12">
+        <div class="row" style="margin-left:10px;margin-right:10px">
+            <div id="summaryInfo" class="well well-sm" style="margin-bottom:10px;"></div>
+            <div id="checkList"></div>
+            <div id="actionRow" class="alert alert-block" style="margin-top:10px;"></div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="drawlineTimeModal" tabindex="-1" data-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">
+                    <span>&times;</span><span class="sr-only">Close</span>
+                </button>
+                <h4 class="modal-title">设置预计放线时间</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal" id="drawlineTimeForm">
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right"> <span class="red">*</span> 预计放线时间</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="col-xs-10 col-sm-6 date-picker-date" id="drawlineTime" data-date-format="yyyy-mm-dd" readonly="readonly" />
+                        </div>
+                    </div>
+                    <div class="space-4"></div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="drawlineTimeSaveBtn" class="btn btn-primary">保存</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="applayDrawLineModal" tabindex="-1" data-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">
+                    <span>&times;</span><span class="sr-only">Close</span>
+                </button>
+                <h4 class="modal-title">申请放线</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal" id="applayDrawLineForm">
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right"> <span class="red">*</span> 申请说明</label>
+                        <div class="col-sm-9">
+                            <input type="text" maxlength="128" id="applayDes" class="col-xs-10 col-sm-6 v_required" placeholder="填写放线申请说明" />
+                        </div>
+                    </div>
+                    <div class="space-4"></div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right"> <span class="red">*</span> 申请时间</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="col-xs-10 col-sm-6 date-picker-date" id="applayTime" data-date-format="yyyy-mm-dd" readonly="readonly" />
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="applayDrawLineBtn" class="btn btn-primary">保存</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="joinActivityModal" tabindex="-1" data-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">
+                    <span>&times;</span><span class="sr-only">Close</span>
+                </button>
+                <h4 class="modal-title">参加活动</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal" id="joinActivityForm">
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right"> <span class="red">*</span> 选择活动</label>
+                        <div class="col-sm-9">
+                            <select id="activityInfo" class="col-xs-10 col-sm-6 v_required"></select>
+                        </div>
+                    </div>
+                    <div class="space-4"></div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="submitDecorationActivityBtn" class="btn btn-primary">保存</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="signLayerPopUp" class="portlet box page-content"></div>
+
+<script type="text/javascript">
+    $.loadScript(['js/decoration/decoration4sign.js']);
+</script>

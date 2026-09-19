@@ -1411,6 +1411,18 @@ $(function() {
                     });
                 }
             },
+            presignprepare: {
+                name: "预签准备",
+                clazz: "btn-yellow",
+                show: function(v) {
+
+                    return pageConfig.pageBtn.contains("presignprepare") && [constant.decoration().decoration.STATUS_INIT_INT, constant.decoration().decoration.STATUS_DEPOSIT_INT].indexOf(v.status) != -1;
+                },
+                handle: function(v) {
+
+                    openSignPrepare(v, "presign");
+                }
+            },
             revie: {
                 name: "回访",
                 clazz: "btn-success",
@@ -1685,6 +1697,18 @@ $(function() {
                 handle: function(v) {
 
                     signOrder(v.orderId, v.customer.cid, v.orderTotalPrice, v.notSalesmanRate, v.couponCut, v.thingCut);
+                }
+            },
+            signprepare: {
+                name: "签约准备",
+                clazz: "btn-yellow",
+                show: function(v) {
+
+                    return pageConfig.pageBtn.contains("signprepare") && [constant.decoration().decoration.STATUS_DEPOSIT_INT, constant.decoration().decoration.STATUS_PROSIGN_INT, constant.decoration().decoration.STATUS_RESIGNED_INT].indexOf(v.status) != -1;
+                },
+                handle: function(v) {
+
+                    openSignPrepare(v, "sign");
                 }
             },
             terminal: {
@@ -2642,6 +2666,73 @@ $(function() {
             });
         });
     }
+
+    // 签约准备弹窗: 缓存行数据, popup4page 加载准备台
+    var openSignPrepare = function(v, mode) {
+
+        params.signPrepareRow = v;
+        params.signPrepare = {
+            orderId: v.orderId,
+            mode: mode,
+            cid: v.customer.cid
+        };
+
+        com.popup4page("#layerPopUp", api.index.decorationSignPrepareIndex.url, (mode == "presign" ? "预签准备" : "签约准备") + ": " + v.orderId, null, function() {
+            searcher.doSearch();
+        });
+    };
+
+    // 签约准备弹窗事件桥: 确认签约/预签与页面跳转复用本页既有链路
+    $(document).on("decoration:signprepare", function(e, data) {
+
+        layer.closeAll();
+
+        var row = params.signPrepareRow;
+
+        if (data.action == "sign") {
+
+            signOrder(row.orderId, row.customer.cid, row.orderTotalPrice, row.notSalesmanRate, row.couponCut, row.thingCut);
+
+        } else if (data.action == "presign") {
+
+            com.showConfirm("确定进行预签", function() {
+
+                com.post(api.decoration.presignDecorationContract, {
+                    "decoration.orderId": row.orderId
+                }, function() {
+
+                    com.switchPage("/views/decoration/decoration.html");
+                }, null, false);
+            });
+
+        } else if (data.action == "goto") {
+
+            if (data.page == "contract") {
+
+                modalAgreementModal(row.orderId, row.customer.cid, row, "advance");
+
+            } else if (data.page == "activity") {
+
+                viewDecorationActivity(row.orderId);
+
+            } else if (data.page == "quotation") {
+
+                com.switchPage(api.index.quotationIndex.url);
+
+            } else if (data.page == "protation") {
+
+                com.switchPage(api.index.protationIndex.url);
+
+            } else if (data.page == "payment") {
+
+                com.switchPage(api.index.decorationPaymentIndex.url);
+
+            } else if (data.page == "approval") {
+
+                com.switchPage(api.index.userApproveIndex.url);
+            }
+        }
+    });
 
     // 签订合同
     function signOrder(orderId, customerId, orderTotalPrice, notSalesmanRate, coupon, thing) {
