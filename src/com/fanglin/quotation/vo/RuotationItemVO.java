@@ -42,6 +42,14 @@ public class RuotationItemVO implements Serializable {
 
 	private Integer index;
 
+	private Short source;
+
+	private Long sourceItemId;
+
+	private Long qfaiId;
+
+	private Short incur;
+
 	public RuotationItemVO() {
 		super();
 	}
@@ -189,5 +197,37 @@ public class RuotationItemVO implements Serializable {
 
 	public void setIndex(Integer index) {
 		this.index = index;
+	}
+
+	public Short getSource() {
+		return source;
+	}
+
+	public void setSource(Short source) {
+		this.source = source;
+	}
+
+	public Long getSourceItemId() {
+		return sourceItemId;
+	}
+
+	public void setSourceItemId(Long sourceItemId) {
+		this.sourceItemId = sourceItemId;
+	}
+
+	public Long getQfaiId() {
+		return qfaiId;
+	}
+
+	public void setQfaiId(Long qfaiId) {
+		this.qfaiId = qfaiId;
+	}
+
+	public Short getIncur() {
+		return incur;
+	}
+
+	public void setIncur(Short incur) {
+		this.incur = incur;
 	}
 }

@@ -91,7 +91,9 @@ import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.quotation.dao.QuotationDao;
+import com.fanglin.quotation.dao.RuotationDao;
 import com.fanglin.quotation.po.QuotationPO;
+import com.fanglin.quotation.po.RuotationPO;
 import com.fanglin.right.dao.DecorationDesignDepartmentRightDao;
 import com.fanglin.right.dao.DecorationSalesmanDepartmentRightDao;
 import com.fanglin.right.dao.DecorationStatusRightDao;
@@ -125,6 +127,9 @@ public class DecorationServiceImpl implements DecorationService {
 
 	@Autowired
 	private QuotationDao quotationDao;
+
+	@Autowired
+	private RuotationDao ruotationDao;
 
 	@Autowired
 	private QuotationVersionDao quotationVersionDao;
@@ -1618,6 +1623,14 @@ public class DecorationServiceImpl implements DecorationService {
 		decorationPO.setStatus(DecorationPO.STATUS_TERMINATION_INT);
 		decorationPO.setTerminalTime(DateUtil.getDateToTimestamp(new Date()));
 		decorationDao.update(decorationPO);
+
+		// 退报单弱关联跟随: 终止落地即生效锁定, 无退报单静默跳过(先软后硬口径)
+		RuotationPO ruotationPO = ruotationDao.queryRuotationByOrderId(orderId, Arrays.asList(RuotationPO.STATUS_INIT_INT, RuotationPO.STATUS_SUBMIT_INT));
+
+		if (ruotationPO != null) {
+			ruotationPO.setStatus(RuotationPO.STATUS_EFFECT_INT);
+			ruotationDao.update(ruotationPO);
+		}
 
 		List<DecorationBelongPO> designers = decorationBelongDao.queryDecorationBelong(decorationPO.getOrderId(), DecorationBelongPO.BELONGTYPE_DESIGN_INT, DecorationBelongPO.STATUS_INVALID_INT);
 		List<DecorationBelongPO> salesmans = decorationBelongDao.queryDecorationBelong(decorationPO.getOrderId(), DecorationBelongPO.BELONGTYPE_SALESMAN_INT, DecorationBelongPO.STATUS_INVALID_INT);

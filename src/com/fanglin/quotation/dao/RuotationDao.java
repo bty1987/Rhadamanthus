@@ -13,4 +13,6 @@ public interface RuotationDao extends Dao<RuotationPO> {
 
 	public RuotationPO queryRuotationByQid(long qid);
 
+	public RuotationPO queryRuotationByOrderId(String orderId, List<Short> status);
+
 }

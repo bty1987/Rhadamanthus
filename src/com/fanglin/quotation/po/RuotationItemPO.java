@@ -22,6 +22,10 @@ public class RuotationItemPO implements Serializable {
 
 	private static final long serialVersionUID = 8263037511645428514L;
 
+	public static final short SOURCE_QUOTATION_INT = 0;// 报价项
+	public static final short SOURCE_EXTENSION_INT = 1;// 扩展项
+	public static final short SOURCE_ADDREDUCE_INT = 2;// 增减项
+
 	private long qriid;
 
 	private RuotationPO ruotation;
@@ -55,6 +59,12 @@ public class RuotationItemPO implements Serializable {
 	private String content;
 
 	private int index;
+
+	private short source;
+
+	private Long sourceItemId;
+
+	private Long qfaiId;
 
 	@Id
 	@GeneratedValue
@@ -213,6 +223,33 @@ public class RuotationItemPO implements Serializable {
 
 	public void setIndex(int index) {
 		this.index = index;
+	}
+
+	@Column(name = "source")
+	public short getSource() {
+		return source;
+	}
+
+	public void setSource(short source) {
+		this.source = source;
+	}
+
+	@Column(name = "sourceItemId")
+	public Long getSourceItemId() {
+		return sourceItemId;
+	}
+
+	public void setSourceItemId(Long sourceItemId) {
+		this.sourceItemId = sourceItemId;
+	}
+
+	@Column(name = "qfaiId")
+	public Long getQfaiId() {
+		return qfaiId;
+	}
+
+	public void setQfaiId(Long qfaiId) {
+		this.qfaiId = qfaiId;
 	}
 
 	public RuotationItemVO ptv(RuotationItemVO ruotationItemVO) {

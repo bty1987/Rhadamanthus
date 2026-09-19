@@ -225,6 +225,16 @@ $(function() {
             return ruotation.pageConfig.propertyArr.contains("totalPrice");
         }
     }, {
+        field: "status",
+        name: "状态",
+        prop: "status",
+        dataset: constant.quotation().ruotation.status.keys,
+        clazz: "red",
+        show: function(v) {
+
+            return ruotation.pageConfig.propertyArr.contains("ruotationStatus");
+        }
+    }, {
         field: "content",
         name: "说明",
         prop: "content",

@@ -23,6 +23,8 @@ public interface QuotationFunctionAreaItemDao extends Dao<QuotationFunctionAreaI
 
 	public List<QuotationFunctionAreaItemPO> queryQuotationFunctionAreaItemByFunctionAreaId(Class<?> clazz, long functionAreaId);
 
+	public List<QuotationFunctionAreaItemPO> queryQuotationFunctionAreaItemByFunctionAreaIds(Class<?> clazz, List<Long> functionAreaIds);
+
 	public QuotationFunctionAreaItemPO queryQuotationFunctionAreaItemByQuotationIdAType(Class<?> clazz, long qId, short type);
 
 	public QuotationFunctionAreaItemPO queryQuotationFunctionAreaItemForTypeByQuotationFunctionAreaId(Class<?> clazz, Long quotationFunctionAreaId, Short type);

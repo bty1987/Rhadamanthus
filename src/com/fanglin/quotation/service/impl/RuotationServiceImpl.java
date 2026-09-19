@@ -71,6 +71,22 @@ public class RuotationServiceImpl implements RuotationService {
 
 		RuotationPO ruotationPO = ruotationDao.get(ruotationVO.getQrid());
 
+		if (ruotationPO == null) {
+			throw new FLException(200126, "退报单不存在");
+		}
+
+		return ruotationPO.ptv(new RuotationVO(new DecorationVO(), new QuotationVO(), new QuotationVersionVO(), new UserBaseVO()));
+	}
+
+	@Override
+	public RuotationVO queryRuotationByOrderId(RuotationVO ruotationVO) throws FLException {
+
+		RuotationPO ruotationPO = ruotationDao.queryRuotationByOrderId(ruotationVO.getDecoration().getOrderId(), Arrays.asList(RuotationPO.STATUS_INIT_INT, RuotationPO.STATUS_SUBMIT_INT, RuotationPO.STATUS_EFFECT_INT));
+
+		if (ruotationPO == null) {
+			return null;
+		}
+
 		return ruotationPO.ptv(new RuotationVO(new DecorationVO(), new QuotationVO(), new QuotationVersionVO(), new UserBaseVO()));
 	}
 
@@ -80,16 +96,16 @@ public class RuotationServiceImpl implements RuotationService {
 
 		RuotationPO ruotationPO = new RuotationPO();
 
-		RuotationPO ruotation = ruotationDao.queryRuotationByQid(ruotationVO.getQuotation().getQid());
-
-		if (ruotation != null) {
-			throw new FLException(200112, "退报单已存在");
-		}
-
 		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(ruotationVO.getDecoration().getOrderId());
 
 		if (decorationPO == null) {
 			throw new FLException(140013, "装修单不存在");
+		}
+
+		RuotationPO ruotation = ruotationDao.queryRuotationByOrderId(decorationPO.getOrderId(), Arrays.asList(RuotationPO.STATUS_INIT_INT, RuotationPO.STATUS_SUBMIT_INT, RuotationPO.STATUS_EFFECT_INT));
+
+		if (ruotation != null) {
+			throw new FLException(200112, "退报单已存在");
 		}
 
 		QuotationPO quotationPO = quotationDao.get(ruotationVO.getQuotation().getQid());
@@ -104,7 +120,7 @@ public class RuotationServiceImpl implements RuotationService {
 			throw new FLException(200022, "报价版本不存在");
 		}
 
-		BeanUtil.copyPropertie(ruotationVO, ruotationPO, Arrays.asList("decoration", "quotation", "version", "creater"));
+		BeanUtil.copyPropertie(ruotationVO, ruotationPO, Arrays.asList("decoration", "quotation", "version", "creater", "status"));
 
 		ruotationPO.setDecoration(decorationPO);
 		ruotationPO.setQuotation(quotationPO);
@@ -112,6 +128,8 @@ public class RuotationServiceImpl implements RuotationService {
 
 		ruotationPO.setCreater(userDao.queryUserByUserId(userId));
 		ruotationPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
+
+		ruotationPO.setStatus(RuotationPO.STATUS_INIT_INT);
 
 		ruotationDao.save(ruotationPO);
 
@@ -124,16 +142,12 @@ public class RuotationServiceImpl implements RuotationService {
 
 		RuotationPO ruotationPO = ruotationDao.get(ruotationVO.getQrid());
 
-		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(ruotationPO.getDecoration().getOrderId());
-
-		if (decorationPO == null) {
-			throw new FLException(140013, "装修单不存在");
+		if (ruotationPO == null) {
+			throw new FLException(200126, "退报单不存在");
 		}
 
-		QuotationPO quotationPO = quotationDao.get(ruotationPO.getQuotation().getQid());
-
-		if (quotationPO == null) {
-			throw new FLException(200003, "报价不存在");
+		if (ruotationPO.getStatus() != RuotationPO.STATUS_INIT_INT) {
+			throw new FLException(200125, "退报单状态不可操作");
 		}
 
 		ruotationPO.setTotalPrice(ruotationVO.getTotalPrice());
@@ -149,10 +163,12 @@ public class RuotationServiceImpl implements RuotationService {
 
 		RuotationPO ruotationPO = ruotationDao.get(ruotationVO.getQrid());
 
-		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(ruotationVO.getDecoration().getOrderId());
+		if (ruotationPO == null) {
+			throw new FLException(200126, "退报单不存在");
+		}
 
-		if (decorationPO == null) {
-			throw new FLException(140013, "装修单不存在");
+		if (ruotationPO.getStatus() != RuotationPO.STATUS_INIT_INT) {
+			throw new FLException(200125, "退报单状态不可操作");
 		}
 
 		ruotationDao.delete(ruotationPO);

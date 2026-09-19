@@ -31,6 +31,8 @@ import com.fanglin.information.service.MessageService;
 import com.fanglin.payment.vo.DecorationPaymentVO;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
+import com.fanglin.quotation.dao.RuotationDao;
+import com.fanglin.quotation.po.RuotationPO;
 import com.fanglin.utils.Arith;
 import com.fanglin.utils.BeanUtil;
 
@@ -64,6 +66,9 @@ public class ApprovalDecorationTerminalServiceImpl implements ApprovalDecoration
 
 	@Autowired
 	private com.fanglin.information.dao.MessageQueuingDao messageQueuingDao;
+
+	@Autowired
+	private RuotationDao ruotationDao;
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
@@ -140,6 +145,14 @@ public class ApprovalDecorationTerminalServiceImpl implements ApprovalDecoration
 		decorationPO.setStatus((short) (decorationPO.getStatus() + DecorationPO.STATUS_APPROVAL_INT));
 
 		decorationDao.update(decorationPO);
+
+		// 退报单弱关联跟随: 提交终止审批即锁定编辑, 审批拒绝时回退, 无退报单静默跳过
+		RuotationPO ruotationPO = ruotationDao.queryRuotationByOrderId(orderId, Arrays.asList(RuotationPO.STATUS_INIT_INT));
+
+		if (ruotationPO != null) {
+			ruotationPO.setStatus(RuotationPO.STATUS_SUBMIT_INT);
+			ruotationDao.update(ruotationPO);
+		}
 
 		messageService.sendMessage(approvalPO.getReceiver().getUserId(), approvalPO.getSender().getUserId(), approvalPO.getContents(), MessagePO.TYPE_SEND_APPROVAL_INT, company);
 
@@ -224,6 +237,14 @@ public class ApprovalDecorationTerminalServiceImpl implements ApprovalDecoration
 		decorationPO.setStatus((short) (decorationPO.getStatus() - DecorationPO.STATUS_APPROVAL_INT));
 
 		decorationDao.update(decorationPO);
+
+		// 退报单弱关联跟随: 审批拒绝回退为可编辑
+		RuotationPO ruotationPO = ruotationDao.queryRuotationByOrderId(orderId, Arrays.asList(RuotationPO.STATUS_SUBMIT_INT));
+
+		if (ruotationPO != null) {
+			ruotationPO.setStatus(RuotationPO.STATUS_INIT_INT);
+			ruotationDao.update(ruotationPO);
+		}
 
 		return 0;
 	}
