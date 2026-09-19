@@ -214,29 +214,42 @@ var RuotationDetail = (function() {
             return ruotationItems;
         },
 
-        //初始化报价中的报价项信息
-        queryQuotationFunctionAreaItem: function(qfaId) {
-            com.post(api.quotation.queryQuotationFunctionAreaItemByQuotationFunctionAreaId, {
-                "quotationFunctionAreaItem.quotationFunctionAreaId": qfaId
+        //拉取三源候选项目(报价/扩展/增减, 带已产生费用标记)
+        queryRuotationCandidates: function() {
+            com.post(api.quotation.queryRuotationItemForCandidateByOrderId, {
+                "ruotationItem.ruotation.decoration.orderId": quoRefund.orderId
             }, function(data) {
 
                 var $tableWrap = com.focusPage('#quateFunctionAreaItemList').empty();
                 var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
 
-                if (data.quotationFunctionAreaItems && data.quotationFunctionAreaItems.length) {
-                    $.each(data.quotationFunctionAreaItems, function(i, v) {
+                var sourceNames = {
+                    0: "报价",
+                    1: "扩展",
+                    2: "增减"
+                };
+
+                if (data.ruotationItems && data.ruotationItems.length) {
+                    $.each(data.ruotationItems, function(i, v) {
+
+                        v.sourceName = sourceNames[v.source] || "报价";
 
                         painter.createQuoteModalItem(v).appendTo($ul);
                     });
                     $ul.appendTo($tableWrap);
 
-                    if (quoteRefund.quotesRecord.length) {
-                        $.each(quoteRefund.quotesRecord, function(index, val) {
+                    // 已产生费用项默认勾选
+                    com.focusPage('input[name="modalQuots"]').each(function() {
 
-                            var $input = com.focusPage('input[name="modalQuots"][value="' + $(val).val() + '"]');
-                            $input.length && ($input.prop('checked', true));
-                        });
-                    }
+                        var $this = $(this);
+
+                        if ($this.attr('data-incur') == 1) {
+                            $this.prop('checked', true);
+                            quoteRefund.recordQuots($this, true);
+                        }
+                    });
+                } else {
+                    $('<div></div>').addClass('alert alert-info').text('该订单无报价/扩展/增减项目').appendTo($tableWrap);
                 }
             }, null, false);
         },
@@ -348,7 +361,7 @@ var RuotationDetail = (function() {
                     "ruotationItem.itemName": that.$nowLine.find('.name .cell-wrap').text(), // 名称
                     "ruotationItem.measurementUnit": that.$nowLine.find('.unit .cell-wrap').text(), // 单位
                     "ruotationItem.workType": that.$nowLine.find('.worktype .cell-wrap').text(), // 工种
-                    "ruotationItem.unitPrice": that.$nowLine.find('.unitprice').attr('data-unitprice'), // 单价 
+                    "ruotationItem.unitPrice": that.$nowLine.find('.unitprice').attr('data-unitprice'), // 单价
                     "ruotationItem.addPrice": that.$nowLine.attr('data-addprice'), // 增补价
                     "ruotationItem.subPrice": that.$nowLine.attr('data-subprice'), // 退减价
                     "ruotationItem.formula": that.$nowLine.find('.formula .cell-wrap').text(), // 计算公式
@@ -357,6 +370,9 @@ var RuotationDetail = (function() {
                     "ruotationItem.type": that.$nowLine.find('.type').attr('data-type'), // 类型
                     "ruotationItem.subtype": that.$nowLine.find('.num').attr('data-subtype'), // 工程, 主材
                     "ruotationItem.content": that.$nowLine.prop('title'), // 说明
+                    "ruotationItem.source": that.$nowLine.attr('data-source'), // 来源:0报价/1扩展/2增减
+                    "ruotationItem.sourceItemId": that.$nowLine.attr('data-sourceItemId'), // 源单行ID
+                    "ruotationItem.qfaiId": that.$nowLine.attr('data-qfaiId'), // 报价项实例ID
                     "ruotationItem.index":  parseInt(that.$nowLine.find(".line .cell-wrap").text()) // 标识
                 };
 
@@ -435,40 +451,61 @@ var RuotationDetail = (function() {
                 return false;
             }
 
-            var index = domain.nowEditDomain.find('.fl-quo-item.item').length;
-            var quolist = domain.nowEditDomain.find('.fl-quo-list.list');
-            var areaType = domain.nowEditDomain.attr('data-areaType');
-            var quotefaId = domain.nowEditDomain.attr('data-qfaId');
+            var areaType = domain.nowEditDomain ? domain.nowEditDomain.attr('data-areaType') : 0;
 
             $.each(quotationFunctionAreaItems, function(i, v) {
 
                 var $this = $(v);
 
-                if ($this.val() && com.focusPage('.fl-quo-item[data-qiid="' + $this.val() + '"]', domain.nowEditDomain).length) {
-                    return false;
+                if (!$this.val()) {
+                    return true;
                 }
+
+                // 候选项归位其原功能区, 找不到才落到当前编辑功能区
+                var quotfaId = $this.attr('data-qfaId');
+                var $targetDomain = com.focusPage('.widget-box[data-qfaId="' + quotfaId + '"]', '#functionAreaDetailList');
+
+                if (!$targetDomain.length) {
+                    $targetDomain = domain.nowEditDomain;
+
+                    if (!$targetDomain) {
+                        return true;
+                    }
+
+                    quotfaId = $targetDomain.attr('data-qfaId');
+                }
+
+                if (com.focusPage('.fl-quo-item[data-sourceid="' + $this.val() + '"]', '#functionAreaDetailList').length) {
+                    return true;
+                }
+
+                var index = $targetDomain.find('.fl-quo-item.item').length;
+                var quolist = $targetDomain.find('.fl-quo-list.list');
 
                 var quotval = {
                     "qriid": "",
                     "ruotation": {"qrid": quoRefund.quoteRefundId},
-                    "quotationFunctionArea": {"qfaId": quotefaId},
+                    "quotationFunctionArea": {"qfaId": quotfaId},
                     "quotationItem": {"qiid": $this.attr('data-quotationItemId')},
                     "itemName": $this.attr('data-itemName'),
                     "measurementUnit": $this.attr("data-measurementUnit"),
-                    "workType": $this.attr("data-workType"),
-                    "unitPrice": $this.attr("data-unitPrice"),
-                    "addPrice": $this.attr("data-addPrice"),
+                    "workType": $this.attr('data-workType'),
+                    "unitPrice": $this.attr('data-unitPrice'),
+                    "addPrice": $this.attr('data-addPrice'),
                     "subPrice": $this.attr('data-subPrice'),
                     "formula": "",
                     "initNum": $this.attr('data-initNum'),
-                    "num": 0,
+                    "num": $this.attr('data-initNum'),
                     "type": $this.attr('data-type'),
                     "subtype": $this.attr('data-subtype'),
                     "content": $this.attr('data-content'),
-                    "areaType": areaType
+                    "source": $this.attr('data-source'),
+                    "sourceItemId": $this.attr('data-sourceItemId'),
+                    "qfaiId": $this.attr('data-qfaiId'),
+                    "areaType": $targetDomain.attr('data-areaType') || areaType
                 };
 
-                painter.createQuote(index + i + 1, quotval).appendTo(quolist);
+                painter.createQuote(index + 1, quotval).appendTo(quolist);
 
             });
 
@@ -754,10 +791,10 @@ var RuotationDetail = (function() {
             }
 
             if (dv.type != constant.quotation().quotationFunctionArea.TYPE_MANAGEMENT_INT) {
-                $btns.$btnAdd.click(function() {// 添加报价中的工程报价项
+                $btns.$btnAdd.click(function() {// 添加三源候选项目(报价/扩展/增减)
 
                     domain.nowEditDomain = $domain;
-                    domain.queryQuotationFunctionAreaItem(dv.qfaId);
+                    domain.queryRuotationCandidates();
                     quoRefund.quoModals.$addQuotaionFunctionAreaItemModal.modal("show");
                     com.focusPage('#addItemFunctionAreaIndex').val(dv.qfaId);
                 });
@@ -947,6 +984,10 @@ var RuotationDetail = (function() {
 
             $item.attr('data-qriid', qv.qriid);
             $item.attr('data-qiid', qv.quotationItem.qiid);
+            $item.attr('data-source', qv.source);
+            $item.attr('data-sourceid', (qv.source != null ? qv.source : 0) + "-" + (qv.sourceItemId != null ? qv.sourceItemId : qv.qriid));
+            $item.attr('data-sourceItemId', qv.sourceItemId);
+            $item.attr('data-qfaiId', qv.qfaiId);
             $item.attr('data-expres', qv.quotationItem.formula ? qv.quotationItem.formula : "");
             $item.attr('data-isRtem', qv.quotationItem.isRtem == 1 ? 1 : 0);
 
@@ -957,7 +998,7 @@ var RuotationDetail = (function() {
             return $item;
         },
 
-        // 创建添加报价项天窗中的报价项
+        // 创建添加退报项弹窗中的候选项目(报价/扩展/增减三源)
         createQuoteModalItem: function(v) {
 
             var $liLine = $('<li></li>').addClass('item-blue clearfix');
@@ -975,24 +1016,43 @@ var RuotationDetail = (function() {
                 "data-addPrice": v.addPrice,
                 "data-subPrice": v.subPrice,
                 "data-measurementUnit": v.measurementUnit,
-                "data-quotationItemId": v.quotationItemId,
+                "data-quotationItemId": v.quotationItem.qiid,
                 "data-type": v.type,
                 "data-subtype": v.subtype,
                 "data-workType": v.workType,
                 "data-content": v.content,
                 "data-formula": v.formula,
                 "data-num": v.num,
-                "data-isRtem": v.isRtem,
-            }).val(v.quotationItemId);
+                "data-initNum": v.initNum,
+                "data-source": v.source,
+                "data-sourceItemId": v.sourceItemId,
+                "data-qfaiId": v.qfaiId,
+                "data-qfaId": v.quotationFunctionArea.qfaId,
+                "data-incur": v.incur
+            }).val(v.source + "-" + v.sourceItemId);
 
-            var $span = $('<span></span>').addClass('lbl blue bigger-150').text(v.itemName);
+            var sourceClz = v.source == 1 ? "orange" : (v.source == 2 ? "purple" : "blue");
+            var $span = $('<span></span>').addClass('lbl bigger-150').append($('<span></span>').addClass('label label-' + sourceClz + ' arrowed-in').css({
+                "margin-right": "5px",
+                "font-size": "12px"
+            }).text(v.sourceName || "报价")).append(v.itemName);
+
+            if (v.incur == 1) {
+                $span.append($('<span></span>').addClass('label label-success arrowed-in-right').css({
+                    "margin-left": "5px",
+                    "font-size": "12px"
+                }).text("已产生费用"));
+            }
+
             var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
 
             var propertyArr = [];
+            propertyArr.push(["来源:", v.sourceName || "报价", sourceClz]);
             propertyArr.push(["单位:", v.measurementUnit, "red"]);
             propertyArr.push(["工种:", v.workType, "red"]);
             propertyArr.push(["工程量:", v.num, "blue"]);
             propertyArr.push(["单价:", v.unitPrice, "blue"]);
+            propertyArr.push(["已产生费用:", v.incur == 1 ? "是" : "否", v.incur == 1 ? "green" : "grey"]);
             propertyArr.push(["说明:", v.content, "grey"]);
 
             $.each(propertyArr, function(index, value) {

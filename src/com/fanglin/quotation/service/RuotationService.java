@@ -13,6 +13,8 @@ public interface RuotationService {
 
 	public RuotationVO queryRuotationById(RuotationVO ruotationVO) throws FLException;
 
+	public RuotationVO queryRuotationByOrderId(RuotationVO ruotationVO) throws FLException;
+
 	public int addRuotation(RuotationVO ruotationVO, String userId) throws FLException;
 
 	public int updateRuotation(RuotationVO ruotationVO) throws FLException;

@@ -1189,6 +1189,14 @@ $.extend(api, {
                 args: ["totalPrice"]
             }]
         },
+        queryRuotationByOrderId: {
+            url: "queryRuotationByOrderId.do",
+            type: "query",
+            tranargs: [{
+                result: "ruotation",
+                args: ["totalPrice"]
+            }]
+        },
         addRuotation: {
             url: "addRuotation.do",
             type: "update",
@@ -1210,6 +1218,14 @@ $.extend(api, {
         queryRuotationItem: {
             url: "queryRuotationItem.do",
             demo: true,
+            type: "query",
+            tranargs: [{
+                result: "ruotationItems",
+                args: ["unitPrice", "addPrice", "subPrice", "initNum", "num"]
+            }]
+        },
+        queryRuotationItemForCandidateByOrderId: {
+            url: "queryRuotationItemForCandidateByOrderId.do",
             type: "query",
             tranargs: [{
                 result: "ruotationItems",

@@ -2845,6 +2845,25 @@ $(function() {
             }
             com.focusPage("#refundConstructionProgress").text(constructionProgress);
 
+            // 退报单弱关联带出: 有退报单自动填已发生项目金额(可编辑), 无则软提示(先软后硬口径)
+            com.post(api.quotation.queryRuotationByOrderId, {
+                "ruotation.decoration.orderId": orderId
+            }, function(res) {
+
+                if (res.ruotation) {
+
+                    com.focusPage("#refundIncurredAmount").val(res.ruotation.totalPrice);
+
+                    com.showAlert(com.info, "已带出退报单已发生项目金额, 可按实际情况修改");
+                } else {
+
+                    com.showAlert(com.info, "该订单未创建退报单, 已发生项目金额需手工填写");
+                }
+            }, function(error) {
+
+                com.showAlert(com.info, "该订单未创建退报单, 已发生项目金额需手工填写");
+            }, false);
+
             // 第二步：获取活动物品信息并填充到"已办理优惠明细"
             com.post(api.decoration.queryDecorationActivityItem, {
                 "decoration.orderId": orderId

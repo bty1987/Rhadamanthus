@@ -25,6 +25,11 @@ public class RuotationPO implements Serializable{
 
 	private static final long serialVersionUID = -3339190398463881091L;
 
+	public static final short STATUS_INIT_INT = 0;// 编辑中
+	public static final short STATUS_SUBMIT_INT = 1;// 已提交(终止审批中)
+	public static final short STATUS_EFFECT_INT = 2;// 已生效(终止落地)
+	public static final short STATUS_OBSOLETE_INT = 3;// 已作废
+
 	private long qrid;
 
 	private DecorationPO decoration;
@@ -40,6 +45,8 @@ public class RuotationPO implements Serializable{
 	private long totalPrice;
 
 	private String content;
+
+	private short status;
 
 	@Id
 	@GeneratedValue
@@ -117,6 +124,15 @@ public class RuotationPO implements Serializable{
 
 	public void setContent(String content) {
 		this.content = content;
+	}
+
+	@Column(name = "status")
+	public short getStatus() {
+		return status;
+	}
+
+	public void setStatus(short status) {
+		this.status = status;
 	}
 
 	public RuotationVO ptv(RuotationVO ruotationVO) {

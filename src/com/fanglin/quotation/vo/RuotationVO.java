@@ -29,6 +29,8 @@ public class RuotationVO implements Serializable {
 
 	private String content;
 
+	private Short status;
+
 	public RuotationVO() {
 		super();
 	}
@@ -105,5 +107,13 @@ public class RuotationVO implements Serializable {
 
 	public void setContent(String content) {
 		this.content = content;
+	}
+
+	public Short getStatus() {
+		return status;
+	}
+
+	public void setStatus(Short status) {
+		this.status = status;
 	}
 }

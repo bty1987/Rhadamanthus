@@ -39,6 +39,14 @@ public class RuotationItemAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "queryRuotationItemForCandidateByOrderId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryRuotationItemForCandidateByOrderId() throws FLException {
+
+		ruotationItems = ruotationItemService.queryRuotationItemForCandidateByOrderId(ruotationItem);
+
+		return SUCCESS;
+	}
+
 	@Action(value = "updateRuotationItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String updateRuotationItem() throws FLException {
 

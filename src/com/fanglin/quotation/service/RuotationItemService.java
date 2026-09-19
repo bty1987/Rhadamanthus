@@ -10,6 +10,8 @@ public interface RuotationItemService {
 
 	public List<RuotationItemVO> queryRuotationItem(RuotationItemVO ruotationItemVO) throws FLException;
 
+	public List<RuotationItemVO> queryRuotationItemForCandidateByOrderId(RuotationItemVO ruotationItemVO) throws FLException;
+
 	public RuotationItemVO updateRuotationItem(RuotationItemVO ruotationItemVO, RuotationVO ruotationVO) throws FLException;
 
 	public int updateRuotationItemForIndex(List<RuotationItemVO> ruotationItemVOs) throws FLException;
