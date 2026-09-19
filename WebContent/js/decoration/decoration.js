@@ -2707,29 +2707,9 @@ $(function() {
 
         } else if (data.action == "goto") {
 
-            if (data.page == "contract") {
-
-                modalAgreementModal(row.orderId, row.customer.cid, row, "advance");
-
-            } else if (data.page == "activity") {
-
-                viewDecorationActivity(row.orderId);
-
-            } else if (data.page == "quotation") {
-
-                com.switchPage(api.index.quotationIndex.url);
-
-            } else if (data.page == "protation") {
-
-                com.switchPage(api.index.protationIndex.url);
-
-            } else if (data.page == "payment") {
+            if (data.page == "payment") {
 
                 com.switchPage(api.index.decorationPaymentIndex.url);
-
-            } else if (data.page == "approval") {
-
-                com.switchPage(api.index.userApproveIndex.url);
             }
         }
     });

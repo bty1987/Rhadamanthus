@@ -1,6 +1,6 @@
 # 签约准备操作台(Sign Prepare)设计方案
 
-> 版本:v3.0(2026-09-19,实施后改造:**撤销后端聚合,改为前端拼装既有接口,零后端改动**)
+> 版本:v3.1(2026-09-19,实施后二次改造:**前置操作全面就地化**去跳转;收款/审批按用户口径豁免——收款保留跳转,审批仅提示)
 > 状态:已实施完毕(实施记录见 §8),待生产发版与回归测试
 > 关联记忆:material-plan-design(popup4page 弹窗页先例)、supervision4detail(嵌套弹窗 modal+.load 先例)、app.popup 先例(additem/matplan)
 
@@ -232,3 +232,16 @@
 - 两版 `js/api/decoration.js` 删除聚合接口注册(api.index.decorationSignPrepareIndex 保留);
 - 两版 `decoration4sign.js` 数据层重写:queryData 改为 8 个既有接口同步串行拼装(§3.1 表),渲染/轻操作/事件桥零改动;款项域与签约校验同源接口,审批计数用 pageApproval+filters(totalRecords,company 过滤可能有微小偏差→前端参考口径,后端 140037 兜底);
 - 发版缩为两件:SQL + 前端(零 jar)。
+
+### 8.8 v3.1 改造记录(2026-09-19 同日,用户拍板:就绪台内加载对应数据就地完成操作,不再跳转;收款不就地收款、审批仅提示)
+
+- **就地化新增**(两版弹窗页同构):
+  - 款项区块:加载全单款项明细(`queryDecorationPaymentByOrderId`,详情页 initPayment 同款接口),checklist 内逐行展示 类型/应收/状态;保留"去装修款页"跳转(收款豁免,收款表单含六种方式不就地复刻);
+  - 报价区块:展示报价构成(优惠内/优惠外/运费/管理费,quotation VO 现成字段);无报价时给"刷新"按钮;**去"去报价页"跳转**;
+  - 活动区块:补"换活动"(确认→deleteDecorationActivity→刷新后重新参加)与未参加时"参加活动";**去"去活动页"跳转**;活动有效期展示;
+  - 合同区块:补**公司签**(querySignet 签章下拉+signDecorationContractForCompany{dcid,sid},与 decorationContract 页同参)与**查看合同**(viewDecorationContract→popup4frame/parent.app.popup);**去"去合同页"跳转**;
+  - 预签报价区块:补**就地锁定/解锁**(lockProtation/unlockProtation{pid},锁定条件 status=0/解锁条件 status=2);**去"去预签报价页"跳转**;app 版 api/quotation.js 补 lock/unlockProtation 两行注册;
+  - 审批区块:**去"去审批页"按钮**,仅状态+提示文字("请先处理完相关审批后再回本页签约",处理不就地)。
+- **宿主事件桥裁剪**:两版 decoration.js 的 goto 分支只留 payment,删 quotation/activity/contract/protation/approval 五分支(不再触发)。
+- checklist item 渲染支持 detail 明细行(款项列表)。
+- 发版物不变:SQL + 前端(零 jar)。

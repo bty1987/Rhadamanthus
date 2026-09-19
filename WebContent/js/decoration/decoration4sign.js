@@ -101,6 +101,18 @@ jQuery(function($) {
             data.paymentReady = payments.length > 0;
         }, null, false);
 
+        // 款项明细(全单款项行, 就地展示)
+        data.payments = [];
+
+        com.post(api.payment.queryDecorationPaymentByOrderId, {
+            "decorationPayment.decoration.orderId": signPrepare.orderId
+        }, function(res) {
+
+            data.payments = (res.decorationPayments || []).sort(function(a, b) {
+                return (a.sort || 0) - (b.sort || 0);
+            });
+        }, null, false);
+
         // 报价: 默认报价
         data.quotationReady = false;
 
@@ -117,6 +129,7 @@ jQuery(function($) {
                 data.quotationAttstatus = quotation.attstatus;
                 data.quotationTotalPrice = quotation.totalPrice;
                 data.quotationVersionName = quotation.version ? quotation.version.name : null;
+                data.quotationPriceParts = "优惠内 " + (quotation.disPrice || 0) + " / 优惠外 " + (quotation.undisPrice || 0) + " / 运费 " + (quotation.trafficPrice || 0) + " / 管理费 " + (quotation.managePrice || 0);
             }
         }, function() {}, false);
 
@@ -218,6 +231,7 @@ jQuery(function($) {
             var protation = res.protation || {};
 
             if (protation.pid != null) {
+                data.protationPid = protation.pid;
                 data.protationStatus = protation.status;
                 data.protationTotalPrice = protation.totalPrice;
             }
@@ -282,11 +296,24 @@ jQuery(function($) {
             desc: "签约要求订单处于 初始/定金/预签/重签 状态"
         });
 
+        var paymentStatusText = ["未付款", "已付款", "已确认", "审批中", "历史"];
+
+        var paymentDetail = "";
+
+        $.each(data.payments || [], function(i, payment) {
+            paymentDetail += '<div style="font-size:12px;">' + (i + 1) + '. ' + (payment.paymentType || '-') + ' : 应收 ' + (payment.referMoney || 0) + ' 元 / ' + (paymentStatusText[payment.paymentStatus] || payment.paymentStatus) + '</div>';
+        });
+
+        if (paymentDetail == "") {
+            paymentDetail = '<div style="font-size:12px;">该单尚无款项行</div>';
+        }
+
         items.push({
             state: data.paymentReady ? "ok" : "fail",
             title: "合同款已收",
             value: data.paymentReady ? "已收合同款: " + (data.paymentMoney || 0) + " 元" : "尚无已付款/已确认的合同款",
-            desc: "签约前必须存在已付款或已确认的合同款(收款类), 收款请在装修款页面完成",
+            desc: "签约前必须存在已付款或已确认的合同款(收款类); 收款请在装修款页面完成",
+            detail: paymentDetail,
             btns: [{
                 act: "goto-payment",
                 label: "去装修款页",
@@ -304,8 +331,8 @@ jQuery(function($) {
 
         if (!data.quotationReady) {
             quotationBtns.push({
-                act: "goto-quotation",
-                label: "去报价页",
+                act: "refresh-quotation",
+                label: "刷新",
                 clazz: "btn-info"
             });
         } else {
@@ -323,18 +350,13 @@ jQuery(function($) {
                     clazz: "btn-info"
                 });
             }
-            quotationBtns.push({
-                act: "goto-quotation",
-                label: "去报价页",
-                clazz: "btn-info"
-            });
         }
 
         items.push({
             state: data.quotationReady ? "ok" : "fail",
             title: "默认报价存在",
             value: quotationValue,
-            desc: "签约要求存在默认报价; 签约时将自动锁定该单全部报价, 如需签约前锁定防改动可在此手动锁定(需审核完成)",
+            desc: "签约要求存在默认报价; 签约时将自动锁定该单全部报价, 如需签约前锁定防改动可在此手动锁定(需审核完成)" + (data.quotationPriceParts ? "; 构成: " + data.quotationPriceParts : ""),
             btns: quotationBtns
         });
 
@@ -343,11 +365,22 @@ jQuery(function($) {
 
         var activityBtns = [];
 
+        if (data.activityStatus == -1) {
+            activityBtns.push({
+                act: "join-activity",
+                label: "参加活动",
+                clazz: "btn-yellow"
+            });
+        }
         if (data.activityStatus == 0) {
             activityBtns.push({
                 act: "lock-activity",
                 label: "锁定活动",
                 clazz: "btn-pink"
+            }, {
+                act: "change-activity",
+                label: "换活动",
+                clazz: "btn-yellow"
             });
         }
         if (data.activityStatus == 1) {
@@ -357,17 +390,12 @@ jQuery(function($) {
                 clazz: "btn-info"
             });
         }
-        activityBtns.push({
-            act: "goto-activity",
-            label: "去活动页",
-            clazz: "btn-info"
-        });
 
         items.push({
             state: activityState,
             title: "活动已锁定(建议)",
             value: activityValue,
-            desc: "正式签约不强制校验活动; 但活动锁定后不可误删误改, 且预签必须先锁定活动, 建议签约前完成锁定",
+            desc: "正式签约不强制校验活动; 但活动锁定后不可误删误改, 且预签必须先锁定活动, 建议签约前完成锁定" + (data.activityEndTime ? "; 活动有效期至: " + String(data.activityEndTime).substring(0, 10) : ""),
             btns: activityBtns
         });
 
@@ -384,6 +412,10 @@ jQuery(function($) {
             });
         } else if (data.contractStatus == 0) {
             contractBtns.push({
+                act: "company-sign",
+                label: "公司签",
+                clazz: "btn-purple"
+            }, {
                 act: "customer-sign",
                 label: "客户签",
                 clazz: "btn-purple"
@@ -397,17 +429,19 @@ jQuery(function($) {
                 clazz: "btn-inverse"
             });
         }
-        contractBtns.push({
-            act: "goto-contract",
-            label: "去合同页",
-            clazz: "btn-info"
-        });
+        if (data.contractStatus != -1) {
+            contractBtns.push({
+                act: "view-contract",
+                label: "查看合同",
+                clazz: "btn-white"
+            });
+        }
 
         items.push({
             state: contractState,
             title: "电子合同已签署(建议)",
             value: contractValue,
-            desc: "电子合同与订单签约相互独立, 签约不校验合同; 建议签约前完成合同创建与签署(公司签请在合同页完成)",
+            desc: "电子合同与订单签约相互独立, 签约不校验合同; 建议签约前完成合同创建与签署(公司签选择签章, 客户签打开签署页)",
             btns: contractBtns
         });
 
@@ -440,12 +474,7 @@ jQuery(function($) {
             state: data.approvalCount == 0 ? "ok" : "fail",
             title: "审批已清零",
             value: data.approvalCount == 0 ? "无未处理审批" : "存在 " + data.approvalCount + " 条未处理审批",
-            desc: "签约要求订单无未处理审批项, 请先在审批页完成处理",
-            btns: [{
-                act: "goto-approval",
-                label: "去审批页",
-                clazz: "btn-info"
-            }]
+            desc: "签约要求订单无未处理审批项, 请先处理完相关审批后再回本页签约"
         });
 
         return items;
@@ -472,11 +501,13 @@ jQuery(function($) {
                 clazz: "btn-yellow"
             });
         }
-        activityBtns.push({
-            act: "goto-activity",
-            label: "去活动页",
-            clazz: "btn-info"
-        });
+        if (data.activityStatus == 0) {
+            activityBtns.push({
+                act: "change-activity",
+                label: "换活动",
+                clazz: "btn-yellow"
+            });
+        }
 
         items.push({
             state: data.activityStatus != -1 ? "ok" : "fail",
@@ -515,31 +546,52 @@ jQuery(function($) {
             state: data.protationStatus != -1 ? "ok" : "fail",
             title: "预签报价存在",
             value: data.protationStatus != -1 ? "预签报价总额: " + (data.protationTotalPrice || 0) + " 元" : "尚无预签报价",
-            desc: "预签要求存在默认预签报价(protation)",
-            btns: [{
-                act: "goto-protation",
-                label: "去预签报价页",
-                clazz: "btn-info"
-            }]
+            desc: "预签要求存在默认预签报价(protation), 请在预签报价页完成创建与编辑"
         });
+
+        var protationBtns = [];
+
+        if (data.protationStatus == 0) {
+            protationBtns.push({
+                act: "lock-protation",
+                label: "锁定预签报价",
+                clazz: "btn-pink"
+            });
+        }
+        if (data.protationStatus == 2) {
+            protationBtns.push({
+                act: "unlock-protation",
+                label: "解锁预签报价",
+                clazz: "btn-info"
+            });
+        }
 
         items.push({
             state: data.protationStatus == 2 ? "ok" : "fail",
             title: "预签报价已锁定",
             value: data.protationStatus != -1 ? "预签报价状态: " + (PROTATION_STATUS[data.protationStatus] || data.protationStatus) : "尚无预签报价",
-            desc: "预签要求预签报价处于锁定状态, 请在预签报价页完成锁定",
-            btns: [{
-                act: "goto-protation",
-                label: "去预签报价页",
-                clazz: "btn-info"
-            }]
+            desc: "预签要求预签报价处于锁定状态, 可在此直接锁定",
+            btns: protationBtns
         });
+
+        var paymentStatusText = ["未付款", "已付款", "已确认", "审批中", "历史"];
+
+        var paymentDetail = "";
+
+        $.each(data.payments || [], function(i, payment) {
+            paymentDetail += '<div style="font-size:12px;">' + (i + 1) + '. ' + (payment.paymentType || '-') + ' : 应收 ' + (payment.referMoney || 0) + ' 元 / ' + (paymentStatusText[payment.paymentStatus] || payment.paymentStatus) + '</div>';
+        });
+
+        if (paymentDetail == "") {
+            paymentDetail = '<div style="font-size:12px;">该单尚无款项行</div>';
+        }
 
         items.push({
             state: data.paymentReady ? "ok" : "warn",
             title: "款项参考(建议)",
             value: data.paymentReady ? "已收合同款: " + (data.paymentMoney || 0) + " 元" : "尚无已收合同款",
-            desc: "预签不强制校验收款, 仅作签约进度参考",
+            desc: "预签不强制校验收款, 仅作签约进度参考; 收款请在装修款页面完成",
+            detail: paymentDetail,
             btns: [{
                 act: "goto-payment",
                 label: "去装修款页",
@@ -559,6 +611,10 @@ jQuery(function($) {
         html += '<div class="alert ' + stateClass + '" style="margin-bottom:8px;padding:8px 12px;">';
         html += '<div><strong style="font-size:14px;">' + stateIcon + ' ' + item.title + '</strong>&nbsp;&nbsp;<span>' + item.value + '</span></div>';
         html += '<div style="color:#999;font-size:12px;margin:2px 0 4px 0;">' + item.desc + '</div>';
+
+        if (item.detail) {
+            html += '<div style="margin:0 0 4px 8px;">' + item.detail + '</div>';
+        }
 
         if (item.btns && item.btns.length > 0) {
             html += '<div>';
@@ -640,6 +696,57 @@ jQuery(function($) {
                 "decorationActivity.daId": data.activityDaId
             }, function() {
                 com.showAlert(com.info, "活动已解锁");
+                queryData();
+            });
+
+        } else if (act == "change-activity") {
+
+            com.showConfirm("更换活动需先删除当前活动(未锁定), 删除后可重新参加, 确认删除?", function() {
+
+                com.post(api.decoration.deleteDecorationActivity, {
+                    "decorationActivity.daId": data.activityDaId
+                }, function() {
+                    com.showAlert(com.info, "活动已删除, 可重新参加");
+                    queryData();
+                });
+            });
+
+        } else if (act == "refresh-quotation") {
+
+            queryData();
+
+        } else if (act == "company-sign") {
+
+            com.post(api.data.querySignet, {}, function(res) {
+
+                com.focusPage("#signetSel").bindData(res.signets, "sid", "name", false);
+
+                com.focusPage("#companySignModal").modal("show");
+            }, null, false);
+
+        } else if (act == "view-contract") {
+
+            com.post(api.decoration.viewDecorationContract, {
+                "decorationContract.dcid": data.contractDcid
+            }, function(res) {
+                com.popup4frame("合同查看", res.redirect);
+            });
+
+        } else if (act == "lock-protation") {
+
+            com.post(api.quotation.lockProtation, {
+                "protation.pid": data.protationPid
+            }, function() {
+                com.showAlert(com.info, "预签报价已锁定");
+                queryData();
+            });
+
+        } else if (act == "unlock-protation") {
+
+            com.post(api.quotation.unlockProtation, {
+                "protation.pid": data.protationPid
+            }, function() {
+                com.showAlert(com.info, "预签报价已解锁");
                 queryData();
             });
 
@@ -791,6 +898,23 @@ jQuery(function($) {
                 com.showAlert(com.info, "放线申请已提交");
                 com.focusPage("#applayDrawLineModal").modal("hide");
             });
+        });
+    });
+
+    // 公司签: 选签章后提交
+    com.focusPage("#companySignSaveBtn").on("click", function() {
+
+        if (com.validate("companySignModal")) {
+            return false;
+        }
+
+        com.post(api.decoration.signDecorationContractForCompany, {
+            "decorationContract.dcid": signPrepare.data.contractDcid,
+            "signet.sid": com.focusPage("#signetSel").val()
+        }, function() {
+            com.showAlert(com.info, "公司签已完成");
+            com.focusPage("#companySignModal").modal("hide");
+            queryData();
         });
     });
 
