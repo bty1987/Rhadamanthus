@@ -623,6 +623,34 @@ $.extend(api, {
             url: "deleteConstructionPlan.do"
         },
 
+        queryMaterialPlanByOrderId: {
+            url: "queryMaterialPlanByOrderId.do",
+            type: "query"
+        },
+        makeMaterialPlan: {
+            url: "makeMaterialPlan.do",
+            type: "update"
+        },
+        addMaterialPlan: {
+            url: "addMaterialPlan.do",
+            type: "update"
+        },
+        updateMaterialPlan: {
+            url: "updateMaterialPlan.do",
+            type: "update"
+        },
+        confirmMaterialPlan: {
+            url: "confirmMaterialPlan.do",
+            type: "update"
+        },
+        cancelMaterialPlan: {
+            url: "cancelMaterialPlan.do",
+            type: "update"
+        },
+        deleteMaterialPlan: {
+            url: "deleteMaterialPlan.do"
+        },
+
         pageConstructionDiary: {
             url: "pageConstructionDiary.do",
             demo: true

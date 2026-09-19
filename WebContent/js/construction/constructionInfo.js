@@ -316,6 +316,17 @@ jQuery(function($) {
                     return btnVisible("conplan");
                 }
             },
+            matplan: {
+                name: "主材计划",
+                clazz: "btn-pink",
+                handle: function(v) {
+                    params.construction = v;
+                    com.popup4page("#stockRecordPopUp", "/views/construction/materialPlan.html", "主材计划");
+                },
+                show: function() {
+                    return btnVisible("matplan");
+                }
+            },
             proLine: {
                 name: "预派监理",
                 clazz: "btn-inverse",

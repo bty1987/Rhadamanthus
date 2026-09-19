@@ -1,0 +1,168 @@
+<div id="fl-statement">
+    <div class="page-header">
+        <h1>
+            <span>主材计划</span>
+            <small data-i18n="page.construction.label.materialPlan">主材下单配送到货计划</small>
+        </h1>
+    </div>
+</div>
+<div class="row">
+    <div class="col-xs-12">
+        <div class="row" style="margin-left:10px;margin-right:10px">
+            <div id="materialPlans"></div>
+            <div>
+                <div>
+                    <a class="btn btn-minier btn-info pull-left" id="makeBtn" style="margin-top: 7px;margin-left: 2px">
+                        <i class="icon-plus bigger-110"></i>
+                        <span>生成</span>
+                    </a>
+                </div>
+                <div>
+                    <a class="btn btn-minier btn-yellow pull-left" id="addBtn" style="margin-top: 7px;margin-left: 2px">
+                        <i class="icon-plus bigger-110"></i>
+                        <span>添加</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="materialPlanModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">
+                    <span>&times;</span><span class="sr-only">Close</span>
+                </button>
+                <h4 class="modal-title" id="myModalLabel">添加主材计划</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal">
+
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right orange">维度</label>
+                        <div class="col-md-9">
+                            <select id='type' class='col-xs-10 col-sm-6'></select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right orange">品类</label>
+                        <div class="col-md-9">
+                            <select id='cid' class='col-xs-10 col-sm-6'></select>
+                        </div>
+                    </div>
+
+                    <div class="form-group" id="brandGroup">
+                        <label class="col-sm-3 control-label no-padding-right orange">品牌</label>
+                        <div class="col-md-9">
+                            <select id='bid' class='col-xs-10 col-sm-6'></select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right orange">施工节点</label>
+                        <div class="col-md-9">
+                            <select id='cnid' class='col-xs-10 col-sm-6'></select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right orange">动作</label>
+                        <div class="col-md-9">
+                            <select id='action' class='col-xs-10 col-sm-6'></select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right orange">时间锚点</label>
+                        <div class="col-md-9">
+                            <select id='anchor' class='col-xs-10 col-sm-6'></select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right">偏移天数(负=锚点前,0=当日)</label>
+                        <div class="col-md-9">
+                            <input type="text" maxlength="8" class="col-xs-10 col-sm-6 v_anumber" data-toggle="popover" data-placement="bottom" data-trigger="manual" id="offsetDay">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right">指定时点(不填按锚点推算)</label>
+                        <div class="col-md-9">
+                            <input id="manualTime" class="date-picker-date col-xs-10 col-sm-5" type="text" readonly="readonly" data-date-format="yyyy-mm-dd" data-toggle="popover" data-trigger='manual'/>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right">说明</label>
+                        <div class="col-md-9">
+                            <textarea id="comment" maxlength="128" class="col-xs-10 col-sm-6" rows="3"></textarea>
+                        </div>
+                    </div>
+                    <div class="space-4"></div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="saveBtn" class="btn btn-primary" data-i18n="msg.save">保存</button>
+                <button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal" data-i18n="msg.cancel">取消</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="editMaterialPlanModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">
+                    <span>&times;</span><span class="sr-only">Close</span>
+                </button>
+                <h4 class="modal-title" id="myModalLabel">编辑主材计划</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal">
+
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right">时间锚点</label>
+                        <div class="col-md-9">
+                            <select id='editAnchor' class='col-xs-10 col-sm-6'></select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right">偏移天数(负=锚点前,0=当日)</label>
+                        <div class="col-md-9">
+                            <input type="text" maxlength="8" class="col-xs-10 col-sm-6 v_anumber" data-toggle="popover" data-placement="bottom" data-trigger="manual" id="editOffsetDay">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right">指定时点(不填按锚点推算)</label>
+                        <div class="col-md-9">
+                            <input id="editManualTime" class="date-picker-date col-xs-10 col-sm-5" type="text" readonly="readonly" data-date-format="yyyy-mm-dd" data-toggle="popover" data-trigger='manual'/>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right">说明</label>
+                        <div class="col-md-9">
+                            <textarea id="editComment" maxlength="128" class="col-xs-10 col-sm-6" rows="3"></textarea>
+                        </div>
+                    </div>
+                    <div class="space-4"></div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="editBtn" class="btn btn-primary" data-i18n="msg.save">保存</button>
+                <button type="button" id="editCancelBtn" class="btn btn-default" data-dismiss="modal" data-i18n="msg.cancel">取消</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $.loadScript(['js/utils/constructionPageUtils.js', 'js/construction/materialPlan.js']);
+</script>
