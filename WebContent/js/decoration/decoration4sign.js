@@ -237,18 +237,27 @@ jQuery(function($) {
 
         var data = signPrepare.data;
 
+        var statusBadge = {
+            0: "label-info", 1: "label-primary", 2: "label-warning", 3: "label-success",
+            4: "label-warning", 5: "label-danger", 6: "label-danger", 7: "label-default",
+            8: "label-default", 20: "label-default", 30: "label-default", 32: "label-default", 33: "label-default"
+        };
+
         var html = '';
-        html += '<div class="row">';
-        html += '<div class="col-sm-3"><strong>订单号:</strong>' + data.orderId + '</div>';
-        html += '<div class="col-sm-2"><strong>状态:</strong>' + (DECORATION_STATUS[data.status] || data.status) + '</div>';
-        html += '<div class="col-sm-2"><strong>客户:</strong>' + (data.customerName || '-') + '</div>';
-        html += '<div class="col-sm-3"><strong>楼盘:</strong>' + (data.villageName || '-') + ' ' + (data.houseNumber || '') + '</div>';
-        html += '<div class="col-sm-2"><strong>设计师:</strong>' + (data.designerName || '-') + '</div>';
+        html += '<div style="padding:2px 0 8px 0;border-bottom:1px solid #e3e3e3;">';
+        html += '<span style="font-size:20px;font-weight:bold;vertical-align:middle;">' + data.orderId + '</span>';
+        html += '&nbsp;&nbsp;<span class="label ' + (statusBadge[data.status] || "label-default") + '" style="font-size:13px;vertical-align:middle;">' + (DECORATION_STATUS[data.status] || data.status) + '</span>';
+        html += '&nbsp;&nbsp;<span class="label label-primary" style="font-size:13px;vertical-align:middle;">' + (signPrepare.mode == "presign" ? "预签准备" : "签约准备") + '</span>';
         html += '</div>';
-        html += '<div class="row">';
-        html += '<div class="col-sm-4"><strong>订单总额:</strong>' + (data.orderTotalPrice || 0) + ' 元</div>';
-        html += '<div class="col-sm-4"><strong>已收合同款:</strong>' + (data.paymentMoney || 0) + ' 元</div>';
-        html += '<div class="col-sm-4">' + (signPrepare.mode == "presign" ? '<strong>预签报价:</strong>' + (data.protationTotalPrice || 0) + ' 元' : '<strong>默认报价:</strong>' + (data.quotationTotalPrice || 0) + ' 元') + '</div>';
+        html += '<div style="padding:8px 0 6px 0;color:#666;font-size:13px;">';
+        html += '<i class="icon-user"></i>&nbsp;' + (data.customerName || '-') + '&nbsp;&nbsp;&nbsp;';
+        html += '<i class="icon-home"></i>&nbsp;' + (data.villageName || '-') + ' ' + (data.houseNumber || '') + '&nbsp;&nbsp;&nbsp;';
+        html += '<i class="icon-edit"></i>&nbsp;' + (data.designerName || '-');
+        html += '</div>';
+        html += '<div class="row" style="text-align:center;margin-top:6px;padding-top:6px;border-top:1px solid #e3e3e3;">';
+        html += '<div class="col-sm-4"><div style="color:#999;font-size:12px;">订单总额</div><div style="font-size:18px;font-weight:bold;">' + (data.orderTotalPrice || 0) + ' <small>元</small></div></div>';
+        html += '<div class="col-sm-4" style="border-left:1px solid #e3e3e3;border-right:1px solid #e3e3e3;"><div style="color:#999;font-size:12px;">已收合同款</div><div style="font-size:18px;font-weight:bold;color:' + (data.paymentReady ? "#468847" : "#b94a48") + ';">' + (data.paymentMoney || 0) + ' <small>元</small></div></div>';
+        html += '<div class="col-sm-4"><div style="color:#999;font-size:12px;">' + (signPrepare.mode == "presign" ? "预签报价" : "默认报价") + '</div><div style="font-size:18px;font-weight:bold;">' + (signPrepare.mode == "presign" ? (data.protationTotalPrice || 0) : (data.quotationTotalPrice || 0)) + ' <small>元</small></div></div>';
         html += '</div>';
 
         com.focusPage("#summaryInfo").html(html);
@@ -572,16 +581,27 @@ jQuery(function($) {
 
     function buildItemHtml(item) {
 
-        var stateClass = item.state == "ok" ? "alert-success" : (item.state == "fail" ? "alert-danger" : (item.state == "warn" ? "alert-warning" : ""));
-        var stateIcon = item.state == "ok" ? "✓" : (item.state == "fail" ? "✗" : (item.state == "warn" ? "!" : "—"));
+        var stateConf = {
+            ok: { clazz: "alert-success", color: "#5cb85c", icon: "✓", label: "label-success", text: "满足" },
+            fail: { clazz: "alert-danger", color: "#d9534f", icon: "✗", label: "label-danger", text: "未满足" },
+            warn: { clazz: "alert-warning", color: "#f0ad4e", icon: "!", label: "label-warning", text: "待完成" },
+            na: { clazz: "", color: "#999999", icon: "—", label: "label-default", text: "不适用" }
+        };
+
+        var conf = stateConf[item.state] || stateConf.na;
 
         var html = '';
-        html += '<div class="alert ' + stateClass + '" style="margin-bottom:8px;padding:8px 12px;">';
-        html += '<div><strong style="font-size:14px;">' + stateIcon + ' ' + item.title + '</strong>&nbsp;&nbsp;<span>' + item.value + '</span></div>';
-        html += '<div style="color:#999;font-size:12px;margin:2px 0 4px 0;">' + item.desc + '</div>';
+        html += '<div class="alert ' + conf.clazz + '" style="margin-bottom:10px;padding:10px 14px;border-left:4px solid ' + conf.color + ';">';
+        html += '<div style="border-bottom:1px dashed rgba(0,0,0,0.12);padding-bottom:6px;margin-bottom:6px;">';
+        html += '<span style="display:inline-block;width:22px;height:22px;line-height:22px;border-radius:50%;background:' + conf.color + ';color:#fff;text-align:center;font-size:13px;font-weight:bold;margin-right:8px;vertical-align:middle;">' + conf.icon + '</span>';
+        html += '<strong style="font-size:15px;vertical-align:middle;">' + item.title + '</strong>';
+        html += '&nbsp;&nbsp;<span class="label ' + conf.label + '" style="vertical-align:middle;">' + conf.text + '</span>';
+        html += '</div>';
+        html += '<div style="margin-bottom:4px;">' + item.value + '</div>';
+        html += '<div style="color:#999;font-size:12px;margin:2px 0 6px 0;">' + item.desc + '</div>';
 
         if (item.detail) {
-            html += '<div style="margin:0 0 4px 8px;">' + item.detail + '</div>';
+            html += '<div style="margin:0 0 6px 8px;">' + item.detail + '</div>';
         }
 
         if (item.btns && item.btns.length > 0) {
