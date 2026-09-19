@@ -284,6 +284,24 @@ jQuery(function($) {
             name: "预估时间",
             prop: "planTime",
             clazz: "green"
+        },
+        "materialPlanSchedule": {
+            field: "materialPlanSchedule",
+            name: "主材计划(完/总)",
+            prop: function(v) {
+
+                return v.materialPlanTotal ? v.materialPlanConfirm + "/" + v.materialPlanTotal : "-";
+            },
+            clazz: "blue"
+        },
+        "materialPlanOverdue": {
+            field: "materialPlanOverdue",
+            name: "主材逾期",
+            prop: function(v) {
+
+                return v.materialPlanOverdue ? v.materialPlanOverdue : 0;
+            },
+            clazz: "red"
         }
     };
 
@@ -394,6 +412,24 @@ jQuery(function($) {
         },
         show: function() {
             return btnVisible("additem");
+        }
+    }, {
+        name: "主材计划",
+        clazz: "btn-pink",
+        handle: function(v) {
+
+            params.construction = {
+                decoration: {
+                    orderId: v.decoration.orderId
+                }
+            };
+
+            com.popup4page("#materialPlanPopUp", "/views/construction/materialPlan.html", "主材计划");
+
+            return false;
+        },
+        show: function() {
+            return btnVisible("matplan");
         }
     }];
 

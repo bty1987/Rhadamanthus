@@ -61,54 +61,102 @@ public class MaterialPlanServiceImpl implements MaterialPlanService {
 	@Override
 	public List<MaterialPlanVO> queryMaterialPlanByOrderId(MaterialPlanVO materialPlanVO) throws FLException {
 
-		List<MaterialPlanPO> materialPlanPOs = materialPlanDao.queryMaterialPlanByOrderId(materialPlanVO.getOrderId());
+		List<MaterialPlanVO> materialPlanVOs = queryMaterialPlanByOrderIds(Collections.singletonList(materialPlanVO.getOrderId())).get(materialPlanVO.getOrderId());
 
-		List<MaterialPlanVO> materialPlanVOs = new ArrayList<MaterialPlanVO>();
+		return materialPlanVOs == null ? new ArrayList<MaterialPlanVO>() : materialPlanVOs;
+	}
 
-		if (materialPlanPOs.size() == 0) return materialPlanVOs;
+	// 批量版: 工程进度列表页按页取多单主材计划汇总用, 5条SQL固定开销不随单数放大
+	@Override
+	public Map<String, List<MaterialPlanVO>> queryMaterialPlanByOrderIds(List<String> orderIds) {
 
-		Map<Long, ConstructionSchedulePO> scheduleMap = scheduleMap(materialPlanVO.getOrderId());
+		Map<String, List<MaterialPlanVO>> resultMap = new HashMap<String, List<MaterialPlanVO>>();
 
-		List<Object[]> salesRows = materialPlanDao.queryMaterialSalesByOrderId(materialPlanVO.getOrderId());
-		List<Object[]> deliveryRows = materialPlanDao.queryMaterialDeliveryByOrderId(materialPlanVO.getOrderId());
-		List<Object[]> selectionRows = materialPlanDao.queryMaterialSelectionByOrderId(materialPlanVO.getOrderId());
+		if (orderIds == null || orderIds.size() == 0) return resultMap;
+
+		List<MaterialPlanPO> materialPlanPOs = materialPlanDao.queryMaterialPlanByOrderIds(orderIds);
+
+		if (materialPlanPOs.size() == 0) return resultMap;
+
+		Map<String, List<MaterialPlanPO>> poMap = new HashMap<String, List<MaterialPlanPO>>();
 
 		for (MaterialPlanPO materialPlanPO : materialPlanPOs) {
 
-			MaterialPlanVO materialPlan = materialPlanPO.ptv(new MaterialPlanVO());
+			if (!poMap.containsKey(materialPlanPO.getOrderId())) poMap.put(materialPlanPO.getOrderId(), new ArrayList<MaterialPlanPO>());
 
-			ConstructionSchedulePO constructionSchedulePO = scheduleMap.get(materialPlanPO.getCnid());
-
-			materialPlan.setAnchorTime(anchorTime(constructionSchedulePO, materialPlanPO.getAnchor()));
-
-			materialPlan.setPlanTime(materialPlanPO.getManualTime() != null ? materialPlanPO.getManualTime() : offsetTime(materialPlan.getAnchorTime(), materialPlanPO.getOffsetDay()));
-
-			fillFulfillment(materialPlan, salesRows, deliveryRows, selectionRows);
-
-			materialPlan.setOverdue(materialPlan.getPlanTime() != null && materialPlanPO.getStatus() == MaterialPlanPO.STATUS_INIT_INT && materialPlan.getAutoStatus() != null && materialPlan.getAutoStatus() < (short) (materialPlanPO.getAction() + 1) && beforeToday(materialPlan.getPlanTime()) ? (short) 1 : (short) 0);
-
-			materialPlanVOs.add(materialPlan);
+			poMap.get(materialPlanPO.getOrderId()).add(materialPlanPO);
 		}
 
-		Collections.sort(materialPlanVOs, new Comparator<MaterialPlanVO>() {
+		Map<String, Map<Long, ConstructionSchedulePO>> scheduleMaps = new HashMap<String, Map<Long, ConstructionSchedulePO>>();
 
-			@Override
-			public int compare(MaterialPlanVO o1, MaterialPlanVO o2) {
+		for (ConstructionSchedulePO constructionSchedulePO : constructionScheduleDao.queryConstructionScheduleByOrderIds(orderIds)) {
 
-				long s1 = o1.getCnid() != null && scheduleMap.get(o1.getCnid()) != null ? scheduleMap.get(o1.getCnid()).getSchedule() : Long.MAX_VALUE;
-				long s2 = o2.getCnid() != null && scheduleMap.get(o2.getCnid()) != null ? scheduleMap.get(o2.getCnid()).getSchedule() : Long.MAX_VALUE;
+			if (constructionSchedulePO.getNode() == null) continue;
 
-				if (s1 != s2) return s1 > s2 ? 1 : -1;
+			if (!scheduleMaps.containsKey(constructionSchedulePO.getOrderId())) scheduleMaps.put(constructionSchedulePO.getOrderId(), new HashMap<Long, ConstructionSchedulePO>());
 
-				if (o1.getAction() != null && o2.getAction() != null && !o1.getAction().equals(o2.getAction())) return o1.getAction().compareTo(o2.getAction());
+			scheduleMaps.get(constructionSchedulePO.getOrderId()).put(constructionSchedulePO.getNode().getCnid(), constructionSchedulePO);
+		}
 
-				if (o1.getOffsetDay() != null && o2.getOffsetDay() != null && !o1.getOffsetDay().equals(o2.getOffsetDay())) return o1.getOffsetDay().compareTo(o2.getOffsetDay());
+		List<Object[]> salesRows = materialPlanDao.queryMaterialSalesByOrderIds(orderIds);
+		List<Object[]> deliveryRows = materialPlanDao.queryMaterialDeliveryByOrderIds(orderIds);
+		List<Object[]> selectionRows = materialPlanDao.queryMaterialSelectionByOrderIds(orderIds);
 
-				return o1.getMpid().compareTo(o2.getMpid());
+		for (String orderId : poMap.keySet()) {
+
+			List<MaterialPlanPO> orderPlanPOs = poMap.get(orderId);
+			Map<Long, ConstructionSchedulePO> scheduleMap = scheduleMaps.get(orderId);
+
+			if (scheduleMap == null) scheduleMap = new HashMap<Long, ConstructionSchedulePO>();
+
+			List<MaterialPlanVO> materialPlanVOs = new ArrayList<MaterialPlanVO>();
+
+			for (MaterialPlanPO materialPlanPO : orderPlanPOs) {
+
+				MaterialPlanVO materialPlan = materialPlanPO.ptv(new MaterialPlanVO());
+
+				ConstructionSchedulePO constructionSchedulePO = scheduleMap.get(materialPlanPO.getCnid());
+
+				materialPlan.setAnchorTime(anchorTime(constructionSchedulePO, materialPlanPO.getAnchor()));
+
+				materialPlan.setPlanTime(materialPlanPO.getManualTime() != null ? materialPlanPO.getManualTime() : offsetTime(materialPlan.getAnchorTime(), materialPlanPO.getOffsetDay()));
+
+				fillFulfillment(materialPlan, salesRows, deliveryRows, selectionRows);
+
+				materialPlan.setOverdue(materialPlan.getPlanTime() != null && materialPlanPO.getStatus() == MaterialPlanPO.STATUS_INIT_INT && materialPlan.getAutoStatus() != null && materialPlan.getAutoStatus() < (short) (materialPlanPO.getAction() + 1) && beforeToday(materialPlan.getPlanTime()) ? (short) 1 : (short) 0);
+
+				materialPlanVOs.add(materialPlan);
 			}
-		});
 
-		return materialPlanVOs;
+			Collections.sort(materialPlanVOs, new Comparator<MaterialPlanVO>() {
+
+				private Map<Long, ConstructionSchedulePO> scheduleMap;
+
+				public Comparator<MaterialPlanVO> setScheduleMap(Map<Long, ConstructionSchedulePO> scheduleMap) {
+					this.scheduleMap = scheduleMap;
+					return this;
+				}
+
+				@Override
+				public int compare(MaterialPlanVO o1, MaterialPlanVO o2) {
+
+					long s1 = o1.getCnid() != null && scheduleMap.get(o1.getCnid()) != null ? scheduleMap.get(o1.getCnid()).getSchedule() : Long.MAX_VALUE;
+					long s2 = o2.getCnid() != null && scheduleMap.get(o2.getCnid()) != null ? scheduleMap.get(o2.getCnid()).getSchedule() : Long.MAX_VALUE;
+
+					if (s1 != s2) return s1 > s2 ? 1 : -1;
+
+					if (o1.getAction() != null && o2.getAction() != null && !o1.getAction().equals(o2.getAction())) return o1.getAction().compareTo(o2.getAction());
+
+					if (o1.getOffsetDay() != null && o2.getOffsetDay() != null && !o1.getOffsetDay().equals(o2.getOffsetDay())) return o1.getOffsetDay().compareTo(o2.getOffsetDay());
+
+					return o1.getMpid().compareTo(o2.getMpid());
+				}
+			}.setScheduleMap(scheduleMap));
+
+			resultMap.put(orderId, materialPlanVOs);
+		}
+
+		return resultMap;
 	}
 
 	@Override
@@ -269,12 +317,11 @@ public class MaterialPlanServiceImpl implements MaterialPlanService {
 
 		if (materialPlanPO.getStatus() == MaterialPlanPO.STATUS_CANCEL_INT) {
 			materialPlanPO.setStatus(MaterialPlanPO.STATUS_INIT_INT);
-			materialPlanPO.setActualTime(null);
 		} else {
 			materialPlanPO.setStatus(MaterialPlanPO.STATUS_CANCEL_INT);
-			materialPlanPO.setActualTime(null);
 		}
 
+		materialPlanPO.setActualTime(null);
 		materialPlanPO.setOperater(userId == null || userId.length() == 0 ? 0L : Long.parseLong(userId));
 
 		materialPlanDao.update(materialPlanPO);
@@ -342,7 +389,7 @@ public class MaterialPlanServiceImpl implements MaterialPlanService {
 		return day.before(today);
 	}
 
-	// 系统履约档位: 0未履约 1已下单 2已配送 3已到货; 品牌按bid精确匹配, 品类按品类名严格匹配
+	// 系统履约档位: 0未履约 1已下单 2已配送 3已到货; 批量行首列是 orderId 须先比对, 品牌按bid精确匹配, 品类按品类名严格匹配
 	private void fillFulfillment(MaterialPlanVO materialPlan, List<Object[]> salesRows, List<Object[]> deliveryRows, List<Object[]> selectionRows) {
 
 		boolean brandDim = materialPlan.getType() != null && materialPlan.getType() == MaterialPlanPO.TYPE_BRAND_SHORT;
@@ -358,20 +405,49 @@ public class MaterialPlanServiceImpl implements MaterialPlanService {
 
 		for (Object[] row : salesRows) {
 
-			if (!hit(brandDim, brandId, categoryName, number(row[3]), null, null, (String) row[2])) continue;
+			if (!materialPlan.getOrderId().equals(row[0])) continue;
+
+			if (!hit(brandDim, brandId, categoryName, number(row[4]), null, null, (String) row[3])) continue;
 
 			salesCount++;
 
 			autoStatus = (short) Math.max(autoStatus, 1);
 
-			Timestamp createTime = (Timestamp) row[1];
+			Timestamp createTime = (Timestamp) row[2];
 
 			if (orderTime == null || (createTime != null && createTime.before(orderTime))) orderTime = createTime;
 		}
 
 		for (Object[] row : deliveryRows) {
 
-			if (!hit(brandDim, brandId, categoryName, number(row[5]), number(row[4]), (String) row[6], null)) continue;
+			if (!materialPlan.getOrderId().equals(row[0])) continue;
+
+			if (!hit(brandDim, brandId, categoryName, number(row[6]), number(row[5]), (String) row[7], null)) continue;
+
+			short status = number(row[2]) == null ? 0 : number(row[2]).shortValue();
+
+			if (status >= 3) {
+
+				autoStatus = (short) Math.max(autoStatus, 3);
+
+				Timestamp confirmTime = (Timestamp) row[4];
+
+				if (arriveTime == null || (confirmTime != null && confirmTime.after(arriveTime))) arriveTime = confirmTime;
+			} else if (status >= 1) {
+
+				autoStatus = (short) Math.max(autoStatus, 2);
+
+				Timestamp tranTime = (Timestamp) row[3];
+
+				if (deliverTime == null || (tranTime != null && tranTime.after(deliverTime))) deliverTime = tranTime;
+			}
+		}
+
+		for (Object[] row : selectionRows) {
+
+			if (!materialPlan.getOrderId().equals(row[0])) continue;
+
+			if (!hit(brandDim, brandId, categoryName, number(row[4]), null, (String) row[5], null)) continue;
 
 			short status = number(row[1]) == null ? 0 : number(row[1]).shortValue();
 
@@ -387,29 +463,6 @@ public class MaterialPlanServiceImpl implements MaterialPlanService {
 				autoStatus = (short) Math.max(autoStatus, 2);
 
 				Timestamp tranTime = (Timestamp) row[2];
-
-				if (deliverTime == null || (tranTime != null && tranTime.after(deliverTime))) deliverTime = tranTime;
-			}
-		}
-
-		for (Object[] row : selectionRows) {
-
-			if (!hit(brandDim, brandId, categoryName, number(row[3]), null, (String) row[4], null)) continue;
-
-			short status = number(row[0]) == null ? 0 : number(row[0]).shortValue();
-
-			if (status >= 3) {
-
-				autoStatus = (short) Math.max(autoStatus, 3);
-
-				Timestamp confirmTime = (Timestamp) row[2];
-
-				if (arriveTime == null || (confirmTime != null && confirmTime.after(arriveTime))) arriveTime = confirmTime;
-			} else if (status >= 1) {
-
-				autoStatus = (short) Math.max(autoStatus, 2);
-
-				Timestamp tranTime = (Timestamp) row[1];
 
 				if (deliverTime == null || (tranTime != null && tranTime.after(deliverTime))) deliverTime = tranTime;
 			}
@@ -438,17 +491,6 @@ public class MaterialPlanServiceImpl implements MaterialPlanService {
 
 	private Number number(Object obj) {
 		return obj instanceof Number ? (Number) obj : null;
-	}
-
-	private Map<Long, ConstructionSchedulePO> scheduleMap(String orderId) {
-
-		Map<Long, ConstructionSchedulePO> scheduleMap = new HashMap<Long, ConstructionSchedulePO>();
-
-		for (ConstructionSchedulePO constructionSchedulePO : constructionScheduleDao.queryConstructionScheduleByOrderId(orderId)) {
-			if (constructionSchedulePO.getNode() != null) scheduleMap.put(constructionSchedulePO.getNode().getCnid(), constructionSchedulePO);
-		}
-
-		return scheduleMap;
 	}
 
 	private String nodeName(Map<Long, ConstructionSchedulePO> scheduleMap, long cnid, String fallback) {

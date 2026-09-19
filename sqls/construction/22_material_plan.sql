@@ -8,6 +8,7 @@
 --   3. constructionfunction 种子: materialPlan 页 + constructionInfo 行按钮 matplan       [幂等]
 --   4. constructionfunctionright 授权: 复制 constructionInfo 公司集                        [幂等]
 --   5. 菜单: 规则维护页挂 443 数据字典目录(工程节点 mid=189 同级)                          [非幂等]
+--   6. constructionSchedule 页联动: 主材计划汇总列×2 + 行按钮 matplan + 授权              [幂等]
 --
 -- 生产核查(2026-09-19 只读库):
 --   communion.module MAX(mid)=929 → 本脚本取 930(执行前复核未被占用)
@@ -259,10 +260,40 @@ SELECT DISTINCT rm.rid, 930, rm.link, rm.access, 0, NOW(), rm.company
 FROM `communion`.`rolemodule` rm
 WHERE rm.mid = 189;
 
+-- 6. constructionSchedule 页联动(2026-09-19 追加): 节点级主材计划汇总 ------------------------
+-- 进度列表每行=一单一个节点, 汇总列按 orderId+cnid 统计该节点主材计划:
+--   materialPlanSchedule = 完成/总数(完成=手工确认或履约达动作档位), materialPlanOverdue = 逾期数
+-- 行按钮 matplan 弹该单完整主材计划页
+-- 🔴 production constructionSchedule 页 propertyArr/pageBtn 均为白名单, 不插以下行则列/按钮不显示
+
+INSERT INTO `construction`.`constructionfunction` (`name`,`key`,`value`,`type`,`subtype`,`comment`,`sort`)
+SELECT 'constructionSchedule','propertyArr','materialPlanSchedule',3,1,'主材计划(完/总)',17 FROM DUAL
+WHERE NOT EXISTS (SELECT 1 FROM `construction`.`constructionfunction` f WHERE f.name='constructionSchedule' AND f.`key`='propertyArr' AND f.`value`='materialPlanSchedule');
+
+INSERT INTO `construction`.`constructionfunction` (`name`,`key`,`value`,`type`,`subtype`,`comment`,`sort`)
+SELECT 'constructionSchedule','propertyArr','materialPlanOverdue',3,1,'主材逾期',18 FROM DUAL
+WHERE NOT EXISTS (SELECT 1 FROM `construction`.`constructionfunction` f WHERE f.name='constructionSchedule' AND f.`key`='propertyArr' AND f.`value`='materialPlanOverdue');
+
+INSERT INTO `construction`.`constructionfunction` (`name`,`key`,`value`,`type`,`subtype`,`comment`,`sort`)
+SELECT 'constructionSchedule','pageBtn','matplan',4,1,'主材计划',6 FROM DUAL
+WHERE NOT EXISTS (SELECT 1 FROM `construction`.`constructionfunction` f WHERE f.name='constructionSchedule' AND f.`key`='pageBtn' AND f.`value`='matplan');
+
+-- constructionSchedule 新增 3 个配置项的右行: 复制其已绑定公司
+INSERT INTO `platform`.`constructionfunctionright` (`name`,`cfid`,`company`)
+SELECT f.name, f.cfid, r.company
+FROM `construction`.`constructionfunction` f
+JOIN (SELECT DISTINCT company FROM `platform`.`constructionfunctionright` WHERE name = 'constructionSchedule') r
+WHERE f.name = 'constructionSchedule'
+AND ((f.`key` = 'propertyArr' AND f.`value` IN ('materialPlanSchedule', 'materialPlanOverdue')) OR (f.`key` = 'pageBtn' AND f.`value` = 'matplan'))
+AND NOT EXISTS (SELECT 1 FROM `platform`.`constructionfunctionright` x WHERE x.name = f.name AND x.cfid = f.cfid AND x.company = r.company);
+
 -- =============================================================================
 -- 执行后核验
 --   SELECT COUNT(*) FROM communion.constant WHERE module='construction' AND clazz='materialPlan';      -- 应 16
 --   SELECT COUNT(*) FROM construction.constructionfunction WHERE name='materialPlan';                    -- 应 21
 --   SELECT COUNT(*) FROM platform.constructionfunctionright WHERE name='materialPlan';                   -- = constructionInfo 公司数+1(含0)
+--   SELECT COUNT(*) FROM construction.constructionfunction WHERE name='constructionSchedule'
+--     AND ((`key`='propertyArr' AND `value` IN ('materialPlanSchedule','materialPlanOverdue'))
+--       OR (`key`='pageBtn' AND `value`='matplan'));                                                     -- 应 3
 --   SELECT COUNT(*) FROM communion.rolemodule WHERE mid = 930;                                          -- = mid189 授权行数
 -- =============================================================================

@@ -15,6 +15,8 @@ public interface ConstructionScheduleDao extends Dao<ConstructionSchedulePO> {
 
 	public List<ConstructionSchedulePO> queryConstructionScheduleByOrderId(String orderId);
 
+	public List<ConstructionSchedulePO> queryConstructionScheduleByOrderIds(List<String> orderIds);
+
 	public List<ConstructionSchedulePO> queryConstructionScheduleByCid(long cid);
 
 	public ConstructionSchedulePO queryConstructionScheduleByOrderId(String orderId, short schedule);

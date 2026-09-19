@@ -1,6 +1,7 @@
 package com.fanglin.construction.service;
 
 import java.util.List;
+import java.util.Map;
 
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.construction.vo.MaterialPlanVO;
@@ -8,6 +9,8 @@ import com.fanglin.construction.vo.MaterialPlanVO;
 public interface MaterialPlanService {
 
 	public List<MaterialPlanVO> queryMaterialPlanByOrderId(MaterialPlanVO materialPlanVO) throws FLException;
+
+	public Map<String, List<MaterialPlanVO>> queryMaterialPlanByOrderIds(List<String> orderIds);
 
 	public void makeMaterialPlan(MaterialPlanVO materialPlanVO) throws FLException;
 
