@@ -807,6 +807,12 @@ $.extend(api, {
                 args: ["quotePrice", "quoteArea", "preferPrice", "managePrice", "manageDiscount", "taxPrice", "costPrice", "mostPrice", "totalCost", "totalProfit", "costRate", "mostRate", "manageRate", "taxRate", "profitRate", "discount", "unitPrice", "basicPrice", "comdPrice", "commPrice", "adddPrice", "addmPrice", "subdPrice", "submPrice", "subcPrice", "accdPrice", "accmPrice", "totalPrice", "manageProfit", "advanceProfit", "activityPrice", "activityProfit"]
             }]
         },
+        lockProtation: {
+            url: "lockProtation.do"
+        },
+        unlockProtation: {
+            url: "unlockProtation.do"
+        },
         queryProtationByPid: {
             url: "queryProtationByPid.do",
             demo: true,
