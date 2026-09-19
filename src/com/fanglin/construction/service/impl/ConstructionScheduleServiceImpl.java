@@ -4,6 +4,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,9 +17,12 @@ import com.fanglin.construction.po.ConstructionInfoPO;
 import com.fanglin.construction.po.ConstructionPO;
 import com.fanglin.construction.po.ConstructionScheduleDO;
 import com.fanglin.construction.po.ConstructionSchedulePO;
+import com.fanglin.construction.po.MaterialPlanPO;
 import com.fanglin.construction.service.ConstructionScheduleService;
+import com.fanglin.construction.service.MaterialPlanService;
 import com.fanglin.construction.vo.ConstructionScheduleVO;
 import com.fanglin.construction.vo.ConstructionVO;
+import com.fanglin.construction.vo.MaterialPlanVO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.security.SensitiveDataHelper;
 import com.fanglin.core.vo.Filter;
@@ -76,6 +80,9 @@ public class ConstructionScheduleServiceImpl implements ConstructionScheduleServ
 	@Autowired
 	private DecorationAccountStatusService decorationAccountStatusService;
 
+	@Autowired
+	private MaterialPlanService materialPlanService;
+
 	@Override
 	public void pageConstructionSchedule(Paging paging, List<Filter> filters, Integer company) throws FLException {
 
@@ -88,7 +95,55 @@ public class ConstructionScheduleServiceImpl implements ConstructionScheduleServ
 			constructionVOs.add(constructionScheduleDO.ptv(new ConstructionScheduleVO(new ConstructionNodeVO(), new ConstructionVO(new DecorationVO(), new UserBaseVO()), new DecorationVO())));
 		}
 
+		fillMaterialPlanSummary(constructionVOs);
+
 		paging.setData(constructionVOs);
+	}
+
+	// 主材计划节点级汇总: 每页订单集一次批量取(5条SQL固定开销), 完成口径=手工确认或履约达动作档位
+	private void fillMaterialPlanSummary(List<ConstructionScheduleVO> constructionVOs) {
+
+		if (constructionVOs.size() == 0) return;
+
+		List<String> orderIds = new ArrayList<String>();
+
+		for (ConstructionScheduleVO constructionVO : constructionVOs) {
+			if (constructionVO.getOrderId() != null && !orderIds.contains(constructionVO.getOrderId())) orderIds.add(constructionVO.getOrderId());
+		}
+
+		if (orderIds.size() == 0) return;
+
+		Map<String, List<MaterialPlanVO>> materialPlanMap = materialPlanService.queryMaterialPlanByOrderIds(orderIds);
+
+		for (ConstructionScheduleVO constructionVO : constructionVOs) {
+
+			int total = 0;
+			int confirm = 0;
+			int overdue = 0;
+
+			List<MaterialPlanVO> materialPlanVOs = materialPlanMap.get(constructionVO.getOrderId());
+
+			if (materialPlanVOs != null && constructionVO.getNode() != null && constructionVO.getNode().getCnid() != null) {
+
+				long cnid = constructionVO.getNode().getCnid();
+
+				for (MaterialPlanVO materialPlanVO : materialPlanVOs) {
+
+					if (materialPlanVO.getCnid() == null || materialPlanVO.getCnid() != cnid) continue;
+
+					total++;
+
+					if (materialPlanVO.getStatus() != null && materialPlanVO.getStatus() == MaterialPlanPO.STATUS_CONFIRM_INT) confirm++;
+					else if (materialPlanVO.getAutoStatus() != null && materialPlanVO.getAction() != null && materialPlanVO.getAutoStatus() >= materialPlanVO.getAction() + 1) confirm++;
+
+					if (materialPlanVO.getOverdue() != null && materialPlanVO.getOverdue() == 1) overdue++;
+				}
+			}
+
+			constructionVO.setMaterialPlanTotal(total);
+			constructionVO.setMaterialPlanConfirm(confirm);
+			constructionVO.setMaterialPlanOverdue(overdue);
+		}
 	}
 
 	@Override

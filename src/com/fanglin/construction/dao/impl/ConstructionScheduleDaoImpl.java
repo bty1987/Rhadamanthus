@@ -41,6 +41,12 @@ public class ConstructionScheduleDaoImpl extends DaoImpl<ConstructionSchedulePO>
 
 	@Override
 	@SuppressWarnings("unchecked")
+	public List<ConstructionSchedulePO> queryConstructionScheduleByOrderIds(List<String> orderIds) {
+		return session().createCriteria(ConstructionSchedulePO.class).add(Restrictions.in(ConstructionSchedulePO.COLUMN_ORDERID_STR, orderIds)).list();
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
 	public List<ConstructionSchedulePO> queryConstructionScheduleByCid(long cid) {
 		return session().createCriteria(ConstructionSchedulePO.class).add(Restrictions.eq(ConstructionSchedulePO.COLUMN_CID_STR, cid)).list();
 	}

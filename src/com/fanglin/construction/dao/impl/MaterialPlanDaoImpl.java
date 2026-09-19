@@ -25,6 +25,12 @@ public class MaterialPlanDaoImpl extends DaoImpl<MaterialPlanPO> implements Mate
 	}
 
 	@Override
+	@SuppressWarnings("unchecked")
+	public List<MaterialPlanPO> queryMaterialPlanByOrderIds(List<String> orderIds) {
+		return session().createCriteria(MaterialPlanPO.class).add(Restrictions.in(MaterialPlanPO.COLUMN_ORDERID_STR, orderIds)).addOrder(Order.asc("mpid")).list();
+	}
+
+	@Override
 	public int countMaterialPlan(String orderId) {
 
 		String sql = "select count(*) from construction.materialplan where orderId = :orderId";
@@ -35,30 +41,30 @@ public class MaterialPlanDaoImpl extends DaoImpl<MaterialPlanPO> implements Mate
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<Object[]> queryMaterialSalesByOrderId(String orderId) {
+	public List<Object[]> queryMaterialSalesByOrderIds(List<String> orderIds) {
 
 		// tinyint 一律 cast as signed: 原生结果集 tinyint(1) 会被映射为 Boolean 导致强转失败
-		String sql = "select s.sid, s.createTime, s.category, s.bid, b.name from sales.sales s left join communion.brand b on b.bid = s.bid where s.orderId = :orderId and cast(s.status as signed) in (0, 5)";
+		String sql = "select s.orderId, s.sid, s.createTime, s.category, s.bid, b.name from sales.sales s left join communion.brand b on b.bid = s.bid where s.orderId in (:orderIds) and cast(s.status as signed) in (0, 5)";
 
-		return session().createSQLQuery(sql).setString("orderId", orderId).list();
+		return session().createSQLQuery(sql).setParameterList("orderIds", orderIds).list();
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<Object[]> queryMaterialDeliveryByOrderId(String orderId) {
+	public List<Object[]> queryMaterialDeliveryByOrderIds(List<String> orderIds) {
 
-		String sql = "select di.sid, cast(di.status as signed), di.tranTime, di.confirmTime, di.bid, g.bid, g.category from sales.salesdeliveryitem di join sales.sales s on s.sid = di.sid left join data.goods g on g.gid = di.gid where s.orderId = :orderId";
+		String sql = "select s.orderId, di.sid, cast(di.status as signed), di.tranTime, di.confirmTime, di.bid, g.bid, g.category from sales.salesdeliveryitem di join sales.sales s on s.sid = di.sid left join data.goods g on g.gid = di.gid where s.orderId in (:orderIds)";
 
-		return session().createSQLQuery(sql).setString("orderId", orderId).list();
+		return session().createSQLQuery(sql).setParameterList("orderIds", orderIds).list();
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<Object[]> queryMaterialSelectionByOrderId(String orderId) {
+	public List<Object[]> queryMaterialSelectionByOrderIds(List<String> orderIds) {
 
-		String sql = "select cast(si.status as signed), si.tranTime, si.confirmTime, g.bid, g.category from quotation.selectionitem si left join data.goods g on g.gid = si.gid where si.orderId = :orderId and cast(si.status as signed) between 1 and 6";
+		String sql = "select si.orderId, cast(si.status as signed), si.tranTime, si.confirmTime, g.bid, g.category from quotation.selectionitem si left join data.goods g on g.gid = si.gid where si.orderId in (:orderIds) and cast(si.status as signed) between 1 and 6";
 
-		return session().createSQLQuery(sql).setString("orderId", orderId).list();
+		return session().createSQLQuery(sql).setParameterList("orderIds", orderIds).list();
 	}
 
 }

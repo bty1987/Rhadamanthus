@@ -396,6 +396,16 @@ WHERE si.orderId = :orderId AND si.status BETWEEN 1 AND 6;   -- 排除0初始/7�
 - api 段追加 `app/js/api/data.js` / `app/js/api/construction.js`(端点与老版一一对应)
 - 菜单 URL 共用 communion.module 指向的老版路径, app 版按既有惯例并存部署
 
+### 7.5 工程进度页(constructionSchedule)联动(2026-09-19 追加)
+
+进度列表每行=一单一个节点, 与主材计划行的 (orderId, cnid) 键天然对齐:
+
+- **汇总列×2**(配置驱动): `materialPlanSchedule`=完成/总数(完成口径=手工确认 status=1 或履约达档 autoStatus≥action+1)、`materialPlanOverdue`=逾期数; 后端在 `pageConstructionSchedule` 尾部调用 `materialPlanService.queryMaterialPlanByOrderIds(页内订单集)` 批量填充 VO 的 `materialPlanTotal/materialPlanConfirm/materialPlanOverdue` 派生字段(5 条 SQL 固定开销, 不随单数放大, ConstructionScheduleVO:fillMaterialPlanSummary)
+- **行按钮 `matplan`**: 弹该单完整主材计划页(materialPlan.html), 上下文仅带 decoration.orderId(该页其余数据自查)
+- 老版两列挂 propertyMap + `#materialPlanPopUp` 容器; app 版挂 cols + BTNS 注册表(照 additem 的 app.popup 先例)
+- 🔴 依赖强化: 进度列表页(pageConstructionSchedule)自此依赖 materialPlanService ⇒ **construction 与 data 双 jar 不同批次混部会直接炸进度页**, 双 jar 同批从"建议"升级为硬约束
+- 种子/授权: 22_material_plan.sql §6(constructionSchedule 页 propertyArr/pageBtn 白名单, 不插则列与按钮不显示)
+
 ### 7.3 页面配置种子(constructionfunction)
 
 ```sql

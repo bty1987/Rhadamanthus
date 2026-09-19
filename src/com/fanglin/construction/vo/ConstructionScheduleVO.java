@@ -95,6 +95,14 @@ public class ConstructionScheduleVO implements Serializable {
 
 	private Timestamp planTime;
 
+	// ---- 主材计划节点级汇总(pageConstructionSchedule 读时填充, 不落库) ----
+
+	private Integer materialPlanTotal;
+
+	private Integer materialPlanConfirm;
+
+	private Integer materialPlanOverdue;
+
 	public ConstructionScheduleVO() {
 		super();
 	}
@@ -399,6 +407,30 @@ public class ConstructionScheduleVO implements Serializable {
 
 	public void setPostnum(Integer postnum) {
 		this.postnum = postnum;
+	}
+
+	public Integer getMaterialPlanTotal() {
+		return materialPlanTotal;
+	}
+
+	public void setMaterialPlanTotal(Integer materialPlanTotal) {
+		this.materialPlanTotal = materialPlanTotal;
+	}
+
+	public Integer getMaterialPlanConfirm() {
+		return materialPlanConfirm;
+	}
+
+	public void setMaterialPlanConfirm(Integer materialPlanConfirm) {
+		this.materialPlanConfirm = materialPlanConfirm;
+	}
+
+	public Integer getMaterialPlanOverdue() {
+		return materialPlanOverdue;
+	}
+
+	public void setMaterialPlanOverdue(Integer materialPlanOverdue) {
+		this.materialPlanOverdue = materialPlanOverdue;
 	}
 
 }
