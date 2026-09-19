@@ -4,6 +4,8 @@ jQuery(function($) {
 
         constructionSchedules: {},
 
+        materialPlanMap: {},
+
         pageType: params.urlLoadParams.type,
     };
 
@@ -26,32 +28,42 @@ jQuery(function($) {
 
         supervision4detail.constructionSchedules = newSchedules;
 
-        $.each(constructionSchedule, function(i, v) {
+        // 主材计划一次性取全按节点分组(读时推算值: 计划时点/系统履约/逾期), 画面板与步骤角标共用
+        com.post(api.construction.queryMaterialPlanByOrderId, {
+            "materialPlan.orderId": params.construction.orderId
+        }, function(mpRes) {
 
-            constructionNode("#stepId", v.schedule, v.csid, v.node.name);
-            constructionPane("#step-container", v.schedule, v.csid, v.node.name, v.status);
-            params.construction.cid = v.cid;
-        });
+            supervision4detail.materialPlanMap = groupMaterialPlans(mpRes.materialPlans || []);
 
-        var schedule = constructionSchedule[0].schedule;
-        var csid = constructionSchedule[0].csid;
+            $.each(constructionSchedule, function(i, v) {
 
-        initWizardSept(schedule, csid);
+                var overdueCount = countOverdue(supervision4detail.materialPlanMap[v.cnid]);
 
-        com.focusPage('#fuelux-wizard').ace_wizard({
-            status: true
-        }).on('finished', function(e) {
+                constructionNode("#stepId", v.schedule, v.csid, v.node.name, overdueCount);
+                constructionPane("#step-container", v, supervision4detail.materialPlanMap[v.cnid]);
+                params.construction.cid = v.cid;
+            });
 
-            com.showAlert(com.info, "工程已经结束,之后可以进行验收工作!");
-        }).on('stepclick', function(e, info) {
-
-            var ele = com.focusPage("[flag]").eq(info.step - 1);
-
-            var csid = ele.attr("data-csid");
-            var schedule = ele.attr("data-schedule");
+            var schedule = constructionSchedule[0].schedule;
+            var csid = constructionSchedule[0].csid;
 
             initWizardSept(schedule, csid);
-        });
+
+            com.focusPage('#fuelux-wizard').ace_wizard({
+                status: true
+            }).on('finished', function(e) {
+
+                com.showAlert(com.info, "工程已经结束,之后可以进行验收工作!");
+            }).on('stepclick', function(e, info) {
+
+                var ele = com.focusPage("[flag]").eq(info.step - 1);
+
+                var csid = ele.attr("data-csid");
+                var schedule = ele.attr("data-schedule");
+
+                initWizardSept(schedule, csid);
+            });
+        }, null, false);
     }, null, false);
 
     com.focusPage('#modal-wizard .modal-header').ace_wizard();
@@ -122,7 +134,6 @@ jQuery(function($) {
 
                 for ( var i = 0; i < drawings.length; i++) {
                     var drawing = drawings[i];
-
                     appendGalleryElement(csid + "Gallery", drawing.cdId, drawing.drawingUrl, drawing.type, "", api.construction.deleteConstructionDrawing);
                 }
                 com.popup4photos("#" + csid + "Gallery");
@@ -282,16 +293,26 @@ jQuery(function($) {
         return true;
     }
 
-    // 画节点信息轴
-    function constructionNode(stepul, schedule, csid, name) {
+    // 画节点信息轴(节点挂逾期主材时标题带红色角标)
+    function constructionNode(stepul, schedule, csid, name, overdueCount) {
 
         var stepLi = $("<li></li>").attr("data-targe", "#step" + csid).attr("data-schedule", schedule).attr("data-csid", csid).addClass("complete").appendTo(stepul);
         var stepSpan = $("<span></span>").addClass("step").html(schedule).appendTo(stepLi);
-        var stepSpan = $("<span></span>").addClass("title").html(name).appendTo(stepLi);
+
+        var titleHtml = name;
+
+        if (overdueCount > 0) titleHtml += ' <span class="badge badge-important" title="主材计划逾期">' + overdueCount + '</span>';
+
+        var stepSpan = $("<span></span>").addClass("title").html(titleHtml).appendTo(stepLi);
     }
 
-    // 画节点下面的面板
-    function constructionPane(paneId, schedule, csid, name, status) {
+    // 画节点下面的面板: 信息页签(计划/实际时间对照+计划参数+进离场+工人) / 主材计划页签 / 施工图片页签
+    function constructionPane(paneId, v, materialPlans) {
+
+        var csid = v.csid;
+        var name = v.node.name;
+        var schedule = v.schedule;
+        var status = v.status;
 
         var paneDiv = $("<div></div>").addClass("step-pane").attr("id", "step" + csid).attr("flag", "step").attr("data-schedule", schedule).attr("data-csid", csid).appendTo(paneId);
 
@@ -308,7 +329,10 @@ jQuery(function($) {
         var panelia = $("<a></a>").attr("data-toggle", "tab").attr("href", "#" + csid + "Info").html("信息").appendTo(paneli);
 
         var paneliTwo = $("<li></li>").addClass("").appendTo(paneul);
-        var paneliTwoa = $("<a></a>").attr("data-toggle", "tab").attr("href", "#" + csid + "Drawing").html("施工图片").appendTo(paneliTwo);
+        var paneliTwoa = $("<a></a>").attr("data-toggle", "tab").attr("href", "#" + csid + "MaterialPlan").html("主材计划").appendTo(paneliTwo);
+
+        var paneliThree = $("<li></li>").addClass("").appendTo(paneul);
+        var paneliThreea = $("<a></a>").attr("data-toggle", "tab").attr("href", "#" + csid + "Drawing").html("施工图片").appendTo(paneliThree);
 
         var paneTabContent = $("<div></div>").addClass("tab-content").appendTo(paneDivThree);
         var paneTabTwo = $("<div></div>").addClass("tab-pane in active").attr("id", csid + "Info").appendTo(paneTabContent);
@@ -319,50 +343,63 @@ jQuery(function($) {
         var paneTabH3I = $("<i></i>").addClass("icon-edit").appendTo(paneTabH3);
         var paneTabSpan = $("<span></span>").html(name + "信息").appendTo(paneTabH3);
 
-        // 开工时间
+        // 预计开工/预计完工(计划时间, 放线推算, 静态展示)
+        var panePreRow = $("<div></div>").addClass("form-group").appendTo(paneTabForm);
+        var panePreRowTwo = $("<div></div>").addClass("col-sm-12").appendTo(panePreRow);
+        appendTimeInput(panePreRowTwo, csid + "PreStartTime", "预计开工", v.preStartTime);
+        appendTimeInput(panePreRowTwo, csid + "PreEndTime", "预计完工", v.preEndTime);
+
+        // 开工/完工时间(实际时间, 切换步骤时刷新)
         var paneStartTime = $("<div></div>").addClass("form-group").appendTo(paneTabForm);
         var paneStartTimeTwo = $("<div></div>").addClass("col-sm-12").appendTo(paneStartTime);
-        var paneSTlable = $("<label></label>").addClass("col-sm-1 control-label no-padding-right").attr("for", csid + "StartTime").html("开工时间").appendTo(paneStartTimeTwo);
-        var paneSTThree = $("<div></div>").addClass("col-sm-2").appendTo(paneStartTimeTwo);
-        var paneSTInput = $("<input/>").attr("id", csid + "StartTime").attr("type", "text").addClass("col-sm-12").attr("readonly", "readonly").attr("data-toggle", "popover").attr("data-trigge", "manual").appendTo(paneSTThree);
+        appendTimeInput(paneStartTimeTwo, csid + "StartTime", "开工时间", v.startTime);
+        appendTimeInput(paneStartTimeTwo, csid + "EndTime", "完工时间", v.endTime);
 
-        // 完工时间
-        var paneETlable = $("<label></label>").addClass("col-sm-1 control-label no-padding-right").attr("for", csid + "EndTime").html("完工时间").appendTo(paneStartTimeTwo);
-        var paneETFour = $("<div></div>").addClass("col-sm-2").appendTo(paneStartTimeTwo);
-        var paneETInput = $("<input/>").attr("id", csid + "EndTime").attr("type", "text").addClass("col-sm-12").attr("readonly", "readonly").attr("data-toggle", "popover").attr("data-trigge", "manual").appendTo(paneETFour);
-
-        // 状态
+        // 状态 + 附加项待审/款比例豁免标识
         var paneSpace = $("<div></div>").addClass("space-4").appendTo(paneTabForm);
         var paneStatus = $("<div></div>").addClass("form-group").appendTo(paneTabForm);
         var paneStatusTwo = $("<div></div>").addClass("col-sm-12").appendTo(paneStatus);
         var paneStatusLable = $("<label></label>").addClass("col-sm-1 control-label no-padding-right").attr("for", csid + "Status").html(name + "状态").appendTo(paneStatusTwo);
         var paaneStatusTh = $("<div></div>").attr("id", csid + "Status").addClass("col-sm-6").appendTo(paneStatusTwo);
+
+        if (v.additemStatus != null && v.additemStatus == 1) {
+            $("<span></span>").addClass("label label-warning").css("margin-left", "10px").attr("title", "报价附加项待审").html("附加项待审").appendTo(paaneStatusTh);
+        }
+
+        if (v.checkout != null && v.checkout == 1) {
+            $("<span></span>").addClass("label").css("margin-left", "10px").attr("title", "开工完工款比例校验已豁免").html("款比例豁免").appendTo(paaneStatusTh);
+        }
+
         var paneSpaceTwo = $("<div></div>").addClass("space-4").appendTo(paneTabForm);
 
-        // 进场时间
-        var paneStartTime = $("<div></div>").addClass("form-group").appendTo(paneTabForm);
-        var paneStartTimeTwo = $("<div></div>").addClass("col-sm-12").appendTo(paneStartTime);
-        var paneSTlable = $("<label></label>").addClass("col-sm-1 control-label no-padding-right").attr("for", csid + "EnterTime").html("进场时间").appendTo(paneStartTimeTwo);
-        var paneSTThree = $("<div></div>").addClass("col-sm-2").appendTo(paneStartTimeTwo);
-        var paneSTInput = $("<input/>").attr("id", csid + "EnterTime").attr("type", "text").addClass("col-sm-12").attr("readonly", "readonly").attr("data-toggle", "popover").attr("data-trigge", "manual").appendTo(paneSTThree);
+        // 进场/离场时间 + 按钮
+        var paneEnterRow = $("<div></div>").addClass("form-group").appendTo(paneTabForm);
+        var paneEnterRowTwo = $("<div></div>").addClass("col-sm-12").appendTo(paneEnterRow);
+        appendTimeInput(paneEnterRowTwo, csid + "EnterTime", "进场时间", v.enterTime);
+        appendTimeInput(paneEnterRowTwo, csid + "LeaveTime", "离场时间", v.leaveTime);
 
-        // 离场时间
-        var paneETlable = $("<label></label>").addClass("col-sm-1 control-label no-padding-right").attr("for", csid + "LeaveTime").html("离场时间").appendTo(paneStartTimeTwo);
-        var paneETFour = $("<div></div>").addClass("col-sm-2").appendTo(paneStartTimeTwo);
-        var paneETInput = $("<input/>").attr("id", csid + "LeaveTime").attr("type", "text").addClass("col-sm-12").attr("readonly", "readonly").attr("data-toggle", "popover").attr("data-trigge", "manual").appendTo(paneETFour);
-
-        // 进场按钮
-        var enterBtn = $("<button type='button'></button>").addClass("btn btn-xs btn-info").html("进场").attr("style", "margin-right:5px").attr("id", csid + "Success").appendTo(paneStartTimeTwo);
-        // 离场按钮
-        var leaveBtn = $("<button type='button'></button>").addClass("btn btn-xs btn-info").html("离场").attr("style", "margin-right:5px").attr("id", csid + "Leave").appendTo(paneStartTimeTwo);
+        var enterBtn = $("<button type='button'></button>").addClass("btn btn-xs btn-info").html("进场").attr("style", "margin:5px 5px 0 0").attr("id", csid + "Success").appendTo(paneEnterRowTwo);
+        var leaveBtn = $("<button type='button'></button>").addClass("btn btn-xs btn-info").html("离场").attr("style", "margin:5px 5px 0 0").attr("id", csid + "Leave").appendTo(paneEnterRowTwo);
 
         // 进场状态
         var panewSpace = $("<div></div>").addClass("space-4").appendTo(paneTabForm);
         var panewStatus = $("<div></div>").addClass("form-group").appendTo(paneTabForm);
         var panewStatusTwo = $("<div></div>").addClass("col-sm-12").appendTo(panewStatus);
-        var panewStatusLable = $("<label></label>").addClass("col-sm-1 control-label no-padding-right").attr("for", csid + "enterStatus").html("进厂状态").appendTo(panewStatusTwo);
+        var panewStatusLable = $("<label></label>").addClass("col-sm-1 control-label no-padding-right").attr("for", csid + "enterStatus").html("进场状态").appendTo(panewStatusTwo);
         var paanewStatusTh = $("<div></div>").attr("id", csid + "enterStatus").addClass("col-sm-6").appendTo(panewStatusTwo);
         var panewSpaceTwo = $("<div></div>").addClass("space-4").appendTo(paneTabForm);
+
+        // 计划参数: 工期/前后置间隔/四项比例/预估工费(比例与金额经 tranargs 已÷1000, 页面值即百分比/元)
+        var paneParamsH3 = $("<h3></h3>").addClass("header smaller lighter grey").appendTo(paneTabForm);
+        var paneParamsH3I = $("<i></i>").addClass("icon-list").appendTo(paneParamsH3);
+        var paneParamsSpan = $("<span></span>").html("计划参数").appendTo(paneParamsH3);
+
+        var paneParams = $("<div></div>").addClass("form-group").appendTo(paneTabForm);
+        var paneParamsTwo = $("<div></div>").addClass("col-sm-12").appendTo(paneParams);
+        var paramsHtml = buildParamsHtml(v);
+        $(paramsHtml).appendTo(paneParamsTwo);
+
+        var paneParamsSpace = $("<div></div>").addClass("space-4").appendTo(paneTabForm);
 
         // 工人信息
         var paneWorker = $("<div></div>").addClass("form-group").appendTo(paneTabForm);
@@ -373,6 +410,10 @@ jQuery(function($) {
         var paneWorkerContent = $("<div></div>").addClass("form-group").appendTo(paneTabForm);
         var paneWorkerInfo = $("<div></div>").addClass("tab-pane in active").attr("id", csid + "WorkerInfos").appendTo(paneWorkerContent);
         var paneSpaceTh = $("<div></div>").addClass("space-4").appendTo(paneTabForm);
+
+        // 主材计划页签(该节点挂的主材动作与履约, 只读)
+        var paneMaterialPlan = $("<div></div>").addClass("tab-pane in").attr("id", csid + "MaterialPlan").appendTo(paneTabContent);
+        renderMaterialPlanPane(csid, v.cnid, materialPlans, paneMaterialPlan);
 
         // 施工图片信息
         var paneDrawing = $("<div></div>").addClass("tab-pane in").attr("id", csid + "Drawing").appendTo(paneTabContent);
@@ -393,6 +434,102 @@ jQuery(function($) {
         var paneDrawingA = $("<a></a>").attr("id", "file_upload_1-button").attr("href", "javascript:void(0)").addClass("uploadify-button btn btn-success").html("上传").appendTo(paneDrawingRowFour);
         var paneDrawingUpDiv = $("<div></div>").attr("id", "file_upload_1-queue").addClass("uploadify-queue").attr("style", "width: 300px;").appendTo(paneDrawingRowFour);
 
+    }
+
+    // 只读时间行: label col-sm-2 + input col-sm-3, 一行两组
+    function appendTimeInput(row, id, label, value) {
+
+        $("<label></label>").addClass("col-sm-2 control-label no-padding-right").attr("for", id).html(label).appendTo(row);
+        var inputDiv = $("<div></div>").addClass("col-sm-3").appendTo(row);
+        $("<input/>").attr("id", id).attr("type", "text").addClass("col-sm-12").attr("readonly", "readonly").val(value == null ? "" : value).appendTo(inputDiv);
+    }
+
+    // 计划参数内联信息条
+    function buildParamsHtml(v) {
+
+        var items = [];
+
+        items.push(kv("工期", v.period == null ? "-" : v.period + "天"));
+        items.push(kv("前置间隔", v.prenum == null ? "-" : v.prenum + "天"));
+        items.push(kv("后置间隔", v.postnum == null ? "-" : v.postnum + "天"));
+        items.push(kv("开工款比", v.precheck == null ? "-" : v.precheck + "%"));
+        items.push(kv("完工款比", v.postcheck == null ? "-" : v.postcheck + "%"));
+        items.push(kv("开工材比", v.stacheck == null ? "-" : v.stacheck + "%"));
+        items.push(kv("完工材比", v.fincheck == null ? "-" : v.fincheck + "%"));
+        items.push(kv("预估工费", v.planSalary == null ? "-" : v.planSalary + "元" + (v.planStatus == 1 ? "(已确认)" : "")));
+
+        return '<div class="col-sm-12" style="line-height:30px;">' + items.join("") + '</div>';
+    }
+
+    function kv(key, value) {
+        return '<span style="margin-right:18px;"><strong class="grey">' + key + ':</strong> <span class="blue">' + value + '</span></span>';
+    }
+
+    // 主材计划页签: 该节点挂的主材动作(计划时点=读时推算, 系统履约=销售/配送/选材链回填)
+    function renderMaterialPlanPane(csid, cnid, materialPlans, container) {
+
+        // constant 行缺失(SQL未执行)时兜底硬编码枚举
+        var materialPlanEnum = (constant.construction() || {}).materialPlan || {
+            action: { keys: { 0: "下单", 1: "配送", 2: "到货" } },
+            autoStatus: { keys: { 0: "未履约", 1: "已下单", 2: "已配送", 3: "已到货" } },
+            status: { keys: { 0: "未完成", 1: "已完成", 2: "已取消" } }
+        };
+
+        if (materialPlans == null || materialPlans.length == 0) {
+            $('<div class="alert alert-info">').text("本节点暂无主材计划").appendTo(container);
+            return;
+        }
+
+        var table = $("<table></table>").addClass("table table-striped table-bordered table-hover").appendTo(container);
+        var thead = $("<thead></thead>").appendTo(table);
+        var tr = $("<tr></tr>").appendTo(thead);
+        $.each(["主材", "动作", "计划时点", "系统履约", "履约时间", "状态", "说明"], function(i, title) {
+            $("<th></th>").html(title).appendTo(tr);
+        });
+
+        var tbody = $("<tbody></tbody>").appendTo(table);
+
+        $.each(materialPlans, function(i, plan) {
+
+            var material = plan.type == 1 ? (plan.brandName || "") + "(" + (plan.categoryName || "") + ")" : (plan.categoryName || "");
+
+            var row = $("<tr></tr>").appendTo(tbody);
+
+            if (plan.overdue == 1) row.addClass("danger");
+
+            $("<td></td>").html(material).appendTo(row);
+            $("<td></td>").html(materialPlanEnum.action.keys[plan.action] || plan.action).appendTo(row);
+            $("<td></td>").html(plan.planTime || "待定").appendTo(row);
+            $("<td></td>").html(materialPlanEnum.autoStatus.keys[plan.autoStatus] || plan.autoStatus).appendTo(row);
+            $("<td></td>").html(plan.autoTime || "-").appendTo(row);
+            $("<td></td>").html((materialPlanEnum.status.keys[plan.status] || plan.status) + (plan.status == 0 && plan.overdue == 1 ? '<span class="label label-important" style="margin-left:5px">逾期</span>' : "")).appendTo(row);
+            $("<td></td>").html(plan.comment || "").appendTo(row);
+        });
+    }
+
+    // 主材计划按节点分组(后端已按节点排期→动作→偏移排序, 分组保持原序)
+    function groupMaterialPlans(materialPlans) {
+
+        var map = {};
+
+        $.each(materialPlans, function(i, plan) {
+            if (plan.cnid == null) return;
+            if (!map[plan.cnid]) map[plan.cnid] = [];
+            map[plan.cnid].push(plan);
+        });
+
+        return map;
+    }
+
+    function countOverdue(materialPlans) {
+
+        var count = 0;
+
+        $.each(materialPlans || [], function(i, plan) {
+            if (plan.overdue == 1) count++;
+        });
+
+        return count;
     }
 
     function addActive(csid) {
