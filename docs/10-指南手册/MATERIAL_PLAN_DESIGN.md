@@ -406,6 +406,15 @@ WHERE si.orderId = :orderId AND si.status BETWEEN 1 AND 6;   -- 排除0初始/7�
 - 🔴 依赖强化: 进度列表页(pageConstructionSchedule)自此依赖 materialPlanService ⇒ **construction 与 data 双 jar 不同批次混部会直接炸进度页**, 双 jar 同批从"建议"升级为硬约束
 - 种子/授权: 22_material_plan.sql §6(constructionSchedule 页 propertyArr/pageBtn 白名单, 不插则列与按钮不显示)
 
+### 7.6 监理详情向导页(supervision4detail)联动(2026-09-19 追加)
+
+监理向导每节点 pane 增加(纯前端, 零后端改动——schedule VO 全字段与主材计划读时推算接口本就现成):
+
+- **主材计划页签**(信息/施工图片之间): 该节点挂的主材动作表(主材/动作/计划时点/系统履约/履约时间/状态/说明), 逾期行标红; 无行显示提示; 向导步骤标题带红色逾期数角标(一眼定位问题节点)
+- **schedule 其他信息**: 预计开工/预计完工两行(与实际开完工上下对照, 计划vs实际一目了然); "计划参数"信息条=工期/前置/后置间隔/四项款材比例/预估工费(planSalary 经 tranargs ÷1000, 页面值即元); 状态行补"附加项待审"(additemStatus=1 橙标)与"款比例豁免"(checkout=1 灰标)
+- **排版重构**: 时间行统一 label col-sm-2+input col-sm-3(原 col-sm-1/2 过窄), 进离场按钮并入时间行, 修正"进厂状态"错字为"进场状态"; 原有全部元素 id/行为(动态刷新/进离场绑定/图库/上传/工费弹窗)保持不变
+- app 版 layui 同构页同步(tab 逾期角标/预计时间行/计划参数/主材计划表格), 主材计划枚举走 constructionCommon.ENUM, 老版 constant 行缺失时硬编码兜底
+
 ### 7.3 页面配置种子(constructionfunction)
 
 ```sql
