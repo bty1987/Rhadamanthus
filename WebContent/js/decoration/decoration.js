@@ -2705,12 +2705,6 @@ $(function() {
                 }, null, false);
             });
 
-        } else if (data.action == "goto") {
-
-            if (data.page == "payment") {
-
-                com.switchPage(api.index.decorationPaymentIndex.url);
-            }
         }
     });
 

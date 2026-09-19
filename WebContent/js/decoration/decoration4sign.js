@@ -1,5 +1,6 @@
 // 签约准备弹窗页: 被装修单列表页 popup4page 加载, params.signPrepare = {orderId, mode(sign/presign), cid}
-// 轻操作直调既有接口, 确认签约/预签与页面跳转通过 decoration:signprepare 事件桥回宿主页既有链路
+// 轻操作全部就地完成; 确认签约/预签通过 decoration:signprepare 事件桥回宿主页既有链路
+// 审批不展示不判定(pageApproval 系操作人视角非装修单归属口径), 签约硬拦由后端 140037 兜底
 jQuery(function($) {
 
     var signPrepare = {
@@ -205,22 +206,6 @@ jQuery(function($) {
             }
         }, function() {}, false);
 
-        // 审批: 未处理数(pageApproval 计数, 前端参考口径, 签约硬拦仍由后端 140037 兜底)
-        data.approvalCount = 0;
-
-        com.post(api.approval.pageApproval, {
-            "paging.page": 1,
-            "paging.rows": 1,
-            "filters[0].field": "ident",
-            "filters[0].data": signPrepare.orderId,
-            "filters[0].op": "eq",
-            "filters[1].field": "status",
-            "filters[1].data": 0,
-            "filters[1].op": "eq"
-        }, function(res) {
-            data.approvalCount = res.paging ? (res.paging.totalRecords || 0) : 0;
-        }, null, false);
-
         // 预签报价
         data.protationStatus = -1;
 
@@ -238,7 +223,7 @@ jQuery(function($) {
         }, function() {}, false);
 
         // 就绪汇总: 与 sign/presign 校验零漂移
-        data.signReady = [0, 1, 2, 4].indexOf(data.status) != -1 && data.paymentReady && data.quotationReady && data.constructionInfoReady && data.drawlineTime != null && data.approvalCount == 0;
+        data.signReady = [0, 1, 2, 4].indexOf(data.status) != -1 && data.paymentReady && data.quotationReady && data.constructionInfoReady && data.drawlineTime != null;
         data.presignReady = [0, 1, 2].indexOf(data.status) != -1 && data.activityStatus == 1 && data.protationStatus == 2;
 
         signPrepare.data = data;
@@ -312,13 +297,8 @@ jQuery(function($) {
             state: data.paymentReady ? "ok" : "fail",
             title: "合同款已收",
             value: data.paymentReady ? "已收合同款: " + (data.paymentMoney || 0) + " 元" : "尚无已付款/已确认的合同款",
-            desc: "签约前必须存在已付款或已确认的合同款(收款类); 收款请在装修款页面完成",
-            detail: paymentDetail,
-            btns: [{
-                act: "goto-payment",
-                label: "去装修款页",
-                clazz: "btn-info"
-            }]
+            desc: "签约前必须存在已付款或已确认的合同款(收款类), 收款请在装修款页面完成",
+            detail: paymentDetail
         });
 
         var quotationValue = "暂无默认报价";
@@ -470,13 +450,6 @@ jQuery(function($) {
             desc: "签约硬性要求, 缺失请在工程信息页补建"
         });
 
-        items.push({
-            state: data.approvalCount == 0 ? "ok" : "fail",
-            title: "审批已清零",
-            value: data.approvalCount == 0 ? "无未处理审批" : "存在 " + data.approvalCount + " 条未处理审批",
-            desc: "签约要求订单无未处理审批项, 请先处理完相关审批后再回本页签约"
-        });
-
         return items;
     }
 
@@ -591,12 +564,7 @@ jQuery(function($) {
             title: "款项参考(建议)",
             value: data.paymentReady ? "已收合同款: " + (data.paymentMoney || 0) + " 元" : "尚无已收合同款",
             desc: "预签不强制校验收款, 仅作签约进度参考; 收款请在装修款页面完成",
-            detail: paymentDetail,
-            btns: [{
-                act: "goto-payment",
-                label: "去装修款页",
-                clazz: "btn-info"
-            }]
+            detail: paymentDetail
         });
 
         return items;
@@ -839,12 +807,6 @@ jQuery(function($) {
                 action: act == "do-sign" ? "sign" : "presign"
             });
 
-        } else if (act.indexOf("goto-") == 0) {
-
-            $(document).trigger("decoration:signprepare", {
-                action: "goto",
-                page: act.substring(5)
-            });
         }
     });
 
