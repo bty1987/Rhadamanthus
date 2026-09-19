@@ -679,6 +679,26 @@ $.extend(api, {
             url: "updateConstructionNodeForStatus.do"
         },
 
+        pageMaterialPlanNode: {
+            url: "pageMaterialPlanNode.do",
+            type: "query"
+        },
+        queryMaterialPlanNode: {
+            url: "queryMaterialPlanNode.do",
+            type: "query"
+        },
+        addMaterialPlanNode: {
+            url: "addMaterialPlanNode.do",
+            type: "update"
+        },
+        updateMaterialPlanNode: {
+            url: "updateMaterialPlanNode.do",
+            type: "update"
+        },
+        updateMaterialPlanNodeForStatus: {
+            url: "updateMaterialPlanNodeForStatus.do"
+        },
+
         queryPaymentScale: {
             url: "queryPaymentScale.do"
         },

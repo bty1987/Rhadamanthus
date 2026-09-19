@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<!-- app/views/construction/materialPlan.html —— 主材计划（订单维度：生成/添加/编辑/完成/取消/删除）
+  上下文：app.params.construction = { decoration: {...} }（constructionInfo 行数据）。
+  列含读时推算的计划时点与系统履约（销售单/配送/选材链回填），逾期标红。 -->
+<html lang="zh-CN"><head><meta charset="utf-8"><title>主材计划</title>
+<link rel="stylesheet" href="../../layui/css/layui.css"><link rel="stylesheet" href="../../css/app.css"></head>
+<body><div class="app-page">
+    <div class="app-toolbar" style="padding:10px 15px 0;">
+        <span style="font-size:16px;font-weight:bold;">主材计划：<span id="orderIdLabel">-</span></span>
+        <button type="button" class="layui-btn layui-btn-sm" id="makeBtn"><i class="layui-icon layui-icon-template-1"></i>生成</button>
+        <button type="button" class="layui-btn layui-btn-sm" id="addBtn"><i class="layui-icon layui-icon-add-1"></i>添加</button>
+    </div>
+    <div class="app-table" style="margin-top:10px;"><table id="resultTable" lay-filter="resultTable"></table></div>
+    <script type="text/html" id="rowToolbar">
+        <button class="layui-btn layui-btn-xs layui-btn-normal" lay-event="edit">编辑</button>
+        <button class="layui-btn layui-btn-xs" lay-event="confirm">完成</button>
+        <button class="layui-btn layui-btn-xs layui-btn-warm" lay-event="cancel">取消</button>
+        <button class="layui-btn layui-btn-xs layui-btn-danger" lay-event="del">删除</button>
+    </script>
+
+    <div id="materialPlanBox" style="display:none;padding:20px 30px;">
+        <form class="layui-form" id="materialPlanForm">
+            <div class="layui-form-item"><label class="layui-form-label">维度</label><div class="layui-input-inline" style="width:240px;"><select id="type" lay-filter="type"></select></div></div>
+            <div class="layui-form-item"><label class="layui-form-label">品类</label><div class="layui-input-inline" style="width:240px;"><select id="cid" lay-filter="cid"></select></div></div>
+            <div class="layui-form-item" id="brandGroup"><label class="layui-form-label">品牌</label><div class="layui-input-inline" style="width:240px;"><select id="bid"></select></div></div>
+            <div class="layui-form-item"><label class="layui-form-label">施工节点</label><div class="layui-input-inline" style="width:240px;"><select id="cnid"></select></div></div>
+            <div class="layui-form-item"><label class="layui-form-label">动作</label><div class="layui-input-inline" style="width:240px;"><select id="action"></select></div></div>
+            <div class="layui-form-item"><label class="layui-form-label">时间锚点</label><div class="layui-input-inline" style="width:240px;"><select id="anchor"></select></div></div>
+            <div class="layui-form-item"><label class="layui-form-label">偏移天数</label><div class="layui-input-inline"><input class="layui-input" id="offsetDay" placeholder="负=锚点前,0=当日"></div></div>
+            <div class="layui-form-item"><label class="layui-form-label">指定时点</label><div class="layui-input-inline"><input class="layui-input" id="manualTime" placeholder="不填按锚点推算"></div></div>
+            <div class="layui-form-item layui-form-text"><label class="layui-form-label">说明</label><div class="layui-input-block"><textarea id="comment" class="layui-textarea" placeholder="说明"></textarea></div></div>
+        </form>
+    </div>
+    <div id="editMaterialPlanBox" style="display:none;padding:20px 30px;">
+        <form class="layui-form" id="editMaterialPlanForm">
+            <div class="layui-form-item"><label class="layui-form-label">时间锚点</label><div class="layui-input-inline" style="width:240px;"><select id="editAnchor"></select></div></div>
+            <div class="layui-form-item"><label class="layui-form-label">偏移天数</label><div class="layui-input-inline"><input class="layui-input" id="editOffsetDay" placeholder="负=锚点前,0=当日"></div></div>
+            <div class="layui-form-item"><label class="layui-form-label">指定时点</label><div class="layui-input-inline"><input class="layui-input" id="editManualTime" placeholder="不填按锚点推算"></div></div>
+            <div class="layui-form-item layui-form-text"><label class="layui-form-label">说明</label><div class="layui-input-block"><textarea id="editComment" class="layui-textarea" placeholder="说明"></textarea></div></div>
+        </form>
+    </div>
+</div>
+<script src="../../layui/layui.js"></script><script src="../../js/app/config.js"></script><script src="../../js/app/server.js"></script><script src="../../js/app/utils.js"></script><script src="../../js/app/post.js"></script><script src="../../js/app/api.js"></script><script src="../../js/app/core.js"></script><script src="../../js/app/validate.js"></script><script src="../../js/app/bootstrap.js"></script><script src="../../js/construction/construction-common.js"></script><script src="../../js/construction/materialPlan.js"></script>
+</body></html>

@@ -1120,6 +1120,85 @@ Condition.addupRule("data", {
             validate: null
         }
     },
+    "materialplannode-type": {
+        label: "维度",
+        type: "select",
+        submitConfig: {
+            name: "type",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: null,
+            postData: null,
+            listPath: constant.construction().materialPlan.type.datas,
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+    "materialplannode-action": {
+        label: "动作",
+        type: "select",
+        submitConfig: {
+            name: "action",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: null,
+            postData: null,
+            listPath: constant.construction().materialPlan.action.datas,
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+    "materialplannode-anchor": {
+        label: "时间锚点",
+        type: "select",
+        submitConfig: {
+            name: "anchor",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: null,
+            postData: null,
+            listPath: constant.construction().materialPlan.anchor.datas,
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+    "materialplannode-status": {
+        label: "状态",
+        type: "select",
+        submitConfig: {
+            name: "status",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: null,
+            postData: null,
+            listPath: [{
+                "key": 0,
+                "value": "启用"
+            }, {
+                "key": 1,
+                "value": "停用"
+            }],
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+    "materialplannode-nodename": {
+        label: "施工节点",
+        type: "text",
+        submitConfig: {
+            name: "nodeName",
+            op: "cn",
+            validate: null
+        }
+    },
     "construction-cost-name": {
         label: "名称",
         type: "text",

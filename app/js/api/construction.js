@@ -171,6 +171,15 @@ $.extend(api, { construction: {
     moveConstructionPlan:        { url: 'moveConstructionPlan.do' },
     deleteConstructionPlan:      { url: 'deleteConstructionPlan.do' },
 
+    // ==================== MaterialPlan - 主材计划 ====================
+    queryMaterialPlanByOrderId:  { url: 'queryMaterialPlanByOrderId.do', type: 'query' },
+    makeMaterialPlan:            { url: 'makeMaterialPlan.do', type: 'update' },
+    addMaterialPlan:             { url: 'addMaterialPlan.do', type: 'update' },
+    updateMaterialPlan:          { url: 'updateMaterialPlan.do', type: 'update' },
+    confirmMaterialPlan:         { url: 'confirmMaterialPlan.do', type: 'update' },
+    cancelMaterialPlan:          { url: 'cancelMaterialPlan.do', type: 'update' },
+    deleteMaterialPlan:          { url: 'deleteMaterialPlan.do' },
+
     // ==================== ConstructionDiary - 施工日志 ====================
     pageConstructionDiary:        { url: 'pageConstructionDiary.do', demo: true },
     addConstructionDiary:         { url: 'addConstructionDiary.do', intercept: true },

@@ -1,0 +1,96 @@
+
+<div>
+	<div class="row">
+		<div class="col-xs-12">
+			<div id="condList" class="fl_search clearfix"></div> <!-- 查询条件-->
+			<div id="resultList" class="clearfix tab-pane active"></div> <!--查询结果-->
+			<div id="pagenation" class="fl-page-wrap clearfix"></div> <!--分页-->
+		</div>
+	</div>
+
+	<div class="modal fade" id="updateModal" tabindex="-1">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"><span>&times;</span><span class="sr-only">Close</span></button>
+					<h4 class="modal-title" id="myModalLabel">主材计划规则</h4>
+				</div>
+				<div class="modal-body">
+					<form class="form-horizontal">
+
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right orange" for="type">维度</label>
+							<div class="col-sm-9">
+								<select class="col-xs-10 col-sm-6" id="type"></select>
+							</div>
+						</div>
+						<div class="space-4"></div>
+
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right orange" for="cid">品类</label>
+							<div class="col-sm-9">
+								<select class="col-xs-10 col-sm-6" id="cid"></select>
+							</div>
+						</div>
+						<div class="space-4"></div>
+
+						<div class="form-group" id="brandGroup">
+							<label class="col-sm-3 control-label no-padding-right orange" for="bid">品牌</label>
+							<div class="col-sm-9">
+								<select class="col-xs-10 col-sm-6" id="bid"></select>
+							</div>
+						</div>
+						<div class="space-4"></div>
+
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right orange" for="cnid">施工节点</label>
+							<div class="col-sm-9">
+								<select class="col-xs-10 col-sm-6" id="cnid"></select>
+							</div>
+						</div>
+						<div class="space-4"></div>
+
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right orange" for="action">动作</label>
+							<div class="col-sm-9">
+								<select class="col-xs-10 col-sm-6" id="action"></select>
+							</div>
+						</div>
+						<div class="space-4"></div>
+
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right orange" for="anchor">时间锚点</label>
+							<div class="col-sm-9">
+								<select class="col-xs-10 col-sm-6" id="anchor"></select>
+							</div>
+						</div>
+						<div class="space-4"></div>
+
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="offsetDay">偏移天数(负=锚点前,0=当日)</label>
+							<div class="col-sm-9">
+								<input type="text" maxlength="8" id="offsetDay" class="col-xs-10 col-sm-6 v_anumber" data-toggle="popover" data-trigger='manual'/>
+							</div>
+						</div>
+						<div class="space-4"></div>
+
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="comment">说明</label>
+							<div class="col-sm-9">
+								<textarea maxlength="128" id="comment" class="col-xs-10 col-sm-6" rows="3" data-toggle="popover" data-trigger='manual'></textarea>
+							</div>
+						</div>
+					</form>
+				</div>
+				<div class="modal-footer">
+					<button type="button" id="saveBtn" class="btn btn-primary" data-i18n="msg.save">保存</button>
+					<button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal" data-i18n="msg.cancel">取消</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript">
+	$.loadScript(['js/data/materialplannode.js']);
+</script>

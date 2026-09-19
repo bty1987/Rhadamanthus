@@ -91,6 +91,13 @@ $.extend(api, { data: {
     updateConstructionNode: { url: 'updateConstructionNode.do' },
     updateConstructionNodeForStatus: { url: 'updateConstructionNodeForStatus.do' },
 
+    // ===== 主材计划规则 materialPlanNode =====
+    pageMaterialPlanNode: { url: 'pageMaterialPlanNode.do' },
+    queryMaterialPlanNode: { url: 'queryMaterialPlanNode.do' },
+    addMaterialPlanNode: { url: 'addMaterialPlanNode.do' },
+    updateMaterialPlanNode: { url: 'updateMaterialPlanNode.do' },
+    updateMaterialPlanNodeForStatus: { url: 'updateMaterialPlanNodeForStatus.do' },
+
     // ===== 辅料成本 aoodsCost（增删）=====
     pageAoodsCost:    { url: 'pageAoodsCost.do' },
     addAoodsCost:     { url: 'addAoodsCost.do' },
