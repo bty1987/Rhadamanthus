@@ -13,6 +13,7 @@ jQuery(function($) {
         modals: {
             addBalanceAccountModal: com.focusPage("#addBalanceAccountModal"),
             withdrawModal: com.focusPage("#withdrawModal"),
+            editModal: com.focusPage("#editModal"),
 
             addBccountModal: com.focusPage("#addBccountModal"),
             addCccountModal: com.focusPage("#addCccountModal"),
@@ -41,6 +42,15 @@ jQuery(function($) {
             belonger: com.focusPage("#belonger")
         },
 
+        editItems: {
+            ename: com.focusPage("#ename"),
+            eno: com.focusPage("#eno"),
+            eaddress: com.focusPage("#eaddress"),
+            ephone: com.focusPage("#ephone"),
+            ebank: com.focusPage("#ebank"),
+            ebankno: com.focusPage("#ebankno")
+        },
+
         baid: null,
         isBalanceAccountType: {},
         isBalanceAccountStatus: {}
@@ -50,6 +60,30 @@ jQuery(function($) {
     balanceAccount.btns.withdrawBtn.bindClick(withdraw);
     balanceAccount.btns.saveBccountBtn.bindClick(addBccount);
     balanceAccount.btns.saveCccountBtn.bindClick(addCccount);
+
+    com.focusPage('#editSaveBtn').on("click", function() {
+
+        if (com.validate("editModal")) {
+            return false;
+        }
+
+        com.post(api.balance.updateBalanceAccount, {
+            "balanceAccount.baid": balanceAccount.baid,
+            "balanceAccount.name": balanceAccount.editItems.ename.val(),
+            "balanceAccount.no": balanceAccount.editItems.eno.val(),
+            "balanceAccount.address": balanceAccount.editItems.eaddress.val(),
+            "balanceAccount.phone": balanceAccount.editItems.ephone.val(),
+            "balanceAccount.bank": balanceAccount.editItems.ebank.val(),
+            "balanceAccount.bankno": balanceAccount.editItems.ebankno.val()
+        }, function(res) {
+
+            com.showAlert(com.info, "操作成功");
+
+            searcher.doSearch();
+
+            balanceAccount.modals.editModal.modal("hide");
+        });
+    });
 
     balanceAccount.modals.addBalanceAccountModal.on("hide.bs.modal", function() {
 
@@ -107,6 +141,18 @@ jQuery(function($) {
                 tools.personel.info(btn, v.belonger.userId);
             }
         }, {
+            field: "belongerType",
+            name: "主体类型",
+            prop: function(v) {
+
+                var utype = constant.balance().balanceAccount.utype;
+
+                if (utype && utype.keys && utype.keys[v.belongerType]) return utype.keys[v.belongerType];
+
+                return v.belongerType == 1 ? "厂商" : "员工";
+            },
+            clazz: "red"
+        }, {
             field: "creater.currentName",
             name: "创建人",
             prop: "creater.currentName",
@@ -150,6 +196,23 @@ jQuery(function($) {
     var linebtns = (function() {
 
         return {
+            edit: {
+                name: "编辑",
+                clazz: "btn-yellow",
+                handle: function(v) {
+
+                    balanceAccount.baid = v.baid;
+
+                    balanceAccount.editItems.ename.val(v.name);
+                    balanceAccount.editItems.eno.val(v.no);
+                    balanceAccount.editItems.eaddress.val(v.address);
+                    balanceAccount.editItems.ephone.val(v.phone);
+                    balanceAccount.editItems.ebank.val(v.bank);
+                    balanceAccount.editItems.ebankno.val(v.bankno);
+
+                    balanceAccount.modals.editModal.modal("show");
+                }
+            },
             status: {
                 name: "状态",
                 type: "switch",
@@ -191,7 +254,7 @@ jQuery(function($) {
 
     var searcher = new Searcher();
 
-    searcher.set("condList", "pagenation", "resultList", api.balance.pageBalanceAccount, null, ["balance-account-name", "balance-account-type", "balance-account-status"], "accountPostData", null, false, buttons);
+    searcher.set("condList", "pagenation", "resultList", api.balance.pageBalanceAccount, null, ["balance-account-name", "balance-account-type", "balance-account-status", "balance-account-utype"], "accountPostData", null, false, buttons);
     searcher.line("name", lineprops, linebtns).render();
 
     com.focusPage('#addBalanceAccount', '#pagenation').click(function() {

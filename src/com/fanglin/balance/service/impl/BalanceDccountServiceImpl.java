@@ -85,7 +85,6 @@ public class BalanceDccountServiceImpl implements BalanceDccountService {
 		balanceDccountPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 		balanceDccountPO.setStartTime(balanceDccountVO.getStartTime());
 		balanceDccountPO.setEndTime(balanceDccountVO.getEndTime());
-		balanceDccountPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 		balanceDccountPO.setName(balanceDccountVO.getName());
 		balanceDccountPO.setCreater(create);
 		balanceDccountPO.setBelonger(belonger);

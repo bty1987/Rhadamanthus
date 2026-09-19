@@ -68,11 +68,19 @@ public class BalanceAccountAction extends BaseListAction {
 	    return SUCCESS;
 	  }
 	
+	@Action(value = "updateBalanceAccount", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateBalanceAccount() throws FLException {
+
+		balanceAccountService.updateBalanceAccount(balanceAccount);
+
+		return SUCCESS;
+	}
+
 	@Action(value = "updateBalanceAccountForStatus", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String updateBalanceAccountForStatus() throws FLException {
-		
+
 		balanceAccountService.updateBalanceAccountForStatus(balanceAccount);
-		
+
 		return SUCCESS;
 	}
 

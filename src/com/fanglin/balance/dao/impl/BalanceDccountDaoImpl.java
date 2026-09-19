@@ -56,5 +56,12 @@ public class BalanceDccountDaoImpl extends DaoImpl<BalanceDccountPO> implements 
 		return session().createCriteria(BalanceDccountPO.class).add(Restrictions.eq("belonger.uid", buid)).list();
 	}
 
+	@Override
+	public void updateBalanceDccountForSurplus(long bdid, long money) {
+
+		String sql = "update balancedccount set surplus = surplus + :money where bdid = :bdid";
+
+		session().createSQLQuery(sql).setLong("bdid", bdid).setLong("money", money).executeUpdate();
+	}
 
 }

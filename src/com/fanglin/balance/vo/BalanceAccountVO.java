@@ -42,6 +42,8 @@ public class BalanceAccountVO implements java.io.Serializable {
 
 	private Short status;
 
+	private Short belongerType;
+
 	private Integer company;
 
 	public BalanceAccountVO() {
@@ -181,6 +183,14 @@ public class BalanceAccountVO implements java.io.Serializable {
 
 	public void setType(Short type) {
 		this.type = type;
+	}
+
+	public Short getBelongerType() {
+		return belongerType;
+	}
+
+	public void setBelongerType(Short belongerType) {
+		this.belongerType = belongerType;
 	}
 
 	public Integer getCompany() {

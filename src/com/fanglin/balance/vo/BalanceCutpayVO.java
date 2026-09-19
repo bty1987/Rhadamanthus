@@ -28,7 +28,7 @@ public class BalanceCutpayVO implements java.io.Serializable {
 
 	private Long total;
 
-	private Integer money;
+	private Long money;
 
 	private Short type;
 
@@ -119,11 +119,11 @@ public class BalanceCutpayVO implements java.io.Serializable {
 		this.total = total;
 	}
 
-	public Integer getMoney() {
+	public Long getMoney() {
 		return money;
 	}
 
-	public void setMoney(Integer money) {
+	public void setMoney(Long money) {
 		this.money = money;
 	}
 

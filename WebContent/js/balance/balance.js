@@ -215,7 +215,7 @@ jQuery(function($) {
                 clazz: "btn-warning",
                 handle: function(v) {
                     params.balance.bid = v.bid;
-                    com.popup4page("#stockRecordPopUp", api.index.apportDetailIndex.url, "分摊明细");
+                    com.popup4page("#stockRecordPopUp", api.index.balanceApportIndex.url, "分摊明细");
                 }
             }
         };
@@ -249,18 +249,25 @@ jQuery(function($) {
             });
         });
 
-        return [$checka];
+        var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('id', 'addBalance').css("margin", "0px 3px");
+        var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
+        var $addspan = $('<span></span>').text('添加完结单').appendTo($adda);
+
+        $adda.click(function() {
+
+            com.clearValidator();
+            com.cleanItems(balance.items);
+
+            balance.modals.addModal.modal("show");
+        });
+
+        return [$adda, $checka];
     })();
 
     var searcher = new Searcher();
 
     searcher.set("condList", "pagenation", "resultList", api.balance.pageBalance, null, ["balance-balance-no", "balance-balance-type", "balance-balance-status", "balance-balance-isPay"], "balancePostData", null, false, buttons);
     searcher.line("no", lineprops, linebtns).render();
-
-    com.focusPage("#addBalance").click(function() {
-
-        balance.modals.addModal.modal("show");
-    });
 
     function addBalance() {
 

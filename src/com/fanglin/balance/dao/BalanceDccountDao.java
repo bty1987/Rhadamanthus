@@ -14,4 +14,6 @@ public interface BalanceDccountDao extends Dao<BalanceDccountPO> {
 
 	public List<BalanceDccountPO> queryBalanceDccount(int buid);
 
+	public void updateBalanceDccountForSurplus(long bdid, long money);
+
 }
