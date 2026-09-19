@@ -15,7 +15,9 @@ public interface BalanceAccountService {
 	public List<BalanceAccountVO> queryBalanceAccount(BalanceAccountVO balanceAccountVO);
 	
 	public void addBalanceAccount(BalanceAccountVO balanceAccountVO, String userId, int company) throws FLException;
-	
+
+	public void updateBalanceAccount(BalanceAccountVO balanceAccountVO) throws FLException;
+
 	public void updateBalanceAccountForStatus(BalanceAccountVO balanceAccountVO) throws FLException;
 	
 	public List<BalanceAccountVO> queryBalanceAccountForTeller(int company);

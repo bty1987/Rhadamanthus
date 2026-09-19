@@ -23,7 +23,6 @@ import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.system.dao.CompanyDao;
 import com.fanglin.system.po.CompanyPO;
-import com.fanglin.utils.Arith;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.FormatUtil;
@@ -58,6 +57,8 @@ public class BalanceAccountServiceImpl implements BalanceAccountService {
 			balanceAccountVOs.add(balanceAccountPO.ptv(new BalanceAccountVO(new UserBaseVO(), new UserBaseVO())));
 		}
 
+		fillBelongerType(balanceAccountVOs, balanceAccountPOs);
+
 		paging.setData(balanceAccountVOs);
 	}
 
@@ -70,6 +71,8 @@ public class BalanceAccountServiceImpl implements BalanceAccountService {
 		for (BalanceAccountPO balanceAccountPO : balanceAccountPOs) {
 			balanceAccountVOs.add(balanceAccountPO.ptv(new BalanceAccountVO(new UserBaseVO(), new UserBaseVO())));
 		}
+
+		fillBelongerType(balanceAccountVOs, balanceAccountPOs);
 
 		return balanceAccountVOs;
 	}
@@ -85,6 +88,14 @@ public class BalanceAccountServiceImpl implements BalanceAccountService {
 		}
 
 		return balanceAccountVOs;
+	}
+
+	// 主体类型(0员工/1厂商)随VO下发, 驱动账户列表主体维度展示与筛选
+	private void fillBelongerType(List<BalanceAccountVO> balanceAccountVOs, List<BalanceAccountPO> balanceAccountPOs) {
+
+		for (int i = 0; i < balanceAccountVOs.size(); i++) {
+			balanceAccountVOs.get(i).setBelongerType(balanceAccountPOs.get(i).getBelonger().getType());
+		}
 	}
 
 	@Override
@@ -127,6 +138,26 @@ public class BalanceAccountServiceImpl implements BalanceAccountService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
+	public void updateBalanceAccount(BalanceAccountVO balanceAccountVO) throws FLException {
+
+		BalanceAccountPO balanceAccountPO = balanceAccountDao.get(balanceAccountVO.getBaid());
+
+		if (balanceAccountPO == null) {
+			throw new FLException(350001, "帐户不存在");
+		}
+
+		balanceAccountPO.setName(balanceAccountVO.getName());
+		balanceAccountPO.setNo(balanceAccountVO.getNo());
+		balanceAccountPO.setAddress(balanceAccountVO.getAddress());
+		balanceAccountPO.setPhone(balanceAccountVO.getPhone());
+		balanceAccountPO.setBank(balanceAccountVO.getBank());
+		balanceAccountPO.setBankno(balanceAccountVO.getBankno());
+
+		balanceAccountDao.update(balanceAccountPO);
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
 	public void withdrawBalanceAccount(BalanceAccountVO balanceAccountVO, String userId, int company) throws FLException {
 
 		BalanceAccountPO balanceAccountPO = balanceAccountDao.get(balanceAccountVO.getBaid());
@@ -135,15 +166,9 @@ public class BalanceAccountServiceImpl implements BalanceAccountService {
 			throw new FLException(350001, "帐户不存在");
 		}
 
-		if (balanceAccountPO.getSurplus() < balanceAccountVO.getMoney()) {
+		if (balanceAccountDao.updateBalanceAccountForReal(balanceAccountVO.getBaid(), balanceAccountVO.getMoney()) == 0) {
 			throw new FLException(350003, "账户金额不足");
 		}
-
-		balanceAccountPO.setSurplus(Arith.sub(balanceAccountPO.getSurplus(), balanceAccountVO.getMoney()));
-		balanceAccountPO.setRealMoney(Arith.add(balanceAccountPO.getRealMoney(), balanceAccountVO.getMoney()));
-		balanceAccountPO.setCompany(company);
-
-		balanceAccountDao.update(balanceAccountPO);
 
 		BalancePO balancePO = new BalancePO();
 

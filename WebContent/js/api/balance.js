@@ -17,9 +17,6 @@ $.extend(api.index, {
     balanceSalesBalanceIndex: {
         url: "/views/balance/balanceSalesBalance.html"
     },
-    balanceSalesBalancePrint: {
-        url: "/views/balance/balanceSalesBalancePrint.html"
-    },
     balanceSales2print: {
         url: "/views/balance/balanceSales2print.html"
     },
@@ -125,6 +122,11 @@ $.extend(api, {
         addBalanceAccount: {
             url: "addBalanceAccount.do",
             demo: true
+        },
+        updateBalanceAccount: {
+            url: "updateBalanceAccount.do",
+            demo: true,
+            type: "update"
         },
         updateBalanceAccountForStatus: {
             url: "updateBalanceAccountForStatus.do",

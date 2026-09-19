@@ -138,40 +138,40 @@ public class BalanceServiceImpl implements BalanceService {
 
 			BalanceAccountPO accountPO = accountDao.get(accountVO.getBaid());
 
-			if (accountPO == null) {
+			if (accountPO == null || accountPO.getStatus() != BalanceAccountPO.STATUS_VALID_SHORT) {
 				throw new FLException(350001, "帐户不存在");
 			}
 
-			if (balancePO.getType() == 0 && accountPO.getSurplus() < accountVO.getMoney()) {
-				throw new FLException(350030, "帐户余额不足");
-			}
-
-			if (balancePO.getBelonger().getUid() != accountPO.getBelonger().getUid()) {
-				throw new FLException(350007, "结算归属不一致");
-			}
-
-			if (balancePO.getType() == 0) {
-				accountPO.setRealMoney(Arith.add(accountPO.getRealMoney(), accountVO.getMoney()));
-				accountPO.setSurplus(Arith.sub(accountPO.getReferMoney(), accountPO.getRealMoney()));
+			if (accountPO.getType() == BalanceAccountPO.TYPE_UNVALID_SHORT) {
+				// 出纳账户: 现金腿,不消耗结算单余额
+				payCash(balancePO, accountPO, accountVO.getMoney(), creater);
 			} else {
-				accountPO.setReferMoney(Arith.add(accountPO.getReferMoney(), accountVO.getMoney()));
-				accountPO.setSurplus(Arith.sub(accountPO.getReferMoney(), accountPO.getRealMoney()));
+				// 结算账户: 台账腿,登记应付并消耗结算单余额
+				if (balancePO.getType() == BalancePO.TYPE_WITHDRAW_INT) {
+					throw new FLException(350009, "提款单不能结算入账");
+				}
+
+				if (balancePO.getBelonger().getUid() != accountPO.getBelonger().getUid()) {
+					throw new FLException(350007, "结算归属不一致");
+				}
+
+				if (balancePO.getType() == BalancePO.TYPE_PAYOUT_INT && balancePO.getSurplus() < accountVO.getMoney()) {
+					throw new FLException(350030, "帐户余额不足");
+				}
+
+				accountDao.updateBalanceAccountForRefer(accountPO.getBaid(), accountVO.getMoney());
+
+				saveBalanceDetail(accountPO, balancePO, accountVO.getMoney(), creater);
+
+				if (balanceDao.updateBalanceForSurplus(balancePO.getBid(), accountVO.getMoney()) == 0) {
+					throw new FLException(350030, "帐户余额不足");
+				}
+
+				balancePO.setSurplus(Arith.sub(balancePO.getSurplus(), accountVO.getMoney()));
 			}
-
-			accountDao.update(accountPO);
-
-			balancePO.setSurplus(Arith.sub(balancePO.getSurplus(), accountVO.getMoney()));
-
-			BalanceDetailPO balanceDetailPO = new BalanceDetailPO(new BalanceAccountPO(), new UserPO());
-
-			balanceDetailPO.setAccount(accountPO);
-			balanceDetailPO.setBalance(balancePO);
-			balanceDetailPO.setMoney(accountVO.getMoney());
-			balanceDetailPO.setOperater(creater);
-			balanceDetailPO.setOperateTime((DateUtil.getDateToTimestamp(new Date())));
-
-			balanceDetailDao.save(balanceDetailPO);
 		}
+
+		if (balancePO.getSurplus() == 0) balancePO.setStatus(BalancePO.STATUS_FINISH_INT);
 
 		balanceDao.update(balancePO);
 
@@ -208,27 +208,81 @@ public class BalanceServiceImpl implements BalanceService {
 				throw new FLException(350001, "帐户不存在");
 			}
 
-			accountDao.update(accountPO);
-
-			balancePO.setSurplus(Arith.sub(balancePO.getSurplus(), accountVO.getMoney()));
-
-			BalanceDetailPO balanceDetailPO = new BalanceDetailPO(new BalanceAccountPO(), new UserPO());
-
-			balanceDetailPO.setAccount(accountPO);
-			balanceDetailPO.setBalance(balancePO);
-			balanceDetailPO.setMoney(accountVO.getMoney());
-			balanceDetailPO.setOperater(creater);
-			balanceDetailPO.setOperateTime((DateUtil.getDateToTimestamp(new Date())));
-
-			balanceDetailDao.save(balanceDetailPO);
+			payCash(balancePO, accountPO, accountVO.getMoney(), creater);
 		}
 
 		balancePO.setBalancer(creater);
 		balancePO.setBalanceTime(DateUtil.getDateToTimestamp(new Date()));
+		balancePO.setStatus(BalancePO.STATUS_FINISH_INT);
 
 		balanceDao.update(balancePO);
 
 		return 0;
+	}
+
+	// 出纳账户现金腿: 支出/提款单付出纳余额并同步归属结算账户实付额, 收款单记出纳入金
+	private void payCash(BalancePO balancePO, BalanceAccountPO accountPO, long money, UserPO operater) throws FLException {
+
+		if (accountPO.getType() != BalanceAccountPO.TYPE_UNVALID_SHORT) {
+			throw new FLException(350008, "仅允许操作出纳类型账户");
+		}
+
+		if (accountPO.getStatus() != BalanceAccountPO.STATUS_VALID_SHORT) {
+			throw new FLException(350001, "帐户不存在");
+		}
+
+		if (balancePO.getType() == BalancePO.TYPE_COLLECT_INT) {
+			accountDao.updateBalanceAccountForRefer(accountPO.getBaid(), money);
+		} else {
+			if (accountDao.updateBalanceAccountForReal(accountPO.getBaid(), money) == 0) {
+				throw new FLException(350030, "帐户余额不足");
+			}
+
+			if (balancePO.getType() == BalancePO.TYPE_PAYOUT_INT) {
+				BalanceAccountPO belongerAccountPO = locateOrCreateAccount(balancePO, operater);
+
+				accountDao.updateBalanceAccountForRealUncheck(belongerAccountPO.getBaid(), money);
+
+				saveBalanceDetail(belongerAccountPO, balancePO, money, operater);
+			}
+		}
+
+		saveBalanceDetail(accountPO, balancePO, money, operater);
+	}
+
+	// 定位归属人有效结算账户, 无则按结算单主体懒开户(厂商/人员打通)
+	private BalanceAccountPO locateOrCreateAccount(BalancePO balancePO, UserPO creater) {
+
+		List<BalanceAccountPO> accountPOs = accountDao.queryBalanceAccount(balancePO.getBelonger().getUid());
+
+		if (accountPOs.size() > 0) return accountPOs.get(0);
+
+		BalanceAccountPO accountPO = new BalanceAccountPO();
+
+		accountPO.setName(String.format("%s结算账户", balancePO.getBelonger().getCurrentName()));
+		accountPO.setBelonger(balancePO.getBelonger());
+		accountPO.setCreater(creater);
+		accountPO.setType(BalanceAccountPO.TYPE_VALID_SHORT);
+		accountPO.setStatus(BalanceAccountPO.STATUS_VALID_SHORT);
+		accountPO.setCompany(balancePO.getCompany());
+		accountPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
+
+		accountDao.save(accountPO);
+
+		return accountPO;
+	}
+
+	private void saveBalanceDetail(BalanceAccountPO accountPO, BalancePO balancePO, long money, UserPO operater) {
+
+		BalanceDetailPO balanceDetailPO = new BalanceDetailPO(new BalanceAccountPO(), new UserPO());
+
+		balanceDetailPO.setAccount(accountPO);
+		balanceDetailPO.setBalance(balancePO);
+		balanceDetailPO.setMoney(money);
+		balanceDetailPO.setOperater(operater);
+		balanceDetailPO.setOperateTime((DateUtil.getDateToTimestamp(new Date())));
+
+		balanceDetailDao.save(balanceDetailPO);
 	}
 
 	@Override

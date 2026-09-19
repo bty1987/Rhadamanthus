@@ -94,7 +94,32 @@ public class BalanceCutpayServicerImpl implements BalanceCutpayService {
 	public int addBalanceCutpay(BalanceCutpayVO balanceCutpayVO, String userId) throws FLException {
 
 		UserPO operater = userDao.queryUserByUserId(userId);
-		UserPO belonger = userDao.queryUserByUserId(balanceCutpayVO.getBelonger().getUserId());
+
+		BalanceDccountPO balanceDccountPO = null;
+
+		if (balanceCutpayVO.getDccount() != null && balanceCutpayVO.getDccount().getBdid() != null && balanceCutpayVO.getDccount().getBdid() != 0) {
+
+			balanceDccountPO = balanceDccountDao.get(balanceCutpayVO.getDccount().getBdid());
+
+			if (balanceDccountPO == null) {
+				throw new FLException(350004, "扣款账户不存在");
+			}
+		}
+
+		// 归属人缺省取扣款账户归属人(扣款账户明细/扣款账户弹窗录入不带归属人)
+		UserPO belonger;
+
+		if (balanceCutpayVO.getBelonger() != null && balanceCutpayVO.getBelonger().getUserId() != null) {
+			belonger = userDao.queryUserByUserId(balanceCutpayVO.getBelonger().getUserId());
+		} else if (balanceDccountPO != null) {
+			belonger = balanceDccountPO.getBelonger();
+		} else {
+			belonger = null;
+		}
+
+		if (belonger == null) {
+			throw new FLException(350004, "扣款账户不存在");
+		}
 
 		BalanceCutpayPO balanceCutpayPO = new BalanceCutpayPO();
 
@@ -106,28 +131,25 @@ public class BalanceCutpayServicerImpl implements BalanceCutpayService {
 		balanceCutpayPO.setType(balanceCutpayVO.getType());
 		balanceCutpayPO.setComment(balanceCutpayVO.getComment());
 
-		if (balanceCutpayVO.getDccount() != null) {
+		if (balanceDccountPO != null) {
 
-			BalanceDccountPO balanceDccountPO = balanceDccountDao.get(balanceCutpayVO.getDccount().getBdid());
+			if (balanceCutpayPO.getType() == BalanceCutpayPO.TYPE_CUTPAY_INT) {
 
-			if (balanceDccountPO.getSurplus() < balanceCutpayVO.getMoney()) {
-				throw new FLException(350003, "账户金额不足");
+				if (balanceDccountPO.getSurplus() < balanceCutpayPO.getMoney()) {
+					throw new FLException(350003, "账户金额不足");
+				}
+
+				balanceDccountDao.updateBalanceDccountForSurplus(balanceDccountPO.getBdid(), Arith.sub(0, balanceCutpayPO.getMoney()));
+			} else {
+				balanceDccountDao.updateBalanceDccountForSurplus(balanceDccountPO.getBdid(), balanceCutpayPO.getMoney());
 			}
 
 			balanceCutpayPO.setDccount(balanceDccountPO);
-
-			if (balanceCutpayPO.getType() == BalanceCutpayPO.TYPE_CUTPAY_INT) {
-				balanceDccountPO.setSurplus(Arith.sub(balanceDccountPO.getSurplus(), balanceCutpayPO.getMoney()));
-			} else {
-				balanceDccountPO.setSurplus(Arith.add(balanceDccountPO.getSurplus(), balanceCutpayPO.getMoney()));
-			}
-
-			balanceDccountDao.update(balanceDccountPO);
 		}
 
 		balanceCutpayDao.save(balanceCutpayPO);
 
-		if (balanceCutpayVO.getBalance() == null) return 0;
+		if (balanceCutpayVO.getBalance() == null || balanceCutpayVO.getBalance().getBid() == null || balanceCutpayVO.getBalance().getBid() == 0) return 0;
 
 		BalancePO balancePO = balanceDao.get(balanceCutpayVO.getBalance().getBid());
 
@@ -135,17 +157,7 @@ public class BalanceCutpayServicerImpl implements BalanceCutpayService {
 			throw new FLException(350006, "结算单不存在");
 		}
 
-		balanceCutpayPO.setBalance(balancePO);
-
-		if (balanceCutpayPO.getType() == BalanceCutpayPO.TYPE_CUTPAY_INT) {
-			balanceCutpayPO.setTotal(Arith.add(balancePO.getCutpay(), balanceCutpayPO.getMoney()));
-		} else {
-			balanceCutpayPO.setTotal(Arith.sub(balancePO.getCutpay(), balanceCutpayPO.getMoney()));
-		}
-
-		balancePO.setCutpay(balanceCutpayPO.getTotal());
-
-		balanceDao.update(balancePO);
+		bindBalanceCutpay(balanceCutpayPO, balancePO);
 
 		if (balanceCutpayVO.getPath() == null) return 0;
 
@@ -180,18 +192,10 @@ public class BalanceCutpayServicerImpl implements BalanceCutpayService {
 			throw new FLException(350006, "结算单不存在");
 		}
 
-		balanceCutpayPO.setBalance(balancePO);
-		balanceCutpayPO.setStatus(BalanceCutpayPO.STATUS_BIND_INT);
 		balanceCutpayPO.setOperateTime(DateUtil.getDateToTimestamp(new Date()));
-		balanceCutpayPO.setTotal(Arith.add(balancePO.getCutpay(), balanceCutpayPO.getMoney()));
 		balanceCutpayPO.setComment(balanceCutpayVO.getComment());
 
-		balanceCutpayDao.update(balanceCutpayPO);
-
-		balancePO.setSurplus(Arith.sub(balancePO.getSurplus(), balanceCutpayPO.getMoney()));
-		balancePO.setCutpay(Arith.add(balancePO.getCutpay(), balanceCutpayPO.getMoney()));
-
-		balanceDao.update(balancePO);
+		bindBalanceCutpay(balanceCutpayPO, balancePO);
 
 		return 0;
 	}
@@ -206,14 +210,17 @@ public class BalanceCutpayServicerImpl implements BalanceCutpayService {
 			throw new FLException(350033, "结算扣款不存在");
 		}
 
-		if (balanceCutpayVO.getBalance() == null) {
-			throw new FLException(350006, "结算单不存在");
-		}
-
 		BalancePO balancePO = balanceDao.get(balanceCutpayVO.getBalance().getBid());
 
 		if (balancePO == null) {
 			throw new FLException(350006, "结算单不存在");
+		}
+
+		boolean cut = balanceCutpayPO.getType() == BalanceCutpayPO.TYPE_CUTPAY_INT;
+
+		// 解绑退圈: 扣款回补池额度, 返款反向冲回
+		if (balanceCutpayPO.getDccount() != null) {
+			balanceDccountDao.updateBalanceDccountForSurplus(balanceCutpayPO.getDccount().getBdid(), cut ? balanceCutpayPO.getMoney() : Arith.sub(0, balanceCutpayPO.getMoney()));
 		}
 
 		balanceCutpayPO.setBalance(null);
@@ -223,8 +230,8 @@ public class BalanceCutpayServicerImpl implements BalanceCutpayService {
 
 		balanceCutpayDao.update(balanceCutpayPO);
 
-		balancePO.setSurplus(Arith.add(balancePO.getSurplus(), balanceCutpayPO.getMoney()));
-		balancePO.setCutpay(Arith.sub(balancePO.getCutpay(), balanceCutpayPO.getMoney()));
+		balancePO.setSurplus(cut ? Arith.add(balancePO.getSurplus(), balanceCutpayPO.getMoney()) : Arith.sub(balancePO.getSurplus(), balanceCutpayPO.getMoney()));
+		balancePO.setCutpay(cut ? Arith.sub(balancePO.getCutpay(), balanceCutpayPO.getMoney()) : Arith.add(balancePO.getCutpay(), balanceCutpayPO.getMoney()));
 
 		balanceDao.update(balancePO);
 
@@ -253,21 +260,50 @@ public class BalanceCutpayServicerImpl implements BalanceCutpayService {
 
 		balanceCutpayDO.setBalance(balancePO);
 		balanceCutpayDO.setCutpay(balanceCutpayPO);
+		balanceCutpayDO.setBelonger(balanceCutpayPO.getBelonger());
+		balanceCutpayDO.setDccount(balanceCutpayPO.getDccount());
 		balanceCutpayDO.setOperater(operater);
+		balanceCutpayDO.setOperateTime(DateUtil.getDateToTimestamp(new Date()));
 		balanceCutpayDO.setType(balanceCutpayVO.getType());
 		balanceCutpayDO.setName(balanceCutpayVO.getName());
 		balanceCutpayDO.setMoney(balanceCutpayVO.getMoney());
 		balanceCutpayDO.setComment(balanceCutpayVO.getComment());
 
+		boolean refund = balanceCutpayVO.getType() != BalanceCutpayPO.TYPE_CUTPAY_INT;
+
 		balanceCutpayDO.setTotal(Arith.sub(balanceCutpayPO.getTotal(), balanceCutpayDO.getMoney()));
 
 		balanceCutpayDao.save(balanceCutpayDO);
 
-		balancePO.setCutpay(Arith.sub(balancePO.getCutpay(), balanceCutpayDO.getMoney()));
+		// 父记录累计扣款同步核减
+		balanceCutpayPO.setTotal(balanceCutpayDO.getTotal());
+
+		balanceCutpayDao.update(balanceCutpayPO);
+
+		balancePO.setCutpay(refund ? Arith.sub(balancePO.getCutpay(), balanceCutpayDO.getMoney()) : Arith.add(balancePO.getCutpay(), balanceCutpayDO.getMoney()));
+		balancePO.setSurplus(refund ? Arith.add(balancePO.getSurplus(), balanceCutpayDO.getMoney()) : Arith.sub(balancePO.getSurplus(), balanceCutpayDO.getMoney()));
 
 		balanceDao.update(balancePO);
 
 		return 0;
+	}
+
+	// 绑定结算单: status置绑定, 结算单surplus/cutpay按扣款方向联动
+	private void bindBalanceCutpay(BalanceCutpayPO balanceCutpayPO, BalancePO balancePO) {
+
+		boolean cut = balanceCutpayPO.getType() == BalanceCutpayPO.TYPE_CUTPAY_INT;
+
+		balanceCutpayPO.setBalance(balancePO);
+		balanceCutpayPO.setStatus(BalanceCutpayPO.STATUS_BIND_INT);
+
+		balanceCutpayPO.setTotal(cut ? Arith.add(balancePO.getCutpay(), balanceCutpayPO.getMoney()) : Arith.sub(balancePO.getCutpay(), balanceCutpayPO.getMoney()));
+
+		balanceCutpayDao.update(balanceCutpayPO);
+
+		balancePO.setSurplus(cut ? Arith.sub(balancePO.getSurplus(), balanceCutpayPO.getMoney()) : Arith.add(balancePO.getSurplus(), balanceCutpayPO.getMoney()));
+		balancePO.setCutpay(balanceCutpayPO.getTotal());
+
+		balanceDao.update(balancePO);
 	}
 
 }

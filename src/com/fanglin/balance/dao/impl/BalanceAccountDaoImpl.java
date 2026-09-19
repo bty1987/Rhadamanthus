@@ -42,6 +42,30 @@ public class BalanceAccountDaoImpl extends DaoImpl<BalanceAccountPO> implements 
 		return session().createCriteria(BalanceAccountPO.class).add(Restrictions.eq(BalanceAccountPO.COLUMN_STATUS_STR, BalanceAccountPO.STATUS_VALID_SHORT)).add(Restrictions.eq(BalanceAccountPO.COLUMN_TYPE_STR, BalanceAccountPO.TYPE_UNVALID_SHORT)).add(Restrictions.eq("company", company)).list();
 	}
 
+	@Override
+	public void updateBalanceAccountForRefer(long baid, long money) {
+
+		String sql = "update balanceaccount set referMoney = referMoney + :money, surplus = surplus + :money where baid = :baid";
+
+		session().createSQLQuery(sql).setLong("baid", baid).setLong("money", money).executeUpdate();
+	}
+
+	@Override
+	public int updateBalanceAccountForReal(long baid, long money) {
+
+		String sql = "update balanceaccount set realMoney = realMoney + :money, surplus = surplus - :money where baid = :baid and surplus >= :money";
+
+		return session().createSQLQuery(sql).setLong("baid", baid).setLong("money", money).executeUpdate();
+	}
+
+	@Override
+	public void updateBalanceAccountForRealUncheck(long baid, long money) {
+
+		String sql = "update balanceaccount set realMoney = realMoney + :money, surplus = surplus - :money where baid = :baid";
+
+		session().createSQLQuery(sql).setLong("baid", baid).setLong("money", money).executeUpdate();
+	}
+
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {
 
 		if (filters == null) return;
@@ -58,6 +82,9 @@ public class BalanceAccountDaoImpl extends DaoImpl<BalanceAccountPO> implements 
 				query.add(query.getCriterion(field, Short.valueOf(data), op));
 			} else if (field.equals("type")) {
 				query.add(query.getCriterion(field, Short.valueOf(data), op));
+			} else if (field.equals("belongerType")) {
+				query.alias("belonger", "belonger");
+				query.add(query.getCriterion("belonger.type", Short.valueOf(data), op));
 			}
 		}
 	}

@@ -52,7 +52,7 @@ public class BalanceCutpayPO implements java.io.Serializable {
 
 	private long total;
 
-	private int money;
+	private long money;
 
 	private short type;
 
@@ -136,11 +136,11 @@ public class BalanceCutpayPO implements java.io.Serializable {
 	}
 
 	@Column(name = "money")
-	public int getMoney() {
+	public long getMoney() {
 		return money;
 	}
 
-	public void setMoney(int money) {
+	public void setMoney(long money) {
 		this.money = money;
 	}
 

@@ -41,6 +41,28 @@ Condition.addupRule("balance", {
             valuePath: "value"
         }
     },
+    "account-utype": {
+        label: "主体类型",
+        type: "select",
+        submitConfig: {
+            name: "belongerType",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: null,
+            postData: null,
+            listPath: constant.balance().balanceAccount.utype ? constant.balance().balanceAccount.utype.datas : [{
+                key: "0",
+                value: "员工"
+            }, {
+                key: "1",
+                value: "厂商"
+            }],
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
 
     "dccount-name": {
         label: "名称",

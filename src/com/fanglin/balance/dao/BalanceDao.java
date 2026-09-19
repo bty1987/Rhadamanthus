@@ -14,5 +14,5 @@ public interface BalanceDao extends Dao<BalancePO> {
 
 	public List<BalancePO> queryBalance(List<Filter> filters, int company) throws FLException;
 
-	public BalancePO queryBalance(String no);
+	public int updateBalanceForSurplus(long bid, long money);
 }

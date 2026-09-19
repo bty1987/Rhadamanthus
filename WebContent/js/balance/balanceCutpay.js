@@ -405,10 +405,39 @@ $(function() {
         com.post(api.balance.addBalanceCutpay, options, function(res) {
 
             com.showAlert(com.info, "添加成功");
-            
+
             searcher.doSearch();
 
             balanceCutpay.modals.createModal.modal("hide");
+        });
+    });
+
+    balanceCutpay.btns.saveAddBtn.on("click", function() {
+
+        if (com.validate('addBalanceCutpayModal')) {
+            return false;
+        }
+
+        if (!balanceCutpay.items.balanceDccountName.val()) {
+            com.showAlert(com.warning, "请选择扣款账户");
+            return false;
+        }
+
+        var options = {
+            "balanceCutpay.name": balanceCutpay.items.balanceCutpayName.val(),
+            "balanceCutpay.type": constant.balance().balanceCutpay.TYPE_CUTPAY_INT,
+            "balanceCutpay.money": balanceCutpay.items.balanceCutpayMoney.val(),
+            "balanceCutpay.comment": balanceCutpay.items.balanceCutpayComment.val(),
+            "balanceCutpay.dccount.bdid": balanceCutpay.items.balanceDccountName.val()
+        };
+
+        com.post(api.balance.addBalanceCutpay, options, function(res) {
+
+            com.showAlert(com.info, "添加成功");
+
+            searcher.doSearch();
+
+            balanceCutpay.modals.addBalanceCutpayModal.modal("hide");
         });
     });
 

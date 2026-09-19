@@ -48,8 +48,11 @@ public class BalanceDaoImpl extends DaoImpl<BalancePO> implements BalanceDao {
 	}
 
 	@Override
-	public BalancePO queryBalance(String no) {
-		return (BalancePO) session().createCriteria(BalancePO.class).add(Restrictions.eq("no", no)).setMaxResults(1).uniqueResult();
+	public int updateBalanceForSurplus(long bid, long money) {
+
+		String sql = "update balance set surplus = surplus - :money where bid = :bid and (type <> 0 or surplus >= :money)";
+
+		return session().createSQLQuery(sql).setLong("bid", bid).setLong("money", money).executeUpdate();
 	}
 
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) throws FLException {
@@ -79,7 +82,7 @@ public class BalanceDaoImpl extends DaoImpl<BalancePO> implements BalanceDao {
 			if (field.contains("belonger")) {
 				query.alias(String.format("%sbelonger", prefix), String.format("%sbelonger", prefix));
 			} else if (field.contains("creater")) {
-				query.alias(String.format("%screater", prefix), String.format("%sbelonger", prefix));
+				query.alias(String.format("%screater", prefix), String.format("%screater", prefix));
 			}
 
 			if ("balance.no".equals(field)) {
