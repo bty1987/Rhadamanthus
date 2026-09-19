@@ -11,6 +11,10 @@ $.extend(api.index, {
         url: "/views/decoration/decoration4activity.html"
     },
 
+    decorationSignPrepareIndex: {
+        url: "/views/decoration/decoration4sign.html"
+    },
+
     decorationBelongIndex: {
         url: "/views/decoration/decoration4belong.html"
     },
