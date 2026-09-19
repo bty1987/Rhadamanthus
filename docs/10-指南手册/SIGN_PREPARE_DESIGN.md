@@ -1,6 +1,6 @@
 # 签约准备操作台(Sign Prepare)设计方案
 
-> 版本:v3.1(2026-09-19,实施后二次改造:**前置操作全面就地化**去跳转;收款/审批按用户口径豁免——收款保留跳转,审批仅提示)
+> 版本:v3.2(2026-09-19,三次微调:款项区块去跳转只留状态展示;审批项隐藏——pageApproval 系操作人视角非装修单归属口径,不做展示与判定,签约硬拦由后端 140037 兜底)
 > 状态:已实施完毕(实施记录见 §8),待生产发版与回归测试
 > 关联记忆:material-plan-design(popup4page 弹窗页先例)、supervision4detail(嵌套弹窗 modal+.load 先例)、app.popup 先例(additem/matplan)
 
@@ -126,7 +126,7 @@
 | 活动 | `decoration.queryDecorationActivityByOrderId` | 存在任一 status=0 行即未锁定(预签同口径) |
 | 合同 | `decoration.queryDecorationContractByOrderId` | 取 dcid 最大(最新创建)一份的状态 |
 | 工程信息 | `construction.queryConstructionInfoByOrderId` | drawlineTime 非空即就绪 |
-| 审批 | `approval.pageApproval` + filters(ident eq orderId, status eq 0) + `paging.totalRecords` | 前端参考口径(pageApproval 带 company 过滤可能有微小偏差),**签约硬拦仍由后端 140037 兜底**;手写 `filters[0].field/data/op` 传参有先例(buildingHouse4query) |
+| ~~审批~~ | (v3.2 废止) | pageApproval 带操作人 company 过滤,系操作人视角而非装修单归属口径,展示会误导——审批项整体隐藏,signReady 判定不含审批,签约硬拦完全由后端 140037 兜底 |
 | 预签报价 | `quotation.queryProtationForDefaultByOrderId` | pid 非空即存在;锁定=status 2 |
 
 就绪汇总(signReady/presignReady)由前端按 §1.1/§1.2 口径计算,与后端校验逐条对齐。金额 tranargs 各接口既有定义已覆盖(÷1000),前端展示直接用返回值;报价/工程/预签域接口 fail 时静默(PO 不存在会抛错,属预期分支)。
@@ -245,3 +245,10 @@
 - **宿主事件桥裁剪**:两版 decoration.js 的 goto 分支只留 payment,删 quotation/activity/contract/protation/approval 五分支(不再触发)。
 - checklist item 渲染支持 detail 明细行(款项列表)。
 - 发版物不变:SQL + 前端(零 jar)。
+
+### 8.9 v3.2 改造记录(2026-09-19 同日,用户拍板)
+
+- **款项区块**:删除"去装修款页"跳转按钮(准备台操作人基本无装修款页权限),仅保留款项明细状态展示(明细列表不变);
+- **审批项整体隐藏**:pageApproval 计数是当前操作人视角(带 company 过滤)而非装修单归属口径,展示会误导——checklist 删审批项、数据层删审批查询(少一次请求)、signReady/presignReady 判定不含审批;存在未处理审批时由后端签约校验 140037 报错兜底;
+- **宿主事件桥**:goto 分支整体删除(仅剩 sign/presign 两个动作),两版弹窗页分发同步删 goto 分支;
+- 正式签约 checklist 由 8 项收敛为 7 项,预签 6 项不变(款项参考无按钮)。
