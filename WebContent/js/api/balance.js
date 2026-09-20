@@ -184,34 +184,6 @@ $.extend(api, {
                 args: ["amount", "surplus"]
             }]
         },
-        pageComcost: {
-            url: "pageComcost.do",
-            type: "query",
-            tranargs: [{
-                result: "paging-data",
-                args: ["money"]
-            }]
-        },
-        queryComcost: {
-            url: "queryComcost.do",
-            type: "query",
-            tranargs: [{
-                result: "comcosts",
-                args: ["money"]
-            }]
-        },
-        addComcost: {
-            url: "addComcost.do",
-            type: "update",
-            tranargs: {
-                args: ["comcost.money"]
-            }
-        },
-        updateComcostForStatus: {
-            url: "updateComcostForStatus.do",
-            demo: true
-        },
-
         pageBalanceCutpay: {
             url: "pageBalanceCutpay.do",
             demo: true,

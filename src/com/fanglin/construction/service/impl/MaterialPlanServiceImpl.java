@@ -31,6 +31,8 @@ import com.fanglin.data.po.ConstructionNodePO;
 import com.fanglin.data.po.MaterialPlanNodePO;
 import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.po.DecorationPO;
+import com.fanglin.personel.dao.UserDao;
+import com.fanglin.personel.po.UserPO;
 import com.fanglin.utils.DateUtil;
 
 @Service("materialPlanService")
@@ -57,6 +59,9 @@ public class MaterialPlanServiceImpl implements MaterialPlanService {
 
 	@Autowired
 	private CategoryDao categoryDao;
+
+	@Autowired
+	private UserDao userDao;
 
 	@Override
 	public List<MaterialPlanVO> queryMaterialPlanByOrderId(MaterialPlanVO materialPlanVO) throws FLException {
@@ -300,7 +305,7 @@ public class MaterialPlanServiceImpl implements MaterialPlanService {
 
 		materialPlanPO.setStatus(MaterialPlanPO.STATUS_CONFIRM_INT);
 		materialPlanPO.setActualTime(DateUtil.getDateToTimestamp(new Date()));
-		materialPlanPO.setOperater(userId == null || userId.length() == 0 ? 0L : Long.parseLong(userId));
+		materialPlanPO.setOperater(resolveUserId(userId));
 
 		materialPlanDao.update(materialPlanPO);
 	}
@@ -322,7 +327,7 @@ public class MaterialPlanServiceImpl implements MaterialPlanService {
 		}
 
 		materialPlanPO.setActualTime(null);
-		materialPlanPO.setOperater(userId == null || userId.length() == 0 ? 0L : Long.parseLong(userId));
+		materialPlanPO.setOperater(resolveUserId(userId));
 
 		materialPlanDao.update(materialPlanPO);
 	}
@@ -543,4 +548,15 @@ public class MaterialPlanServiceImpl implements MaterialPlanService {
 		}
 	}
 
+	// 工号(如 FL-00479)转 uid, 查无用户兜底 0
+	private long resolveUserId(String userId) {
+
+		if (userId == null || userId.length() == 0) {
+			return 0L;
+		}
+
+		UserPO userPO = userDao.queryUserByUserId(userId);
+
+		return userPO == null ? 0L : userPO.getUid();
+	}
 }

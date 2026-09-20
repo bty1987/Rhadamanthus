@@ -92,6 +92,9 @@ WHERE `key`='apiPage' AND value='api.quotation.pageRuotation'
     SELECT 1 FROM platform.quotationfunctionright WHERE name='ruotation' AND qfid=quotation.quotationfunction.qfid
 );
 
+-- 4.1.1 清理旧退报单时代残留绑定(dev 实测曾残留 40 行导致 depage=quotationRefund 打开时条件/列重复, 幂等)
+DELETE FROM platform.quotationfunctionright WHERE name='quotationRefund' AND type=9;
+
 -- 4.2 条件行(装修单号, 条件组件 ruotation-decoration-orderId 已存在于 condition/quotation.js:350)
 INSERT INTO quotation.quotationfunction (name, `key`, value, `group`, type, subtype, status, sort, comment)
 SELECT '装修单号(退报)', 'condArr', 'ruotation-decoration-orderId', 0, 2, 1, 0, 1, '退报单列表查询条件'
