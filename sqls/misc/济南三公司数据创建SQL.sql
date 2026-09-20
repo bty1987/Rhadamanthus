@@ -189,6 +189,38 @@ FROM platform.decorationfunctionright r WHERE r.company = 92
   AND NOT EXISTS (SELECT 1 FROM platform.decorationfunctionright x WHERE x.name = r.name AND x.dfid = r.dfid AND x.company = 99);
 
 -- =====================================================================
+-- 六、hades.isvconfig 钉钉 ISV 配置(hades 服务按 company 取 corpid/secret 换 token,
+--     每公司两行, type=2, icid 自增; 🔴 依赖本脚本第一段的 company 97/98/99 先建)
+-- =====================================================================
+
+-- 济南分公司 (company=97)
+INSERT INTO hades.isvconfig (`key`, `value`, type, company, comment)
+SELECT 'corpid', 'dingnqgaqmld8aurjwm0', 2, 97, '钉钉-济南分公司'
+FROM DUAL WHERE NOT EXISTS (SELECT 1 FROM hades.isvconfig WHERE company = 97 AND `key` = 'corpid');
+
+INSERT INTO hades.isvconfig (`key`, `value`, type, company, comment)
+SELECT 'secret', 'NNgYYjqWyuRDwfqVeQHBfXziHIQ0APyBc8XZZdJ5L0wWGUE4Doop2GYXVXZtiTVR', 2, 97, '钉钉-济南分公司'
+FROM DUAL WHERE NOT EXISTS (SELECT 1 FROM hades.isvconfig WHERE company = 97 AND `key` = 'secret');
+
+-- 济南方林装饰 (company=98)
+INSERT INTO hades.isvconfig (`key`, `value`, type, company, comment)
+SELECT 'corpid', 'dingiz93n3b5p4hcnqq1', 2, 98, '钉钉-济南方林'
+FROM DUAL WHERE NOT EXISTS (SELECT 1 FROM hades.isvconfig WHERE company = 98 AND `key` = 'corpid');
+
+INSERT INTO hades.isvconfig (`key`, `value`, type, company, comment)
+SELECT 'secret', 'eOa0vqflGnM2RrYdCEYH8tX8AE-2U9ihindv7SGRVOifkN0KSNzZBfj_az9bz98r', 2, 98, '钉钉-济南方林'
+FROM DUAL WHERE NOT EXISTS (SELECT 1 FROM hades.isvconfig WHERE company = 98 AND `key` = 'secret');
+
+-- 济南爱林装饰 (company=99)
+INSERT INTO hades.isvconfig (`key`, `value`, type, company, comment)
+SELECT 'corpid', 'dingwirkqea43bzehiyj', 2, 99, '钉钉-济南爱林'
+FROM DUAL WHERE NOT EXISTS (SELECT 1 FROM hades.isvconfig WHERE company = 99 AND `key` = 'corpid');
+
+INSERT INTO hades.isvconfig (`key`, `value`, type, company, comment)
+SELECT 'secret', 'B5zi66T-8FTHAJR7FVIvw8tqtoKDE7txUCHj3XSNSR9or4jxKjhMF2-oMR0lnHA7', 2, 99, '钉钉-济南爱林'
+FROM DUAL WHERE NOT EXISTS (SELECT 1 FROM hades.isvconfig WHERE company = 99 AND `key` = 'secret');
+
+-- =====================================================================
 -- 执行后核验
 --   SELECT cid, name, block FROM communion.company WHERE cid IN (97,98,99);
 --   SELECT company, COUNT(*) FROM communion.systemconfig WHERE company IN (97,98,99) GROUP BY company;
@@ -198,6 +230,7 @@ FROM platform.decorationfunctionright r WHERE r.company = 92
 --   SELECT company, COUNT(*) FROM platform.decorationfunctionright WHERE company IN (97,98,99) GROUP BY company;
 --     -- 预期: 97 与 91 同(约1557), 98 与 91 同, 99 与 92 同(约1607)
 --   SELECT company, COUNT(*) FROM data.constructionnode WHERE company IN (97,98,99) GROUP BY company;
+--   SELECT company, `key`, LEFT(value,32) FROM hades.isvconfig WHERE company IN (97,98,99) ORDER BY company, `key`;  -- 应 6 行
 -- =====================================================================
 --
 -- 后续人工事项(非 SQL):
