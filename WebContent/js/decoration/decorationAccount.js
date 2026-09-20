@@ -43,7 +43,7 @@ $(function() {
     var searcher = new Searcher();
 
     searcher.base("condList", "pagenation", "resultList", api.decoration.pageDecorationAccount);
-    searcher.condition(["decoration-orderId", "decoration-village", "decoration-houseNumber", "decoration-designer", "decoration-salesman", "decoration-status", "decoration-accountTime", "decorationAccount-isAffirm", "decorationAccount-name"]);
+    searcher.condition(["decoration-orderId", "decoration-village", "decoration-houseNumber", "decoration-designer", "decoration-salesman", "decoration-status", "decoration-accountTime", "decoration-decorationAccount-isAffirm", "decoration-decorationAccount-name"]);
     searcher.history("decorationAccountPostData");
 
     var lineprops = [{

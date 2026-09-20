@@ -240,7 +240,7 @@ $(function () {
 
     var searcher = new Searcher();
 
-    searcher.set("condListData", "pagenationData", "resultListData", pageConfig.apiPage || api.customer.pageAepair, null, pageConfig.condArr.length > 0 ? pageConfig.condArr : ["customer-service-creater-name", "customer-service-updater-name", "customer-aepair-status"], "aepairPostData", null, false, null);
+    searcher.set("condListData", "pagenationData", "resultListData", pageConfig.apiPage || api.customer.pageAepair, null, pageConfig.condArr.length > 0 ? pageConfig.condArr : ["customer-service-creater-name", "customer-service-updater-name", "customer-service-aepair-status"], "aepairPostData", null, false, null);
     searcher.line("comment", lineprops, linebtns).render();
 
     function updateFunction() {

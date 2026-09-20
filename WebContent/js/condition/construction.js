@@ -311,6 +311,18 @@ Condition.addupRule("construction", {
             validate: null
         }
     },
+    "schedule-cid": {
+        label: "工程编号",
+        type: "text",
+        submitConfig: {
+            name: "cid",
+            op: "eq",
+            validate: {
+                "reg": /^[0-9]*$/,
+                "msg": "格式不正确, 请输入数字"
+            }
+        }
+    },
     "schedule-startTime": {
         label: "开工时间",
         type: "dateRangePicker",

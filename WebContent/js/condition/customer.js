@@ -1597,7 +1597,29 @@
             keyPath: "key",
             valuePath: "value"
         }
-    }
+    },
 
 
+    "service-revisit-type": {
+        label: "类型",
+        type: "select",
+        submitConfig: {
+            name: "type",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: null,
+            postData: null,
+            listPath: [{
+                "key": "0",
+                "value": "保修"
+            }, {
+                "key": "1",
+                "value": "投诉"
+            }],
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
 });

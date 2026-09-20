@@ -69,9 +69,9 @@ public class HolidayDaoImpl extends DaoImpl<HolidayPO> implements HolidayDao {
 			if (HolidayPO.COLUMN_PERIOD_STR.equals(field)) {
 				query.add(query.getCriterion(field, data, op));
 			} else if (HolidayPO.COLUMN_STARTTIME_STR.equals(field)) {
-				query.add(query.getCriterion(field, data, op));
+				query.timeranges(HolidayPO.COLUMN_STARTTIME_STR, data);
 			} else if (HolidayPO.COLUMN_ENDTIME_STR.equals(field)) {
-				query.add(query.getCriterion(field, data, op));
+				query.timeranges(HolidayPO.COLUMN_ENDTIME_STR, data);
 			}
 		}
 	}
