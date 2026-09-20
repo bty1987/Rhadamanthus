@@ -265,6 +265,33 @@ Condition.addupRule("personel", {
             op: "eq",
             validate: null
         }
-    }
+    },
 
+    "recruitment-name": {
+        label: "姓名",
+        type: "text",
+        submitConfig: {
+            name: "name",
+            op: "eq",
+            validate: null
+        }
+    },
+    "recruitment-phone": {
+        label: "电话",
+        type: "text",
+        submitConfig: {
+            name: "phone",
+            op: "eq",
+            validate: null
+        }
+    },
+    "recruitment-identity": {
+        label: "身份证号",
+        type: "text",
+        submitConfig: {
+            name: "identity",
+            op: "eq",
+            validate: null
+        }
+    },
 });

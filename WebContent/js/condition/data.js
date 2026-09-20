@@ -2332,5 +2332,23 @@ Condition.addupRule("data", {
             keyPath: "key",
             valuePath: "value"
         }
-    }
+    },
+    "holiday-startTime": {
+        label: "开始时间",
+        type: "dateRangePicker",
+        submitConfig: {
+            name: "startTime",
+            op: "between",
+            validate: null
+        }
+    },
+    "holiday-endTime": {
+        label: "结束时间",
+        type: "dateRangePicker",
+        submitConfig: {
+            name: "endTime",
+            op: "between",
+            validate: null
+        }
+    },
 });

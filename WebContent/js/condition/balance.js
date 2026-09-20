@@ -539,4 +539,61 @@ Condition.addupRule("balance", {
         }
     },
 
+    "oales-balance-no": {
+        label: "结算单号",
+        type: "text",
+        submitConfig: {
+            name: "balance.no",
+            op: "eq",
+            validate: null
+        }
+    },
+    "oales-balance-type": {
+        label: "结算类型",
+        type: "select",
+        submitConfig: {
+            name: "balance.type",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: null,
+            postData: {},
+            listPath: constant.balance().balance.type.datas,
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+    "oales-balance-status": {
+        label: "结算状态",
+        type: "select",
+        submitConfig: {
+            name: "balance.status",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: null,
+            postData: {},
+            listPath: constant.balance().balance.status.datas,
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+    "selection-balance-isPay": {
+        label: "是否已付",
+        type: "select",
+        submitConfig: {
+            name: "balance.isPay",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: null,
+            postData: {},
+            listPath: constant.balance().balance.isPay.datas,
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
 });

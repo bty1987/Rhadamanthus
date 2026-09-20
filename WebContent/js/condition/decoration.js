@@ -248,6 +248,15 @@ Condition.addupRule("decoration", {
             valuePath: "value"
         }
     },
+    "houseType": {
+        label: "房屋类别",
+        type: "text",
+        submitConfig: {
+            name: "decoration.houseType",
+            op: "eq",
+            validate: null
+        }
+    },
     "design-region": {
         label: "设计中心",
         type: "autofill",

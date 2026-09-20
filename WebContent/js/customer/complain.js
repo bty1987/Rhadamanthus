@@ -125,7 +125,7 @@ jQuery(function($) {
 
     var searcher = new Searcher();
 
-    searcher.set("condList", "pagenation", "resultList", pageConfig.apiPage || api.customer.pageComplain, null, pageConfig.condArr.length > 0 ? pageConfig.condArr : ["customer-service-orderId", "customer-service-creater-name", "customer-service-updater-name", "customer-complain-status", "customer-complain-level"], "complainPostData", null, false, null);
+    searcher.set("condList", "pagenation", "resultList", pageConfig.apiPage || api.customer.pageComplain, null, pageConfig.condArr.length > 0 ? pageConfig.condArr : ["customer-service-orderId", "customer-service-creater-name", "customer-service-updater-name", "customer-service-complain-status", "customer-service-complain-level"], "complainPostData", null, false, null);
     searcher.line("decoration.orderId", lineprops, linebtns).render();
 
 })

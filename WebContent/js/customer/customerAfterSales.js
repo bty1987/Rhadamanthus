@@ -458,7 +458,7 @@ jQuery(function($) {
 
     customerAfterSales.searcher = new Searcher();
     customerAfterSales.searcher.base("condList", "pagenation", "resultList", api.customer.pageCustomerAfterSales);
-    customerAfterSales.searcher.condition(["customer-aftersales-asNo", "customer-aftersales-orderId", "customer-aftersales-csid", "customer-aftersales-cid", "customer-aftersales-type", "customer-aftersales-source", "customer-aftersales-priority", "customer-aftersales-status", "customer-aftersales-owner", "customer-aftersales-creater"]);
+    customerAfterSales.searcher.condition(["customer-customer-aftersales-asNo", "customer-customer-aftersales-orderId", "customer-customer-aftersales-csid", "customer-customer-aftersales-cid", "customer-customer-aftersales-type", "customer-customer-aftersales-source", "customer-customer-aftersales-priority", "customer-customer-aftersales-status", "customer-customer-aftersales-owner", "customer-customer-aftersales-creater"]);
     customerAfterSales.searcher.history("customerAfterSalesPostData");
     customerAfterSales.searcher.button([{
         name: "创建",
