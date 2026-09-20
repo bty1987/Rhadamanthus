@@ -16,8 +16,9 @@
 --   新键(group='dingtalk')              = token链路(DINGTALK_CORPID_STR=AppKey/SuiteKey,
 --                                         DINGTALK_SECRET_STR=AppSecret/SuiteSecret)
 --   本脚本直接写入实际值, 无需二次 UPDATE
---   钉钉部门ID(1121813237/1121827279/1121974272)为钉钉应用侧信息,
---   ERP 库无消费点, 不落库; 若后续开通按部门同步需求再补 systemconfig 键
+--   钉钉部门ID落 communion.company.no(生产实证: 北京91=1075669740/92=1075996281/全国自营96
+--   均为钉钉部门ID形态; 北京脚本原文 no=1 系执行后有人修正, 本次直接写对):
+--     97=1121813237 / 98=1121827279 / 99=1121974272
 -- =====================================================================
 
 -- =====================================================================
@@ -26,17 +27,17 @@
 
 -- 济南分公司 (cid=97)
 INSERT INTO communion.company (cid, `no`, code, name, fullname, shortname, address, corporation, phone, doid, soid, atttype, status, block)
-SELECT 97, 1, '370100', '济南分公司', fullname, shortname, address, corporation, phone, doid, soid, atttype, status, block
+SELECT 97, 1121813237, '370100', '济南分公司', fullname, shortname, address, corporation, phone, doid, soid, atttype, status, block
 FROM communion.company WHERE cid = 91;
 
 -- 济南方林装饰 (cid=98)
 INSERT INTO communion.company (cid, `no`, code, name, fullname, shortname, address, corporation, phone, doid, soid, atttype, status, block)
-SELECT 98, 1, '370100', '济南方林装饰', fullname, shortname, address, corporation, phone, doid, soid, atttype, status, block
+SELECT 98, 1121827279, '370100', '济南方林装饰', fullname, shortname, address, corporation, phone, doid, soid, atttype, status, block
 FROM communion.company WHERE cid = 91;
 
 -- 济南爱林装饰 (cid=99)
 INSERT INTO communion.company (cid, `no`, code, name, fullname, shortname, address, corporation, phone, doid, soid, atttype, status, block)
-SELECT 99, 1, '370100', '济南爱林装饰', fullname, shortname, address, corporation, phone, doid, soid, atttype, status, block
+SELECT 99, 1121974272, '370100', '济南爱林装饰', fullname, shortname, address, corporation, phone, doid, soid, atttype, status, block
 FROM communion.company WHERE cid = 92;
 
 -- =====================================================================
@@ -236,6 +237,6 @@ FROM DUAL WHERE NOT EXISTS (SELECT 1 FROM hades.isvconfig WHERE company = 99 AND
 -- 后续人工事项(非 SQL):
 --   1. 公司全称/地址/法人/电话等 communion.company 字段按工商信息补齐(本脚本沿用参照公司值)
 --   2. 新公司建部门/用户/角色授权后, decorationstatusright 按人授权随之配置
---   3. 钉钉应用后台将可见范围配置到对应部门(部门ID见脚本头注释)
+--   3. 钉钉应用后台将可见范围配置到对应部门(部门ID已落 company.no, 见头注释)
 --   4. 若公司命名需调整(如"济南方林装饰"改简称), 直接 UPDATE communion.company.name
 -- =====================================================================
