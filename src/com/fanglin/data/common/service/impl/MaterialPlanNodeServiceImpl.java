@@ -19,6 +19,8 @@ import com.fanglin.data.common.dao.MaterialPlanNodeDao;
 import com.fanglin.data.common.service.MaterialPlanNodeService;
 import com.fanglin.data.common.vo.MaterialPlanNodeVO;
 import com.fanglin.data.po.ConstructionNodePO;
+import com.fanglin.personel.dao.UserDao;
+import com.fanglin.personel.po.UserPO;
 import com.fanglin.data.po.MaterialPlanNodePO;
 import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.Paging;
@@ -38,6 +40,9 @@ public class MaterialPlanNodeServiceImpl implements MaterialPlanNodeService {
 
 	@Autowired
 	private ConstructionNodeDao constructionNodeDao;
+
+	@Autowired
+	private UserDao userDao;
 
 	@Override
 	public void pageMaterialPlanNode(Paging paging, List<Filter> filters, int company) {
@@ -81,7 +86,7 @@ public class MaterialPlanNodeServiceImpl implements MaterialPlanNodeService {
 		materialPlanNodePO.setCnid(cnid);
 		materialPlanNodePO.setNodeName(resolveNodeName(cnid));
 		materialPlanNodePO.setCompany(company);
-		materialPlanNodePO.setCreater(userId == null || userId.length() == 0 ? 0L : Long.parseLong(userId));
+		materialPlanNodePO.setCreater(resolveUserId(userId));
 		materialPlanNodePO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 		materialPlanNodePO.setStatus(MaterialPlanNodePO.STATUS_ENABLE_SHORT);
 
@@ -186,6 +191,18 @@ public class MaterialPlanNodeServiceImpl implements MaterialPlanNodeService {
 		}
 
 		return cnid;
+	}
+
+	// 工号(如 FL-00479)转 uid, 查无用户兜底 0
+	private long resolveUserId(String userId) {
+
+		if (userId == null || userId.length() == 0) {
+			return 0L;
+		}
+
+		UserPO userPO = userDao.queryUserByUserId(userId);
+
+		return userPO == null ? 0L : userPO.getUid();
 	}
 
 	private String resolveNodeName(long cnid) {
