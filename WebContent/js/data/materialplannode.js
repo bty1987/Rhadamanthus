@@ -77,7 +77,7 @@ jQuery(function($) {
 
     searcher.base("condList", "pagenation", "resultList", api.data.pageMaterialPlanNode);
 
-    searcher.condition(["materialplannode-type", "materialplannode-action", "materialplannode-anchor", "materialplannode-status", "materialplannode-nodename"]);
+    searcher.condition(["data-material-plan-node-type", "data-material-plan-node-action", "data-material-plan-node-anchor", "data-material-plan-node-status", "data-material-plan-node-nodename"]);
 
     searcher.history("materialPlanNodePostData");
 

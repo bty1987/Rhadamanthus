@@ -1120,7 +1120,7 @@ Condition.addupRule("data", {
             validate: null
         }
     },
-    "materialplannode-type": {
+    "material-plan-node-type": {
         label: "维度",
         type: "select",
         submitConfig: {
@@ -1136,7 +1136,7 @@ Condition.addupRule("data", {
             valuePath: "value"
         }
     },
-    "materialplannode-action": {
+    "material-plan-node-action": {
         label: "动作",
         type: "select",
         submitConfig: {
@@ -1152,7 +1152,7 @@ Condition.addupRule("data", {
             valuePath: "value"
         }
     },
-    "materialplannode-anchor": {
+    "material-plan-node-anchor": {
         label: "时间锚点",
         type: "select",
         submitConfig: {
@@ -1168,7 +1168,7 @@ Condition.addupRule("data", {
             valuePath: "value"
         }
     },
-    "materialplannode-status": {
+    "material-plan-node-status": {
         label: "状态",
         type: "select",
         submitConfig: {
@@ -1190,7 +1190,7 @@ Condition.addupRule("data", {
             valuePath: "value"
         }
     },
-    "materialplannode-nodename": {
+    "material-plan-node-nodename": {
         label: "施工节点",
         type: "text",
         submitConfig: {
