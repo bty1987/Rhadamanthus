@@ -107,7 +107,7 @@ $(function(){
                 handle: function(v) {
 
                     params.customer.orderId = v.orderId;
-                    com.popup4page('#crowdUserPopUp', api.index.crowdUser.url, '群成员');
+                    com.popup4page('#crowd4userPopUp', api.index.crowd4user.url, '群成员');
                 }
             },
             unbind: {

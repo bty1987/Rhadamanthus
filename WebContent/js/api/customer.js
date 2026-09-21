@@ -23,8 +23,8 @@ $.extend(api.index, {
     complaint: {
         url: "/views/customer/complaint.html"
     },
-    crowdUser: {
-        url: "/views/customer/crowdUser.html"
+    crowd4user: {
+        url: "/views/customer/crowd4user.html"
     },
     customerOriginRecord: {
         url: "/views/customer/customerOrigineRecord.html"
