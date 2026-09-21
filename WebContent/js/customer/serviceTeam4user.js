@@ -1,6 +1,6 @@
 jQuery(function ($) {
 
-    var groupUser = {
+    var serviceTeamUser = {
         saveBtn: com.focusPage("#saveBtn"),
         cancelBtn: com.focusPage("#cancelBtn"),
 
@@ -17,18 +17,18 @@ jQuery(function ($) {
         postParam: {}
     };
 
-    groupUser.saveBtn.bindClick(saveData);
+    serviceTeamUser.saveBtn.bindClick(saveData);
 
-    groupUser.modals.groupUserModal.on("hide.bs.modal", function () {
+    serviceTeamUser.modals.groupUserModal.on("hide.bs.modal", function () {
         com.clearValidator();
         com.cleanTypeahead('userSel');
-        com.cleanItems(groupUser.items);
+        com.cleanItems(serviceTeamUser.items);
     });
 
     com.initTypeahead('userSel', api.personel.queryUserByPinyin, "pinyinName", {"user.status": "0", "departmentType.name": ""}, "autoFillKeyValue", "key", "value", null);
 
     // 获取页面控制参数(按公司差异化配置)
-    var pageConfig = customerPage.getConfig("crowd4user");
+    var pageConfig = customerPage.getConfig("serviceTeam4user");
 
     // pageBtn 配置为空时, 所有按钮按原逻辑显示; 否则需在 pageBtn 中存在
     function btnVisible(key) {
@@ -112,15 +112,15 @@ jQuery(function ($) {
 
     var searcher = new Searcher();
 
-    searcher.set("condListas", "pagenationas", "resultListas", pageConfig.apiPage || api.decoration.queryDecorationUser, {"decorationUser.orderId": groupUser.gorderId}, pageConfig.condArr, "groupUserPostData", null, false, buttons);
+    searcher.set("condListas", "pagenationas", "resultListas", pageConfig.apiPage || api.decoration.queryDecorationUser, {"decorationUser.orderId": serviceTeamUser.gorderId}, pageConfig.condArr, "groupUserPostData", null, false, buttons);
     searcher.line("user.currentName", lineprops, linebtns).render();
 
     com.focusPage('#addGroupUser', '#pagenationas').click(function () {
-        groupUser.editFlg = false;
+        serviceTeamUser.editFlg = false;
 
         fillCommentOptions();
 
-        groupUser.modals.groupUserModal.modal("show");
+        serviceTeamUser.modals.groupUserModal.modal("show");
     });
 
     // 角色建议: communion.constant decoration.decorationUser.contentRole 驱动 datalist(customer 页无 decorationUtils, 本地实现)
@@ -155,15 +155,15 @@ jQuery(function ($) {
 
         var options = {
             'decorationUser.user.userId': com.typeahead("userSel"),
-            'decorationUser.orderId': groupUser.gorderId,
+            'decorationUser.orderId': serviceTeamUser.gorderId,
             'decorationUser.type': com.focusPage("#guType").val(),
-            'decorationUser.content': groupUser.items.comment.val()
+            'decorationUser.content': serviceTeamUser.items.comment.val()
         };
 
         com.post(api.decoration.addDecorationUser, options, function (res) {
             searcher.doSearch();
         }, null, false);
-        groupUser.modals.groupUserModal.modal("hide");
+        serviceTeamUser.modals.groupUserModal.modal("hide");
     }
 
 });
