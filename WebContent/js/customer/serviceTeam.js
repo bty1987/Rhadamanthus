@@ -1,6 +1,6 @@
 $(function(){
 
-    var group = {
+    var serviceTeam = {
         bindSaveBtn: com.focusPage("#bindSaveBtn"),
         bindSaveOrderBtn: com.focusPage("#bindSaveOrderBtn"),
         modals:{
@@ -16,16 +16,16 @@ $(function(){
         opengid: null
     };
 
-    group.bindSaveBtn.bindClick(bindgroup);
-    group.bindSaveOrderBtn.bindClick(bindgroupOrder);
+    serviceTeam.bindSaveBtn.bindClick(bindgroup);
+    serviceTeam.bindSaveOrderBtn.bindClick(bindgroupOrder);
 
     com.focusPage(".modal").on("hide.bs.modal",function () {
-        com.cleanItems(group.items);
+        com.cleanItems(serviceTeam.items);
         com.clearValidator();
     });
 
     // 获取页面控制参数(按公司差异化配置)
-    var pageConfig = customerPage.getConfig("crowd");
+    var pageConfig = customerPage.getConfig("serviceTeam");
 
     // pageBtn 配置为空时, 所有按钮按原逻辑显示; 否则需在 pageBtn 中存在
     function btnVisible(key) {
@@ -79,12 +79,12 @@ $(function(){
                 clazz: "btn-yellow",
                 handle: function(v) {
 
-                    group.gid = v.gid;
+                    serviceTeam.gid = v.gid;
 
-                    group.items.name.val(v.name);
-                    group.items.content.val(v.content);
+                    serviceTeam.items.name.val(v.name);
+                    serviceTeam.items.content.val(v.content);
 
-                    group.modals.updateOrderModal.modal("show");
+                    serviceTeam.modals.updateOrderModal.modal("show");
                 },
                 show: function() { return btnVisible("edit"); }
             },
@@ -94,10 +94,10 @@ $(function(){
                 show: function(v) { return btnVisible("bind") && v.orderId == null; },
                 handle: function(v) {
 
-                    group.gid = v.gid;
-                    group.opengid = v.opengid;
+                    serviceTeam.gid = v.gid;
+                    serviceTeam.opengid = v.opengid;
 
-                    group.modals.bindOrderModal.modal("show");
+                    serviceTeam.modals.bindOrderModal.modal("show");
                 }
             },
             addUser: {
@@ -107,7 +107,7 @@ $(function(){
                 handle: function(v) {
 
                     params.customer.orderId = v.orderId;
-                    com.popup4page('#crowd4userPopUp', api.index.crowd4user.url, '群成员');
+                    com.popup4page('#serviceTeam4userPopUp', api.index.serviceTeam4user.url, '群成员');
                 }
             },
             unbind: {
@@ -123,7 +123,7 @@ $(function(){
     })();
 
     var searcher = new Searcher();
-    searcher.set("condList", "pagenation", "resultList", pageConfig.apiPage || api.customer.pageGroup, null, pageConfig.condArr.length > 0 ? pageConfig.condArr : ['customer-group-name', 'customer-group-orderId'], null, null, false, null);
+    searcher.set("condList", "pagenation", "resultList", pageConfig.apiPage || api.customer.pageGroup, null, pageConfig.condArr.length > 0 ? pageConfig.condArr : ['customer-serviceTeam-name', 'customer-serviceTeam-orderId'], null, null, false, null);
     searcher.line("name", lineprops, linebtns).render();
 
     function bindgroup (){
@@ -133,15 +133,15 @@ $(function(){
         }
 
        var option = {
-            "group.gid": group.gid,
-            "group.name": group.items.name.val(),
-            "group.content": group.items.content.val(),
+            "group.gid": serviceTeam.gid,
+            "group.name": serviceTeam.items.name.val(),
+            "group.content": serviceTeam.items.content.val(),
         };
 
         com.post(api.customer.updateGroup, option, function(){
             searcher.doSearch();
             com.showAlert(com.info,'修改群信息成功');
-            group.modals.updateOrderModal.modal("hide");
+            serviceTeam.modals.updateOrderModal.modal("hide");
         });
     }
 
@@ -152,14 +152,14 @@ $(function(){
         }
 
         var option = {
-            "group.opengid": group.opengid,
-            "group.orderId": group.items.orderId.val(),
+            "group.opengid": serviceTeam.opengid,
+            "group.orderId": serviceTeam.items.orderId.val(),
         };
 
         com.post(api.customer.bindGroup, option, function(){
             searcher.doSearch();
             com.showAlert(com.info,'绑定成功');
-            group.modals.bindOrderModal.modal("hide");
+            serviceTeam.modals.bindOrderModal.modal("hide");
         });
     }
 

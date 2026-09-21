@@ -11,8 +11,8 @@ $.extend(api.index, {
     vustomerAdvance: {
         url: "/views/customer/vustomerAdvance.html"
     },
-    crowd: {
-        url: "/views/customer/crowd.html"
+    serviceTeam: {
+        url: "/views/customer/serviceTeam.html"
     },
     repair: {
         url: "/views/customer/repair.html"
@@ -23,8 +23,8 @@ $.extend(api.index, {
     complaint: {
         url: "/views/customer/complaint.html"
     },
-    crowd4user: {
-        url: "/views/customer/crowd4user.html"
+    serviceTeam4user: {
+        url: "/views/customer/serviceTeam4user.html"
     },
     customerOriginRecord: {
         url: "/views/customer/customerOrigineRecord.html"
