@@ -22,7 +22,7 @@ public interface PointAccountDao extends Dao<PointAccountPO> {
 
 	public PointAccountPO queryPointAccount(long cid);
 
-	public PointAccountPO queryPointAccountByOrderId(String orderId);
+	public PointAccountPO queryPointAccountByOrderId(int company, long cid, String orderId);
 
 	public List<PointAccountPO> pagePointAccount(Paging paging, List<Filter> filters);
 

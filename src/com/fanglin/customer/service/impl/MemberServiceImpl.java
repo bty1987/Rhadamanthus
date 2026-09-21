@@ -746,7 +746,7 @@ public class MemberServiceImpl implements MemberService {
 			decorationActivityItemDao.save(decorationActivityItemPO);
 		}
 
-		PointAccountPO pointAccountPO = pointAccountDao.queryPointAccountByOrderId(orderId);
+		PointAccountPO pointAccountPO = pointAccountDao.queryPointAccountByOrderId(decorationPO.getCompany(), decorationPO.getCustomer().getCid(), orderId);
 
 		if (pointAccountPO == null) {
 
@@ -850,7 +850,7 @@ public class MemberServiceImpl implements MemberService {
 			throw new FLException(140013, "装修单不存在");
 		}
 
-		PointAccountPO pointAccountPO = pointAccountDao.queryPointAccountByOrderId(orderId);
+		PointAccountPO pointAccountPO = pointAccountDao.queryPointAccountByOrderId(decorationPO.getCompany(), decorationPO.getCustomer().getCid(), orderId);
 
 		if (pointAccountPO == null) {
 			throw new FLException(330047, "积分不存在");
