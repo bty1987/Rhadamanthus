@@ -6,6 +6,9 @@ $.extend(api.index, {
     decorationDetailIndex: {
         url: "/views/decoration/decoration4detail.html"
     },
+    decoration4userIndex: {
+        url: "/views/decoration/decoration4user.html"
+    },
 
     decorationActivityItemIndex: {
         url: "/views/decoration/decoration4activity.html"

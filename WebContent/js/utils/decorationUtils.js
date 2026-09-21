@@ -2266,6 +2266,23 @@ var decorationUtils = {
         return fallback[key] || '其他';
     },
 
+    // 服务团队角色建议: content 字典化(communion.constant decoration.decorationUser.contentRole)驱动 datalist;
+    // SQL 未配置时静默跳过(自由输入不受影响), 已填充过则跳过
+    fillContentRoleOptions: function(datalistId) {
+
+        var $datalist = com.focusPage("#" + (datalistId || "duContentOptions"));
+
+        if ($datalist.length == 0 || $datalist.children().length > 0) return;
+
+        var roleNode = constant.decoration().decorationUser.contentRole;
+
+        if (!roleNode || !roleNode.datas || roleNode.datas.length == 0) return;
+
+        $.each(roleNode.datas, function(i, v) {
+            $('<option></option>').attr("value", v.value).appendTo($datalist);
+        });
+    },
+
     initUsers: function(decorationDetail, orderId) {
 
         var $users = com.focusPage("#usersInfo").html('');
@@ -2356,6 +2373,7 @@ var decorationUtils = {
             com.focusPage("#duUser").val(userBase.currentName + "-" + userBase.duty.name).attr("readonly", "readonly");
             com.focusPage("#duContent").val($isContentInfo.text());
             com.focusPage("#duType").val(i.type == null ? '99' : String(i.type)).attr("disabled", "disabled");
+            decorationUtils.fillContentRoleOptions('duContentOptions');
             decorationDetail.decorationUser.duid = i.duid;
             decorationDetail.decorationUser.status = 1;
             decorationDetail.decorationUserModal.modal("show");

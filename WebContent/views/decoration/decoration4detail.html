@@ -992,9 +992,10 @@
                         <div class="space-4"></div>
 
                         <div class="form-group">
-                            <label for="duContent" class="col-sm-3 control-label no-padding-right">备注</label>
+                            <label for="duContent" class="col-sm-3 control-label no-padding-right">角色/备注</label>
                             <div class="col-sm-9">
-                                <textarea class="col-xs-10 col-sm-6" rows="3" data-toggle="popover" data-trigger='manual' maxlength="50" id="duContent"></textarea>
+                                <input type="text" class="col-xs-10 col-sm-6" data-toggle="popover" data-trigger='manual' maxlength="50" id="duContent" list="duContentOptions" placeholder="角色或备注, 下拉为常用角色">
+                                <datalist id="duContentOptions"></datalist>
                             </div>
                         </div>
                     </form>

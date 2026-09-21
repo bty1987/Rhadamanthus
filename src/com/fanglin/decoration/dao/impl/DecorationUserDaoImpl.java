@@ -3,15 +3,17 @@ package com.fanglin.decoration.dao.impl;
 import java.util.List;
 
 import org.hibernate.Criteria;
+import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.criterion.Subqueries;
 import org.springframework.stereotype.Repository;
 
 import com.fanglin.core.dao.impl.DaoImpl;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.decoration.dao.DecorationUserDao;
-import com.fanglin.decoration.po.DecorationUserDO;
+import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.decoration.po.DecorationUserPO;
 import com.fanglin.utils.Paging;
 
@@ -23,15 +25,21 @@ public class DecorationUserDaoImpl extends DaoImpl<DecorationUserPO> implements 
 	}
 
 	@Override
-	public List<DecorationUserDO> pageDecorationForUser(Paging paging, List<Filter> filters, int uid) throws FLException {
+	public List<DecorationPO> pageDecorationForUser(Paging paging, List<Filter> filters, int uid) throws FLException {
 
-		PagingQuery<DecorationUserDO> query = pagingQuery(paging, DecorationUserDO.class);
+		PagingQuery<DecorationPO> query = pagingQuery(paging, DecorationPO.class);
 
-		query.alias("user", "user").add(query.getCriterion(DecorationUserDO.DECORATION_USER_STR, uid, "eq"));
+		// 以装修单为根实体, exists 子查询圈定"当前人员在其服务团队中"的订单:
+		// 同一人在同单存在多个 type 行(自动+手工)时天然去重, 分页计数也正确
+		DetachedCriteria sub = DetachedCriteria.forClass(DecorationUserPO.class, "du");
+		sub.createAlias("du.user", "duu").add(Restrictions.eq("duu.uid", uid));
+		sub.setProjection(Projections.property("du.orderId"));
+
+		query.add(Subqueries.propertyIn("orderId", sub));
 
 		queryFilterExcute(query, filters);
 
-		query.desc("duid");
+		query.desc("createTime");
 
 		return query.list();
 	}
@@ -66,7 +74,7 @@ public class DecorationUserDaoImpl extends DaoImpl<DecorationUserPO> implements 
 
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) throws FLException {
 
-		DecorationDaoImpl.queryFilterExcute(query, filters, "decoration");
+		DecorationDaoImpl.queryFilterExcute(query, filters, "");
 
 	}
 
