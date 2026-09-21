@@ -118,8 +118,26 @@ jQuery(function ($) {
     com.focusPage('#addGroupUser', '#pagenationas').click(function () {
         groupUser.editFlg = false;
 
+        fillCommentOptions();
+
         groupUser.modals.groupUserModal.modal("show");
     });
+
+    // 角色建议: communion.constant decoration.decorationUser.contentRole 驱动 datalist(customer 页无 decorationUtils, 本地实现)
+    function fillCommentOptions() {
+
+        var $datalist = com.focusPage("#commentOptions");
+
+        if ($datalist.length == 0 || $datalist.children().length > 0) return;
+
+        var roleNode = constant.decoration().decorationUser.contentRole;
+
+        if (!roleNode || !roleNode.datas || roleNode.datas.length == 0) return;
+
+        $.each(roleNode.datas, function (i, v) {
+            $('<option></option>').attr("value", v.value).appendTo($datalist);
+        });
+    }
 
     function deleteGroupUser(duid) {
 

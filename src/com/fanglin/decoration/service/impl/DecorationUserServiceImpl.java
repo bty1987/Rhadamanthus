@@ -13,11 +13,12 @@ import com.fanglin.communion.vo.DutyVO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.decoration.dao.DecorationUserDao;
-import com.fanglin.decoration.po.DecorationUserDO;
+import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.decoration.po.DecorationUserPO;
 import com.fanglin.decoration.service.DecorationUserService;
 import com.fanglin.decoration.vo.DecorationUserVO;
 import com.fanglin.decoration.vo.DecorationVO;
+import com.fanglin.log.context.ActionLogContext;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserBaseVO;
@@ -44,19 +45,11 @@ public class DecorationUserServiceImpl implements DecorationUserService {
 			throw new FLException(190005, "人员不存在");
 		}
 
-		List<DecorationUserDO> DecorationUserDOs = decorationUserDao.pageDecorationForUser(paging, filters, userPO.getUid());
+		List<DecorationPO> decorationPOs = decorationUserDao.pageDecorationForUser(paging, filters, userPO.getUid());
 		List<DecorationVO> decorationVOs = new ArrayList<DecorationVO>();
 
-		for (DecorationUserDO decorationUserDO : DecorationUserDOs) {
-			DecorationVO decorationVO = new DecorationVO();
-
-			decorationVO.setSupervisor(new UserBaseVO());
-			decorationVO.setEscorter(new UserBaseVO());
-			decorationVO.setQuoter(new UserBaseVO());
-
-			decorationUserDO.getDecoration().ptvcascade(decorationVO);
-
-			decorationVOs.add(decorationVO);
+		for (DecorationPO decorationPO : decorationPOs) {
+			decorationVOs.add(decorationPO.ptvcascade(new DecorationVO(new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO())));
 		}
 
 		paging.setData(decorationVOs);
@@ -95,6 +88,9 @@ public class DecorationUserServiceImpl implements DecorationUserService {
 			throw new FLException(140078, "服务团队成员已存在");
 		}
 
+		// 团队成员变更留痕: actionLog 记录"谁给哪个订单加了谁"(params 已含被加人/类型/角色)
+		ActionLogContext.bind("decoration", decorationUserVO.getOrderId(), "ADD");
+
 		DecorationUserPO decorationUserPO = new DecorationUserPO();
 
 		BeanUtil.copyPropertie(decorationUserVO, decorationUserPO, Arrays.asList("user", "creater"));
@@ -131,6 +127,9 @@ public class DecorationUserServiceImpl implements DecorationUserService {
 			throw new FLException(140077, "人员不存在");
 		}
 
+		// 团队成员变更留痕: actionLog 记录"谁改了哪个订单的成员属性"(isShow/isPay/content)
+		ActionLogContext.bind("decoration", decorationUserPO.getOrderId(), "UPDATE");
+
 		if (decorationUserVO.getIsShow() != null) {
 			decorationUserPO.setIsShow(decorationUserVO.getIsShow());
 		}
@@ -157,6 +156,9 @@ public class DecorationUserServiceImpl implements DecorationUserService {
 		if (decorationUserPO == null) {
 			throw new FLException(140077, "人员不存在");
 		}
+
+		// 团队成员变更留痕: 物理删除无行级痕迹, actionLog 是唯一追溯点(params 含 duid)
+		ActionLogContext.bind("decoration", decorationUserPO.getOrderId(), "DELETE");
 
 		decorationUserDao.delete(decorationUserPO);
 

@@ -1314,6 +1314,7 @@ jQuery(function($) {
         com.clearValidator();
         com.cleanTypeahead('duUser');
         com.cleanTypeahead('duContent');
+        decorationUtils.fillContentRoleOptions('duContentOptions');
         com.focusPage("#duUser").removeAttr('readonly');
         com.focusPage("#duType").val('99').removeAttr('disabled');
         decorationDetail.decorationUser.status = 0;

@@ -40,9 +40,10 @@
 
                         <div class="space-4"></div>
                         <div class="form-group">
-                            <label for="userSel" class="col-sm-3 control-label no-padding-right">说明</label>
+                            <label for="comment" class="col-sm-3 control-label no-padding-right">角色/说明</label>
                             <div class="col-md-9">
-                                <textarea id="comment" maxlength="128" class="col-xs-10 col-sm-6" rows="3"></textarea>
+                                <input type="text" id="comment" maxlength="128" class="col-xs-10 col-sm-6" list="commentOptions" placeholder="角色或说明, 下拉为常用角色">
+                                <datalist id="commentOptions"></datalist>
                             </div>
                         </div>
                         <div class="space-4"></div>
