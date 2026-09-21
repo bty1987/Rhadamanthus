@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 import org.hibernate.SQLQuery;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
@@ -27,12 +28,12 @@ public class PointAccountDaoImpl extends DaoImpl<PointAccountPO> implements Poin
 
 	@Override
 	public PointAccountPO queryPointAccount(long cid) {
-		return (PointAccountPO) session().createCriteria(PointAccountPO.class).add(Restrictions.eq(PointAccountPO.COLUMN_CID_STR, cid)).setMaxResults(1).uniqueResult();
+		return (PointAccountPO) session().createCriteria(PointAccountPO.class).add(Restrictions.eq(PointAccountPO.COLUMN_CID_STR, cid)).addOrder(Order.desc("accountId")).setMaxResults(1).uniqueResult();
 	}
 
 	@Override
-	public PointAccountPO queryPointAccountByOrderId(String orderId) {
-		return (PointAccountPO) session().createCriteria(PointAccountPO.class).add(Restrictions.eq(PointAccountPO.COLUMN_ORDERID_STR, orderId)).setMaxResults(1).uniqueResult();
+	public PointAccountPO queryPointAccountByOrderId(int company, long cid, String orderId) {
+		return (PointAccountPO) session().createCriteria(PointAccountPO.class).add(Restrictions.eq("company", company)).add(Restrictions.eq(PointAccountPO.COLUMN_CID_STR, cid)).add(Restrictions.eq(PointAccountPO.COLUMN_ORDERID_STR, orderId)).setMaxResults(1).uniqueResult();
 	}
 
 	@Override

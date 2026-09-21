@@ -81,7 +81,7 @@ public class PointAccountServiceImpl implements PointAccountService {
 			throw new FLException(140013, "装修单不存在");
 		}
 
-		PointAccountPO pointAccountPO = pointAccountDao.queryPointAccountByOrderId(pointAccountVO.getOrderId());
+		PointAccountPO pointAccountPO = pointAccountDao.queryPointAccountByOrderId(company, decorationPO.getCustomer().getCid(), pointAccountVO.getOrderId());
 
 		if (pointAccountPO != null) {
 			throw new FLException(330048, "积分已存在");
@@ -107,7 +107,13 @@ public class PointAccountServiceImpl implements PointAccountService {
 	@Transactional(rollbackFor = Exception.class)
 	public PointAccountVO grantPoint(PointAccountVO pointAccountVO, String userId) throws FLException {
 
-		PointAccountPO pointAccountPO = pointAccountDao.queryPointAccountByOrderId(pointAccountVO.getOrderId());
+		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(pointAccountVO.getOrderId());
+
+		if (decorationPO == null) {
+			throw new FLException(140013, "装修单不存在");
+		}
+
+		PointAccountPO pointAccountPO = pointAccountDao.queryPointAccountByOrderId(decorationPO.getCompany(), decorationPO.getCustomer().getCid(), pointAccountVO.getOrderId());
 
 		if (pointAccountPO == null) {
 			throw new FLException(330047, "积分不存在");
@@ -156,7 +162,13 @@ public class PointAccountServiceImpl implements PointAccountService {
 	@Transactional(rollbackFor = Exception.class)
 	public PointAccountVO consumePoint(PointAccountVO pointAccountVO, String userId) throws FLException {
 
-		PointAccountPO pointAccountPO = pointAccountDao.queryPointAccountByOrderId(pointAccountVO.getOrderId());
+		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(pointAccountVO.getOrderId());
+
+		if (decorationPO == null) {
+			throw new FLException(140013, "装修单不存在");
+		}
+
+		PointAccountPO pointAccountPO = pointAccountDao.queryPointAccountByOrderId(decorationPO.getCompany(), decorationPO.getCustomer().getCid(), pointAccountVO.getOrderId());
 
 		if (pointAccountPO == null) {
 			throw new FLException(330047, "积分不存在");
