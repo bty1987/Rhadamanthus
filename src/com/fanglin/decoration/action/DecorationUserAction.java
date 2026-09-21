@@ -47,7 +47,7 @@ public class DecorationUserAction extends BaseListAction {
 	@Action(value = "addDecorationUser", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addDecorationUser() throws FLException {
 
-		decorationUserService.addDecorationUser(decorationUser);
+		decorationUserService.addDecorationUser(decorationUser, queryUserId());
 
 		return SUCCESS;
 	}

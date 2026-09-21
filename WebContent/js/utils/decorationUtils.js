@@ -2250,6 +2250,22 @@ var decorationUtils = {
         }
     },
 
+    // 服务团队成员类型文案: 优先取 communion.constant(decoration.decorationUser.type), SQL未配置或历史NULL值时回退硬编码
+    userTypeText: function(type) {
+
+        var fallback = { 0: '业务', 1: '装饰', 2: '服务', 3: '合同', 4: '销售', 99: '其他' };
+
+        var key = type == null ? 99 : type;
+
+        var enumNode = constant.decoration().decorationUser.type;
+
+        if (enumNode && enumNode.keys && enumNode.keys[key] != undefined) {
+            return enumNode.keys[key];
+        }
+
+        return fallback[key] || '其他';
+    },
+
     initUsers: function(decorationDetail, orderId) {
 
         var $users = com.focusPage("#usersInfo").html('');
@@ -2325,6 +2341,8 @@ var decorationUtils = {
         var $isNameInfo = $('<span></span>').addClass('label label-info arrowed').text(userBase.currentName + " " + userBase.duty.name).appendTo($isNameHolder);
         var $isContentHolder = $('<span></span>').addClass('label-holder').appendTo($tags);
         var $isContentInfo = $('<span></span>').addClass('label label-danger arrowed').attr("id", "duCon_" + i.duid).text(i.content ? i.content : "待说明").appendTo($isContentHolder);
+        var $isTypeHolder = $('<span></span>').addClass('label-holder').appendTo($tags);
+        var $isTypeInfo = $('<span></span>').addClass('label label-purple arrowed').attr("id", "duType_" + i.duid).text(decorationUtils.userTypeText(i.type)).appendTo($isTypeHolder);
 
         var $tools = $('<div></div>').addClass('tools tools-top').appendTo($li);
         var $toolLabel = $('<label></label>').appendTo($tools);
@@ -2337,6 +2355,7 @@ var decorationUtils = {
 
             com.focusPage("#duUser").val(userBase.currentName + "-" + userBase.duty.name).attr("readonly", "readonly");
             com.focusPage("#duContent").val($isContentInfo.text());
+            com.focusPage("#duType").val(i.type == null ? '99' : String(i.type)).attr("disabled", "disabled");
             decorationDetail.decorationUser.duid = i.duid;
             decorationDetail.decorationUser.status = 1;
             decorationDetail.decorationUserModal.modal("show");

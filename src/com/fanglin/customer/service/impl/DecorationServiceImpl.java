@@ -77,7 +77,8 @@ public class DecorationServiceImpl implements DecorationService {
 	@Override
 	public void queryCusDecorationUser(Paging paging, List<Filter> filters, DecorationVO decorationVO) {
 
-		List<DecorationUserPO> decorationUserPOs = decorationUserDao.queryDecorationUser(paging, filters, decorationVO.getOrderId());
+		// 客户侧仅返回"显示"状态的团队成员, ERP中标记隐藏(isShow=1)的成员不对客户暴露
+		List<DecorationUserPO> decorationUserPOs = decorationUserDao.queryDecorationUser(paging, filters, decorationVO.getOrderId(), DecorationUserPO.ISSHOW_SHOW_INT);
 
 		List<DecorationUserVO> decorationUserVOs = new ArrayList<DecorationUserVO>();
 

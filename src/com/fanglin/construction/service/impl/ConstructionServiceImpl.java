@@ -234,26 +234,30 @@ public class ConstructionServiceImpl implements ConstructionService {
 
 		DepartmentPartnerPO partnerSO = departmentPartnerDao.queryDepartmentPartner(decorationPO.getDesigner().getDept().getDid(), DepartmentPartnerPO.TYPE_SALES_INT);
 
-		if (partnerSO != null) {
+		if (partnerSO != null && partnerSO.getPartner() != null && decorationUserDao.countDecorationUser(decorationPO.getOrderId(), partnerSO.getPartner().getUid(), DecorationUserPO.TYPE_SALES_INT) == 0) {
 
 			DecorationUserPO decorationUserPO = new DecorationUserPO();
 
 			decorationUserPO.setOrderId(decorationPO.getOrderId());
 			decorationUserPO.setUser(partnerSO.getPartner());
 			decorationUserPO.setType(DecorationUserPO.TYPE_SALES_INT);
+			decorationUserPO.setCreateTime(new Timestamp(System.currentTimeMillis()));
+			decorationUserPO.setCreater(operater);
 
 			decorationUserDao.save(decorationUserPO);
 		}
 
 		CityProperPartnerPO partnerCPO = cityProperPartnerDao.queryCityProperPartner(decorationPO.getHouse().getVillage().getCityProper().getCpid(), CityProperPartnerPO.TYPE_SERV_INT);
 
-		if (partnerCPO != null) {
+		if (partnerCPO != null && partnerCPO.getPartner() != null && decorationUserDao.countDecorationUser(decorationPO.getOrderId(), partnerCPO.getPartner().getUid(), DecorationUserPO.TYPE_SERV_INT) == 0) {
 
 			DecorationUserPO decorationUserPO = new DecorationUserPO();
 
 			decorationUserPO.setOrderId(decorationPO.getOrderId());
 			decorationUserPO.setType(DecorationUserPO.TYPE_SERV_INT);
 			decorationUserPO.setUser(partnerCPO.getPartner());
+			decorationUserPO.setCreateTime(new Timestamp(System.currentTimeMillis()));
+			decorationUserPO.setCreater(operater);
 
 			decorationUserDao.save(decorationUserPO);
 		}

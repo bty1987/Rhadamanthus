@@ -13,6 +13,8 @@ public interface DecorationUserDao extends Dao<DecorationUserPO> {
 
 	public List<DecorationUserDO> pageDecorationForUser(Paging paging, List<Filter> filters, int uid) throws FLException;
 
-	public List<DecorationUserPO> queryDecorationUser(Paging paging, List<Filter> filters, String orderId);
+	public List<DecorationUserPO> queryDecorationUser(Paging paging, List<Filter> filters, String orderId, Short isShow);
+
+	public long countDecorationUser(String orderId, int user, Short type);
 
 }

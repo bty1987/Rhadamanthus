@@ -1068,15 +1068,19 @@ public class DecorationServiceImpl implements DecorationService {
 			decorationPO.setEscorter(departmentPartnerPO.getPartner());
 		}
 
+		UserPO operater = userDao.queryUserByUserId(userId);
+
 		DepartmentPartnerPO partnerSO = departmentPartnerDao.queryDepartmentPartner(designer.getDept().getDid(), DepartmentPartnerPO.TYPE_SALES_INT);
 
-		if (partnerSO != null) {
+		if (partnerSO != null && partnerSO.getPartner() != null && decorationUserDao.countDecorationUser(decorationPO.getOrderId(), partnerSO.getPartner().getUid(), DecorationUserPO.TYPE_SALES_INT) == 0) {
 
 			DecorationUserPO decorationUserPO = new DecorationUserPO();
 
 			decorationUserPO.setOrderId(decorationPO.getOrderId());
 			decorationUserPO.setUser(partnerSO.getPartner());
 			decorationUserPO.setType(DecorationUserPO.TYPE_SALES_INT);
+			decorationUserPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
+			decorationUserPO.setCreater(operater);
 
 			decorationUserDao.save(decorationUserPO);
 		}
@@ -1087,13 +1091,15 @@ public class DecorationServiceImpl implements DecorationService {
 
 		CityProperPartnerPO partnerCPO = cityProperPartnerDao.queryCityProperPartner(housePO.getVillage().getCityProper().getCpid(), CityProperPartnerPO.TYPE_SALES_INT);
 
-		if (partnerCPO != null) {
+		if (partnerCPO != null && partnerCPO.getPartner() != null && decorationUserDao.countDecorationUser(decorationPO.getOrderId(), partnerCPO.getPartner().getUid(), DecorationUserPO.TYPE_SALES_INT) == 0) {
 
 			DecorationUserPO decorationUserPO = new DecorationUserPO();
 
 			decorationUserPO.setOrderId(decorationPO.getOrderId());
 			decorationUserPO.setType(DecorationUserPO.TYPE_SALES_INT);
 			decorationUserPO.setUser(partnerCPO.getPartner());
+			decorationUserPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
+			decorationUserPO.setCreater(operater);
 
 			decorationUserDao.save(decorationUserPO);
 		}
@@ -1101,7 +1107,6 @@ public class DecorationServiceImpl implements DecorationService {
 		decorationPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 		decorationPO.setMeasureTime(DateUtil.getDateToTimestamp(new Date()));
 
-		UserPO operater = userDao.queryUserByUserId(userId);
 		decorationPO.setCreater(operater);
 
 		decorationPO.setDesignStatus(DecorationPO.DESIGNSTATUS_INITIA_INT);
