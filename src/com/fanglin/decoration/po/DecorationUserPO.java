@@ -1,6 +1,7 @@
 package com.fanglin.decoration.po;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 import java.util.Arrays;
 
 import javax.persistence.Column;
@@ -32,6 +33,10 @@ public class DecorationUserPO implements Serializable {
 	public static final short TYPE_SALES_INT = 4;  // 销售
 	public static final short TYPE_OTHER_INT = 99; // 其他
 
+	// 显示标识常量(与 communion.constant cid 1186/1187 对齐)
+	public static final short ISSHOW_SHOW_INT = 0; // 显示
+	public static final short ISSHOW_HIDE_INT = 1; // 隐藏
+
 	private long duid;
 
 	private String orderId;
@@ -45,6 +50,10 @@ public class DecorationUserPO implements Serializable {
 	private Short type;
 
 	private String content;
+
+	private Timestamp createTime;
+
+	private UserPO creater;
 
 	@Id
 	@GeneratedValue
@@ -112,11 +121,32 @@ public class DecorationUserPO implements Serializable {
 		this.content = content;
 	}
 
+	@Column(name = "createTime")
+	public Timestamp getCreateTime() {
+		return createTime;
+	}
+
+	public void setCreateTime(Timestamp createTime) {
+		this.createTime = createTime;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(nullable = true, name = "creater", referencedColumnName = "uId")
+	public UserPO getCreater() {
+		return creater;
+	}
+
+	public void setCreater(UserPO creater) {
+		this.creater = creater;
+	}
+
 	public DecorationUserVO ptv(DecorationUserVO decorationUserVO) {
 
-		BeanUtil.copyPropertie(this, decorationUserVO, Arrays.asList("user"));
+		BeanUtil.copyPropertie(this, decorationUserVO, Arrays.asList("user", "creater"));
 
 		if (decorationUserVO.getUser() != null && getUser() != null) decorationUserVO.getUser().setBaseInfo(getUser());
+
+		if (decorationUserVO.getCreater() != null && getCreater() != null) decorationUserVO.getCreater().setBaseInfo(getCreater());
 
 		return decorationUserVO;
 	}

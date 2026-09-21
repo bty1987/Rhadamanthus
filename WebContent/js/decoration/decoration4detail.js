@@ -1315,6 +1315,7 @@ jQuery(function($) {
         com.cleanTypeahead('duUser');
         com.cleanTypeahead('duContent');
         com.focusPage("#duUser").removeAttr('readonly');
+        com.focusPage("#duType").val('99').removeAttr('disabled');
         decorationDetail.decorationUser.status = 0;
         decorationDetail.decorationUserModal.modal("show");
     });
@@ -2486,6 +2487,7 @@ jQuery(function($) {
         if (decorationUser.status == 0) {
             url = api.decoration.addDecorationUser;
             options["decorationUser.user.userId"] = com.typeahead("duUser");
+            options["decorationUser.type"] = com.focusPage("#duType").val();
         } else {
             url = api.decoration.updateDecorationUser;
             options["decorationUser.duid"] = decorationUser.duid;

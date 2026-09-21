@@ -2,6 +2,9 @@ package com.fanglin.decoration.dao.impl;
 
 import java.util.List;
 
+import org.hibernate.Criteria;
+import org.hibernate.criterion.Projections;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 import com.fanglin.core.dao.impl.DaoImpl;
@@ -34,13 +37,31 @@ public class DecorationUserDaoImpl extends DaoImpl<DecorationUserPO> implements 
 	}
 
 	@Override
-	public List<DecorationUserPO> queryDecorationUser(Paging paging, List<Filter> filters, String orderId) {
+	public List<DecorationUserPO> queryDecorationUser(Paging paging, List<Filter> filters, String orderId, Short isShow) {
 
 		PagingQuery<DecorationUserPO> query = pagingQuery(paging, DecorationUserPO.class);
 
 		query.add(query.getCriterion(DecorationUserPO.DECORATION_ORDERID_STR, orderId, "eq"));
 
+		if (isShow != null) {
+			query.add(query.getCriterion("isShow", isShow, "eq"));
+		}
+
 		return query.list();
+	}
+
+	@Override
+	public long countDecorationUser(String orderId, int user, Short type) {
+
+		Criteria criteria = session().createCriteria(DecorationUserPO.class).createAlias("user", "user").add(Restrictions.eq(DecorationUserPO.DECORATION_ORDERID_STR, orderId)).add(Restrictions.eq("user.uid", user));
+
+		if (type != null) {
+			criteria.add(Restrictions.eq("type", type));
+		}
+
+		Long count = (Long) criteria.setProjection(Projections.rowCount()).uniqueResult();
+
+		return count == null ? 0 : count.longValue();
 	}
 
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) throws FLException {

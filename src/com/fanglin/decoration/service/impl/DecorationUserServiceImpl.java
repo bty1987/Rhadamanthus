@@ -2,6 +2,7 @@ package com.fanglin.decoration.service.impl;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,7 @@ import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.utils.BeanUtil;
+import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.Paging;
 
 @Service("decorationUserService")
@@ -65,7 +67,7 @@ public class DecorationUserServiceImpl implements DecorationUserService {
 
 		String orderId = decorationUserVO.getOrderId();
 
-		List<DecorationUserPO> decorationUserPOs = decorationUserDao.queryDecorationUser(paging, filters, orderId);
+		List<DecorationUserPO> decorationUserPOs = decorationUserDao.queryDecorationUser(paging, filters, orderId, null);
 		List<DecorationUserVO> decorationUserVOs = new ArrayList<DecorationUserVO>();
 
 		for (DecorationUserPO decorationUserPO : decorationUserPOs) {
@@ -79,21 +81,35 @@ public class DecorationUserServiceImpl implements DecorationUserService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int addDecorationUser(DecorationUserVO decorationUserVO) {
+	public int addDecorationUser(DecorationUserVO decorationUserVO, String userId) throws FLException {
 
 		UserPO userPO = userDao.queryUserByUserId(decorationUserVO.getUser().getUserId());
 
+		if (userPO == null) {
+			throw new FLException(190005, "人员不存在");
+		}
+
+		Short type = decorationUserVO.getType() == null ? DecorationUserPO.TYPE_OTHER_INT : decorationUserVO.getType();
+
+		if (decorationUserDao.countDecorationUser(decorationUserVO.getOrderId(), userPO.getUid(), type) > 0) {
+			throw new FLException(140078, "服务团队成员已存在");
+		}
+
 		DecorationUserPO decorationUserPO = new DecorationUserPO();
 
-		BeanUtil.copyPropertie(decorationUserVO, decorationUserPO, Arrays.asList("user"));
+		BeanUtil.copyPropertie(decorationUserVO, decorationUserPO, Arrays.asList("user", "creater"));
 
 		decorationUserPO.setUser(userPO);
+		decorationUserPO.setType(type);
+		decorationUserPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
+		decorationUserPO.setCreater(userDao.queryUserByUserId(userId));
 
 		decorationUserDao.save(decorationUserPO);
 
 		decorationUserVO.setDuid(decorationUserPO.getDuid());
 		decorationUserVO.setIsShow(decorationUserPO.getIsShow());
 		decorationUserVO.setIsPay(decorationUserPO.getIsPay());
+		decorationUserVO.setType(decorationUserPO.getType());
 
 		UserBaseVO userBaseVO = new UserBaseVO(new DutyVO());
 

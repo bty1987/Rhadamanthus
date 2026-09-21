@@ -1,6 +1,7 @@
 package com.fanglin.decoration.vo;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 
 import com.fanglin.personel.vo.UserBaseVO;
 
@@ -21,6 +22,10 @@ public class DecorationUserVO implements Serializable {
 	private Short type;
 
 	private String content;
+
+	private Timestamp createTime;
+
+	private UserBaseVO creater;
 
 	public DecorationUserVO() {
 		super();
@@ -85,6 +90,22 @@ public class DecorationUserVO implements Serializable {
 
 	public void setContent(String content) {
 		this.content = content;
+	}
+
+	public Timestamp getCreateTime() {
+		return createTime;
+	}
+
+	public void setCreateTime(Timestamp createTime) {
+		this.createTime = createTime;
+	}
+
+	public UserBaseVO getCreater() {
+		return creater;
+	}
+
+	public void setCreater(UserBaseVO creater) {
+		this.creater = creater;
 	}
 
 }

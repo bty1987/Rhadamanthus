@@ -13,7 +13,7 @@ public interface DecorationUserService {
 
 	public List<DecorationUserVO> queryDecorationUser(Paging paging, List<Filter> filters, DecorationUserVO decorationUserVO);
 
-	public int addDecorationUser(DecorationUserVO decorationUserVO);
+	public int addDecorationUser(DecorationUserVO decorationUserVO, String userId) throws FLException;
 
 	public int updateDecorationUser(DecorationUserVO decorationUserVO) throws FLException;
 

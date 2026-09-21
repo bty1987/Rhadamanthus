@@ -51,6 +51,18 @@ jQuery(function ($) {
                 prop: "user.duty.name",
                 clazz: "grey"
             },
+            "type": {
+                field: "type",
+                name: "类型",
+                prop: function(v) {
+                    var fallback = { 0: '业务', 1: '装饰', 2: '服务', 3: '合同', 4: '销售', 99: '其他' };
+                    var key = v.type == null ? 99 : v.type;
+                    var enumNode = constant.decoration().decorationUser.type;
+                    if (enumNode && enumNode.keys && enumNode.keys[key] != undefined) return enumNode.keys[key];
+                    return fallback[key] || '其他';
+                },
+                clazz: "grey"
+            },
             "content": {
                 field: "content",
                 name: "说明",
@@ -126,6 +138,7 @@ jQuery(function ($) {
         var options = {
             'decorationUser.user.userId': com.typeahead("userSel"),
             'decorationUser.orderId': approve.gorderId,
+            'decorationUser.type': com.focusPage("#guType").val(),
             'decorationUser.content': approve.items.comment.val()
         };
 
