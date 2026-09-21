@@ -1,6 +1,6 @@
 jQuery(function ($) {
 
-    var approve = {
+    var groupUser = {
         saveBtn: com.focusPage("#saveBtn"),
         cancelBtn: com.focusPage("#cancelBtn"),
 
@@ -17,12 +17,12 @@ jQuery(function ($) {
         postParam: {}
     };
 
-    approve.saveBtn.bindClick(saveData);
+    groupUser.saveBtn.bindClick(saveData);
 
-    approve.modals.groupUserModal.on("hide.bs.modal", function () {
+    groupUser.modals.groupUserModal.on("hide.bs.modal", function () {
         com.clearValidator();
         com.cleanTypeahead('userSel');
-        com.cleanItems(approve.items);
+        com.cleanItems(groupUser.items);
     });
 
     com.initTypeahead('userSel', api.personel.queryUserByPinyin, "pinyinName", {"user.status": "0", "departmentType.name": ""}, "autoFillKeyValue", "key", "value", null);
@@ -112,13 +112,13 @@ jQuery(function ($) {
 
     var searcher = new Searcher();
 
-    searcher.set("condListas", "pagenationas", "resultListas", pageConfig.apiPage || api.decoration.queryDecorationUser, {"decorationUser.orderId": approve.gorderId}, pageConfig.condArr, "groupUserPostData", null, false, buttons);
+    searcher.set("condListas", "pagenationas", "resultListas", pageConfig.apiPage || api.decoration.queryDecorationUser, {"decorationUser.orderId": groupUser.gorderId}, pageConfig.condArr, "groupUserPostData", null, false, buttons);
     searcher.line("user.currentName", lineprops, linebtns).render();
 
     com.focusPage('#addGroupUser', '#pagenationas').click(function () {
-        approve.editFlg = false;
+        groupUser.editFlg = false;
 
-        approve.modals.groupUserModal.modal("show");
+        groupUser.modals.groupUserModal.modal("show");
     });
 
     function deleteGroupUser(duid) {
@@ -137,15 +137,15 @@ jQuery(function ($) {
 
         var options = {
             'decorationUser.user.userId': com.typeahead("userSel"),
-            'decorationUser.orderId': approve.gorderId,
+            'decorationUser.orderId': groupUser.gorderId,
             'decorationUser.type': com.focusPage("#guType").val(),
-            'decorationUser.content': approve.items.comment.val()
+            'decorationUser.content': groupUser.items.comment.val()
         };
 
         com.post(api.decoration.addDecorationUser, options, function (res) {
             searcher.doSearch();
         }, null, false);
-        approve.modals.groupUserModal.modal("hide");
+        groupUser.modals.groupUserModal.modal("hide");
     }
 
 });
