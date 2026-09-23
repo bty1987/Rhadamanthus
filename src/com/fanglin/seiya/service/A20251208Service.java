@@ -1,5 +1,7 @@
 package com.fanglin.seiya.service;
 
+import java.util.List;
+
 import com.fanglin.construction.vo.AcceptanceVO;
 import com.fanglin.construction.vo.ConstructerVO;
 import com.fanglin.construction.vo.ConstructionScheduleVO;
@@ -42,4 +44,6 @@ public interface A20251208Service {
 	public int updateAcceptanceForPlatforPm(AcceptanceVO acceptanceVO) throws FLException;
 
 	public void syncConstructionNodeForPlatforPm(ConstructionNodeVO constructionNodeVO) throws FLException;
+
+	public void syncConstructionNodesForPlatforPm(List<ConstructionNodeVO> constructionNodes) throws FLException;
 }

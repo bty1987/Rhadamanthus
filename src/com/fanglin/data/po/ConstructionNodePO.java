@@ -29,6 +29,8 @@ public class ConstructionNodePO implements Serializable {
 
 	public static final short STATUS_INIT_SHORT = 0;
 
+	public static final short STATUS_DISABLE_SHORT = 1;
+
 	public static final short PROCESS_INIT_INT = 0;
 
 	public static final short MARK_START_INT = 1;
