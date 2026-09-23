@@ -48,8 +48,8 @@ public class ConstructionNodeDaoImpl extends DaoImpl<ConstructionNodePO> impleme
 	@Override
 	public int countConstructionNode(short process, int company) {
 
-		String sql = "select count(*) from data.constructionnode cn where cn.process = :process and cn.company = :company";
-		BigInteger count = (BigInteger) session().createSQLQuery(sql).setShort("process", process).setInteger("company", company).uniqueResult();
+		String sql = "select count(*) from data.constructionnode cn where cn.process = :process and cn.company = :company and cn.status = :status";
+		BigInteger count = (BigInteger) session().createSQLQuery(sql).setShort("process", process).setInteger("company", company).setShort("status", ConstructionNodePO.STATUS_INIT_SHORT).uniqueResult();
 
 		return count.intValue();
 	}

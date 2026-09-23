@@ -11,6 +11,9 @@
 
 package com.fanglin.seiya.action;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
 import org.apache.struts2.convention.annotation.ParentPackage;
@@ -57,6 +60,8 @@ public class A20251208Action extends BaseListAction {
 	private AcceptanceVO acceptance;
 
 	private ConstructionNodeVO constructionNode;
+
+	private List<ConstructionNodeVO> constructionNodes;
 
 	@Action(value = "saveOrUpdateUserForPlatforPm", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String saveOrUpdateUserForPlatforPm() throws FLException {
@@ -182,6 +187,20 @@ public class A20251208Action extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "syncConstructionNodesForPlatforPm", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String syncConstructionNodesForPlatforPm() throws FLException {
+
+		// 兼容单条报文:复数键缺省而沿用单条接口键(constructionNode.*)时,包装为单元素批量执行
+		if ((constructionNodes == null || constructionNodes.isEmpty()) && constructionNode != null) {
+			constructionNodes = new ArrayList<ConstructionNodeVO>();
+			constructionNodes.add(constructionNode);
+		}
+
+		a20251208Service.syncConstructionNodesForPlatforPm(constructionNodes);
+
+		return SUCCESS;
+	}
+
 	public UserInfoVO getUserInfo() {
 		return userInfo;
 	}
@@ -252,6 +271,14 @@ public class A20251208Action extends BaseListAction {
 
 	public void setConstructionNode(ConstructionNodeVO constructionNode) {
 		this.constructionNode = constructionNode;
+	}
+
+	public List<ConstructionNodeVO> getConstructionNodes() {
+		return constructionNodes;
+	}
+
+	public void setConstructionNodes(List<ConstructionNodeVO> constructionNodes) {
+		this.constructionNodes = constructionNodes;
 	}
 
 }
