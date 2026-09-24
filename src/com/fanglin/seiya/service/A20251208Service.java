@@ -29,6 +29,8 @@ public interface A20251208Service {
 
 	public void syncConstructionScheduleForPlatforPm(ConstructionScheduleVO constructionSchedule) throws FLException;
 
+	public void syncConstructionSchedulesForPlatforPm(List<ConstructionScheduleVO> constructionSchedules) throws FLException;
+
 	public void addConstructerForPlatforPm(ConstructerVO constructer, String createrId) throws FLException;
 
 	public void deleteConstructerForPlatforPm(ConstructerVO constructer) throws FLException;
@@ -44,6 +46,4 @@ public interface A20251208Service {
 	public int updateAcceptanceForPlatforPm(AcceptanceVO acceptanceVO) throws FLException;
 
 	public void syncConstructionNodeForPlatforPm(ConstructionNodeVO constructionNodeVO) throws FLException;
-
-	public void syncConstructionNodesForPlatforPm(List<ConstructionNodeVO> constructionNodes) throws FLException;
 }

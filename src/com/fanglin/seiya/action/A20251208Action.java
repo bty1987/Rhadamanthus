@@ -61,7 +61,7 @@ public class A20251208Action extends BaseListAction {
 
 	private ConstructionNodeVO constructionNode;
 
-	private List<ConstructionNodeVO> constructionNodes;
+	private List<ConstructionScheduleVO> constructionSchedules;
 
 	@Action(value = "saveOrUpdateUserForPlatforPm", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String saveOrUpdateUserForPlatforPm() throws FLException {
@@ -118,7 +118,13 @@ public class A20251208Action extends BaseListAction {
 	@Action(value = "syncConstructionScheduleForPlatforPm", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String syncConstructionScheduleForPlatforPm() throws FLException {
 
-		a20251208Service.syncConstructionScheduleForPlatforPm(constructionSchedule);
+		// 兼容单条报文:复数键缺省而沿用单条接口键(constructionSchedule.*)时,包装为单元素批量执行
+		if ((constructionSchedules == null || constructionSchedules.isEmpty()) && constructionSchedule != null) {
+			constructionSchedules = new ArrayList<ConstructionScheduleVO>();
+			constructionSchedules.add(constructionSchedule);
+		}
+
+		a20251208Service.syncConstructionSchedulesForPlatforPm(constructionSchedules);
 
 		return SUCCESS;
 	}
@@ -183,20 +189,6 @@ public class A20251208Action extends BaseListAction {
 	public String syncConstructionNodeForPlatforPm() throws FLException {
 
 		a20251208Service.syncConstructionNodeForPlatforPm(constructionNode);
-
-		return SUCCESS;
-	}
-
-	@Action(value = "syncConstructionNodesForPlatforPm", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String syncConstructionNodesForPlatforPm() throws FLException {
-
-		// 兼容单条报文:复数键缺省而沿用单条接口键(constructionNode.*)时,包装为单元素批量执行
-		if ((constructionNodes == null || constructionNodes.isEmpty()) && constructionNode != null) {
-			constructionNodes = new ArrayList<ConstructionNodeVO>();
-			constructionNodes.add(constructionNode);
-		}
-
-		a20251208Service.syncConstructionNodesForPlatforPm(constructionNodes);
 
 		return SUCCESS;
 	}
@@ -273,12 +265,12 @@ public class A20251208Action extends BaseListAction {
 		this.constructionNode = constructionNode;
 	}
 
-	public List<ConstructionNodeVO> getConstructionNodes() {
-		return constructionNodes;
+	public List<ConstructionScheduleVO> getConstructionSchedules() {
+		return constructionSchedules;
 	}
 
-	public void setConstructionNodes(List<ConstructionNodeVO> constructionNodes) {
-		this.constructionNodes = constructionNodes;
+	public void setConstructionSchedules(List<ConstructionScheduleVO> constructionSchedules) {
+		this.constructionSchedules = constructionSchedules;
 	}
 
 }

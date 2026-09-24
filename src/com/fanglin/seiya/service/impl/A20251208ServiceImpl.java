@@ -831,6 +831,19 @@ public class A20251208ServiceImpl implements A20251208Service {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
+	public void syncConstructionSchedulesForPlatforPm(List<ConstructionScheduleVO> constructionSchedules) throws FLException {
+
+		if (constructionSchedules == null || constructionSchedules.isEmpty()) {
+			return;
+		}
+
+		for (ConstructionScheduleVO constructionScheduleVO : constructionSchedules) {
+			syncConstructionScheduleForPlatforPm(constructionScheduleVO);
+		}
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
 	public void addConstructerForPlatforPm(ConstructerVO constructerVO, String createrId) throws FLException {
 
 		Long cid = constructerVO.getCid();
@@ -1154,36 +1167,6 @@ public class A20251208ServiceImpl implements A20251208Service {
 			constructionNodeService.addConstructionNode(constructionNodeVO);
 		} else {
 			constructionNodeService.updateConstructionNode(constructionNodeVO);
-		}
-	}
-
-	@Override
-	@Transactional(rollbackFor = Exception.class)
-	public void syncConstructionNodesForPlatforPm(List<ConstructionNodeVO> constructionNodes) throws FLException {
-
-		if (constructionNodes == null || constructionNodes.isEmpty()) {
-			return;
-		}
-
-		for (ConstructionNodeVO constructionNodeVO : constructionNodes) {
-
-			if (constructionNodeVO.getCnid() == null) {
-				constructionNodeService.addConstructionNode(constructionNodeVO);
-				continue;
-			}
-
-			// 禁用即逻辑删除:只动status,不触碰节点字段,支持仅带cnid+status的最小报文
-			if (constructionNodeVO.getStatus() != null && constructionNodeVO.getStatus() == ConstructionNodePO.STATUS_DISABLE_SHORT) {
-				constructionNodeService.updateConstructionNodeForStatus(constructionNodeVO);
-				continue;
-			}
-
-			constructionNodeService.updateConstructionNode(constructionNodeVO);
-
-			// 显式携带status=0时同步启用态,覆盖禁用节点的恢复启用
-			if (constructionNodeVO.getStatus() != null && constructionNodeVO.getStatus() == ConstructionNodePO.STATUS_INIT_SHORT) {
-				constructionNodeService.updateConstructionNodeForStatus(constructionNodeVO);
-			}
 		}
 	}
 
