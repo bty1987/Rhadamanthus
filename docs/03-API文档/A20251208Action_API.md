@@ -26,7 +26,7 @@
 - [三、施工管理接口](#三施工管理接口)
   - [4. beginConstructionScheduleForPlatforPm](#4-beginconstructionscheduleforplatforpm--工程环节开工)
   - [5. finishConstructionScheduleForPlatforPm](#5-finishconstructionscheduleforplatforpm--工程环节完工)
-  - [6. syncConstructionScheduleForPlatforPm](#6-syncconstructionscheduleforplatforpm--同步工程环节)
+  - [6. syncConstructionScheduleForPlatforPm](#6-syncconstructionscheduleforplatforpm--同步工程环节单条批量)
   - [7. addConstructerForPlatforPm](#7-addconstructerforplatforpm--新增施工工人)
   - [8. deleteConstructerForPlatforPm](#8-deleteconstructerforplatforpm--删除施工工人)
   - [9. syncSupervisorForPlatforPm](#9-syncsupervisorforplatforpm--同步工程监理)
@@ -34,7 +34,6 @@
   - [11. syncConstructionForPlatforPm](#11-syncconstructionforplatforpm--同步工程单)
   - [12. updateAcceptanceForPlatforPm / syncAcceptanceForPlatforPm](#12-updateacceptanceforplatforpm--syncacceptanceforplatforpm--同步工程验收)
   - [13. syncConstructionNodeForPlatforPm](#13-syncconstructionnodeforplatforpm--同步工程节点)
-  - [14. syncConstructionNodesForPlatforPm](#14-syncconstructionnodesforplatforpm--批量同步工程节点增改删)
 - [四、错误码速查表](#四错误码速查表)
 - [五、变更记录](#五变更记录)
 
@@ -297,11 +296,11 @@ if (SystemConfig.getString("communion") == null) {
 
 ---
 
-### 6. syncConstructionScheduleForPlatforPm — 同步工程环节
+### 6. syncConstructionScheduleForPlatforPm — 同步工程环节（单条/批量）
 
 **路径**: `/syncConstructionScheduleForPlatforPm`
-**方法位置**: `A20251208Action.java:113-119`
-**Service**: `syncConstructionScheduleForPlatforPm`
+**方法位置**: `A20251208Action.java`（`syncConstructionScheduleForPlatforPm`）
+**Service**: `syncConstructionScheduleForPlatforPm`（单条逐项）/ `syncConstructionSchedulesForPlatforPm`（批量入口，整批一个事务，逐条委托单条逻辑）
 
 #### 请求参数
 
@@ -328,7 +327,17 @@ if (SystemConfig.getString("communion") == null) {
 
 按 `csid`、`cid+cnid` 或 `orderId+cnid` 定位环节；存在则仅更新传入字段，不传的字段保持原值。不存在时按单个基础节点创建一个 `ConstructionSchedulePO`，再应用传入字段。
 
-该接口合并参考接口 `updateConstructionScheduleForScal`（款项比例）与 `updateConstructionScheduleForNorm`（材料/工费浮动额、限额）；不支持删除，也不做批量新增。
+该接口合并参考接口 `updateConstructionScheduleForScal`（款项比例）与 `updateConstructionScheduleForNorm`（材料/工费浮动额、限额）；不支持删除。
+
+#### 批量报文（2026-09-24 起，同一 URL）
+
+支持 Struts2 List 索引绑定，参数键为 `constructionSchedules[下标].字段名`（下标从 0 连续编号），一次请求同步多个工程环节：
+
+- **整批一个事务**，任一条目失败整批回滚；
+- 逐条执行与单条完全一致的"定位→不存在则新增→按传入字段更新"逻辑，`constructionSchedules[i].*` 字段范围与上表一致（`node.cnid` 备用定位写法为 `constructionSchedules[i].node.cnid`）；
+- `constructionSchedules` 为空或不传时静默成功（no-op）。
+
+**单条报文兼容**：沿用单条参数键 `constructionSchedule.*`（单数、无下标）调用本接口也可——服务端在复数参数缺省而单数参数存在时，自动将 `constructionSchedule` 包装为单元素批量执行，响应中单条字段照常回填 `csid`/`cid`/`orderId`/`cnid`。优先级：`constructionSchedules[i].*` 与 `constructionSchedule.*` 同时传入时以复数为准，单数忽略。
 
 #### 异常场景
 
@@ -337,6 +346,8 @@ if (SystemConfig.getString("communion") == null) {
 | 120020 | 工程信息不存在 | 新增环节时工程查不到 |
 | 120034 | 工程节点不存在 | 新增环节时基础节点查不到 |
 | 120035 | 工费浮动已达上限 | 传入 `salaryLimit` 超过当前工费浮动额 + 工费浮动总上限 |
+
+> 批量报文下异常码与单条一致，按触发条目抛出并**整批回滚**。
 
 ---
 
@@ -647,99 +658,7 @@ if (SystemConfig.getString("communion") == null) {
 
 - `cnid` 为空或查不到 → 调 `constructionNodeService.addConstructionNode` 新增（比例阈值/工期强制 0，写 `NODE_CREATED` 消息队列事件）。
 - 否则 → 调 `constructionNodeService.updateConstructionNode` 更新（注意：`name` 与 `sort` 不会被更新；两个问卷字段传 `stid` 才绑定、不传会被置空），写 `NODE_UPDATED` 消息队列事件。
-- 不调用 `updateConstructionNodeForStatus`，基础节点禁用不在本次同步范围内（单条同步不支持禁用/删除；**禁用=逻辑删除请使用批量接口**，见 [14. syncConstructionNodesForPlatforPm](#14-syncconstructionnodesforplatforpm--批量同步工程节点增改删)）。
-
----
-
-### 14. syncConstructionNodesForPlatforPm — 批量同步工程节点（增/改/删）
-
-**路径**: `/syncConstructionNodesForPlatforPm`
-**方法位置**: `A20251208Action.java`（`syncConstructionNodesForPlatforPm`，2026-09-23 新增）
-**Service**: `syncConstructionNodesForPlatforPm`（`A20251208ServiceImpl`，整批一个事务）
-
-> 单条接口 [13](#13-syncconstructionnodeforplatforpm--同步工程节点) 的批量版：一次请求携带节点数组，**新增 / 更新 / 逻辑删除三种意图在同一接口内按字段分流**。删除不是物理删，而是**禁用**（`status=1`）——禁用节点在 `queryConstructionNode` 全链路（进度节点下拉、开工排期等）中隐身，等价于删除；存量单已生成的环节（`constructionSchedule` 挂 cnid）不受影响。
-
-#### 请求参数
-
-**报文格式**：Struts2 List 索引绑定，参数键为 `constructionNodes[下标].字段名`，下标从 0 连续编号；**传单个节点即 `constructionNodes[0].*`，与多条同一套报文格式，无需区分调用方式**。整批在一个事务内执行，**任一条目失败整批回滚**；`constructionNodes` 为空或不传时静默成功（no-op）。
-
-**单条报文兼容**：沿用单条接口 [13](#13-syncconstructionnodeforplatforpm--同步工程节点) 的参数键 `constructionNode.*`（单数字段、无下标）直接调用本批量接口也可——服务端在复数参数缺省而单数参数存在时，自动将 `constructionNode` 包装为单元素批量执行，新增 / 更新 / 禁用三种意图均可用。优先级：`constructionNodes[i].*` 与 `constructionNode.*` 同时传入时以复数为准，单数忽略。
-
-数组元素（`ConstructionNodeVO`）按三种意图的消费范围：
-
-**意图一：新增（`cnid` 为空）** —— 走 `addConstructionNode`
-
-| 参数名 | 类型 | 必填 | 说明 |
-|--------|------|:----:|------|
-| `constructionNodes[i].cnid` | Long | 不传 | 不传即视为新增 |
-| `constructionNodes[i].name` | String | **是** | 节点名称 |
-| `constructionNodes[i].startalk` | String | 否 | 进场播报文案 |
-| `constructionNodes[i].endtalk` | String | 否 | 完工播报文案 |
-| `constructionNodes[i].kino` | String | 否 | 关联业务编码 |
-| `constructionNodes[i].kiname` | String | 否 | 关联业务名称 |
-| `constructionNodes[i].mark` | Short | 否 | 节点标记：`1`=开工节点，`2`=竣工节点 |
-| `constructionNodes[i].account` | Short | 否 | 记账标记：`0`=不记账（缺省），`1`=记账 |
-| `constructionNodes[i].accessoryLimit` | Integer | **是** | 节点级材料限额（服务端直接拆箱，不传报错） |
-| `constructionNodes[i].salaryLimit` | Integer | **是** | 节点级工费限额（同上） |
-| `constructionNodes[i].process` | Short | **是** | 所属进程组（服务端直接拆箱，不传报错） |
-| `constructionNodes[i].proset` | Short | **是** | 进程集合（同上） |
-| `constructionNodes[i].company` | Integer | 否 | 公司 ID；缺省 `0`（通用节点） |
-| `constructionNodes[i].precheck/postcheck/stacheck/fincheck/timeLimit` | - | - | 新增分支不消费（强制 0，同单条接口） |
-| `constructionNodes[i].sort` | Short | - | **不消费**：服务端不落库（历史机制，排序由 SQL 脚本维护）。新增节点 sort 落库为 0，**平台侧应将新节点追加到现有排序末尾并事后调序，避免中间插入** |
-
-**意图二：逻辑删除 / 禁用（`cnid` 非空 且 `status=1`）** —— 走 `updateConstructionNodeForStatus`
-
-| 参数名 | 类型 | 必填 | 说明 |
-|--------|------|:----:|------|
-| `constructionNodes[i].cnid` | Long | **是** | 待禁用节点 ID |
-| `constructionNodes[i].status` | Short | **是** | 传 `1` 即禁用=逻辑删除；**只更新 status，其余字段一律忽略**——支持仅 `cnid+status` 的最小报文，适合批量删除场景 |
-| `constructionNodes[i].其余字段` | - | 否 | 本分支不消费，传了也不会改节点字段 |
-
-> 禁用的连带效应：新工程开工排期不再生成该节点环节；在途单已生成环节可照常开完工，但该节点若未完工，工序（process）推进判断因分母已剔除禁用节点（`countConstructionNode` 仅统计 `status=0`）而不再被其阻塞。
-
-**意图三：更新（`cnid` 非空 且 `status` 非 1）** —— 走 `updateConstructionNode`（必要时补状态落库）
-
-| 参数名 | 类型 | 必填 | 说明 |
-|--------|------|:----:|------|
-| `constructionNodes[i].cnid` | Long | **是** | 待更新节点 ID |
-| 其余字段 | - | 见[单条接口 13](#13-syncconstructionnodeforplatforpm--同步工程节点)更新分支 | 全量覆盖式更新：`name`/`sort` 不修改，问卷字段传 `stid` 才绑定、不传置空，其余字段**不传会被覆盖为空值**（与单条接口一致，更新请全量回传） |
-| `constructionNodes[i].status` | Short | 否 | 显式传 `0` 时，全量更新后补一次状态落库——用于**恢复启用**已禁用节点；不传则保持节点现有启用状态 |
-
-#### 分流逻辑（伪代码）
-
-```java
-for (node : constructionNodes) {
-    if (node.cnid == null)                    → addConstructionNode(node);          // 新增
-    else if (node.status == 1)                → updateConstructionNodeForStatus(node); // 禁用=逻辑删除
-    else {
-        updateConstructionNode(node);                                                // 全量更新
-        if (node.status == 0)                 → updateConstructionNodeForStatus(node); // 恢复启用
-    }
-}
-```
-
-#### 请求示例（批量：1 新增 + 1 禁用 + 1 更新）
-
-```
-POST /syncConstructionNodesForPlatforPm
-
-constructionNodes[0].name=防水验收&constructionNodes[0].mark=1&constructionNodes[0].process=1&constructionNodes[0].proset=1&constructionNodes[0].accessoryLimit=0&constructionNodes[0].salaryLimit=0&constructionNodes[0].timeLimit=0
-&constructionNodes[1].cnid=15&constructionNodes[1].status=1
-&constructionNodes[2].cnid=16&constructionNodes[2].precheck=800&...(全量更新字段)&constructionNodes[2].status=0
-```
-
-#### 异常场景
-
-| 错误码 | 错误信息 | 触发条件 |
-|:------:|---------|:---------|
-| 130026 | 工程节点不存在 | 禁用/更新分支的 `cnid` 查不到（**整批回滚**） |
-
-> 新增分支无查重（同名节点会重复创建）；除 130026 外的运行时异常同样触发整批回滚。
-
-#### 与单条接口的关系
-
-- 单条 [13. syncConstructionNodeForPlatforPm](#13-syncconstructionnodeforplatforpm--同步工程节点) 保留不动，行为不变（不支持禁用）。
-- 批量接口是 2026-09-23 新增方法，发版 jar：`fanglin-seiya-8.3.029.jar` + `fanglin-data-8.3.029.jar`（data 侧含 `ConstructionNodePO.STATUS_DISABLE_SHORT` 常量与 `countConstructionNode` 的 status 过滤，两 jar 同批发版）。
+- 不调用 `updateConstructionNodeForStatus`，基础节点禁用不在同步范围内（单条同步不支持禁用/删除）。
 
 ---
 
@@ -802,3 +721,9 @@ constructionNodes[0].name=防水验收&constructionNodes[0].mark=1&constructionN
 - 发版约束：`fanglin-seiya-8.3.029.jar` + `fanglin-data-8.3.029.jar` 两 jar 同批
 - 已知约束：`sort` 服务端不落库（排序仍由 SQL 脚本维护），新增节点须尾部追加后调序；新增分支无同名查重
 - 单条兼容：批量接口同时兼容旧单条接口参数键 `constructionNode.*`（单数、无下标），复数键缺省而单数键存在时自动包装为单元素批量执行；传单个节点也可用标准格式 `constructionNodes[0].*`
+
+### 2026-09-24
+- **方向修正**：批量同步的正确目标是工程环节（`constructionSchedule`，业务实例），而非工程节点（`constructionNode`，基础数据）。2026-09-23 误加的批量接口 `syncConstructionNodesForPlatforPm`（原第 14 节）**整体移除**，单条接口 [13](#13-syncconstructionnodeforplatforpm--同步工程节点) 保留不动
+- 批量能力落在 [6. syncConstructionScheduleForPlatforPm](#6-syncconstructionscheduleforplatforpm--同步工程环节单条批量)（**URL 不变**）：支持 `constructionSchedules[i].*` 索引绑定整批一个事务，逐条执行"定位→不存在新增→按传入字段更新"，空列表 no-op；兼容旧单条键 `constructionSchedule.*`（复数缺省而单数存在时包装单元素执行，单条响应字段照常回填）
+- Service 层：删除 `syncConstructionNodesForPlatforPm`，新增 `syncConstructionSchedulesForPlatforPm(List<ConstructionScheduleVO>)`
+- data 模块不受影响：`ConstructionNodePO.STATUS_DISABLE_SHORT` 常量与 `countConstructionNode` 的 `status=0` 过滤系禁用语义的独立修复，保留；本轮仅重发 `fanglin-seiya-8.3.029.jar`（复用累积号），data jar 沿用已构建版本
