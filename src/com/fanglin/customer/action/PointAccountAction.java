@@ -65,6 +65,14 @@ public class PointAccountAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "updatePointAccountForOperatePoint", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updatePointAccountForOperatePoint() throws FLException {
+
+		pointAccount = pointAccountService.updatePointAccountForOperatePoint(pointAccount, queryUserId());
+
+		return SUCCESS;
+	}
+
 	@Action(value = "grantPoint", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String grantPoint() throws FLException {
 

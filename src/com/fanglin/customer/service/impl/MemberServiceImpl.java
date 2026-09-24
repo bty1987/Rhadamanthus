@@ -284,12 +284,17 @@ public class MemberServiceImpl implements MemberService {
 
 			String orderId = memberPointVO.getOrderId();
 
-			// 可用装修积分:合同款(sort!=0)应收额*活动倍数;冻结装修积分:预付款余额*活动倍数;主材积分:主材预付款收款额*活动倍数
+			// 可用装修积分:合同款(sort!=0)应收额*活动倍数;冻结装修积分:预付款余额*活动倍数;主材积分:主材预付款收款额*活动倍数;运营积分:积分账户cppoint.opoint
 			memberPointVO.setDecorationPoint(memberDao.amountDecorationPointByOrderId(orderId));
 			memberPointVO.setFreezeDecorationPoint(memberDao.amountDecorationPointForFreezeByOrderId(orderId));
 			memberPointVO.setMaterialPoint(memberDao.amountMaterialPointByOrderId(orderId));
 			memberPointVO.setFreezeMaterialPoint(0l);
-			memberPointVO.setOperatePoint(Arith.add(memberPointVO.getDecorationPoint(), memberPointVO.getMaterialPoint()));
+
+			DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(orderId);
+
+			PointAccountPO pointAccountPO = decorationPO == null ? null : pointAccountDao.queryPointAccountByOrderId(decorationPO.getCompany(), decorationPO.getCustomer().getCid(), orderId);
+
+			memberPointVO.setOperatePoint(pointAccountPO == null ? 0l : pointAccountPO.getOperatePoint());
 		}
 
 		return memberPointFOs;

@@ -15,6 +15,8 @@ public interface PointAccountService {
 
 	public PointAccountVO createPointAccount(PointAccountVO pointAccountVO, int company, String userId) throws FLException;
 
+	public PointAccountVO updatePointAccountForOperatePoint(PointAccountVO pointAccountVO, String userId) throws FLException;
+
 	public PointAccountVO grantPoint(PointAccountVO pointAccountVO, String userId) throws FLException;
 
 	public PointAccountVO consumePoint(PointAccountVO pointAccountVO, String userId) throws FLException;

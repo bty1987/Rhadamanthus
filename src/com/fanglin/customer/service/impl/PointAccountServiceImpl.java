@@ -105,6 +105,49 @@ public class PointAccountServiceImpl implements PointAccountService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
+	public PointAccountVO updatePointAccountForOperatePoint(PointAccountVO pointAccountVO, String userId) throws FLException {
+
+		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(pointAccountVO.getOrderId());
+
+		if (decorationPO == null) {
+			throw new FLException(140013, "装修单不存在");
+		}
+
+		if (pointAccountVO.getOperatePoint() == null) {
+			throw new FLException(330050, "运营积分不能为空");
+		}
+
+		// 无账户懒开户,对齐makeMemberOrder口径,保证运营积分可先行设置
+		PointAccountPO pointAccountPO = pointAccountDao.queryPointAccountByOrderId(decorationPO.getCompany(), decorationPO.getCustomer().getCid(), pointAccountVO.getOrderId());
+
+		if (pointAccountPO == null) {
+
+			pointAccountPO = new PointAccountPO();
+
+			pointAccountPO.setCustomer(decorationPO.getCustomer());
+			pointAccountPO.setOrderId(pointAccountVO.getOrderId());
+			pointAccountPO.setCompany(decorationPO.getCompany());
+		}
+
+		UserPO operater = userDao.queryUserByUserId(userId);
+
+		long operatePoint = pointAccountVO.getOperatePoint();
+		long delta = Arith.sub(operatePoint, pointAccountPO.getOperatePoint());
+
+		pointAccountPO.setOperatePoint(operatePoint);
+
+		pointAccountDao.saveOrUpdate(pointAccountPO);
+
+		if (delta != 0) {
+			// 台账记变化量:调增ADDUP/调减USERUP,快照列记调整后四项余额
+			pointRecordDao.save(new PointRecordPO().init(pointAccountPO.getCustomer().getCid(), pointAccountPO.getAccountId(), delta > 0 ? PointRecordPO.TYPE_ADDUP_INT : PointRecordPO.TYPE_USERUP_INT, PointRecordPO.POINTTYPE_OPOINT_INT, Arith.add(pointAccountPO.getDecorationPoint(), pointAccountPO.getMaterialPoint()), pointAccountPO.getDecorationPoint(), pointAccountPO.getMaterialPoint(), pointAccountPO.getOperatePoint(), delta, null, pointAccountPO.getOrderId(), operater));
+		}
+
+		return pointAccountVO;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
 	public PointAccountVO grantPoint(PointAccountVO pointAccountVO, String userId) throws FLException {
 
 		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(pointAccountVO.getOrderId());

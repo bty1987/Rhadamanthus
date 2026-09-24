@@ -1837,7 +1837,7 @@ jQuery(function($) {
         }
     }
 
-    // 活动信息节点积分:可用装修/冻结装修/主材三个展示位 + 装修/主材明细弹窗
+    // 活动信息节点积分:可用装修/冻结装修/主材/运营四个展示位 + 装修/主材明细弹窗
     function initActivityIntegral(orderId) {
 
         com.post(api.customer.queryMemberPoint, {
@@ -1850,6 +1850,7 @@ jQuery(function($) {
                 com.focusPage("#decorationIntegral").text(memberPoint.decorationPoint);
                 com.focusPage("#freezeDecorationIntegral").text(memberPoint.freezeDecorationPoint);
                 com.focusPage("#materialIntegral").text(memberPoint.materialPoint);
+                com.focusPage("#operateIntegral").text(memberPoint.operatePoint == null ? 0 : memberPoint.operatePoint);
             }
         });
 
