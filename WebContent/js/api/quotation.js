@@ -451,6 +451,9 @@ $.extend(api, {
         updateQuotationItemForDiscount: {
             url: "updateQuotationItemForDiscount.do"
         },
+        updateQuotationItemForImportant: {
+            url: "updateQuotationItemForImportant.do"
+        },
         updateQuotationItemForFormula: {
             url: "updateQuotationItemForFormula.do"
         },

@@ -46,6 +46,8 @@ public class QuotationFunctionAreaItemVO implements Serializable {
 
 	private Short isRtem;
 
+	private Short isImportant;
+
 	private String content;
 
 	private Integer index;
@@ -212,6 +214,14 @@ public class QuotationFunctionAreaItemVO implements Serializable {
 
 	public void setIsRtem(Short isRtem) {
 		this.isRtem = isRtem;
+	}
+
+	public Short getIsImportant() {
+		return isImportant;
+	}
+
+	public void setIsImportant(Short isImportant) {
+		this.isImportant = isImportant;
 	}
 
 	public String getContent() {

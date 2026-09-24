@@ -74,6 +74,8 @@ public class QuotationItemVO implements Serializable {
 
 	private String rtemFlag;
 
+	private Short isImportant;
+
 	private String comment;
 
 	public QuotationItemVO() {
@@ -295,6 +297,14 @@ public class QuotationItemVO implements Serializable {
 
 	public void setRtemFlag(String rtemFlag) {
 		this.rtemFlag = rtemFlag;
+	}
+
+	public Short getIsImportant() {
+		return isImportant;
+	}
+
+	public void setIsImportant(Short isImportant) {
+		this.isImportant = isImportant;
 	}
 
 	public String getComment() {
