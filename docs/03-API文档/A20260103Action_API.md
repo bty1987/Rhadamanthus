@@ -46,6 +46,8 @@
 
 接收外部系统（如 Salesforce）传入的客户线索信息, 转换为 ERP 客户机会并创建, 支持客户线索的自动分配和设计师指派。
 
+> `sourceInfo` / `contactInfo`（2026-09-24 起生效）：非空白时分别落 `customersource.source`（来源）/ `customersource.contact`（联系方式），随客户资源一并创建；语义对齐 [updateCustomerLead](#2-updatecustomerlead--更新客户线索)（非空且不同才生效），新建场景无旧值比对、无变更留痕。
+
 ### 核心流程
 
 ```
@@ -105,6 +107,8 @@
     "buildArea": 120.0,
     "busitype": "电商信息流客源",
     "referOrderId": "FL2603140001",
+    "sourceInfo": "抖音推广",
+    "contactInfo": "微信:zhangsan",
     "userId": "FL-123456",
     "orgId": 1,
     "designerId": "FL-789012",
@@ -648,6 +652,9 @@ Salesforce 端调用 ERP 接口的典型流程：
 ---
 
 ## 变更记录
+
+### 2026-09-24
+- addCustomerLead：`sourceInfo` / `contactInfo` **补实现**——2026-06-30 文档已列参数但代码未消费；现非空白时分别落 `customersource.source` / `customersource.contact`（`addCustomerSource` BeanUtil 拷贝天然携带,零 customer 模块改动），响应 data 补两字段回显，与 ADD_CUSTOMER_LEAD_EXCEPTIONS.md 响应示例对齐
 
 ### 2026-06-30
 - 同步源码方法行号漂移（各方法行号对齐 `A20260103Action.java` 最新版本）

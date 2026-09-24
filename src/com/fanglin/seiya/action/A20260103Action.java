@@ -415,6 +415,16 @@ public class A20260103Action extends BaseListAction {
 		source.setGender(gender);
 		source.setReferOrderId(referOrderId);
 
+		// 来源信息(三方,落customersource.source,语义对齐updateCustomerLead)
+		if (sourceInfo != null && !sourceInfo.trim().isEmpty()) {
+			source.setSource(sourceInfo);
+		}
+
+		// 联系方式(三方,落customersource.contact)
+		if (contactInfo != null && !contactInfo.trim().isEmpty()) {
+			source.setContact(contactInfo);
+		}
+
 		// 楼盘信息
 		source.setVillage(new VillageVO(village));
 
@@ -500,6 +510,8 @@ public class A20260103Action extends BaseListAction {
 		this.data.put("buildArea", buildArea != null ? buildArea / 1000.0 : null);
 		this.data.put("busitype", busitype);
 		this.data.put("referOrderId", referOrderId);
+		this.data.put("sourceInfo", sourceInfo);
+		this.data.put("contactInfo", contactInfo);
 		this.data.put("userId", userId);
 		this.data.put("orgId", orgId);
 		this.data.put("designerId", designerId);
