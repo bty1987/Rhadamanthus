@@ -39,6 +39,8 @@ public interface QuotationItemService {
 
 	public int updateQuotationItemForDiscount(QuotationItemVO quotationItemVO) throws FLException;
 
+	public int updateQuotationItemForImportant(QuotationItemVO quotationItemVO) throws FLException;
+
 	public int updateQuotationItemForFormula(QuotationItemVO quotationItemVO) throws FLException;
 
 	public int updateQuotationItemForCost(QuotationItemVO quotationItemVO) throws FLException;

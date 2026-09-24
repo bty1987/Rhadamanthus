@@ -251,6 +251,23 @@ public class QuotationItemServiceImpl implements QuotationItemService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
+	public int updateQuotationItemForImportant(QuotationItemVO quotationItemVO) throws FLException {
+
+		QuotationItemPO quotationItemPO = quotationItemDao.get(quotationItemVO.getQiid());
+
+		if (quotationItemPO == null) {
+			throw new FLException(200013, "报价项不存在");
+		}
+
+		quotationItemPO.setIsImportant(quotationItemVO.getIsImportant() == null ? QuotationItemPO.ISIMPORTANT_NONE_INT : quotationItemVO.getIsImportant().shortValue());
+
+		quotationItemDao.update(quotationItemPO);
+
+		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
 	public int updateQuotationItemForFormula(QuotationItemVO quotationItemVO) throws FLException {
 
 		QuotationItemPO quotationItemPO = quotationItemDao.get(quotationItemVO.getQiid());

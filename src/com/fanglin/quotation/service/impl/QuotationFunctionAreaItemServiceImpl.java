@@ -76,6 +76,7 @@ public class QuotationFunctionAreaItemServiceImpl implements QuotationFunctionAr
 
 				quotationFunctionAreaItemVO.setQuotationItemId(quotationItemPO.getQiid());
 				quotationFunctionAreaItemVO.setIsRtem(quotationItemPO.getIsRtem());
+				quotationFunctionAreaItemVO.setIsImportant(quotationItemPO.getIsImportant());
 				quotationFunctionAreaItemVO.setContent(quotationItemPO.getComment());
 			}
 

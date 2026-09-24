@@ -195,6 +195,13 @@ $(function() {
             });
             var $dspan = $('<span></span>').addClass('lbl discount-lbl');
 
+            // 重要标记
+            var $btnImportant = $('<div></div>').addClass('pull-right');
+            var $importantSwitch = $('<input/>').addClass('ace ace-switch ace-switch-5').prop({
+                "type": "checkbox"
+            });
+            var $ispan = $('<span></span>').addClass('lbl important-lbl');
+
             var no = v.version.offset == 0 ? "-" : "QI_" + (Array(5).join('0') + (v.qiid - v.version.offset)).slice(-5);
 
             var $text = $('<text>' + v.version.name + '</text>').click(function() {
@@ -227,9 +234,9 @@ $(function() {
 
                     // 对于定额类型(type==3)的报价项，显示定额工时按钮
                     if (v.type == 3) {
-                        $divBtnWrap.append($btnNormtime).append($btnRtem).append($btnPrice).append($btnFormula).append($btnEdit).append($btnDiscount).append($btnStatus).appendTo($h3);
+                        $divBtnWrap.append($btnNormtime).append($btnRtem).append($btnPrice).append($btnFormula).append($btnEdit).append($btnDiscount).append($btnImportant).append($btnStatus).appendTo($h3);
                     } else {
-                        $divBtnWrap.append($btnRtem).append($btnPrice).append($btnFormula).append($btnEdit).append($btnDiscount).append($btnStatus).appendTo($h3);
+                        $divBtnWrap.append($btnRtem).append($btnPrice).append($btnFormula).append($btnEdit).append($btnDiscount).append($btnImportant).append($btnStatus).appendTo($h3);
                     }
             }
 
@@ -251,6 +258,7 @@ $(function() {
 
             $btnStatus.append($statusSwitch).append($span);
             $btnDiscount.append($discountSwitch).append($dspan);
+            $btnImportant.append($importantSwitch).append($ispan);
 
             $liLine.append($h3).append($ulProperty).append($ulAccess);
 
@@ -360,6 +368,12 @@ $(function() {
 
                     $discountSwitch.prop("checked");
                 }));
+            });
+
+            v.isImportant == 1 && $importantSwitch.prop("checked", true);
+            $importantSwitch.switchBtn("important-lbl").on("click", function() {
+
+                $importantSwitch.prop("checked") ? updateImportant(v.qiid, 1) : updateImportant(v.qiid, 0);
             });
 
             return $liLine;
@@ -580,6 +594,16 @@ $(function() {
         com.post(api.quotation.updateQuotationItemForDiscount, {
             "quotationItem.qiid": id,
             "quotationItem.discount": discount
+        });
+    }
+    ;
+
+    // 重要标记设置
+    function updateImportant(id, isImportant) {
+
+        com.post(api.quotation.updateQuotationItemForImportant, {
+            "quotationItem.qiid": id,
+            "quotationItem.isImportant": isImportant
         });
     }
     ;

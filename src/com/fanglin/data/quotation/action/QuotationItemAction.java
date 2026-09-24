@@ -110,6 +110,14 @@ public class QuotationItemAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "updateQuotationItemForImportant", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateQuotationItemForImportant() throws FLException {
+
+		quotationItemService.updateQuotationItemForImportant(quotationItem);
+
+		return SUCCESS;
+	}
+
 	@Action(value = "updateQuotationItemForFormula", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String updateQuotationItemForFormula() throws FLException {
 

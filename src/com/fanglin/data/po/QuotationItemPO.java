@@ -58,6 +58,10 @@ public class QuotationItemPO implements Serializable {
 
 	public static final short ISRTEM_CACSE_INT = 1;
 
+	public static final short ISIMPORTANT_NONE_INT = 0;
+
+	public static final short ISIMPORTANT_IMPORTANT_INT = 1;
+
 	private long qiid;
 
 	private String no;
@@ -105,6 +109,8 @@ public class QuotationItemPO implements Serializable {
 	private short isRtem;
 
 	private String rtemFlag;
+
+	private short isImportant;
 
 	private String comment;
 
@@ -340,6 +346,15 @@ public class QuotationItemPO implements Serializable {
 
 	public void setRtemFlag(String rtemFlag) {
 		this.rtemFlag = rtemFlag;
+	}
+
+	@Column(name = "isImportant")
+	public short getIsImportant() {
+		return isImportant;
+	}
+
+	public void setIsImportant(short isImportant) {
+		this.isImportant = isImportant;
 	}
 
 	@Column(name = "comment")
