@@ -791,6 +791,7 @@ var selectionDetail = (function() {
                 'data-quotationItemId': data.quotationItemId,
                 'data-areaName': data.quotationFunctionAreaName,
                 'data-preprice': data.preprice,
+                'data-expres': data.expres == null ? '' : data.expres,
             });
 
             var lineSet = [];
@@ -917,9 +918,13 @@ var selectionDetail = (function() {
         }
     };
 
-    // 选材公式:报价项已选材时,按 报价功能区->模板功能区(版本+名称)->品类(品牌品类名)->规格(商品规格) 匹配公式,
-    // 用功能区参数({a}周长{b}面积{c}举架{d}{e}洞面{f}{g}窗面{h}{i}梁,毫米/平方毫米,与报价页口径一致)求值,
-    // 结果追加在报价项数量旁(仅展示不落库);基础数据一次拉取(品类粒度),规格仅对命中品类批量查询
+    // 选材公式三个显示口径(均追加在报价项工程量旁,蓝色,仅展示不落库):
+    //   工程量  = 报价项 num(原有红色)
+    //   关联量  = 按 报价功能区->模板功能区(版本+名称)->品类(品牌品类名)->规格(商品规格) 匹配的公式计算
+    //   公式量  = 直接用报价项自身的公式(quotationitem.formula,随行 expres 下发)计算
+    // 公式变量口径一致: {a}周长{b}面积{c}举架{d}{e}洞面{f}{g}窗面{h}{i}梁(代入前×1000还原毫米/平方毫米)
+    var SHOW_RELATED = false; // 关联量默认隐藏(匹配逻辑保留,置 true 即恢复三值并列)
+
     var formula = {
 
         categoryByArea: {}, // qfaId -> [{fcid, categoryName}]
@@ -1010,27 +1015,47 @@ var selectionDetail = (function() {
 
                 if (ids.length != 3 || ids[2] != String(constant.quotation().selectionItem.TYPE_QUOTATION_INT)) return true;
 
-                var category = $li.attr('data-category');
-                var format = $li.attr('data-format');
                 var param = selection.areaParams[ids[0]];
 
-                if (!category || !format || !param) return true;
+                if (!param) return true;
 
-                var expres = null;
+                var $numWrap = $li.prev('.fl-quo-item').find('.cell.num .cell-wrap');
 
-                $.each(formula.categoryByArea[ids[0]] || [], function(i, c) {
-                    if (c.categoryName == category && formula.formatsByFcid[c.fcid]) {
-                        expres = formula.formatsByFcid[c.fcid][format] || expres;
+                // 关联量:功能区/品类/规格匹配公式计算(默认隐藏,SHOW_RELATED 恢复)
+                if (SHOW_RELATED) {
+
+                    var category = $li.attr('data-category');
+                    var format = $li.attr('data-format');
+
+                    if (category && format) {
+
+                        var expres = null;
+
+                        $.each(formula.categoryByArea[ids[0]] || [], function(i, c) {
+                            if (c.categoryName == category && formula.formatsByFcid[c.fcid]) {
+                                expres = formula.formatsByFcid[c.fcid][format] || expres;
+                            }
+                        });
+
+                        var relatedResult = formula.evalFormula(expres, param);
+
+                        if (relatedResult != null) {
+                            $numWrap.append(
+                                $('<span></span>').addClass('formula-num related-num blue').text('(' + relatedResult + ')'));
+                        }
                     }
-                });
+                }
 
-                if (!expres) return true;
+                // 公式量:报价项自身公式(quotationitem.formula,行 data-expres)
+                var itemExpres = $li.prev('.fl-quo-item').attr('data-expres');
 
-                var result = formula.evalFormula(expres, param);
+                if (!itemExpres) return true;
+
+                var result = formula.evalFormula(itemExpres, param);
 
                 if (result == null) return true;
 
-                $li.prev('.fl-quo-item').find('.cell.num .cell-wrap').append(
+                $numWrap.append(
                     $('<span></span>').addClass('formula-num blue').text('(' + result + ')'));
             });
         },
@@ -1319,6 +1344,7 @@ var selectionDetail = (function() {
                         "itemName": rawData.itemName,
                         "type": type,
                         "num": rawData.num,
+                        "expres": rawData.expres,
                         "quotationFunctionAreaName": functionAreaName,
                         "preprice": rawData.unitPrice,
                     }
