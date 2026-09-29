@@ -47,7 +47,8 @@ public class AccessoriesItemDaoImpl extends DaoImpl<AccessoriesItemPO> implement
 	@Override
 	public int amountAccessoriesItem(String orderId, long nid) {
 
-		String sql = "select CAST(sum(if(type = 0, ai.num, -ai.num)*ai.storenum) AS SIGNED) from inventory.accessories a, inventory.accessoriesitem ai where a.orderId = :orderId and a.aid = ai.aid and nid =:nid and a.status not in (3, 4)";
+		// 同族归一:领用绑定nid与明细挂的nid可能是同一定材族(pnid)下不同公司的实例,按族合并统计;pnid=0自建行仅统计自身
+		String sql = "select CAST(sum(if(a.type = 0, ai.num, -ai.num)*ai.storenum) AS SIGNED) from inventory.accessories a, inventory.accessoriesitem ai where a.orderId = :orderId and a.aid = ai.aid and a.status not in (3, 4) and (ai.nid = :nid or ai.nid in (select x.nid from data.noods x where x.pnid != 0 and x.pnid = (select t.pnid from data.noods t where t.nid = :nid)))";
 		BigInteger count = (BigInteger) session().createSQLQuery(sql).setString("orderId", orderId).setLong("nid", nid).uniqueResult();
 
 		return count == null ? 0 : Arith.div(count.intValue(), 1000000);
