@@ -32,7 +32,8 @@ public class NormoodItemDaoImpl extends DaoImpl<NormoodItemPO> implements Normoo
 	@Override
 	public int amountNormoodItem(long qid, long nid) {
 
-		String sql = "select sum(if(atttype = 0, storenum, -storenum)) from quotation.normooditem where qid =:qid and nid = :nid and status = :status";
+		// 同族归一:铺法(normood)全局共享,明细可能挂其他公司同族实例,按pnid族合并统计;pnid=0自建行仅统计自身
+		String sql = "select sum(if(ni.atttype = 0, ni.storenum, -ni.storenum)) from quotation.normooditem ni where ni.qid = :qid and ni.status = :status and (ni.nid = :nid or ni.nid in (select x.nid from data.noods x where x.pnid != 0 and x.pnid = (select t.pnid from data.noods t where t.nid = :nid)))";
 		BigDecimal count = (BigDecimal) session().createSQLQuery(sql).setLong("qid", qid).setLong("nid", nid).setShort("status", NormoodItemPO.STATUS_INIT_INT).uniqueResult();
 
 		return count == null ? 0 : count.intValue();

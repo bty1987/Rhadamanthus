@@ -138,7 +138,8 @@ public class AccessoriesItemServiceImpl implements AccessoriesItemService {
 
 		normamount = Arith.round(normamount, 0, Arith.ROUND_UP);
 
-		if (Arith.add(acceamount, Arith.mul(accessoriesItemVO.getNum(), accessoriesItemVO.getStorenum())) > Arith.add(normamount, noodsPO.getSurplus())) {
+		// 量纲口径:acceamount已按(num×storenum)÷1000000折算,此处num不再乘storenum(线上在跑口径,乘回必全量误拦)
+		if (Arith.add(acceamount, accessoriesItemVO.getNum()) > Arith.add(normamount, noodsPO.getSurplus())) {
 			throw new FLException(260082, "辅料项总额已达上限");
 		}
 
