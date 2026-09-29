@@ -124,6 +124,7 @@ public class ConstructionNodeServiceImpl implements ConstructionNodeService {
 		constructionNodePO.setAccount(constructionNodeVO.getAccount() == null ? ConstructionNodePO.ACCOUNT_INVALID_INT : constructionNodeVO.getAccount());
 		constructionNodePO.setAccessoryLimit(constructionNodeVO.getAccessoryLimit());
 		constructionNodePO.setSalaryLimit(constructionNodeVO.getSalaryLimit());
+		constructionNodePO.setSalaryFloor(constructionNodeVO.getSalaryFloor() == null ? 0 : constructionNodeVO.getSalaryFloor());
 
 		constructionNodePO.setProcess(constructionNodeVO.getProcess());
 		constructionNodePO.setProset(constructionNodeVO.getProset());
@@ -178,6 +179,7 @@ public class ConstructionNodeServiceImpl implements ConstructionNodeService {
 
 		constructionNodePO.setAccessoryLimit(constructionNodeVO.getAccessoryLimit());
 		constructionNodePO.setSalaryLimit(constructionNodeVO.getSalaryLimit());
+		constructionNodePO.setSalaryFloor(constructionNodeVO.getSalaryFloor() == null ? 0 : constructionNodeVO.getSalaryFloor());
 
 		constructionNodeDao.update(constructionNodePO);
 
