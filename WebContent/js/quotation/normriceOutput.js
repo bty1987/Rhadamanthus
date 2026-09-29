@@ -1,5 +1,8 @@
 var NORMRICE_ITEM_STATUS_CONFIRMED_INT = 2;
 
+// 节点工费保底额(×1000经tranargs换算,0=无保底;generatePrintPage为全局函数,故声明在全局作用域)
+var salaryFloor = 0;
+
 function printHeader(headStr) {
 
     var quotation = quotationUtils.quotationDetail.quotation;
@@ -325,7 +328,7 @@ function printAllTotal(amountInfo) {
     contentHtml += '<td width="9%" align="center"></td>';
     contentHtml += '<td width="9%" align="center"></td>';
     contentHtml += '<td width="9%" align="center">所有项目总额</td>';
-    contentHtml += '<td width="8%" align="center">' + (amountInfo.total || 0) + '</td>';
+    contentHtml += '<td width="8%" align="center">' + (amountInfo.total || 0) + (amountInfo.isFloor ? ' (保底)' : '') + '</td>';
     contentHtml += '</tr>';
 
     return contentHtml;
@@ -388,6 +391,17 @@ jQuery(function($) {
         quotationUtils.quotationDetail.quotation.decoration = res.decoration;
     }, null, false);
 
+    // 取节点工费保底额(定额低于保底额时,总额按保底托底并打保底标识)
+    if (params.quotation.workType != null && params.quotation.workType !== '') {
+
+        com.post(api.data.queryConstructionNodeByCnid, {
+            "constructionNode.cnid": params.quotation.workType
+        }, function(res) {
+
+            salaryFloor = res.constructionNode ? (res.constructionNode.salaryFloor || 0) : 0;
+        }, null, false);
+    }
+
     var quotationFunctionAreas = [];
 
     if ((params.quotation.subtype & 1) == 1) {
@@ -446,7 +460,8 @@ function generatePrintPage(type, subtype, workType, company, orderType, showType
 
     var html = "";
     var amountInfo = {
-        total: 0
+        total: 0,
+        floor: salaryFloor
     };
 
     if (type == 1) {
@@ -459,6 +474,12 @@ function generatePrintPage(type, subtype, workType, company, orderType, showType
 
     if ((subtype & 8) == 8) {
         html += printNromadd(workType, amountInfo);
+    }
+
+    // 定额总额低于保底额:总额按保底托底,打印附保底标识
+    if (amountInfo.floor > 0 && amountInfo.floor > amountInfo.total) {
+        amountInfo.total = amountInfo.floor;
+        amountInfo.isFloor = true;
     }
 
     if (type == 1) {

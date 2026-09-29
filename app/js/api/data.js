@@ -87,6 +87,7 @@ $.extend(api, { data: {
     // ===== 施工节点 constructionNode（下拉用）=====
     pageConstructionNode: { url: 'pageConstructionNode.do' },
     queryConstructionNode: { url: 'queryConstructionNode.do' },
+    queryConstructionNodeByCnid: { url: 'queryConstructionNodeByCnid.do', tranargs: [{ result: 'constructionNode', args: ['salaryFloor'] }] },
     addConstructionNode: { url: 'addConstructionNode.do' },
     updateConstructionNode: { url: 'updateConstructionNode.do' },
     updateConstructionNodeForStatus: { url: 'updateConstructionNodeForStatus.do' },

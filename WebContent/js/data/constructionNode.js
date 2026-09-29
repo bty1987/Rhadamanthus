@@ -33,6 +33,7 @@ jQuery(function($) {
             account: com.focusPage("#account", "#updateModal"),
             accessoryLimit: com.focusPage("#accessoryLimit", "#updateModal"),
             salaryLimit: com.focusPage("#salaryLimit", "#updateModal"),
+            salaryFloor: com.focusPage("#salaryFloor", "#updateModal"),
         },
 
         status: {
@@ -116,6 +117,11 @@ jQuery(function($) {
         fieId: "salaryLimit",
         name: "工费总额限制",
         prop: "salaryLimit",
+        clazz: "blue"
+    }, {
+        fieId: "salaryFloor",
+        name: "工费保底额",
+        prop: "salaryFloor",
         clazz: "blue"
     }, {
         fieId: "startalk",
@@ -213,6 +219,7 @@ jQuery(function($) {
             constructionNode.items.account.val(v.account);
             constructionNode.items.accessoryLimit.val(v.accessoryLimit);
             constructionNode.items.salaryLimit.val(v.salaryLimit);
+            constructionNode.items.salaryFloor.val(v.salaryFloor);
             constructionNode.modals.updateModal.modal("show");
 
             return false;
@@ -253,6 +260,7 @@ jQuery(function($) {
             "constructionNode.account": constructionNode.items.account.val(),
             "constructionNode.accessoryLimit": constructionNode.items.accessoryLimit.val(),
             "constructionNode.salaryLimit": constructionNode.items.salaryLimit.val(),
+            "constructionNode.salaryFloor": constructionNode.items.salaryFloor.val(),
             "constructionNode.timeLimit": constructionNode.items.timeLimit.val()
         }
 

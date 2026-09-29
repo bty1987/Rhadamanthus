@@ -36,6 +36,8 @@ public class ConstructionNodeVO implements Serializable {
 
 	private Integer salaryLimit;
 
+	private Integer salaryFloor;
+
 	private Integer accessoryLimit;
 
 	private Short process;
@@ -256,6 +258,14 @@ public class ConstructionNodeVO implements Serializable {
 
 	public void setSalaryLimit(Integer salaryLimit) {
 		this.salaryLimit = salaryLimit;
+	}
+
+	public Integer getSalaryFloor() {
+		return salaryFloor;
+	}
+
+	public void setSalaryFloor(Integer salaryFloor) {
+		this.salaryFloor = salaryFloor;
 	}
 
 	public Integer getAccessoryLimit() {

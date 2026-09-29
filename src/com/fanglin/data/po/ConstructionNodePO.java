@@ -65,6 +65,8 @@ public class ConstructionNodePO implements Serializable {
 
 	private int salaryLimit;
 
+	private int salaryFloor;
+
 	private int accessoryLimit;
 
 	private short process;
@@ -289,6 +291,15 @@ public class ConstructionNodePO implements Serializable {
 
 	public void setSalaryLimit(int salaryLimit) {
 		this.salaryLimit = salaryLimit;
+	}
+
+	@Column(name = "salaryFloor")
+	public int getSalaryFloor() {
+		return salaryFloor;
+	}
+
+	public void setSalaryFloor(int salaryFloor) {
+		this.salaryFloor = salaryFloor;
 	}
 
 	@Column(name = "accessoryLimit")
