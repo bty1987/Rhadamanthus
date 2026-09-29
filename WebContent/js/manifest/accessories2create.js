@@ -92,9 +92,11 @@ jQuery(function() {
         var brand = accessories.leftitems.brand.val();
         var measurementUnit = accessories.leftitems.measurementUnit.val();
         var schedule = accessories.leftitems.constructionNode.attr("data-schedule");
+        var constructionNode = accessories.leftitems.constructionNode.attr("data-constructionNode");
         var num = accessories.leftitems.num.val();
 
-        if (schedule && schedule != accessories.rightitems.schedule.val()) {
+        // 下拉框value为cnid,须与节点cnid比对;data-schedule存sort仅作提交值(后端按schedule.sort对比)
+        if (schedule && constructionNode != accessories.rightitems.schedule.val()) {
             com.showAlert(com.warning, "施工环节不匹配");
             return false;
         }
