@@ -7,8 +7,8 @@
 --   补全后:现有使用不炸;后续新场景(角色从未授权过的接口)报无权限=预期,
 --   由运维在角色管理页配置 roleoperation 后生效。
 --
--- 执行顺序: 严格按 步骤1→2→3→4,单线程执行,可重复执行(幂等)
--- 预期数字(2026-09-29 实测): 去重 1916 组;补全 229,741 条;补全后总量约 30 万
+-- 执行顺序: 严格按 步骤1→2A→2B→3→4,单线程执行,可重复执行(幂等)
+-- 预期数字(2026-09-29 实测): 去重 1916 组;补全 229,741 条(2A+2B合计);补全后总量约 30 万
 -- ============================================================
 
 -- ------------------------------------------------------------
@@ -22,13 +22,15 @@ INNER JOIN communion.roleoperation ro2
    AND ro1.roid > ro2.roid;
 
 -- ------------------------------------------------------------
--- 步骤2: 公司维度对齐补全
---   主角色腿 + 附加角色腿; cuid=NULL 表示系统补全(非人工配置)
+-- 步骤2: 公司维度对齐补全(拆两段执行,先2A后2B,顺序可互换)
+--   cuid=34 操作人uid; 第二段的差集会实时看见第一段的插入结果,
+--   天然去重,等价于 UNION,不会插重
 -- ------------------------------------------------------------
+
+-- 步骤2A: 主角色腿 —— 用户主角色的授权并集 → 用户有身份的所有公司
 INSERT INTO communion.roleoperation (rid, oid, cuid, company, createTime)
-SELECT t.rid, t.oid, NULL, t.cid, NOW()
+SELECT t.rid, t.oid, 34, t.cid, NOW()
 FROM (
-    -- 主角色: 用户主角色的授权并集 → 用户有身份的所有公司
     SELECT DISTINCT u.roleId AS rid, h.oid, uc.cid
     FROM communion.usercompany uc
     INNER JOIN communion.user u ON u.uid = uc.uid
@@ -36,10 +38,12 @@ FROM (
     LEFT JOIN communion.roleoperation e
         ON e.rid = u.roleId AND e.oid = h.oid AND e.company = uc.cid
     WHERE e.roid IS NULL
+) t;
 
-    UNION
-
-    -- 附加角色: 用户附加角色的授权并集 → 用户有身份的所有公司
+-- 步骤2B: 附加角色腿 —— 用户附加角色的授权并集 → 用户有身份的所有公司
+INSERT INTO communion.roleoperation (rid, oid, cuid, company, createTime)
+SELECT t.rid, t.oid, 34, t.cid, NOW()
+FROM (
     SELECT DISTINCT ur.rid, h.oid, uc.cid
     FROM communion.usercompany uc
     INNER JOIN communion.userrole ur ON ur.uid = uc.uid
@@ -70,7 +74,7 @@ SELECT COUNT(*) AS dup_groups FROM (
     GROUP BY rid, oid, company HAVING COUNT(*) > 1
 ) t;
 
--- 4.3 缺口应为 0(重跑推算子查询)
+-- 4.3 缺口应为 0(重跑推算子查询,覆盖 2A+2B 两腿合计)
 SELECT COUNT(*) AS gap FROM (
     SELECT DISTINCT u.roleId AS rid, h.oid, uc.cid
     FROM communion.usercompany uc
