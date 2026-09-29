@@ -16,7 +16,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -322,11 +321,7 @@ public class OperationServiceImpl implements OperationService {
 	private void addRoleOperation(int rid, int oid, int company, UserPO creater) {
 
 		if (roleOperationDao.queryRoleOperation(rid, oid, company) == null) {
-			try {
-				roleOperationDao.save(new RoleOperationPO(new OperationPO(oid), rid, creater, company));
-			} catch (DuplicateKeyException e) {
-				// 并发下已被其他请求补全(uk_rid_oid_company兜底),目标已达成,忽略
-			}
+			roleOperationDao.save(new RoleOperationPO(new OperationPO(oid), rid, creater, company));
 		}
 	}
 

@@ -51,9 +51,9 @@ FROM (
 
 -- ------------------------------------------------------------
 -- 步骤3: 唯一索引根治重复(替代原普通索引,两者列完全相同)
---   此后 fillRoleOperationByOperation 收集的并发重复插入会被数据库拒绝
---   应用侧 DAO save 需容忍 DuplicateKey(收集逻辑 query-then-insert,
---   唯一键冲突时插入失败但不影响请求放行,由既有查询兜底)
+--   此后 fillRoleOperationByOperation 收集的并发重复插入会被数据库拒绝,
+--   冲突异常沿拦截器抛出 → 请求返回 110000"操作失败" —— 属预期行为,
+--   有问题报出来;该 (rid,oid,company) 实际已由并发请求补全,重试即可
 -- ------------------------------------------------------------
 ALTER TABLE communion.roleoperation ADD UNIQUE KEY uk_rid_oid_company (rid, oid, company);
 ALTER TABLE communion.roleoperation DROP INDEX idx_rid_oid_company;
