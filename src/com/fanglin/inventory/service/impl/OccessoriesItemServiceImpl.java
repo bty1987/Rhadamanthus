@@ -85,7 +85,13 @@ public class OccessoriesItemServiceImpl implements OccessoriesItemService {
 		occessoriesItemPO.setRbalance(occessoriesItemVO.getRbalance());
 		occessoriesItemPO.setVbalance(occessoriesItemVO.getRbalance());
 
-		occessoriesPO.setTotal(Arith.add(occessoriesPO.getTotal(), (occessoriesItemVO.getGoods().getSelling() * occessoriesItemVO.getNum())));
+		GoodsPO goodsPO = goodsDao.get(occessoriesItemVO.getGoods().getGid());
+
+		if (goodsPO == null) {
+			throw new FLException(260004, "商品不存在");
+		}
+
+		occessoriesPO.setTotal(Arith.add(occessoriesPO.getTotal(), (goodsPO.getSelling() * occessoriesItemVO.getNum())));
 
 		occessoriesItemDao.save(occessoriesItemPO);
 
@@ -99,15 +105,24 @@ public class OccessoriesItemServiceImpl implements OccessoriesItemService {
 		OccessoriesItemPO occessoriesItemPO = occessoriesItemDao.get(occessoriesItemVO.getOiid());
 
 		if (occessoriesItemPO == null) {
-			throw new FLException(260080, "辅料单不存在");
+			throw new FLException(260081, "辅料项不存在");
 		}
 
 		OccessoriesPO occessoriesPO = occessoriesDao.get(occessoriesItemPO.getOid());
 
+		if (occessoriesPO == null) {
+			throw new FLException(260023, "辅料单不存在");
+		}
+
 		if (occessoriesPO.getStatus() != OccessoriesPO.STATUS_INIT_INT) {
 			throw new FLException(260024, "辅料单状态不可操作");
 		}
+
 		GoodsPO goodsPO = goodsDao.get(occessoriesItemVO.getGoods().getGid());
+
+		if (goodsPO == null) {
+			throw new FLException(260004, "商品不存在");
+		}
 
 		long oldTotal = occessoriesPO.getTotal();
 		long totals = Arith.mul(occessoriesItemPO.getNum(), goodsPO.getSelling());
@@ -132,6 +147,10 @@ public class OccessoriesItemServiceImpl implements OccessoriesItemService {
 		}
 
 		OccessoriesPO occessoriesPO = occessoriesDao.get(occessoriesItemPO.getOid());
+
+		if (occessoriesPO == null) {
+			throw new FLException(260023, "辅料单不存在");
+		}
 
 		if (occessoriesPO.getStatus() != OccessoriesPO.STATUS_INIT_INT) {
 			throw new FLException(260024, "辅料单状态不可操作");

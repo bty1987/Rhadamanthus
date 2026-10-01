@@ -16,9 +16,13 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionSynchronizationAdapter;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 import com.fanglin.common.po.CountingPO;
 import com.fanglin.common.service.CountingService;
@@ -77,6 +81,8 @@ import com.fanglin.utils.Paging;
 @Service("manifestService")
 @Transactional(readOnly = true)
 public class ManifestServiceImpl implements ManifestService {
+
+	private static final Logger log = LoggerFactory.getLogger(ManifestServiceImpl.class);
 
 	@Autowired
 	private CompanyDao companyDao;
@@ -153,9 +159,13 @@ public class ManifestServiceImpl implements ManifestService {
 	}
 
 	@Override
-	public ManifestVO queryManifestByMid(ManifestVO manifestVO) {
+	public ManifestVO queryManifestByMid(ManifestVO manifestVO) throws FLException {
 
 		ManifestPO manifestPO = manifestDao.get(manifestVO.getMid());
+
+		if (manifestPO == null) {
+			throw new FLException(260009, "货单不存在");
+		}
 
 		manifestVO = new ManifestVO(new UserBaseVO());
 
@@ -302,7 +312,7 @@ public class ManifestServiceImpl implements ManifestService {
 
 			if (salesItemPO == null) continue;
 
-			if (manifestItemPO.getSurplus() < num) {
+			if (salesItemPO.getXgnum() < num) {
 				throw new FLException(260008, "出货数量不符");
 			} else {
 				salesItemPO.setXgnum(Arith.sub(salesItemPO.getXgnum(), num));
@@ -332,7 +342,7 @@ public class ManifestServiceImpl implements ManifestService {
 		ManifestPO manifestPO = manifestDao.get(manifestVO.getMid());
 
 		if (manifestPO == null) {
-			throw new FLException(260052, "货单不存在");
+			throw new FLException(260009, "货单不存在");
 		}
 
 		if (manifestPO.getStatus() != ManifestPO.STATUS_CONFIRM_INT) {
@@ -358,6 +368,10 @@ public class ManifestServiceImpl implements ManifestService {
 		for (ManifestItemVO manifestItemVO : manifestItemVOs) {
 
 			manifestItemPO = manifestItemDao.get(manifestItemVO.getMiid());
+
+			if (manifestItemPO == null) {
+				throw new FLException(260010, "货单项不存在");
+			}
 
 			long gid = manifestItemPO.getGoods().getGid();
 			long cid = manifestItemPO.getColor().getCid();
@@ -400,7 +414,7 @@ public class ManifestServiceImpl implements ManifestService {
 		ManifestPO manifestPO = manifestDao.get(manifestVO.getMid());
 
 		if (manifestPO == null) {
-			throw new FLException(260052, "货单不存在");
+			throw new FLException(260009, "货单不存在");
 		}
 
 		if (manifestPO.getStatus() != ManifestPO.STATUS_CONFIRM_INT) {
@@ -422,6 +436,10 @@ public class ManifestServiceImpl implements ManifestService {
 		for (ManifestItemVO manifestItemVO : manifestItemVOs) {
 
 			manifestItemPO = manifestItemDao.get(manifestItemVO.getMiid());
+
+			if (manifestItemPO == null) {
+				throw new FLException(260010, "货单项不存在");
+			}
 
 			long gid = manifestItemPO.getGoods().getGid();
 			long cid = manifestItemPO.getColor().getCid();
@@ -522,6 +540,10 @@ public class ManifestServiceImpl implements ManifestService {
 
 			purchasePO = purchaseDao.get(purchaseVO.getPid());
 
+			if (purchasePO == null) {
+				throw new FLException(260017, "采购单不存在");
+			}
+
 			if (purchasePO.getStatus() == PurchasePO.STATUS_BATCHIN_ALL_INT) {
 				throw new FLException(260018, "采购单状态不可操作");
 			}
@@ -544,6 +566,10 @@ public class ManifestServiceImpl implements ManifestService {
 		for (PurchaseItemVO purchaseItemVO : purchaseItemVOs) {
 
 			PurchaseItemPO purchaseItemPO = purchaseItemDao.get(purchaseItemVO.getPiid());
+
+			if (purchaseItemPO == null) {
+				throw new FLException(260019, "采购项不存在");
+			}
 
 			long gid = purchaseItemPO.getGoods().getGid();
 			long cid = purchaseItemPO.getColor().getCid();
@@ -612,6 +638,10 @@ public class ManifestServiceImpl implements ManifestService {
 
 			accessoriesPO = accessoriesDao.get(accessoriesVO.getAid());
 
+			if (accessoriesPO == null) {
+				throw new FLException(260023, "辅料单不存在");
+			}
+
 			if (!Arrays.asList(AccessoriesPO.STATUS_INIT_INT, AccessoriesPO.STATUS_ADVANCE_INT).contains(accessoriesPO.getStatus())) {
 				throw new FLException(260024, "辅料单状态不可操作");
 			}
@@ -659,9 +689,18 @@ public class ManifestServiceImpl implements ManifestService {
 			accessoriesManifestDao.save(new AccessoriesManifestPO(accessories, manifestPO));
 		}
 
-		String content = String.format("辅料单:%s,已出库", accessoriesPO.getNo());
+		final List<AccessoriesPO> notifiedAccessories = accessoriesPOs;
+		final int companyId = company;
 
-		messageService.sendMessage(accessoriesPO.getCreater().getUserId(), accessoriesPO.getApprover().getUserId(), content, MessagePO.TYPE_SEND_VISIT_INT, MessagePO.SUBTYPE_ACCESSORIES_INT, accessoriesPO.getAid(), company);
+		sendMessageAfterCommit(new Runnable() {
+
+			public void run() {
+				for (AccessoriesPO accessories : notifiedAccessories) {
+					String content = String.format("辅料单:%s,已出库", accessories.getNo());
+					messageService.sendMessage(accessories.getCreater().getUserId(), accessories.getApprover().getUserId(), content, MessagePO.TYPE_SEND_VISIT_INT, MessagePO.SUBTYPE_ACCESSORIES_INT, accessories.getAid(), companyId);
+				}
+			}
+		});
 
 		return 0;
 	}
@@ -689,6 +728,10 @@ public class ManifestServiceImpl implements ManifestService {
 
 			accessoriesPO = accessoriesDao.get(accessoriesVO.getAid());
 
+			if (accessoriesPO == null) {
+				throw new FLException(260023, "辅料单不存在");
+			}
+
 			if (accessoriesPO.getStatus() != AccessoriesPO.STATUS_BATCHOUT_INT && accessoriesPO.getStatus() != AccessoriesPO.STATUS_DELIVER_INT) {
 				throw new FLException(260024, "辅料单状态不可操作");
 			}
@@ -697,6 +740,10 @@ public class ManifestServiceImpl implements ManifestService {
 		}
 
 		ConstructionPO constructionPO = constructionDao.queryConstructionByOrderId(accessoriesPO.getOrderId());
+
+		if (constructionPO == null && accessoriesPO.getType() == AccessoriesPO.TYPE_COMMON_INT) {
+			throw new FLException(120038, "工程单不存在");
+		}
 
 		String currentDate = DateUtil.current("yyMMdd").toString();
 		int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_INVENTORY_AS_INT, currentDate, company);
@@ -727,14 +774,17 @@ public class ManifestServiceImpl implements ManifestService {
 				manifestItemPO.setSurplus(Arith.sub(manifestItemPO.getSurplus(), num));
 			}
 
-			ConstructionAccessoryPO constructionAccessoryPO = constructionAccessoryDao.queryConstructionAccessory(constructionPO.getCid(), gid);
+			if (constructionPO != null) {
 
-			if (constructionAccessoryPO != null && accessoriesPO.getType() == AccessoriesPO.TYPE_COMMON_INT) {
-				long total = Arith.mul(goodsPO.getSelling(), num);
+				ConstructionAccessoryPO constructionAccessoryPO = constructionAccessoryDao.queryConstructionAccessory(constructionPO.getCid(), gid);
 
-				constructionAccessoryPO.setTotal(Arith.sub(constructionAccessoryPO.getTotal(), total));
-				constructionAccessoryPO.setNum(Arith.sub(constructionAccessoryPO.getNum(), num));
-				constructionAccessoryDao.update(constructionAccessoryPO);
+				if (constructionAccessoryPO != null && accessoriesPO.getType() == AccessoriesPO.TYPE_COMMON_INT) {
+					long total = Arith.mul(goodsPO.getSelling(), num);
+
+					constructionAccessoryPO.setTotal(Arith.sub(constructionAccessoryPO.getTotal(), total));
+					constructionAccessoryPO.setNum(Arith.sub(constructionAccessoryPO.getNum(), num));
+					constructionAccessoryDao.update(constructionAccessoryPO);
+				}
 			}
 
 			totals += Arith.mul(goodsPO.getSelling(), num);
@@ -746,14 +796,14 @@ public class ManifestServiceImpl implements ManifestService {
 			manifestItemDao.save(manifestItemPO);
 		}
 
-		if (accessoriesPO.getType() == AccessoriesPO.TYPE_COMMON_INT) { // 售后类型辅料单不需要处理工程单和工程辅料
+		if (constructionPO != null && accessoriesPO.getType() == AccessoriesPO.TYPE_COMMON_INT) { // 售后类型辅料单不需要处理工程单和工程辅料
 
 			constructionPO.setAccessoryTotal(Arith.sub(constructionPO.getAccessoryTotal(), totals));
 			constructionDao.update(constructionPO);
+		}
 
-			for (AccessoriesPO accessories : accessoriesPOs) {
-				accessoriesManifestDao.save(new AccessoriesManifestPO(accessories, manifestPO));
-			}
+		for (AccessoriesPO accessories : accessoriesPOs) {
+			accessoriesManifestDao.save(new AccessoriesManifestPO(accessories, manifestPO));
 		}
 
 		return 0;
@@ -856,6 +906,7 @@ public class ManifestServiceImpl implements ManifestService {
 	}
 
 	@Override
+	@Transactional(rollbackFor = Exception.class)
 	public int addManifestForCP(List<ManifestItemVO> manifestItemVOs, String userId, int company) throws FLException {
 
 		CompanyPO companyPO = companyDao.get(company);
@@ -895,6 +946,7 @@ public class ManifestServiceImpl implements ManifestService {
 	}
 
 	@Override
+	@Transactional(rollbackFor = Exception.class)
 	public int addManifestForCL(List<ManifestItemVO> manifestItemVOs, String userId, int company) throws FLException {
 
 		CompanyPO companyPO = companyDao.get(company);
@@ -975,6 +1027,27 @@ public class ManifestServiceImpl implements ManifestService {
 		manifestDao.update(manifestPO);
 
 		return 0;
+	}
+
+	// 钉钉消息延后到事务提交后发送，避免 HTTP 超时拖长事务；发送失败只记日志不回滚业务
+	private void sendMessageAfterCommit(final Runnable task) {
+
+		if (!TransactionSynchronizationManager.isSynchronizationActive()) {
+			task.run();
+			return;
+		}
+
+		TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronizationAdapter() {
+
+			@Override
+			public void afterCommit() {
+				try {
+					task.run();
+				} catch (Exception e) {
+					log.error("manifest message send after commit failed", e);
+				}
+			}
+		});
 	}
 
 }

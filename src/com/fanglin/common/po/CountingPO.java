@@ -143,6 +143,8 @@ public class CountingPO implements Serializable {
 
 	public static int TYPE_INVENTORY_PO_INT = 36; // 采购单
 
+	public static int TYPE_INVENTORY_O_INT = 57; // 外辅单
+
 	public static int TYPE_INVENTORY_PM_INT = 37; // 采购单
 
 	public static int TYPE_INVENTORY_PS_INT = 38; // 采购单

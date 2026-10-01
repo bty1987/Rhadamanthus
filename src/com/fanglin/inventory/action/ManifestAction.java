@@ -80,7 +80,7 @@ public class ManifestAction extends BaseListAction {
 	}
 
 	@Action(value = "queryManifestByMid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryManifestByMid() {
+	public String queryManifestByMid() throws FLException {
 
 		manifest = manifestService.queryManifestByMid(manifest);
 

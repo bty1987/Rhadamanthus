@@ -96,9 +96,13 @@ public class PurchaseServiceImpl implements PurchaseService {
 	}
 
 	@Override
-	public PurchaseVO queryPurchaseByPid(PurchaseVO purchaseVO) {
+	public PurchaseVO queryPurchaseByPid(PurchaseVO purchaseVO) throws FLException {
 
 		PurchasePO purchasePO = purchaseDao.queryPurchaseByPid(purchaseVO.getPid());
+
+		if (purchasePO == null) {
+			throw new FLException(260017, "采购单不存在");
+		}
 
 		purchaseVO = new PurchaseVO();
 
@@ -151,7 +155,6 @@ public class PurchaseServiceImpl implements PurchaseService {
 
 		purchasePO.setUser(userPO);
 		purchasePO.setCreateTime(new Timestamp(System.currentTimeMillis()));
-		purchasePO.setBalanceTime(new Timestamp(System.currentTimeMillis()));
 		purchasePO.setStatus(PurchasePO.STATUS_INIT_INT);
 		purchasePO.setBalanceStatus(PurchasePO.BALANCESTATUS_INIT_INT);
 		purchasePO.setCompany(company);
@@ -211,34 +214,11 @@ public class PurchaseServiceImpl implements PurchaseService {
 			throw new FLException(260017, "采购单不存在");
 		}
 
-		if (purchasePO.getStatus() == 2) {
+		if (purchasePO.getStatus() == PurchasePO.STATUS_BATCHIN_ALL_INT) {
 			throw new FLException(260018, "采购单状态不可操作");
 		}
 
-		purchasePO.setPid(purchaseVO.getPid());
 		purchasePO.setComment(purchaseVO.getComment());
-
-		purchaseDao.update(purchasePO);
-
-		return 0;
-	}
-
-	@Override
-	@Transactional(rollbackFor = Exception.class)
-	public int updatePurchaseStatus(PurchaseVO purchaseVO) throws FLException {
-
-		PurchasePO purchasePO = purchaseDao.get(purchaseVO.getPid());
-
-		if (purchasePO == null) {
-			throw new FLException(260017, "采购单不存在");
-		}
-
-		if (purchasePO.getStatus() == 2) {
-			throw new FLException(260018, "采购单状态不可操作");
-		}
-
-		purchasePO.setPid(purchaseVO.getPid());
-		purchasePO.setStatus(PurchasePO.STATUS_BATCHIN_PART_INT);
 
 		purchaseDao.update(purchasePO);
 
@@ -255,11 +235,10 @@ public class PurchaseServiceImpl implements PurchaseService {
 			throw new FLException(260017, "采购单不存在");
 		}
 
-		if (purchasePO.getStatus() == 2) {
+		if (purchasePO.getStatus() == PurchasePO.STATUS_BATCHIN_ALL_INT) {
 			throw new FLException(260018, "采购单状态不可操作");
 		}
 
-		purchasePO.setPid(purchaseVO.getPid());
 		purchasePO.setStatus(PurchasePO.STATUS_BATCHIN_ALL_INT);
 
 		purchaseDao.update(purchasePO);
@@ -277,7 +256,6 @@ public class PurchaseServiceImpl implements PurchaseService {
 			throw new FLException(260017, "采购单不存在");
 		}
 
-		purchasePO.setPid(purchaseVO.getPid());
 		purchasePO.setBalanceStatus(PurchasePO.BALANCESTATUS_FINISH_INT);
 
 		return 0;

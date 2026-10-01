@@ -99,7 +99,7 @@ public class GoodsStorehouseStockServiceImpl implements GoodsStorehouseStockServ
 
 				goodsStorehouseStockVO = new GoodsStorehouseStockVO(new GoodsVO(), new ColorVO(), new FormatVO(), new StorehouseVO());
 
-				goodsStorehouseStockVO.setGshsid(goodsStorehouseStockVO.getGshsid());
+				goodsStorehouseStockVO.setGshsid(goodsStorehouseStockPO.getGshsid());
 				goodsStorehouseStockVO.setNum(goodsStorehouseStockPO.getNum());
 
 				BeanUtil.copyProperties(goodsStorehouseStockPO.getGoods(), goodsStorehouseStockVO.getGoods(), Arrays.asList("accessoriesType"));
@@ -124,9 +124,13 @@ public class GoodsStorehouseStockServiceImpl implements GoodsStorehouseStockServ
 	}
 
 	@Override
-	public GoodsStorehouseStockVO queryStorehouseStockByShidAGid(GoodsStorehouseStockVO goodsStorehouseStockVO) {
+	public GoodsStorehouseStockVO queryStorehouseStockByShidAGid(GoodsStorehouseStockVO goodsStorehouseStockVO) throws FLException {
 
 		GoodsStorehouseStockPO goodsStorehouseStockPO = goodsStorehouseStockDao.queryGoodsStorehouseStockByShidAGid(goodsStorehouseStockVO.getGoods().getGid(), goodsStorehouseStockVO.getColor().getCid(), goodsStorehouseStockVO.getFormat().getFid(), goodsStorehouseStockVO.getStorehouse().getShid());
+
+		if (goodsStorehouseStockPO == null) {
+			throw new FLException(260011, "商品库存不存在");
+		}
 
 		goodsStorehouseStockVO = new GoodsStorehouseStockVO();
 
@@ -249,67 +253,58 @@ public class GoodsStorehouseStockServiceImpl implements GoodsStorehouseStockServ
 
 	public StorehousePO instorehouse(long gid, long cid, long fid, long shid, int num) throws FLException {
 
-		if (goodsDao.get(gid) == null) {
-			throw new FLException(260004, "商品不存在");
-		}
+		// 原子自增，0 行=该商品在该仓库无库存行，走建档
+		if (goodsStorehouseStockDao.increaseStockNum(gid, cid, fid, shid, num) == 0) {
 
-		if (storehouseDao.get(shid) == null) {
-			throw new FLException(260005, "仓库不存在");
-		}
+			if (goodsDao.get(gid) == null) {
+				throw new FLException(260004, "商品不存在");
+			}
 
-		GoodsStorehouseStockPO inGoodsStorehouseStockPO = goodsStorehouseStockDao.queryGoodsStorehouseStockByShidAGid(gid, cid, fid, shid);
-
-		if (inGoodsStorehouseStockPO == null) {
-			inGoodsStorehouseStockPO = new GoodsStorehouseStockPO();
+			if (storehouseDao.get(shid) == null) {
+				throw new FLException(260005, "仓库不存在");
+			}
 
 			ColorPO colorPO = colorDao.get(cid);
 			FormatPO formatPO = formatDao.get(fid);
 
-			if (colorPO.getGid() != gid || formatPO.getGid() != gid) {
+			if (colorPO == null || formatPO == null || colorPO.getGid() != gid || formatPO.getGid() != gid) {
 				throw new FLException(260053, "商品不匹配");
 			}
+
+			GoodsStorehouseStockPO inGoodsStorehouseStockPO = new GoodsStorehouseStockPO();
 
 			inGoodsStorehouseStockPO.setGoods(new GoodsPO(gid));
 			inGoodsStorehouseStockPO.setColor(new ColorPO(cid));
 			inGoodsStorehouseStockPO.setFormat(new FormatPO(fid));
 			inGoodsStorehouseStockPO.setStorehouse(new StorehousePO(shid));
 
-			inGoodsStorehouseStockPO.setNum(0);
+			inGoodsStorehouseStockPO.setNum(num);
 
+			goodsStorehouseStockDao.save(inGoodsStorehouseStockPO);
 		}
 
-		inGoodsStorehouseStockPO.setNum(Arith.add(inGoodsStorehouseStockPO.getNum(), num));
-
-		goodsStorehouseStockDao.saveOrUpdate(inGoodsStorehouseStockPO);
-
-		return inGoodsStorehouseStockPO.getStorehouse();
+		return storehouseDao.get(shid);
 	}
 
 	public StorehousePO outstorehouse(long gid, long cid, long fid, long shid, int num) throws FLException {
 
-		GoodsStorehouseStockPO outGoodsStorehouseStockPO = goodsStorehouseStockDao.queryGoodsStorehouseStockByShidAGid(gid, cid, fid, shid);
+		// 原子扣减并校验存量下限，0 行=库存行不存在或存量不足，防并发超扣
+		if (goodsStorehouseStockDao.decreaseStockNum(gid, cid, fid, shid, num) == 0) {
 
-		if (outGoodsStorehouseStockPO == null) {
-			throw new FLException(260011, "商品库存不存在");
-		}
+			GoodsStorehouseStockPO outGoodsStorehouseStockPO = goodsStorehouseStockDao.queryGoodsStorehouseStockByShidAGid(gid, cid, fid, shid);
 
-		if (outGoodsStorehouseStockPO.getGoods() == null) {
-			throw new FLException(260004, "商品不存在");
-		}
+			if (outGoodsStorehouseStockPO == null) {
+				throw new FLException(260011, "商品库存不存在");
+			}
 
-		if (outGoodsStorehouseStockPO.getStorehouse() == null) {
-			throw new FLException(260005, "仓库不存在");
-		}
+			if (outGoodsStorehouseStockPO.getGoods() == null) {
+				throw new FLException(260004, "商品不存在");
+			}
 
-		if (outGoodsStorehouseStockPO.getNum() < num) {
 			throw new FLException(260008, outGoodsStorehouseStockPO.getGoods().getName() + "商品库存不足");
 		}
 
-		outGoodsStorehouseStockPO.setNum(Arith.sub(outGoodsStorehouseStockPO.getNum(), num));
-
-		goodsStorehouseStockDao.update(outGoodsStorehouseStockPO);
-
-		return outGoodsStorehouseStockPO.getStorehouse();
+		return storehouseDao.get(shid);
 	}
 
 }

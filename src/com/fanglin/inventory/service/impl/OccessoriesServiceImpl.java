@@ -5,15 +5,21 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionSynchronizationAdapter;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 import com.fanglin.common.po.CountingPO;
 import com.fanglin.common.service.CountingService;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
+import com.fanglin.data.material.dao.GoodsDao;
 import com.fanglin.data.po.AoodsPO;
+import com.fanglin.data.po.GoodsPO;
 import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.decoration.vo.DecorationVO;
@@ -46,10 +52,15 @@ import com.fanglin.utils.Paging;
 @Transactional(readOnly = true)
 public class OccessoriesServiceImpl implements OccessoriesService {
 
+	private static final Logger log = LoggerFactory.getLogger(OccessoriesServiceImpl.class);
+
 	private static final String OCCESSORIES_DELIVE_MESSAGE_URL_STR = "https://service-erp.fanglin.vip/dingding/vue/index.html?agent=4921021#/manifest/occessories-detail?oid=%s";
 
 	@Autowired
 	private OccessoriesDao occessoriesDao;
+
+	@Autowired
+	private GoodsDao goodsDao;
 
 	@Autowired
 	private DecorationDao decorationDao;
@@ -194,17 +205,15 @@ public class OccessoriesServiceImpl implements OccessoriesService {
 		}
 
 		String currentDate = DateUtil.current("yyMMdd").toString();
-		int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_INVENTORY_AO_INT, currentDate, company);
+		int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_INVENTORY_O_INT, currentDate, company);
 		String no = companyPO.getShortname() + currentDate + FormatUtil.fillZero(FormatUtil.offset(count), "0000");
 
 		UserPO creater = userDao.queryUserByUserId(userId);
 
-		UserPO supervisor = userDao.queryUserByUserId(occessoriesVO.getSupervisor().getUserId());
-
 		OccessoriesPO occessoriesPO = new OccessoriesPO().init(no, occessoriesVO.getDecoration().getOrderId(), creater, company, occessoriesVO.getIsEnter(), occessoriesVO.getIsLift(), occessoriesVO.getIsExceed(), occessoriesVO.getIsAttic(), occessoriesVO.getLoadFloor());
 
 		if (occessoriesVO.getSupervisor() != null) {
-			occessoriesPO.setSupervisor(supervisor);
+			occessoriesPO.setSupervisor(userDao.queryUserByUserId(occessoriesVO.getSupervisor().getUserId()));
 		}
 
 		occessoriesPO.setDecoration(decorationPO);
@@ -247,8 +256,10 @@ public class OccessoriesServiceImpl implements OccessoriesService {
 
 			occessoriesItemDao.save(occessoriesItemPO);
 
-			// 累计商品总额：数量 × 单价（使用 Arith 精确运算）
-			total = Arith.add(total, Arith.mul(occessoriesItemPO.getNum(), occessoriesItemPO.getGoods().getSelling()));
+			// 累计商品总额：数量 × 单价（商品单价取商品档案实价，itemPO.goods 仅持有 gid）
+			GoodsPO goodsPO = goodsDao.get(occessoriesItemVO.getGoods().getGid());
+
+			total = Arith.add(total, Arith.mul(occessoriesItemPO.getNum(), goodsPO.getSelling()));
 
 			if (occessoriesItemVO.getOccessoriesCharges() == null || occessoriesItemVO.getOccessoriesCharges().size() == 0) continue;
 
@@ -307,7 +318,7 @@ public class OccessoriesServiceImpl implements OccessoriesService {
 			throw new FLException(260023, "辅料单不存在");
 		}
 
-		if (occessoriesPO.getStatus() != OccessoriesPO.STATUS_INIT_INT & occessoriesPO.getStatus() != OccessoriesPO.STATUS_BIND_INT) {
+		if (occessoriesPO.getStatus() != OccessoriesPO.STATUS_INIT_INT && occessoriesPO.getStatus() != OccessoriesPO.STATUS_BIND_INT) {
 			throw new FLException(260024, "辅料单状态不可操作");
 		}
 
@@ -316,11 +327,19 @@ public class OccessoriesServiceImpl implements OccessoriesService {
 
 		occessoriesDao.update(occessoriesPO);
 
-		String content = String.format("装修单号:%s,楼盘:%s,外辅单号:%s,厂商名称:%s,已经分配完厂商", occessoriesPO.getDecoration().getOrderId(), occessoriesPO.getDecoration().getHouse().getVillage().getName(), occessoriesPO.getNo(), occessoriesPO.getSupplier().getUserName());
+		final UserPO supervisor = occessoriesPO.getSupervisor();
 
-		UserPO supervisor = occessoriesPO.getSupervisor();
+		if (supervisor != null) {
 
-		if (supervisor != null) messageService.sendMessage(supervisor.getUserId(), null, content, MessagePO.TYPE_SEND_CONSTRUCTION_INT, supervisor.getCompany());
+			final String content = String.format("装修单号:%s,楼盘:%s,外辅单号:%s,厂商名称:%s,已经分配完厂商", occessoriesPO.getDecoration().getOrderId(), occessoriesPO.getDecoration().getHouse().getVillage().getName(), occessoriesPO.getNo(), occessoriesPO.getSupplier().getUserName());
+
+			sendMessageAfterCommit(new Runnable() {
+
+				public void run() {
+					messageService.sendMessage(supervisor.getUserId(), null, content, MessagePO.TYPE_SEND_CONSTRUCTION_INT, supervisor.getCompany());
+				}
+			});
+		}
 
 		return 0;
 	}
@@ -350,16 +369,29 @@ public class OccessoriesServiceImpl implements OccessoriesService {
 
 			OccessoriesItemPO occessoriesItemPO = occessoriesItemDao.get(occessoriesItemVO.getOiid());
 
+			if (occessoriesItemPO == null) {
+				throw new FLException(260075, "外辅项不存在");
+			}
+
 			occessoriesItemPO.setSennum(occessoriesItemVO.getSennum());
 
 			occessoriesItemDao.save(occessoriesItemPO);
 		}
-		String content = String.format("装修单号:%s,楼盘:%s,外辅单号:%s,厂商名称:%s,已经送货", occessoriesPO.getDecoration().getOrderId(), occessoriesPO.getDecoration().getHouse().getVillage().getName(), occessoriesPO.getNo(), occessoriesPO.getSupplier().getUserName());
 
-		UserPO supervisor = occessoriesPO.getSupervisor();
+		final UserPO supervisor = occessoriesPO.getSupervisor();
 
 		if (supervisor != null) {
-			messageService.sendMessageForUrl(supervisor.getUserId(), deliver == null ? null : deliver.getUserId(), content, MessagePO.TYPE_SEND_CONSTRUCTION_INT, buildOccessoriesDeliveMessageUrl(occessoriesPO), supervisor.getCompany());
+
+			final String content = String.format("装修单号:%s,楼盘:%s,外辅单号:%s,厂商名称:%s,已经送货", occessoriesPO.getDecoration().getOrderId(), occessoriesPO.getDecoration().getHouse().getVillage().getName(), occessoriesPO.getNo(), occessoriesPO.getSupplier().getUserName());
+			final UserPO deliverFinal = deliver;
+			final String messageUrl = buildOccessoriesDeliveMessageUrl(occessoriesPO);
+
+			sendMessageAfterCommit(new Runnable() {
+
+				public void run() {
+					messageService.sendMessageForUrl(supervisor.getUserId(), deliverFinal == null ? null : deliverFinal.getUserId(), content, MessagePO.TYPE_SEND_CONSTRUCTION_INT, messageUrl, supervisor.getCompany());
+				}
+			});
 		}
 
 		return 0;
@@ -389,6 +421,10 @@ public class OccessoriesServiceImpl implements OccessoriesService {
 		for (OccessoriesItemVO occessoriesItemVO : occessoriesItemVOs) {
 
 			OccessoriesItemPO occessoriesItemPO = occessoriesItemDao.get(occessoriesItemVO.getOiid());
+
+			if (occessoriesItemPO == null) {
+				throw new FLException(260075, "外辅项不存在");
+			}
 
 			occessoriesItemPO.setRecnum(occessoriesItemVO.getRecnum());
 
@@ -524,9 +560,13 @@ public class OccessoriesServiceImpl implements OccessoriesService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int rateOccessories(OccessoriesVO occessoriesVO) {
+	public int rateOccessories(OccessoriesVO occessoriesVO) throws FLException {
 
 		OccessoriesPO occessoriesPO = occessoriesDao.get(occessoriesVO.getOid());
+
+		if (occessoriesPO == null) {
+			throw new FLException(260023, "辅料单不存在");
+		}
 
 		occessoriesPO.setRate(occessoriesVO.getRate());
 		occessoriesPO.setRemake(occessoriesVO.getRemake());
@@ -538,9 +578,13 @@ public class OccessoriesServiceImpl implements OccessoriesService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int updateOccessoriesForRemark(OccessoriesVO occessoriesVO) {
+	public int updateOccessoriesForRemark(OccessoriesVO occessoriesVO) throws FLException {
 
 		OccessoriesPO occessoriesPO = occessoriesDao.get(occessoriesVO.getOid());
+
+		if (occessoriesPO == null) {
+			throw new FLException(260023, "辅料单不存在");
+		}
 
 		occessoriesPO.setRemark(occessoriesVO.getRemark());
 
@@ -600,6 +644,27 @@ public class OccessoriesServiceImpl implements OccessoriesService {
 		String value = messageUrl == null ? OCCESSORIES_DELIVE_MESSAGE_URL_STR : messageUrl.value(OCCESSORIES_DELIVE_MESSAGE_URL_STR);
 
 		return String.format(value, occessoriesPO.getOid());
+	}
+
+	// 钉钉消息延后到事务提交后发送，避免 HTTP 超时拖长事务；发送失败只记日志不回滚业务
+	private void sendMessageAfterCommit(final Runnable task) {
+
+		if (!TransactionSynchronizationManager.isSynchronizationActive()) {
+			task.run();
+			return;
+		}
+
+		TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronizationAdapter() {
+
+			@Override
+			public void afterCommit() {
+				try {
+					task.run();
+				} catch (Exception e) {
+					log.error("occessories message send after commit failed", e);
+				}
+			}
+		});
 	}
 
 }

@@ -226,17 +226,6 @@ $(function() {
             return (accessories.pageType != "advance" && v.status == constant.inventory().accessories.STATUS_BATCHOUT_INT)
         }
     }, {
-        name: "定额",
-        clazz: "btn-pink",
-        handle: function (v) {
-            params.quotation.orderId = v.orderId;
-            com.popup4page('#layerPopUp', "views/manifest/quotaItem.html", "辅料单 : " + v.no);
-            return false;
-        },
-        show: function (v) {
-            return (accessories.pageType != "advance" && v.status == constant.inventory().accessories.STATUS_BATCHOUT_INT)
-        }
-    }, {
         name: "审核",
         clazz: "btn-primary",
         handle: function (v) {

@@ -78,6 +78,7 @@ public class OccessoriesChargeServiceImpl implements OccessoriesChargeService {
 			if (occessoriesPO == null) {
 				throw new FLException(260088, "外辅单不存在");
 			}
+			checkOccessoriesEditable(occessoriesPO);
 		}
 
 		if (occessoriesChargeVO.getOccessoriesItem() != null && occessoriesChargeVO.getOccessoriesItem().getOiid() != null) {
@@ -119,6 +120,12 @@ public class OccessoriesChargeServiceImpl implements OccessoriesChargeService {
 			throw new FLException(260071, "外辅费用不存在");
 		}
 
+		OccessoriesPO occessoriesPO = occessoriesDao.get(occessoriesChargePO.getOccessories().getOid());
+
+		if (occessoriesPO != null) {
+			checkOccessoriesEditable(occessoriesPO);
+		}
+
 		BeanUtil.copyProperties(occessoriesChargeVO, occessoriesChargePO, "occessories", "occessoriesItem");
 
 		occessoriesChargeDao.update(occessoriesChargePO);
@@ -137,6 +144,13 @@ public class OccessoriesChargeServiceImpl implements OccessoriesChargeService {
 		OccessoriesChargePO occessoriesChargePO = occessoriesChargeDao.get(occessoriesChargeVO.getAcid());
 
 		if (occessoriesChargePO != null) {
+
+			OccessoriesPO occessoriesPO = occessoriesDao.get(occessoriesChargePO.getOccessories().getOid());
+
+			if (occessoriesPO != null) {
+				checkOccessoriesEditable(occessoriesPO);
+			}
+
 			occessoriesChargeDao.delete(occessoriesChargePO);
 		}
 
@@ -160,6 +174,8 @@ public class OccessoriesChargeServiceImpl implements OccessoriesChargeService {
 		if (occessoriesPO == null) {
 			throw new FLException(260088, "外辅单不存在");
 		}
+
+		checkOccessoriesEditable(occessoriesPO);
 
 		// 删除该外辅单的所有旧费用
 		List<OccessoriesChargePO> oldCharges = occessoriesChargeDao.queryOccessoriesChargeByOid(oid);
@@ -188,6 +204,14 @@ public class OccessoriesChargeServiceImpl implements OccessoriesChargeService {
 		}
 
 		return 0;
+	}
+
+	// 结算后的外辅单不允许再动费用成本，防止已结算金额与费用明细脱钩
+	private void checkOccessoriesEditable(OccessoriesPO occessoriesPO) throws FLException {
+
+		if (occessoriesPO.getStatus() >= OccessoriesPO.STATUS_BALANCE_INT) {
+			throw new FLException(260024, "辅料单状态不可操作");
+		}
 	}
 
 }

@@ -57,6 +57,22 @@ public class GoodsStorehouseStockDaoImpl extends DaoImpl<GoodsStorehouseStockPO>
 		return nums == null ? 0 : nums.intValue();
 	}
 
+	@Override
+	public int increaseStockNum(long gid, long cid, long fid, long shid, int num) {
+
+		String sql = "UPDATE inventory.goodsstorehousestock SET num = num + :num WHERE gid = :gid AND cid = :cid AND fid = :fid AND shid = :shid";
+
+		return session().createSQLQuery(sql).setLong("gid", gid).setLong("cid", cid).setLong("fid", fid).setLong("shid", shid).setInteger("num", num).executeUpdate();
+	}
+
+	@Override
+	public int decreaseStockNum(long gid, long cid, long fid, long shid, int num) {
+
+		String sql = "UPDATE inventory.goodsstorehousestock SET num = num - :num WHERE gid = :gid AND cid = :cid AND fid = :fid AND shid = :shid AND num >= :num";
+
+		return session().createSQLQuery(sql).setLong("gid", gid).setLong("cid", cid).setLong("fid", fid).setLong("shid", shid).setInteger("num", num).executeUpdate();
+	}
+
 	private void queryFilterExecute(PagingQuery<?> query, List<Filter> filters) {
 
 		if (filters == null) return;
