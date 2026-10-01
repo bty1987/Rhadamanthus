@@ -54,6 +54,8 @@ public class OccessoriesCostServiceImpl implements OccessoriesCostService {
 			throw new FLException(260023, "辅料单不存在");
 		}
 
+		checkOccessoriesEditable(occessoriesPO);
+
 		OccessoriesCostPO occessoriesCostPO = new OccessoriesCostPO().init(occessoriesCostVO.getOid(), occessoriesCostVO.getPrice(), occessoriesCostVO.getCost(), occessoriesCostVO.getType());
 
 		occessoriesCostDao.save(occessoriesCostPO);
@@ -68,7 +70,13 @@ public class OccessoriesCostServiceImpl implements OccessoriesCostService {
 		OccessoriesCostPO occessoriesCostPO = occessoriesCostDao.get(occessoriesCostVO.getOcid());
 
 		if (occessoriesCostPO == null) {
-			throw new FLException(260071, "外辅费用不存在");
+			throw new FLException(260090, "外辅成本不存在");
+		}
+
+		OccessoriesPO occessoriesPO = occessoriesDao.get(occessoriesCostPO.getOid());
+
+		if (occessoriesPO != null) {
+			checkOccessoriesEditable(occessoriesPO);
 		}
 
 		occessoriesCostPO.setPrice(occessoriesCostVO.getPrice());
@@ -85,9 +93,27 @@ public class OccessoriesCostServiceImpl implements OccessoriesCostService {
 
 		OccessoriesCostPO occessoriesCostPO = occessoriesCostDao.get(occessoriesCostVO.getOcid());
 
+		if (occessoriesCostPO == null) {
+			throw new FLException(260090, "外辅成本不存在");
+		}
+
+		OccessoriesPO occessoriesPO = occessoriesDao.get(occessoriesCostPO.getOid());
+
+		if (occessoriesPO != null) {
+			checkOccessoriesEditable(occessoriesPO);
+		}
+
 		occessoriesCostDao.delete(occessoriesCostPO);
 
 		return 0;
+	}
+
+	// 结算后的外辅单不允许再动费用成本，防止已结算金额与费用明细脱钩
+	private void checkOccessoriesEditable(OccessoriesPO occessoriesPO) throws FLException {
+
+		if (occessoriesPO.getStatus() >= OccessoriesPO.STATUS_BALANCE_INT) {
+			throw new FLException(260024, "辅料单状态不可操作");
+		}
 	}
 
 }

@@ -69,7 +69,7 @@ public class PurchaseAction extends BaseListAction {
 	}
 	
 	@Action(value = "queryPurchaseByPid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryPurchaseByPid(){
+	public String queryPurchaseByPid() throws FLException {
 		
 		purchase = purchaseService.queryPurchaseByPid(purchase);
 		

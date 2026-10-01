@@ -12,7 +12,7 @@ public interface PurchaseService {
 	
 	public void pagePurchase(Paging paging, List<Filter> filters,int company);
 	
-	public PurchaseVO queryPurchaseByPid(PurchaseVO purchaseVO);
+	public PurchaseVO queryPurchaseByPid(PurchaseVO purchaseVO) throws FLException;
 	
 	public List<PurchaseVO> queryPurchaseBySid(SalesVO salesVO);
 	
@@ -23,7 +23,5 @@ public interface PurchaseService {
 	public int updatePurchaseForBalanceStatus(PurchaseVO purchaseVO) throws FLException;
 	
 	public int updatePurchase(PurchaseVO purchaseVO) throws FLException;
-	
-	public int updatePurchaseStatus(PurchaseVO purchaseVO) throws FLException;
-	
+
 }

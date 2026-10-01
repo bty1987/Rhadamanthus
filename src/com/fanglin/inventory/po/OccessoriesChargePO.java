@@ -35,9 +35,9 @@ public class OccessoriesChargePO implements Serializable {
 
 	private String name; // 费用名称
 
-	private int price; // 价格（分）
+	private int price; // 价格（×1000）
 
-	private int surplus; // 浮动额（分）
+	private int surplus; // 浮动额（×1000）
 
 	private int num; // 数量
 

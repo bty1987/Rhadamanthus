@@ -25,7 +25,7 @@ public interface GoodsStorehouseStockService {
 
 	public Integer queryGoodsStorehouseStockByGid(GoodsStorehouseStockVO goodsStorehouseStockVO);
 
-	public GoodsStorehouseStockVO queryStorehouseStockByShidAGid(GoodsStorehouseStockVO goodsStorehouseStock);
+	public GoodsStorehouseStockVO queryStorehouseStockByShidAGid(GoodsStorehouseStockVO goodsStorehouseStock) throws FLException;
 
 	public int makeGoodsStorehouseStock(GoodsStorehouseStockVO goodsStorehouseStockVO) throws FLException;
 

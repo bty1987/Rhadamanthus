@@ -18,6 +18,7 @@ public class OccessoriesCostPO implements Serializable {
 
 	public static final String COLUMN_STATUS_STR = "status";
 
+	// 历史命名：这三个常量是 type 的取值（0车运费/1搬运费/2上楼费），不是 status
 	public static final short STATUS_INIT_VEHICLEFREIGHT = 0;
 
 	public static final short STATUS_INIT_HANDLINGFEE = 1;

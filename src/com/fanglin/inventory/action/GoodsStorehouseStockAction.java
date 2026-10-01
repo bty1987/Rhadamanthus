@@ -50,7 +50,7 @@ public class GoodsStorehouseStockAction extends BaseListAction {
 	}
 
 	@Action(value = "queryGoodsStorehouseStockByShidAGid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryStorehouseStockByShidAGid() {
+	public String queryStorehouseStockByShidAGid() throws FLException {
 
 		goodsStorehouseStock = goodsStorehouseStockService.queryStorehouseStockByShidAGid(goodsStorehouseStock);
 

@@ -28,7 +28,7 @@ public interface ManifestService {
 
 	public void pageManifest(Paging paging, List<Filter> filters, int company);
 
-	public ManifestVO queryManifestByMid(ManifestVO manifestVO);
+	public ManifestVO queryManifestByMid(ManifestVO manifestVO) throws FLException;
 
 	public List<ManifestVO> queryManifestForPUByPids(List<Long> pids);
 
