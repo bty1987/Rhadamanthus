@@ -60,7 +60,7 @@ jQuery(function($) {
         com.cleanItems(constructionNode.items);
     });
 
-    com.post(api.data.querySurveyTemplate, {}, function(res) {
+    com.post(api.data.querySurveyTemplate, {'surveyTemplate.name': ''}, function(res) {
 
         constructionNode.items.startSurvey.bindData(res.surveyTemplates, "stid", "name");
 
