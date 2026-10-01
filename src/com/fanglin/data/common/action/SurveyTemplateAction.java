@@ -39,6 +39,8 @@ public class SurveyTemplateAction extends BaseListAction {
 	@Action(value = "querySurveyTemplate", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String querySurveyTemplate() throws FLException {
 
+		if (surveyTemplate == null) surveyTemplate = new SurveyTemplateVO();
+
 		surveyTemplates = surveyTemplateService.querySurveyTemplate(surveyTemplate, queryCompany());
 
 		return SUCCESS;
