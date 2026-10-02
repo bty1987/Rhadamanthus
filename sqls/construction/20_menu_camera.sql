@@ -26,7 +26,7 @@ VALUES
 INSERT INTO `communion`.`rolemodule`
   (`rmid`, `rid`, `mid`, `link`, `access`, `cuid`, `createTime`, `company`)
 VALUES
-  (NULL, 86, 925, 1, 0, 0, NOW(), 1);
+  (NULL, 86, 925, 1, 0, 34, NOW(), 1);
 
 -- =============================================================================
 -- 执行前核验(mid 未被占用, 应返回 0 行)

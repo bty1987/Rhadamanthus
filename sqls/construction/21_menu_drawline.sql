@@ -25,7 +25,7 @@ VALUES
 -- 2. rolemodule: 复制 mid=75(放线申请) 的全部角色授权(DISTINCT 去重历史重复行)
 INSERT INTO `communion`.`rolemodule`
   (`rid`, `mid`, `link`, `access`, `cuid`, `createTime`, `company`)
-SELECT DISTINCT rm.rid, 928, rm.link, rm.access, 0, NOW(), rm.company
+SELECT DISTINCT rm.rid, 928, rm.link, rm.access, 34, NOW(), rm.company
 FROM `communion`.`rolemodule` rm
 WHERE rm.mid = 75;
 
