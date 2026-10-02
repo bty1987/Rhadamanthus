@@ -114,21 +114,22 @@ public class A20251113ServiceImpl implements A20251113Service {
 	}
 
 	@Override
-	public String exchangeAuthCodeForToken(String accessToken) throws FLException {
+	public String exchangeAuthCodeForToken(String accessToken, String userId) throws FLException {
 
 		try {
 
-			// 1. accessToken 必填
-			if (accessToken == null || accessToken.trim().isEmpty()) {
+			// 1. accessToken 与 userId(平台用户ID, 网关要求的 Login-User-Id 头)均必填
+			if (accessToken == null || accessToken.trim().isEmpty() || userId == null || userId.trim().isEmpty()) {
 				throw new FLException(110000, "系统繁忙,请稍后重试");
 			}
 
 			// 2. 携带 accessToken 调 SSO 平台 get-permission-info, 由平台校验令牌并返回当前用户(含工号/手机号)
+			// 请求头与中台前端 setAuthHeaders 同构: Authorization: Bearer + Login-User-Id
 			SystemConfigPO ssourl = systemConfigDao.querySystemConfig("SSO_URL_STR");
 
 			String url = String.format("%s/admin-api/user/auth/get-permission-info", ssourl.getValue());
 
-			JSONObject response = httpGetForAuthorization(url, accessToken.trim());
+			JSONObject response = httpGetForAuthorization(url, accessToken.trim(), userId.trim());
 
 			if (response == null || response.getIntValue("code") != 0) {
 				logger.error(String.format("交换平台令牌失败, 平台响应异常: %s", response));
@@ -176,12 +177,14 @@ public class A20251113ServiceImpl implements A20251113Service {
 		return AESHelper.encrypt(authentication.getAuthenticationStr(), SystemConfig.getString("encryptKey"), SystemConfig.getString("encryptIv"));
 	}
 
-	// 带 Authorization 头的 GET(服务端调 SSO 平台), 非 200 或异常返回 null 由调用方统一处理
-	private JSONObject httpGetForAuthorization(String url, String accessToken) {
+	// 带 Authorization 与 Login-User-Id 头的 GET(服务端调 SSO 平台, 头口径与中台前端 setAuthHeaders 同构), 非 200 或异常返回 null 由调用方统一处理
+	private JSONObject httpGetForAuthorization(String url, String accessToken, String userId) {
 
 		HttpGet httpGet = new HttpGet(url);
 
 		httpGet.setHeader("Authorization", String.format("Bearer %s", accessToken));
+
+		httpGet.setHeader("Login-User-Id", userId);
 
 		CloseableHttpClient httpClient = HttpClients.createDefault();
 
