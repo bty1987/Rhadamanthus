@@ -3,6 +3,69 @@ jQuery(function($) {
     // 我参与的装修单: 后端 pageDecorationForUser(exists 子查询圈定"当前登录人在其服务团队中"的订单, 同人多 type 行天然去重);
     // 服务监理/合约专员等非归属人角色的按人查单视图, 数据源 decoration.decorationUser
 
+    // 页面配置对象: 与 constructionPageUtils.constructionPage.getConfig 同构, 仅本页使用故就地声明;
+    // 配置源=decoration.decorationfunctionright(name=页面名) 挂 decorationfunction(key/value/type/subtype/sort);
+    // 无配置时各数组为空 = 页面默认全展示
+    var decorationPage = {
+
+        getConfig: function (page) {
+
+            var pageConfig = {
+                "apiPage": null,
+                "pageBtn": [],
+                "condArr": [],
+                "propertyArr": []
+            };
+
+            function packageConfig(o, props, value, subtype) {
+
+                var prop = props.shift();
+
+                if (props.length != 0) {
+                    if (!o[prop]) o[prop] = {};
+                    packageConfig(o[prop], props, value, subtype);
+                    return;
+                }
+
+                if (subtype == 0) {
+                    o[prop] = value;
+                } else if (subtype == 1 && !o[prop]) {
+                    o[prop] = [value];
+                } else if (subtype == 1 && o[prop]) {
+                    o[prop].push(value);
+                }
+            }
+
+            function getApi(o, props) {
+
+                var prop = props.shift();
+
+                if (props.length == 0) {
+                    return o[prop];
+                } else if (o[prop]) {
+                    return getApi(o[prop], props);
+                }
+                return "";
+            }
+
+            com.post(api.right.queryDecorationFunctionRightByName, { "decorationFunctionRight.name": page }, function (res) {
+
+                var rights = (res.decorationFunctionRights || []).sort(function (a, b) { return a.decorationFunction.sort - b.decorationFunction.sort; });
+
+                $.each(rights, function (i, v) {
+
+                    var data = v.decorationFunction;
+
+                    if (data.type == 1) data.value = getApi({ "api": api }, data.value.split("."));
+
+                    packageConfig(pageConfig, data.key.split("."), data.value, data.subtype);
+                });
+            }, null, false);
+
+            return pageConfig;
+        }
+    };
+
     // 获取页面控制参数(按公司差异化配置, 无配置时所有列/条件/按钮按默认全展示)
     var pageConfig = decorationPage.getConfig("decoration4user");
 
