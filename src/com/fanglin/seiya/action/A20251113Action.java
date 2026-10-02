@@ -63,7 +63,7 @@ public class A20251113Action extends BaseListAction {
 	@Action(value = "exchangeAuthCodeForToken", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String exchangeAuthCodeForToken() throws FLException {
 
-		osstoken = a20251113Service.exchangeAuthCodeForToken(accessToken);
+		osstoken = a20251113Service.exchangeAuthCodeForToken(accessToken, userId);
 
 		return SUCCESS;
 	}

@@ -234,10 +234,11 @@ A20251113Action 是方林 ERP 接入**方林统一 SSO 平台**的落地实现�
 | 参数 | 类型 | 必填 | 说明 |
 |------|------|------|------|
 | accessToken | String | 是 | 中台登录接口（`/user/auth/sso/login` 等）返回的 `accessToken` 原文 |
+| userId | String | 是 | 中台平台用户ID（登录响应的 `userId`）。平台网关要求请求自报 `Login-User-Id` 头，ERP 服务端代带该头，故须由调用方透传 |
 
 #### 处理逻辑（内部步骤）
 
-1. ERP 服务端携带 `Authorization: Bearer {accessToken}` 调 SSO 平台 `GET {SSO_URL}/admin-api/user/auth/get-permission-info`（与中台前端同一通路），由**平台侧校验令牌**并返回当前用户；
+1. ERP 服务端携带 `Authorization: Bearer {accessToken}` 与 `Login-User-Id: {userId}`（与中台前端 `setAuthHeaders` 同构）调 SSO 平台 `GET {SSO_URL}/admin-api/user/auth/get-permission-info`（与中台前端同一通路），由**平台侧校验令牌**并返回当前用户；
 2. 从平台返回中取 `code`（工号）查询 `communion.user`；查不到时按 `phone` 兜底（与 `stateAuthCode` 同法）；
 3. 校验用户存在且**在职**（`status=0`），否则抛 `110004`；
 4. 与 `exchangeAuthCode` 完全相同地签发 ERP 会话票据（AES 密文）返回。
@@ -259,7 +260,7 @@ A20251113Action 是方林 ERP 接入**方林统一 SSO 平台**的落地实现�
 |---|---|---|
 | 0 | 成功 | — |
 | 110004 | 该用户不能登陆系统 | 工号/手机号在 ERP 无对应用户，或用户已非在职状态 |
-| 110000 | 系统繁忙,请稍后重试 | accessToken 为空、无效或已过期（平台校验不过）、平台调用异常 |
+| 110000 | 系统繁忙,请稍后重试 | accessToken/userId 为空、accessToken 无效或已过期（平台校验不过）、平台调用异常 |
 
 #### operation 注册 SQL（幂等，随发版执行）
 
