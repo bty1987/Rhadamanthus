@@ -29,7 +29,7 @@ VALUES
 --    动态复制: 授权范围自动跟随 rid=86 当前拥有权限的公司, 后续新增公司重跑本段即可补齐; 幂等
 INSERT INTO `communion`.`rolemodule`
   (`rid`, `mid`, `link`, `access`, `cuid`, `createTime`, `company`)
-SELECT 86, 929, 1, 0, 0, NOW(), t.company
+SELECT 86, 929, 1, 0, 34, NOW(), t.company
 FROM (SELECT DISTINCT company FROM `communion`.`rolemodule` WHERE rid = 86) t
 WHERE NOT EXISTS (
     SELECT 1 FROM `communion`.`rolemodule` x

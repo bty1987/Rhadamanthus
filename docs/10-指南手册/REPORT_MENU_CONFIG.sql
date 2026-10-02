@@ -58,32 +58,32 @@ SET @mid_inventory = LAST_INSERT_ID();
 
 -- 授权"经营分析"分组父菜单
 INSERT INTO communion.rolemodule (rid, mid, link, access, cuid, createTime, company)
-SELECT 86, @mid_analytics, 1, 0, 0, NOW(), 0
+SELECT 86, @mid_analytics, 1, 0, 34, NOW(), 0
 WHERE NOT EXISTS (SELECT 1 FROM communion.rolemodule WHERE rid = 86 AND mid = @mid_analytics AND company = 0);
 
 -- 授权 6 个报表页
 INSERT INTO communion.rolemodule (rid, mid, link, access, cuid, createTime, company)
-SELECT 86, @mid_funnel, 1, 0, 0, NOW(), 0
+SELECT 86, @mid_funnel, 1, 0, 34, NOW(), 0
 WHERE NOT EXISTS (SELECT 1 FROM communion.rolemodule WHERE rid = 86 AND mid = @mid_funnel AND company = 0);
 
 INSERT INTO communion.rolemodule (rid, mid, link, access, cuid, createTime, company)
-SELECT 86, @mid_payment, 1, 0, 0, NOW(), 0
+SELECT 86, @mid_payment, 1, 0, 34, NOW(), 0
 WHERE NOT EXISTS (SELECT 1 FROM communion.rolemodule WHERE rid = 86 AND mid = @mid_payment AND company = 0);
 
 INSERT INTO communion.rolemodule (rid, mid, link, access, cuid, createTime, company)
-SELECT 86, @mid_fulfillment, 1, 0, 0, NOW(), 0
+SELECT 86, @mid_fulfillment, 1, 0, 34, NOW(), 0
 WHERE NOT EXISTS (SELECT 1 FROM communion.rolemodule WHERE rid = 86 AND mid = @mid_fulfillment AND company = 0);
 
 INSERT INTO communion.rolemodule (rid, mid, link, access, cuid, createTime, company)
-SELECT 86, @mid_material, 1, 0, 0, NOW(), 0
+SELECT 86, @mid_material, 1, 0, 34, NOW(), 0
 WHERE NOT EXISTS (SELECT 1 FROM communion.rolemodule WHERE rid = 86 AND mid = @mid_material AND company = 0);
 
 INSERT INTO communion.rolemodule (rid, mid, link, access, cuid, createTime, company)
-SELECT 86, @mid_customer, 1, 0, 0, NOW(), 0
+SELECT 86, @mid_customer, 1, 0, 34, NOW(), 0
 WHERE NOT EXISTS (SELECT 1 FROM communion.rolemodule WHERE rid = 86 AND mid = @mid_customer AND company = 0);
 
 INSERT INTO communion.rolemodule (rid, mid, link, access, cuid, createTime, company)
-SELECT 86, @mid_inventory, 1, 0, 0, NOW(), 0
+SELECT 86, @mid_inventory, 1, 0, 34, NOW(), 0
 WHERE NOT EXISTS (SELECT 1 FROM communion.rolemodule WHERE rid = 86 AND mid = @mid_inventory AND company = 0);
 
 

@@ -256,7 +256,7 @@ VALUES (930, 443, '主材计划', '主材计划', '', 'icon-wrench', '/views/dat
 
 -- 授权: 复制 mid=189(工程节点, 同目录同域)的全部角色授权
 INSERT INTO `communion`.`rolemodule` (`rid`,`mid`,`link`,`access`,`cuid`,`createTime`,`company`)
-SELECT DISTINCT rm.rid, 930, rm.link, rm.access, 0, NOW(), rm.company
+SELECT DISTINCT rm.rid, 930, rm.link, rm.access, 34, NOW(), rm.company
 FROM `communion`.`rolemodule` rm
 WHERE rm.mid = 189;
 

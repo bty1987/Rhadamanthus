@@ -10,7 +10,9 @@
 --
 -- 注意:
 --   1. 非幂等, 重复执行前先跑核验查询确认未插入过。
---   2. cuid=0 表示 SQL 直接落库无操作人, 如需留痕可替换为实际操作人 uid。
+--   2. cuid 必须为真实存在的 user.uid(统一 34=白添宇 FL-00479): RoleModulePO.creater 系
+--      EAGER ManyToOne 关联 user.uid, cuid 无对应用户时 queryModuleForLogin 取菜单抛
+--      ObjectNotFoundException, 整个菜单接口报错。
 --   3. 页面调用的 pageDecorationForUser.do 走 operation 自动补全(through=1), 无需登记。
 --   4. 🔴 依赖 docs/10-指南手册/DECORATION_USER_ROLE_DICT_INDEX.sql 的 idx_user 索引先建
 --      (页面主查询 exists 子查询按 decorationUser.user 过滤)。
@@ -20,13 +22,13 @@
 INSERT INTO `communion`.`module`
   (`mid`, `fatherModuleId`, `name`, `alias`, `module`, `icon`, `url`, `level`, `system`, `order`, `helpKey`)
 VALUES
-  (931, 39, '我参与的装修单', '我参与的装修单', '', 'icon-user',
+  (931, 39, '装修单-我的', '装修单-我的', '', 'icon-user',
    '/views/decoration/decoration4user.html', 3, 1, 25, '');
 
 -- 2. rolemodule: 复制 mid=70(装修单-通用) 的全部角色授权(DISTINCT 去重历史重复行)
 INSERT INTO `communion`.`rolemodule`
   (`rid`, `mid`, `link`, `access`, `cuid`, `createTime`, `company`)
-SELECT DISTINCT rm.rid, 931, rm.link, rm.access, 0, NOW(), rm.company
+SELECT DISTINCT rm.rid, 931, rm.link, rm.access, 34, NOW(), rm.company
 FROM `communion`.`rolemodule` rm
 WHERE rm.mid = 70;
 
