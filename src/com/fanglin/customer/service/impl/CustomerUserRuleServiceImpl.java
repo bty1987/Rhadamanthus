@@ -34,7 +34,6 @@ import com.fanglin.system.po.CompanyPO;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.Paging;
-import com.fanglin.utils.SystemConfig;
 
 @Service("customerUserRuleService")
 @Transactional(readOnly = true)
@@ -119,10 +118,6 @@ public class CustomerUserRuleServiceImpl implements CustomerUserRuleService {
 			for (CompanyPO po : companyDao.queryCompanyByIds(companys)) {
 				companyNames.put(po.getCid(), po.getName());
 			}
-		}
-
-		if (SystemConfig.getInt("multicompany", 0) == 0) {
-			companys = null;
 		}
 
 		List<UserBaseVO> userBaseVOs = new ArrayList<UserBaseVO>();
