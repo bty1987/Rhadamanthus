@@ -3,9 +3,7 @@ package com.fanglin.customer.service.impl;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,9 +23,7 @@ import com.fanglin.customer.po.CustomerUserRulePO;
 import com.fanglin.customer.service.CustomerUserRuleService;
 import com.fanglin.customer.vo.CustomerUserRuleVO;
 import com.fanglin.personel.dao.UserDao;
-import com.fanglin.personel.dao.UserCompanyDao;
 import com.fanglin.personel.po.UserPO;
-import com.fanglin.personel.po.UserCompanyPO;
 import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.personel.vo.UserVO;
 import com.fanglin.system.dao.CompanyDao;
@@ -46,9 +42,6 @@ public class CustomerUserRuleServiceImpl implements CustomerUserRuleService {
 
 	@Autowired
 	private UserDao userDao;
-
-	@Autowired
-	private UserCompanyDao userCompanyDao;
 
 	@Autowired
 	private CustomerSourceRecordDao customerSourceRecordDao;
@@ -110,26 +103,7 @@ public class CustomerUserRuleServiceImpl implements CustomerUserRuleService {
 	@Override
 	public List<UserBaseVO> queryCustomerUserRuleByPinyin(String pinyinName, UserVO userVO, DepartmentTypeVO departmentType, int company) throws FLException {
 
-		// 候选池 = 本公司编制人员 + 挂靠本公司的人员(多公司身份)
-		List<UserCompanyPO> userCompanyPOs = userCompanyDao.queryUserCompanyByCid(company);
-
-		List<Integer> uids = new ArrayList<Integer>();
-
-		for (UserCompanyPO userCompanyPO : userCompanyPOs) {
-			if (!uids.contains(userCompanyPO.getUid())) uids.add(userCompanyPO.getUid());
-		}
-
-		// 挂靠者存在时候选池跨公司, 按人员编制公司打公司名标签; 纯本公司时不上标签
-		Map<Integer, String> companyNames = null;
-
-		if (uids.size() > 0) {
-
-			companyNames = new HashMap<Integer, String>();
-
-			for (CompanyPO po : companyDao.queryCompanyByIds(buildCompanyIds(company, uids))) {
-				companyNames.put(po.getCid(), po.getName());
-			}
-		}
+		CompanyPO companyPO = companyDao.get(company);
 
 		List<UserBaseVO> userBaseVOs = new ArrayList<UserBaseVO>();
 
@@ -162,28 +136,14 @@ public class CustomerUserRuleServiceImpl implements CustomerUserRuleService {
 			rid = userVO.getDept().getFatherDept().getDid();
 		}
 
-		List<UserPO> userPOs = customerUserRuleDao.queryCustomerUserRuleByPinyin(paging, pinyinName, userVO.getStatus(), company, uids, dtid, did, rid);
+		List<UserPO> userPOs = customerUserRuleDao.queryCustomerUserRuleByPinyin(paging, pinyinName, userVO.getStatus(), company, dtid, did, rid);
 
 		for (UserPO userPO : userPOs) {
 
-			String companyName = companyNames != null ? companyNames.get(userPO.getCompany()) : null;
-
-			userBaseVOs.add(new UserBaseVO(new DutyVO(), new DepartmentVO(new DepartmentVO())).ptv(userPO, companyName));
+			userBaseVOs.add(new UserBaseVO(new DutyVO(), new DepartmentVO(new DepartmentVO())).ptv(userPO, companyPO != null ? companyPO.getName() : null));
 		}
 
 		return userBaseVOs;
-	}
-
-	private List<Integer> buildCompanyIds(int company, List<Integer> uids) {
-
-		List<Integer> cids = new ArrayList<Integer>();
-		cids.add(company);
-
-		for (UserPO userPO : userDao.queryUserByUids(uids)) {
-			if (!cids.contains(userPO.getCompany())) cids.add(userPO.getCompany());
-		}
-
-		return cids;
 	}
 
 	@Override

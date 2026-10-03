@@ -28,12 +28,6 @@ public class UserCompanyDaoImpl extends DaoImpl<UserCompanyPO> implements UserCo
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
-	public List<UserCompanyPO> queryUserCompanyByCid(int cid) {
-		return session().createCriteria(UserCompanyPO.class).add(Restrictions.eq("company.cid", cid)).list();
-	}
-
-	@Override
 	public int deleteUserCompany(int uid) {
 
 		String sql = "delete from communion.usercompany where uid= :uid";
