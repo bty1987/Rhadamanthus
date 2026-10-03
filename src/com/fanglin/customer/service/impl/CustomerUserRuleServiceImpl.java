@@ -101,9 +101,13 @@ public class CustomerUserRuleServiceImpl implements CustomerUserRuleService {
 	}
 
 	@Override
-	public List<UserBaseVO> queryCustomerUserRuleByPinyin(String pinyinName, UserVO userVO, DepartmentTypeVO departmentType, int company) throws FLException {
+	public List<UserBaseVO> queryCustomerUserRuleByPinyin(String pinyinName, UserVO userVO, DepartmentTypeVO departmentType, Integer company) throws FLException {
 
-		CompanyPO companyPO = companyDao.get(company);
+		CompanyPO companyPO = null;
+
+		if (company != null) {
+			companyPO = companyDao.get(company);
+		}
 
 		List<UserBaseVO> userBaseVOs = new ArrayList<UserBaseVO>();
 
@@ -136,11 +140,10 @@ public class CustomerUserRuleServiceImpl implements CustomerUserRuleService {
 			rid = userVO.getDept().getFatherDept().getDid();
 		}
 
-		List<UserPO> userPOs = customerUserRuleDao.queryCustomerUserRuleByPinyin(paging, pinyinName, userVO.getStatus(), company, dtid, did, rid);
+		List<UserPO> userPOs = customerUserRuleDao.queryCustomerUserRuleByPinyin(paging, pinyinName, userVO.getStatus(), null, dtid, did, rid);
 
 		for (UserPO userPO : userPOs) {
-
-			userBaseVOs.add(new UserBaseVO(new DutyVO(), new DepartmentVO(new DepartmentVO())).ptv(userPO, companyPO != null ? companyPO.getName() : null));
+			userBaseVOs.add(new UserBaseVO(new DutyVO(), new DepartmentVO(new DepartmentVO())).ptv(userPO, companyPO == null ? null : companyPO.getName()));
 		}
 
 		return userBaseVOs;

@@ -12,7 +12,6 @@
 package com.fanglin.seiya.action;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -274,12 +273,9 @@ public class A20260103Action extends BaseListAction {
 
 	/**
 	 * 查询客户线索接口
-	 *
-	 * 支持三种查询方式：
-	 * 1. orderId - 单独查询
-	 * 2. village + houseNumber - 楼盘+楼号一同查询
-	 * 3. phone - 单独查询
-	 *
+	 * 
+	 * 支持三种查询方式： 1. orderId - 单独查询 2. village + houseNumber - 楼盘+楼号一同查询 3. phone - 单独查询
+	 * 
 	 * @return SUCCESS
 	 * @throws FLException 业务异常
 	 */
@@ -321,16 +317,16 @@ public class A20260103Action extends BaseListAction {
 
 	/**
 	 * 验证装修单是否存在接口
-	 *
-	 * 参考DecorationService.checkOverDecoration逻辑：
-	 * 通过客户电话和楼盘+楼号查询是否存在有效装修单
-	 *
+	 * 
+	 * 参考DecorationService.checkOverDecoration逻辑： 通过客户电话和楼盘+楼号查询是否存在有效装修单
+	 * 
 	 * 请求参数：
+	 * 
 	 * @phone: 客户电话（必填）
 	 * @village: 楼盘名称（必填）
 	 * @houseNumber: 楼号（必填）
 	 * @orgId: 公司标识（必填）
-	 *
+	 * 
 	 * @return SUCCESS
 	 * @throws FLException 业务异常（存在装修单时抛出140063）
 	 */
@@ -795,17 +791,17 @@ public class A20260103Action extends BaseListAction {
 
 	/**
 	 * SF更新装修单接口
-	 *
-	 * 通过装修单号(orderId)修改装修单的客户电话和楼盘楼号
-	 * 不存在则创建，存在则更新
-	 *
+	 * 
+	 * 通过装修单号(orderId)修改装修单的客户电话和楼盘楼号 不存在则创建，存在则更新
+	 * 
 	 * 请求参数：
+	 * 
 	 * @orderId: 装修单号（必填）
 	 * @phone: 客户电话（可选，传则更新）
 	 * @village: 楼盘编号（可选，需与houseNumber一同传入）
 	 * @houseNumber: 楼号（可选，需与village一同传入）
 	 * @orgId: 公司标识（必填）
-	 *
+	 * 
 	 * @return SUCCESS
 	 * @throws FLException 业务异常
 	 */
@@ -828,16 +824,17 @@ public class A20260103Action extends BaseListAction {
 
 	/**
 	 * 更新客户机会客户编号接口
-	 *
+	 * 
 	 * 通过装修单号更新关联客户机会的客户编号（customerchance.customerno）
-	 *
+	 * 
 	 * 定位客户机会：ccid优先（主键直查），未传ccid时按 customerchance.orderId 定位（不走 customerchanceorder 映射）：存在则更新，不存在报 330075
-	 *
+	 * 
 	 * 请求参数：
+	 * 
 	 * @ccid: 客户机会ID（可选，优先级高于orderId，传入后orderId可不传）
 	 * @orderId: 装修单号（ccid未传时必填）
 	 * @customerNo: 客户编号（必填，外部系统客户编号，亦可用参数名customerno）
-	 *
+	 * 
 	 * @return SUCCESS
 	 * @throws FLException 业务异常
 	 */
