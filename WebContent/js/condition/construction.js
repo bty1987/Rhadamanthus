@@ -359,31 +359,6 @@ Condition.addupRule("construction", {
             validate: null
         }
     },
-    "schedule-status": {
-        label: "环节状态",
-        type: "select",
-        submitConfig: {
-            name: "construction.status",
-            op: "eq",
-            validate: null
-        },
-        dataSource: {
-            url: null,
-            postData: null,
-            listPath: [{
-                "key": "0",
-                "value": "初始"
-            }, {
-                "key": "1",
-                "value": "开工"
-            }, {
-                "key": "2",
-                "value": "完工"
-            }],
-            keyPath: "key",
-            valuePath: "value"
-        }
-    },
 
     "drawLine-actualDate": {
         label: "放线时间",
@@ -567,7 +542,7 @@ Condition.addupRule("construction", {
         }
     },
     "schedule-status": {
-        label: "计划状态",
+        label: "环节状态",
         type: "select",
         submitConfig: {
             name: "status",
@@ -577,7 +552,21 @@ Condition.addupRule("construction", {
         dataSource: {
             url: null,
             postData: null,
-            listPath: constant.construction().constructionSchedule.status.datas,
+            // 写死选项,不读constant字典(该字典键4~14为历史死值,且新增状态需页面同步)
+            // status: 0=初始, 1=开工, 2=完工, 3=工费(未完工已开放工费)
+            listPath: [{
+                "key": "0",
+                "value": "初始"
+            }, {
+                "key": "1",
+                "value": "开工"
+            }, {
+                "key": "2",
+                "value": "完工"
+            }, {
+                "key": "3",
+                "value": "工费"
+            }],
             keyPath: "key",
             valuePath: "value"
         }

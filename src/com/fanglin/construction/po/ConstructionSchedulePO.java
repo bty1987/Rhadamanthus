@@ -52,6 +52,9 @@ public class ConstructionSchedulePO implements Serializable {
 
 	public static final short STATUS_FINISH_INT = 2;
 
+	// 工费:未完工,但已开放工费(位于开工与完工之间,值沿用constant字典键3)
+	public static final short STATUS_SALARY_INT = 3;
+
 	public static final short CHECKOUT_VALID_INT = 0;
 
 	public static final short CHECKOUT_PASS_INT = 1;

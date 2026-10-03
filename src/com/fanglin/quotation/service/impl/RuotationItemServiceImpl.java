@@ -245,7 +245,7 @@ public class RuotationItemServiceImpl implements RuotationItemService{
 
 				if (addReducePO != null && addReducePO.getConstructionNode() != null) {
 					Short status = nodeStatus.get(addReducePO.getConstructionNode().getCnid());
-					candidate.setIncur(status != null && (ConstructionSchedulePO.STATUS_BEGIN_INT == status || ConstructionSchedulePO.STATUS_FINISH_INT == status) ? (short) 1 : (short) 0);
+					candidate.setIncur(status != null && (ConstructionSchedulePO.STATUS_BEGIN_INT == status || ConstructionSchedulePO.STATUS_SALARY_INT == status || ConstructionSchedulePO.STATUS_FINISH_INT == status) ? (short) 1 : (short) 0);
 				}
 
 				if (addReduceItemPO.getQuotationFunctionArea() != null) {
@@ -287,7 +287,7 @@ public class RuotationItemServiceImpl implements RuotationItemService{
 
 			Short status = nodeStatus.get(cnid);
 
-			if (status != null && (ConstructionSchedulePO.STATUS_BEGIN_INT == status || ConstructionSchedulePO.STATUS_FINISH_INT == status)) {
+			if (status != null && (ConstructionSchedulePO.STATUS_BEGIN_INT == status || ConstructionSchedulePO.STATUS_SALARY_INT == status || ConstructionSchedulePO.STATUS_FINISH_INT == status)) {
 				return (short) 1;
 			}
 		}

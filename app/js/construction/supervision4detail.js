@@ -157,7 +157,7 @@ layui.use(['table', 'element', 'form', 'layer', 'upload', 'jquery'], function ()
                 $('#' + csid + 'EndTime').val(cs.endTime || '');
                 $('#' + csid + 'EnterTime').val(cs.enterTime || '');
                 $('#' + csid + 'LeaveTime').val(cs.leaveTime || '');
-                $('#' + csid + 'Status').html(constructionCommon.stateBadge(cs.status, ['初始', '开工', '完工']));
+                $('#' + csid + 'Status').html(constructionCommon.stateBadge(cs.status, ['初始', '开工', '完工', '工费']));
                 $('#' + csid + 'enterStatus').html(constructionCommon.stateBadge(cs.workStatus, ['初始', '进场', '离场']));
 
                 bindEnterLeave('#' + csid + 'Success', api.construction.enterConstructionSchedule, 1, csid, args, cs);

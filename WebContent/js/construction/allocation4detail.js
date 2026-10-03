@@ -87,6 +87,7 @@ $(function() {
             var otherStatus = constructionSchedule.status;
 
             var otherSuccessBtn = com.focusPage("#" + otherename + "Success");
+            var otherSalaryBtn = com.focusPage("#" + otherename + "Salary");
             var othereFailBtn = com.focusPage("#" + otherename + "Fail");
             var othereValidBtn = com.focusPage("#" + otherename + "Valid");
             var otherePassdBtn = com.focusPage("#" + otherename + "Pass");
@@ -107,6 +108,22 @@ $(function() {
 
                     com.showAlert(com.info, "操作成功");
                     updatastatusDiv(1, otherename);
+                });
+
+                return false;
+            });
+
+            // 开放工费:开工后、完工前允许创建工费单(状态置3工费)
+            otherSalaryBtn.click(function() {
+
+                var options = {
+                    "constructionSchedule.csid": constructionSchedule.csid
+                };
+
+                com.post(api.construction.updateConstructionScheduleForSalary, options, function(res) {
+
+                    com.showAlert(com.info, "操作成功");
+                    updatastatusDiv(3, otherename);
                 });
 
                 return false;
@@ -242,7 +259,7 @@ $(function() {
     }
 
     // 添加初始完结按钮
-    // status: 0=初始, 1=开工, 2=完工
+    // status: 0=初始, 1=开工, 2=完工, 3=工费(未完工已开放工费)
     function updatastatusDiv(status, statusDiv) {
 
         var statusDiv = com.focusPage("#" + statusDiv + "Status").html("");
@@ -251,6 +268,8 @@ $(function() {
             $("<span></span>").addClass("label label-grey").text("初始").appendTo(statusDiv);
         } else if (status == 1) {
             $("<span></span>").addClass("label label-info").text("开工").appendTo(statusDiv);
+        } else if (status == 3) {
+            $("<span></span>").addClass("label label-warning").text("工费").appendTo(statusDiv);
         } else {
             $("<span></span>").addClass("label label-success").text("完工").appendTo(statusDiv);
         }
@@ -434,6 +453,7 @@ $(function() {
 
         // 按钮
         var paneWorkerBtnS = $("<button></button>").attr("id", name + "Success").addClass("btn btn-xs btn-info").html("开工").attr("style", "margin-right:5px").appendTo(paneWorkerSmFive);
+        var paneWorkerBtnS = $("<button></button>").attr("id", name + "Salary").addClass("btn btn-xs btn-warning").html("开放工费").attr("style", "margin-right:5px").appendTo(paneWorkerSmFive);
         var paneWorkerBtnS = $("<button></button>").attr("id", name + "Fail").addClass("btn btn-xs btn-success").html("完工").attr("style", "margin-right:5px").appendTo(paneWorkerSmFive);
         var paneWorkerBtnS = $("<button></button>").attr("id", name + "Valid").addClass("btn btn-xs btn-yellow ").html("验证").attr("style", "margin-right:5px").appendTo(paneWorkerSmFive);
         var paneWorkerBtnS = $("<button></button>").attr("id", name + "Pass").addClass("btn btn-xs btn-danger ").html("通过").attr("style", "margin-right:5px").appendTo(paneWorkerSmFive);
