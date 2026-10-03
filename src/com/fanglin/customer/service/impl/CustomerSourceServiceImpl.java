@@ -511,12 +511,6 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 
 		CompanyPO companyPO = companyDao.get(company);
 
-		if (companyPO == null) {
-			// 入参公司无效(解码后不存在), 兜底操作人编制公司
-			company = issuer.getCompany();
-			companyPO = companyDao.get(company);
-		}
-
 		short atttype = CustomerChancePO.ATTTYPE_USER_INT;
 
 		DecorationBusitypePO busitype = customerSourcePO.getBusitype();
@@ -665,6 +659,12 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 			customerChancePO.setBelonger(belonger);
 			customerChancePO.setDepartment(belonger.getDept());
 			customerChancePO.setRegion(belonger.getDept().getFatherDept());
+
+			if (companyPO == null) {
+				company = belonger.getCompany();
+				companyPO = companyDao.get(company);
+			}
+
 			customerChancePO.setCompany(company);
 			customerChancePO.setIsIssue(CustomerChancePO.ISISSUE_ISSUED_INT);
 
@@ -716,11 +716,17 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 			customerChancePO.setType(CustomerChancePO.ATTTYPE_REGION_INT);
 			customerChancePO.setBusitype(busitype);
 			customerChancePO.setRegion(region);
-			customerChancePO.setCompany(company);
 
 			if (region.getManager() != null) {
 				customerChancePO.setBelonger(region.getManager());
 			}
+
+			if (companyPO == null) {
+				company = region.getManager() != null ? region.getManager().getCompany() : region.getCompany();
+				companyPO = companyDao.get(company);
+			}
+
+			customerChancePO.setCompany(company);
 
 			String currentDate = DateUtil.current("yyyyMMdd").toString().substring(2);
 			int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_DECORATION_ORDER_INT, currentDate, company);
@@ -763,7 +769,6 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 			customerChancePO.setBusitype(busitype);
 			customerChancePO.setDepartment(dept);
 			customerChancePO.setRegion(dept.getFatherDept());
-			customerChancePO.setCompany(company);
 
 			if (dept.getFatherDept() == null) {
 				customerChancePO.setRegion(dept);
@@ -772,6 +777,13 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 			if (dept.getManager() != null) {
 				customerChancePO.setBelonger(dept.getManager());
 			}
+
+			if (companyPO == null) {
+				company = dept.getManager() != null ? dept.getManager().getCompany() : dept.getCompany();
+				companyPO = companyDao.get(company);
+			}
+
+			customerChancePO.setCompany(company);
 
 			String currentDate = DateUtil.current("yyyyMMdd").toString().substring(2);
 			int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_DECORATION_ORDER_INT, currentDate, company);
@@ -825,6 +837,12 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 			customerChancePO.setBelonger(belonger);
 			customerChancePO.setDepartment(belonger.getDept());
 			customerChancePO.setRegion(belonger.getDept().getFatherDept());
+
+			if (companyPO == null) {
+				company = belonger.getCompany();
+				companyPO = companyDao.get(company);
+			}
+
 			customerChancePO.setCompany(company);
 
 			if (belonger.getDept().getFatherDept() == null) {
