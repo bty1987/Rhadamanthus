@@ -256,6 +256,26 @@ public class ConstructionScheduleServiceImpl implements ConstructionScheduleServ
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
+	public void updateConstructionScheduleForSalary(ConstructionScheduleVO constructionScheduleVO) throws FLException {
+
+		ConstructionSchedulePO constructionSchedulePO = constructionScheduleDao.get(constructionScheduleVO.getCsid());
+
+		if (constructionSchedulePO == null) {
+			throw new FLException(120024, "工程环节不存在");
+		}
+
+		// 仅开工状态可开放工费(初始未进场/已完工/已开放均不可操作)
+		if (constructionSchedulePO.getStatus() != ConstructionSchedulePO.STATUS_BEGIN_INT) {
+			throw new FLException(120025, "工程环节不可操作");
+		}
+
+		constructionSchedulePO.setStatus(ConstructionSchedulePO.STATUS_SALARY_INT);
+
+		constructionScheduleDao.update(constructionSchedulePO);
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
 	public int beginConstructionSchedule(ConstructionScheduleVO constructionScheduleVO, String userId) throws FLException {
 
 		ConstructionSchedulePO constructionSchedulePO = constructionScheduleDao.get(constructionScheduleVO.getCsid());
@@ -348,7 +368,8 @@ public class ConstructionScheduleServiceImpl implements ConstructionScheduleServ
 			throw new FLException(120020, "工程信息不存在");
 		}
 
-		if (constructionSchedulePO.getStatus() != ConstructionSchedulePO.STATUS_BEGIN_INT) {
+		// 开工/工费(未完工已开放工费)状态均可完工
+		if (constructionSchedulePO.getStatus() != ConstructionSchedulePO.STATUS_BEGIN_INT && constructionSchedulePO.getStatus() != ConstructionSchedulePO.STATUS_SALARY_INT) {
 			throw new FLException(120025, "工程环节不可操作");
 		}
 

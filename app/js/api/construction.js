@@ -62,6 +62,7 @@ $.extend(api, { construction: {
     updateConstructionScheduleForNorm: { url: 'updateConstructionScheduleForNorm.do', type: 'update', tranargs: { args: ['constructionSchedule.accessoryLimit', 'constructionSchedule.salaryLimit', 'constructionSchedule.accessoryTotal', 'constructionSchedule.salaryTotal'] } },
     updateConstructionScheduleForScal: { url: 'updateConstructionScheduleForScal.do', type: 'update', tranargs: { args: ['constructionSchedule.precheck', 'constructionSchedule.postcheck', 'constructionSchedule.stacheck', 'constructionSchedule.fincheck'] } },
     updateConstructionScheduleForPeriod: { url: 'updateConstructionScheduleForPeriod.do', type: 'update', tranargs: { args: ['constructionSchedule.period'] } },
+    updateConstructionScheduleForSalary: { url: 'updateConstructionScheduleForSalary.do', type: 'update' },
     nextConstructionByOrderId:    { url: 'nextConstructionByOrderId.do' },
     openConstruction:             { url: 'openConstruction.do' },
     lockConstruction:             { url: 'lockConstruction.do' },

@@ -15,7 +15,7 @@
  *   - constructionCommon.ensureApiStubs()：跨模块 api stub 补齐
  *
  * 施工域状态机（site-workflow）：
- *   constructionSchedule.status：0初始→1开工→2完工（显示名随节点动态映射）
+ *   constructionSchedule.status：0初始→1开工→3工费(未完工已开放工费)→2完工（显示名随节点动态映射）
  *   workStatus：0初始→1进场→2离场；checkout：0验证→1通过
  *   drawLine.status：0排队→1申请放线→2成功放线/3失败放线
  */
@@ -46,7 +46,7 @@ window.constructionCommon = (function () {
         isHovel: { 0: '公司', 1: '客户' },
         isKey: { 0: '工程中心', 1: '客户' },
         // 施工进度 constructionSchedule.status / planStatus / additemStatus
-        scheduleStatus: { 0: '初始', 1: '开工', 2: '完工', 3: '砌墙', 4: '铲大白', 5: '放线', 6: '力工', 7: '水工', 8: '电工', 9: '瓦工', 10: '地面找平', 11: '木工', 12: '油工', 13: '水电验收', 14: '保洁' },
+        scheduleStatus: { 0: '初始', 1: '开工', 2: '完工', 3: '工费' },
         planStatus: { 0: '标准', 1: '预估' },
         additemStatus: { 0: '无', 1: '待审' },
         // 主材计划 materialPlan.type / action / anchor / status / autoStatus
@@ -189,11 +189,11 @@ window.constructionCommon = (function () {
         return (nodeMap && nodeMap[cnid]) != null ? nodeMap[cnid] : '';
     }
 
-    /** 进度状态机徽章（status/workStatus/checkout 共用三态渲染） */
+    /** 进度状态机徽章（status/workStatus/checkout 共用，按 labels 长度定上界；第4态=工费） */
     function stateBadge(status, labels) {
         var idx = parseInt(status, 10);
-        if (idx < 0 || idx > 2 || isNaN(idx)) return '<span class="layui-badge layui-bg-gray">-<\/span>';
-        var cls = ['layui-bg-blue', 'layui-bg-cyan', 'layui-bg-green'][idx];
+        if (idx < 0 || idx >= labels.length || isNaN(idx)) return '<span class="layui-badge layui-bg-gray">-<\/span>';
+        var cls = ['layui-bg-blue', 'layui-bg-cyan', 'layui-bg-green', 'layui-bg-orange'][idx];
         return '<span class="layui-badge ' + cls + '">' + labels[idx] + '<\/span>';
     }
 

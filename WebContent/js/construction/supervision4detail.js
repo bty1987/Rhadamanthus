@@ -544,13 +544,13 @@ jQuery(function($) {
         com.focusPage("#step" + csid).addClass("active");
     }
 
-    // 状态显示通用函数: status 0/1/2 对应不同 label 文字
-    // labels = [label0, label1, label2], styles = [class0, class1, class2]
+    // 状态显示通用函数: status 按值取 labels/styles 对应下标(数组长度即上界)
+    // labels = [label0, label1, ...], styles = [class0, class1, ...]
     function renderStatus(status, container, labels, styles) {
 
         com.focusPage("#" + container).html("");
 
-        if (status >= 0 && status <= 2) {
+        if (status >= 0 && status < labels.length) {
             $("<span></span>").addClass("label " + styles[status]).text(labels[status]).appendTo(com.focusPage("#" + container));
         }
     }
@@ -562,11 +562,12 @@ jQuery(function($) {
             ["label label-grey", "label label-info", "label label-success"]);
     }
 
+    // schedule.status: 0=初始, 1=开工, 2=完工, 3=工费(未完工已开放工费)
     function updateStatus(schedule, csid, status) {
 
         renderStatus(status, csid + "Status",
-            ["初始", "开工", "完工"],
-            ["label label-grey", "label label-info", "label label-success"]);
+            ["初始", "开工", "完工", "工费"],
+            ["label label-grey", "label label-info", "label label-success", "label label-warning"]);
     }
 
 });

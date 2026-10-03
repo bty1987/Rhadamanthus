@@ -699,7 +699,7 @@ public class A20251208ServiceImpl implements A20251208Service {
 			throw new FLException(120020, "工程信息不存在");
 		}
 
-		if (constructionSchedulePO.getStatus() != ConstructionSchedulePO.STATUS_BEGIN_INT) {
+		if (constructionSchedulePO.getStatus() != ConstructionSchedulePO.STATUS_BEGIN_INT && constructionSchedulePO.getStatus() != ConstructionSchedulePO.STATUS_SALARY_INT) {
 			throw new FLException(120025, "工程环节不可操作");
 		}
 

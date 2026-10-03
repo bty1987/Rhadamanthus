@@ -206,6 +206,10 @@ $.extend(api, {
                 args: ["constructionSchedule.period"]
             }
         },
+        updateConstructionScheduleForSalary: {
+            url: "updateConstructionScheduleForSalary.do",
+            type: "update"
+        },
         nextConstructionByOrderId: {
             url: "nextConstructionByOrderId.do"
         },

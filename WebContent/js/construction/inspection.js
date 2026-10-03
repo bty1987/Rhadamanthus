@@ -102,7 +102,9 @@ $(function() {
         "projectStatus": {
             field: "projectStatus",
             name: "进度",
-            prop: function(v) { return constant.construction.constructionSchedule.status.keys[v.projectStatus]; },
+            // projectStatus=0/1/2(初始/开工/完工)或cnid(节点), 用按公司动态镜像解析
+            // (0/1/2固定+本公司节点cnid→name), 勿用constructionSchedule.status字典(纯状态机)
+            prop: function(v) { return constant.decoration().decoration.projectStatus.keys[v.projectStatus]; },
             clazz: "red"
         }
     };

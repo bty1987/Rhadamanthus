@@ -189,7 +189,8 @@ public class WorkerSalaryServiceImpl implements WorkerSalaryService {
 				throw new FLException(280015, "预估工费已锁定,不可创建工费");
 			}
 
-			if (constructionSchedulePO.getStatus() != ConstructionSchedulePO.STATUS_FINISH_INT) {
+			// 完工或工费(未完工已开放工费)状态均可创建工费
+			if (constructionSchedulePO.getStatus() != ConstructionSchedulePO.STATUS_FINISH_INT && constructionSchedulePO.getStatus() != ConstructionSchedulePO.STATUS_SALARY_INT) {
 				throw new FLException(280003, "施工环节未完工");
 			}
 
@@ -610,7 +611,8 @@ public class WorkerSalaryServiceImpl implements WorkerSalaryService {
 
 			ConstructionSchedulePO constructionSchedulePO = constructionScheduleDao.get(workerSalaryVO.getCsid());
 
-			if (constructionSchedulePO.getStatus() != ConstructionSchedulePO.STATUS_FINISH_INT) {
+			// 完工或工费(未完工已开放工费)状态均可扣款
+			if (constructionSchedulePO.getStatus() != ConstructionSchedulePO.STATUS_FINISH_INT && constructionSchedulePO.getStatus() != ConstructionSchedulePO.STATUS_SALARY_INT) {
 				throw new FLException(280003, "施工环节未完工");
 			}
 
