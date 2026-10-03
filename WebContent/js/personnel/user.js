@@ -16,11 +16,6 @@ $(function() {
         postParam: {},
         userAdvanceItems: {},
         companysel: [],
-        // 跨公司查看模块清单(随批次扩展: decoration/payment/sales)
-        crossModules: [{
-            module: "customer",
-            name: "客源分配人员"
-        }],
         departmentsel: [],
         task: {},
         rolesel: {},
@@ -36,8 +31,7 @@ $(function() {
 
             saveRoleBtn: com.focusPage("#saveRoleBtn").on("click", saveUserRole),
             saveCompanyBtn: com.focusPage("#saveCompanyBtn").on("click", saveUserCompany),
-            saveDepartmentBtn: com.focusPage("#saveDepartmentBtn").on("click", saveUserDepartment),
-            saveCrossCompanyBtn: com.focusPage("#saveCrossCompanyBtn").on("click", saveCrossCompany)
+            saveDepartmentBtn: com.focusPage("#saveDepartmentBtn").on("click", saveUserDepartment)
         },
 
         modals: {
@@ -49,8 +43,7 @@ $(function() {
             userDepartmentModal: com.focusPage("#userDepartmentModal"),
             usertaskModal: com.focusPage("#taskModal"),
             userRoleModal: com.focusPage("#userRoleModal"),
-            companyCopyModal: com.focusPage("#companyCopyModal"),
-            crossCompanyModal: com.focusPage("#crossCompanyModal")
+            companyCopyModal: com.focusPage("#companyCopyModal")
         },
         items: {
             userPhoto: com.focusPage("#userPhoto", "#pictureModal"),
@@ -1046,79 +1039,6 @@ $(function() {
                     });
                 }
             };
-            btns.crosscompany = {
-                name: "跨公司",
-                clazz: "btn-purple",
-                handle: function(v) {
-
-                    user.uid = v.uid;
-
-                    com.focusPage("#crossCompanyForm").empty();
-
-                    var crossRights = [];
-
-                    user.modals.crossCompanyModal.modal("show");
-
-                    com.post(api.right.queryCrossCompanyRightByUid, {
-                        "crossCompanyRight.uid": v.uid
-                    }, function(res) {
-
-                        $.each(res.crossCompanyRights || [], function(i, va) {
-                            crossRights.push(va);
-                        });
-                    }, null, false);
-
-                    $.each(user.crossModules, function(mi, mv) {
-
-                        // 加密cid掺随机数每次不同(FormatUtil.encodeCompany), 与usercompany一致按公司名匹配
-                        var granted = [];
-
-                        $.each(crossRights, function(ri, rv) {
-                            if (rv.module == mv.module) {
-                                $.each(rv.companys || [], function(ci, cv) {
-                                    granted.push(cv.name);
-                                });
-                            }
-                        });
-
-                        // 现有授权标签行, 对齐usercompany"现有公司权限"
-                        var $cur = $('<div class="form-group"></div>').appendTo(com.focusPage("#crossCompanyForm"));
-                        $('<label class="col-sm-3 control-label no-padding-right"></label>').html(mv.name + "·现有").appendTo($cur);
-                        var $curdiv = $('<div class="tags" style="border: 0"></div>').appendTo($cur);
-
-                        granted.length && $.each(granted, function(i, name) {
-                            $('<span class="tag"></span>').html(name).appendTo($curdiv);
-                        });
-
-                        // 勾选区
-                        var $group = $('<div class="form-group"></div>').appendTo(com.focusPage("#crossCompanyForm"));
-                        $('<label class="col-sm-3 control-label no-padding-right"></label>').html(mv.name).appendTo($group);
-                        var $div = $('<div class="tags" style="border: 0"></div>').appendTo($group);
-
-                        $.each(user.companysel, function(i, va) {
-
-                            var $tag = $('<div class="tag"></div>');
-                            var $input = $('<input/>').attr({
-                                "type": "checkbox",
-                                "value": va.name,
-                                "name": "crossCompany_" + mv.module,
-                                "id": va.cid,
-                                "class": "ace"
-                            });
-                            var $span = $('<span></span>').addClass('lbl');
-                            var $spans = $('<span></span>').html(va.name);
-                            $tag.append($input).append($span).append($spans).appendTo($div);
-                            if (granted.indexOf(va.name) != -1) {
-                                $input.attr("checked", true);
-                            }
-                        });
-
-                        if (mi < user.crossModules.length - 1) {
-                            com.focusPage("#crossCompanyForm").append($('<div class="space-4"></div>'));
-                        }
-                    });
-                }
-            };
         }
 
         if (user.pageConfig.pageBtn.contains("department")) {
@@ -1930,35 +1850,6 @@ $(function() {
         com.post(api.personel.updateUserCompany, params, function(res) {
 
             user.modals.userCompanyModal.modal("hide");
-        });
-    }
-
-    function saveCrossCompany() {
-
-        var params = {
-            "crossCompanyRight.uid": user.uid
-        };
-
-        var idx = 0;
-
-        $.each(user.crossModules, function(mi, mv) {
-
-            var $inputs = com.focusPage('input[name="crossCompany_' + mv.module + '"]:checked');
-
-            if ($inputs.length == 0) return true;
-
-            params["crossCompanyRights[" + idx + "].module"] = mv.module;
-
-            $.each($inputs, function(i, v) {
-                params["crossCompanyRights[" + idx + "].cids[" + i + "]"] = $(v).attr('id');
-            });
-
-            idx++;
-        });
-
-        com.post(api.right.updateCrossCompanyRight, params, function(res) {
-
-            user.modals.crossCompanyModal.modal("hide");
         });
     }
 

@@ -11,6 +11,8 @@ public interface UserCompanyDao extends Dao<UserCompanyPO> {
 
 	public UserCompanyPO queryUserCompany(int uid, int company);
 
+	public List<UserCompanyPO> queryUserCompanyByCid(int cid);
+
 	public int deleteUserCompany(int uid);
 
 }
