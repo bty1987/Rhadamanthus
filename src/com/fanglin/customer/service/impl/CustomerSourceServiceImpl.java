@@ -507,13 +507,19 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 			// throw new FLException(330074, "客户资源不可操作");
 		}
 
+		UserPO issuer = userDao.queryUserByUserId(userId);
+
 		CompanyPO companyPO = companyDao.get(company);
+
+		if (companyPO == null) {
+			// 入参公司无效(解码后不存在), 兜底操作人编制公司
+			company = issuer.getCompany();
+			companyPO = companyDao.get(company);
+		}
 
 		short atttype = CustomerChancePO.ATTTYPE_USER_INT;
 
 		DecorationBusitypePO busitype = customerSourcePO.getBusitype();
-
-		UserPO issuer = userDao.queryUserByUserId(userId);
 
 		CustomerChancePO customerChancePO = new CustomerChancePO();
 
@@ -650,7 +656,7 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 
 			UserPO belonger = customerUserRulePO.getUser();
 
-			customerChanceEO = customerChanceDao.queryCustomerChance(customerSourcePO.getCsid(), belonger.getCompany());
+			customerChanceEO = customerChanceDao.queryCustomerChance(customerSourcePO.getCsid(), company);
 
 			if (customerChanceEO != null) {
 				throw new FLException(330076, "客户机会已存在");
@@ -659,7 +665,7 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 			customerChancePO.setBelonger(belonger);
 			customerChancePO.setDepartment(belonger.getDept());
 			customerChancePO.setRegion(belonger.getDept().getFatherDept());
-			customerChancePO.setCompany(belonger.getCompany());
+			customerChancePO.setCompany(company);
 			customerChancePO.setIsIssue(CustomerChancePO.ISISSUE_ISSUED_INT);
 
 			customerChancePO.setType(CustomerChancePO.ATTTYPE_AUTO_INT);
@@ -710,7 +716,7 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 			customerChancePO.setType(CustomerChancePO.ATTTYPE_REGION_INT);
 			customerChancePO.setBusitype(busitype);
 			customerChancePO.setRegion(region);
-			customerChancePO.setCompany(region.getCompany());
+			customerChancePO.setCompany(company);
 
 			if (region.getManager() != null) {
 				customerChancePO.setBelonger(region.getManager());
@@ -757,7 +763,7 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 			customerChancePO.setBusitype(busitype);
 			customerChancePO.setDepartment(dept);
 			customerChancePO.setRegion(dept.getFatherDept());
-			customerChancePO.setCompany(dept.getCompany());
+			customerChancePO.setCompany(company);
 
 			if (dept.getFatherDept() == null) {
 				customerChancePO.setRegion(dept);
@@ -807,7 +813,7 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 				throw new FLException(190005, "人员不存在");
 			}
 
-			CustomerChancePO customerChanceEO = customerChanceDao.queryCustomerChance(customerSourcePO.getCsid(), belonger.getCompany());
+			CustomerChancePO customerChanceEO = customerChanceDao.queryCustomerChance(customerSourcePO.getCsid(), company);
 
 			if (checkCustomerChance(customerChanceEO) != null) {
 				throw new FLException(330076, "客户机会已存在");
@@ -819,7 +825,7 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 			customerChancePO.setBelonger(belonger);
 			customerChancePO.setDepartment(belonger.getDept());
 			customerChancePO.setRegion(belonger.getDept().getFatherDept());
-			customerChancePO.setCompany(belonger.getCompany());
+			customerChancePO.setCompany(company);
 
 			if (belonger.getDept().getFatherDept() == null) {
 				customerChancePO.setRegion(belonger.getDept());
