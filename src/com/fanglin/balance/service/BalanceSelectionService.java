@@ -34,6 +34,8 @@ public interface BalanceSelectionService {
 
 	public int updateBalanceSelection(BalanceSelectionVO balanceSelection) throws FLException;
 
+	public int splitBalanceSelection(BalanceSelectionVO balanceSelectionVO, String userId, int company) throws FLException;
+
 	public int balanceBalanceSelection(BalanceSelectionVO balanceSelectionVO, String userId) throws FLException;
 
 	public int auditBalanceSelection(BalanceSelectionVO balanceSelectionVO, String userId) throws FLException;

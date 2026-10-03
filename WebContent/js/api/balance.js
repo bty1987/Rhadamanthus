@@ -282,6 +282,9 @@ $.extend(api, {
         deleteBalanceSales: {
             url: "deleteBalanceSales.do"
         },
+        splitBalanceSales: {
+            url: "splitBalanceSales.do"
+        },
 
         pageBalanceSales: {
             url: "pageBalanceSales.do",
@@ -521,6 +524,9 @@ $.extend(api, {
         },
         deleteBalanceSelection: {
             url: "deleteBalanceSelection.do"
+        },
+        splitBalanceSelection: {
+            url: "splitBalanceSelection.do"
         },
         amountBalanceSelection: {
             url: "amountBalanceSelection.do",

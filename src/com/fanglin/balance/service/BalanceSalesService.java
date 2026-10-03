@@ -28,6 +28,8 @@ public interface BalanceSalesService {
 
 	public int updateBalanceSales(BalanceSalesVO balanceSales) throws FLException;
 
+	public int splitBalanceSales(BalanceSalesVO balanceSalesVO, String userId, int company) throws FLException;
+
 	public int amountBalanceSales(BalanceSalesVO balanceSales) throws FLException;
 
 	public int balanceBalanceSales(BalanceSalesVO balanceSalesVO, String userId) throws FLException;
