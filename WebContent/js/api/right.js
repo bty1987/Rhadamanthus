@@ -166,12 +166,5 @@ $.extend(api, {
             url: "updateSelectionItemStatusRight.do"
         },
 
-        queryCrossCompanyRightByUid: {
-            url: "queryCrossCompanyRightByUid.do"
-        },
-        updateCrossCompanyRight: {
-            url: "updateCrossCompanyRight.do"
-        },
-
     }
 });

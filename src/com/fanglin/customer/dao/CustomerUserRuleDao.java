@@ -14,7 +14,7 @@ public interface CustomerUserRuleDao extends Dao<CustomerUserRulePO> {
 
 	public CustomerUserRulePO queryCustomerUserRule(Integer uid);
 
-	public List<UserPO> queryCustomerUserRuleByPinyin(Paging paging, String pinyin, Short status, List<Integer> companys, Integer dtid, Integer did, Integer rid);
+	public List<UserPO> queryCustomerUserRuleByPinyin(Paging paging, String pinyin, Short status, int company, List<Integer> uids, Integer dtid, Integer did, Integer rid);
 
 	public CustomerUserRulePO pullCustomerUserRule(int company);
 
