@@ -49,11 +49,13 @@ public class CustomerUserRuleDaoImpl extends DaoImpl<CustomerUserRulePO> impleme
 	}
 
 	@Override
-	public List<UserPO> queryCustomerUserRuleByPinyin(Paging paging, String pinyin, Short status, int company, Integer dtid, Integer did, Integer rid) {
+	public List<UserPO> queryCustomerUserRuleByPinyin(Paging paging, String pinyin, Short status, Integer company, Integer dtid, Integer did, Integer rid) {
 
 		PagingQuery<UserPO> query = pagingQuery(paging, UserPO.class);
 
-		query.add(Restrictions.eq("company", company));
+		if (company != null) {
+			query.add(Restrictions.eq("company", company));
+		}
 
 		query.add(Restrictions.eq("type", UserPO.TYPE_USER_INT));
 
@@ -90,7 +92,11 @@ public class CustomerUserRuleDaoImpl extends DaoImpl<CustomerUserRulePO> impleme
 			query.add(Restrictions.eq("status", status));
 		}
 
-		query.add(Restrictions.sqlRestriction("not exists (select 1 from customer.customeruserrule cur where cur.uid = {alias}.uid and cur.company = ? and cur.status = ?)", new Object[] { company, CustomerUserRulePO.STATUS_ADVANCE_INVALID_INT }, new Type[] { StandardBasicTypes.INTEGER, StandardBasicTypes.SHORT }));
+		if (company != null) {
+			query.add(Restrictions.sqlRestriction("not exists (select 1 from customer.customeruserrule cur where cur.uid = {alias}.uid and cur.company = ? and cur.status = ?)", new Object[] { company, CustomerUserRulePO.STATUS_ADVANCE_INVALID_INT }, new Type[] { StandardBasicTypes.INTEGER, StandardBasicTypes.SHORT }));
+		} else {
+			query.add(Restrictions.sqlRestriction("not exists (select 1 from customer.customeruserrule cur where cur.uid = {alias}.uid and cur.status = ?)", CustomerUserRulePO.STATUS_ADVANCE_INVALID_INT, StandardBasicTypes.SHORT));
+		}
 
 		return query.list();
 	}
