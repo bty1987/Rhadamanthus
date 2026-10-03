@@ -25,6 +25,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONException;
+import com.fanglin.common.po.CountingPO;
+import com.fanglin.common.service.CountingService;
 import com.fanglin.communion.dao.BrandDao;
 import com.fanglin.communion.dao.BrandInstorerDao;
 import com.fanglin.communion.dao.DepartmentDao;
@@ -49,7 +51,9 @@ import com.fanglin.system.dao.SystemConfigDao;
 import com.fanglin.system.po.CompanyPO;
 import com.fanglin.system.po.RolePO;
 import com.fanglin.system.po.SystemConfigPO;
+import com.fanglin.utils.FormatUtil;
 import com.fanglin.utils.PinYin4Util;
+import com.fanglin.utils.SystemConfig;
 
 @Service("A20260404Service")
 @Transactional
@@ -90,6 +94,9 @@ public class A20260404ServiceImpl implements A20260404Service {
 	@Autowired
 	private SystemConfigDao systemConfigDao;
 
+	@Autowired
+	private CountingService countingService;
+
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public Map<String, Object> syncSupplier(String userId, String userName, String phone, Integer company, String creditCode) throws FLException {
@@ -104,8 +111,13 @@ public class A20260404ServiceImpl implements A20260404Service {
 			throw new FLException(510000, "公司不存在: " + company);
 		}
 
-		// 1. 通过编号(userId)判断是否存在
+		// 1. 通过编号(userId)或原编号(oldUserId)判断是否存在
 		UserPO supplierPO = userDao.queryUserByUserId(userId);
+
+		if (supplierPO == null) {
+			supplierPO = userDao.queryUserByOldUserId(userId);
+		}
+
 		String operation = "add";
 
 		if (supplierPO != null) {
@@ -162,10 +174,17 @@ public class A20260404ServiceImpl implements A20260404Service {
 				throw new FLException(230011, "供应商职位不存在: " + dutyConfig.getValue());
 			}
 
-			// 6. 创建供应商用户
+			// 6. 创建供应商用户（userId 系统生成, 对齐手工创建供应商: multicompany开=公司简称U-流水, 关=OC-流水; 外部原编号存 oldUserId）
+			int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_SUPPLIER_INT, CountingPO.COUNTING_DATE_SILNLE_STR, company);
+
+			StringBuffer no = new StringBuffer();
+			no.append(SystemConfig.getInt("multicompany", 0) != 0 ? String.format("%sU-", companyPO.getShortname()) : "OC-");
+			no.append(FormatUtil.fillZero(count, "00000"));
+
 			supplierPO = new UserPO();
-			supplierPO.setUserId(userId);
-			supplierPO.setLoginId(userId); // loginId = userId
+			supplierPO.setUserId(no.toString());
+			supplierPO.setLoginId(no.toString()); // loginId = userId
+			supplierPO.setOldUserId(userId);
 			supplierPO.setCurrentName(userName);
 			supplierPO.setUserName(userName);
 			supplierPO.setPhone(phone);
