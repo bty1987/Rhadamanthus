@@ -3,18 +3,7 @@ $(function() {
     var constructionNode = {};
     var allocation4detail = {
 
-        constructionSchedules: {},
-        wizardSept: {
-            "1": false,
-            "2": false,
-            "3": false,
-            "4": false,
-            "5": false,
-            "6": false,
-            "7": false,
-            "8": false,
-            "9": false
-        }
+        constructionSchedules: {}
     };
 
     com.post(api.construction.queryConstructionScheduleByOrderId, {
@@ -35,7 +24,7 @@ $(function() {
         });
 
         var stepnum = constructionSchedule[0].node.sort;
-        initWizardSept(stepnum, stepnum);
+        initWizardSept(stepnum);
 
         com.focusPage('#fuelux-wizard').ace_wizard({
             status: true
@@ -46,9 +35,8 @@ $(function() {
 
             var stepId = com.focusPage("[flag]").eq(info.step - 1).attr("id");
             var sd = stepId.substring(4);
-            if (!allocation4detail.wizardSept[sd]) {
-                initWizardSept(sd, sd);
-            }
+            // 每次进入面板都重新拉取环节状态与工人列表(绑定用unbind防叠加)
+            initWizardSept(sd);
         });
 
     }, null, false);
@@ -60,7 +48,7 @@ $(function() {
         html: true
     });
 
-    function initWizardSept(operate, schedule) {
+    function initWizardSept(schedule) {
 
         addActive(schedule);
 
@@ -69,195 +57,114 @@ $(function() {
             "constructionSchedule.schedule": schedule
         };
 
+        // 操作成功后回查环节, 回填实际时间字段
+        function refreshTimeField(field) {
+
+            com.post(api.construction.queryConstructionScheduleByOrderIdASchedule, elementPostData, function(res) {
+
+                com.focusPage("#" + schedule + field).val(res.constructionSchedule[field] || "");
+            });
+        }
+
         com.post(api.construction.queryConstructionScheduleByOrderIdASchedule, elementPostData, function(res) {
 
             var constructionSchedule = res.constructionSchedule;
 
-            com.initTypeahead(operate + "WorkerName", api.personel.queryUserByPinyin, "pinyinName", {
+            // 节点操作统一提交: unbind防面板反复进入叠加绑定, extra为checkout等附加参数
+            function bindScheduleAction(btn, apiName, extra, done) {
+
+                btn.unbind("click").on("click", function() {
+
+                    var options = $.extend({ "constructionSchedule.csid": constructionSchedule.csid }, extra || {});
+
+                    com.post(apiName, options, function() {
+
+                        com.showAlert(com.info, "操作成功");
+                        done();
+                    });
+
+                    return false;
+                });
+            }
+
+            com.initTypeahead(schedule + "WorkerName", api.personel.queryUserByPinyin, "pinyinName", {
                 "departmentType.name": "工程部",
                 "user.status": 0
             }, "autoFillKeyValue", "key", "value");
 
-            com.focusPage("#" + operate + "StartTime").val(constructionSchedule.startTime);
-            com.focusPage("#" + operate + "EndTime").val(constructionSchedule.endTime);
-            com.focusPage("#" + operate + "EnterTime").val(constructionSchedule.enterTime);
-            com.focusPage("#" + operate + "LeaveTime").val(constructionSchedule.leaveTime);
+            com.focusPage("#" + schedule + "StartTime").val(constructionSchedule.startTime);
+            com.focusPage("#" + schedule + "EndTime").val(constructionSchedule.endTime);
+            com.focusPage("#" + schedule + "EnterTime").val(constructionSchedule.enterTime);
+            com.focusPage("#" + schedule + "LeaveTime").val(constructionSchedule.leaveTime);
 
-            var otherename = schedule;
-            var otherStatus = constructionSchedule.status;
+            updatastatusDiv(constructionSchedule.status, schedule);
+            updatePaymentStatus(constructionSchedule.checkout, schedule);
+            updateEnterStatus(constructionSchedule.workStatus, schedule);
 
-            var otherSuccessBtn = com.focusPage("#" + otherename + "Success");
-            var otherSalaryBtn = com.focusPage("#" + otherename + "Salary");
-            var othereFailBtn = com.focusPage("#" + otherename + "Fail");
-            var othereValidBtn = com.focusPage("#" + otherename + "Valid");
-            var otherePassdBtn = com.focusPage("#" + otherename + "Pass");
-            var otherEnterBtn = com.focusPage("#" + otherename + "Enter");
-            var otherLeaveBtn = com.focusPage("#" + otherename + "Leave");
-
-            updatastatusDiv(otherStatus, otherename);
-            updatePaymentStatus(constructionSchedule.checkout, otherename);
-            updateEnterStatus(constructionSchedule.workStatus, otherename);
-
-            otherSuccessBtn.click(function() {
-
-                var options = {
-                    "constructionSchedule.csid": constructionSchedule.csid
-                };
-
-                com.post(api.construction.beginConstructionSchedule, options, function(res) {
-
-                    com.showAlert(com.info, "操作成功");
-                    updatastatusDiv(1, otherename);
-                });
-
-                return false;
+            bindScheduleAction(com.focusPage("#" + schedule + "Success"), api.construction.beginConstructionSchedule, null, function() {
+                updatastatusDiv(1, schedule);
             });
 
-            // 开放工费:开工后、完工前允许创建工费单(状态置3工费)
-            otherSalaryBtn.click(function() {
-
-                var options = {
-                    "constructionSchedule.csid": constructionSchedule.csid
-                };
-
-                com.post(api.construction.updateConstructionScheduleForSalary, options, function(res) {
-
-                    com.showAlert(com.info, "操作成功");
-                    updatastatusDiv(3, otherename);
-                });
-
-                return false;
+            // 开放工费: 开工后、完工前允许创建工费单(状态置3工费)
+            bindScheduleAction(com.focusPage("#" + schedule + "Salary"), api.construction.updateConstructionScheduleForSalary, null, function() {
+                updatastatusDiv(3, schedule);
             });
 
-            otherEnterBtn.click(function() {
-
-                var options = {
-                    "constructionSchedule.csid": constructionSchedule.csid
-                };
-
-                com.post(api.construction.enterConstructionSchedule, options, function(res) {
-
-                    com.showAlert(com.info, "操作成功");
-                    updateEnterStatus(1, otherename);
-                    com.post(api.construction.queryConstructionScheduleByOrderIdASchedule, elementPostData, function(res) {
-
-                        var constructionSchedule = res.constructionSchedule;
-                    com.focusPage("#" + operate + "EnterTime").val(constructionSchedule.enterTime);
-                    });
-
-                });
-
-                return false;
-            });
-            
-            otherLeaveBtn.click(function() {
-
-                var options = {
-                    "constructionSchedule.csid": constructionSchedule.csid
-                };
-
-                com.post(api.construction.leaveConstructionSchedule, options, function(res) {
-
-                    com.showAlert(com.info, "操作成功");
-                    updateEnterStatus(2, otherename);
-                    com.post(api.construction.enterConstructionSchedule, options, function(res) {
-                        
-                        com.post(api.construction.queryConstructionScheduleByOrderIdASchedule, elementPostData, function(res) {
-
-                            var constructionSchedule = res.constructionSchedule;
-                        com.focusPage("#" + operate + "LeaveTime").val(constructionSchedule.leaveTime);
-                        });
-
-                    });
-                });
-
-                return false;
-            });
-            
-            othereFailBtn.click(function() {
-
-                var options = {
-                    "constructionSchedule.csid": constructionSchedule.csid
-                };
-
-                com.post(api.construction.finishConstructionSchedule, options, function(res) {
-
-                    com.showAlert(com.info, "操作成功");
-                    updatastatusDiv(2, otherename);
-                });
-
-                return false;
+            bindScheduleAction(com.focusPage("#" + schedule + "Fail"), api.construction.finishConstructionSchedule, null, function() {
+                updatastatusDiv(2, schedule);
             });
 
-            othereValidBtn.click(function() {
-
-                var options = {
-                    "constructionSchedule.csid": constructionSchedule.csid,
-                    "constructionSchedule.checkout": 0
-                };
-
-                com.post(api.construction.checkoutConstructionSchedule, options, function(res) {
-
-                    com.showAlert(com.info, "操作成功");
-                    updatePaymentStatus(0, otherename);
-                });
-                return false;
+            bindScheduleAction(com.focusPage("#" + schedule + "Valid"), api.construction.checkoutConstructionSchedule, { "constructionSchedule.checkout": 0 }, function() {
+                updatePaymentStatus(0, schedule);
             });
 
-            otherePassdBtn.click(function() {
-
-                var options = {
-                    "constructionSchedule.csid": constructionSchedule.csid,
-                    "constructionSchedule.checkout": 1
-                };
-
-                com.post(api.construction.checkoutConstructionSchedule, options, function(res) {
-
-                    com.showAlert(com.info, "操作成功");
-                    updatePaymentStatus(1, otherename);
-                });
-                return false;
+            bindScheduleAction(com.focusPage("#" + schedule + "Pass"), api.construction.checkoutConstructionSchedule, { "constructionSchedule.checkout": 1 }, function() {
+                updatePaymentStatus(1, schedule);
             });
 
-            var options = {};
-            options["constructer.orderId"] = params.construction.orderId;
-            options["constructer.csid"] = constructionSchedule.csid;
-            options["constructer.cnid"] = constructionSchedule.cnid;
+            bindScheduleAction(com.focusPage("#" + schedule + "Enter"), api.construction.enterConstructionSchedule, null, function() {
+                updateEnterStatus(1, schedule);
+                refreshTimeField("EnterTime");
+            });
 
-            com.post(api.construction.queryConstructerByOrderId, options, function(res) {
+            // 离场后仅回查回填离场时间(勿再触发进场)
+            bindScheduleAction(com.focusPage("#" + schedule + "Leave"), api.construction.leaveConstructionSchedule, null, function() {
+                updateEnterStatus(2, schedule);
+                refreshTimeField("LeaveTime");
+            });
 
-                queryWorkerUrl(operate, res);
+            com.post(api.construction.queryConstructerByOrderId, {
+                "constructer.orderId": params.construction.orderId,
+                "constructer.csid": constructionSchedule.csid,
+                "constructer.cnid": constructionSchedule.cnid
+            }, function(res) {
+
+                queryWorkerUrl(schedule, res);
             }, null, false);
 
-            com.focusPage("#" + operate + "WorkerSubmit").unbind("click");
-            com.focusPage("#" + operate + "WorkerSubmit").on("click", function() {
+            com.focusPage("#" + schedule + "WorkerSubmit").unbind("click").on("click", function() {
 
-                if (com.focusPage("#" + operate + "WorkerName").val().replace(/\s+/g, "") == "") {
+                if (com.focusPage("#" + schedule + "WorkerName").val().replace(/\s+/g, "") == "") {
                     com.showAlert(com.error, "工人名称不能为空");
                     return false;
                 }
 
-                var args = {};
-                args["constructer.cid"] = constructionSchedule.cid;
-                args["constructer.csid"] = constructionSchedule.csid;
-                args["constructer.cnid"] = constructionSchedule.cnid;
+                com.post(api.construction.addConstructer, {
+                    "constructer.cid": constructionSchedule.cid,
+                    "constructer.csid": constructionSchedule.csid,
+                    "constructer.cnid": constructionSchedule.cnid,
+                    "constructer.user.userId": com.focusPage('#' + schedule + "WorkerName").attr("data-typeahead-key")
+                }, function(res) {
 
-                args["constructer.user.userId"] = com.focusPage('#' + operate + "WorkerName").attr("data-typeahead-key");
-
-                com.post(api.construction.addConstructer, args, function(res) {
-
-                    setWorkerUrl(operate, res);
+                    setWorkerUrl(schedule, res);
                 });
 
                 return false;
             });
 
-            com.focusPage('#' + operate + "Drawing").removeClass("active");
-
-            return false;
+            com.focusPage('#' + schedule + "Drawing").removeClass("active");
         });
     }
-
     // 添加初始完结按钮
     // status: 0=初始, 1=开工, 2=完工, 3=工费(未完工已开放工费)
     function updatastatusDiv(status, statusDiv) {
@@ -304,7 +211,7 @@ $(function() {
     // 查询
     function queryWorkerUrl(operate, res) {
 
-        constructers = res.constructers;
+        var constructers = res.constructers;
         com.focusPage("#" + operate + "WorkerInfos").html("");
 
         if (constructers.length != 0) {
@@ -387,7 +294,7 @@ $(function() {
 
         var stepLi = $("<li></li>").attr("data-targe", "#step" + schedule).addClass("complete").appendTo(stepul);
         var stepSpan = $("<span></span>").addClass("step").html(schedule).appendTo(stepLi);
-        var stepSpan = $("<span></span>").addClass("title").html(constructionNode[schedule]).appendTo(stepLi);
+        var stepTitle = $("<span></span>").addClass("title").html(constructionNode[schedule]).appendTo(stepLi);
     }
 
     // 画施工人员面板
@@ -451,12 +358,12 @@ $(function() {
         var paneWorkerGroupFive = $("<div></div>").addClass("form-group").attr("id", name + "Operate").appendTo(paneWorkerGroup);
         var paneWorkerSmFive = $("<div></div>").addClass("col-sm-offset-2").appendTo(paneWorkerGroupFive);
 
-        // 按钮
-        var paneWorkerBtnS = $("<button></button>").attr("id", name + "Success").addClass("btn btn-xs btn-info").html("开工").attr("style", "margin-right:5px").appendTo(paneWorkerSmFive);
-        var paneWorkerBtnS = $("<button></button>").attr("id", name + "Salary").addClass("btn btn-xs btn-warning").html("开放工费").attr("style", "margin-right:5px").appendTo(paneWorkerSmFive);
-        var paneWorkerBtnS = $("<button></button>").attr("id", name + "Fail").addClass("btn btn-xs btn-success").html("完工").attr("style", "margin-right:5px").appendTo(paneWorkerSmFive);
-        var paneWorkerBtnS = $("<button></button>").attr("id", name + "Valid").addClass("btn btn-xs btn-yellow ").html("验证").attr("style", "margin-right:5px").appendTo(paneWorkerSmFive);
-        var paneWorkerBtnS = $("<button></button>").attr("id", name + "Pass").addClass("btn btn-xs btn-danger ").html("通过").attr("style", "margin-right:5px").appendTo(paneWorkerSmFive);
+        // 操作按钮: 开工/开放工费/完工/验证/通过
+        $("<button></button>").attr("id", name + "Success").addClass("btn btn-xs btn-info").html("开工").attr("style", "margin-right:5px").appendTo(paneWorkerSmFive);
+        $("<button></button>").attr("id", name + "Salary").addClass("btn btn-xs btn-warning").html("开放工费").attr("style", "margin-right:5px").appendTo(paneWorkerSmFive);
+        $("<button></button>").attr("id", name + "Fail").addClass("btn btn-xs btn-success").html("完工").attr("style", "margin-right:5px").appendTo(paneWorkerSmFive);
+        $("<button></button>").attr("id", name + "Valid").addClass("btn btn-xs btn-yellow ").html("验证").attr("style", "margin-right:5px").appendTo(paneWorkerSmFive);
+        $("<button></button>").attr("id", name + "Pass").addClass("btn btn-xs btn-danger ").html("通过").attr("style", "margin-right:5px").appendTo(paneWorkerSmFive);
         var paneWorkerGroupS = $("<div></div>").addClass("form-group").appendTo(paneWorkerForm);
         var paneWorkerSmS = $("<div></div>").addClass("col-sm-12").appendTo(paneWorkerGroupS);
         var paneWorkerHTh = $("<h3></h3>").addClass("header smaller lighter blue").appendTo(paneWorkerSmS);
@@ -469,7 +376,7 @@ $(function() {
         var leaveBtn = $("<button type='button'></button>").addClass("btn btn-xs btn-success").html("离场").attr("style", "margin-right:5px").attr("id", name + "Leave").appendTo(paneWorkerSmFive);
         var paneWorkerGroupSe = $("<div></div>").addClass("form-group").appendTo(paneWorkerForm);
         var paneWorkerEnter = $("<div></div>").attr("id", name + "WorkerEnter").appendTo(paneWorkerGroupSe);
-        var paneWorkerEnlab = $("<lable></lable>").addClass("col-sm-1 control-label").attr("for", name + "WorkerName").html("工人姓名").appendTo(paneWorkerEnter);
+        var paneWorkerEnlab = $("<label></label>").addClass("col-sm-1 control-label").attr("for", name + "WorkerName").html("工人姓名").appendTo(paneWorkerEnter);
         var paneWorkerSelDiv = $("<div></div>").addClass("col-sm-4").appendTo(paneWorkerEnter);
         var paneWorkerSel = $("<input></input>").attr("id", name + "WorkerName").addClass("col-xs-10 col-sm-6 v_required").attr("data-placeholder", "请输入工人名称").attr("data-placement", "bottom").attr("data-toggle", "popover").attr("data-trigger", "manual").attr("type", "text").appendTo(paneWorkerSelDiv);
 
