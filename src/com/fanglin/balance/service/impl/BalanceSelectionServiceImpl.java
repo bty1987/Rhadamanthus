@@ -2,6 +2,8 @@ package com.fanglin.balance.service.impl;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -38,6 +40,7 @@ import com.fanglin.quotation.po.SelectionItemPD;
 import com.fanglin.quotation.po.SelectionItemPO;
 import com.fanglin.system.dao.CompanyDao;
 import com.fanglin.system.po.CompanyPO;
+import com.fanglin.utils.Arith;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.FormatUtil;
@@ -46,6 +49,9 @@ import com.fanglin.utils.Paging;
 @Service("balanceSelectionService")
 @Transactional(readOnly = true)
 public class BalanceSelectionServiceImpl implements BalanceSelectionService {
+
+	/** 拆分门槛：明细不足该数量不可拆分 */
+	private static final int SPLIT_MIN_ITEM_INT = 500;
 
 	@Autowired
 	private BalanceSelectionDao balanceSelectionDao;
@@ -404,6 +410,113 @@ public class BalanceSelectionServiceImpl implements BalanceSelectionService {
 		balanceSelectionPO.setName(balanceSelection.getName());
 
 		balanceSelectionDao.update(balanceSelectionPO);
+
+		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int splitBalanceSelection(BalanceSelectionVO balanceSelectionVO, String userId, int company) throws FLException {
+
+		BalanceSelectionPO balanceSelectionPO = balanceSelectionDao.get(balanceSelectionVO.getBsid());
+
+		if (balanceSelectionPO == null) {
+			throw new FLException(350027, "结算选材不存在");
+		}
+
+		if (balanceSelectionPO.getStatus() != BalanceSelectionPO.STATUS_INIT_INT) {
+			throw new FLException(350028, "结算选材不可操作");
+		}
+
+		List<BalanceSelectionItemPO> balanceSelectionItemPOs = balanceSelectionItemDao.queryBalanceSelectionItem(balanceSelectionPO.getBsid());
+
+		if (balanceSelectionItemPOs.size() < SPLIT_MIN_ITEM_INT) {
+			throw new FLException(350035, "结算选材明细不足500");
+		}
+
+		Collections.sort(balanceSelectionItemPOs, new Comparator<BalanceSelectionItemPO>() {
+			@Override
+			public int compare(BalanceSelectionItemPO o1, BalanceSelectionItemPO o2) {
+				return Long.compare(o1.getBsiid(), o2.getBsiid());
+			}
+		});
+
+		UserPO operater = userDao.queryUserByUserId(userId);
+
+		int targetCompany = balanceSelectionPO.getCompany();
+
+		BrandPO brand = balanceSelectionPO.getBrand();
+
+		BalanceSelectionPO newBalanceSelectionPO = new BalanceSelectionPO(brand).init(brand, balanceSelectionPO.getGrade(), operater, targetCompany);
+
+		newBalanceSelectionPO.setAtttype(balanceSelectionPO.getAtttype());
+
+		BalancePO newBalancePO = new BalancePO(new UserPO(), new UserPO());
+
+		String currentDate = DateUtil.current("yyMMdd").toString();
+
+		CompanyPO companyPO = companyDao.get(targetCompany);
+
+		int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_BALANCE_INT, currentDate, targetCompany);
+
+		newBalancePO.setNo(companyPO.getShortname() + currentDate + FormatUtil.fillZero(FormatUtil.offset(count), "0000"));
+		newBalancePO.setType(BalanceSalesPO.STATUS_INIT_INT);
+		newBalancePO.setBelonger(brand.getSupplier());
+		newBalancePO.setCreater(operater);
+		newBalancePO.setCompany(targetCompany);
+		newBalancePO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
+		newBalancePO.setAmount(0);
+		newBalancePO.setSurplus(0);
+
+		balanceDao.save(newBalancePO);
+
+		newBalanceSelectionPO.setBid(newBalancePO.getBid());
+
+		balanceSelectionDao.save(newBalanceSelectionPO);
+
+		int half = balanceSelectionItemPOs.size() / 2;
+
+		for (int i = 0; i < half; i++) {
+
+			BalanceSelectionItemPO balanceSelectionItemPO = balanceSelectionItemPOs.get(i);
+
+			balanceSelectionItemPO.setBsid(newBalanceSelectionPO.getBsid());
+
+			balanceSelectionItemDao.update(balanceSelectionItemPO);
+		}
+
+		balanceSelectionItemDao.flush();
+
+		long sourceAmount = balanceSelectionDao.amountBalaceSelection(balanceSelectionPO.getBsid());
+		long targetAmount = balanceSelectionDao.amountBalaceSelection(newBalanceSelectionPO.getBsid());
+
+		balanceSelectionPO.setCost(sourceAmount);
+		balanceSelectionPO.setPayment(sourceAmount);
+
+		balanceSelectionDao.update(balanceSelectionPO);
+
+		newBalanceSelectionPO.setCost(targetAmount);
+		newBalanceSelectionPO.setPayment(targetAmount);
+
+		balanceSelectionDao.update(newBalanceSelectionPO);
+
+		newBalancePO.setAmount(newBalanceSelectionPO.getPayment());
+		newBalancePO.setSurplus(Arith.sub(newBalanceSelectionPO.getPayment(), newBalancePO.getCutpay()));
+
+		balanceDao.update(newBalancePO);
+
+		BalancePO balancePO = balanceDao.get(balanceSelectionPO.getBid());
+
+		if (balancePO != null && balancePO.getBid() != 0) {
+
+			balancePO.setAmount(balanceSelectionPO.getPayment());
+			balancePO.setSurplus(Arith.sub(balanceSelectionPO.getPayment(), balancePO.getCutpay()));
+
+			balanceDao.update(balancePO);
+		}
+
+		balanceSelectionRecordDao.save(new BalanceSelectionRecordPO().init(balanceSelectionPO, operater, BalanceSelectionPO.STATUS_INIT_INT, "拆分"));
+		balanceSelectionRecordDao.save(new BalanceSelectionRecordPO().init(newBalanceSelectionPO, operater, BalanceSelectionPO.STATUS_INIT_INT, "拆分"));
 
 		return 0;
 	}

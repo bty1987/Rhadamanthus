@@ -2,6 +2,8 @@ package com.fanglin.balance.service.impl;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -47,6 +49,9 @@ import com.fanglin.log.context.ActionLogContext;
 @Service("balanceSalesService")
 @Transactional(readOnly = true)
 public class BalanceSalesServiceImpl implements BalanceSalesService {
+
+	/** 拆分门槛：明细不足该数量不可拆分 */
+	private static final int SPLIT_MIN_ITEM_INT = 500;
 
 	@Autowired
 	private CompanyDao companyDao;
@@ -291,6 +296,106 @@ public class BalanceSalesServiceImpl implements BalanceSalesService {
 		balanceSalesPO.setName(balanceSales.getName());
 
 		balanceSalesDao.update(balanceSalesPO);
+
+		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int splitBalanceSales(BalanceSalesVO balanceSalesVO, String userId, int company) throws FLException {
+
+		ActionLogContext.bind("balance", String.valueOf(balanceSalesVO.getBsid()), "SPLIT");
+
+		BalanceSalesPO balanceSalesPO = balanceSalesDao.get(balanceSalesVO.getBsid());
+
+		if (balanceSalesPO == null) {
+			throw new FLException(350017, "结算销售不存在");
+		}
+
+		if (balanceSalesPO.getStatus() != BalanceSalesPO.STATUS_INIT_INT) {
+			throw new FLException(350018, "结算销售不可操作");
+		}
+
+		List<BalanceSalesBalancePO> balanceSalesBalancePOs = balanceSalesBalanceDao.queryBalanceSalesBalance(balanceSalesPO.getBsid());
+
+		if (balanceSalesBalancePOs.size() < SPLIT_MIN_ITEM_INT) {
+			throw new FLException(350034, "结算销售明细不足500");
+		}
+
+		Collections.sort(balanceSalesBalancePOs, new Comparator<BalanceSalesBalancePO>() {
+			@Override
+			public int compare(BalanceSalesBalancePO o1, BalanceSalesBalancePO o2) {
+				return Long.compare(o1.getBsbid(), o2.getBsbid());
+			}
+		});
+
+		UserPO operater = userDao.queryUserByUserId(userId);
+
+		int targetCompany = balanceSalesPO.getCompany();
+
+		BalancePO newBalancePO = new BalancePO(new UserPO(), new UserPO());
+
+		String currentDate = DateUtil.current("yyMMdd").toString();
+
+		CompanyPO companyPO = companyDao.get(targetCompany);
+
+		int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_BALANCE_INT, currentDate, targetCompany);
+
+		newBalancePO.setNo(companyPO.getShortname() + currentDate + FormatUtil.fillZero(FormatUtil.offset(count), "0000"));
+		newBalancePO.setType(BalanceSalesPO.STATUS_INIT_INT);
+		newBalancePO.setBelonger(balanceSalesPO.getSupplier());
+		newBalancePO.setCreater(operater);
+		newBalancePO.setCompany(targetCompany);
+		newBalancePO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
+		newBalancePO.setAmount(0);
+		newBalancePO.setSurplus(0);
+
+		balanceDao.save(newBalancePO);
+
+		BalanceSalesPO newBalanceSalesPO = new BalanceSalesPO(balanceSalesPO.getBrand());
+
+		newBalanceSalesPO.setName(String.format("%s-%s-%s-%s", currentDate, balanceSalesPO.getBrand().getName(), balanceSalesPO.getGrade(), (System.currentTimeMillis() % 1000)));
+		newBalanceSalesPO.setGrade(balanceSalesPO.getGrade());
+		newBalanceSalesPO.setSupplier(balanceSalesPO.getSupplier());
+		newBalanceSalesPO.setAtttype(balanceSalesPO.getAtttype());
+		newBalanceSalesPO.setStatus(BalanceSalesPO.STATUS_INIT_INT);
+		newBalanceSalesPO.setCompany(targetCompany);
+		newBalanceSalesPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
+		newBalanceSalesPO.setCreater(operater);
+		newBalanceSalesPO.setBid(newBalancePO.getBid());
+
+		balanceSalesDao.save(newBalanceSalesPO);
+
+		int half = balanceSalesBalancePOs.size() / 2;
+
+		for (int i = 0; i < half; i++) {
+
+			BalanceSalesBalancePO balanceSalesBalancePO = balanceSalesBalancePOs.get(i);
+
+			balanceSalesBalancePO.setBsid(newBalanceSalesPO.getBsid());
+
+			balanceSalesBalanceDao.update(balanceSalesBalancePO);
+		}
+
+		balanceSalesBalanceDao.flush();
+
+		totalBalanceSales(balanceSalesPO);
+		totalBalanceSales(newBalanceSalesPO);
+
+		newBalancePO.setAmount(newBalanceSalesPO.getPayment());
+		newBalancePO.setSurplus(Arith.sub(newBalanceSalesPO.getPayment(), newBalancePO.getCutpay()));
+
+		balanceDao.update(newBalancePO);
+
+		BalancePO balancePO = balanceDao.get(balanceSalesPO.getBid());
+
+		if (balancePO != null && balancePO.getBid() != 0) {
+
+			balancePO.setAmount(balanceSalesPO.getPayment());
+			balancePO.setSurplus(Arith.sub(balanceSalesPO.getPayment(), balancePO.getCutpay()));
+
+			balanceDao.update(balancePO);
+		}
 
 		return 0;
 	}

@@ -375,6 +375,28 @@ jQuery(function($) {
             return false;
         }
     }, {
+        name: "拆分",
+        clazz: "btn-yellow",
+        handle: function(v) {
+
+            com.showConfirm("确定将该结算销售平均拆分为两个？", function() {
+
+                com.post(api.balance.splitBalanceSales, {
+                    "balanceSales.bsid": v.bsid
+                }, function() {
+
+                    com.showAlert(com.info, "拆分成功");
+                    seacher.doSearch();
+                });
+            });
+
+            return false;
+        },
+        show: function(v) {
+
+            return (v.status == constant.balance().balanceSales.STATUS_INIT_INT);
+        }
+    }, {
         name: "删除",
         clazz: "btn-danger",
         handle: function(v) {

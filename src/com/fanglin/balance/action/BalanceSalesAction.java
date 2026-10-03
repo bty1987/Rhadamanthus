@@ -87,6 +87,14 @@ public class BalanceSalesAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "splitBalanceSales", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String splitBalanceSales() throws FLException {
+
+		balanceSalesService.splitBalanceSales(balanceSales, queryUserId(), queryCompany());
+
+		return SUCCESS;
+	}
+
 	@Action(value = "amountBalanceSales", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String amountBalanceSales() throws FLException {
 

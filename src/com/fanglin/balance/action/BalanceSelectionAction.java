@@ -126,6 +126,14 @@ public class BalanceSelectionAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "splitBalanceSelection", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String splitBalanceSelection() throws FLException {
+
+		balanceSelectionService.splitBalanceSelection(balanceSelection, queryUserId(), queryCompany());
+
+		return SUCCESS;
+	}
+
 	@Action(value = "balanceBalanceSelection", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String balanceBalanceSelection() throws FLException {
 
