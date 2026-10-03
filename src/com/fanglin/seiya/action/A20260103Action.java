@@ -618,8 +618,12 @@ public class A20260103Action extends BaseListAction {
 		// 转换为简化格式并放入 data
 		List<SimpleUserVO> resultList = new ArrayList<SimpleUserVO>();
 
-		// 查询用户列表
-		List<UserBaseVO> users = customerUserRuleService.queryCustomerUserRuleByPinyin(pinyinName, user, departmentType, orgId == null ? null : Arrays.asList(orgId));
+		// 查询用户列表（orgId必填: 候选池=该公司编制∪挂靠该公司人员）
+		if (orgId == null) {
+			throw new FLException(400004, "公司标识不能为空");
+		}
+
+		List<UserBaseVO> users = customerUserRuleService.queryCustomerUserRuleByPinyin(pinyinName, user, departmentType, orgId);
 
 		if (users != null && !users.isEmpty()) {
 			for (UserBaseVO u : users) {
