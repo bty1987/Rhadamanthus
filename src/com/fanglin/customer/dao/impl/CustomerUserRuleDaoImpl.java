@@ -49,16 +49,11 @@ public class CustomerUserRuleDaoImpl extends DaoImpl<CustomerUserRulePO> impleme
 	}
 
 	@Override
-	public List<UserPO> queryCustomerUserRuleByPinyin(Paging paging, String pinyin, Short status, int company, List<Integer> uids, Integer dtid, Integer did, Integer rid) {
+	public List<UserPO> queryCustomerUserRuleByPinyin(Paging paging, String pinyin, Short status, int company, Integer dtid, Integer did, Integer rid) {
 
 		PagingQuery<UserPO> query = pagingQuery(paging, UserPO.class);
 
-		// 本公司编制人员 + 挂靠本公司的人员(多公司身份)
-		if (uids != null && uids.size() > 0) {
-			query.add(Restrictions.or(Restrictions.eq("company", company), Restrictions.in("uid", uids)));
-		} else {
-			query.add(Restrictions.eq("company", company));
-		}
+		query.add(Restrictions.eq("company", company));
 
 		query.add(Restrictions.eq("type", UserPO.TYPE_USER_INT));
 
