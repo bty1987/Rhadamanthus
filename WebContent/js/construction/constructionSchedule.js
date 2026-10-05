@@ -431,6 +431,33 @@ jQuery(function($) {
         show: function() {
             return btnVisible("matplan");
         }
+    }, {
+        name: "开放工费",
+        clazz: "btn-warning",
+        handle: function(v) {
+
+            if (v.status != 1) { // 仅开工(1)可开放工费, 与后端状态闸一致
+                com.showAlert(com.warning, "仅开工状态可开放工费");
+                return false;
+            }
+
+            com.showConfirm("确认开放工费？开放后该环节可创建工费单", function() {
+
+                com.post(api.construction.updateConstructionScheduleForSalary, {
+                    "constructionSchedule.csid": v.csid
+                }, function(res) {
+
+                    com.showAlert(com.info, "开放工费成功");
+
+                    searcher.doSearch();
+                });
+            });
+
+            return false;
+        },
+        show: function() {
+            return btnVisible("salary");
+        }
     }];
 
     searcher.line("node.name", lineprops, linebtns).render();

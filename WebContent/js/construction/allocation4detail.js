@@ -105,11 +105,6 @@ $(function() {
                 updatastatusDiv(1, schedule);
             });
 
-            // 开放工费: 开工后、完工前允许创建工费单(状态置3工费)
-            bindScheduleAction(com.focusPage("#" + schedule + "Salary"), api.construction.updateConstructionScheduleForSalary, null, function() {
-                updatastatusDiv(3, schedule);
-            });
-
             bindScheduleAction(com.focusPage("#" + schedule + "Fail"), api.construction.finishConstructionSchedule, null, function() {
                 updatastatusDiv(2, schedule);
             });
@@ -358,9 +353,8 @@ $(function() {
         var paneWorkerGroupFive = $("<div></div>").addClass("form-group").attr("id", name + "Operate").appendTo(paneWorkerGroup);
         var paneWorkerSmFive = $("<div></div>").addClass("col-sm-offset-2").appendTo(paneWorkerGroupFive);
 
-        // 操作按钮: 开工/开放工费/完工/验证/通过
+        // 操作按钮: 开工/完工/验证/通过(开放工费已迁移至 constructionSchedule 页)
         $("<button></button>").attr("id", name + "Success").addClass("btn btn-xs btn-info").html("开工").attr("style", "margin-right:5px").appendTo(paneWorkerSmFive);
-        $("<button></button>").attr("id", name + "Salary").addClass("btn btn-xs btn-warning").html("开放工费").attr("style", "margin-right:5px").appendTo(paneWorkerSmFive);
         $("<button></button>").attr("id", name + "Fail").addClass("btn btn-xs btn-success").html("完工").attr("style", "margin-right:5px").appendTo(paneWorkerSmFive);
         $("<button></button>").attr("id", name + "Valid").addClass("btn btn-xs btn-yellow ").html("验证").attr("style", "margin-right:5px").appendTo(paneWorkerSmFive);
         $("<button></button>").attr("id", name + "Pass").addClass("btn btn-xs btn-danger ").html("通过").attr("style", "margin-right:5px").appendTo(paneWorkerSmFive);
