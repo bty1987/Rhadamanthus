@@ -135,6 +135,17 @@ layui.use(['table', 'laypage', 'form', 'laydate', 'layer', 'jquery'], function (
         app.params.construction = $.extend({}, app.params.construction, { decoration: v.decoration });
         app.popup('views/construction/materialPlan.html', '主材计划', null, { area: ['85%', '85%'] });
     });
+    reg('salary', '开放工费', function () { return btnVisible('salary'); }, function (v) {
+        if (v.status != 1) { app.showAlert(app.warning, '仅开工状态可开放工费'); return; }
+        app.showConfirm('确认开放工费？开放后该环节可创建工费单', function () {
+            app.post(api.construction.updateConstructionScheduleForSalary, {
+                'constructionSchedule.csid': v.csid
+            }, function () {
+                app.showAlert(app.success, '开放工费成功');
+                query(state.page);
+            });
+        });
+    });
 
     table.on('tool(resultTable)', function (obj) {
         var ev = obj.event, v = obj.data;

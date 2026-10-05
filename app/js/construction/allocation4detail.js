@@ -60,7 +60,6 @@ layui.use(['element', 'form', 'layer', 'jquery'], function () {
             + '<label style="margin-left:20px;">进场状态<\/label><span id="' + sort + 'enterStatus"><\/span><\/div>'
             + '<div style="margin:12px 0;">'
             + '<button type="button" class="layui-btn layui-btn-xs layui-btn-normal" id="' + sort + 'Success">开工<\/button>'
-            + '<button type="button" class="layui-btn layui-btn-xs layui-btn-warm" id="' + sort + 'Salary">开放工费<\/button>'
             + '<button type="button" class="layui-btn layui-btn-xs" id="' + sort + 'Fail">完工<\/button>'
             + '<button type="button" class="layui-btn layui-btn-xs layui-btn-warm" id="' + sort + 'Valid">验证<\/button>'
             + '<button type="button" class="layui-btn layui-btn-xs layui-btn-danger" id="' + sort + 'Pass">通过<\/button>'
@@ -89,10 +88,6 @@ layui.use(['element', 'form', 'layer', 'jquery'], function () {
 
             bindFlow('#' + schedule + 'Success', api.construction.beginConstructionSchedule, function () {
                 $('#' + schedule + 'Status').html(constructionCommon.stateBadge(1, ['初始', '开工', '完工', '工费']));
-            }, cs, null);
-            // 开放工费:开工后、完工前允许创建工费单(状态置3工费)
-            bindFlow('#' + schedule + 'Salary', api.construction.updateConstructionScheduleForSalary, function () {
-                $('#' + schedule + 'Status').html(constructionCommon.stateBadge(3, ['初始', '开工', '完工', '工费']));
             }, cs, null);
             bindFlow('#' + schedule + 'Fail', api.construction.finishConstructionSchedule, function () {
                 $('#' + schedule + 'Status').html(constructionCommon.stateBadge(2, ['初始', '开工', '完工', '工费']));
