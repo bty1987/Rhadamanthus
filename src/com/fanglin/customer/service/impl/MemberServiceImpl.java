@@ -838,6 +838,9 @@ public class MemberServiceImpl implements MemberService {
 		// 设置有效期
 		decorationActivityItemPO.setExpireTime(memberOrderItemVO.getExpireTime());
 
+		// 积分商城备注(物品说明)落活动物品备注
+		decorationActivityItemPO.setContent(memberOrderItemVO.getContent());
+
 		decorationActivityItemDao.save(decorationActivityItemPO);
 
 		return 0;

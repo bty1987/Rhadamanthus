@@ -194,7 +194,7 @@ public class DecorationActivityItemVO implements java.io.Serializable {
 		this.refunder = refunder;
 	}
 
-	@JSON(format = "yyyy-MM-dd")
+	@JSON(format = "yyyy-MM-dd HH:mm:ss")
 	public Timestamp getCreateTime() {
 		return createTime;
 	}
@@ -203,7 +203,7 @@ public class DecorationActivityItemVO implements java.io.Serializable {
 		this.createTime = createTime;
 	}
 
-	@JSON(format = "yyyy-MM-dd")
+	@JSON(format = "yyyy-MM-dd HH:mm:ss")
 	public Timestamp getReceiveTime() {
 		return receiveTime;
 	}
@@ -212,7 +212,7 @@ public class DecorationActivityItemVO implements java.io.Serializable {
 		this.receiveTime = receiveTime;
 	}
 
-	@JSON(format = "yyyy-MM-dd")
+	@JSON(format = "yyyy-MM-dd HH:mm:ss")
 	public Timestamp getRefundTime() {
 		return refundTime;
 	}
@@ -221,7 +221,7 @@ public class DecorationActivityItemVO implements java.io.Serializable {
 		this.refundTime = refundTime;
 	}
 
-	@JSON(format = "yyyy-MM-dd")
+	@JSON(format = "yyyy-MM-dd HH:mm:ss")
 	public Timestamp getAffirmTime() {
 		return affirmTime;
 	}
@@ -230,7 +230,7 @@ public class DecorationActivityItemVO implements java.io.Serializable {
 		this.affirmTime = affirmTime;
 	}
 
-	@JSON(format = "yyyy-MM-dd")
+	@JSON(format = "yyyy-MM-dd HH:mm:ss")
 	public Timestamp getCheckTime() {
 		return checkTime;
 	}
