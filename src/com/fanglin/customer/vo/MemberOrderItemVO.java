@@ -21,6 +21,8 @@ public class MemberOrderItemVO implements Serializable {
 
 	private Short isPayment;
 
+	private String content;
+
 	public String getNo() {
 		return no;
 	}
@@ -75,6 +77,14 @@ public class MemberOrderItemVO implements Serializable {
 
 	public void setIsPayment(Short isPayment) {
 		this.isPayment = isPayment;
+	}
+
+	public String getContent() {
+		return content;
+	}
+
+	public void setContent(String content) {
+		this.content = content;
 	}
 
 }

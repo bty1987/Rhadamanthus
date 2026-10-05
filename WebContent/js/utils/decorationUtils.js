@@ -1070,8 +1070,8 @@ var decorationUtils = {
                     continue;
                 }
 
-                // 直接传递 uniqueId，不提前查询数据
-                decorationUtils.addActivityItemForDiv(itempack, item, uiBtnMethod, config, wizard.content, item.uniqueId);
+                // 直接传递 uniqueId，不提前查询数据；会员活动物品固定走 content 展示分支(是否计入库存/首次二次操作确认时间/是否确认)
+                decorationUtils.addActivityItemForDiv(itempack, item, uiBtnMethod, config, "content", item.uniqueId);
             }
         });
     },
