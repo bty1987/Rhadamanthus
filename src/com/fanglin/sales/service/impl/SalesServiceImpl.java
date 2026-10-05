@@ -398,19 +398,19 @@ public class SalesServiceImpl implements SalesService {
 			BeanUtil.copyProperties(salesItemVO, salesItemPO, Arrays.asList("goods", "color", "format"));
 
 			salesItemPO.setSid(salesPO.getSid());
-			salesItemPO.setType(goodsPO.getType());
 			salesItemPO.setInitnum(salesItemVO.getNum());
 			salesItemPO.setPunum(salesItemVO.getNum());
 			salesItemPO.setXgnum(salesItemVO.getNum());
 
+			// 套装(type=1)须先查展开配置: 空配置套装(无展开子项)按普通商品(type=0)落库——
+			// 否则主项type=1会被购货结算/配送的"孤儿套餐明细(psiid=0且type=1)"过滤误杀, 导致配送/购货结算缺行
+			List<GoodsPackagePO> goodsPackages = goodsPO != null && goodsPO.getType() == GoodsPO.TYPE_SUIT_INT ? goodsPackageDao.queryGoodsPackage(goodsPO.getGid()) : null;
+
+			salesItemPO.setType(goodsPO != null && goodsPO.getType() == GoodsPO.TYPE_SUIT_INT && (goodsPackages == null || goodsPackages.isEmpty()) ? GoodsPO.TYPE_GOODS_INT : goodsPO.getType());
+
 			salesItemDao.save(salesItemPO);
 
 			total = Arith.add(total, salesItemVO.getTotal());
-
-			if (goodsPO == null || goodsPO.getType() != GoodsPO.TYPE_SUIT_INT) continue;
-
-			// 套餐类型商品，需要展开套餐明细
-			List<GoodsPackagePO> goodsPackages = goodsPackageDao.queryGoodsPackage(goodsPO.getGid());
 
 			if (goodsPackages == null || goodsPackages.isEmpty()) continue;
 
