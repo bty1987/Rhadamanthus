@@ -820,13 +820,17 @@ public class MemberServiceImpl implements MemberService {
 		if (awardStockPO != null) decorationActivityItemPO.setAsid(awardStockPO.getAsId());
 
 		decorationActivityItemPO.setActivityItemName(memberOrderItemVO.getName());
-		decorationActivityItemPO.setState(DecorationActivityItemPO.STATUS_INIT_INT);
+		// 积分商城同步产生即已领, 首次操作时间=同步时间
+		decorationActivityItemPO.setState(DecorationActivityItemPO.STATUS_RECEIVE_INT);
+		decorationActivityItemPO.setReceiveTime(DateUtil.getDateToTimestamp(new Date()));
 
 		decorationActivityItemPO.setIsPrefor(memberOrderItemVO.getIsPrefer() != null ? memberOrderItemVO.getIsPrefer() : DecorationActivityItemPO.ISPREFOR_UNCAL_INT);
 		decorationActivityItemPO.setIsPayment(memberOrderItemVO.getIsPayment() != null ? memberOrderItemVO.getIsPayment() : DecorationActivityItemPO.ISPAYMENT_CAL_INT);
 
 		decorationActivityItemPO.setNo(memberOrderVO.getPointOrderId());
 		decorationActivityItemPO.setAtttype(DecorationActivityItemPO.ATTTYPE_ONLINE_INT);
+		decorationActivityItemPO.setType(DecorationActivityItemPO.TYPE_THING_INT);
+		decorationActivityItemPO.setStateType(DecorationActivityItemPO.STATUSTYPE_POINTSHOP_INT);
 		decorationActivityItemPO.setNum((int) Arith.mul(memberOrderItemVO.getNum(), 1000000l));
 		decorationActivityItemPO.setMoney((int) Arith.mul(memberOrderItemVO.getPoint(), 1000000l));
 		decorationActivityItemPO.setCreater(creater);

@@ -47,6 +47,8 @@ public class DecorationActivityItemPO implements java.io.Serializable {
 
 	public static final short TYPE_THING_INT = 1; // 物品
 
+	public static final short STATUSTYPE_POINTSHOP_INT = 15; // 办理类型: 积分商城
+
 	public static final short ISPREFOR_CAL_INT = 0; // 业绩标识 0 计算
 
 	public static final short ISPREFOR_UNCAL_INT = 1;
