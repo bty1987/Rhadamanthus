@@ -128,7 +128,7 @@ layui.use(['jquery'], function () {
         }
 
         h += '<tr><td height="12" colspan="8"><\/td><\/tr>'
-            + '<tr><td colspan="6"><\/td><td align="center">总额</td><td align="center">' + u.changeThrDecimal(grandTotal) + (isFloor ? ' (保底)' : '') + '<\/td><\/tr>'
+            + '<tr><td colspan="6"><\/td><td align="center">' + (isFloor ? '保底工费总额' : '总额') + '<\/td><td align="center">' + u.changeThrDecimal(grandTotal) + '<\/td><\/tr>'
             + '<\/tbody><\/table>';
         h += '<table style="font-size:12px" width="100%" border="0" cellpadding="1" cellspacing="0"><tbody>'
             + '<tr><td><b>&nbsp;甲方签字:<\/b><\/td><td><b>监理签字:<\/b><\/td><td><b>质检签字:<\/b><\/td><td><b>日期:<\/b><\/td><\/tr><\/tbody><\/table>';

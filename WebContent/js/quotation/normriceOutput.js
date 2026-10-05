@@ -327,8 +327,8 @@ function printAllTotal(amountInfo) {
     contentHtml += '<td width="9%" align="center"></td>';
     contentHtml += '<td width="9%" align="center"></td>';
     contentHtml += '<td width="9%" align="center"></td>';
-    contentHtml += '<td width="9%" align="center">所有项目总额</td>';
-    contentHtml += '<td width="8%" align="center">' + (amountInfo.total || 0) + (amountInfo.isFloor ? ' (保底)' : '') + '</td>';
+    contentHtml += '<td width="9%" align="center">' + (amountInfo.isFloor ? '保底工费总额' : '所有项目总额') + '</td>';
+    contentHtml += '<td width="8%" align="center">' + (amountInfo.total || 0) + '</td>';
     contentHtml += '</tr>';
 
     return contentHtml;
