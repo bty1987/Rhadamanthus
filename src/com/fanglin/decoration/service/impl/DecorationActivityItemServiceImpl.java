@@ -488,7 +488,12 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 			throw new FLException(140101, "装修活动物品不存在");
 		}
 
-		if (decorationActivityItemPO.getState() != DecorationActivityItemPO.STATUS_INIT_INT) {
+		// 会员/线上物品(atttype=1)由积分商城同步产生, 初始即已领(STATUS_RECEIVE_INT); 装修/线下物品仅初始可核销
+		if (decorationActivityItemPO.getAtttype() == DecorationActivityItemPO.ATTTYPE_ONLINE_INT) {
+			if (decorationActivityItemPO.getState() != DecorationActivityItemPO.STATUS_INIT_INT && decorationActivityItemPO.getState() != DecorationActivityItemPO.STATUS_RECEIVE_INT) {
+				throw new FLException(140102, "装修活动奖品不可操作");
+			}
+		} else if (decorationActivityItemPO.getState() != DecorationActivityItemPO.STATUS_INIT_INT) {
 			throw new FLException(140102, "装修活动奖品不可操作");
 		}
 
