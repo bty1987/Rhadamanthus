@@ -189,7 +189,8 @@ public class CompanyServiceImpl implements CompanyService {
 
 		companyPO.setName(companyVO.getName());
 		companyPO.setCode(companyVO.getCode());
-		companyPO.setShortname(companyVO.getShortname());
+		// shortname 不允许更新, 固定空字符串——公司简称参与单号生成(counting), 中文/超长前缀会污染 orderId(历史 11/14 位超长单即源于此)
+		companyPO.setShortname("");
 		companyPO.setFullname(companyVO.getFullname());
 		companyPO.setAddress(companyVO.getAddress());
 		companyPO.setCorporation(companyVO.getCorporation());
