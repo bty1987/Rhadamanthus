@@ -427,7 +427,9 @@ $(function() {
                 ['备注', 'selectionItem.comment'], //
                 ['计价面积', 'selectionItem.decoration.house.innerArea'], //
                 ['标配/升级', ''], //
-                ['预签时间', 'selectionItem.decoration.procontracttime'], //
+                ['预签时间', 'selectionItem.decoration.precontractTime'], // 原procontracttime系DecorationVO不存在字段的死路径恒空
+                ['设计师', 'selectionItem.decoration.designer.currentName'], //
+                ['拆单时间', 'selectionItem.createTime'], //
                 ],
                 list: res.paging.data
             }, function(v) {
