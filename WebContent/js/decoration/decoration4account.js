@@ -651,6 +651,9 @@ $(function() {
 
         $.each(oaleses, function(i, v) {
 
+            // 驳回/废单不计入外销总额
+            if (v.status == constant.sales().oales.STATUS_REJECT_INT || v.status == constant.sales().oales.STATUS_INVALID_INI) return;
+
             accountBasic.oalesTotal = utils.accAdd(accountBasic.oalesTotal, v.total);
         });
 
