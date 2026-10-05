@@ -1,46 +1,56 @@
--- data.goods.type=1(空配置套装) 开单后被购货结算/配送"孤儿套餐明细"过滤误杀 存量修复（待生产, 分段拍板执行）
+-- data.goods.type=1(空配置套装) 开单后被购货结算/配送"孤儿套餐明细"过滤误杀 存量修复（待生产）
 -- 机制(2026-10-05 诊断, 2603210594 实证)：
---   1) 4个奥普直播商品(gid 679438/679439/679441/679443) data.goods.type=1(套装) 但 data.goodspackage 配置为 0 条(空套装);
---   2) 开单(SalesServiceImpl/SalesItemServiceImpl)把 goods.type 原样拷入 salesitem.type → 主项 type=1, psiid=0, 无展开子项;
---   3) 购货结算发起(SalesBalanceServiceImpl.preSalesBalance:486)与配送(SalesDeliveryServiceImpl:341)的
---      "跳过孤儿套餐明细(psiid=0且type=TYPE_PACKAGE=1)"过滤把该主项误杀 → 配送/购货结算缺行;
---      同品牌仅此商品时整个购货结算单不生成("没有购货结算明细"), 否则结算单在而缺行("少N条子项");
---   4) 退货链不过此过滤 → 退货有行而购货无行(不对称); 2603300254 购货无/退货重复两行为同源衍生, 需单独甄别。
--- 受影响面(2026-10-05 核验)：64单中 47单有购货结算单(缺行)/19单无结算单, balanceStatus 1预结算×66 + 2×1;
---   4 gid 全历史 salesitem 仍为 type=1 psiid=0 的行仅 14 行/6 单(其余各行后续被编辑重置为0)。
+--   4个奥普直播商品(gid 679438/679439/679441/679443) data.goods.type=1(套装) 但 goodspackage 配置 0 条(空套装);
+--   开单把 goods.type 原样拷入 salesitem.type → 主项 type=1, psiid=0, 无展开子项;
+--   购货结算发起(SalesBalanceServiceImpl.preSalesBalance:486)与配送(SalesDeliveryServiceImpl:341)的
+--   "跳过孤儿套餐明细(psiid=0且type=1)"过滤把主项误杀 → 配送/购货结算缺行; 退货链不过滤 → 购货缺退货有的不对称。
+-- 盘点(2026-10-05 生产)：
+--   缺明细行 108 行(全部 si.total=0/num=0, 纯展示行, 补行零金额风险——故无金额重算步骤);
+--   涉及购货结算单均 status=0(预结算), 另 2603210898 一单 status=1(厂商结算中)缺 2 行单独拍板;
+--   19 单无购货结算单(balanceStatus=1), 回退后由业务在页面重新发起结算(修复后代码生成正确)。
+-- 本脚本全部语句可直接执行, 无占位; 顺序执行 A→B→C1→C3。幂等: UPDATE 天然幂等, INSERT 带 NOT EXISTS 防重。
 
--- ========== A. 商品数据修正(治本, 未来开单恢复正常; 执行后新开单不再依赖代码防御) ==========
+-- ========== A. 商品数据修正(治本, 未来开单恢复正常) ==========
 UPDATE data.goods SET type = 0 WHERE gid IN (679438, 679439, 679441, 679443) AND type = 1;
 
--- ========== B. 存量销售项修正(现仍为 type=1 psiid=0 的 14 行/6 单) ==========
+-- ========== B. 存量销售项修正(仍为 type=1 psiid=0 的行, 盘点 14 行/6 单) ==========
 UPDATE sales.salesitem si
 JOIN data.goods g ON g.gid = si.gid
 SET si.type = 0
 WHERE g.gid IN (679438, 679439, 679441, 679443) AND si.type = 1 AND si.psiid = 0;
 
--- ========== C. 存量购货结算补行(复杂, 执行前须逐单核对, 建议先跑查询段人工过目) ==========
--- C0. 盘点: 各单缺失的结算行(有购货结算单但缺对应 salesbalanceitem 的)
--- SELECT s.no, sb.sbid, si.siid, g.name
+-- ========== C1. 补购货结算明细行(108 行, status=0 结算单; 补行金额全 0 不动单头) ==========
+INSERT INTO sales.salesbalanceitem (sbid, siid, rawCtype, rawCvalue, ctype, cvalue, num, total)
+SELECT sb.sbid, si.siid, si.rawCtype, si.rawCvalue, si.ctype, si.cvalue, si.num, si.total
+FROM sales.sales s
+JOIN sales.salesitem si ON si.sid = s.sid AND si.type = 0 AND si.psiid = 0
+JOIN data.goods g ON g.gid = si.gid AND g.gid IN (679438, 679439, 679441, 679443)
+JOIN sales.salesbalance sb ON sb.sid = s.sid AND sb.onetype = 0 AND sb.type = 0 AND sb.status = 0
+LEFT JOIN sales.salesbalanceitem sbi ON sbi.sbid = sb.sbid AND sbi.siid = si.siid
+WHERE sbi.sbiid IS NULL;
+
+-- ========== C1b. 2603210898(结算单 1623301 status=1 厂商结算中)缺 2 行——拍板后执行 ==========
+-- 行金额同为 0, 补行不改金额; 但该单已进入厂商结算环节, 厂商端会看到新增行, 执行前知会厂商。
+-- INSERT INTO sales.salesbalanceitem (sbid, siid, rawCtype, rawCvalue, ctype, cvalue, num, total)
+-- SELECT sb.sbid, si.siid, si.rawCtype, si.rawCvalue, si.ctype, si.cvalue, si.num, si.total
 -- FROM sales.sales s
+-- JOIN sales.salesitem si ON si.sid = s.sid AND si.type = 0 AND si.psiid = 0
+-- JOIN data.goods g ON g.gid = si.gid AND g.gid IN (679438, 679439, 679441, 679443)
+-- JOIN sales.salesbalance sb ON sb.sid = s.sid AND sb.onetype = 0 AND sb.type = 0 AND sb.status = 1 AND sb.sbid = 1623301
+-- LEFT JOIN sales.salesbalanceitem sbi ON sbi.sbid = sb.sbid AND sbi.siid = si.siid
+-- WHERE sbi.sbiid IS NULL;
+
+-- ========== C3. 19 单无购货结算单: 经确认不处理(2026-10-05 拍板) ==========
+-- 核验: 19 单全部销售项 total=0(0元套装赠品单), 补建结算单无财务意义;
+--       回退 balanceStatus 重发亦无业务价值, 保持现状(报表显示"无购货结算明细"即真实状态)。
+--       原回退语句撤销, 不执行。
+
+-- ========== 核验(执行后人工核对, 预期: missing=0) ==========
+-- SELECT COUNT(*) AS missing FROM sales.sales s
 -- JOIN sales.salesitem si ON si.sid = s.sid AND si.type = 0 AND si.psiid = 0
 -- JOIN data.goods g ON g.gid = si.gid AND g.gid IN (679438, 679439, 679441, 679443)
 -- JOIN sales.salesbalance sb ON sb.sid = s.sid AND sb.onetype = 0 AND sb.type = 0
 -- LEFT JOIN sales.salesbalanceitem sbi ON sbi.sbid = sb.sbid AND sbi.siid = si.siid
 -- WHERE sbi.sbiid IS NULL;
 
--- C1. 补明细行(以 C0 盘点结果为准; num/total 取自销售项, 金额口径与 preSalesBalance:578-592 一致)
--- INSERT INTO sales.salesbalanceitem (sbid, siid, ctype, cvalue, num, total)
--- SELECT sb.sbid, si.siid, si.ctype, si.cvalue, si.num, si.total
--- FROM sales.sales s
--- JOIN sales.salesitem si ON si.sid = s.sid AND si.type = 0 AND si.psiid = 0
--- JOIN sales.salesbalance sb ON sb.sid = s.sid AND sb.onetype = 0 AND sb.type = 0
--- LEFT JOIN sales.salesbalanceitem sbi ON sbi.sbid = sb.sbid AND sbi.siid = si.siid
--- WHERE s.no IN ( /* 64单清单 */ ) AND sbi.sbiid IS NULL;
-
--- C2. 结算单金额重算(补行后 total/pbalance/vbalance 需按品牌重算, 口径同 preSalesBalance:525-572;
---     ⚠️ 涉及已付款/已确认金额, 须与财务核对后执行, 建议逐单 UPDATE 人工确认)
-
--- C3. 19单"没有购货结算明细": balanceStatus=1(预结算)不满足 preSalesBalance 重发闸(要求初始),
---     需人工评估: 回退 balanceStatus 后重发, 或按 preSalesBalance 口径手工补建结算单+明细。
-
--- ========== D. 退货不对称/重复(2603300254 等)单独甄别, 勿在本脚本盲改 ==========
+-- ========== D. 退货侧不对称/重复(2603300254 购货无但退货多两条重复)单独甄别, 勿在本脚本盲改 ==========
