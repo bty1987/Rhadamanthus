@@ -43,6 +43,9 @@ public class ConstructionNodePO implements Serializable {
 
 	private long cnid;
 
+	// 集团节点:0=集团行(company=0)/自治行,>0=关联的集团行cnid(全字段自由,仅归集关系)
+	private long pcnid;
+
 	private String name;
 
 	private int precheck;
@@ -111,6 +114,15 @@ public class ConstructionNodePO implements Serializable {
 
 	public void setCnid(long cnid) {
 		this.cnid = cnid;
+	}
+
+	@Column(name = "pcnid")
+	public long getPcnid() {
+		return pcnid;
+	}
+
+	public void setPcnid(long pcnid) {
+		this.pcnid = pcnid;
 	}
 
 	@Column(name = "name")

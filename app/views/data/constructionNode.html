@@ -2,7 +2,7 @@
 <!-- app/views/data/constructionNode.html —— 施工节点（CRUD + 状态）
   字段：name(节点名) precheck/postcheck/stacheck/fincheck(款项比) accessoryLimit/salaryLimit(限额) timeLimit(工期) kino/kiname(金蝶) -->
 <html lang="zh-CN"><head><meta charset="utf-8"><title>施工节点</title>
-<link rel="stylesheet" href="../../layui/css/layui.css"><link rel="stylesheet" href="../../css/app.css"></head>
+<link rel="stylesheet" href="../../layui/css/layui.css"><link rel="stylesheet" href="../../css/app.css"><style>.node-sel-list{position:absolute;z-index:9999;left:20px;right:20px;background:#fff;border:1px solid #d2d2d2;max-height:220px;overflow:auto;display:none}.node-sel-item{padding:6px 12px;cursor:pointer}.node-sel-item:hover{background:#f2f2f2}</style></head>
 <body><div class="app-page">
     <div class="app-search"><form class="layui-form" id="searchForm"><div class="layui-form-item">
         <div class="layui-inline"><label class="layui-form-label">节点名</label><div class="layui-input-inline"><input type="text" name="name" data-op="cn" placeholder="节点名" class="layui-input" autocomplete="off"></div></div>
@@ -12,6 +12,7 @@
     <div id="pagenation" class="app-pagenation"></div>
     <div id="editBox" style="display:none; padding:20px;"><form class="layui-form" id="editForm">
         <input type="hidden" name="cnid">
+        <div class="layui-form-item" id="nodeSelItem" style="display:none;"><label class="layui-form-label">集团节点<span class="app-req">*</span></label><div class="layui-input-block" style="position:relative;"><input type="text" id="nodeSel" placeholder="必选,集团没有的节点请先在集团下维护" class="layui-input" autocomplete="off"><div id="nodeSelList" class="node-sel-list"></div></div></div>
         <div class="layui-form-item"><label class="layui-form-label">节点名<span class="app-req">*</span></label><div class="layui-input-block"><input type="text" name="name" placeholder="节点名" class="layui-input v_required" lay-verify="required"></div></div>
         <div class="layui-form-item"><label class="layui-form-label">开工款项比</label><div class="layui-input-inline"><input type="text" name="precheck" placeholder="开工款项比" class="layui-input v_float"></div></div>
         <div class="layui-form-item"><label class="layui-form-label">完工款项比</label><div class="layui-input-inline"><input type="text" name="postcheck" placeholder="完工款项比" class="layui-input v_float"></div></div>

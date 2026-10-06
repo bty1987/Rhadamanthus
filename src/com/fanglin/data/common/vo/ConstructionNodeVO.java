@@ -8,6 +8,9 @@ public class ConstructionNodeVO implements Serializable {
 
 	private Long cnid;
 
+	// 集团节点:0=集团行(company=0)/自治行,>0=关联的集团行cnid(全字段自由,仅归集关系)
+	private Long pcnid;
+
 	private String name;
 
 	private Integer precheck;
@@ -74,6 +77,14 @@ public class ConstructionNodeVO implements Serializable {
 
 	public void setCnid(Long cnid) {
 		this.cnid = cnid;
+	}
+
+	public Long getPcnid() {
+		return pcnid;
+	}
+
+	public void setPcnid(Long pcnid) {
+		this.pcnid = pcnid;
 	}
 
 	public String getName() {

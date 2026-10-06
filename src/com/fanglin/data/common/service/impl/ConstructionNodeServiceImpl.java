@@ -65,6 +65,19 @@ public class ConstructionNodeServiceImpl implements ConstructionNodeService {
 	}
 
 	@Override
+	public List<ConstructionNodeVO> queryConstructionNodeForGroup(String name) {
+
+		List<ConstructionNodePO> constructionNodePOs = constructionNodeDao.queryConstructionNodeForGroup(name, 10);
+		List<ConstructionNodeVO> constructionNodeVOs = new ArrayList<ConstructionNodeVO>();
+
+		for (ConstructionNodePO constructionNodePO : constructionNodePOs) {
+			constructionNodeVOs.add(constructionNodePO.ptv(new ConstructionNodeVO(new SurveyTemplateVO(), new SurveyTemplateVO())));
+		}
+
+		return constructionNodeVOs;
+	}
+
+	@Override
 	public ConstructionNodeVO queryConstructionNodeByCnid(ConstructionNodeVO constructionNodeVO) {
 
 		ConstructionNodePO constructionNodePO = constructionNodeDao.get(constructionNodeVO.getCnid());
@@ -130,6 +143,8 @@ public class ConstructionNodeServiceImpl implements ConstructionNodeService {
 		constructionNodePO.setProset(constructionNodeVO.getProset());
 
 		constructionNodePO.setCompany(constructionNodeVO.getCompany() == null ? 0 : constructionNodeVO.getCompany());
+
+		constructionNodePO.setPcnid(constructionNodeVO.getPcnid() == null ? 0 : constructionNodeVO.getPcnid());
 
 		constructionNodeDao.save(constructionNodePO);
 
