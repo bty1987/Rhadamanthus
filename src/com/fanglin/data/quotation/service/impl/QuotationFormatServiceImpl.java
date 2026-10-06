@@ -69,9 +69,9 @@ public class QuotationFormatServiceImpl implements QuotationFormatService {
 
 		quotationFormatPO.setQuotationCtem(new QuotationCtemPO(quotationFormatVO.getQuotationCtem().getQcid()));
 
-		quotationFormatPO.setMeasurementUnit(quotationFormatVO.getUnit() == null || quotationFormatVO.getUnit().getId() == null ? null : new MeasurementUnitPO(quotationFormatVO.getUnit().getId()));
+		quotationFormatPO.setMeasurementUnit(quotationFormatVO.getUnit() == null || quotationFormatVO.getUnit().getId() == 0 ? null : new MeasurementUnitPO(quotationFormatVO.getUnit().getId()));
 
-		quotationFormatPO.setWorkType(quotationFormatVO.getWorkType() == null || quotationFormatVO.getWorkType().getId() == null ? null : new WorkTypePO(quotationFormatVO.getWorkType().getId()));
+		quotationFormatPO.setWorkType(quotationFormatVO.getWorkType() == null || quotationFormatVO.getWorkType().getId() == 0 ? null : new WorkTypePO(quotationFormatVO.getWorkType().getId()));
 
 		quotationFormatPO.setStatus(QuotationFormatPO.STATUS_ENABLE_STR);
 
@@ -90,9 +90,9 @@ public class QuotationFormatServiceImpl implements QuotationFormatService {
 
 		BeanUtil.copyProperties(quotationFormatVO, quotationFormatPO, Arrays.asList("quotationCtem", "unit", "workType"));
 
-		quotationFormatPO.setMeasurementUnit(quotationFormatVO.getUnit() == null || quotationFormatVO.getUnit().getId() == null ? null : new MeasurementUnitPO(quotationFormatVO.getUnit().getId()));
+		quotationFormatPO.setMeasurementUnit(quotationFormatVO.getUnit() == null || quotationFormatVO.getUnit().getId() == 0 ? null : new MeasurementUnitPO(quotationFormatVO.getUnit().getId()));
 
-		quotationFormatPO.setWorkType(quotationFormatVO.getWorkType() == null || quotationFormatVO.getWorkType().getId() == null ? null : new WorkTypePO(quotationFormatVO.getWorkType().getId()));
+		quotationFormatPO.setWorkType(quotationFormatVO.getWorkType() == null || quotationFormatVO.getWorkType().getId() == 0 ? null : new WorkTypePO(quotationFormatVO.getWorkType().getId()));
 
 		quotationFormatPO.setPinyin(PinYin4Util.getPinYinHeadChar(quotationFormatVO.getName() + quotationFormatVO.getFormat()).get(0));
 

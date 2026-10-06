@@ -10,7 +10,6 @@ import com.fanglin.core.vo.Filter;
 import com.fanglin.data.po.CormtimePO;
 import com.fanglin.data.quotation.dao.CormtimeDao;
 import com.fanglin.utils.Paging;
-import com.fanglin.utils.PagingQuery;
 
 @Repository("cormtimeDao")
 public class CormtimeDaoImpl extends DaoImpl<CormtimePO> implements CormtimeDao {
