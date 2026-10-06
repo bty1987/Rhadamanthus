@@ -922,7 +922,7 @@ var selectionDetail = (function() {
     //   工程量  = 报价项 num(原有红色)
     //   关联量  = 按 报价功能区->模板功能区(版本+名称)->品类(品牌品类名)->规格(商品规格) 匹配的公式计算
     //   公式量  = 直接用报价项自身的公式(quotationitem.formula,随行 expres 下发)计算
-    // 公式变量口径一致: {a}周长{b}面积{c}举架{d}{e}洞面{f}{g}窗面{h}{i}梁(代入前×1000还原毫米/平方毫米)
+    // 公式变量口径一致: {a}周长{b}面积{c}举架{d}{e}洞面{f}{g}窗面{h}{i}梁(米/平方米口径,显示值直接代入,另支持~固定值与|取大)
     var SHOW_RELATED = false; // 关联量默认隐藏(匹配逻辑保留,置 true 即恢复三值并列)
 
     var formula = {
@@ -1062,7 +1062,7 @@ var selectionDetail = (function() {
 
         evalFormula: function(expres, param) {
 
-            // 页面响应里参数字段已被tranargs÷1000(显示单位),代入前×1000还原库内毫米/平方毫米原值
+            // 报价项公式为米/平方米口径: 页面参数已被tranargs÷1000,显示值原样代入(同报价页quotetionFunctionAreaFormula)
             var variables = {
                 a: param.girth,
                 b: param.area,
@@ -1078,10 +1078,15 @@ var selectionDetail = (function() {
             expres = String(expres == null ? '' : expres);
 
             $.each(variables, function(key, value) {
-                expres = expres.replace(new RegExp('\\{' + key + '\\}', 'g'), value == null ? 0 : utils.accMul(value, 1000));
+                expres = expres.replace(new RegExp('\\{' + key + '\\}', 'g'), value == null ? 0 : value);
             });
 
             if (/\{[a-zA-Z]+\}/.test(expres)) return null;
+
+            // ~固定值: 取浪线后字面量(~1→1, ~64/10→6.4); |取大: Math.max(前,后) — 语义同报价页quotetionPart.js:3094-3104
+            if (expres.indexOf('~') != -1) expres = expres.split('~')[1];
+
+            if (expres.indexOf('|') != -1) expres = 'Math.max(' + expres.split('|')[0] + ', ' + expres.split('|')[1] + ')';
 
             expres = expres.replace(/!\s*\(/g, 'Math.ceil(');
 
