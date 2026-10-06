@@ -1,7 +1,7 @@
 $(function() {
 
     var cormrice = {
-        qcid: params.data.quotationCtem.qcid,
+        qfid: params.data.quotationFormat != null ? params.data.quotationFormat.qfid : 0,
         items: {
             constructionNode: com.focusPage('#constructionNode', "#addCormriceModal"),
             unit: com.focusPage('#unit', "#addCormriceModal"),
@@ -47,6 +47,7 @@ $(function() {
         var renderList = function(tableId, listData) {
 
             var $tableWrap = com.focusPage('#' + tableId);
+
             var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
 
             if (listData && listData.length) {
@@ -68,7 +69,7 @@ $(function() {
 
             var $btnDel = $('<a></a>').addClass('btn btn-minier btn-success').html('删除');
 
-            var propertyArr = [["公共项单位: ", v.quotationCtem.unit.name, "gray"], ["定额单位: ", v.unit, "gray"], ["转换量: ", v.trannum, "blue"], ["工费: ", v.salary, "blue"], ["状态: ", constant.data().cormrice.status.keys[v.status], "red"]];
+            var propertyArr = [["定额单位: ", v.unit, "gray"], ["转换量: ", v.trannum, "blue"], ["工费: ", v.salary, "blue"], ["状态: ", constant.data().cormrice.status.keys[v.status], "red"]];
 
             $.each(propertyArr, function(index, value) {
 
@@ -99,8 +100,8 @@ $(function() {
         return {
             init: function() {
 
-                com.post(api.data.queryCormriceByQcid, {
-                    "cormrice.quotationCtem.qcid": cormrice.qcid
+                com.post(api.data.queryCormriceByQfid, {
+                    "cormrice.qfid": cormrice.qfid
                 }, function(res) {
 
                     com.focusPage('#cormriceResultList').html(null);
@@ -132,7 +133,7 @@ $(function() {
             "cormrice.unit": cormrice.items.unit.val(),
             "cormrice.trannum": cormrice.items.trannum.val(),
             "cormrice.salary": cormrice.items.salary.val(),
-            "cormrice.quotationCtem.qcid": cormrice.qcid
+            "cormrice.qfid": cormrice.qfid
         };
 
         com.post(api.data.addCormrice, option, function(e) {

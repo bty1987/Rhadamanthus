@@ -73,19 +73,41 @@ public class CormriceServiceImpl implements CormriceService {
 	}
 
 	@Override
+	public List<CormriceVO> queryCormriceByQfid(Long qfid) {
+
+		List<CormricePO> cormricePOs = cormriceDao.queryCormriceByQfid(qfid);
+		List<CormriceVO> cormriceVOs = new ArrayList<CormriceVO>();
+
+		for (CormricePO cormricePO : cormricePOs) {
+
+			CormriceVO cormriceVO = new CormriceVO(new QuotationCtemVO(null, null, null, null, new MeasurementUnitVO(), new WorkTypeVO()), new ConstructionNodeVO());
+
+			BeanUtil.copyProperties(cormricePO, cormriceVO, Arrays.asList("quotationCtem", "constructionNode"));
+			BeanUtil.copyProperties(cormricePO.getConstructionNode(), cormriceVO.getConstructionNode(), Arrays.asList("startSurvey", "endSurvey"));
+
+			if (cormricePO.getQuotationCtem() != null) cormricePO.getQuotationCtem().ptv(cormriceVO.getQuotationCtem());
+
+			cormriceVOs.add(cormriceVO);
+		}
+
+		return cormriceVOs;
+	}
+
+	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int addCormrice(CormriceVO cormriceVO, Integer company) {
+	public int addCormrice(CormriceVO cormriceVO) {
 
 		CormricePO cormricePO = new CormricePO(new QuotationCtemPO(), new ConstructionNodePO());
 
 		BeanUtil.copyPropertie(cormriceVO, cormricePO, Arrays.asList("quotationCtem", "constructionNode"));
 		BeanUtil.copyProperties(cormriceVO.getConstructionNode(), cormricePO.getConstructionNode(), Arrays.asList("startSurvey", "endSurvey"));
 
-		cormricePO.setQuotationCtem(new QuotationCtemPO(cormriceVO.getQuotationCtem().getQcid()));
+		if (cormriceVO.getQuotationCtem() != null) cormricePO.setQuotationCtem(new QuotationCtemPO(cormriceVO.getQuotationCtem().getQcid()));
 
 		cormricePO.setStatus(CormricePO.STATUS_VALID_STR);
 
-		cormricePO.setCompany(company);
+		// 集团数据(拍板2):company 语义废弃,新行固定落 0
+		cormricePO.setCompany(0);
 
 		cormriceDao.save(cormricePO);
 

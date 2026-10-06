@@ -12,6 +12,8 @@ public class CormriceVO implements Serializable {
 
 	private QuotationCtemVO quotationCtem;
 
+	private Long qfid;
+
 	private ConstructionNodeVO constructionNode;
 
 	private String unit;
@@ -48,6 +50,14 @@ public class CormriceVO implements Serializable {
 
 	public void setQuotationCtem(QuotationCtemVO quotationCtem) {
 		this.quotationCtem = quotationCtem;
+	}
+
+	public Long getQfid() {
+		return qfid;
+	}
+
+	public void setQfid(Long qfid) {
+		this.qfid = qfid;
 	}
 
 	public ConstructionNodeVO getConstructionNode() {

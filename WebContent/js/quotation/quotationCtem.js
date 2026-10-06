@@ -58,17 +58,6 @@ $(function() {
             return false;
         }
     }, {
-        name: "工费",
-        clazz: "btn-inverse",
-        handle: function(v) {
-
-            params.data.quotationCtem = v;
-
-            com.popup4page("#quotationCtemPopUp", "/views/data/cormrice.html", "工费");
-
-            return false;
-        }
-    }, {
         name: "编辑",
         clazz: "btn-yellow",
         handle: function(v) {
