@@ -3,6 +3,7 @@ package com.fanglin.data.common.dao.impl;
 import java.math.BigInteger;
 import java.util.List;
 
+import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
@@ -38,6 +39,12 @@ public class ConstructionNodeDaoImpl extends DaoImpl<ConstructionNodePO> impleme
 	@SuppressWarnings("unchecked")
 	public List<ConstructionNodePO> queryConstructionNode(int company) {
 		return session().createCriteria(ConstructionNodePO.class).add(Restrictions.eq("company", company)).addOrder(Order.asc(ConstructionNodePO.COLUMN_SORT_STR)).add(Restrictions.eq(ConstructionNodePO.COLUMN_STATUS_STR, ConstructionNodePO.STATUS_INIT_SHORT)).list();
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<ConstructionNodePO> queryConstructionNodeForGroup(String name, int limit) {
+		return session().createCriteria(ConstructionNodePO.class).add(Restrictions.eq("company", 0)).add(Restrictions.eq(ConstructionNodePO.COLUMN_STATUS_STR, ConstructionNodePO.STATUS_INIT_SHORT)).add(Restrictions.ilike("name", name, MatchMode.ANYWHERE)).setMaxResults(limit).list();
 	}
 
 	@Override

@@ -661,6 +661,14 @@ $.extend(api, {
                 args: ["precheck", "postcheck", "stacheck", "fincheck", "timeLimit", "salaryLimit", "salaryFloor", "accessoryLimit", "account"]
             }]
         },
+        queryConstructionNodeForGroup: {
+            url: "queryConstructionNodeForGroup.do",
+            type: "query",
+            tranargs: [{
+                result: "constructionNodes",
+                args: ["precheck", "postcheck", "stacheck", "fincheck", "timeLimit", "salaryLimit", "salaryFloor", "accessoryLimit", "account"]
+            }]
+        },
         addConstructionNode: {
             url: "addConstructionNode.do",
             type: "update",

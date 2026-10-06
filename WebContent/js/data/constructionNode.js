@@ -4,6 +4,10 @@ jQuery(function($) {
 
         cnid: null,
 
+        pcnid: null,
+
+        isGroupView: null,
+
         btns: {
             updateBtn: com.focusPage("#updateBtn").on("click", save)
         },
@@ -15,6 +19,8 @@ jQuery(function($) {
         items: {
 
             name: com.focusPage("#name", "#updateModal"),
+
+            groupNodeSel: com.focusPage("#constructionNodeSel", "#updateModal"),
 
             precheck: com.focusPage("#precheck", "#updateModal"),
             postcheck: com.focusPage("#postcheck", "#updateModal"),
@@ -67,6 +73,33 @@ jQuery(function($) {
         constructionNode.items.endSurvey.bindData(res.surveyTemplates, "stid", "name");
     }, null, false);
 
+    // 账号形态探测(数据驱动,不引身份接口):自有行company=0 → 集团账号,隐藏选择器自建集团行;自有行为空时按集团目录有无数据兜底判定
+    com.post(api.data.queryConstructionNode, {}, function(res) {
+
+        var rows = res.constructionNodes || [];
+
+        if (rows.length > 0) {
+            constructionNode.isGroupView = rows[0].company === 0;
+        } else {
+            com.post(api.data.queryConstructionNodeForGroup, {}, function(res2) {
+                constructionNode.isGroupView = (res2.constructionNodes || []).length === 0;
+            }, null, false);
+        }
+    }, null, false);
+
+    // 集团工程节点选择器(数据源queryConstructionNodeForGroup查company=0启用行);无快照,选中仅记录pcnid
+    com.initTypeahead('constructionNodeSel', api.data.queryConstructionNodeForGroup, "constructionNode.name", {}, "constructionNodes", "cnid", "name", function(list, key, value) {
+
+        $.each(list, function(i, v) {
+
+            if (v.cnid == key) {
+                constructionNode.pcnid = v.cnid;
+            }
+        });
+
+        return value;
+    });
+
     var searcher = new Searcher();
 
     searcher.base("condList", "pagenation", "resultList", api.data.pageConstructionNode);
@@ -75,12 +108,12 @@ jQuery(function($) {
 
     searcher.history("constructionNodePostData");
 
-    // searcher.button([{
-    // id: "add",
-    // name: "创建",
-    // clazz: "btn-success",
-    // icon: "icon-plus"
-    // }, ]);
+    searcher.button([{
+        id: "add",
+        name: "创建",
+        clazz: "btn-success",
+        icon: "icon-plus"
+    }]);
 
     // 数据
     var propertyArr = [{
@@ -88,6 +121,11 @@ jQuery(function($) {
         name: "节点名称",
         prop: "name",
         clazz: "grey"
+    }, {
+        fieId: "pcnid",
+        name: "关联cnid",
+        prop: "pcnid",
+        clazz: "blue"
     }, {
         fieId: "precheck",
         name: "开工款项比",
@@ -201,6 +239,7 @@ jQuery(function($) {
         handle: function(v) {
 
             constructionNode.cnid = v.cnid;
+            constructionNode.pcnid = v.pcnid;
             constructionNode.items.name.val(v.name);
             constructionNode.items.precheck.val(v.precheck);
             constructionNode.items.postcheck.val(v.postcheck);
@@ -220,6 +259,10 @@ jQuery(function($) {
             constructionNode.items.accessoryLimit.val(v.accessoryLimit);
             constructionNode.items.salaryLimit.val(v.salaryLimit);
             constructionNode.items.salaryFloor.val(v.salaryFloor);
+
+            // 编辑态不展示集团选择器(关联关系建行即定,换绑走运维SQL)
+            com.focusPage("#groupNodeSelGroup").hide();
+
             constructionNode.modals.updateModal.modal("show");
 
             return false;
@@ -233,6 +276,10 @@ jQuery(function($) {
         com.cleanItems(constructionNode.items);
 
         constructionNode.cnid = null;
+        constructionNode.pcnid = null;
+
+        // 分公司账号创建必选集团节点(集团没有的先在集团下维护);集团账号(自有行company=0)隐藏选择器自建集团行
+        com.focusPage("#groupNodeSelGroup").toggle(constructionNode.isGroupView !== true);
 
         constructionNode.modals.updateModal.modal("show");
     });
@@ -277,6 +324,16 @@ jQuery(function($) {
 
             url = api.data.updateConstructionNode;
         } else {
+            // 分公司创建必须先选集团节点(前端承载约束,后端零校验);集团账号自建集团行不带pcnid
+            if (constructionNode.isGroupView === false && constructionNode.pcnid == null) {
+                com.showAlert(com.error, "请选择集团工程节点(集团没有的节点请先在集团下维护)");
+                return false;
+            }
+
+            if (constructionNode.pcnid != null) {
+                options["constructionNode.pcnid"] = constructionNode.pcnid;
+            }
+
             url = api.data.addConstructionNode;
         }
 

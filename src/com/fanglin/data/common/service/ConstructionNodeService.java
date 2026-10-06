@@ -13,6 +13,8 @@ public interface ConstructionNodeService {
 
 	public List<ConstructionNodeVO> queryConstructionNode(int company);
 
+	public List<ConstructionNodeVO> queryConstructionNodeForGroup(String name);
+
 	public ConstructionNodeVO queryConstructionNodeByCnid(ConstructionNodeVO constructionNodeVO);
 
 	public List<ConstructionNodeVO> queryConstructionNodeByOrderId(String orderId) throws FLException;

@@ -13,6 +13,8 @@ public interface ConstructionNodeDao extends Dao<ConstructionNodePO> {
 
 	public List<ConstructionNodePO> queryConstructionNode(int company);
 
+	public List<ConstructionNodePO> queryConstructionNodeForGroup(String name, int limit);
+
 	public ConstructionNodePO queryConstructionNodeBySort(short sort, int company);
 
 	public int countConstructionNode(short process, int company);
