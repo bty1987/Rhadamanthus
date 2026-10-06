@@ -351,7 +351,7 @@ $.extend(api, {
             type: "query",
             tranargs: [{
                 result: "quotationFormats",
-                args: ["price"]
+                args: ["price", "addPrice", "subPrice", "achePrice"]
             }]
         },
 
@@ -360,21 +360,21 @@ $.extend(api, {
             type: "query",
             tranargs: [{
                 result: "quotationFormats",
-                args: ["price"]
+                args: ["price", "addPrice", "subPrice", "achePrice"]
             }]
         },
         addQuotationFormat: {
             url: "addQuotationFormat.do",
             type: "update",
             tranargs: {
-                args: ["quotationFormat.price"]
+                args: ["quotationFormat.price", "quotationFormat.addPrice", "quotationFormat.subPrice", "quotationFormat.achePrice"]
             }
         },
         updateQuotationFormat: {
             url: "updateQuotationFormat.do",
             type: "update",
             tranargs: {
-                args: ["quotationFormat.price"]
+                args: ["quotationFormat.price", "quotationFormat.addPrice", "quotationFormat.subPrice", "quotationFormat.achePrice"]
             }
         },
         updateQuotationFormatForStatus: {

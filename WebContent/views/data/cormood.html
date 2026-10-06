@@ -1,0 +1,89 @@
+<div>
+    <div class="row">
+        <div class="col-xs-12">
+            <div id="cormoodCondList" class="fl_search clearfix"></div>
+            <div id="cormoodResultList" class="clearfix tab-pane active col-xs-12"></div>
+            <div id="cormoodPagenation" class="fl-page-wrap clearfix col-xs-12">
+
+                <div class="row" style="margin-top: 20px">
+                    <div class="col-xs-12">
+                        <a class="btn btn-minier btn-primary pull-left" id="addCormoodBtn" style="margin-right: 10px">
+                            <i class="icon-plus bigger-110"></i>
+                            <span>添加</span>
+                        </a>
+                        <a class="btn btn-minier" id="cormoodBackBtn">
+                            <i class="icon-mail-forward bigger-110"></i>
+                            <span data-i18n="msg.back">返回</span>
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="addCormoodModal" tabindex="-1">
+    <div class="modal-dialog" style="margin-top: 10%;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span>&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="SaveModal">添加材料</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal">
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right orange" for="noodsName">名称</label>
+                        <div class="col-sm-9">
+                            <input type="text" id="noodsName" class="col-xs-10 col-sm-5 v_required v_typeahead" data-toggle="popover" data-trigger='manual' maxlength="32"/>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right orange" for="normunit" data-i18n="page.data.label.quotaUnit">定额单位</label>
+                        <div class="col-sm-9">
+                            <select  id="normunit" class="col-xs-10 col-sm-5 v_required" data-toggle="popover" data-trigger='manual' maxlength="15"></select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right orange" for="normnum" data-i18n="page.data.label.quotaNum">定额数量</label>
+                        <div class="col-sm-9">
+                            <input type="text" id="normnum" class="col-xs-10 col-sm-5 v_required v_float_3" data-toggle="popover" data-trigger='manual' maxlength="8"/>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right orange" for="storeunit" data-i18n="page.data.label.storeUnit">库房单位</label>
+                        <div class="col-sm-9">
+                            <select  id="storeunit" class="col-xs-10 col-sm-5 v_required" data-toggle="popover" data-trigger='manual' maxlength="15"></select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right orange" for="storenum" data-i18n="page.data.label.storeNum">库房数量</label>
+                        <div class="col-sm-9">
+                            <input type="text" id="storenum" class="col-xs-10 col-sm-5 v_required v_float_3" data-toggle="popover" data-trigger='manual' maxlength="8"/>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right orange" for="price">价格</label>
+                        <div class="col-sm-9">
+                            <input type="text" id="price" class="col-xs-10 col-sm-5 v_required v_float_3" data-toggle="popover" data-trigger='manual' maxlength="8"/>
+                        </div>
+                    </div>
+                </form>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="addCormoodItemBtn" class="btn btn-primary" data-i18n="msg.save">保存</button>
+                <button type="button" id="CancelBtn" class="btn btn-default" data-dismiss="modal" data-i18n="msg.cancel">取消</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $.loadScript(['js/data/cormood.js']);
+</script>

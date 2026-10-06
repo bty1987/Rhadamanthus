@@ -1502,8 +1502,78 @@ $.extend(api, {
                 args: ["cormrice.trannum", "cormrice.salary"]
             }
         },
+        queryCormriceByQfid: {
+            url: "queryCormriceByQfid.do",
+            type: "query",
+            tranargs: [{
+                result: "cormrices",
+                args: ["trannum", "salary"]
+            }, {
+                result: "cormrices-constructionNode",
+                args: ["precheck", "postcheck", "stacheck", "fincheck"]
+            }]
+        },
         deleteCormrice: {
             url: "deleteCormrice.do"
+        },
+
+        // 公共项-工时
+        pageCormtime: {
+            url: "pageCormtime.do",
+            type: "query",
+            tranargs: [{
+                result: "paging-data",
+                args: ["trannum", "workdays"]
+            }]
+        },
+        queryCormtimeByQfid: {
+            url: "queryCormtimeByQfid.do",
+            type: "query",
+            tranargs: [{
+                result: "cormtimes",
+                args: ["trannum", "workdays"]
+            }, {
+                result: "cormtimes-constructionNode",
+                args: ["precheck", "postcheck", "stacheck", "fincheck"]
+            }]
+        },
+        addCormtime: {
+            url: "addCormtime.do",
+            type: "update",
+            tranargs: {
+                args: ["cormtime.trannum", "cormtime.workdays"]
+            }
+        },
+        deleteCormtime: {
+            url: "deleteCormtime.do"
+        },
+
+        // 公共项-材料
+        pageCormood: {
+            url: "pageCormood.do",
+            type: "query",
+            tranargs: [{
+                result: "paging-data",
+                args: ["normnum", "storenum", "price"]
+            }]
+        },
+        queryCormoodByQfid: {
+            url: "queryCormoodByQfid.do",
+            type: "query",
+            tranargs: [{
+                result: "cormoods",
+                args: ["normnum", "storenum", "price"]
+            }]
+        },
+        addCormood: {
+            url: "addCormood.do",
+            type: "update",
+            tranargs: {
+                args: ["cormood.normnum", "cormood.storenum", "cormood.price"]
+            }
+        },
+        deleteCormood: {
+            url: "deleteCormood.do"
         },
 
         // 定额

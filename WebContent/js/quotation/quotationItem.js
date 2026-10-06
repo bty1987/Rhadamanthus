@@ -95,9 +95,14 @@ $(function() {
         quotationItem.items.version.bindData(a.quotationVersions, "no", "name");
     });
 
-    com.initTypeahead('name', api.quotation.queryQuotationFormat, "quotationFormat.pinyin", {}, "quotationFormats", "qcid", "name", function(i, key, value) {
+    com.initTypeahead('name', api.quotation.queryQuotationFormat, "quotationFormat.pinyin", {}, "quotationFormats", "qfid", "name", function(i, key, value) {
 
-        quotationItem.qcid = key;
+        var _quotationFormat = $.grep(i, function(d) {
+            return d.qfid == key;
+        })[0];
+
+        quotationItem.qfid = key;
+        quotationItem.qcid = _quotationFormat != null ? _quotationFormat.qcid : null;
 
         return value;
     }, null, false);
@@ -136,6 +141,7 @@ $(function() {
         com.clearValidator("no", true);
         com.cleanItems(quotationItem.items);
         quotationItem.qcid = null;
+        quotationItem.qfid = null;
     });
 
     quotationItem.saveBtn.bindClick(saveData);
@@ -552,6 +558,7 @@ $(function() {
                 "quotationItem.unit.id": quotationItem.items.measurementUnit.val(),
                 "quotationItem.workType.id": quotationItem.items.workType.val(),
                 "quotationItem.quotationCtem.qcid": quotationItem.qcid,
+                "quotationItem.qfid": quotationItem.qfid,
 
                 "quotationItem.unitPrice": quotationItem.items.unitPrice.val(),
                 "quotationItem.addPrice": quotationItem.items.addPrice.val(),

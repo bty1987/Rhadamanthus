@@ -88,6 +88,8 @@ public class QuotationItemPO implements Serializable {
 
 	private QuotationCtemPO quotationCtem;
 
+	private int qfid; // 关联规格(quotationformat.qfid),0=未关联;建行即定,换绑走SQL
+
 	private int addPrice; // 增补价
 
 	private int unitPrice; // 单价
@@ -247,6 +249,15 @@ public class QuotationItemPO implements Serializable {
 
 	public void setQuotationCtem(QuotationCtemPO quotationCtem) {
 		this.quotationCtem = quotationCtem;
+	}
+
+	@Column(name = "qfid")
+	public int getQfid() {
+		return qfid;
+	}
+
+	public void setQfid(int qfid) {
+		this.qfid = qfid;
 	}
 
 	@Column(name = "addPrice")

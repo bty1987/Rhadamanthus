@@ -44,10 +44,18 @@ public class CormriceAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "queryCormriceByQfid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryCormriceByQfid() throws FLException {
+
+		cormrices = cormriceService.queryCormriceByQfid(cormrice.getQfid());
+
+		return SUCCESS;
+	}
+
 	@Action(value = "addCormrice", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addCormrice() throws FLException {
 
-		cormriceService.addCormrice(cormrice, queryCompany());
+		cormriceService.addCormrice(cormrice);
 
 		return SUCCESS;
 	}

@@ -13,4 +13,6 @@ public interface CormriceDao extends Dao<CormricePO> {
 
 	public List<CormricePO> queryCormriceByQcid(Long qcid);
 
+	public List<CormricePO> queryCormriceByQfid(Long qfid);
+
 }

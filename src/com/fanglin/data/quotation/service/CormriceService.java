@@ -12,7 +12,9 @@ public interface CormriceService {
 
 	public List<CormriceVO> queryCormriceByQcid(Long qcid);
 
-	public int addCormrice(CormriceVO cormriceVO, Integer company);
+	public List<CormriceVO> queryCormriceByQfid(Long qfid);
+
+	public int addCormrice(CormriceVO cormriceVO);
 
 	public int deleteCormrice(CormriceVO cormriceVO);
 

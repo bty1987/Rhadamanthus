@@ -50,6 +50,8 @@ public class QuotationItemVO implements Serializable {
 
 	private QuotationCtemVO quotationCtem;
 
+	private Integer qfid;
+
 	private Integer addPrice;
 
 	private Integer unitPrice;
@@ -201,6 +203,14 @@ public class QuotationItemVO implements Serializable {
 
 	public void setQuotationCtem(QuotationCtemVO quotationCtem) {
 		this.quotationCtem = quotationCtem;
+	}
+
+	public Integer getQfid() {
+		return qfid;
+	}
+
+	public void setQfid(Integer qfid) {
+		this.qfid = qfid;
 	}
 
 	public Integer getAddPrice() {

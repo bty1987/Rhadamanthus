@@ -33,6 +33,12 @@ public class CormriceDaoImpl extends DaoImpl<CormricePO> implements CormriceDao 
 		return createCriteria(CormricePO.class).createAlias("quotationCtem", "quotationCtem").add(Restrictions.eq(CormricePO.COLUMN_QCID_STR, qcid)).list();
 	}
 
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<CormricePO> queryCormriceByQfid(Long qfid) {
+		return createCriteria(CormricePO.class).add(Restrictions.eq(CormricePO.COLUMN_QFID_STR, qfid)).list();
+	}
+
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {
 
 		if (filters == null) return;

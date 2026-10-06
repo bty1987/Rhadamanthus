@@ -10,6 +10,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.communion.vo.MeasurementUnitVO;
 import com.fanglin.core.interceptor.FLException;
+import com.fanglin.communion.po.MeasurementUnitPO;
+import com.fanglin.communion.po.WorkTypePO;
 import com.fanglin.data.po.QuotationCtemPO;
 import com.fanglin.data.po.QuotationFormatPO;
 import com.fanglin.data.quotation.dao.QuotationFormatDao;
@@ -63,9 +65,13 @@ public class QuotationFormatServiceImpl implements QuotationFormatService {
 
 		QuotationFormatPO quotationFormatPO = new QuotationFormatPO();
 
-		BeanUtil.copyPropertie(quotationFormatVO, quotationFormatPO, Arrays.asList("quotationCtem", "unit"));
+		BeanUtil.copyPropertie(quotationFormatVO, quotationFormatPO, Arrays.asList("quotationCtem", "unit", "workType"));
 
 		quotationFormatPO.setQuotationCtem(new QuotationCtemPO(quotationFormatVO.getQuotationCtem().getQcid()));
+
+		quotationFormatPO.setMeasurementUnit(quotationFormatVO.getUnit() == null || quotationFormatVO.getUnit().getId() == null ? null : new MeasurementUnitPO(quotationFormatVO.getUnit().getId()));
+
+		quotationFormatPO.setWorkType(quotationFormatVO.getWorkType() == null || quotationFormatVO.getWorkType().getId() == null ? null : new WorkTypePO(quotationFormatVO.getWorkType().getId()));
 
 		quotationFormatPO.setStatus(QuotationFormatPO.STATUS_ENABLE_STR);
 
@@ -82,7 +88,11 @@ public class QuotationFormatServiceImpl implements QuotationFormatService {
 
 		QuotationFormatPO quotationFormatPO = quotationFormatDao.get(quotationFormatVO.getQfid());
 
-		BeanUtil.copyProperties(quotationFormatVO, quotationFormatPO, Arrays.asList("quotationCtem", "unit"));
+		BeanUtil.copyProperties(quotationFormatVO, quotationFormatPO, Arrays.asList("quotationCtem", "unit", "workType"));
+
+		quotationFormatPO.setMeasurementUnit(quotationFormatVO.getUnit() == null || quotationFormatVO.getUnit().getId() == null ? null : new MeasurementUnitPO(quotationFormatVO.getUnit().getId()));
+
+		quotationFormatPO.setWorkType(quotationFormatVO.getWorkType() == null || quotationFormatVO.getWorkType().getId() == null ? null : new WorkTypePO(quotationFormatVO.getWorkType().getId()));
 
 		quotationFormatPO.setPinyin(PinYin4Util.getPinYinHeadChar(quotationFormatVO.getName() + quotationFormatVO.getFormat()).get(0));
 

@@ -21,6 +21,8 @@ public class CormricePO implements Serializable {
 
 	public static final String COLUMN_QCID_STR = "quotationCtem.qcid";
 
+	public static final String COLUMN_QFID_STR = "qfid";
+
 	// 状态：0=有效 1=无效（前端 cormrice.js 的"有效/无效"显示）
 	public static final short STATUS_VALID_STR = 0;
 
@@ -29,6 +31,8 @@ public class CormricePO implements Serializable {
 	private long cpid;
 
 	private QuotationCtemPO quotationCtem;
+
+	private long qfid;
 
 	private ConstructionNodePO constructionNode;
 
@@ -71,6 +75,15 @@ public class CormricePO implements Serializable {
 
 	public void setQuotationCtem(QuotationCtemPO quotationCtem) {
 		this.quotationCtem = quotationCtem;
+	}
+
+	@Column(name = "qfid")
+	public long getQfid() {
+		return qfid;
+	}
+
+	public void setQfid(long qfid) {
+		this.qfid = qfid;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
