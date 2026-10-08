@@ -26,7 +26,7 @@ public interface RoleOperationDao extends Dao<RoleOperationPO> {
 
 	public RoleOperationPO queryRoleOperation(int rid, int oid, Integer company);
 
-	public RoleOperationPO queryRoleOperation(List<Integer> rids, int oid);
+	public RoleOperationPO queryRoleOperation(List<Integer> rids, int oid, int company);
 
 	public int countRoleOperationByOid(int oid, Integer company);
 

@@ -281,7 +281,8 @@ public class OperationServiceImpl implements OperationService {
 			rids.add(userRolePO.getRole().getRid());
 		}
 
-		RoleOperationPO roleOperationPO = roleOperationDao.queryRoleOperation(rids, operationPO.getOid());
+		// 修复: 历史错配——此参数是company(8.3.004.010起SQL按company过滤),曾误传oid致角色校验错乱(oid>公司数恒拒绝)
+		RoleOperationPO roleOperationPO = roleOperationDao.queryRoleOperation(rids, operationPO.getOid(), userPO.getCompany());
 
 		result = roleOperationPO != null;
 

@@ -14,6 +14,7 @@ package com.fanglin.system.dao.impl;
 import java.math.BigInteger;
 import java.util.List;
 
+import org.hibernate.Criteria;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
@@ -55,8 +56,14 @@ public class RoleOperationDaoImpl extends DaoImpl<RoleOperationPO> implements Ro
 	}
 
 	@Override
-	public RoleOperationPO queryRoleOperation(List<Integer> rids, int oid) {
-		return (RoleOperationPO) session().createCriteria(RoleOperationPO.class).createAlias("operation", "operation").add(Restrictions.in("rid", rids)).add(Restrictions.eq("operation.oid", oid)).setMaxResults(1).uniqueResult();
+	public RoleOperationPO queryRoleOperation(List<Integer> rids, int oid, int company) {
+
+		// 鉴权语义: 该批角色在公司配权或全局配权(company=0,游客/超级管理员等通用角色)下对该operation有授权行
+		Criteria criteria = session().createCriteria(RoleOperationPO.class).createAlias("operation", "operation").add(Restrictions.in("rid", rids)).add(Restrictions.eq("operation.oid", oid)).add(Restrictions.eq("operation.status", OperationPO.STATUS_ENABLE_INT));
+
+		criteria.add(Restrictions.or(Restrictions.eq("company", company), Restrictions.eq("company", 0)));
+
+		return (RoleOperationPO) criteria.setMaxResults(1).uniqueResult();
 	}
 
 	@Override
