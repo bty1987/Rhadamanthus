@@ -13,6 +13,8 @@ package com.fanglin.personel.dao.impl;
 
 import java.util.List;
 
+import org.hibernate.Criteria;
+import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
@@ -56,6 +58,19 @@ public class UserInfoDaoImpl extends DaoImpl<UserInfoPO> implements UserInfoDao 
 	@Override
 	public UserInfoPO queryUserInfoByUserId(String userId) {
 		return (UserInfoPO) session().createCriteria(UserInfoPO.class).createAlias("user", "user").add(Restrictions.eq("user.userId", userId)).setMaxResults(1).uniqueResult();
+	}
+
+	@Override
+	public int countUserInfoByEmail(String email, String userId) {
+
+		Criteria criteria = session().createCriteria(UserInfoPO.class).createAlias("user", "user").add(Restrictions.eq("email", email));
+
+		// userId 非空=更新场景排除本人;库列 CI 排序规则,等值比较天然忽略大小写
+		if (userId != null) {
+			criteria.add(Restrictions.ne("user.userId", userId));
+		}
+
+		return ((Number) criteria.setProjection(Projections.rowCount()).uniqueResult()).intValue();
 	}
 
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {

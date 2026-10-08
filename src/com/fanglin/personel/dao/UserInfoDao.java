@@ -24,4 +24,6 @@ public interface UserInfoDao extends Dao<UserInfoPO> {
 	
 	public UserInfoPO queryUserInfoByUserId(String userId);
 
+	public int countUserInfoByEmail(String email, String userId);
+
 }
