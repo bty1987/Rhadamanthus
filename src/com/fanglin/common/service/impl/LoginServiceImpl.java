@@ -83,10 +83,17 @@ public class LoginServiceImpl implements LoginService {
 				throw new FLException(110004, "该用户不能登陆系统");
 			}
 
+			// 关联校验: buid>0 时换票 uid 必须与之相等(按110008拒绝,不泄露关联关系)
+			if (tokenPO.getBuid() > 0 && tokenPO.getBuid() != userPO.getUid()) {
+				throw new FLException(110008, "验证信息错误");
+			}
+
 			$company = userPO.getCompany();
 
 			authentication = new Authentication(userPO.getUserId(), userPO.getCurrentName(), userPO.getRole().getRid(), (new Date()).getTime(), true, $company, userPO.getFreedom());
-			authentication.setTimout((short) 1);
+
+			// 加固: 超时档位按码配置(0=正常超时,-1=永久映射TIMEOUT_INT);原 setTimout(1) 一律永久
+			authentication.setTimout(tokenPO.getTimeout() == -1 ? Authentication.TIMEOUT_INT : (short) 0);
 
 			return AESHelper.encrypt(authentication.getAuthenticationStr(), SystemConfig.getString("encryptKey"), SystemConfig.getString("encryptIv"));
 		} catch (FLException e) {
@@ -130,7 +137,9 @@ public class LoginServiceImpl implements LoginService {
 			$company = userPO.getCompany();
 
 			authentication = new Authentication(userPO.getUserId(), userPO.getCurrentName(), userPO.getRole().getRid(), (new Date()).getTime(), true, $company, userPO.getFreedom());
-			authentication.setTimout((short) 1);
+
+			// 加固: 强制正常超时,同 requestAuthCode
+			authentication.setTimout((short) 0);
 
 			return AESHelper.encrypt(authentication.getAuthenticationStr(), SystemConfig.getString("encryptKey"), SystemConfig.getString("encryptIv"));
 		} catch (FLException e) {
