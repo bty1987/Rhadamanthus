@@ -8,8 +8,6 @@ _客源 · 报价 · 订单 · 施工 · 主材 · 结算 · 审批 · 报表_
 
 **让每一张装修订单，从一条客源到一笔结算，都在同一个系统里闭环。**
 
-[![star](https://gitee.com/bty1987/Rhadamanthus/badge/star.svg?theme=gitee)](https://gitee.com/bty1987/Rhadamanthus/stargazers)
-[![fork](https://gitee.com/bty1987/Rhadamanthus/badge/fork.svg?theme=gitee)](https://gitee.com/bty1987/Rhadamanthus/fork)
 ![Java](https://img.shields.io/badge/Java-8-007396)
 ![Spring](https://img.shields.io/badge/Spring-4.3-6DB33F)
 ![Struts2](https://img.shields.io/badge/Struts2-2.5-000000)
