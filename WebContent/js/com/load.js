@@ -43,7 +43,7 @@ $.extend($,{
                     } catch (e) { /* i18n 失败不影响业务功能 */ }
                 }
             }).fail(function(jqxhr, settings, exception) {
-                console.error('loadScript fail:', filename, 'status:', jqxhr.status);
+                console.error('loadScript fail:', filename, 'status:', jqxhr.status, 'exception:', exception, exception && exception.stack ? '\n' + exception.stack : '');
             })
         }
     }
