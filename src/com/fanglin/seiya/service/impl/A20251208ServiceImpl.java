@@ -220,6 +220,11 @@ public class A20251208ServiceImpl implements A20251208Service {
 			throw new FLException(190013, "登录名已存在");
 		}
 
+		// 邮箱查重(190039): 空值=清空邮箱放行,重复邮箱致企业大学唯一性冲突
+		if (userInfoVO.getEmail() != null && !userInfoVO.getEmail().trim().isEmpty() && userInfoDao.countUserInfoByEmail(userInfoVO.getEmail().trim(), null) > 0) {
+			throw new FLException(190039, "邮箱已被占用");
+		}
+
 		DepartmentPO departmentPO = departmentDao.get(userVO.getDept().getDid());
 
 		if (departmentPO == null) {
@@ -333,6 +338,11 @@ public class A20251208ServiceImpl implements A20251208Service {
 
 		if (userInfoPO == null) {
 			throw new FLException(190005, "人员不存在");
+		}
+
+		// 邮箱查重(190039): 排除本人;空值=清空邮箱放行
+		if (userInfoVO.getEmail() != null && !userInfoVO.getEmail().trim().isEmpty() && userInfoDao.countUserInfoByEmail(userInfoVO.getEmail().trim(), userVO.getUserId()) > 0) {
+			throw new FLException(190039, "邮箱已被占用");
 		}
 
 		UserPO userPO = userInfoPO.getUser();
