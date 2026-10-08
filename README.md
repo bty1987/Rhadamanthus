@@ -1,116 +1,185 @@
-# Rhadamanthus — 方林装饰 ERP 系统
+<div align="center">
 
-> 服务于装饰装修行业的多公司（多租户）ERP 平台：覆盖从客户线索 → 报价 → 装修订单 → 施工 → 主材销售 → 财务结算 → 售后的完整业务闭环，支撑集团及数十家分子公司协同运营。
+# Rhadamanthus
+
+**装饰装修行业全流程 ERP · 多公司协同运营形态**
+
+_客源 · 报价 · 订单 · 施工 · 主材 · 结算 · 审批 · 报表_
+
+**让每一张装修订单，从一条客源到一笔结算，都在同一个系统里闭环。**
+
+[![star](https://gitee.com/bty1987/Rhadamanthus/badge/star.svg?theme=gitee)](https://gitee.com/bty1987/Rhadamanthus/stargazers)
+[![fork](https://gitee.com/bty1987/Rhadamanthus/badge/fork.svg?theme=gitee)](https://gitee.com/bty1987/Rhadamanthus/fork)
+![Java](https://img.shields.io/badge/Java-8-007396)
+![Spring](https://img.shields.io/badge/Spring-4.3-6DB33F)
+![Struts2](https://img.shields.io/badge/Struts2-2.5-000000)
+![Hibernate](https://img.shields.io/badge/Hibernate-3.6-59666C)
+![MySQL](https://img.shields.io/badge/MySQL-5.x-4479A1)
+
+</div>
 
 ---
 
-## 一、项目简介
+## 这是什么
 
-- **业务定位**：装饰装修行业全流程 ERP —— 客源管理、报价设计、装修订单、施工管理、主材销售/购货、财务结算、人事薪资、审批流、报表平台
-- **多租户架构**：以 `communion.company` 为租户根，业务数据按 `company` 列隔离，支撑集团-分公司两级组织
-- **开放能力**：SSO 单点登录（授权码模式）、钉钉/企业微信/微信集成、电子签（e签宝/法大大）、威富通/银联支付、阿里云 OSS、金蝶对接、施工摄像头（萤石）
-- **开发模式**：小步快跑的持续迭代仓库，业务模块以独立 jar 热替换部署，SQL 脚本与代码同仓库版本化管理
+Rhadamanthus 是一套**跑在自己内网**的装饰装修行业多公司（多租户）ERP 平台。它以"业务单据全链路数字化"为底座，向上生长出完整的经营能力：**客源分配 → 报价设计 → 订单合同 → 施工交付 → 主材供应链 → 财务结算 → 审批与报表**——支撑集团与数十家分子公司在同一套系统里协同运营。
 
-## 二、技术栈
+**它解决的真实痛点：**
 
-| 层 | 技术 | 版本 |
-|-----|------|------|
-| 语言 | Java | 1.8 |
-| Web 框架 | Struts2 | 2.5.16 |
-| IoC/AOP | Spring | 4.3.17.RELEASE |
-| ORM | Hibernate | 3.6.10.Final |
-| 数据库 | MySQL | 5.x（多 schema：communion/decoration/quotation/...） |
-| 前端 | Ace Admin + jQuery + LayUI + i18n | — |
-| 应用服务器 | Tomcat | 7.0.88 |
-| 构建 | 自研模块化构建脚本（非 Maven） | bins/build |
+- 客源靠表格流转，归属和时效说不清——**客源机会+分配规则引擎**解决；
+- 报价版本满天飞，增减项和决算对不上——**报价版本/增减项/决算单**解决；
+- 施工节点、验收、辅料、工费上限靠人盯——**施工节点+定额体系**解决；
+- 主材销售、购货、配送、厂商结算三本账对不齐——**销售/购货/结算一体链**解决；
+- 多公司各自一套表，集团看不到全局——**多租户同库分域 + 报表平台**解决。
 
-> 早期框架版本为既定事实，项目策略是「框架老不是病根，同功能写两遍/状态人肉对账才是」——壳按模块渐进替换，业务规则不重写，前端新老双版并行（WebContent 老版为主、app/ 为 layui 实验版）。
+**工程边界（特点，也是底线）**：系统部署在自有内网，数据不出门；围绕业务实态演进——框架版本是既定事实，不为了"新"而重写业务规则，按模块渐进替换壳、严格守护业务语义。
 
-## 三、模块全景（src/com/fanglin/）
+## 能力全景
 
-| 业务域 | 模块 |
-|--------|------|
-| 装修主链 | `decoration` 装修订单 · `quotation` 报价 · `construction` 施工 · `sales` 主材销售 · `material` 主材 · `balance` 财务结算 · `payment` 款项收付 · `production` 生产 · `building` 楼盘 |
-| 客户与营销 | `customer` 客户 · `communion` 通讯/基础数据 · `market` 营销卡券 · `report` 报表平台 |
-| 组织与人事 | `personel` 人事 · `salary` 薪资 · `system` 系统管理 · `right` 权限 · `approval` 审批 · `finance` 财务 · `kingdee` 金蝶 |
-| 供应链 | `store` 门店物料 · `inventory` 库存 · `data` 基础数据（商品/定额/共享项） · `imports`/`exports` 导入导出 |
-| 集成与开放 | `seiya` 开放平台/SSO · `dingding`/`wechat`/`wecom` 钉钉微信企微 · `elecsign`/`esign`/`fadada` 电子签 · `swiftpass`/`yspay` 支付 · `aliyun` OSS · `camera` 施工摄像头 · `factory` 厂商对接 · `postar` · `market` |
-| 基础设施 | `core` 框架核心（拦截器/DAO 基类/异常） · `utils` 工具集 · `common` 登录认证 · `log` 操作/登录日志 · `timer` 定时任务 · `secret` 密钥 |
-
-## 四、目录结构
-
-```
-Rhadamanthus/
-├── src/com/fanglin/        # 全部 Java 源码（Action/Service/DAO/PO/VO 分层）
-├── WebContent/             # 老版前端主战场（views/js/assets）+ WEB-INF
-│   ├── js/api/             #   接口注册中心（url + tranargs 金额换算声明）
-│   ├── js/com/             #   公共组件（constant/validate/com 等）
-│   └── views/              #   按模块组织的页面
-├── app/                    # layui 实验版前端（渐进迁移验证场）
-├── conf/                   # Spring/Struts/数据源/系统参数配置
-├── docs/                   # 项目文档（见下方文档地图）
-├── sqls/                   # 生产 SQL 脚本（按模块目录，随代码同仓版本化）
-├── bins/                   # 构建/部署/依赖归集脚本（见 bins/BUILD_README.md）
-├── AGENTS.md               # AI Agent 开发规范（分层/命名/错误码/事务/Git 约定）
-└── WebContent/CLAUDE.md    # 前端架构说明
+```text
+┌────────────────────────────────────────────────────────────┐
+│  报表平台    指标域建模 · ECharts 可视化 · 导出              │
+├────────────────────────────────────────────────────────────┤
+│  审批流      通用审批 · 金额闸门 · 节点锁定                  │
+├────────────────────────────────────────────────────────────┤
+│  财务结算    装修款/销售款/购货款 · 厂商结算 · 账户扣款闭环   │
+├────────────────────────────────────────────────────────────┤
+│  主材供应链  选材 · 销售单 · 配送 · 购货/退货 · 厂商结算      │
+├────────────────────────────────────────────────────────────┤
+│  施工交付    节点排期 · 验收 · 辅料 · 放线 · 工费定额控制     │
+├────────────────────────────────────────────────────────────┤
+│  报价设计    版本/模板 · 增减项 · 定额共享项 · 预算员分配     │
+├────────────────────────────────────────────────────────────┤
+│  客源获客    机会池 · 分配规则引擎 · 客源画像 · 跟进流转      │
+└────────────────────────────────────────────────────────────┘
+      底座：多租户同库分域 · 组织权限两级闸 · 模块化 jar 热替换
 ```
 
-## 五、构建与部署
+| 能力板块 | 说明 | 状态 |
+|---|---|---|
+| 🧭 客源获客 | 客户机会池、自动/分区/部门/人员四级分配规则、客源跟进流转与画像 | ✅ 生产运行 |
+| 📐 报价设计 | 多版本报价、报价模板与定额共享项、增减项、预算员自动分配 | ✅ 生产运行 |
+| 🏗️ 施工交付 | 工程节点排期、验收与放线、辅料单、工费定额上限控制 | ✅ 生产运行 |
+| 🧱 主材供应链 | 选材、销售单、配送、购货/退货、厂商结算闭环 | ✅ 生产运行 |
+| 💰 财务结算 | 装修款/销售款/购货款、结算单与厂商结算、账户/扣款体系 | ✅ 生产运行 |
+| 📋 审批与报表 | 通用审批流、金额闸门、多主题报表平台 | ✅ 核心 / 🚧 报表平台渐进投产 |
+| 🔗 集成开放 | SSO 授权码登录、钉钉/企业微信/微信、e签宝/法大大电子签、威富通/银联支付、阿里云 OSS、金蝶 | ✅ 生产运行 |
+| 📱 移动端 | layui 移动/轻量版前端 | 🚧 渐进迁移 |
 
-项目**不使用 Maven**（无 pom.xml），采用自研模块化构建：
+## 与通用 ERP 产品的区别
+
+如果说通用 ERP 产品解决的是"标准化流程开箱即用"，Rhadamanthus 解决的是更深一层的两件事：**业务实态的精确建模**与**长年运营中的持续演进**。
+
+| 维度 | 通用 ERP 产品 | Rhadamanthus |
+|---|---|---|
+| 业务匹配 | 标准流程，行业细节靠配置凑 | 装饰行业原生建模：报价版本/增减项/定额/节点排期/厂商结算均为一等公民 |
+| 部署形态 | 厂商云端订阅 | **私有化内网部署**，数据自有 |
+| 演进方式 | 等厂商版本 | 业务驱动自主迭代，SQL 与代码同仓版本化，模块 jar 热替换当天上线 |
+| 多公司协同 | 按组织架构配置 | 集团-分公司多租户分域，权限两级闸（operation/roleoperation） |
+| 集成深度 | 标准接口 | 钉钉/微信/电子签/支付/OSS/金蝶深度打通，开放平台 SSO 免登 |
+
+## 系统架构
+
+```text
+浏览器 / 移动端 / 三方系统
+ │ HTTP（Struts2 Action，operation 两级权限闸）
+ ▼
+Service 层（业务规则 · @Transactional 事务边界 · FLException 错误码体系）
+ │
+ ▼
+DAO 层（Hibernate Criteria/原生 SQL，多 schema 分域）
+ │
+ ├──▶ MySQL 多 schema（communion 租户域 / decoration / quotation / sales / balance / ...）
+ ├──▶ 前端：WebContent 主站（jQuery + Ace Admin）+ app 轻量版（layui）
+ └──▶ 开放通道：SSO 免登 · 钉钉/企微/微信 · 电子签 · 支付 · OSS · 金蝶
+```
+
+- **认证**：挑战-响应登录 + AES 认证票据 + SSO 授权码交换（开放平台）
+- **权限**：operation（接口注册）+ roleoperation（角色授权）两级闸，`through` 档位控制免认证/通用/鉴权
+- **审计**：登录日志（防爆破统计）、操作日志（ActionLog 统一记录）
+
+## 技术栈
+
+| 层 | 技术 | 说明 |
+|---|---|---|
+| 服务端 | Java 8 · Struts2 2.5.16 · Spring 4.3.17 · Hibernate 3.6.10 | 分层：Action → Service → DAO，PO/VO 分离 |
+| 存储 | MySQL 5.x 多 schema | 金额 ×1000 整型存储，手机号/证件 AES 加密 |
+| 前端 | jQuery + Ace Admin + LayUI + i18n | 接口注册中心（js/api）统一 url 与金额 tranargs 换算 |
+| 构建 | 自研模块化构建脚本（非 Maven） | 单模块编译出 jar，生产热替换 |
+| 运行 | Tomcat 7 | 公共包置于 lib，业务模块按 jar 独立发版 |
+
+## 快速开始（开发环境）
 
 ```bat
-:: 编译并打包单个业务模块（模块名 = src\com\fanglin\ 下的目录名）
-bins\build\build-module.bat <模块名> <版本号>
+:: 前置：JDK 1.8 + Tomcat 7 + MySQL 5.x，配置 conf/jdbc.properties
+:: 依赖 jar 归集（一次性）
+bins\lib\gather-libs.bat
 
-:: 例：打包装修模块
+:: 编译并打包单个业务模块（模块名 = src\com\fanglin\ 下的目录名）
 bins\build\build-module.bat decoration 8.3.031.000
+
+:: 全量编译 + war（本地整包验证）
+bins\build\build-all.bat
 ```
 
-- 产物：`target/fanglin-<模块名>-<版本号>.jar`（仅含该模块 class，公共包在 Tomcat lib）
-- 模块 jar 支持生产热替换；**SQL 脚本与 jar 的上线顺序在每个 SQL 文件头注释中标明**
-- 依赖 jar 归集：`bins/lib/gather-libs.bat`（详见 [bins/BUILD_README.md](bins/BUILD_README.md)）
-- 全量编译 + war：`bins/build/build-all.bat`
+> 详细构建说明见 [bins/BUILD_README.md](bins/BUILD_README.md)。业务改动以模块 jar 热替换验证；**涉及表结构的 SQL 与 jar 的上线顺序在每个 SQL 文件头注释中标明**。
 
-## 六、开发规范
+## 目录结构
 
-- **[AGENTS.md](AGENTS.md)** — 开发规范总纲：分层调用约定、方法命名（`动词+对象+By条件+For目的`，page/query 硬规则）、FLException 错误码登记制、Action 异常处理豁免清单、事务管理、Git 提交约定
-- **[方法命名规范](docs/10-指南手册/METHOD_NAMING_CONVENTION.md)** — 2963 个方法名统计支撑的命名细则
-- **[Operation 收集关闸 SOP](docs/10-指南手册/OPERATION_COLLECT_CUTOVER_SOP.md)** — 接口权限治理流程（operation/roleoperation 两级闸）
-- 关键惯例：金额 ×1000 存储整型、字段命名 `isXxx` 布尔 / `xxxStatus` 状态机、复用 status 枚举优于加列、SQL 参数化查询、手机号/证件号 AES 加密存储
+```text
+Rhadamanthus/
+├── src/com/fanglin/   # 全部 Java 源码（45 个模块，Action/Service/DAO/PO/VO 分层）
+├── WebContent/        # 主站前端（views/js/assets）+ WEB-INF；js/api 为接口注册中心
+├── app/               # layui 轻量版前端（渐进迁移验证场）
+├── conf/              # Spring/Struts/数据源/系统参数
+├── docs/              # 项目文档（16 类分类目录，见下方索引）
+├── sqls/              # 生产 SQL 脚本（按模块归档，随代码同仓版本化）
+├── bins/              # 构建/部署/依赖归集脚本
+├── AGENTS.md          # 开发规范总纲（分层/命名/错误码/事务/Git 约定）
+└── WebContent/CLAUDE.md  # 前端架构说明
+```
 
-## 七、文档地图
+## 文档索引
 
 文档总入口：**[docs/INDEX.md](docs/INDEX.md)**（16 类分类目录全量索引）
 
 | 目录 | 内容 |
-|------|------|
-| `docs/01-方案设计/` | 功能设计方案（含实施状态标注） |
-| `docs/02-需求功能/` | 需求与功能实现文档 |
-| `docs/03-API文档/` | 对外/对内接口文档（含 SSO 对接、error.md 错误码总表） |
-| `docs/04-问题修复/` | 线上问题诊断与修复记录 |
-| `docs/05-优化性能/` | 性能优化 |
-| `docs/06-重构改造/` | 重构记录 |
-| `docs/07-总结报告/` | 阶段总结 |
-| `docs/08-安全加密/` | 加密体系与安全治理 |
-| `docs/09-SQL脚本/` | 数据修复与维护脚本 |
-| `docs/10-指南手册/` | 开发指南与 SOP（命名规范/关闸 SOP/设计文档等） |
-| `docs/11-构建部署/` | 构建部署 |
-| `docs/12-规范标准/` | 规范标准 |
-| `docs/13-集成同步/` | 三方集成与数据同步 |
-| `docs/14-分析调研/` | 分析调研 |
-| `mover/` | 前端迁移文档集 |
+|---|---|
+| [docs/01-方案设计/](docs/01-方案设计/) | 功能设计方案（含实施状态标注） |
+| [docs/02-需求功能/](docs/02-需求功能/) | 需求与功能实现文档 |
+| [docs/03-API文档/](docs/03-API文档/) | 接口文档（SSO 对接、error.md 错误码总表） |
+| [docs/04-问题修复/](docs/04-问题修复/) | 线上问题诊断与修复记录 |
+| [docs/08-安全加密/](docs/08-安全加密/) | 加密体系与安全治理 |
+| [docs/09-SQL脚本/](docs/09-SQL脚本/) | 数据修复与维护脚本 |
+| [docs/10-指南手册/](docs/10-指南手册/) | 开发指南与 SOP（[方法命名规范](docs/10-指南手册/METHOD_NAMING_CONVENTION.md)、[权限关闸 SOP](docs/10-指南手册/OPERATION_COLLECT_CUTOVER_SOP.md)） |
+| [docs/13-集成同步/](docs/13-集成同步/) | 三方集成与数据同步 |
 
-各业务模块的领域速查文档位于 `src/com/fanglin/[模块]/CLAUDE.md`，前端架构见 [WebContent/CLAUDE.md](WebContent/CLAUDE.md)。
+各业务模块的领域速查文档位于 `src/com/fanglin/[模块]/CLAUDE.md`，前端架构见 [WebContent/CLAUDE.md](WebContent/CLAUDE.md)，开发规范总纲见 [AGENTS.md](AGENTS.md)。
 
-## 八、快速启动（开发环境）
+## 工程实践
 
-1. JDK 1.8 + Tomcat 7 + MySQL 5.x
-2. 配置数据库连接 `conf/jdbc.properties`（多 schema 结构见脚本注释）
-3. IDE 导入源码目录，依赖 jar 见 `WebContent/WEB-INF/lib/`（缺失执行 `bins/lib/gather-libs.bat`）
-4. 部署至 Tomcat，访问 `http://localhost:8080/Rhadamanthus/login.html`
-5. 改动业务模块后用 `bins/build/build-module.bat` 出对应 jar 热替换验证
+- **模块化热替换**：业务模块独立打 jar，生产当天上线；SQL 脚本随代码同仓版本化，上线顺序强制标注
+- **错误码登记制**：所有业务异常使用 FLException 错误码，码值统一登记于 `docs/03-API文档/API/error.md`
+- **权限治理**：operation/roleoperation 两级闸持续收口（免认证接口陆续关闸、未登记接口自动收集）
+- **数据安全**：手机号/证件号 AES 加密存储、SQL 参数化强制、敏感字段展示脱敏、登录防爆破统计
+- **文档治理**：每一项功能设计、问题修复、SOP 均归档入 docs 分类目录，与代码同仓演进
 
----
+## 常见问题（FAQ）
 
-> **声明**：本项目为方林装饰内部业务系统，仓库与文档仅面向内部开发与维护人员。
+**Q：为什么不用新框架重构？**
+框架老不是病根——同功能写两遍、状态靠人肉对账才是。项目策略是壳按模块渐进替换、业务规则不重写，把工程资源投在业务语义的正确性上。
+
+**Q：为什么不用 Maven？**
+历史与部署形态决定：业务模块以独立 jar 热替换发版，`bins/build/build-module.bat` 单模块编译更贴合该流程（详见 [bins/BUILD_README.md](bins/BUILD_README.md)）。
+
+**Q：金额为什么都是大整数？**
+全库金额 ×1000 整型存储避免浮点误差；前端接口注册中心的 tranargs 声明负责展示层 ÷1000，跨接口金额运算必须两边都过换算。
+
+**Q：如何新增一个业务接口？**
+遵循 AGENTS.md：分层调用（Action 传 VO → Service → DAO 传基本类型）、方法命名（动词+对象+By条件+For目的）、FLException 错误码先在 error.md 登记、operation 表注册权限档位。
+
+## 使用边界与许可
+
+本项目为**内部业务系统**，仓库与文档仅面向内部开发与维护人员；数据含真实经营信息，请勿对外泄露系统地址、账号与业务数据。
+
+本项目暂未附带开源许可证，**默认保留所有权利（All Rights Reserved）**。
