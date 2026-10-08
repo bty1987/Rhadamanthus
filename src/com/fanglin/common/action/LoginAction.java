@@ -12,6 +12,10 @@
 package com.fanglin.common.action;
 
 import java.util.Date;
+import java.util.Deque;
+import java.util.LinkedList;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
@@ -48,6 +52,61 @@ import com.fanglin.utils.SystemConfig;
 public class LoginAction extends BaseListAction {
 
 	private static final long serialVersionUID = 597878314944213650L;
+
+	// AUTHCODE 路径失败限速: 同ip 5分钟内失败≥5次直接拒绝(内存版,单实例部署;按ip聚合防爆破/防码枚举)
+	private static final Map<String, Deque<Long>> AUTH_FAIL_LOG = new ConcurrentHashMap<String, Deque<Long>>();
+
+	private static final int AUTH_FAIL_LIMIT = 5;
+
+	private static final long AUTH_FAIL_WINDOW = 5 * 60 * 1000L;
+
+	private static boolean isAuthRateLimited(String ip) {
+
+		Deque<Long> fails = AUTH_FAIL_LOG.get(ip);
+
+		if (fails == null) {
+			return false;
+		}
+
+		long now = System.currentTimeMillis();
+
+		synchronized (fails) {
+
+			while (!fails.isEmpty() && now - fails.peekFirst() > AUTH_FAIL_WINDOW) {
+				fails.pollFirst();
+			}
+
+			return fails.size() >= AUTH_FAIL_LIMIT;
+		}
+	}
+
+	private static void recordAuthFail(String ip) {
+
+		if (AUTH_FAIL_LOG.size() > 10000) {
+			AUTH_FAIL_LOG.clear(); // 防极端源ip数撑爆内存,清空仅影响限速计数
+		}
+
+		Deque<Long> fails = AUTH_FAIL_LOG.get(ip);
+
+		if (fails == null) {
+
+			fails = new LinkedList<Long>();
+
+			Deque<Long> old = AUTH_FAIL_LOG.putIfAbsent(ip, fails);
+
+			if (old != null) {
+				fails = old;
+			}
+		}
+
+		synchronized (fails) {
+			fails.addLast(System.currentTimeMillis());
+		}
+	}
+
+	private static void clearAuthFail(String ip) {
+		AUTH_FAIL_LOG.remove(ip);
+	}
 
 	protected Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -244,6 +303,14 @@ public class LoginAction extends BaseListAction {
 			String code = request.getParameter("code");
 			String secret = request.getParameter("secret");
 
+			// 审计: traceId 记通行码尾6位,滥用可追溯到具体码
+			loginLogVO.setTraceId("authcode:" + (code == null ? "null" : code.substring(Math.max(0, code.length() - 6))));
+
+			// 加固: 同ip失败限速,窗口内超限直接拒绝(含真实校验前的枚举防护)
+			if (isAuthRateLimited(ip)) {
+				throw new FLException(110008, "验证信息错误");
+			}
+
 			if (SystemConfig.getString("disable") != null && !SystemConfig.getString("disable").equals(userId)) {
 				throw new FLException(110018, "平台暂停使用");
 			}
@@ -251,16 +318,19 @@ public class LoginAction extends BaseListAction {
 			setAuthentication(loginService.requestAuthCode(userId, code, secret));
 
 			// 成功
+			clearAuthFail(ip);
 			loginLogService.recordLogin(loginLogVO, true, null, null);
 		} catch (FLException e) {
 			setErrorCode(e.getCode());
 			setErrorMsg(e.getErrorMessage());
+			recordAuthFail(ip);
 			try {
 				loginLogService.recordLogin(loginLogVO, false, e.getCode(), e.getErrorMessage());
 			} catch (Throwable ignore) { }
 		} catch (Exception e) {
 			setErrorCode(110000);
 			setErrorMsg("系统繁忙,请稍后重试");
+			recordAuthFail(ip);
 			try {
 				loginLogVO.setResultState(com.fanglin.log.po.LoginLogPO.RESULTSTATE_ERROR);
 				loginLogService.recordLogin(loginLogVO, false, 110000, "系统繁忙,请稍后重试");
@@ -287,6 +357,14 @@ public class LoginAction extends BaseListAction {
 			String code = request.getParameter("code");
 			String secret = request.getParameter("secret");
 
+			// 审计: traceId 记验证码尾6位
+			loginLogVO.setTraceId("phoneauthcode:" + (code == null ? "null" : code.substring(Math.max(0, code.length() - 6))));
+
+			// 加固: 同ip失败限速,同 requestAuthCode
+			if (isAuthRateLimited(ip)) {
+				throw new FLException(110008, "验证信息错误");
+			}
+
 			if (SystemConfig.getString("disable") != null && !SystemConfig.getString("disable").equals(userId)) {
 				throw new FLException(110018, "平台暂停使用");
 			}
@@ -294,22 +372,25 @@ public class LoginAction extends BaseListAction {
 			setAuthentication(loginService.phoneAuthCode(userId, phone, code, secret));
 
 			// 成功
+			clearAuthFail(ip);
 			loginLogService.recordLogin(loginLogVO, true, null, null);
 		} catch (FLException e) {
 			setErrorCode(e.getCode());
 			setErrorMsg(e.getErrorMessage());
+			recordAuthFail(ip);
 			try {
 				loginLogService.recordLogin(loginLogVO, false, e.getCode(), e.getErrorMessage());
 			} catch (Throwable ignore) { }
 		} catch (Exception e) {
 			setErrorCode(110000);
 			setErrorMsg("系统繁忙,请稍后重试");
+			recordAuthFail(ip);
 			try {
 				loginLogVO.setResultState(com.fanglin.log.po.LoginLogPO.RESULTSTATE_ERROR);
 				loginLogService.recordLogin(loginLogVO, false, 110000, "系统繁忙,请稍后重试");
 			} catch (Throwable ignore) { }
 
-			LogUtils.logging(logger, e, "requestAuthCode", "common");
+			LogUtils.logging(logger, e, "phoneAuthCode", "common");
 		}
 
 		return SUCCESS;

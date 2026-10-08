@@ -28,6 +28,10 @@ public class TokenPO implements java.io.Serializable {
 
 	private short status;
 
+	private int buid;
+
+	private short timeout;
+
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
 	@Column(name = "tid")
@@ -55,6 +59,27 @@ public class TokenPO implements java.io.Serializable {
 
 	public void setStatus(short status) {
 		this.status = status;
+	}
+
+	// 关联 communion.user.uid: 0=不绑定(兼容存量行),>0 时该码仅可为对应 uid 换票
+	@Column(name = "buid")
+	public int getBuid() {
+		return this.buid;
+	}
+
+	public void setBuid(int buid) {
+		this.buid = buid;
+	}
+
+	// 会话超时档位: 0=正常超时(cookieOvertime), -1=永久(签发映射 TIMEOUT_INT)
+	// 列名用正确拼写 timeout;Authentication 内部 timout 系历史错拼,票据协议键实为 "timeout="
+	@Column(name = "timeout")
+	public short getTimeout() {
+		return this.timeout;
+	}
+
+	public void setTimeout(short timeout) {
+		this.timeout = timeout;
 	}
 
 }
