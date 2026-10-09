@@ -1,0 +1,128 @@
+<div id="quotationFunctionManageContent">
+    <style>
+        #qfmCategoryList { list-style: none; margin: 0; padding: 0; border-right: 1px solid #e8e8e8; min-height: 420px; }
+        #qfmCategoryList li a { display: block; padding: 5px 10px; cursor: pointer; color: #333; }
+        #qfmCategoryList li a:hover { background: #f5f7fa; text-decoration: none; }
+        #qfmCategoryList li.active a { background: #4383b4; color: #fff; }
+        #qfmCategoryList li.nav-header { padding: 8px 10px 3px; font-size: 11px; color: #999; }
+        .qfm-section { margin: 14px 0 6px; padding-bottom: 4px; color: #4383b4; font-weight: bold; border-bottom: 1px solid #e5e5e5; }
+        .qfm-grid { overflow: hidden; }
+        .qfm-grid .col-md-4, .qfm-grid .col-sm-6 { padding: 0 10px 10px 0; }
+        .qfm-card { border: 1px solid #e3e3e3; border-radius: 3px; background: #fff; padding: 6px 8px; min-height: 62px; }
+        .qfm-card:hover { border-color: #4383b4; background: #f5f7fa; }
+        .qfm-card .qfm-dfid { font-size: 11px; color: #fff; background: #adb3bf; border-radius: 3px; padding: 1px 5px; margin-right: 6px; }
+        .qfm-card .qfm-group { font-size: 11px; color: #fff; background: #82af6e; border-radius: 3px; padding: 1px 5px; margin-right: 6px; }
+        .qfm-card .qfm-name { color: #0866c6; font-weight: bold; margin-right: 6px; }
+        .qfm-card .qfm-kv { color: #666; font-size: 12px; margin-top: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .qfm-card .qfm-cmt { color: #a0a0a0; font-size: 12px; margin-top: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .qfm-card .qfm-ops { display: none; }
+        .qfm-card:hover .qfm-ops { display: inline; }
+    </style>
+    <div class="row">
+        <div class="col-xs-2">
+            <ul id="qfmCategoryList"></ul> <!-- 左侧分类导航 -->
+        </div>
+        <div class="col-xs-10">
+            <div class="clearfix" style="margin-bottom: 6px;">
+                <a id="qfmAddBtn" class="btn btn-minier btn-yellow pull-left" style="margin-right: 10px;">
+                    <i class="icon-plus bigger-110"></i>
+                    <span>添加</span>
+                </a>
+                <input type="text" id="qfmFilter" class="pull-left" placeholder="过滤: 名称 / 键 / 值" style="width: 200px; height: 26px; margin-right: 12px;">
+                <span id="qfmViewHint" class="text-muted pull-left" style="line-height: 26px;"></span>
+            </div>
+            <div id="qfmItemList"></div> <!-- 右侧分组条目列表 -->
+        </div>
+    </div>
+
+    <div class="modal fade" id="quotationFunctionModal" tabindex="-1">
+        <div class="modal-dialog" style="margin-top: 10%; width: 500px;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span>&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title">报价功能</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal">
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right orange" for="qfName">名称</label>
+                            <div class="col-sm-9">
+                                <input type="text" id="qfName" class="col-xs-10 col-sm-6 v_required" data-toggle="popover" maxlength="64"/>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right orange" for="qfKey">键</label>
+                            <div class="col-sm-9">
+                                <input type="text" id="qfKey" class="col-xs-10 col-sm-6 v_required" data-toggle="popover" maxlength="64"/>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right orange" for="qfValue">值</label>
+                            <div class="col-sm-9">
+                                <input type="text" id="qfValue" class="col-xs-10 col-sm-6" data-toggle="popover" maxlength="255"/>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right orange" for="qfGroup">分组</label>
+                            <div class="col-sm-9">
+                                <select id="qfGroup" class="col-xs-10 col-sm-6" data-toggle="popover" data-trigger='manual'>
+                                    <option value="0">0</option>
+                                    <option value="1">1</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right orange" for="qfType">类型</label>
+                            <div class="col-sm-9">
+                                <select id="qfType" class="col-xs-10 col-sm-6 v_required" data-toggle="popover" data-trigger='manual'>
+                                    <option value="">请选择</option>
+                                    <option value="0">0 功能区块</option>
+                                    <option value="1">1 API数据源</option>
+                                    <option value="2">2 查询条件</option>
+                                    <option value="3">3 列字段</option>
+                                    <option value="4">4 功能项</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right orange" for="qfSubtype">子类型</label>
+                            <div class="col-sm-9">
+                                <select id="qfSubtype" class="col-xs-10 col-sm-6" data-toggle="popover" data-trigger='manual'>
+                                    <option value="0">0</option>
+                                    <option value="1">1</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right orange" for="qfSort">排序</label>
+                            <div class="col-sm-9">
+                                <input type="text" id="qfSort" class="col-xs-10 col-sm-6 v_number" data-toggle="popover" data-trigger='manual' maxlength="6"/>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right orange" for="qfComment">备注</label>
+                            <div class="col-sm-9">
+                                <textarea id="qfComment" class="col-xs-10 col-sm-6" rows="3" data-toggle="popover" data-trigger='manual' maxlength="200"></textarea>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="saveQuotationFunctionBtn" class="btn btn-primary">保存</button>
+                    <button type="button" id="cancelQuotationFunctionBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $.loadScript(['js/quotation/quotationFunctionManage.js']);
+</script>

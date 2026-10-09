@@ -28,10 +28,42 @@ public class QuotationFunctionAction extends BaseListAction {
 
 	private QuotationFunctionVO quotationFunction;
 
+	@Action(value = "pageQuotationFunction", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String pageQuotationFunction() throws FLException {
+
+		quotationFunctions = quotationFunctionService.pageQuotationFunction(getPaging(), getFilters());
+
+		return SUCCESS;
+	}
+
 	@Action(value = "queryQuotationFunction", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryQuotationFunction() throws FLException {
 
 		quotationFunctions = quotationFunctionService.queryQuotationFunction(quotationFunction);
+
+		return SUCCESS;
+	}
+
+	@Action(value = "addQuotationFunction", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String addQuotationFunction() throws FLException {
+
+		quotationFunctionService.addQuotationFunction(quotationFunction);
+
+		return SUCCESS;
+	}
+
+	@Action(value = "updateQuotationFunction", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateQuotationFunction() throws FLException {
+
+		quotationFunctionService.updateQuotationFunction(quotationFunction);
+
+		return SUCCESS;
+	}
+
+	@Action(value = "deleteQuotationFunction", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String deleteQuotationFunction() throws FLException {
+
+		quotationFunctionService.deleteQuotationFunction(quotationFunction);
 
 		return SUCCESS;
 	}

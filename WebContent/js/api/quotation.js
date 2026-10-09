@@ -162,6 +162,18 @@ $.extend(api, {
         queryQuotationFunction: {
             url: "queryQuotationFunction.do"
         },
+        pageQuotationFunction: {
+            url: "pageQuotationFunction.do"
+        },
+        addQuotationFunction: {
+            url: "addQuotationFunction.do"
+        },
+        updateQuotationFunction: {
+            url: "updateQuotationFunction.do"
+        },
+        deleteQuotationFunction: {
+            url: "deleteQuotationFunction.do"
+        },
 
         pageQuotationVersion: {
             url: "pageQuotationVersion.do",
