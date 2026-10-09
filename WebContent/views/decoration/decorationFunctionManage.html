@@ -1,0 +1,93 @@
+<div id="decorationFunctionManageContent" class="page-content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div id="decorationFunctionManageCondList" class="fl_search clearfix"></div> <!-- 查询条件 -->
+            <div id="decorationFunctionManageResultList" class="clearfix tab-pane active"></div>
+            <div id="decorationFunctionManagePagenation" class="fl-page-wrap clearfix"></div> <!-- 分页 -->
+        </div>
+    </div>
+
+    <div class="modal fade" id="decorationFunctionModal" tabindex="-1">
+        <div class="modal-dialog" style="margin-top: 10%; width: 500px;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span>&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title">装修功能</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal">
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right orange" for="dfName">名称</label>
+                            <div class="col-sm-9">
+                                <input type="text" id="dfName" class="col-xs-10 col-sm-5 v_required" data-toggle="popover" maxlength="64"/>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right orange" for="dfKey">键</label>
+                            <div class="col-sm-9">
+                                <input type="text" id="dfKey" class="col-xs-10 col-sm-5 v_required" data-toggle="popover" maxlength="64"/>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right orange" for="dfValue">值</label>
+                            <div class="col-sm-9">
+                                <input type="text" id="dfValue" class="col-xs-10 col-sm-5" data-toggle="popover" maxlength="255"/>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right orange" for="dfType">类型</label>
+                            <div class="col-sm-9">
+                                <select id="dfType" class="col-xs-10 col-sm-5 v_required" data-toggle="popover" data-trigger='manual'>
+                                    <option value="">请选择</option>
+                                    <option value="0">0</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
+                                    <option value="6">6</option>
+                                    <option value="7">7</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right orange" for="dfSubtype">子类型</label>
+                            <div class="col-sm-9">
+                                <select id="dfSubtype" class="col-xs-10 col-sm-5" data-toggle="popover" data-trigger='manual'>
+                                    <option value="0">0</option>
+                                    <option value="1">1</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right orange" for="dfSort">排序</label>
+                            <div class="col-sm-9">
+                                <input type="text" id="dfSort" class="col-xs-10 col-sm-5 v_number" data-toggle="popover" data-trigger='manual' maxlength="6"/>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right orange" for="dfComment">备注</label>
+                            <div class="col-sm-9">
+                                <textarea id="dfComment" class="col-xs-10 col-sm-5" rows="3" data-toggle="popover" data-trigger='manual' maxlength="200"></textarea>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="saveDecorationFunctionBtn" class="btn btn-primary">保存</button>
+                    <button type="button" id="cancelDecorationFunctionBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $.loadScript(['js/decoration/decorationFunctionManage.js']);
+</script>
