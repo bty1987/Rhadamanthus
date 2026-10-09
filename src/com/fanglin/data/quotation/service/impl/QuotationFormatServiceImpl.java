@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.communion.vo.MeasurementUnitVO;
 import com.fanglin.core.interceptor.FLException;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.communion.po.MeasurementUnitPO;
 import com.fanglin.communion.po.WorkTypePO;
 import com.fanglin.data.po.QuotationCtemPO;
@@ -46,9 +47,9 @@ public class QuotationFormatServiceImpl implements QuotationFormatService {
 	}
 
 	@Override
-	public List<QuotationFormatVO> queryQuotationFormatByQcid(Long qcid) {
+	public List<QuotationFormatVO> queryQuotationFormatByQcid(Long qcid, List<Filter> filters) {
 
-		List<QuotationFormatPO> quotationFormatPOs = quotationFormatDao.queryQuotationFormatByQcid(qcid);
+		List<QuotationFormatPO> quotationFormatPOs = quotationFormatDao.queryQuotationFormatByQcid(qcid, filters);
 		List<QuotationFormatVO> quotationFormatVOs = new ArrayList<QuotationFormatVO>();
 
 		for (QuotationFormatPO quotationFormatPO : quotationFormatPOs) {
