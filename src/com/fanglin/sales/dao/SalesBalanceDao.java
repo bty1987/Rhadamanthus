@@ -30,6 +30,8 @@ public interface SalesBalanceDao extends Dao<SalesBalancePO> {
 
 	public SalesBalancePO querySalesBalance(long sid, long bid, short type, short onetype, short deliverSchedule);
 
+	public List<SalesBalancePO> querySalesBalanceByRid(long rid);
+
 	public int countSalesBalance(long sid, short type, short onetype, short checkStatus) throws FLException;
 
 	public int updateSalesBalance(long sid, short onetype, String field, short status);
