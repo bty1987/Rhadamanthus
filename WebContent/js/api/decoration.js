@@ -990,6 +990,18 @@ $.extend(api, {
         queryDecorationFunctionByName: {
             url: "queryDecorationFunctionByName.do"
         },
+        pageDecorationFunction: {
+            url: "pageDecorationFunction.do"
+        },
+        addDecorationFunction: {
+            url: "addDecorationFunction.do"
+        },
+        updateDecorationFunction: {
+            url: "updateDecorationFunction.do"
+        },
+        deleteDecorationFunction: {
+            url: "deleteDecorationFunction.do"
+        },
         queryDecorationAtttypeByType: {
             url: "queryDecorationAtttypeByType.do"
         },
@@ -1024,7 +1036,7 @@ $.extend(tools, {
 
                 var decorationInfo = res.decorationInfo;
 
-                com.showTip(content, "非业务员名:" + decorationInfo.notSalesmanName + "<br\>非业务员电话:" + decorationInfo.notSalesmanPhone + "<br\>非业务员备注:" + decorationInfo.notSalesmanContent + "<br\>返单人员名:" + decorationInfo.backOrderName + "<br\>返单人员电话:" + decorationInfo.backOrderPhone + "<br\>返单人员备注:" + decorationInfo.backOrderContent, "bottom");
+                com.showTip(content, "非业务员名:" + decorationInfo.notSalesmanName + "<br\>非业务员电话:" + decorationInfo.notSalesmanPhone + "<br\>非业务员备注:" + decorationInfo.notSalesmanContent + "<br\>来源方:" + (decorationInfo.source == null ? "" : decorationInfo.source) + "<br\>对接人:" + (decorationInfo.contact == null ? "" : decorationInfo.contact) + "<br\>返单人员名:" + decorationInfo.backOrderName + "<br\>返单人员电话:" + decorationInfo.backOrderPhone + "<br\>返单人员备注:" + decorationInfo.backOrderContent, "bottom");
             });
         },
 

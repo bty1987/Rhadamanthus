@@ -1523,6 +1523,8 @@ jQuery(function($) {
             decorationDetail.items.notSalesmanPhone.val(res.notSalesmanPhone);
             decorationDetail.items.notSalesmanName.val(res.notSalesmanName);
             decorationDetail.items.notSalesmanContent.val(res.notSalesmanContent);
+            com.focusPage("#dfSource").val(res.source == null ? "" : res.source);
+            com.focusPage("#dfContact").val(res.contact == null ? "" : res.contact);
         });
 
         decorationDetail.houseItems.shid = decoration.house.hid;
