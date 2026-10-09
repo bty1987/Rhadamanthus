@@ -1,20 +1,34 @@
 <div id="decorationFunctionManageContent">
+    <style>
+        #dfmCategoryList { list-style: none; margin: 0; padding: 0; border-right: 1px solid #e8e8e8; min-height: 420px; }
+        #dfmCategoryList li a { display: block; padding: 5px 10px; cursor: pointer; color: #333; }
+        #dfmCategoryList li a:hover { background: #f5f7fa; text-decoration: none; }
+        #dfmCategoryList li.active a { background: #4383b4; color: #fff; }
+        #dfmCategoryList li.nav-header { padding: 8px 10px 3px; font-size: 11px; color: #999; }
+        .dfm-section { margin: 14px 0 4px; padding-bottom: 4px; color: #4383b4; font-weight: bold; border-bottom: 1px solid #e5e5e5; }
+        .dfm-line { padding: 5px 8px; border-bottom: 1px dotted #eee; }
+        .dfm-line:hover { background: #f5f7fa; }
+        .dfm-line .dfm-dfid { font-size: 11px; color: #fff; background: #adb3bf; border-radius: 3px; padding: 1px 5px; margin-right: 6px; }
+        .dfm-line .dfm-name { color: #0866c6; font-weight: bold; margin-right: 6px; }
+        .dfm-line .dfm-kv { color: #666; font-size: 12px; margin-right: 6px; }
+        .dfm-line .dfm-cmt { color: #a0a0a0; font-size: 12px; }
+        .dfm-line .dfm-ops { display: none; }
+        .dfm-line:hover .dfm-ops { display: inline; }
+    </style>
     <div class="row">
-        <div class="col-xs-12">
-            <div id="dfmCategoryBar" class="clearfix"></div> <!-- type=0分类条 -->
-            <div id="decorationFunctionManageCondList" class="fl_search clearfix"></div> <!-- 查询条件 -->
-            <div id="decorationFunctionManageResultList" class="clearfix tab-pane active"></div>
-            <div id="decorationFunctionManagePagenation" class="fl-page-wrap clearfix"></div> <!-- 分页 -->
-            <div id="dfmCategoryPanel" style="display: none;">
-                <div id="dfmCategoryToolbar" class="clearfix" style="margin: 6px 0;">
-                    <a id="dfmCategoryAddBtn" class="btn btn-minier btn-yellow pull-left" style="margin-right: 10px">
-                        <i class="icon-plus bigger-110"></i>
-                        <span>添加</span>
-                    </a>
-                    <span class="text-muted pull-left" style="line-height: 26px;">条目与分类的公司绑定关系在「功能配置」页维护,此处仅字典维护</span>
-                </div>
-                <ul id="dfmCategoryResultList" class="item-list fl-table-list ui-sortable clearfix"></ul>
+        <div class="col-xs-2">
+            <ul id="dfmCategoryList"></ul> <!-- 左侧分类导航 -->
+        </div>
+        <div class="col-xs-10">
+            <div class="clearfix" style="margin-bottom: 6px;">
+                <a id="dfmAddBtn" class="btn btn-minier btn-yellow pull-left" style="margin-right: 10px;">
+                    <i class="icon-plus bigger-110"></i>
+                    <span>添加</span>
+                </a>
+                <input type="text" id="dfmFilter" class="pull-left" placeholder="过滤: 名称 / 键 / 值" style="width: 200px; height: 26px; margin-right: 12px;">
+                <span id="dfmViewHint" class="text-muted pull-left" style="line-height: 26px;"></span>
             </div>
+            <div id="dfmItemList"></div> <!-- 右侧分组条目列表 -->
         </div>
     </div>
 
@@ -53,14 +67,14 @@
                             <div class="col-sm-9">
                                 <select id="dfType" class="col-xs-10 col-sm-5 v_required" data-toggle="popover" data-trigger='manual'>
                                     <option value="">请选择</option>
-                                    <option value="0">0</option>
-                                    <option value="1">1</option>
-                                    <option value="2">2</option>
-                                    <option value="3">3</option>
-                                    <option value="4">4</option>
-                                    <option value="5">5</option>
-                                    <option value="6">6</option>
-                                    <option value="7">7</option>
+                                    <option value="0">0 功能区块</option>
+                                    <option value="1">1 API数据源</option>
+                                    <option value="2">2 查询条件</option>
+                                    <option value="3">3 列字段</option>
+                                    <option value="4">4 功能项</option>
+                                    <option value="5">5 节点配置</option>
+                                    <option value="6">6 状态项</option>
+                                    <option value="7">7 公司项</option>
                                 </select>
                             </div>
                         </div>

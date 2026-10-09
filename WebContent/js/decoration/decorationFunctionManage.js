@@ -2,15 +2,13 @@ jQuery(function($) {
 
     var decorationFunctionManage = {
         dfid: null,
-        category: null, // 当前分类变体key(null=全部)
+        category: "", // 当前视图(""=全部条目, 否则为type=0页面变体key)
+        functions: [],
         categories: [],
         typeNames: {0: "功能区块", 1: "API数据源", 2: "查询条件", 3: "列字段", 4: "功能项", 5: "节点配置", 6: "状态项", 7: "公司项"},
+        typeOrder: [1, 2, 3, 4, 5, 6, 7, 0],
         modals: {
             decorationFunctionModal: com.focusPage("#decorationFunctionModal"),
-        },
-        btns: {
-            saveBtn: com.focusPage("#saveDecorationFunctionBtn"),
-            cancelBtn: com.focusPage("#cancelDecorationFunctionBtn"),
         },
         items: {
             name: com.focusPage("#dfName"),
@@ -23,80 +21,157 @@ jQuery(function($) {
         },
     };
 
-    var searcher = new Searcher();
+    // ---------- 数据加载 ----------
 
-    var buttons = (function() {
+    function loadFunctions(done) {
 
-        var $adda = $('<a></a>').addClass('btn btn-minier btn-yellow pull-left').attr('name', 'addDecorationFunction').css("margin", "0px 3px");
-        $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
-        $('<span></span>').text('添加').appendTo($adda);
+        com.post(api.decoration.queryDecorationFunction, {
+            "decorationFunction.type": ""
+        }, function(res) {
 
-        return [$adda];
-    })();
+            decorationFunctionManage.functions = res.decorationFunctions || [];
+            done && done();
+        });
+    }
 
-    searcher.set("decorationFunctionManageCondList", "decorationFunctionManagePagenation", "decorationFunctionManageResultList", api.decoration.pageDecorationFunction, null, ["decoration-decorationFunction-name", "decoration-decorationFunction-key", "decoration-decorationFunction-type", "decoration-decorationFunction-subtype"], "decorationFunctionManagePostData", null, false, buttons);
+    // ---------- 左侧分类导航 ----------
 
-    var lineprops = [{
-        field: "dfid",
-        name: "编号",
-        prop: "dfid",
-        clazz: "grey"
-    }, {
-        field: "name",
-        name: "名称",
-        prop: "name",
-        clazz: "blue"
-    }, {
-        field: "key",
-        name: "键",
-        prop: "key",
-        clazz: "grey"
-    }, {
-        field: "value",
-        name: "值",
-        prop: "value",
-        clazz: "grey"
-    }, {
-        field: "type",
-        name: "类型",
-        prop: "type",
-        clazz: "red"
-    }, {
-        field: "subtype",
-        name: "子类型",
-        prop: "subtype",
-        clazz: "red"
-    }, {
-        field: "sort",
-        name: "排序",
-        prop: "sort",
-        clazz: "grey"
-    }, {
-        field: "comment",
-        name: "备注",
-        prop: "comment",
-        clazz: "grey"
-    }];
+    function renderSidebar() {
 
-    var linebtns = [{
-        name: "编辑",
-        clazz: "btn-yellow",
-        handle: function(v) {
+        var $ul = com.focusPage("#dfmCategoryList").html(null);
 
-            openEdit(v);
+        var $all = $('<li data-key=""></li>').append($('<a></a>').html('全部条目<span class="badge pull-right" style="margin-top: 2px;">' + decorationFunctionManage.functions.length + '</span>'));
+        $ul.append($all);
+        $ul.append($('<li class="nav-header"></li>').text("页面变体"));
+
+        $.each(decorationFunctionManage.categories, function(i, v) {
+
+            $ul.append($('<li data-key="' + v.key + '" title="' + v.key + '"></li>').append($('<a></a>').text(v.name)));
+        });
+
+        markActive();
+    }
+
+    function markActive() {
+
+        com.focusPage("#dfmCategoryList li").removeClass("active").each(function() {
+
+            if ($(this).attr("data-key") == decorationFunctionManage.category) $(this).addClass("active");
+        });
+    }
+
+    function categoryName(key) {
+
+        var name = key;
+
+        $.each(decorationFunctionManage.categories, function(i, v) {
+
+            if (v.key == key) {
+                name = v.name + " (" + v.key + ")";
+                return false;
+            }
+        });
+
+        return name;
+    }
+
+    // ---------- 右侧条目渲染 ----------
+
+    function currentDfids(done) {
+
+        if (!decorationFunctionManage.category) {
+            done(null);
+            return;
         }
-    }, {
-        name: "删除",
-        clazz: "btn-danger",
-        handle: function(v) {
 
-            deleteFunction(v);
+        com.post(api.right.queryDecorationFunctionRightByName, {
+            "decorationFunctionRight.name": decorationFunctionManage.category
+        }, function(res) {
+
+            var set = {};
+
+            $.each(res.decorationFunctionRights || [], function(i, va) {
+                set[va.decorationFunction.dfid] = true;
+            });
+
+            done(set);
+        });
+    }
+
+    function render() {
+
+        currentDfids(function(dfidSet) {
+
+            var kw = com.focusPage("#dfmFilter").val().trim().toLowerCase();
+            var groups = {}, total = 0;
+
+            $.each(decorationFunctionManage.functions, function(i, v) {
+
+                if (dfidSet && !dfidSet[v.dfid]) return true;
+                if (kw && ((v.name || "") + " " + (v.key || "") + " " + (v.value || "") + " " + (v.comment || "")).toLowerCase().indexOf(kw) == -1) return true;
+
+                (groups[v.type] = groups[v.type] || []).push(v);
+                total++;
+            });
+
+            renderGroups(groups, total);
+            renderHint(total);
+        });
+    }
+
+    function renderGroups(groups, total) {
+
+        var $list = com.focusPage("#dfmItemList").html(null);
+
+        $.each(decorationFunctionManage.typeOrder, function(i, t) {
+
+            var rows = groups[t];
+            if (!rows || !rows.length) return true;
+
+            rows.sort(function(a, b) {
+                return (a.sort || 0) - (b.sort || 0);
+            });
+
+            $list.append($('<div></div>').addClass('dfm-section').text(decorationFunctionManage.typeNames[t] + " · " + rows.length));
+
+            $.each(rows, function(j, v) {
+
+                var $line = $('<div></div>').addClass('dfm-line clearfix');
+                $line.append($('<span></span>').addClass('dfm-dfid').text(v.dfid));
+                $line.append($('<span></span>').addClass('dfm-name').text(v.name));
+                $line.append($('<span></span>').addClass('dfm-kv').text(v.key + (v.value ? " = " + v.value : "")));
+                if (v.comment) $line.append($('<span></span>').addClass('dfm-cmt').text("// " + v.comment));
+
+                var $ops = $('<span></span>').addClass('dfm-ops pull-right');
+                $ops.append($('<a class="btn btn-minier btn-yellow">编辑</a>'));
+                $ops.append($('<a class="btn btn-minier btn-danger" style="margin-left: 4px;">删除</a>'));
+                $line.append($ops);
+                $list.append($line);
+
+                $ops.children().eq(0).on("click", function() {
+                    openEdit(v);
+                });
+                $ops.children().eq(1).on("click", function() {
+                    deleteFunction(v);
+                });
+            });
+        });
+
+        if (!total) $list.append($('<div class="text-muted" style="padding: 16px 8px;">当前视图暂无条目</div>'));
+    }
+
+    function renderHint(total) {
+
+        var $hint = com.focusPage("#dfmViewHint");
+
+        if (decorationFunctionManage.category) {
+            $hint.text("「" + categoryName(decorationFunctionManage.category) + "」绑定条目 " + total + " 条 · 公司级勾选在「功能配置」页维护");
+        } else {
+            $hint.text("共 " + total + " 条");
         }
-    }];
+    }
 
-    searcher.table(lineprops, linebtns).render();
-
-    // ---------- 编辑/删除(全部视图与分类视图共用) ----------
+    // ---------- 编辑/删除/添加 ----------
 
     function openEdit(v) {
 
@@ -119,23 +194,41 @@ jQuery(function($) {
         }, function(e) {
 
             com.showAlert(com.info, "操作成功");
-            refreshCurrent();
+            refresh();
         });
     }
 
-    function refreshCurrent() {
+    function refresh() {
 
-        if (decorationFunctionManage.category == null) {
-            searcher.doSearch();
-        } else {
-            loadCategory();
-        }
+        loadFunctions(function() {
+
+            renderSidebar();
+            render();
+        });
     }
 
-    com.focusPage('a[name="addDecorationFunction"]', '#decorationFunctionManagePagenation').on("click", function() {
+    // ---------- 事件绑定 ----------
+
+    com.focusPage("#dfmCategoryList").on("click", "li[data-key]", function() {
+
+        decorationFunctionManage.category = $(this).attr("data-key") || "";
+        markActive();
+        render();
+    });
+
+    com.focusPage("#dfmFilter").on("keyup", function() {
+
+        render();
+    });
+
+    com.focusPage("#dfmAddBtn").on("click", function() {
 
         openEdit(null);
     });
+
+    decorationFunctionManage.btns = {
+        saveBtn: com.focusPage("#saveDecorationFunctionBtn"),
+    };
 
     decorationFunctionManage.btns.saveBtn.on("click", function() {
 
@@ -163,7 +256,7 @@ jQuery(function($) {
         com.post(url, option, function(e) {
 
             com.showAlert(com.info, "操作成功");
-            refreshCurrent();
+            refresh();
 
             decorationFunctionManage.modals.decorationFunctionModal.modal("hide");
         });
@@ -175,10 +268,7 @@ jQuery(function($) {
         com.cleanItems(decorationFunctionManage.items);
     });
 
-    // ---------- 分类视图(type=0页面变体: 设计/业务/通用..., 条目经decorationfunctionright按name挂接) ----------
-
-    var $categoryBar = com.focusPage("#dfmCategoryBar");
-    var $categoryPanel = com.focusPage("#dfmCategoryPanel");
+    // ---------- 初始化 ----------
 
     com.post(api.decoration.queryDecorationFunction, {
         "decorationFunction.type": 0
@@ -188,127 +278,9 @@ jQuery(function($) {
         decorationFunctionManage.categories.sort(function(a, b) {
             return (a.sort || 0) - (b.sort || 0);
         });
-        drawCategoryBar();
+        renderSidebar();
     });
 
-    function drawCategoryBar() {
-
-        $categoryBar.empty();
-
-        var $all = $('<button type="button" class="btn btn-minier ' + (decorationFunctionManage.category == null ? "btn-info" : "btn-yellow") + '" style="margin: 0 3px 4px 0;"></button>').text("全部");
-        $all.on("click", function() {
-            switchMode(null);
-        });
-        $categoryBar.append($all);
-
-        $.each(decorationFunctionManage.categories, function(i, v) {
-
-            var $btn = $('<button type="button" class="btn btn-minier ' + (decorationFunctionManage.category == v.key ? "btn-info" : "btn-yellow") + '" style="margin: 0 3px 4px 0;" title="' + v.key + '"></button>').text(v.name);
-            $btn.on("click", function() {
-                switchMode(v.key);
-            });
-            $categoryBar.append($btn);
-        });
-    }
-
-    function switchMode(key) {
-
-        decorationFunctionManage.category = key;
-        drawCategoryBar();
-
-        var $cond = com.focusPage("#decorationFunctionManageCondList");
-        var $result = com.focusPage("#decorationFunctionManageResultList");
-        var $pager = com.focusPage("#decorationFunctionManagePagenation");
-
-        if (key == null) {
-
-            $categoryPanel.hide();
-            $cond.show();
-            $result.show();
-            $pager.show();
-        } else {
-
-            $cond.hide();
-            $result.hide();
-            $pager.hide();
-            $categoryPanel.show();
-            loadCategory();
-        }
-    }
-
-    function loadCategory() {
-
-        com.post(api.right.queryDecorationFunctionRightByName, {
-            "decorationFunctionRight.name": decorationFunctionManage.category
-        }, function(res) {
-
-            var dfids = {};
-
-            $.each(res.decorationFunctionRights || [], function(i, va) {
-                dfids[va.decorationFunction.dfid] = true;
-            });
-
-            com.post(api.decoration.queryDecorationFunction, {
-                "decorationFunction.type": ""
-            }, function(r2) {
-
-                renderCategory(dfids, r2.decorationFunctions || []);
-            });
-        });
-    }
-
-    function renderCategory(dfids, functions) {
-
-        var $list = com.focusPage("#dfmCategoryResultList").html(null);
-        var groups = {};
-
-        $.each(functions, function(i, v) {
-
-            if (dfids[v.dfid]) (groups[v.type] = groups[v.type] || []).push(v);
-        });
-
-        $.each([1, 2, 3, 4, 5, 6, 7, 0], function(i, t) {
-
-            var rows = groups[t];
-            if (!rows || !rows.length) return true;
-
-            rows.sort(function(a, b) {
-                return (a.sort || 0) - (b.sort || 0);
-            });
-
-            $list.append($('<div></div>').addClass('blue').css("margin", "10px 0 4px 2px").text(decorationFunctionManage.typeNames[t] + " (" + rows.length + ")"));
-
-            $.each(rows, function(j, v) {
-
-                var $li = $('<li></li>').addClass('item-orange clearfix').css("padding", "4px 8px");
-                var $h3 = $('<h3></h3>').addClass('oid');
-                $h3.append($('<small></small>').addClass('blue').text(v.name + " [dfid:" + v.dfid + "]"));
-                $h3.append($('<span></span>').css({"margin-left": "8px", "color": "#666", "font-size": "12px"}).text(v.key + (v.value ? " = " + v.value : "") + (v.comment ? "  // " + v.comment : "")));
-
-                var $wrap = $('<div></div>').addClass('pull-right action-buttons');
-                var $edit = $('<a class="btn btn-minier btn-yellow">编辑</a>');
-                var $del = $('<a class="btn btn-minier btn-danger" style="margin-left: 4px;">删除</a>');
-                $wrap.append($edit).append($del).appendTo($h3);
-
-                $li.append($h3).appendTo($list);
-
-                $edit.on("click", function() {
-                    openEdit(v);
-                });
-                $del.on("click", function() {
-                    deleteFunction(v);
-                });
-            });
-        });
-
-        if (!$list.children().length) {
-            $list.append($('<div class="text-muted" style="padding: 12px;">该分类暂无绑定条目</div>'));
-        }
-    }
-
-    com.focusPage("#dfmCategoryAddBtn").on("click", function() {
-
-        openEdit(null);
-    });
+    loadFunctions(render);
 
 });
