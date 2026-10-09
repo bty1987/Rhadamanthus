@@ -234,6 +234,7 @@ return query.list();
 - **前端架构**: `WebContent/CLAUDE.md`
 - **模块文档**: 各模块目录下的 `CLAUDE.md`
 - **方法命名规范**: `docs/10-指南手册/METHOD_NAMING_CONVENTION.md` (新增方法/接口必须遵守)
+- **查询条件配置**: `docs/10-指南手册/QUERY_CONDITION_GUIDE.md` (页面加查询条件必须遵守:条件规则库注册+页面全名引用+DAO白名单三层)
 - **Operation收集关闸SOP**: `docs/10-指南手册/OPERATION_COLLECT_CUTOVER_SOP.md`
 
 ---
