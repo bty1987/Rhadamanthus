@@ -143,6 +143,12 @@ public class SalesBalanceDaoImpl extends DaoImpl<SalesBalancePO> implements Sale
 	}
 
 	@Override
+	@SuppressWarnings("unchecked")
+	public List<SalesBalancePO> querySalesBalanceByRid(long rid) {
+		return session().createCriteria(SalesBalancePO.class).add(Restrictions.eq("refunds.rid", rid)).list();
+	}
+
+	@Override
 	public int countSalesBalance(long sid, short type, short onetype, short checkStatus) throws FLException {
 
 		String sql = "SELECT count(*) FROM sales.salesbalance where sid = :sid AND type = :type AND onetype = :onetype AND checkstatus = :checkStatus";

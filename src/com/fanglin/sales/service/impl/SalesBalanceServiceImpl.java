@@ -776,6 +776,11 @@ public class SalesBalanceServiceImpl implements SalesBalanceService {
 			throw new FLException(370016, "退货单不存在");
 		}
 
+		// 防重: 同一退货单只允许生成一张退货结算单(历史存在重复提交产生多张的问题)
+		if (salesBalanceDao.querySalesBalanceByRid(salesRefundsPO.getRid()).size() > 0) {
+			throw new FLException(370033, "退货结算已存在");
+		}
+
 		UserPO operater = userDao.queryUserByUserId(userId);
 
 		short balanceStatus = salesPO.getBalanceStatus();
