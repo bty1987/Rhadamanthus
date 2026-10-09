@@ -28,10 +28,42 @@ public class CustomerFunctionAction extends BaseListAction {
 
 	private CustomerFunctionVO customerFunction;
 
+	@Action(value = "pageCustomerFunction", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String pageCustomerFunction() throws FLException {
+
+		customerFunctions = customerFunctionService.pageCustomerFunction(getPaging(), getFilters());
+
+		return SUCCESS;
+	}
+
 	@Action(value = "queryCustomerFunction", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryCustomerFunction() throws FLException {
 
 		customerFunctions = customerFunctionService.queryCustomerFunction(customerFunction);
+
+		return SUCCESS;
+	}
+
+	@Action(value = "addCustomerFunction", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String addCustomerFunction() throws FLException {
+
+		customerFunctionService.addCustomerFunction(customerFunction);
+
+		return SUCCESS;
+	}
+
+	@Action(value = "updateCustomerFunction", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateCustomerFunction() throws FLException {
+
+		customerFunctionService.updateCustomerFunction(customerFunction);
+
+		return SUCCESS;
+	}
+
+	@Action(value = "deleteCustomerFunction", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String deleteCustomerFunction() throws FLException {
+
+		customerFunctionService.deleteCustomerFunction(customerFunction);
 
 		return SUCCESS;
 	}

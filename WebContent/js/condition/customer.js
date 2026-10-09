@@ -1622,4 +1622,62 @@
             valuePath: "value"
         }
     },
+
+    // 客户功能字典 - 名称
+    "customerFunction-name": {
+        label: "名称",
+        type: "text",
+        submitConfig: {
+            name: "name",
+            op: "cn",
+            validate: null
+        }
+    },
+
+    // 客户功能字典 - 键
+    "customerFunction-key": {
+        label: "键",
+        type: "text",
+        submitConfig: {
+            name: "key",
+            op: "cn",
+            validate: null
+        }
+    },
+
+    // 客户功能字典 - 类型
+    "customerFunction-type": {
+        label: "类型",
+        type: "select",
+        submitConfig: {
+            name: "type",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: null,
+            postData: null,
+            listPath: [{key: "0", value: "0"}, {key: "1", value: "1"}, {key: "2", value: "2"}, {key: "3", value: "3"}, {key: "4", value: "4"}],
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+
+    // 客户功能字典 - 子类型
+    "customerFunction-subtype": {
+        label: "子类型",
+        type: "select",
+        submitConfig: {
+            name: "subtype",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: null,
+            postData: null,
+            listPath: [{key: "0", value: "0"}, {key: "1", value: "1"}],
+            keyPath: "key",
+            valuePath: "value"
+        }
+    }
 });

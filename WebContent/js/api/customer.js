@@ -182,6 +182,18 @@ $.extend(api, {
         queryCustomerFunction: {
             url: "queryCustomerFunction.do"
         },
+        pageCustomerFunction: {
+            url: "pageCustomerFunction.do"
+        },
+        addCustomerFunction: {
+            url: "addCustomerFunction.do"
+        },
+        updateCustomerFunction: {
+            url: "updateCustomerFunction.do"
+        },
+        deleteCustomerFunction: {
+            url: "deleteCustomerFunction.do"
+        },
 
         pageCustomerCompanyRule: {
             url: "pageCustomerCompanyRule.do",
