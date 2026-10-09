@@ -1,9 +1,20 @@
-<div id="decorationFunctionManageContent" class="page-content">
+<div id="decorationFunctionManageContent">
     <div class="row">
         <div class="col-xs-12">
+            <div id="dfmCategoryBar" class="clearfix"></div> <!-- type=0分类条 -->
             <div id="decorationFunctionManageCondList" class="fl_search clearfix"></div> <!-- 查询条件 -->
             <div id="decorationFunctionManageResultList" class="clearfix tab-pane active"></div>
             <div id="decorationFunctionManagePagenation" class="fl-page-wrap clearfix"></div> <!-- 分页 -->
+            <div id="dfmCategoryPanel" style="display: none;">
+                <div id="dfmCategoryToolbar" class="clearfix" style="margin: 6px 0;">
+                    <a id="dfmCategoryAddBtn" class="btn btn-minier btn-yellow pull-left" style="margin-right: 10px">
+                        <i class="icon-plus bigger-110"></i>
+                        <span>添加</span>
+                    </a>
+                    <span class="text-muted pull-left" style="line-height: 26px;">条目与分类的公司绑定关系在「功能配置」页维护,此处仅字典维护</span>
+                </div>
+                <ul id="dfmCategoryResultList" class="item-list fl-table-list ui-sortable clearfix"></ul>
+            </div>
         </div>
     </div>
 
