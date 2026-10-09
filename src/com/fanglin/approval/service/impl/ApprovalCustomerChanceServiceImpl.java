@@ -207,6 +207,8 @@ public class ApprovalCustomerChanceServiceImpl implements ApprovalCustomerChance
 
 		decorationInfoVO.setIssueTime(customerChancePO.getIssueTime());
 		decorationInfoVO.setMeetTime(customerChancePO.getMeetTime());
+		decorationInfoVO.setSource(customerSourcePO.getSource());
+		decorationInfoVO.setContact(customerSourcePO.getContact());
 
 		String orderId = customerChancePO.getOrderId();
 
