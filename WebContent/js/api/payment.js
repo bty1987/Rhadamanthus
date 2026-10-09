@@ -845,6 +845,18 @@ $.extend(api, {
         queryPaymentFunction: {
             url: "queryPaymentFunction.do"
         },
+        pagePaymentFunction: {
+            url: "pagePaymentFunction.do"
+        },
+        addPaymentFunction: {
+            url: "addPaymentFunction.do"
+        },
+        updatePaymentFunction: {
+            url: "updatePaymentFunction.do"
+        },
+        deletePaymentFunction: {
+            url: "deletePaymentFunction.do"
+        },
 
         pageWallet: {
             url: "pageWallet.do",
