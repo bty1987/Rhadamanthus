@@ -120,7 +120,7 @@
 
     searcher.set("quotationFormatCondList", "quotationFormatPagenation", "quotationFormatResultList", api.quotation.queryQuotationFormatByQcid, {
         "quotationFormat.quotationCtem.qcid": quotationFormat.qcid
-    }, ["quotationFormat-name", "quotationFormat-format", "quotationFormat-workType", "quotationFormat-type", "quotationFormat-status"], null, "quotationFormats", true);
+    }, ["data-quotationFormat-name", "data-quotationFormat-format", "data-quotationFormat-workType", "data-quotationFormat-type", "data-quotationFormat-status"], null, "quotationFormats", true);
 
     var lineprops = [{
         field: "format",
