@@ -680,6 +680,8 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 		decorationInfoVO.setIssueTime(customerChancePO.getIssueTime());
 		decorationInfoVO.setMeetTime(customerChancePO.getMeetTime());
 		decorationInfoVO.setCcid(customerChancePO.getCcid());
+		decorationInfoVO.setSource(customerSourcePO.getSource());
+		decorationInfoVO.setContact(customerSourcePO.getContact());
 
 		if (customerChancePO.getHouse() != null) {
 			HousePO housePO = customerChancePO.getHouse();
@@ -900,6 +902,8 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 		decorationInfoVO.setIssueTime(customerChancePO.getIssueTime());
 		decorationInfoVO.setMeetTime(customerChancePO.getMeetTime());
 		decorationInfoVO.setCcid(customerChancePO.getCcid());
+		decorationInfoVO.setSource(customerSourcePO.getSource());
+		decorationInfoVO.setContact(customerSourcePO.getContact());
 
 		decorationService.tranDecoration(decorationVO, decorationInfoVO, company);
 
