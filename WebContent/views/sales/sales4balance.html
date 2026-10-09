@@ -4,25 +4,39 @@
 
             <div id="sales4balanceInfo" style="margin-bottom: 10px; font-weight: bold;"></div>
 
-            <table class="table table-striped table-bordered table-hover" id="sales4balanceTable">
-                <thead>
-                    <tr>
-                        <th>结算单号</th>
-                        <th>类型</th>
-                        <th>状态</th>
-                        <th>结算值</th>
-                        <th>厂结值</th>
-                        <th>差额</th>
-                        <th>厂结人</th>
-                        <th>厂结时间</th>
-                        <th>创建时间</th>
-                        <th>操作</th>
-                    </tr>
-                </thead>
-                <tbody></tbody>
-            </table>
+            <div id="sales4balanceList" class="clearfix tab-pane active"></div>
 
         </div>
+    </div>
+</div>
+
+<!--厂结值弹窗-->
+<div id="sales4balanceVbalance" style="display: none">
+    <div style="padding: 40px 0;">
+        <div class="row-fluid">
+            <form class="form-horizontal" novalidate="novalidate" id="form">
+
+                <div class="form-group" style="margin-right: 0">
+                    <label class="col-xs-4 control-label orange">厂商结算值</label>
+                    <div class="col-xs-8">
+                        <input type="text" class="v_required v_afloat_3" name="vbalanceValue">
+                    </div>
+                </div>
+
+                <div class="form-group" style="margin-right: 0">
+                    <label class="col-xs-4 control-label ">总价</label>
+                    <div class="col-xs-8">
+                        <input type="text" name="total" readonly>
+                    </div>
+                </div>
+
+                <div class="form-group col-sm-12" style="text-align: right">
+                    <button type="button" id="sales4balanceSaveBtn" class="btn btn-success">提交</button>
+                </div>
+
+            </form>
+        </div>
+
     </div>
 </div>
 

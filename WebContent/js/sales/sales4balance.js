@@ -1,86 +1,191 @@
 $(function() {
 
     // 本单信息由父页面(sales.js balanceSales)挂载: params.sales.sales
-    var sales = params.sales.sales;
+    var sales4balance = {
 
-    var sid = sales.sid;
-    var orderId = sales.orderId;
+        sales: params.sales.sales,
 
-    var salesBalances = [];
+        items: {
+            vbalanceValue: com.focusPage('#sales4balanceVbalance')
+        },
+        btns: {
+            supplierSaveBtn: com.focusPage("#sales4balanceSaveBtn")
+        },
+    };
 
-    var render = function() {
+    var sid = sales4balance.sales.sid;
+    var orderId = sales4balance.sales.orderId;
 
-        com.focusPage("#sales4balanceInfo").html("销售单号: " + (sales.no || sid) + "&nbsp;&nbsp;&nbsp;&nbsp;装修单号: " + (orderId || "-"));
+    function getElement(o, props) {
 
-        var $tbody = com.focusPage("#sales4balanceTable tbody");
+        var prop = props.shift();
 
-        $tbody.empty();
-
-        if (!salesBalances.length) {
-
-            $tbody.append('<tr><td colspan="10" style="text-align: center; color: #999;">暂无结算数据</td></tr>');
-
-            return;
+        if (props.length == 0) {
+            return o[prop];
+        } else if (o[prop]) {
+            return getElement(o[prop], props);
         }
 
-        $.each(salesBalances, function(i, v) {
+        return "";
+    }
 
-            var _type = constant.sales().salesBalance.type.keys[v.type] != null ? constant.sales().salesBalance.type.keys[v.type] : v.type;
-            var _status = constant.sales().salesBalance.status.keys[v.status] != null ? constant.sales().salesBalance.status.keys[v.status] : v.status;
+    var displayFunc = (function() {
 
-            // 仅预结算(status=0)行开放厂结操作: 厂结值录入 + 厂商结算
-            var _operate = '';
+        var renderList = function(listId, listData) {
 
-            if (v.status == 0) {
+            var $wrap = com.focusPage('#' + listId);
+            $wrap.empty();
 
-                _operate = '<input type="text" name="vbalanceInput" data-sbid="' + v.sbid + '" value="' + (v.vbalance == null ? 0 : v.vbalance) + '" style="width: 90px; margin-right: 4px;">' +
-                    '<button type="button" class="btn btn-minier btn-success" data-action="vpost" data-sbid="' + v.sbid + '">厂结</button>';
+            var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
+
+            if (!listData || !listData.length) {
+
+                var $emptyLi = $('<li></li>').addClass('item-orange clearfix').append(
+                    $('<div></div>').html("暂无结算数据").css({ "text-align": "center", "color": "#999", "padding": "8px" }));
+
+                $ul.append($emptyLi);
             }
 
-            $tbody.append('<tr>' +
-                '<td>' + v.sbid + '</td>' +
-                '<td>' + _type + '</td>' +
-                '<td>' + _status + '</td>' +
-                '<td>' + (v.total == null ? "-" : v.total) + '</td>' +
-                '<td>' + (v.vbalance == null ? "-" : v.vbalance) + '</td>' +
-                '<td>' + (v.difference == null ? "-" : v.difference) + '</td>' +
-                '<td>' + (v.voster == null || v.voster.currentName == null ? "-" : v.voster.currentName) + '</td>' +
-                '<td>' + (v.venderTime == null ? "-" : v.venderTime) + '</td>' +
-                '<td>' + (v.createTime == null ? "-" : v.createTime) + '</td>' +
-                '<td>' + (_operate == '' ? "-" : _operate) + '</td>' +
-                '</tr>');
-        });
+            $.each(listData, function(i, v) {
 
-        // 厂结: 先保存厂结值(updateSalesBalanceForVBalance), 成功后提交厂商结算(vpostSalesBalance)
-        $tbody.find('button[data-action="vpost"]').off('click').on('click', function() {
+                var $liLine = $('<li></li>').addClass('item-orange clearfix');
+                var $h3 = $('<h3></h3>').addClass('oid');
+                var $small = $('<small></small>').addClass('blue').html("结算单号: " + v.sbid);
+                var $btnDiv = $('<div></div>').addClass('pull-right action-buttons');
+                var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
 
-            var sbid = $(this).attr('data-sbid');
-            var $input = $tbody.find('input[name="vbalanceInput"][data-sbid="' + sbid + '"]');
-            var vbalance = $input.length ? $input.val() : null;
+                var propertyArr = [
+                    ["类型:", "type", "red"],
+                    ["状态:", "status", "red"],
+                    ["结算值:", "total", "blue"],
+                    ["厂结值:", "vbalance", "blue"],
+                    ["差额:", "difference", "grey"],
+                    ["厂结人:", "voster.currentName", "grey"],
+                    ["厂结时间:", "venderTime", "green"],
+                    ["创建时间:", "createTime", "green"]
+                ];
 
-            if (vbalance == null || vbalance === '' || isNaN(vbalance)) {
-                com.showAlert(com.warning, "厂结值未填写, 请先填写厂结值");
-                return false;
-            }
+                $.each(propertyArr, function(index, value) {
 
-            com.showConfirm('确认对结算记录(' + sbid + ')进行厂结?', function() {
+                    var data = getElement(v, value[1].split('.'));
 
-                com.post(api.sales.updateSalesBalanceForVBalance, {
-                    "salesBalance.sbid": sbid,
-                    "salesBalance.vbalance": vbalance
-                }, function() {
+                    if (value[1] == "type")
+                        data = constant.sales().salesBalance.type.keys[data] != null ? constant.sales().salesBalance.type.keys[data] : data;
+                    if (value[1] == "status")
+                        data = constant.sales().salesBalance.status.keys[data] != null ? constant.sales().salesBalance.status.keys[data] : data;
 
-                    com.post(api.sales.vpostSalesBalance, {
-                        "salesBalances[0].sbid": sbid
-                    }, function() {
+                    var $liProperty = $('<li></li>');
 
-                        com.showAlert(com.info, "厂结成功");
-                        loadBalances();
-                    });
+                    $('<strong></strong>').html(value[0]).appendTo($liProperty);
+                    $('<b></b>').html(data == "" ? "-" : data).addClass(value[2]).appendTo($liProperty);
+
+                    $liProperty.appendTo($ulProperty);
                 });
+
+                // 仅预结状态开放厂结操作(口径同结算单页面): 先录厂结值, 再厂结
+                if (v.status == constant.sales().salesBalance.STATUS_PREBALANCE_INT) {
+
+                    var $btnVbalance = $('<a></a>').addClass('btn btn-minier btn-yellow').html("厂结值");
+
+                    $btnVbalance.click(function() {
+                        vbalancevalueBalance(v);
+                    });
+
+                    var $btnVpost = $('<a></a>').addClass('btn btn-minier btn-success').html("厂结");
+
+                    $btnVpost.click(function() {
+                        vbalanceBalance(v);
+                    });
+
+                    $btnDiv.append($btnVbalance).append($btnVpost);
+                }
+
+                $h3.append($small).append($btnDiv);
+                $liLine.append($h3).append($ulProperty);
+                $ul.append($liLine);
             });
+
+            $wrap.append($ul);
+        };
+
+        return {
+            init: renderList
+        }
+
+    })();
+
+    // 录厂结值: popup4model 弹窗, 厂结值默认带出总价(口径同结算单页面 vbalancevalueBalance)
+    function vbalancevalueBalance(v) {
+
+        if (v.status != constant.sales().salesBalance.STATUS_PREBALANCE_INT) {
+            com.showAlert(com.warning, "非预结状态下不允许进行厂结");
+            return false;
+        }
+
+        sales4balance.sales = v;
+
+        sales4balance.items.vbalanceValue.find('input[name="total"]').val(v.total);
+
+        com.popup4model("#sales4balanceVbalance", "厂结值", function() {
+
+        }, function() {
+
+            com.clearValidator();
+            com.cleanItems(sales4balance.items);
         });
-    };
+    }
+
+    // 厂结: 口径同结算单页面 vbalanceBalance(预结状态且厂结值已填写)
+    function vbalanceBalance(v) {
+
+        if (v.status != constant.sales().salesBalance.STATUS_PREBALANCE_INT) {
+            com.showAlert(com.warning, "非预结状态下不允许进行厂结");
+            return false;
+        }
+
+        if (v.vbalance == 0) {
+            com.showAlert(com.warning, "厂结值未填写 , 请检查");
+            return false;
+        }
+
+        com.showConfirm('确定要将单号为 ' + (sales4balance.sales.no || v.sales.no) + ' 的销售单进行厂结吗?', function() {
+
+            com.post(api.sales.vpostSalesBalance, {
+                "salesBalances[0].sbid": v.sbid
+            }, function() {
+
+                com.showAlert(com.info, "厂结成功");
+                loadBalances();
+            }, function() {
+                loadBalances();
+            });
+        }, function() {
+
+            loadBalances();
+        });
+    }
+
+    // 提交厂结值: 口径同结算单页面 supplierSaveBtn(com.validate 校验 v_required/v_afloat_3)
+    sales4balance.btns.supplierSaveBtn.on('click', function() {
+
+        var _vBalance = sales4balance.items.vbalanceValue.find('input[name="vbalanceValue"]').val();
+
+        if (com.validate('sales4balanceVbalance', 'right') == false) {
+
+            com.post(api.sales.updateSalesBalanceForVBalance, {
+                "salesBalance.sbid": sales4balance.sales.sbid,
+                "salesBalance.vbalance": _vBalance
+            }, function(res) {
+
+                com.showAlert(com.info, "更新成功");
+
+                com.closePopup();
+                com.cleanItems(sales4balance.items);
+
+                loadBalances();
+            });
+        }
+    });
 
     var loadBalances = function() {
 
@@ -91,9 +196,11 @@ $(function() {
             "sid[0]": sid
         }, function(res) {
 
-            salesBalances = res.salesBalances || [];
+            var salesBalances = res.salesBalances || [];
 
-            render();
+            com.focusPage("#sales4balanceInfo").html("销售单号: " + (sales4balance.sales.no || sid) + "&nbsp;&nbsp;&nbsp;&nbsp;装修单号: " + (orderId || "-"));
+
+            displayFunc.init("sales4balanceList", salesBalances);
         });
     };
 
