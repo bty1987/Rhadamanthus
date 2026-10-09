@@ -472,7 +472,7 @@ $.extend(api, {
             type: "query",
             tranargs: [{
                 result: "salesBalances",
-                args: ["balance", "pbalance"]
+                args: ["balance", "pbalance", "total", "vbalance", "difference", "coupon", "allowance"]
             }, {
                 result: "salesBalances-sales",
                 args: ["total"]

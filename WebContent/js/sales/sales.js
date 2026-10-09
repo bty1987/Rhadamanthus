@@ -221,6 +221,15 @@ $(function() {
         });
     }
 
+    function balanceSales(v) {
+
+        params.sales.sales = v;
+        com.popup4page("#layerPopUp", "/views/sales/sales4balance.html", "厂结", '', function() {
+
+            salesSearcher.doSearch();
+        })
+    }
+
     function decorationSales(v) {
 
         com.focusPage("text").css("line-height", "27px");
@@ -812,6 +821,15 @@ $(function() {
                     return v.type == constant.sales().sales.TYPE_SUB_INT;
                 },
                 handle: unpaySales
+            },
+            balance: {
+                name: "厂结",
+                clazz: "btn-info",
+                show: function(v) {
+
+                    return v.status != constant.sales().sales.STATUS_WAST_INT && v.type != constant.sales().sales.TYPE_SUB_INT;
+                },
+                handle: balanceSales
             },
             picture: {
                 name: "图片",
