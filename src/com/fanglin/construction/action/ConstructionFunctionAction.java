@@ -28,6 +28,14 @@ public class ConstructionFunctionAction extends BaseListAction {
 
 	private ConstructionFunctionVO constructionFunction;
 
+	@Action(value = "pageConstructionFunction", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String pageConstructionFunction() throws FLException {
+
+		constructionFunctions = constructionFunctionService.pageConstructionFunction(getPaging(), getFilters());
+
+		return SUCCESS;
+	}
+
 	@Action(value = "queryConstructionFunction", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryConstructionFunction() throws FLException {
 
@@ -40,6 +48,30 @@ public class ConstructionFunctionAction extends BaseListAction {
 	public String queryConstructionFunctionByName() throws FLException {
 
 		constructionFunctions = constructionFunctionService.queryConstructionFunctionByName(constructionFunction);
+
+		return SUCCESS;
+	}
+
+	@Action(value = "addConstructionFunction", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String addConstructionFunction() throws FLException {
+
+		constructionFunctionService.addConstructionFunction(constructionFunction);
+
+		return SUCCESS;
+	}
+
+	@Action(value = "updateConstructionFunction", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateConstructionFunction() throws FLException {
+
+		constructionFunctionService.updateConstructionFunction(constructionFunction);
+
+		return SUCCESS;
+	}
+
+	@Action(value = "deleteConstructionFunction", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String deleteConstructionFunction() throws FLException {
+
+		constructionFunctionService.deleteConstructionFunction(constructionFunction);
 
 		return SUCCESS;
 	}
