@@ -2,6 +2,7 @@ package com.fanglin.data.quotation.service;
 
 import java.util.List;
 
+import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.data.quotation.vo.CormriceVO;
 import com.fanglin.utils.Paging;
@@ -14,7 +15,7 @@ public interface CormriceService {
 
 	public List<CormriceVO> queryCormriceByQfid(Long qfid);
 
-	public int addCormrice(CormriceVO cormriceVO);
+	public int addCormrice(CormriceVO cormriceVO) throws FLException;
 
 	public int deleteCormrice(CormriceVO cormriceVO);
 
