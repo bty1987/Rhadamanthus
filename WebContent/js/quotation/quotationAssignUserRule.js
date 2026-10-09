@@ -385,26 +385,46 @@ $(function() {
             if (rows.length == 0) {
                 com.focusPage('#taskEmptyMsg').show();
             } else {
-                var $body = com.focusPage('#taskListBody');
+                var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
+
                 $.each(rows, function(i, item) {
 
-	                    var statusText = constant.quotation().quotationAssignRequest.status.keys[item.status] || "未知";
-	                    var priorityText = constant.quotation().quotationAssignRequest.priority.keys[item.priority] || "普通";
-	                    var companyName = item.company ? item.company.name : "-";
-	                    var decorationType = constant.quotation().quotationAssignRequest.decorationType.keys[item.decorationType] || "-";
+                    var statusText = constant.quotation().quotationAssignRequest.status.keys[item.status] || "未知";
+                    var priorityText = constant.quotation().quotationAssignRequest.priority.keys[item.priority] || "普通";
+                    var companyName = item.company ? item.company.name : "-";
+                    var decorationType = constant.quotation().quotationAssignRequest.decorationType.keys[item.decorationType] || "-";
                     var requestUserName = item.requestUser && item.requestUser.currentName ? item.requestUser.currentName : "-";
 
-                    var $tr = $('<tr></tr>');
-                    $('<td></td>').text(item.orderId || '-').appendTo($tr);
-                    $('<td></td>').text(companyName).appendTo($tr);
-                    $('<td></td>').text(decorationType).appendTo($tr);
-                    $('<td></td>').text(statusText).appendTo($tr);
-                    $('<td></td>').text(priorityText).appendTo($tr);
-                    $('<td></td>').text(requestUserName).appendTo($tr);
-                    $('<td></td>').text(item.assignTime || '-').appendTo($tr);
+                    var $liLine = $('<li></li>').addClass('item-orange clearfix');
+                    var $h3 = $('<h3></h3>').addClass('oid');
+                    var $small = $('<small></small>').addClass('blue').html("装修单号: " + (item.orderId || '-'));
+                    var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
 
-                    $tr.appendTo($body);
+                    var propertyArr = [
+                        ["公司:", companyName, "grey"],
+                        ["装修类型:", decorationType, "red"],
+                        ["状态:", statusText, "red"],
+                        ["优先级:", priorityText, "grey"],
+                        ["请求人:", requestUserName, "grey"],
+                        ["分配时间:", item.assignTime || '-', "green"]
+                    ];
+
+                    $.each(propertyArr, function(index, value) {
+
+                        var $liProperty = $('<li></li>');
+
+                        $('<strong></strong>').html(value[0]).appendTo($liProperty);
+                        $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
+
+                        $liProperty.appendTo($ulProperty);
+                    });
+
+                    $h3.append($small);
+                    $liLine.append($h3).append($ulProperty);
+                    $ul.append($liLine);
                 });
+
+                com.focusPage('#taskListBody').append($ul);
             }
 
             // 显示弹窗
