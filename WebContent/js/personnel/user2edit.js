@@ -232,23 +232,34 @@ jQuery(function(a) {
         com.cleanItems(user.cItems);
     });
 
+    // 行登记展示: li 体系(对齐 displayFunc 惯例), type 1=合同 2=教育 3=运营经历
+    var drawTableConfig = {
+        1: { listId: "userContractList", title: "合同", labels: ["合同名称", "签订时间", "开始时间", "结束时间", "状态", "说明"] },
+        2: { listId: "userEducationList", title: "教育", labels: ["机构", "证书", "专业", "开始时间", "结束时间", "内容"] },
+        3: { listId: "userOperationList", title: "运营经历", labels: ["公司", "行业", "职位", "开始时间", "结束时间", "薪资", "描述"] }
+    };
+
     function drawTbody(list, type) {
 
-        var table;
-        if (type == 1)
-            table = com.focusPage('#userContractTable');
-        else if (type == 2)
-            table = com.focusPage('#userEducationTable');
-        else if (type == 3)
-            table = com.focusPage('#userOperationTable');
+        var conf = drawTableConfig[type];
 
-        var $tbody = $('<tbody></tbody>').appendTo(table);
-        var $tr = $('<tr></tr>').appendTo($tbody);
+        var $liLine = $('<li></li>').addClass('item-orange clearfix');
+        var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(conf.title));
+        var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
 
         $.each(list, function(i, v) {
 
-            var $td = $('<td></td>').html(v).addClass('center').appendTo($tr);
+            var $liProperty = $('<li></li>');
+
+            $('<strong></strong>').html(conf.labels[i] + ":").appendTo($liProperty);
+            $('<b></b>').html(v).addClass('center').appendTo($liProperty);
+
+            $liProperty.appendTo($ulProperty);
         });
+
+        $liLine.append($h3).append($ulProperty);
+        com.focusPage('#' + conf.listId).append($liLine);
+
     }
 
     user.politicalType = constant.personel().userInfo.political.datas;

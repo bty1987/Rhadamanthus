@@ -25,26 +25,47 @@ jQuery(function($) {
             var $body = com.focusPage("#taskBody").empty();
             var tasks = res.tasks || [];
 
-            com.focusPage("#taskTable").toggle(tasks.length > 0);
             com.focusPage("#notTask").toggle(tasks.length === 0);
+
+            var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
 
             $.each(tasks, function(i, t) {
 
-                var $tr = $('<tr></tr>');
+                var $liLine = $('<li></li>').addClass('item-orange clearfix');
+                var $h3 = $('<h3></h3>').addClass('oid');
+                var $small = $('<small></small>').addClass('blue').html("任务#" + t.taskId + " · 审批单" + t.aid);
+                var $btnDiv = $('<div></div>').addClass('pull-right action-buttons');
+                var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
 
-                $('<td></td>').html("<strong>#" + t.taskId + "</strong>").appendTo($tr);
-                $('<td></td>').text(t.aid).appendTo($tr);
-                $('<td></td>').text(t.nodeSeq).appendTo($tr);
-                $('<td></td>').html("<span class='label label-primary'>" + (nodeTypeMap[t.nodeType] || t.nodeType) + "</span>").appendTo($tr);
-                $('<td></td>').addClass("small muted").text(t.assignTime || "-").appendTo($tr);
+                var propertyArr = [
+                    ["节点序号:", t.nodeSeq, "grey"],
+                    ["节点类型:", nodeTypeMap[t.nodeType] || t.nodeType, "red"],
+                    ["分配时间:", t.assignTime || "-", "green"]
+                ];
 
-                var $btnTd = $('<td></td>');
-                $('<button></button>').addClass("btn btn-minier btn-success").html('<i class="icon-check"></i> 审批').on("click", function() { openTaskModal(t); }).appendTo($btnTd);
-                $('<button></button>').addClass("btn btn-minier btn-info").html('<i class="icon-reorder"></i> 轨迹').css("margin-left", "5px").on("click", function() { openTraceModal(t.aid); }).appendTo($btnTd);
-                $btnTd.appendTo($tr);
+                $.each(propertyArr, function(index, value) {
 
-                $body.append($tr);
+                    var $liProperty = $('<li></li>');
+
+                    $('<strong></strong>').html(value[0]).appendTo($liProperty);
+                    $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
+
+                    $liProperty.appendTo($ulProperty);
+                });
+
+                var $btnAgree = $('<a></a>').addClass('btn btn-minier btn-success').html('<i class="icon-check"></i> 审批');
+                $btnAgree.on("click", function() { openTaskModal(t); });
+
+                var $btnTrace = $('<a></a>').addClass('btn btn-minier btn-info').html('<i class="icon-reorder"></i> 轨迹');
+                $btnTrace.on("click", function() { openTraceModal(t.aid); });
+
+                $btnDiv.append($btnAgree).append($btnTrace);
+                $h3.append($small).append($btnDiv);
+                $liLine.append($h3).append($ulProperty);
+                $ul.append($liLine);
             });
+
+            $body.append($ul);
         });
     }
 
@@ -68,25 +89,47 @@ jQuery(function($) {
             var $body = com.focusPage("#traceBody").empty();
             var tasks = res.tasks || [];
 
+            var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
+
             if (tasks.length === 0) {
-                $('<tr></tr>').html('<td colspan="6" class="alert alert-info center">暂无轨迹</td>').appendTo($body);
-                task.traceModal.modal("show");
-                return;
+
+                var $emptyLi = $('<li></li>').addClass('item-orange clearfix').append(
+                    $('<div></div>').addClass('alert alert-info center').html("暂无轨迹"));
+
+                $ul.append($emptyLi);
             }
 
             $.each(tasks, function(i, t) {
 
-                var $tr = $('<tr></tr>');
+                var $liLine = $('<li></li>').addClass('item-orange clearfix');
+                var $h3 = $('<h3></h3>').addClass('oid');
+                var $small = $('<small></small>').addClass('blue').html("节点" + t.nodeSeq);
+                var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
 
-                $('<td></td>').text(t.nodeSeq).appendTo($tr);
-                $('<td></td>').html(statusMap[t.status] || t.status).appendTo($tr);
-                $('<td></td>').text(t.assigneeId || "-").appendTo($tr);
-                $('<td></td>').text(t.transferTo || "-").appendTo($tr);
-                $('<td></td>').addClass("small").text(t.comment || "-").appendTo($tr);
-                $('<td></td>').addClass("small muted").text(t.actionTime || "-").appendTo($tr);
+                var propertyArr = [
+                    ["状态:", statusMap[t.status] || t.status, "red"],
+                    ["处理人:", t.assigneeId || "-", "grey"],
+                    ["转交给:", t.transferTo || "-", "grey"],
+                    ["意见:", t.comment || "-", "grey"],
+                    ["时间:", t.actionTime || "-", "green"]
+                ];
 
-                $body.append($tr);
+                $.each(propertyArr, function(index, value) {
+
+                    var $liProperty = $('<li></li>');
+
+                    $('<strong></strong>').html(value[0]).appendTo($liProperty);
+                    $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
+
+                    $liProperty.appendTo($ulProperty);
+                });
+
+                $h3.append($small);
+                $liLine.append($h3).append($ulProperty);
+                $ul.append($liLine);
             });
+
+            $body.append($ul);
 
             task.traceModal.modal("show");
         });
