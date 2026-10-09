@@ -28,11 +28,43 @@ public class PaymentFunctionAction extends BaseListAction {
 	
 	private PaymentFunctionVO paymentFunction;
 	
+	@Action(value = "pagePaymentFunction", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String pagePaymentFunction() throws FLException{
+
+		paymentFunctions = paymentFunctionService.pagePaymentFunction(getPaging(), getFilters());
+
+		return SUCCESS;
+	}
+
 	@Action(value = "queryPaymentFunction", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryPaymentFunction() throws FLException{
-		
+
 		paymentFunctions = paymentFunctionService.queryPaymentFunction(paymentFunction);
-		
+
+		return SUCCESS;
+	}
+
+	@Action(value = "addPaymentFunction", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String addPaymentFunction() throws FLException{
+
+		paymentFunctionService.addPaymentFunction(paymentFunction);
+
+		return SUCCESS;
+	}
+
+	@Action(value = "updatePaymentFunction", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updatePaymentFunction() throws FLException{
+
+		paymentFunctionService.updatePaymentFunction(paymentFunction);
+
+		return SUCCESS;
+	}
+
+	@Action(value = "deletePaymentFunction", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String deletePaymentFunction() throws FLException{
+
+		paymentFunctionService.deletePaymentFunction(paymentFunction);
+
 		return SUCCESS;
 	}
 

@@ -1,0 +1,131 @@
+<div id="paymentFunctionManageContent">
+    <style>
+        #payCategoryList { list-style: none; margin: 0; padding: 0; border-right: 1px solid #e8e8e8; min-height: 420px; }
+        #payCategoryList li a { display: block; padding: 5px 10px; cursor: pointer; color: #333; }
+        #payCategoryList li a:hover { background: #f5f7fa; text-decoration: none; }
+        #payCategoryList li.active a { background: #4383b4; color: #fff; }
+        #payCategoryList li.nav-header { padding: 8px 10px 3px; font-size: 11px; color: #999; }
+        .pay-section { margin: 14px 0 6px; padding-bottom: 4px; color: #4383b4; font-weight: bold; border-bottom: 1px solid #e5e5e5; }
+        .pay-grid { overflow: hidden; }
+        .pay-grid .col-md-4, .pay-grid .col-sm-6 { padding: 0 10px 10px 0; }
+        .pay-card { border: 1px solid #e3e3e3; border-radius: 3px; background: #fff; padding: 6px 8px; min-height: 62px; }
+        .pay-card:hover { border-color: #4383b4; background: #f5f7fa; }
+        .pay-card .pay-dfid { font-size: 11px; color: #fff; background: #adb3bf; border-radius: 3px; padding: 1px 5px; margin-right: 6px; }
+        .pay-card .pay-group { font-size: 11px; color: #fff; background: #82af6e; border-radius: 3px; padding: 1px 5px; margin-right: 6px; }
+        .pay-card .pay-name { color: #0866c6; font-weight: bold; margin-right: 6px; }
+        .pay-card .pay-kv { color: #666; font-size: 12px; margin-top: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .pay-card .pay-cmt { color: #a0a0a0; font-size: 12px; margin-top: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .pay-card .pay-ops { display: none; }
+        .pay-card:hover .pay-ops { display: inline; }
+    </style>
+    <div class="row">
+        <div class="col-xs-2">
+            <ul id="payCategoryList"></ul> <!-- 左侧分类导航 -->
+        </div>
+        <div class="col-xs-10">
+            <div class="clearfix" style="margin-bottom: 6px;">
+                <a id="payAddBtn" class="btn btn-minier btn-yellow pull-left" style="margin-right: 10px;">
+                    <i class="icon-plus bigger-110"></i>
+                    <span>添加</span>
+                </a>
+                <input type="text" id="payFilter" class="pull-left" placeholder="过滤: 名称 / 键 / 值" style="width: 200px; height: 26px; margin-right: 12px;">
+                <span id="payViewHint" class="text-muted pull-left" style="line-height: 26px;"></span>
+            </div>
+            <div id="payItemList"></div> <!-- 右侧分组条目列表 -->
+        </div>
+    </div>
+
+    <div class="modal fade" id="paymentFunctionModal" tabindex="-1">
+        <div class="modal-dialog" style="margin-top: 10%; width: 500px;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span>&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title">款项功能</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal">
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right orange" for="payName">名称</label>
+                            <div class="col-sm-9">
+                                <input type="text" id="payName" class="col-xs-10 col-sm-6 v_required" data-toggle="popover" maxlength="64"/>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right orange" for="payKey">键</label>
+                            <div class="col-sm-9">
+                                <input type="text" id="payKey" class="col-xs-10 col-sm-6 v_required" data-toggle="popover" maxlength="64"/>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right orange" for="payValue">值</label>
+                            <div class="col-sm-9">
+                                <input type="text" id="payValue" class="col-xs-10 col-sm-6" data-toggle="popover" maxlength="255"/>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right orange" for="payGroup">分组</label>
+                            <div class="col-sm-9">
+                                <select id="payGroup" class="col-xs-10 col-sm-6" data-toggle="popover" data-trigger='manual'>
+                                    <option value="0">0</option>
+                                    <option value="1">1</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right orange" for="payType">类型</label>
+                            <div class="col-sm-9">
+                                <select id="payType" class="col-xs-10 col-sm-6 v_required" data-toggle="popover" data-trigger='manual'>
+                                    <option value="">请选择</option>
+                                    <option value="0">0 功能区块</option>
+                                    <option value="1">1 API数据源</option>
+                                    <option value="2">2 查询条件</option>
+                                    <option value="3">3 列字段</option>
+                                    <option value="4">4 功能项</option>
+                                    <option value="5">5 功能项</option>
+                                    <option value="6">6 功能项</option>
+                                    <option value="7">7 功能项</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right orange" for="paySubtype">子类型</label>
+                            <div class="col-sm-9">
+                                <select id="paySubtype" class="col-xs-10 col-sm-6" data-toggle="popover" data-trigger='manual'>
+                                    <option value="0">0</option>
+                                    <option value="1">1</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right orange" for="paySort">排序</label>
+                            <div class="col-sm-9">
+                                <input type="text" id="paySort" class="col-xs-10 col-sm-6 v_number" data-toggle="popover" data-trigger='manual' maxlength="6"/>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right orange" for="payComment">备注</label>
+                            <div class="col-sm-9">
+                                <textarea id="payComment" class="col-xs-10 col-sm-6" rows="3" data-toggle="popover" data-trigger='manual' maxlength="200"></textarea>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="savePaymentFunctionBtn" class="btn btn-primary">保存</button>
+                    <button type="button" id="cancelPaymentFunctionBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $.loadScript(['js/payment/paymentFunctionManage.js']);
+</script>
