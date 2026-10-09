@@ -3,6 +3,7 @@
     var quotationFormat = {
         qcid: params.data.quotationCtem.qcid,
         qfid: null,
+        quotationTypes: {},
         items: {
             name: com.focusPage('#name', "#addQuotationFormatModal"),
             format: com.focusPage('#format', "#addQuotationFormatModal"),
@@ -119,7 +120,7 @@
 
     searcher.set("quotationFormatCondList", "quotationFormatPagenation", "quotationFormatResultList", api.quotation.queryQuotationFormatByQcid, {
         "quotationFormat.quotationCtem.qcid": quotationFormat.qcid
-    }, null, null, "quotationFormats", true);
+    }, ["quotationFormat-name", "quotationFormat-format", "quotationFormat-workType", "quotationFormat-type", "quotationFormat-status"], null, "quotationFormats", true);
 
     var lineprops = [{
         field: "format",
@@ -128,14 +129,55 @@
         clazz: "grey"
     }, {
         field: "name",
-        name: "名字",
+        name: "名称",
         prop: "name",
+        clazz: "grey"
+    }, {
+        field: "alias",
+        name: "别名",
+        prop: "alias",
+        clazz: "grey"
+    }, {
+        field: "type",
+        name: "类型",
+        prop: "type",
+        dataset: quotationFormat.quotationTypes,
+        clazz: "grey"
+    }, {
+        field: "workType",
+        name: "工种",
+        prop: "workType.name",
+        clazz: "grey"
+    }, {
+        field: "unit",
+        name: "单位",
+        prop: "unit.name",
         clazz: "grey"
     }, {
         field: "price",
         name: "单价",
         prop: "price",
         clazz: "blue"
+    }, {
+        field: "addPrice",
+        name: "增补价",
+        prop: "addPrice",
+        clazz: "blue"
+    }, {
+        field: "subPrice",
+        name: "退减价",
+        prop: "subPrice",
+        clazz: "blue"
+    }, {
+        field: "achePrice",
+        name: "业绩额",
+        prop: "achePrice",
+        clazz: "blue"
+    }, {
+        field: "comment",
+        name: "信息",
+        prop: "comment",
+        clazz: "grey"
     }];
 
     searcher.line("format", lineprops, linebtns).render();
@@ -208,6 +250,16 @@
 
     // ---------- 基础数据 ----------
 
+    com.post(api.quotation.queryQuotationType, {}, function(res) {
+
+        quotationFormat.items.quotationType.bindData(res.quotationTypes, "id", "name");
+
+        $.each(res.quotationTypes, function(i, v) {
+
+            quotationFormat.quotationTypes[v.id] = v.name;
+        });
+    }, null, false);
+
     com.post(api.common.queryWorkType, {}, function(res) {
 
         quotationFormat.items.workType.bindData(res.workTypes, "id", "name");
@@ -231,8 +283,6 @@
         cormrice.items.node.bindData(res.constructionNodes, "cnid", "name");
         cormtime.items.node.bindData(res.constructionNodes, "cnid", "name");
     });
-
-    com.initTypeahead(cormood.items.noodsName, api.data.queryNoodsByName, "noods.name", {}, "noodes", "nid", "name", null);
 
     // ---------- 定额行渲染(工费/工时/材料共用) ----------
 
@@ -404,6 +454,8 @@
             saveBtn: com.focusPage('#quotationCormoodSaveBtn', "#quotationCormoodModal")
         }
     };
+
+    com.initTypeahead(cormood.items.noodsName, api.data.queryNoodsByName, "noods.name", {}, "noodes", "nid", "name", null);
 
     function initCormood(qfid) {
 

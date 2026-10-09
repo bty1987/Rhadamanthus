@@ -39,7 +39,7 @@ public class QuotationFormatAction extends BaseListAction {
 	@Action(value = "queryQuotationFormatByQcid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryQuotationFormatByQcid() throws FLException {
 
-		quotationFormats = quotationFormatService.queryQuotationFormatByQcid(quotationFormat.getQuotationCtem().getQcid());
+		quotationFormats = quotationFormatService.queryQuotationFormatByQcid(quotationFormat.getQuotationCtem().getQcid(), getFilters());
 
 		return SUCCESS;
 	}
