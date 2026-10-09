@@ -134,19 +134,30 @@ jQuery(function($) {
 
             $list.append($('<div></div>').addClass('dfm-section').text(decorationFunctionManage.typeNames[t] + " · " + rows.length));
 
+            var $grid = $('<div></div>').addClass('dfm-grid clearfix');
+
             $.each(rows, function(j, v) {
 
-                var $line = $('<div></div>').addClass('dfm-line clearfix');
-                $line.append($('<span></span>').addClass('dfm-dfid').text(v.dfid));
-                $line.append($('<span></span>').addClass('dfm-name').text(v.name));
-                $line.append($('<span></span>').addClass('dfm-kv').text(v.key + (v.value ? " = " + v.value : "")));
-                if (v.comment) $line.append($('<span></span>').addClass('dfm-cmt').text("// " + v.comment));
+                var kvText = v.key + (v.value ? " = " + v.value : "");
+
+                var $cell = $('<div></div>').addClass('col-md-4 col-sm-6');
+                var $card = $('<div></div>').addClass('dfm-card');
+
+                var $head = $('<div></div>').addClass('clearfix');
+                $head.append($('<span></span>').addClass('dfm-dfid').text(v.dfid));
+                $head.append($('<span></span>').addClass('dfm-name').text(v.name).attr("title", v.name));
 
                 var $ops = $('<span></span>').addClass('dfm-ops pull-right');
                 $ops.append($('<a class="btn btn-minier btn-yellow">编辑</a>'));
                 $ops.append($('<a class="btn btn-minier btn-danger" style="margin-left: 4px;">删除</a>'));
-                $line.append($ops);
-                $list.append($line);
+                $head.append($ops);
+
+                $card.append($head);
+                $card.append($('<div></div>').addClass('dfm-kv').text(kvText).attr("title", kvText));
+                if (v.comment) $card.append($('<div></div>').addClass('dfm-cmt').text("// " + v.comment).attr("title", v.comment));
+
+                $cell.append($card);
+                $grid.append($cell);
 
                 $ops.children().eq(0).on("click", function() {
                     openEdit(v);
@@ -155,6 +166,8 @@ jQuery(function($) {
                     deleteFunction(v);
                 });
             });
+
+            $list.append($grid);
         });
 
         if (!total) $list.append($('<div class="text-muted" style="padding: 16px 8px;">当前视图暂无条目</div>'));
