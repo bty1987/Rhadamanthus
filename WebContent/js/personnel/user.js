@@ -1310,6 +1310,7 @@ $(function() {
     user.items.gender = com.focusPage("#gender").switchBtn("gender");
     user.items.identity = com.focusPage("#identity");
     user.items.phone = com.focusPage("#phone");
+    user.items.email = com.focusPage("#email");
     user.items.deptSel = com.focusPage("#deptSel");
     user.items.dutySel = com.focusPage("#dutySel");
     user.items.deptTypeSel = com.focusPage("#deptTypeSel");
@@ -1377,6 +1378,7 @@ $(function() {
             "userInfo.gender": user.items.gender.prop("checked") == true ? 0 : 1,
             "userInfo.user.identity": user.items.identity.val(),
             "userInfo.user.phone": user.items.phone.val(),
+            "userInfo.email": user.items.email.val().trim(),
             "userInfo.user.loginId": user.items.loginId.val(),
             "userInfo.user.dtid": user.items.deptTypeSel.val(),
             "userInfo.user.dept.did": user.items.deptSel.val(),
