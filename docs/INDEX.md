@@ -147,6 +147,7 @@
 | MYSQL_MCP_SERVER_SETUP.md | MySQL MCP 服务器配置指南 |
 | OSS_IMAGE_SIMPLIFIED.md | OSS 图片显示简化版使用指南 |
 | PAYMENT_VIEWS_GUIDE.md | Payment 数据库视图说明文档 |
+| QUERY_CONDITION_GUIDE.md | 查询条件配置指南（condition规则库/Searcher条件区/DAO filters白名单三层） |
 | UPLOAD_GUIDE.md | 文件上传功能使用指南 |
 | aliyun-sls-integration.md | 阿里云 SLS 日志服务接入配置手册 |
 
