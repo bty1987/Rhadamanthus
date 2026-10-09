@@ -740,6 +740,18 @@ $.extend(api, {
         queryConstructionFunctionByName: {
             url: "queryConstructionFunctionByName.do"
         },
+        pageConstructionFunction: {
+            url: "pageConstructionFunction.do"
+        },
+        addConstructionFunction: {
+            url: "addConstructionFunction.do"
+        },
+        updateConstructionFunction: {
+            url: "updateConstructionFunction.do"
+        },
+        deleteConstructionFunction: {
+            url: "deleteConstructionFunction.do"
+        },
 
         pageConstructionCamera: {
             url: "pageConstructionCamera.do"
