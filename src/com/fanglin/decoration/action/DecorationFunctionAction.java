@@ -28,6 +28,14 @@ public class DecorationFunctionAction extends BaseListAction {
 
 	private DecorationFunctionVO decorationFunction;
 
+	@Action(value = "pageDecorationFunction", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String pageDecorationFunction() throws FLException {
+
+		decorationFunctions = decorationFunctionService.pageDecorationFunction(getPaging(), getFilters());
+
+		return SUCCESS;
+	}
+
 	@Action(value = "queryDecorationFunction", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryDecorationFunction() throws FLException {
 
@@ -40,6 +48,30 @@ public class DecorationFunctionAction extends BaseListAction {
 	public String queryDecorationFunctionByName() throws FLException {
 
 		decorationFunctions = decorationFunctionService.queryDecorationFunctionByName(decorationFunction);
+
+		return SUCCESS;
+	}
+
+	@Action(value = "addDecorationFunction", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String addDecorationFunction() throws FLException {
+
+		decorationFunctionService.addDecorationFunction(decorationFunction);
+
+		return SUCCESS;
+	}
+
+	@Action(value = "updateDecorationFunction", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateDecorationFunction() throws FLException {
+
+		decorationFunctionService.updateDecorationFunction(decorationFunction);
+
+		return SUCCESS;
+	}
+
+	@Action(value = "deleteDecorationFunction", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String deleteDecorationFunction() throws FLException {
+
+		decorationFunctionService.deleteDecorationFunction(decorationFunction);
 
 		return SUCCESS;
 	}
