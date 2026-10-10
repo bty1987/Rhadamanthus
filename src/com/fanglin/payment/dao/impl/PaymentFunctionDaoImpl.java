@@ -10,18 +10,16 @@ import com.fanglin.core.dao.impl.DaoImpl;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.payment.dao.PaymentFunctionDao;
 import com.fanglin.payment.po.PaymentFunctionPO;
-import com.fanglin.right.po.PaymentFunctionRightPO;
 import com.fanglin.utils.Paging;
 
 @Repository("paymentFunctionDao")
 public class PaymentFunctionDaoImpl extends DaoImpl<PaymentFunctionPO> implements PaymentFunctionDao {
 
-	public PaymentFunctionDaoImpl(){
+	public PaymentFunctionDaoImpl() {
 		super(PaymentFunctionPO.class);
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
 	public List<PaymentFunctionPO> pagePaymentFunction(Paging paging, List<Filter> filters) {
 		PagingQuery<PaymentFunctionPO> query = pagingQuery(paging, PaymentFunctionPO.class);
 
@@ -62,7 +60,7 @@ public class PaymentFunctionDaoImpl extends DaoImpl<PaymentFunctionPO> implement
 
 		Criteria criteria = session().createCriteria(PaymentFunctionPO.class).add(Restrictions.eq("status", PaymentFunctionPO.STATUS_ENABLE_INT));
 
-		if(type != null){
+		if (type != null) {
 			criteria.add(Restrictions.eq("type", type));
 		}
 

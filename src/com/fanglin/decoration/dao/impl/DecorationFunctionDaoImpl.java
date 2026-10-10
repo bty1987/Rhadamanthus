@@ -9,18 +9,16 @@ import com.fanglin.core.dao.impl.DaoImpl;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.decoration.dao.DecorationFunctionDao;
 import com.fanglin.decoration.po.DecorationFunctionPO;
-import com.fanglin.right.po.DecorationFunctionRightPO;
 import com.fanglin.utils.Paging;
 
 @Repository("decorationFunctionDao")
 public class DecorationFunctionDaoImpl extends DaoImpl<DecorationFunctionPO> implements DecorationFunctionDao {
 
-	public DecorationFunctionDaoImpl(){
+	public DecorationFunctionDaoImpl() {
 		super(DecorationFunctionPO.class);
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
 	public List<DecorationFunctionPO> pageDecorationFunction(Paging paging, List<Filter> filters) {
 		PagingQuery<DecorationFunctionPO> query = pagingQuery(paging, DecorationFunctionPO.class);
 
@@ -57,9 +55,9 @@ public class DecorationFunctionDaoImpl extends DaoImpl<DecorationFunctionPO> imp
 	@SuppressWarnings("unchecked")
 	public List<DecorationFunctionPO> queryDecorationFunction(Short type) {
 
-		if(type != null){
+		if (type != null) {
 			return session().createCriteria(DecorationFunctionPO.class).add(Restrictions.eq("type", type)).list();
-		}else{
+		} else {
 			return session().createCriteria(DecorationFunctionPO.class).list();
 		}
 	}

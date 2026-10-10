@@ -92,7 +92,7 @@ public class LoginAction extends BaseListAction {
 
 			fails = new LinkedList<Long>();
 
-			Deque<Long> old = AUTH_FAIL_LOG.putIfAbsent(ip, fails);
+			Deque<Long> old = ((ConcurrentHashMap<String, Deque<Long>>) AUTH_FAIL_LOG).putIfAbsent(ip, fails);
 
 			if (old != null) {
 				fails = old;
@@ -259,10 +259,11 @@ public class LoginAction extends BaseListAction {
 
 			// Phase 8: FLException 也记录到登录日志（除已记录的 110002/110004 外）
 			// 避免重复记录：110002 已在上方 recordLogin 记录
-			if (e.getCode() != 110002 && e.getCode() != 110003){
+			if (e.getCode() != 110002 && e.getCode() != 110003) {
 				try {
 					loginLogService.recordLogin(loginLogVO, false, e.getCode(), e.getErrorMessage());
-				} catch (Throwable ignore) { }
+				} catch (Throwable ignore) {
+				}
 			}
 		} catch (Exception e) {
 
@@ -273,7 +274,8 @@ public class LoginAction extends BaseListAction {
 			try {
 				loginLogVO.setResultState(com.fanglin.log.po.LoginLogPO.RESULTSTATE_ERROR);
 				loginLogService.recordLogin(loginLogVO, false, 110000, "系统繁忙,请稍后重试");
-			} catch (Throwable ignore) { }
+			} catch (Throwable ignore) {
+			}
 
 			LogUtils.logging(logger, e, "doLogin", "common", ip);
 		}
@@ -326,7 +328,8 @@ public class LoginAction extends BaseListAction {
 			recordAuthFail(ip);
 			try {
 				loginLogService.recordLogin(loginLogVO, false, e.getCode(), e.getErrorMessage());
-			} catch (Throwable ignore) { }
+			} catch (Throwable ignore) {
+			}
 		} catch (Exception e) {
 			setErrorCode(110000);
 			setErrorMsg("系统繁忙,请稍后重试");
@@ -334,7 +337,8 @@ public class LoginAction extends BaseListAction {
 			try {
 				loginLogVO.setResultState(com.fanglin.log.po.LoginLogPO.RESULTSTATE_ERROR);
 				loginLogService.recordLogin(loginLogVO, false, 110000, "系统繁忙,请稍后重试");
-			} catch (Throwable ignore) { }
+			} catch (Throwable ignore) {
+			}
 
 			LogUtils.logging(logger, e, "requestAuthCode", "common");
 		}
@@ -380,7 +384,8 @@ public class LoginAction extends BaseListAction {
 			recordAuthFail(ip);
 			try {
 				loginLogService.recordLogin(loginLogVO, false, e.getCode(), e.getErrorMessage());
-			} catch (Throwable ignore) { }
+			} catch (Throwable ignore) {
+			}
 		} catch (Exception e) {
 			setErrorCode(110000);
 			setErrorMsg("系统繁忙,请稍后重试");
@@ -388,7 +393,8 @@ public class LoginAction extends BaseListAction {
 			try {
 				loginLogVO.setResultState(com.fanglin.log.po.LoginLogPO.RESULTSTATE_ERROR);
 				loginLogService.recordLogin(loginLogVO, false, 110000, "系统繁忙,请稍后重试");
-			} catch (Throwable ignore) { }
+			} catch (Throwable ignore) {
+			}
 
 			LogUtils.logging(logger, e, "phoneAuthCode", "common");
 		}

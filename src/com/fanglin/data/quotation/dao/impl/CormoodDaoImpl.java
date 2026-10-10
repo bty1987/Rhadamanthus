@@ -19,7 +19,6 @@ public class CormoodDaoImpl extends DaoImpl<CormoodPO> implements CormoodDao {
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
 	public List<CormoodPO> pageCormood(Paging paging, List<Filter> filters) {
 		PagingQuery<CormoodPO> query = pagingQuery(paging, CormoodPO.class);
 

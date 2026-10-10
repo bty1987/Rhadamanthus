@@ -10,7 +10,6 @@ import com.fanglin.core.dao.impl.DaoImpl;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.customer.dao.CustomerFunctionDao;
 import com.fanglin.customer.po.CustomerFunctionPO;
-import com.fanglin.right.po.CustomerFunctionRightPO;
 import com.fanglin.utils.Paging;
 
 @Repository("customerFunctionDao")
@@ -21,7 +20,6 @@ public class CustomerFunctionDaoImpl extends DaoImpl<CustomerFunctionPO> impleme
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
 	public List<CustomerFunctionPO> pageCustomerFunction(Paging paging, List<Filter> filters) {
 		PagingQuery<CustomerFunctionPO> query = pagingQuery(paging, CustomerFunctionPO.class);
 
