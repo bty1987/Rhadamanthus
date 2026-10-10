@@ -19,7 +19,6 @@ public class CormtimeDaoImpl extends DaoImpl<CormtimePO> implements CormtimeDao 
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
 	public List<CormtimePO> pageCormtime(Paging paging, List<Filter> filters) {
 		PagingQuery<CormtimePO> query = pagingQuery(paging, CormtimePO.class);
 

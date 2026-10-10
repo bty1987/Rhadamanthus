@@ -10,7 +10,6 @@ import com.fanglin.core.dao.impl.DaoImpl;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.quotation.dao.QuotationFunctionDao;
 import com.fanglin.quotation.po.QuotationFunctionPO;
-import com.fanglin.right.po.QuotationFunctionRightPO;
 import com.fanglin.utils.Paging;
 
 @Repository("quotationFunctionDao")
@@ -21,7 +20,6 @@ public class QuotationFunctionDaoImpl extends DaoImpl<QuotationFunctionPO> imple
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
 	public List<QuotationFunctionPO> pageQuotationFunction(Paging paging, List<Filter> filters) {
 		PagingQuery<QuotationFunctionPO> query = pagingQuery(paging, QuotationFunctionPO.class);
 

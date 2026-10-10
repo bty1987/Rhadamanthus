@@ -5,11 +5,10 @@ import java.util.List;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
-import com.fanglin.core.dao.impl.DaoImpl;
-import com.fanglin.core.vo.Filter;
 import com.fanglin.construction.dao.ConstructionFunctionDao;
 import com.fanglin.construction.po.ConstructionFunctionPO;
-import com.fanglin.right.po.ConstructionFunctionRightPO;
+import com.fanglin.core.dao.impl.DaoImpl;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.utils.Paging;
 
 @Repository("constructionFunctionDao")
@@ -20,7 +19,6 @@ public class ConstructionFunctionDaoImpl extends DaoImpl<ConstructionFunctionPO>
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
 	public List<ConstructionFunctionPO> pageConstructionFunction(Paging paging, List<Filter> filters) {
 		PagingQuery<ConstructionFunctionPO> query = pagingQuery(paging, ConstructionFunctionPO.class);
 
