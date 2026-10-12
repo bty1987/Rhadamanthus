@@ -13,6 +13,6 @@ public interface AccessoriesItemDao extends Dao<AccessoriesItemPO> {
 
 	public List<AccessoriesItemPO> queryAccessoriesItem(List<Long> aids);
 
-	public int amountAccessoriesItem(String orderId, long nid);
+	public long amountAccessoriesItem(String orderId, long nid);
 
 }

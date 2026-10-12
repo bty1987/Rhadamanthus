@@ -102,7 +102,7 @@ public class AccessoriesItemServiceImpl implements AccessoriesItemService {
 	}
 
 	@Override
-	public int checkAccessoriesItem(AccessoriesVO accessoriesVO, AccessoriesItemVO accessoriesItemVO) throws FLException {
+	public long checkAccessoriesItem(AccessoriesVO accessoriesVO, AccessoriesItemVO accessoriesItemVO) throws FLException {
 
 		String orderId = accessoriesVO.getOrderId();
 		long nid = accessoriesItemVO.getNid();
@@ -133,17 +133,20 @@ public class AccessoriesItemServiceImpl implements AccessoriesItemService {
 
 		if (noodsPO.getCalc() != NoodsPO.CALC_CACL_INT) return 0;
 
-		int normamount = normoodItemDao.amountNormoodItem(quotationPO.getQid(), accessoriesItemVO.getNid());
-		int acceamount = accessoriesItemDao.amountAccessoriesItem(orderId, accessoriesItemVO.getNid());
+		long normamount = normoodItemDao.amountNormoodItem(quotationPO.getQid(), accessoriesItemVO.getNid());
+		long acceamount = accessoriesItemDao.amountAccessoriesItem(orderId, accessoriesItemVO.getNid());
 
 		normamount = Arith.round(normamount, 0, Arith.ROUND_UP);
 
-		// 量纲口径:acceamount已按(num×storenum)÷1000000折算,此处num不再乘storenum(线上在跑口径,乘回必全量误拦)
-		if (Arith.add(acceamount, accessoriesItemVO.getNum()) > Arith.add(normamount, noodsPO.getSurplus())) {
+		// 量纲口径: acceamount 与本次领用均按(num×storenum)÷1000 折算到×1000口径,与定额侧同量纲;storenum 未传按 1:1 兜底,防前端缺参 NPE
+		Integer storenum = accessoriesItemVO.getStorenum();
+		long cost = Arith.div(Arith.mul(accessoriesItemVO.getNum(), storenum == null ? 1000L : storenum.longValue()), 1000L);
+
+		if (Arith.add(acceamount, cost) > Arith.add(normamount, noodsPO.getSurplus())) {
 			throw new FLException(260082, "辅料项总额已达上限");
 		}
 
-		return Arith.sub(normamount, Arith.add(acceamount, accessoriesItemVO.getNum()));
+		return Arith.sub(normamount, Arith.add(acceamount, cost));
 	}
 
 	@Override

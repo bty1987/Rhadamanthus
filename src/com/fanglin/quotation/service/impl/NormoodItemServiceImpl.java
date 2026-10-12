@@ -61,7 +61,7 @@ public class NormoodItemServiceImpl implements NormoodItemService {
 	@Override
 	public int amountNormoodItem(NormoodItemVO normoodItemVO) {
 
-		int amount = normoodItemDao.amountNormoodItem(normoodItemVO.getQid(), normoodItemVO.getNoods().getNid());
+		long amount = normoodItemDao.amountNormoodItem(normoodItemVO.getQid(), normoodItemVO.getNoods().getNid());
 
 		normoodItemVO.setAmount(amount);
 
