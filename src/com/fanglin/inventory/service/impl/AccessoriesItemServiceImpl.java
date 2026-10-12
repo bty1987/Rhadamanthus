@@ -138,9 +138,9 @@ public class AccessoriesItemServiceImpl implements AccessoriesItemService {
 
 		normamount = Arith.round(normamount, 0, Arith.ROUND_UP);
 
-		// 量纲口径: 已领与本次领用均按(num×storenum)÷1000 折算到×1000口径,与定额侧同量纲;storenum 未传按 1:1 兜底,防前端缺参 NPE
+		// 量纲口径: 已领(DAO内÷1000)与本次领用(Arith.mul自带÷1000)均为×1000口径的定额单位量,与定额侧同量纲;storenum 未传按 1:1 兜底,防前端缺参 NPE
 		long storenum = accessoriesItemVO.getStorenum() == null ? 1000L : accessoriesItemVO.getStorenum().longValue();
-		long cost = accessoriesItemVO.getNum() * storenum / 1000;
+		long cost = Arith.mul(accessoriesItemVO.getNum(), storenum);
 
 		System.out.println("checkAccessoriesItem orderId=" + orderId + " nid=" + nid + " num=" + accessoriesItemVO.getNum() + " storenum=" + storenum + " acceamount=" + acceamount + " cost=" + cost + " normamount=" + normamount + " surplus=" + noodsPO.getSurplus());
 
