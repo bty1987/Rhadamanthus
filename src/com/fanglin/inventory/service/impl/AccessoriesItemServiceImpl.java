@@ -138,15 +138,12 @@ public class AccessoriesItemServiceImpl implements AccessoriesItemService {
 
 		normamount = Arith.round(normamount, 0, Arith.ROUND_UP);
 
-		// 量纲口径: acceamount 与本次领用均按(num×storenum)÷1000 折算到×1000口径,与定额侧同量纲;storenum 未传按 1:1 兜底,防前端缺参 NPE
-		Integer storenum = accessoriesItemVO.getStorenum();
-		long cost = Arith.div(Arith.mul(accessoriesItemVO.getNum(), storenum == null ? 1000L : storenum.longValue()), 1000L);
-
-		if (Arith.add(acceamount, cost) > Arith.add(normamount, noodsPO.getSurplus())) {
+		// 量纲口径: 已领按(num×storenum)÷1000 换算(行存库存单位数量),本次领用 num 原样参与比较(提交口径即定额单位×1000)
+		if (Arith.add(acceamount, accessoriesItemVO.getNum()) > Arith.add(normamount, noodsPO.getSurplus())) {
 			throw new FLException(260082, "辅料项总额已达上限");
 		}
 
-		return Arith.sub(normamount, Arith.add(acceamount, cost));
+		return Arith.sub(normamount, Arith.add(acceamount, accessoriesItemVO.getNum()));
 	}
 
 	@Override
