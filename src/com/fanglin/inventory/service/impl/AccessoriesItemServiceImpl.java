@@ -142,8 +142,6 @@ public class AccessoriesItemServiceImpl implements AccessoriesItemService {
 		long storenum = accessoriesItemVO.getStorenum() == null ? 1000L : accessoriesItemVO.getStorenum().longValue();
 		long cost = Arith.mul(accessoriesItemVO.getNum(), storenum);
 
-		System.out.println("checkAccessoriesItem orderId=" + orderId + " nid=" + nid + " num=" + accessoriesItemVO.getNum() + " storenum=" + storenum + " acceamount=" + acceamount + " cost=" + cost + " normamount=" + normamount + " surplus=" + noodsPO.getSurplus());
-
 		if (Arith.add(acceamount, cost) > Arith.add(normamount, noodsPO.getSurplus())) {
 			throw new FLException(260082, "辅料项总额已达上限");
 		}
