@@ -264,6 +264,11 @@ public class OperationServiceImpl implements OperationService {
 			throw new FLException(220005, "员工不存在");
 		}
 
+		// super 角色旁路: 零覆盖关闸接口连管理员都会被拒, 保留应急救援通道
+		if (RolePO.SUPER_NO_STR.equals(userPO.getRole().getNo())) {
+			return rollcall == 0;
+		}
+
 		OperationPO operationPO = operationDao.queryOperationByOperation(operation);
 
 		if (operationPO == null) return true;
@@ -301,10 +306,12 @@ public class OperationServiceImpl implements OperationService {
 		if (userPO == null) throw new FLException(220005, "员工不存在");
 
 		// 1. operation 不存在则创建(through=1 收集期放行, type=0 留给关闸后校验)
+		// 修复: 新建后须回引 operationPO, 否则未登记接口上 getOid() 必 NPE
 		OperationPO operationPO = operationDao.queryOperationByOperation(operation);
 
 		if (operationPO == null) {
-			operationDao.save(new OperationPO(operation, OperationPO.SYSTEM_PLATFORM_INT, OperationPO.STATUS_ENABLE_INT, OperationPO.THROUGH_PASS_INT, OperationPO.TYPE_CHECK_INT));
+			operationPO = new OperationPO(operation, OperationPO.SYSTEM_PLATFORM_INT, OperationPO.STATUS_ENABLE_INT, OperationPO.THROUGH_PASS_INT, OperationPO.TYPE_CHECK_INT);
+			operationDao.save(operationPO);
 		}
 
 		int oid = operationPO.getOid();
