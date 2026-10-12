@@ -140,7 +140,7 @@ public class AccessoriesItemServiceImpl implements AccessoriesItemService {
 
 		// 量纲口径: 已领与本次领用均按(num×storenum)÷1000 折算到×1000口径,与定额侧同量纲;storenum 未传按 1:1 兜底,防前端缺参 NPE
 		long storenum = accessoriesItemVO.getStorenum() == null ? 1000L : accessoriesItemVO.getStorenum().longValue();
-		long cost = Arith.div(Arith.mul(accessoriesItemVO.getNum(), storenum), 1000L);
+		long cost = accessoriesItemVO.getNum() * storenum / 1000;
 
 		System.out.println("checkAccessoriesItem orderId=" + orderId + " nid=" + nid + " num=" + accessoriesItemVO.getNum() + " storenum=" + storenum + " acceamount=" + acceamount + " cost=" + cost + " normamount=" + normamount + " surplus=" + noodsPO.getSurplus());
 
