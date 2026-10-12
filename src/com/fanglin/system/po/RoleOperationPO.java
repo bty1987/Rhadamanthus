@@ -45,6 +45,8 @@ public class RoleOperationPO implements java.io.Serializable {
 		this.rid = rid;
 		this.creater = creater;
 		this.company = company;
+		// 收集/授权行必须盖 createTime, 否则按时间审计收集进度时整批行不可见(生产实证 25988 行 NULL)
+		this.createTime = new Timestamp(System.currentTimeMillis());
 	}
 
 	@Id

@@ -191,7 +191,8 @@ public class AccessInterceptor extends AbstractInterceptor {
 
 					if (operationService.checkOperation(authentication.getUserId(), actionName, authentication.getRollcall())) {
 
-						// operationService.fillOperation(authentication.getUserId(), authentication.getRoleId(), authentication.getCompany(), actionName);
+						// 影子收集: 校验通过后补登 roleoperation(只记录合法使用, 被拒角色不经此放行)
+						operationService.fillOperation(authentication.getUserId(), authentication.getRoleId(), authentication.getCompany(), actionName);
 
 						return invocation.invoke();
 					} else {
