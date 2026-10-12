@@ -11,7 +11,7 @@ public interface NormoodItemDao extends Dao<NormoodItemPO> {
 
 	public NormoodItemPO queryNormoodItem(long sid, long quoteId, long ngid, short type);
 
-	public int amountNormoodItem(long qid, long nid);
+	public long amountNormoodItem(long qid, long nid);
 
 	public int countNormoodItem(long sid, short type);
 

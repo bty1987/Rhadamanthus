@@ -38,7 +38,7 @@ public class NormoodItemVO implements Serializable {
 
 	private Integer storenum;
 
-	private Integer amount;
+	private Long amount;
 
 	public NormoodItemVO() {
 		super();
@@ -169,11 +169,11 @@ public class NormoodItemVO implements Serializable {
 		this.storenum = storenum;
 	}
 
-	public Integer getAmount() {
+	public Long getAmount() {
 		return amount;
 	}
 
-	public void setAmount(Integer amount) {
+	public void setAmount(Long amount) {
 		this.amount = amount;
 	}
 }
