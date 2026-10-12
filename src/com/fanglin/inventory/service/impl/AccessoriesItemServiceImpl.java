@@ -1,6 +1,8 @@
 package com.fanglin.inventory.service.impl;
 import java.util.ArrayList;
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,6 +36,8 @@ import com.fanglin.utils.Arith;
 @Service("accessoriesItemService")
 @Transactional(readOnly = true)
 public class AccessoriesItemServiceImpl implements AccessoriesItemService {
+
+	private static final Logger logger = LoggerFactory.getLogger(AccessoriesItemServiceImpl.class);
 
 	@Autowired
 	private AccessoriesItemDao accessoriesItemDao;
@@ -138,12 +142,17 @@ public class AccessoriesItemServiceImpl implements AccessoriesItemService {
 
 		normamount = Arith.round(normamount, 0, Arith.ROUND_UP);
 
-		// 量纲口径: 已领按(num×storenum)÷1000 换算(行存库存单位数量),本次领用 num 原样参与比较(提交口径即定额单位×1000)
-		if (Arith.add(acceamount, accessoriesItemVO.getNum()) > Arith.add(normamount, noodsPO.getSurplus())) {
+		// 量纲口径: 已领与本次领用均按(num×storenum)÷1000 折算到×1000口径,与定额侧同量纲;storenum 未传按 1:1 兜底,防前端缺参 NPE
+		long storenum = accessoriesItemVO.getStorenum() == null ? 1000L : accessoriesItemVO.getStorenum().longValue();
+		long cost = Arith.div(Arith.mul(accessoriesItemVO.getNum(), storenum), 1000L);
+
+		logger.info("checkAccessoriesItem orderId={} nid={} num={} storenum={} acceamount={} cost={} normamount={} surplus={}", orderId, nid, accessoriesItemVO.getNum(), storenum, acceamount, cost, normamount, noodsPO.getSurplus());
+
+		if (Arith.add(acceamount, cost) > Arith.add(normamount, noodsPO.getSurplus())) {
 			throw new FLException(260082, "辅料项总额已达上限");
 		}
 
-		return Arith.sub(normamount, Arith.add(acceamount, accessoriesItemVO.getNum()));
+		return Arith.sub(normamount, Arith.add(acceamount, cost));
 	}
 
 	@Override
