@@ -6,7 +6,7 @@ from plan_util import *
 class Exporter(Util):
 
     def __init__(self, host='', username='', password='', media='', pthost='', charset='utf8'):
-    
+
         self.dbconn = None
         self.cursor = None
         self.flag = True
@@ -20,28 +20,28 @@ class Exporter(Util):
         self.size = 400
 
         self.colum = u"""
-            d.orderId AS `装修单号`,
-            v.name AS `楼盘`,
-            h.housenumber as `楼号`,
-            du.currentName AS `设计师`,
-            dd.name AS `设计部`,
-            su.currentName AS `业务员`,
-            sd.name AS `业务部`,
-            dh.originMaterialPrice AS `原主材配比额`,
-            dh.materialPrice AS `现主材配比额`,
-            dh.originMaterialPrice-dh.materialPrice AS `主材配比差额`,
-            d.contractTime AS `签单时间`,
-            communion.kv('decoration', 'decoration', 'typeness', d.typeness) AS `订单类型`,
-            communion.kv('decoration', 'decoration', 'status', d.status) AS `订单状态`,
-            d.orderTotalPrice AS `签单额`,
-            d.factPrice AS `实收额`,
-            dh.materialPrice AS `主材总额`,
-            dh.materialPaidup AS `实收主材额`,
-            dh.servicePrice AS `服务费`,
-            dh.servicePaidup AS `实收服务费`
+            d.orderId,
+            v.name,
+            h.housenumber,
+            du.currentName,
+            dd.name,
+            su.currentName,
+            sd.name,
+            dh.originMaterialPrice,
+            dh.materialPrice,
+            dh.originMaterialPrice - dh.materialPrice,
+            d.contractTime,
+            communion.kv('decoration', 'decoration', 'typeness', d.typeness),
+            communion.kv('decoration', 'decoration', 'status', d.status),
+            d.orderTotalPrice,
+            d.factPrice,
+            dh.materialPrice,
+            dh.materialPaidup,
+            dh.servicePrice,
+            dh.servicePaidup
         """
 
-        self.SELECT_SQL = u"""
+        self.SQL_QUERY = u"""
             SELECT
                 %s
             FROM
@@ -55,19 +55,20 @@ class Exporter(Util):
                 decoration.decorationholonomy as dh
             WHERE
                 d.orderId = dh.orderId
-                AND d.hid = h.hid 
+                AND d.hid = h.hid
                 AND h.vid = v.vid
                 AND d.dsuid = du.uid
                 AND d.smuid = su.uid
                 AND du.deptid = dd.did
-                AND su.deptid = sd.did 
-                AND d.contractTime >= '%s 00:00:00' 
+                AND su.deptid = sd.did
+                AND d.contractTime >= '%s 00:00:00'
                 AND d.contractTime <= '%s 23:59:59'
                 AND d.type = 2
                 %s
         """
 
     def company(self, columnCompany, company):
+
         if company != 0:
             companyString = u"AND %s = %s" % (columnCompany, company)
         else:
@@ -75,95 +76,30 @@ class Exporter(Util):
 
         return companyString
 
+    def sqler(self, args, company):
+
+        startTime, endTime = args.split("-")
+
+        return self.SQL_QUERY % ("%s", startTime, endTime, self.company("d.company", company))
+
+    def rower(self, row):
+
+        self.divNum(row, [7, 8, 9, 13, 14, 15, 16, 17, 18])
+
+        return row
+
     def main(self, pid, args, company):
 
-        try:
-            self.getDBCursor(self.host, self.username, self.password, self.charset)
+        tableheads = [
+            u"装修单号", u"楼盘", u"楼号", u"设计师", u"设计部", u"业务员", u"业务部", u"原主材配比额", u"现主材配比额", u"主材配比差额",
+            u"签单时间", u"订单类型", u"订单状态", u"签单额", u"实收额", u"主材总额", u"实收主材额", u"服务费", u"实收服务费"
+        ]
 
-            startTime, endTime = args.split("-")
+        self.getDBCursor(self.host, self.username, self.password, self.charset)
 
-            checkFlag = self.controlTime(startTime, endTime)
+        sql = self.sqler(args, company)
 
-            if checkFlag == False:
-                self.flag = False
-                self.updataSchedule(self.pthost, pid, {
-                    u"plan.status": 3,
-                    u"plan.info": '时间范围大于31天'
-                })
-                return False
-
-            sqlcount = self.SELECT_SQL % ("count(*)", startTime, endTime, self.company("d.company", company))
-
-            count = self.count(sqlcount)
-
-            if count == 0:
-                self.flag = False
-                self.updataSchedule(self.pthost, pid, {
-                    u"plan.status": 3,
-                    u"plan.info": '无可导出数据'
-                })
-                return False
-
-            all = count / 0.8
-            molecular = all * 0.1
-            schedule = (molecular / all) * 100
-
-            self.updataSchedule(self.pthost, pid, {
-                u"plan.schedule": schedule,
-                u"plan.status": 4
-            })
-
-            sql = self.SELECT_SQL % (self.colum, startTime, endTime, self.company("d.company", company))
-
-            workbook, sheet = self.createWorkbook(u"装修满减信息")
-
-            tableHead = [u"装修单号", u"楼盘", u"楼号", u"设计师", u"设计部", u"业务员", u"业务部", u'原主材配比额', u'现主材配比额', u'主材配比差额',
-                         u"签单时间", u"订单类型", u"订单状态", u"签单额" ,u"实收额", u"主材总额", u"实收主材额", u"服务费", u"实收服务费",]
-
-            self.createTableHead(sheet, tableHead)
-
-            count = 1
-            nowPage = 1
-            flag = True
-            
-            while (flag):
-
-                data = self.page(sql, nowPage, self.size)
-
-                for i, v in enumerate(data):
-                    row = list(v)
-
-                    self.divNum(row, [7, 8, 9, 13, 14, 15, 16, 17, 18])
-
-                    self.createTableHead(sheet, row, count)
-                    count += 1
-
-                nowPage = nowPage + 1
-
-                if len(data) < self.size:
-                    flag = False
-
-                molecular = molecular + len(data)
-                schedules = (molecular / all) * 100
-
-                self.updataSchedule(self.pthost, pid, {
-                    u"plan.schedule": int(schedules),
-                    u"plan.status": 4
-                })
-
-            resultfilepath = self.packFile(pid, workbook)
-
-            self.updataSchedule(self.pthost, pid, {
-                u"plan.resultFilepath": resultfilepath
-            })
-
-        except Exception as e:
-            self.flag = False
-            self.errCall(pid, self.pthost, self.media, e)
-
-        finally:
-            self.modelEnd(pid, self.pthost, self.media, self.flag)
-            sys.exit(0)
+        self.exporter(pid, args, u"装修满减信息", tableheads, self.colum, sql, self.rower)
 
 if __name__ == '__main__':
 
@@ -174,10 +110,10 @@ if __name__ == '__main__':
         1.参数说明参数要对应
             1.pid         information.plan的主键 3143;
             2.args        2018/11/01-2018/11/30
-            3.company     0
+            3.company     公司cid, 0为全部(不传默认0)
         2.脚本传参说明:
-            plan_export_decoration_order_holonomy.py  pid args
-            plan_export_decoration_order_holonomy.py  299 2018/11/01-2018/11/30
+            plan_export_decoration_order_holonomy.py  pid args                 company
+            plan_export_decoration_order_holonomy.py  299 2018/11/01-2018/11/30 1
 
     """
 
@@ -188,7 +124,7 @@ if __name__ == '__main__':
 
     pid = sys.argv[1]
     args = sys.argv[2]
-    company = sys.argv[3]
+    company = sys.argv[3] if len(sys.argv) > 3 else 0
 
     exporter = Exporter(dbconf.get("host"), dbconf.get("username"), dbconf.get("password"), config.get("media"), config.get("pthost"))
 

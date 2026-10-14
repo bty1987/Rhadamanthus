@@ -6,7 +6,7 @@ from plan_util import *
 class Exporter(Util):
 
     def __init__(self, host='', username='', password='', media='', pthost='', charset='utf8'):
-    
+
         self.dbconn = None
         self.cursor = None
         self.flag = True
@@ -19,35 +19,35 @@ class Exporter(Util):
         self.pthost = pthost
         self.size = 300
 
-        self.column = """
-            d.orderId AS `装修单号`,
-            v.name AS `楼盘`,
-            h.housenumber as `楼号`,
-            c.name AS `客户名`,
-            h.buildArea AS `建筑面积`,
-            h.innerArea AS `计价面积`,
-            du.userId AS `设计师工号`,
-            du.currentName AS `设计师`,
-            su.userId AS `业务员工号`,
-            su.currentName AS `业务员`,
-            eu.userId AS `方案设计工号`,
-            eu.currentName AS `方案设计`,
-            d.contractTime AS `签单时间`,
-            d.balanceTime AS `内决时间`,
-            communion.kv("decoration", "decoration", "status", d.status) AS `订单状态`,
-            communion.kv("decoration", "decoration", "projectStatus", d.projectStatus) AS `工程状态`,
-            communion.kv("decoration", "decoration", "typeness", d.typeness) AS `订单类型`,
-            u.userId AS `归属人工号`,
-            u.currentName AS `归属人`,
-            db.type AS `归属类型`,
-            ur.no AS `分区编号`,
-            ur.name AS `分区名称`,
-            ud.no AS `部门编号`,
-            ud.name AS `部门名称`,
-            db.rate AS `归属比例`
+        self.colum = u"""
+            d.orderId,
+            v.name,
+            h.housenumber,
+            c.name,
+            h.buildArea,
+            h.innerArea,
+            du.userId,
+            du.currentName,
+            su.userId,
+            su.currentName,
+            eu.userId,
+            eu.currentName,
+            d.contractTime,
+            d.balanceTime,
+            communion.kv("decoration", "decoration", "status", d.status),
+            communion.kv("decoration", "decoration", "projectStatus", d.projectStatus),
+            communion.kv("decoration", "decoration", "typeness", d.typeness),
+            u.userId,
+            u.currentName,
+            db.type,
+            ur.no,
+            ur.name,
+            ud.no,
+            ud.name,
+            db.rate
         """
 
-        self.SQL_EXPORT_DECORATION_BALANCE = """
+        self.SQL_QUERY = u"""
             SELECT
                 %s
             FROM
@@ -63,117 +63,52 @@ class Exporter(Util):
                 LEFT JOIN communion.department ud ON u.deptId = ud.did
                 LEFT JOIN communion.department ur ON ud.fdid = ur.did
             WHERE
-                d.balanceTime >= '%s 00:00:00' AND 
+                d.balanceTime >= '%s 00:00:00' AND
                 d.balanceTime <= '%s 23:59:59'
                 %s
         """
 
-
     def company(self, columnCompany, company):
+
         if company != 0:
-            companyString = "AND %s = %s" % (columnCompany, company)
+            companyString = u"AND %s = %s" % (columnCompany, company)
         else:
-            companyString = " "
+            companyString = u" "
 
         return companyString
 
+    def sqler(self, args, company):
+
+        startTime, endTime = args.split("-")
+
+        return self.SQL_QUERY % ("%s", startTime, endTime, self.company("d.company", company))
+
+    def rower(self, row):
+
+        self.divNum(row, [4, 5, 24])
+
+        # 归属类型(0设计/1业务), constant_ref中无decorationbelong.type码表, 保留本地字典翻译
+        row[19] = self.decorationbelongType.get(row[19], row[19])
+
+        if (row[12] is None): row[12] = ""
+        if (row[13] is None): row[13] = ""
+
+        return row
+
     def main(self, pid, args, company):
 
-        try:
-            self.getDBCursor(self.host, self.username, self.password, self.charset)
+        tableheads = [
+            u"装修单号", u"楼盘", u"楼号", u"客户名", u"建筑面积", u"计价面积",
+            u"设计师工号", u"设计师", u"业务员工号", u"业务员", u"方案设计工号", u"方案设计",
+            u"签单时间", u"内决时间", u"订单状态", u"工程状态", u"订单类型",
+            u"归属人工号", u"归属人", u"归属类型", u"分区编号", u"分区名称", u"部门编号", u"部门名称", u"归属比例"
+        ]
 
-            startTime, endTime = args.split("-")
+        self.getDBCursor(self.host, self.username, self.password, self.charset)
 
-            checkFlag = self.controlTime(startTime, endTime)
+        sql = self.sqler(args, company)
 
-            if checkFlag == False:
-                self.flag = False
-                self.updataSchedule(self.pthost, pid, {
-                    "plan.status": 3,
-                    "plan.info": "时间范围大于31天"
-                })
-                return False
-
-            sqlcount = self.SQL_EXPORT_DECORATION_BALANCE % ("count(*)", startTime, endTime, self.company("d.company", company))
-
-            count = self.count(sqlcount)
-            
-            if count == 0:
-                self.flag = False
-                self.updataSchedule(self.pthost, pid, {
-                    "plan.status": 3,
-                    "plan.info": "无可导出数据"
-                })
-                return False
-
-            all = count / 0.8
-            molecular = all * 0.1
-            schedule = (molecular / all) * 100
-
-            self.updataSchedule(self.pthost, pid, {
-                "plan.schedule": schedule,
-                "plan.status": 4
-            })
-
-            sql = self.SQL_EXPORT_DECORATION_BALANCE % (self.column, startTime, endTime, self.company("d.company", company))
-
-            workbook, sheet = self.createWorkbook("装修内决信息")
-            
-            tableHead = [
-                "装修单号", "楼盘", "楼号", "客户名", "建筑面积", "计价面积",
-                "设计师工号", "设计师", "业务员工号", "业务员", "方案设计工号", "方案设计",
-                "签单时间", "内决时间", "订单状态", "工程状态", "订单类型",
-                "归属人工号", "归属人", "归属类型", "分区编号", "分区名称", "部门编号", "部门名称", "归属比例"
-            ]
-
-            self.createTableHead(sheet, tableHead)
-
-            count = 1
-            nowPage = 1
-            flag = True
-            
-            while (flag):
-
-                data = self.page(sql, nowPage, self.size)
-
-                for i, v in enumerate(data):
-
-                    rows = list(v)
-                    
-                    self.divNum(rows, [4, 5, 24])
-
-                    rows[19] = self.decorationbelongType.get(rows[19], rows[19])
-
-                    if (rows[12] is None): rows[12] = ""
-                    if (rows[13] is None): rows[13] = ""
-
-                    self.createTableHead(sheet, rows, count)
-                    count += 1
-
-                nowPage = nowPage + 1
-                if len(data) < self.size:
-                    flag = False
-
-                molecular = molecular + len(data)
-                schedules = (molecular / all) * 100
-                self.updataSchedule(self.pthost, pid, {
-                    "plan.schedule": int(schedules),
-                    "plan.status": 4
-                })
-
-            resultfilepath = self.packFile(pid, workbook)
-
-            self.updataSchedule(self.pthost, pid, {
-                "plan.resultFilepath": resultfilepath
-            })
-
-        except Exception as e:
-            self.flag = False
-            self.errCall(pid, self.pthost, self.media, e)
-
-        finally:
-            self.modelEnd(pid, self.pthost, self.media, self.flag)
-            sys.exit(0)
+        self.exporter(pid, args, u"装修内决信息", tableheads, self.colum, sql, self.rower)
 
 if __name__ == '__main__':
 
@@ -184,7 +119,7 @@ if __name__ == '__main__':
         1.传入必须参数说明
             1.pid         information.plan的主键;
             2.args        2018/11/01-2018/11/30
-            3.company     公司:1
+            3.company     公司cid, 0为全部(不传默认0)
         2.命令使用 plan_export_decoration_order_balance.py  pid args company
                    plan_export_decoration_order_balance.py  299 2018/11/01-2018/11/30 1
 
@@ -198,7 +133,7 @@ if __name__ == '__main__':
 
     pid = sys.argv[1]
     args = sys.argv[2]
-    company = sys.argv[3]
+    company = sys.argv[3] if len(sys.argv) > 3 else 0
 
     exporter = Exporter(dbconf.get("host"), dbconf.get("username"), dbconf.get("password"), config.get("media"), config.get("pthost"))
     exporter.main(pid, args, int(company))

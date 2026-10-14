@@ -6,7 +6,7 @@ from plan_util import *
 class Exporter(Util):
 
     def __init__(self, host='', username='', password='', media='', pthost="", charset='utf8'):
-    
+
         self.dbconn = None
         self.cursor = None
 
@@ -20,75 +20,71 @@ class Exporter(Util):
         self.list = []
         self.size = 200
 
-        self.colum = """
+        self.colum = u"""
             s.orderId,
             cc.name,
-            s.no AS '销售单号',
-            uc.name AS '销售公司',
-            communion.kv('decoration', 'decoration', 'status', d.status) AS '装修单状态',
-            CONCAT(v.name, CONCAT(' ', h.houseNumber)) AS '楼盘地址',
-            b.name AS '品牌',
-            s.category AS '品类',
-            gk0.name AS '统计类别',
-            gk1.name AS '一类',
-            gk2.name AS '二类',
-            gk3.name AS '三类',
-            du.userId AS '设计师编号',
-            du.currentName AS '设计师',
-            eu.userId AS '方案设计编号',
-            eu.currentName AS '方案设计',
-            sdr.no AS '签约设计大区编号',
-            sdr.alias AS '签约设计大区',
-            sdd.no AS '签约设计部门编号',
-            sdd.alias AS '签约设计部门',
-            dr.no AS '设计师大区编号',
-            dr.alias AS '设计师大区',
-            dd.no AS '设计师部编号',
-            dd.alias AS '设计师部',
-            s.total AS '总价',
-            s.coupon AS '劵值',
-            s.couponInfo AS '劵信息',
-            cru.userId AS '创建人工号',
-            cru.currentName AS '创建人',
-            iu.userId AS '驻店',
-            iu.currentName AS '驻店',
-            gu.userId AS '导购工号',
-            gu.currentName AS '导购',
-            sb.balance AS '预结算值',
-            sb.createTime AS '预结时间',
-            cu.currentName AS '预结算人',
-            sb.vbalance AS '厂商结算',
-            sb.pbalance AS '结算值',
-            sb.allowance AS '补贴',
-            sb.postTime AS '结算时间',
-            pu.currentName AS '结算人',
-            s.maling AS '抹零',
-            s.venderMaling AS '厂商抹零',
-            communion.kv('sales', 'salesbalance', 'status', sb.status) AS '状态',
-            communion.kv('sales', 'salesbalance', 'type', sb.type) AS '结算类型',
-            g.name AS '商品名称',
-            g.no AS '商品编号',
-            c.name AS '颜色',
-            f.info AS '规格',
-            sitem.selling AS '售价',
-            sitem.disPrice AS '折扣价',
-            sitem.price AS '折让价',
-            sitem.priceType AS '价格类型',
-            ritem.num AS '数量',
-            ritem.total AS '销售项总价',
-            sitem.ctype AS '结算方式',
-            sitem.cvalue AS '结算值',
-            sb.createTime AS '审批时间',
-            b.kino AS '金蝶编号',
-            b.kiname AS '金蝶名称',
-            s.comment AS '备注',
-            gk0.name AS '统计类别',
-            gk1.name AS '一类',
-            gk2.name AS '二类',
-            gk3.name AS '三类'
+            s.no,
+            uc.name,
+            communion.kv('decoration', 'decoration', 'status', d.status),
+            CONCAT(v.name, CONCAT(' ', h.houseNumber)),
+            b.name,
+            s.category,
+            gk0.name,
+            gk1.name,
+            gk2.name,
+            gk3.name,
+            du.userId,
+            du.currentName,
+            eu.userId,
+            eu.currentName,
+            sdr.no,
+            sdr.alias,
+            sdd.no,
+            sdd.alias,
+            dr.no,
+            dr.alias,
+            dd.no,
+            dd.alias,
+            s.total,
+            s.coupon,
+            s.couponInfo,
+            cru.userId,
+            cru.currentName,
+            iu.userId,
+            iu.currentName,
+            gu.userId,
+            gu.currentName,
+            sb.balance,
+            sb.createTime,
+            cu.currentName,
+            sb.vbalance,
+            sb.pbalance,
+            sb.allowance,
+            sb.postTime,
+            pu.currentName,
+            s.maling,
+            s.venderMaling,
+            communion.kv('sales', 'salesbalance', 'status', sb.status),
+            communion.kv('sales', 'salesbalance', 'type', sb.type),
+            g.name,
+            g.no,
+            c.name,
+            f.info,
+            sitem.selling,
+            sitem.disPrice,
+            sitem.price,
+            communion.kv('data', 'price', 'type', sitem.priceType),
+            ritem.num,
+            ritem.total,
+            communion.kv('sales', 'salesItem', 'ctype', sitem.ctype),
+            sitem.cvalue,
+            sb.createTime,
+            b.kino,
+            b.kiname,
+            s.comment
         """
 
-        self.SQL_QUERY = """
+        self.SQL_QUERY = u"""
             SELECT
                 %s
             FROM
@@ -123,141 +119,73 @@ class Exporter(Util):
                 LEFT JOIN data.goodskind gk2 ON g.twokind = gk2.gkid
                 LEFT JOIN data.goodskind gk3 ON g.thrkind = gk3.gkid
             WHERE
-                %s >= '%s 00:00:00' AND 
+                %s >= '%s 00:00:00' AND
                 %s <= '%s 23:59:59' AND
                 s.type = %s
                 %s
         """
 
     def timetype(self, timeType):
-    
+
         column = "sb.createTime"
-    
+
         if timeType == "0":
             column = "sb.createTime"
         elif timeType == "1":
             column = "sb.postTime"
-        elif timeTyoe == "2":
+        elif timeType == "2":
             column = "s.createTime"
-    
+
         return column
 
     def company(self, companyType, company):
 
-        companyId = " "
+        companyId = u" "
         if company != 0:
             if companyType == "0":
-                companyId = "AND s.company = %s " % company
+                companyId = u"AND s.company = %s " % company
             elif companyType == "1":
-                companyId = "AND s.pompany = %s " % company
+                companyId = u"AND s.pompany = %s " % company
         else:
-            companyId = " "
+            companyId = u" "
 
         return companyId
 
-    def main(self, timeType, companyType, type, pid, args, comapny):
+    def sqler(self, timeType, companyType, type, args, company):
 
-        try:
-            self.getDBCursor(self.host, self.username, self.password, self.charset)
+        startTime, endTime = args.split("-")
 
-            startTime, endTime = args.split("-")
+        timeColumn = self.timetype(timeType)
 
-            checkFlag = self.controlTime(startTime, endTime)
-            if checkFlag == False:
-                self.flag = False
-                self.updataSchedule(self.pthost, pid, {
-                    "plan.status": 3,
-                    "plan.info": '时间范围大于31天'
-                })
-                return False
+        return self.SQL_QUERY % ("%s", timeColumn, startTime, timeColumn, endTime, type, self.company(companyType, company))
 
-            timeColumn = self.timetype(timeType)
+    def rower(self, row):
 
-            sqlcount = self.SQL_QUERY % ("count(*)", timeColumn, startTime, timeColumn, endTime, type, self.company(companyType, comapny))
+        # 装修单状态/结算状态/结算类型/价格类型/结算方式已由SQL层communion.kv翻译
+        # 原尾部的统计类别/一类/二类/三类重复列已去除, 列数与表头61列对齐
+        self.divNum(row, [24, 25, 33, 36, 37, 38, 41, 42, 49, 50, 51, 53, 54, 56])
 
-            count = self.count(sqlcount)
-            if count == 0:
-                self.flag = False
-                self.updataSchedule(self.pthost, pid, {
-                    "plan.status": 3,
-                    "plan.info": '无可导出数据'
-                })
-                return False
+        if row[36] == None: row[36] = u'无'; row[37] = u'无'
 
-            all = count / 0.8
-            molecular = all * 0.1
-            schedule = (molecular / all) * 100
+        return row
 
-            self.updataSchedule(self.pthost, pid, {
-                "plan.schedule": schedule,
-                "plan.status": 4
-            })
+    def main(self, timeType, companyType, type, pid, args, company):
 
-            sql = self.SQL_QUERY % (self.colum, timeColumn, startTime, timeColumn, endTime, type, self.company(companyType, comapny))
+        tableheads = [
+            u"装修单号", u"装修单公司", u"销售单号", u"销售公司", u"销售单状态", u"楼盘地址", u"品牌", u"品类", u"统计类别", u"一类",
+            u"二类", u"三类", u"设计师编号", u"设计师", u"方案设计编号", u"方案设计", u"签约设计大区编号", u"签约设计大区", u"签约设计部门编号", u"签约设计部门",
+            u"设计师大区编号", u"设计师大区", u"设计师部编号", u"设计师部", u"销售总价", u"券值", u"券信息", u"创建人工号", u"创建人", u"驻店工号",
+            u"驻店", u"导购工号", u"导购", u"预结算值", u"预结算时间", u"预结算人", u"厂商结算", u"结算值", u"补贴", u"结算时间",
+            u"结算人", u"抹零", u"厂商抹零", u"状态", u"类型", u"商品名称", u"商品编号", u"商品颜色", u"商品规格", u"售价",
+            u"折扣价", u"折让价", u"价格类型", u"数量", u"销售项总价", u"结算方式", u"结算值", u"审批时间", u"金蝶编号", u"金蝶名称",
+            u"备注"
+        ]
 
-            workbook, sheet = self.createWorkbook("销售结算-退货")
+        self.getDBCursor(self.host, self.username, self.password, self.charset)
 
-            tableHead = [
-                "装修单号", "装修单公司", "销售单号", "销售公司", "销售单状态", "楼盘地址", "品牌", "品类", "统计类别", "一类", 
-                "二类", "三类", "设计师编号", "设计师", "方案设计编号", "方案设计", "签约设计大区编号", "签约设计大区", "签约设计部门编号", "签约设计部门", 
-                "设计师大区编号", "设计师大区", "设计师部编号", "设计师部", "销售总价", "券值", "券信息", "创建人工号", "创建人", "驻店工号", 
-                "驻店", "导购工号", "导购", "预结算值", "预结算时间", "预结算人", "厂商结算", "结算值",  "补贴", "结算时间", 
-                "结算人", "抹零", "厂商抹零", "状态", "类型", "商品名称", "商品编号", "商品颜色", "商品规格", "售价", 
-                "折扣价", "折让价", "价格类型", "数量", "销售项总价", "结算方式", "结算值", "审批时间", "金蝶编号", "金蝶名称", 
-                "备注"
-            ]
+        sql = self.sqler(timeType, companyType, type, args, company)
 
-            self.createTableHead(sheet, tableHead)
-
-            count = 1
-            nowPage = 1
-            flag = True
-            
-            while (flag):
-
-                rows = self.page(sql, nowPage, self.size)
-
-                for i, v in enumerate(rows):
-                
-                    data = list(v)
-
-                    self.divNum(data, [24, 25, 33, 36, 37, 38, 41, 42, 49, 50, 51, 53, 54, 56])
-
-                    if data[52]: data[52] = self.salesPriceType[data[52]]
-                    if data[55]: data[55] = self.salesCType[data[55]]
-
-                    if data[36] == None : data[36] = u'无'; data[37] = u'无'
-
-                    self.createTableHead(sheet, data, count)
-
-                    count += 1
-
-                molecular = molecular + len(rows)
-                schedules = (molecular / all) * 100
-
-                self.updataSchedule(self.pthost, pid, {
-                    "plan.schedule": int(schedules),
-                    "plan.status": 4
-                })
-                
-                nowPage = nowPage + 1
-
-                if len(rows) < self.size:
-                    flag = False
-
-            resultfilepath = self.packFile(pid, workbook)
-
-            self.updataSchedule(self.pthost, pid, {
-                "plan.resultFilepath": resultfilepath
-            })
-
-        except Exception as e:
-            self.flag = False
-            self.errCall(pid, self.pthost, self.media, e)
-
-        finally:
-            self.modelEnd(pid, self.pthost, self.media, self.flag)
-            sys.exit(0)
+        self.exporter(pid, args, u"销售结算-退货", tableheads, self.colum, sql, self.rower)
 
 if __name__ == '__main__':
 
@@ -265,16 +193,17 @@ if __name__ == '__main__':
         导出销售结算退货脚本说明:
             根据查询条件,以分页拿数据的方式导出销售结算;并上传到文件服务器中,可从任务页面上点击下载即可;
             当该脚本执行出现异常时,将跟新进度为失败并记录到log文件中上传至文件服务器中;
-             
+
         1.参数说明参数要对应
             1.timeType        自动获取查询条件时间字段
             2.companyType        自动获取查询条件公司
-            3.pid         information.plan的主键;
-            4.args        "2018/12/13-2018/12/13"
-            5.company     公司:1
+            3.type        销售单类型
+            4.pid         information.plan的主键;
+            5.args        "2018/12/13-2018/12/13"
+            6.company     公司cid, 0为全部(不传默认0)
         2.脚本传参说明:
-             plan_export_sales_balance_item_refund.py   timeType       companyType      pid              args                company
-             plan_export_sales_balance_item_refund.py      0                1           299       2020/04/01-2020/04/30         1
+             plan_export_sales_balance_item_refund.py   timeType       companyType      type   pid              args                company
+             plan_export_sales_balance_item_refund.py      0                1           0     299       2020/04/01-2020/04/30         1
 
         3.注:
             1.结束时间不能大于开始时间31天
@@ -291,8 +220,7 @@ if __name__ == '__main__':
     type = sys.argv[3]
     pid = sys.argv[4]
     args = sys.argv[5]
-    company = sys.argv[6]
+    company = sys.argv[6] if len(sys.argv) > 6 else 0
 
     exporter = Exporter(dbconf.get("host"), dbconf.get("username"), dbconf.get("password"), config.get("media"), config.get("pthost"))
     exporter.main(timeType, companyType, type, pid, args, int(company))
-    

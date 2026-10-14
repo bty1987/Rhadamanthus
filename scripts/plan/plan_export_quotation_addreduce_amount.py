@@ -17,28 +17,29 @@ class Exporter(Util):
         self.charset = charset
         self.media = media
         self.pthost = pthost
+        self.list = []
         self.size = 300
 
-        self.column = u"""
-            d.orderId AS '装修单号',
-            h.houseNumber AS '楼号',
-            v.`name` AS '楼盘',
-            dp.referMoney AS '款项金额',
-            ar.type AS '增减类型',
-            IF (ari.subtype = 1,sum(ari.num * ari.unitprice)/1000,0) AS '工程折前总价',
-            IF(subtype != 1 and subtype != 0, sum(ari.num * ari.unitprice)/1000, 0) AS '主材折前总价',
-            ar.total AS '总额',
-            ar.managePrice AS '管理费',
-            ar.taxPrice AS '税金',
-            ar.createTime AS '创建时间',
-            dr.collectTime AS '收款时间',
-            ar.sendTime AS '推送时间',
-            ar.affirmTime AS '确认时间',
-            communion.kv('quotation', 'addreduce', 'status', ar.status) AS '状态',
-            c.`name` AS '公司'
+        self.colum = u"""
+            d.orderId,
+            h.houseNumber,
+            v.`name`,
+            dp.referMoney,
+            communion.kv('quotation', 'addreduce', 'type', ar.type),
+            IF (ari.subtype = 1,sum(ari.num * ari.unitprice)/1000,0),
+            IF(subtype != 1 and subtype != 0, sum(ari.num * ari.unitprice)/1000, 0),
+            ar.total,
+            ar.managePrice,
+            ar.taxPrice,
+            ar.createTime,
+            dr.collectTime,
+            ar.sendTime,
+            ar.affirmTime,
+            communion.kv('quotation', 'addreduce', 'status', ar.status),
+            c.`name`
         """
 
-        self.EXPORT_QUOTATION_ADDREDUCE = u"""
+        self.SQL_QUERY = u"""
             SELECT
                 %s
             FROM
@@ -58,129 +59,55 @@ class Exporter(Util):
         """
 
     # 公司条件识别
-    def company(self, cloumCompany, company):
-    
+    def company(self, columnCompany, company):
+
         if company != 0:
-            companyId = u"AND %s = %s" % (cloumCompany, company)
+            companyString = u"AND %s = %s" % (columnCompany, company)
         else:
-            companyId = u" "
-            
-        return companyId
+            companyString = u" "
 
-    def main(self, type, pid, args, company):
+        return companyString
 
-        try:
-            self.getDBCursor(self.host, self.username, self.password, self.charset)
+    def sqler(self, type, args, company):
 
-            startTime, endTime = args.split("-")
-            checkFlag = self.controlTime(startTime, endTime)
+        startTime, endTime = args.split("-")
 
-            if checkFlag == False:
-                self.flag = False
-                self.updataSchedule(self.pthost, pid, {
-                    u"plan.status": 3,
-                    u"plan.info": '时间范围大于31天'
-                })
-                return False
-                
-            field = 'dr.collectTime'
-                
-            if type == '1':
-                field = 'ar.sendTime'
-                
-            sqlcount = self.EXPORT_QUOTATION_ADDREDUCE % ("count(*)", field, startTime, field, endTime, self.company("dp.company", company))
-            
-            count = self.count(sqlcount)
+        timeColumn = "dr.collectTime"
+        if type == "1":
+            timeColumn = "ar.sendTime"
 
-            if count == 0:
-                self.flag = False
-                self.updataSchedule(self.pthost, pid, {
-                    u"plan.status": 3,
-                    u"plan.info": '无可导出数据'
-                })
-                return False
+        return self.SQL_QUERY % ("%s", timeColumn, startTime, timeColumn, endTime, self.company("dp.company", company))
 
-            all = count / 0.8
-            molecular = all * 0.1
-            schedule = (molecular / all) * 100
+    def rower(self, row):
 
-            plan = {
-                u"plan.schedule": schedule,
-                u"plan.status": 4
-            }
+        self.divNum(row, [3, 5, 6, 7, 8, 9])
 
-            self.updataSchedule(self.pthost, pid, plan)
+        return row
 
-            params = self.createWorkbook(u"报价增减工程信息")
-            workbook = params[0]
-            sheet = params[1]
+    def main(self, pid, type, args, company):
 
-            tableHead = [u"装修单号", u"楼号", u"楼盘", u"款项金额", u"增减类型", u"工程折前总价", u"主材折前总价", u"总价", u"管理费", u"税金", 
-                         u"创建时间", u"收款时间", u"推送时间", u"确认时间", u"状态", u"公司"]
+        tableheads = [u"装修单号", u"楼号", u"楼盘", u"款项金额", u"增减类型", u"工程折前总价", u"主材折前总价", u"总价", u"管理费", u"税金",
+                      u"创建时间", u"收款时间", u"推送时间", u"确认时间", u"状态", u"公司"]
 
-            self.createTableHead(sheet, tableHead)
+        self.getDBCursor(self.host, self.username, self.password, self.charset)
 
-            path = tempfile.gettempdir() + u"/quotation.xls"
-            self.saveWorkbook(path, workbook)
+        sql = self.sqler(type, args, company)
 
-            sql = self.EXPORT_QUOTATION_ADDREDUCE % (self.column, field, startTime, field, endTime, self.company("dp.company", company))
-
-            nowPage = 1
-            length = 1
-            flag = True
-
-            while flag:
-
-                rows = self.page(sql, nowPage, self.size)
-
-                for i, v in enumerate(rows):
-                    data = list(v)
-                    self.divNum(data, [3, 5, 6, 7, 8, 9])
-                    data[4] = self.addReduceType[data[4]]
-
-                    self.createTableHead(sheet, data, length)
-
-                    length = length + 1
-
-                molecular = molecular + len(rows)
-                schedules = (molecular / all) * 100
-
-                plan = {
-                    u"plan.schedule": int(schedules)
-                }
-
-                self.updataSchedule(self.pthost, pid, plan)
-
-                nowPage = nowPage + 1
-
-                if len(rows) < self.size:
-                    flag = False
-
-            resultfilepath = self.packFile(pid, workbook)
-
-            self.updataSchedule(self.pthost, pid, {
-                u"plan.resultFilepath": resultfilepath
-            })
-
-        except Exception as e:
-            self.flag = False
-            self.errCall(pid, self.pthost, self.media, e)
-
-        finally:
-            self.modelEnd(pid, self.pthost, self.media, self.flag)
-            sys.exit(0)
+        self.exporter(pid, args, u"报价增减工程信息", tableheads, self.colum, sql, self.rower)
 
 if __name__ == '__main__':
+
     """
       报价增减工程信息统计脚本说明:
           根据查询条件,以分页形式导出报价增减工程信息统计信息;并上传到文件服务器中,可从任务页面上点击下载即可;
           当该脚本执行出现异常时,将跟新进度为失败并记录到log文件中上传至文件服务器中;
       1.传入必须参数说明
-          1.pid         information.plan的主键;
-          2.args        2020/08/01-2020/08/30
-          3.company     公司:1
-      2.命令使用 plan_export_quotation_addreduce.py  pid args company
-                plan_export_quotation_addreduce.py  299 2020/08/01-2020/08/30 1
+          1.type        0: 收款时间 1: 推送时间
+          2.pid         information.plan的主键;
+          3.args        2020/08/01-2020/08/30
+          4.company     公司cid, 0为全部(不传默认0)
+      2.命令使用 plan_export_quotation_addreduce_amount.py type pid args company
+                plan_export_quotation_addreduce_amount.py 0 299 2020/08/01-2020/08/30 1
 
       """
 
@@ -193,7 +120,7 @@ if __name__ == '__main__':
     type = sys.argv[1]
     pid = sys.argv[2]
     args = sys.argv[3]
-    company = sys.argv[4]
+    company = sys.argv[4] if len(sys.argv) > 4 else 0
 
     exporter = Exporter(dbconf.get("host"), dbconf.get("username"), dbconf.get("password"), config.get("media"), config.get("pthost"))
-    exporter.main(type, pid, args, int(company))
+    exporter.main(pid, type, args, int(company))

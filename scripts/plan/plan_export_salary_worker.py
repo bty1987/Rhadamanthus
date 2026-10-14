@@ -20,7 +20,7 @@ class Exporter(Util):
         self.list = []
         self.size = 400
 
-        self.colum = """
+        self.colum = u"""
             u.currentName,
             u.userId,
             ui.bank,
@@ -41,10 +41,10 @@ class Exporter(Util):
             ws.deposit,
             cn.name,
             du.name,
-            communion.kv('salary', 'salary', 'type', ws.type) '类型',
-            communion.kv('salary', 'salary', 'onetype', ws.onetype) '一类',
-            communion.kv('salary', 'salary', 'SalaryTwoType', ws.twotype) '二类',
-            communion.kv('salary', 'salary', 'status', ws.status) '状态',
+            communion.kv('salary', 'salary', 'type', ws.type),
+            communion.kv('salary', 'salary', 'onetype', ws.onetype),
+            communion.kv('salary', 'salary', 'SalaryTwoType', ws.twotype),
+            communion.kv('salary', 'salary', 'status', ws.status),
             ws.checkTime,
             coo.name,
             co.name,
@@ -52,8 +52,8 @@ class Exporter(Util):
             ws.annotate,
             ws.count
          """
-         
-        self.SQL_QUERY_WORKER_SALARY = """
+
+        self.SQL_QUERY_WORKER_SALARY = u"""
            SELECT
               %s
            FROM
@@ -67,7 +67,7 @@ class Exporter(Util):
               LEFT JOIN communion.village AS v ON h.vid = v.vid
               LEFT JOIN communion.user AS sv ON d.svuid = sv.uid
               LEFT JOIN communion.duty AS du ON u.did = du.did
-              LEFT JOIN data.constructionnode AS cn ON ws.cnid = cn.cnid 
+              LEFT JOIN data.constructionnode AS cn ON ws.cnid = cn.cnid
               LEFT JOIN communion.company AS coo ON d.conpany = coo.cid
               LEFT JOIN communion.company AS co ON d.company = co.cid
            WHERE
@@ -75,133 +75,55 @@ class Exporter(Util):
         """
 
     def company(self, columnCompany, company):
+
         if company != 0:
-            companyString = " AND %s = %s" % (columnCompany, company)
+            companyString = u"AND %s = %s" % (columnCompany, company)
         else:
-            companyString = " "
+            companyString = u" "
 
         return companyString
 
+    def sqler(self, type, args, company):
+
+        condition = ""
+
+        if type == 0:
+
+            startTime, endTime = args.split("-")
+            condition = "ws.createTime >= '%s 00:00:00' AND ws.createTime <= '%s 23:59:59' %s" % (startTime, endTime, self.company("ws.company", company))
+
+        elif type == 1:
+
+            condition = "ws.orderId = '%s'" % (args)
+
+        elif type == 2:
+
+            startTime, endTime = args.split("-")
+            condition = "ws.approveTime >= '%s 00:00:00' AND ws.approveTime <= '%s 23:59:59' %s" % (startTime, endTime, self.company("ws.company", company))
+
+        return self.SQL_QUERY_WORKER_SALARY % ("%s", condition)
+
+    def rower(self, row):
+
+        # 类型/一类/二类/状态四列已由SQL层communion.kv翻译, rower仅做金额量纲处理
+        self.divNum(row, [12, 14, 15, 16])
+
+        return row
+
     def main(self, type, pid, args, company):
 
-        try:
+        tableheads = [
+            u"工人姓名", u"工人工号", u"开户行", u"银行卡号", u"创建人编号", u"创建人", u"创建时间", u"审批人编号", u"审批人", u"审批时间",
+            u"装修单号", u"楼盘地址", u"计价面积", u"监理编号", u"监理", u"操作金额", u"工费", u"质保金", u"施工节点", u"工种", u"类型",
+            u"一类", u"二类", u"状态", u"质检时间", u"工程公司", u"装修公司", u"备注", u"备注", u"计数"
+        ]
 
-            self.getDBCursor(self.host, self.username, self.password, self.charset)
-            
-            self.constructionnode(company)
-            
-            condition = ""
-            
-            if type == 0:
+        self.getDBCursor(self.host, self.username, self.password, self.charset)
 
-                startTime, endTime = args.split("-")
+        sql = self.sqler(type, args, company)
 
-                if self.controlTime(startTime, endTime) == False:
-                    self.updataSchedule(self.pthost, pid, {
-                        "plan.status": 3,
-                        "plan.info": '时间范围大于31天'
-                    })
-                    return False
-                    
-                condition = "ws.createTime >= '%s 00:00:00' AND ws.createTime <= '%s 23:59:59' %s" % (startTime, endTime, self.company("ws.company", company))
-
-            elif type == 1:
-            
-                condition = "ws.orderId = '%s'" % (args)
-            elif type == 2:
-                
-                startTime, endTime = args.split("-")
-
-                if self.controlTime(startTime, endTime) == False:
-                    self.updataSchedule(self.pthost, pid, {
-                        "plan.status": 3,
-                        "plan.info": '时间范围大于31天'
-                    })
-                    return False
-                    
-                condition = "ws.approveTime >= '%s 00:00:00' AND ws.approveTime <= '%s 23:59:59' %s" % (startTime, endTime, self.company("ws.company", company))
-
-            path = tempfile.gettempdir() + "/Funds.xls"
-
-            sqlcount = self.SQL_QUERY_WORKER_SALARY % ("count(*)", condition)
-
-            count = self.count(sqlcount)
-
-            if count == 0:
-                self.updataSchedule(self.pthost, pid, {
-                    "plan.status": 2,
-                    "plan.info": '无可导出数据'
-                })
-                return False
-
-            all = count / 0.8
-            molecular = all * 0.1
-            schedule = (molecular / all) * 100
-
-            self.updataSchedule(self.pthost, pid, {
-                "plan.schedule": schedule,
-                "plan.status": 4
-            })
-
-            sql = self.SQL_QUERY_WORKER_SALARY % (self.colum, condition)
-
-            workbook, sheet = self.createWorkbook("工人工费")
-
-            tableHead = [
-                "工人姓名", "工人工号", "开户行", "银行卡号", "创建人编号", "创建人", "创建时间", "审批人编号", "审批人", "审批时间", 
-                "装修单号", "楼盘地址", "计价面积", "监理编号", "监理", "操作金额", "工费", "质保金", "施工节点", "工种", "类型", 
-                "一类", "二类", "状态", "质检时间", "工程公司", "装修公司", "备注", "备注", "计数"
-            ]
-
-            self.createTableHead(sheet, tableHead)
-
-            count = 1
-            nowPage = 1
-            flag = True
-
-            while (flag):
-
-                rows = self.page(sql, nowPage, self.size)
-
-                for i, v in enumerate(rows):
-                
-                    data = list(v)
-
-                    self.divNum(data, [12, 14, 15, 16])
-
-                    self.createTableHead(sheet, data, count)
-
-                    count += 1
-
-                molecular = molecular + len(rows)
-                schedules = (molecular / all) * 100
-                self.updataSchedule(self.pthost, pid, {
-                    "plan.schedule": int(schedules),
-                    "plan.status": 4
-                })
-
-                nowPage = nowPage + 1
-
-                if len(rows) < self.size:
-                    flag = False
-
-            self.saveWorkbook(path, workbook)
-
-            url = self.media + "uploadOther.do"
-            resultfilepath = self.uploudFile(path, url)
-            self.delFile(path)
-
-            self.updataSchedule(self.pthost, pid, {
-                "plan.resultFilepath": resultfilepath
-            })
-
-        except Exception as e:
-            self.flag = False
-            self.errCall(pid, self.pthost, self.media, e)
-
-        finally:
-            self.modelEnd(pid, self.pthost, self.media, self.flag)
-            sys.exit(0)
+        # type=1时args为装修单号而非日期段, 不做31天时间校验
+        self.exporter(pid, None if type == 1 else args, u"工人工费", tableheads, self.colum, sql, self.rower)
 
 if __name__ == '__main__':
 
@@ -211,12 +133,13 @@ if __name__ == '__main__':
         当该脚本执行出现异常时,将跟新进度为失败并记录到log文件中上传至文件服务器中;
 
         1.参数说明参数要对应
-            1.pid         information.plan的主键;
-            2.args        "2018/12/13-2018/12/13"
-            3.company     公司:1
+            1.type        创建时间 0/装修单号 1/审批时间 2
+            2.pid         information.plan的主键;
+            3.args        type为0/2时:"2018/12/13-2018/12/13", type为1时:装修单号
+            4.company     公司cid, 0为全部(不传默认0)
         2.脚本传参说明:
-        python plan_export_salary_worker_salary.py pid        args             company
-        python plan_export_salary_worker_salary.py 1207 2016/07/01-2016/07/30     0
+            python plan_export_Salary_worker.py type pid args company
+            python plan_export_Salary_worker.py  0  1207 2016/07/01-2016/07/30  1
 
     """
 
@@ -229,7 +152,7 @@ if __name__ == '__main__':
     type = sys.argv[1]
     pid = sys.argv[2]
     args = sys.argv[3]
-    company = sys.argv[4]
+    company = sys.argv[4] if len(sys.argv) > 4 else 0
 
     exporter = Exporter(dbconf.get("host"), dbconf.get("username"), dbconf.get("password"), config.get("media"), config.get("pthost"))
     exporter.main(int(type), pid, args, int(company))

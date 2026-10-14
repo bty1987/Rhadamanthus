@@ -6,7 +6,7 @@ from plan_util import *
 class Exporter(Util):
 
     def __init__(self, host='', username='', password='', media='', pthost="", charset='utf8'):
-    
+
         self.dbconn = None
         self.cursor = None
 
@@ -19,54 +19,54 @@ class Exporter(Util):
         self.flag = True
         self.size = 400
 
-        self.colunm = """
-            d.orderId AS '装修单号',
-            v.name AS '楼盘',
-            h.housenumber AS '地址',
-            su.userId AS '业务员工号',
-            su.currentName AS '业务员',
-            du.userId AS '设计师工号',
-            du.currentName AS '设计师',
-            dd.name AS '设计部',
-            dr.name AS '设计分区',
-            d.contractTime AS '签单时间',
-            d.precontractTime AS '预签时间',
-            d.accountTime AS '决算时间',
-            c.createTime AS '开工时间',
-            h.buildArea AS '建筑面积',
-            h.freeArea AS '赠送面积',
-            h.innerArea AS '套内面积',
-            h.houseType AS '户型',
-            g.no AS '商品编号',
-            g.name AS '商品名称',
-            g.category AS '品类',
-            g.brand AS '品牌',
-            si.type AS '选材类型',
-            si.num AS '选材数量',
-            si.refnum AS '退货数量',
-            si.num-si.refnum AS '剩余数量',
-            si.initnum AS '工程量',
-            si.preprice AS '报价项单价',
-            si.postprice AS '结算价',
-            si.balanceTime AS '结算时间',
-            si.status AS '状态',
-            si.comment AS '备注',
-            si.areaName AS '功能区',
-            si.preprice AS '预算金额',
-            bu.currentName AS '结算人',
-            bu.userId AS '结算人工号',
-            ju.currentName AS '监理',
-            ju.userId AS '监理工号',
-            si.finishTime AS '完结时间',
-            ocu.currentName AS '供应商',
-            co.name AS '公司',
-            b.kiname AS '金蝶名称',
-            b.kino AS '金蝶编号',
-            communion.kv('balance', 'balance', 'ispay', b.ispay) '付款状态',
-            b.payedtime '付款时间'
+        self.colum = u"""
+            d.orderId,
+            v.name,
+            h.housenumber,
+            su.userId,
+            su.currentName,
+            du.userId,
+            du.currentName,
+            dd.name,
+            dr.name,
+            d.contractTime,
+            d.precontractTime,
+            d.accountTime,
+            c.createTime,
+            h.buildArea,
+            h.freeArea,
+            h.innerArea,
+            h.houseType,
+            g.no,
+            g.name,
+            g.category,
+            g.brand,
+            communion.kv('quotation', 'selectionitem', 'type', si.type),
+            si.num,
+            si.refnum,
+            si.num-si.refnum,
+            si.initnum,
+            si.preprice,
+            si.postprice,
+            si.balanceTime,
+            communion.kv('quotation', 'selectionitem', 'status', si.status),
+            si.comment,
+            si.areaName,
+            si.preprice,
+            bu.currentName,
+            bu.userId,
+            ju.currentName,
+            ju.userId,
+            si.finishTime,
+            ocu.currentName,
+            co.name,
+            b.kiname,
+            b.kino,
+            communion.kv('balance', 'balance', 'ispay', b.ispay),
+            b.payedtime
         """
 
-        self.SQL_QUERY = """
+        self.SQL_QUERY = u"""
             SELECT
                 %s
             FROM
@@ -84,7 +84,7 @@ class Exporter(Util):
                 LEFT JOIN communion.user su ON d.smuid = su.uid
                 LEFT JOIN communion.user bu ON si.buid = bu.uid
                 LEFT JOIN communion.user ju ON d.svuid = ju.uid
-                LEFT JOIN communion.brand b ON g.bid = b.bid 
+                LEFT JOIN communion.brand b ON g.bid = b.bid
                 LEFT JOIN communion.user ocu ON b.ocuid = ocu.uid
                 LEFT JOIN communion.company co ON d.company = co.cid
                 LEFT JOIN balance.balanceselectionitem bsi ON si.siid = bsi.siid
@@ -96,7 +96,7 @@ class Exporter(Util):
         """
 
     def datetime(self, type, beginTime, endTime):
-            
+
         if type == "0":
             _type = "si.balanceTime"
         elif type == "1":
@@ -112,123 +112,50 @@ class Exporter(Util):
 
         return "%s >= '%s 00:00:00' AND %s <= '%s 23:59:59'" % (_type, beginTime, _type, endTime)
 
-    def company(self, cloumCompany, company):
+    def company(self, columnCompany, company):
+
         if company != 0:
-            companyId = "AND %s = %s" % (cloumCompany, company)
+            companyId = u"AND %s = %s" % (columnCompany, company)
         else:
-            companyId = " "
+            companyId = u" "
 
         return companyId
 
+    def sqler(self, type, args, company):
+
+        startTime, endTime = args.split("-")
+
+        return self.SQL_QUERY % ("%s", self.datetime(type, startTime, endTime), self.company("si.company", company))
+
+    def rower(self, row):
+
+        # 选材类型/状态已由SQL层communion.kv翻译, rower仅做面积/数量/单价÷1000
+        self.divNum(row, [13, 14, 15, 22, 23, 24, 25, 26, 27])
+
+        return row
+
     def main(self, pid, type, args, company):
 
-        try:
-            self.getDBCursor(self.host, self.username, self.password, self.charset)
+        tableheads = [
+            u"装修单号", u"楼盘", u"地址", u"业务员工号", u"业务员", u"设计师工号", u"设计师", u"设计部", u"设计分区", u"签单时间",
+            u"预签时间", u"决算时间", u"开工时间", u"建筑面积", u"赠送面积", u"套内面积", u"户型", u"商品编号", u"商品名称", u"品类",
+            u"品牌", u"选材类型", u"选材数量", u"退货数量", u"剩余数量", u"工程量", u"报价项单价", u"结算价", u"结算时间", u"状态",
+            u"备注", u"功能区", u"预算金额", u"结算人", u"结算人工号", u"监理", u"监理工号", u"完结时间", u"供应商", u"公司",
+            u"金蝶名称", u"金蝶编号", u"付款状态", u"付款时间"
+        ]
 
-            startTime, endTime = args.split("-")
-
-            checkFlag = self.controlTime(startTime, endTime)
-
-            if checkFlag == False:
-                self.flag = False
-                self.updataSchedule(self.pthost, pid, {
-                    "plan.status": 3,
-                    "plan.info": '时间范围大于31天'
-                })
-                return False
-                
-            timeColumn = self.datetime(type, startTime, endTime)
-            
-            if timeColumn == ' ':
-                print("Date or Time is Empty")
-                raise RuntimeError(u'时间应在1-31内')
-
-            path = tempfile.gettempdir() + "/selectionItem.xls"
-
-            sqlcount = self.SQL_QUERY % ("count(*)", timeColumn, self.company("si.company", company))
-
-            count = self.count(sqlcount)
-
-            if count == 0:
-                self.flag = False
-                self.updataSchedule(self.pthost, pid, {
-                    "plan.status": 3,
-                    "plan.info": '无可导出数据'
-                })
-                return False
-
-            all = count / 0.8
-            molecular = all * 0.1
-            schedule = (molecular / all) * 100
-
-            paln = {
-                "plan.schedule": schedule,
-                "plan.status": 4
-            }
-
-            self.updataSchedule(self.pthost, pid, paln)
-
-            sql = self.SQL_QUERY % (self.colunm, timeColumn, self.company("si.company", company))
-
-            workbook, sheet = self.createWorkbook("选材结算导出")
-
-            tableHead = [
-                "装修单号", "楼盘", "地址", "业务员工号", "业务员", "设计师工号", "设计师", "设计部", "设计分区", "签单时间",
-                "预签时间", "决算时间", "开工时间", "建筑面积", "赠送面积", "套内面积", "户型", "商品编号", "商品名称", "品类", 
-                "品牌", "选材类型", "选材数量", "退货数量", "剩余数量", "工程量", "报价项单价", "结算价", "结算时间", "状态", 
-                "备注", "功能区", "预算金额", "结算人", "结算人工号", "监理", "监理工号", "完结时间", "供应商", "公司", 
-                "金蝶名称", "金蝶编号", "付款状态", "付款时间"
-            ]
-
-            self.createTableHead(sheet, tableHead)
-
-            count = 1
-            nowPage = 1
-            flag = True
-
-            while (flag):
-
-                rows = self.page(sql, nowPage, self.size)
-
-                for i, v in enumerate(rows):
-                
-                    data = list(v)
-
-                    self.divNum(data, [13, 14, 15, 22, 23, 24, 25, 26, 27])
-
-                    data[21] = self.selectionType[data[21]]
-                    data[29] = self.selectionStatus[data[29]]
-
-                    self.createTableHead(sheet, data, count)
-
-                    count += 1
-
-                molecular = molecular + len(rows)
-                schedules = (molecular / all) * 100
-                paln = {
-                    "plan.schedule": int(schedules),
-                    "plan.status": 4
-                }
-                self.updataSchedule(self.pthost, pid, paln)
-
-                nowPage = nowPage + 1
-
-                if len(rows) < self.size:
-                    flag = False
-
-            resultfilepath = self.packFile(pid, workbook)
-
+        if type not in ("0", "1", "2", "3", "4"):
             self.updataSchedule(self.pthost, pid, {
-                "plan.resultFilepath": resultfilepath
+                u"plan.status": 3,
+                u"plan.info": u'时间类型有误'
             })
+            return False
 
-        except Exception as e:
-            self.flag = False
-            self.errCall(pid, self.pthost, self.media, e)
+        self.getDBCursor(self.host, self.username, self.password, self.charset)
 
-        finally:
-            self.modelEnd(pid, self.pthost, self.media, self.flag)
-            sys.exit(0)
+        sql = self.sqler(type, args, company)
+
+        self.exporter(pid, args, u"选材结算导出", tableheads, self.colum, sql, self.rower)
 
 if __name__ == '__main__':
 
@@ -237,10 +164,10 @@ if __name__ == '__main__':
             根据查询条件,以分页拿数据的方式导出选材项;并上传到文件服务器中,可从任务页面上点击下载即可;
             当该脚本执行出现异常时,将跟新进度为失败并记录到log文件中上传至文件服务器中;
         1.传入必须参数说明
-            1.type        结算时间 0/创建时间 1/完结时间 2
+            1.type        结算时间 0/创建时间 1/完结时间 2/决算时间 3/开工验收时间 4
             2.pid         information.plan的主键;
             3.args        "2020/06/01-2020/06/30"
-            4.company     公司:1
+            4.company     公司cid, 0为全部(不传默认0)
 
         2.使用
             python plan_export_selection_item.py type pid args company
@@ -256,7 +183,7 @@ if __name__ == '__main__':
     type = sys.argv[1]
     pid = sys.argv[2]
     args = sys.argv[3]
-    company = sys.argv[4]
+    company = sys.argv[4] if len(sys.argv) > 4 else 0
 
     exporter = Exporter(dbconf.get("host"), dbconf.get("username"), dbconf.get("password"), config.get("media"), config.get("pthost"))
     exporter.main(pid, type, args, int(company))

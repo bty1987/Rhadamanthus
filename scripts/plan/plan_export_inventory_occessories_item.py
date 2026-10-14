@@ -20,13 +20,6 @@ class Exporter(Util):
         self.list = []
         self.size = 400
 
-        # 布尔字典照 communion.constant 实况(inventory/occessories), rower 本地翻译,
-        # 不走 communion.kv(28万行×5次constant子查询会拖垮导出)
-        self.isEnter = {0: u"可", 1: u"不"}
-        self.isLift = {0: u"有", 1: u"无"}
-        self.isExceed = {0: u"有", 1: u"无"}
-        self.isAttic = {0: u"有", 1: u"无"}
-
         self.colum = u"""
             o.no,
             d.orderId,
@@ -49,10 +42,10 @@ class Exporter(Util):
             oi.rbalance,
             oi.vbalance,
             oi.sennum * oi.vbalance / 1000,
-            o.isEnter,
-            o.isLift,
-            o.isExceed,
-            o.isAttic,
+            communion.kv('inventory', 'occessories', 'isEnter', o.isEnter),
+            communion.kv('inventory', 'occessories', 'isLift', o.isLift),
+            communion.kv('inventory', 'occessories', 'isExceed', o.isExceed),
+            communion.kv('inventory', 'occessories', 'isAttic', o.isAttic),
             o.comment,
             o.content,
             d.grade
@@ -113,12 +106,8 @@ class Exporter(Util):
     def rower(self, row):
 
         # 结算金额(sennum*vbalance)为×10⁶口径, SQL层已/1000降到×1000口径, 此处随金额列统一÷1000
+        # 状态/布尔五列已由SQL层communion.kv翻译, rower仅做金额量纲处理
         self.divNum(row, [4, 8, 9, 18, 19, 20])
-
-        row[21] = self.isEnter[row[21]]
-        row[22] = self.isLift[row[22]]
-        row[23] = self.isExceed[row[23]]
-        row[24] = self.isAttic[row[24]]
 
         return row
 

@@ -6,7 +6,7 @@ from plan_util import *
 class Exporter(Util):
 
     def __init__(self, host='', username='', password='', media='', pthost="", charset='utf8'):
-    
+
         self.dbconn = None
         self.cursor = None
 
@@ -24,7 +24,7 @@ class Exporter(Util):
             s.no,
             s.orderId,
             cc.name,
-            CONCAT(v.`name`, CONCAT('  ', h.houseNumber)) AS '楼盘地址',
+            CONCAT(v.`name`, CONCAT('  ', h.houseNumber)),
             u.userId,
             u.currentName,
             s.total,
@@ -33,18 +33,18 @@ class Exporter(Util):
             sb.balance,
             r.createTime,
             us.currentName,
-            dept.name AS '部门',
-            region.name AS '分区',
-            communion.kv('sales', 'refunds', 'type', r.type) AS '类型',
-            b.kino AS '金蝶编号',
-            b.kiname AS '金蝶名称'
+            dept.name,
+            region.name,
+            communion.kv('sales', 'refunds', 'type', r.type),
+            b.kino,
+            b.kiname
         """
 
         self.SQL_SalesItem = u"""
             SELECT
                 %s
             FROM
-                sales.salesrefunds AS r 
+                sales.salesrefunds AS r
                 LEFT JOIN sales.sales AS s ON s.sid = r.sid
                 LEFT JOIN payment.salespayment AS sp ON sp.spid = r.spid
                 LEFT JOIN sales.salesbalance AS sb ON sb.rid = r.rid
@@ -66,7 +66,7 @@ class Exporter(Util):
 
     def company(self, form, company):
 
-        companyId = " "
+        companyId = u" "
         if company != 0:
             if form == "0":
                 companyId = u"AND s.company = %s " % company
@@ -75,93 +75,29 @@ class Exporter(Util):
 
         return companyId
 
-    def main(self, form, pid, args, comapny):
+    def sqler(self, form, args, company):
 
-        try:
-            self.getDBCursor(self.host, self.username, self.password, self.charset)
+        startTime, endTime = args.split("-")
 
-            startTime, endTime = args.split("-")
+        return self.SQL_SalesItem % ("%s", startTime, endTime, self.company(form, company))
 
-            checkFlag = self.controlTime(startTime, endTime)
-            if checkFlag == False:
-                self.flag = False
-                self.updataSchedule(self.pthost, pid, {
-                    "plan.status": 3,
-                    "plan.info": "时间范围大于31天"
-                })
-                return False
+    def rower(self, row):
 
-            sqlcount = self.SQL_SalesItem % ("count(*)", startTime, endTime, self.company(form, comapny))
+        # 退款类型已由SQL层communion.kv翻译, rower仅做金额÷1000
+        self.divNum(row, [6, 7, 8, 9])
 
-            count = self.count(sqlcount)
-            if count == 0:
-                self.flag = False
-                self.updataSchedule(self.pthost, pid, {
-                    "plan.status": 3,
-                    "plan.info": "无可导出数据"
-                })
-                return False
+        return row
 
-            all = count / 0.8
-            molecular = all * 0.1
-            schedule = (molecular / all) * 100
+    def main(self, form, pid, args, company):
 
-            self.updataSchedule(self.pthost, pid, {
-                u"plan.schedule": schedule,
-                u"plan.status": 4
-            })
+        tableheads = [u'销售单号', u'装修单号', u'装修单公司', u'楼盘地址', u'设计师编号', u'设计师', u'销售单总额', u'补款', u'退款总额',
+                      u'预结算值', u'退款时间', u'审批人', u'部门', u'分区', u'类型', u'金蝶编号', u'金蝶名称']
 
-            sql = self.SQL_SalesItem % (self.colum, startTime, endTime, self.company(form, comapny))
+        self.getDBCursor(self.host, self.username, self.password, self.charset)
 
-            workbook, sheet = self.createWorkbook(u"销售单-商品退款")
+        sql = self.sqler(form, args, company)
 
-            tableHead = [u'销售单号', u'装修单号', u'装修单公司', u'楼盘地址', u'设计师编号', u'设计师', u'销售单总额', u'补款', u'退款总额',
-                          u'预结算值', u'退款时间', u'审批人', u'部门', u'分区', u'类型', u'金蝶编号', u'金蝶名称']
-
-            self.createTableHead(sheet, tableHead)
-
-            count = 1
-            nowPage = 1
-            flag = True
-            
-            while (flag):
-
-                rows = self.page(sql, nowPage, self.size)
-
-                for i, v in enumerate(rows):
-                    data = list(v)
-
-                    self.divNum(data, [6, 7, 8, 9])
-
-                    self.createTableHead(sheet, data, count)
-
-                    count += 1
-
-                molecular = molecular + len(rows)
-                schedules = (molecular / all) * 100
-                self.updataSchedule(self.pthost, pid, {
-                    u"plan.schedule": int(schedules),
-                    u"plan.status": 4
-                })
-                
-                nowPage = nowPage + 1
-
-                if len(rows) < self.size:
-                    flag = False
-
-            resultfilepath = self.packFile(pid, workbook)
-
-            self.updataSchedule(self.pthost, pid, {
-                u"plan.resultFilepath": resultfilepath
-            })
-
-        except Exception as e:
-            self.flag = False
-            self.errCall(pid, self.pthost, self.media, e)
-
-        finally:
-            self.modelEnd(pid, self.pthost, self.media, self.flag)
-            sys.exit(0)
+        self.exporter(pid, args, u"销售单-商品退款", tableheads, self.colum, sql, self.rower)
 
 if __name__ == '__main__':
 
@@ -174,10 +110,10 @@ if __name__ == '__main__':
             1.form        自动获取查询条件公司
             2.pid         information.plan的主键;
             3.args        "2018/12/13-2018/12/13"
-            4.company     公司:1
+            4.company     公司cid, 0为全部(不传默认0)
         2.脚本传参说明:
-             plan_export_sales_balance_item_refund.py   form     pid              args                company
-             plan_export_sales_balance_item_refund.py    0       299          2020/04/01-2020/04/30      1
+             plan_export_sales_item_refund.py   form     pid              args                company
+             plan_export_sales_item_refund.py    0       299          2020/04/01-2020/04/30      1
 
         3.注:
             1.结束时间不能大于开始时间31天
@@ -193,7 +129,7 @@ if __name__ == '__main__':
     form = sys.argv[1]
     pid = sys.argv[2]
     args = sys.argv[3]
-    company = sys.argv[4]
+    company = sys.argv[4] if len(sys.argv) > 4 else 0
 
     exporter = Exporter(dbconf.get("host"), dbconf.get("username"), dbconf.get("password"), config.get("media"), config.get("pthost"))
     exporter.main(form, pid, args, int(company))

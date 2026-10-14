@@ -20,7 +20,7 @@ class Exporter(Util):
         self.list = []
         self.size = 400
 
-        self.colum = """
+        self.colum = u"""
             d.orderId,
             v.name,
             h.houseNumber,
@@ -46,11 +46,11 @@ class Exporter(Util):
             communion.kv('decoration', 'decoration', 'typeness', d.typeness),
             cn.name,
             communion.kv('decoration', 'decoration', 'status', d.status),
-            db.name AS busitypeName,
+            db.name,
             ci.comment
         """
 
-        self.SQL_QUERY = """
+        self.SQL_QUERY = u"""
             SELECT
                 %s
             FROM
@@ -77,107 +77,37 @@ class Exporter(Util):
     def company(self, columnCompany, company):
 
         if company != 0:
-            companyString = "AND %s = %s" % (columnCompany, company)
+            companyString = u"AND %s = %s" % (columnCompany, company)
         else:
-            companyString = " "
+            companyString = u" "
 
         return companyString
 
+    def sqler(self, args, company):
+
+        startTime, endTime = args.split("-")
+
+        return self.SQL_QUERY % ("%s", startTime, endTime, self.company("d.company", company))
+
+    def rower(self, row):
+
+        self.divNum(row, [11, 12, 15])
+
+        return row
+
     def main(self, pid, args, company):
 
-        try:
+        tableheads = [
+            u"装修单号", u"楼盘", u"楼号", u"客户", u"房屋类别", u"设计分区", u"设计部", u"设计师", u"业务员", u"方案设计", u"监理",
+            u"面积", u"合同额", u"报价版本", u"签单时间", u"设计天数", u"预计交钥匙时间", u"预计放线时间", u"预计完工时间", u"预计设计完成时间", u"合同方案确认时间",
+            u"放线方案确认时间", u"装修类型", u"工程状态", u"装修状态", u"装修业务", u"备注"
+        ]
 
-            self.getDBCursor(self.host, self.username, self.password, self.charset)
+        self.getDBCursor(self.host, self.username, self.password, self.charset)
 
-            times = args.split("-")
+        sql = self.sqler(args, company)
 
-            startTime = times[0]
-            endTime = times[1]
-
-            checkFlag = self.controlTime(startTime, endTime)
-
-            if checkFlag == False:
-                self.flag = False
-                self.updataSchedule(self.pthost, pid, {
-                    "plan.status": 3,
-                    "plan.info": "时间范围大于31天"
-                })
-                return False
-
-            sqlcount = self.SQL_QUERY % ("count(*)", startTime, endTime, self.company("d.company", company))
-
-            count = self.count(sqlcount)
-            if count == 0:
-                self.flag = False
-                self.updataSchedule(self.pthost, pid, {
-                    "plan.status": 3,
-                    "plan.info": "无可导出数据"
-                })
-                return False
-
-            all = count / 0.8
-            molecular = all * 0.1
-            schedule = (molecular / all) * 100
-
-            self.updataSchedule(self.pthost, pid, {
-                "plan.schedule": schedule,
-                "plan.status": 4
-            })
-
-            sql = self.SQL_QUERY % (self.colum, startTime, endTime, self.company("d.company", company))
-
-            workbook, sheet = self.createWorkbook("装修单信息")
-
-            tableHead = [
-                "装修单号", "楼盘", "楼号", "客户", "房屋类别", "设计分区", "设计部", "设计师", "业务员", "方案设计", "监理", 
-                "面积", "合同额", "报价版本", "签单时间", "设计天数", "预计交钥匙时间", "预计放线时间", "预计完工时间", "预计设计完成时间", "合同方案确认时间", 
-                "放线方案确认时间", "装修类型", "工程状态", "装修状态", "装修业务", "备注"
-            ]
-
-            self.createTableHead(sheet, tableHead)
-
-            count = 1
-            nowPage = 1
-            flag = True
-
-            while (flag):
-
-                rows = self.page(sql, nowPage, self.size)
-
-                for i, v in enumerate(rows):
-                    data = list(v)
-
-                    self.divNum(data, [11, 12, 15])
-
-                    self.createTableHead(sheet, data, count)
-
-                    count += 1
-
-                molecular = molecular + len(rows)
-                schedules = (molecular / all) * 100
-                self.updataSchedule(self.pthost, pid, {
-                    "plan.schedule": int(schedules),
-                    "plan.status": 4
-                })
-
-                nowPage = nowPage + 1
-
-                if len(rows) < self.size:
-                    flag = False
-
-            resultfilepath = self.packFile(pid, workbook)
-
-            self.updataSchedule(self.pthost, pid, {
-                "plan.resultFilepath": resultfilepath
-            })
-
-        except Exception as e:
-            self.flag = False
-            self.errCall(pid, self.pthost, self.media, e)
-
-        finally:
-            self.modelEnd(pid, self.pthost, self.media, self.flag)
-            sys.exit(0)
+        self.exporter(pid, args, u"装修单信息", tableheads, self.colum, sql, self.rower)
 
 if __name__ == '__main__':
 
@@ -189,10 +119,10 @@ if __name__ == '__main__':
         1.参数说明参数要对应
             1.pid         information.plan的主键;
             2.args        "2018/12/13-2018/12/13"
-            3.company     公司:1(0表示全部)
+            3.company     公司cid, 0为全部(不传默认0)
         2.脚本传参说明:
-             plan_export_decoration_info.py pid     args      company
-             plan_export_decoration_info.py 1207 "2016/07/01-2016/07/30" 1
+             plan_export_construction_plan_pro.py pid     args      company
+             plan_export_construction_plan_pro.py 1207 "2016/07/01-2016/07/30" 1
 
         3.导出字段说明:
             装修单/楼盘/楼号/客户/设计分区/设计部/设计师/业务员/方案设计/监理/面积/合同额/报价版本/签单时间
@@ -211,7 +141,7 @@ if __name__ == '__main__':
 
     pid = sys.argv[1]
     args = sys.argv[2]
-    company = sys.argv[3]
+    company = sys.argv[3] if len(sys.argv) > 3 else 0
 
     exporter = Exporter(dbconf.get("host"), dbconf.get("username"), dbconf.get("password"), config.get("media"), config.get("pthost"))
     exporter.main(pid, args, int(company))
