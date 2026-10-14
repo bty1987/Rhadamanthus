@@ -1,5 +1,6 @@
 package com.fanglin.decoration.dao.impl;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 import org.hibernate.criterion.Restrictions;
@@ -85,6 +86,14 @@ public class DecorationServiceDaoImpl extends DaoImpl<DecorationServicePO> imple
 				.setProjection(org.hibernate.criterion.Projections.rowCount())
 				.setMaxResults(1).uniqueResult();
 		return count != null ? count.intValue() + 1 : 1;
+	}
+
+	@Override
+	public int updateDecorationServiceForFinishByOrderId(String orderId, Timestamp finishTime) {
+
+		String sql = "update decoration.decorationService set status = :status, finishTime = :finishTime where orderId = :orderId and type = :type and status = :initStatus";
+
+		return session().createSQLQuery(sql).setShort("status", DecorationServicePO.SERVICESTATUS_FINISH_INT).setTimestamp("finishTime", finishTime).setString("orderId", orderId).setShort("type", DecorationServicePO.TYPE_DESIGN_CONFIRM).setShort("initStatus", DecorationServicePO.SERVICESTATUS_INIT_INT).executeUpdate();
 	}
 
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) throws FLException {
