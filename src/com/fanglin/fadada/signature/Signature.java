@@ -763,7 +763,7 @@ public class Signature {
 			throw new FLException(130027, "客户认证失败,请求错误");
 		}
 
-		if ("1000".equals(response.getInteger("code"))) {
+		if (!"1000".equals(response.getString("code"))) {
 			logger.error("合同归档失败: " + result);
 			throw new FLException(130027, response.getString("msg"));
 		}
