@@ -61,7 +61,7 @@ class Exporter(Util):
                 communion.company c,
                 communion.village v,
                 communion.house h,
-                inventory.goods g,
+                data.goods g,
                 communion.user up,
                 communion.user su,
                 communion.user cu
