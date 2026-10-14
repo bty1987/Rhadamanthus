@@ -1070,8 +1070,9 @@ var decorationUtils = {
                     continue;
                 }
 
-                // 直接传递 uniqueId，不提前查询数据（会员活动物品不渲染 content 分支的六字段）
-                decorationUtils.addActivityItemForDiv(itempack, item, uiBtnMethod, config, wizard.content, item.uniqueId);
+                // 会员活动物品不渲染content分支的装修语义字段(是否计入库存/业绩/金额/是否确认/四次操作时间),
+                // 恒传null与公司配置(activity变体dfid=199)解耦; 装修/销售区块仍按wizard.content配置开关
+                decorationUtils.addActivityItemForDiv(itempack, item, uiBtnMethod, config, null, item.uniqueId);
             }
         });
     },
