@@ -1,0 +1,4 @@
+flask_decoration_script                 装修模块
+flask_information_script                信息模块
+flask_login_index_memcache              缓存模块
+flask_uwsgi_index_script                框架/入口

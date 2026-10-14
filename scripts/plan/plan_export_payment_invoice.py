@@ -1,0 +1,193 @@
+#!/usr/bin/python
+# -*- coding:UTF-8 -*-
+
+import pyaes
+import base64
+
+from plan_util import *
+
+class Exporter(Util):
+
+    def __init__(self, host='', username='', password='', media='', pthost="", charset='utf8'):
+    
+        self.dbconn = None
+        self.cursor = None
+
+        self.host = host
+        self.username = username
+        self.password = password
+        self.charset = charset
+        self.media = media
+        self.pthost = pthost
+        self.flag = True
+        self.list = []
+        self.size = 200
+        
+        self.key = "844dd1be967b6e9e"
+        self.iv = "cdb421d038104126"
+        self.newKey = None
+        self.newIv = None
+        self.legacyKey = "b4d617b336124c63"
+        self.legacyIv = "b4d1a58a416957a5"
+
+        self.colum = u"""
+            r.orderId AS `装修单号`,
+            ct.province AS `省份`,
+            ct.`name` AS `城市`,
+            ctp.`name` AS `城区`,
+            v.name AS `楼盘`,
+            h.houseNumber AS `楼号`,
+            c.name AS `客户名`,
+            c.phone AS `客户电话`,
+            c.identity AS `身份证号`,
+            communion.kv('payment', 'receipt', 'paymentType', r.paymentType) AS `款项类型`,
+            r.paymentName AS `款项名称`,
+            r.name AS `收据名称`,
+            communion.kv('data', 'receiptType', 'fund', rt.fund) AS `资金类型`,
+            communion.kv('payment', 'servicePayment', 'type', r.type) AS `操作类型`,
+            r.collectTime AS `收款时间`,
+            r.money AS `金额`,
+            communion.kv('customer', 'customer', 'customerType', c.type) AS `客户类型`,
+            c.companyBankno AS `银行卡号`,
+            c.companyNo AS `公司编号`
+        """
+
+        self.SQL_EXPORT_RECEIPT = u"""
+            SELECT 
+                %s
+            FROM
+                 payment.receipt AS r LEFT JOIN data.receipttype AS rt ON r.rtid = rt.rtid,
+                 decoration.decoration AS d,
+                 communion.house AS h,
+                 communion.village AS v,
+                 communion.cityproper AS ctp,
+                 communion.city AS ct,
+                 communion.customer AS c
+            WHERE
+                 r.orderId = d.orderId
+                AND d.hid = h.hid
+                AND h.vid = v.vid
+                AND v.cityProperId = ctp.cpid
+                AND ctp.cid = ct.cid
+                AND d.customerId = c.cid
+                AND r.paymentType IN (1, 4)
+                AND r.collectTime >= '%s 00:00:00'
+                AND r.collectTime <= '%s 23:59:59'
+                AND r.company = %s
+        """
+        
+    def pad(self, data):
+        padding_len = 16 - (len(data) % 16)
+        return data + bytes([padding_len] * padding_len)
+    
+    def unpad(self, data):
+        padding_len = data[-1]
+        return data[:-padding_len]
+    
+    def decrypt(self, encrypted_base64, key, iv):
+        key_bytes = key.encode('utf-8')
+        iv_bytes = iv.encode('utf-8')
+        encrypted_bytes = base64.b64decode(encrypted_base64)
+    
+        aes = pyaes.AESModeOfOperationCBC(key_bytes, iv=iv_bytes)
+        decrypted = aes.decrypt(encrypted_bytes)
+        return self.unpad(decrypted).decode('utf-8')
+
+    def decryptSensitive(self, value):
+        """三层回退解密，参照系统中 SensitiveDataHelper.decrypt
+
+        1. 新格式 ENC(V1:base64密文) -> 用新密钥解密
+        2. 旧格式（纯Base64） -> 用旧密钥解密
+        3. 兜底 -> 当作明文直接返回
+        """
+        if value is None or str(value).strip() == '':
+            return value
+
+        value = str(value).strip()
+
+        # 第一层: 新格式 ENC(V1:xxx)
+        if value.startswith('ENC(') and value.endswith(')'):
+            inner = value[4:-1]
+            colonIndex = inner.find(':')
+            if colonIndex > 0:
+                version = inner[:colonIndex]
+                encryptedData = inner[colonIndex + 1:]
+                if version == 'V1' and self.newKey and self.newIv:
+                    try:
+                        return self.decrypt(encryptedData, self.newKey, self.newIv)
+                    except Exception:
+                        pass
+
+        # 第二层: 旧格式（纯Base64）
+        # 快速排除：11位纯数字是手机号明文
+        import re
+        if len(value) >= 10 and not re.match(r'^\d{11}$', value):
+            try:
+                return self.decrypt(value, self.legacyKey, self.legacyIv)
+            except Exception:
+                pass
+
+        # 第三层: 当作明文直接返回
+        return value
+
+    def company(self, cloumCompany, company):
+        if company != 0:
+            companyId = u"AND %s = %s" % (cloumCompany, company)
+        else:
+            companyId = u" "
+
+        return companyId
+
+    def sqler(self, args, company):
+
+        startTime, endTime = args.split("-")
+
+        return self.SQL_EXPORT_RECEIPT % ("%s", startTime, endTime, company)
+
+    def rower(self, row):
+
+        row[7] = self.decryptSensitive(row[7])
+
+        return row
+
+    def main(self, pid, args, company):
+
+        tableheads = [
+            u"装修单号", u"省份", u"城市", u"城区", u"楼盘", u"楼号", u"客户名", u"客户电话", u"身份证号", u"款项类型",
+            u"款项名称", u"收据名称", u"资金类型", u"操作类型", u"收款时间", u"金额", u"客户类型", u"银行卡号", u"公司编号"
+        ]
+
+        self.getDBCursor(self.host, self.username, self.password, self.charset)
+
+        sql = self.sqler(args, company)
+
+        self.exporter(pid, args, u"发票数据", tableheads, self.colum, sql, self.rower)
+
+if __name__ == '__main__':
+
+    """
+        导出发票数据脚本说明:
+            根据查询条件,以时间为条件查询数据导出收据;并上传到文件服务器中,可从任务页面上点击下载即可;
+            当该脚本执行出现异常时,将跟新进度为失败并记录到log文件中上传至文件服务器中;
+        1.传入必须参数说明
+            1.pid         information.plan的主键;
+            2.args        "2018/12/13-2018/12/13"
+            3.company     公司:1
+        2.命令使用 python plan_export_payment_invoice.py pid args company
+               python plan_export_payment_invoice.py 911 2018/10/01-2018/12/13 1
+    """
+    
+    modernFilePath = os.path.realpath(__file__)
+    configPath = "%s/%s" % (os.path.dirname(modernFilePath), "config.json")
+
+    config = json.load(open(configPath))
+    dbconf = config.get("database")
+
+    pid = sys.argv[1]
+    args = sys.argv[2]
+    company = sys.argv[3]
+
+    exporter = Exporter(dbconf.get("host"), dbconf.get("username"), dbconf.get("password"), config.get("media"), config.get("pthost"))
+    exporter.newKey = config.get("encryptKeyV1", None)
+    exporter.newIv = config.get("encryptIvV1", None)
+    exporter.main(pid, args, company)

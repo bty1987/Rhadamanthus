@@ -1,0 +1,19 @@
+plan_achievement_decoration_collecter       装修业绩汇总          导出
+plan_achievement_material_collecter         主材业绩汇总          导出
+plan_achievement_sales_collecter            销售业绩汇总          导出
+plan_delete_inventory_price                 删除仓储/销售商品价格 删除
+plan_export_decoration_contract_listing     装修签单明细          导出
+plan_export_decoration_contract_ranking     装修签单排名          导出
+plan_export_decoration_order                装修单明细            导出
+plan_export_inventory_goods                 仓储/销售商品明细     导出
+plan_export_payment_material                主材款明细            导出
+plan_export_payment_receipt                 收据明细              导出
+plan_export_payment_sales                   销售款明细            导出
+plan_import_inventory_color                 仓储/销售商品颜色     导入
+plan_import_inventory_format                仓储/销售商品规格     导入
+plan_import_inventory_goods                 仓储/销售商品         导入
+plan_import_inventory_price                 仓储/销售商品价格     导入
+plan_import_quotation_item                  数据报价项            导入
+plan_merge_personel_attendance              人员考勤汇总          导出
+plan_payment_arrange                        金蝶款项模版          导出
+plan_util                                   计划工具类
