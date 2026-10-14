@@ -1,6 +1,6 @@
 -- 积分商城活动物品 办理类型常量（待生产）
 -- 背景：makeMemberOrderItem(积分商城同步)产生的 decorationactivityitem 需落
---       type=1物品 / stateType=15积分商城 / state=2已领；
+--       type=0券(字典已有) / stateType=15积分商城 / state=2已领；
 --       stateType 常量族(communion.constant, module=decoration, clazz=decorationActivityItem,
 --       field=STATUSTYPE_*)原 0~14 无"积分商城", 新增 15。
 --       state(state=2已领)/type 字典已有, 无需新增。

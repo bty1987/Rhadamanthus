@@ -725,28 +725,40 @@ public class MemberServiceImpl implements MemberService {
 			if (awardStockPO != null) decorationActivityItemPO.setAsid(awardStockPO.getAsId());
 
 			decorationActivityItemPO.setActivityItemName(memberOrderItemVO.getName());
-			decorationActivityItemPO.setState(DecorationActivityItemPO.STATUS_DELIVERY_INT);
+			// 积分商城同步产生即已领, 首次操作时间=同步时间(对齐makeMemberOrderItem; 线上物品核销仅认初始/已领, 落配送会卡140102)
+			decorationActivityItemPO.setState(DecorationActivityItemPO.STATUS_RECEIVE_INT);
+			decorationActivityItemPO.setReceiveTime(DateUtil.getDateToTimestamp(new Date()));
 
-			decorationActivityItemPO.setIsPrefor(DecorationActivityItemPO.ISPREFOR_UNCAL_INT);
-			decorationActivityItemPO.setIsPayment(DecorationActivityItemPO.ISPAYMENT_UNCAL_INT);
+			decorationActivityItemPO.setIsPrefor(memberOrderItemVO.getIsPrefer() != null ? memberOrderItemVO.getIsPrefer() : DecorationActivityItemPO.ISPREFOR_UNCAL_INT);
+			decorationActivityItemPO.setIsPayment(memberOrderItemVO.getIsPayment() != null ? memberOrderItemVO.getIsPayment() : DecorationActivityItemPO.ISPAYMENT_CAL_INT);
 
 			decorationActivityItemPO.setNo(memberOrderVO.getPointOrderId());
 			decorationActivityItemPO.setAtttype(DecorationActivityItemPO.ATTTYPE_ONLINE_INT);
+			// 券口径(与makeMemberOrderItem一致; 生产存量1204行即券, 10-05误改物品已纠正)
+			decorationActivityItemPO.setType(DecorationActivityItemPO.TYPE_COUPON_INT);
+			decorationActivityItemPO.setStateType(DecorationActivityItemPO.STATUSTYPE_POINTSHOP_INT);
 			decorationActivityItemPO.setNum((int) Arith.mul(memberOrderItemVO.getNum(), 1000000l));
 			decorationActivityItemPO.setMoney((int) Arith.mul(memberOrderItemVO.getPoint(), 1000000l));
 			decorationActivityItemPO.setCreater(creater);
 			decorationActivityItemPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 
-			// 设置有效期：创建时间 + 活动有效天数
-			int validays = decorationActivityPO.getActivity().getValidays();
-			if (validays > 0) {
-				Calendar calendar = Calendar.getInstance();
-				calendar.add(Calendar.DAY_OF_MONTH, validays);
-				decorationActivityItemPO.setExpireTime(new Timestamp(calendar.getTimeInMillis()));
+			// 设置有效期: 优先取积分商城传参, 缺省按创建时间+活动有效天数(对齐makeMemberOrderItem)
+			if (memberOrderItemVO.getExpireTime() != null) {
+				decorationActivityItemPO.setExpireTime(memberOrderItemVO.getExpireTime());
+			} else {
+				int validays = decorationActivityPO.getActivity().getValidays();
+				if (validays > 0) {
+					Calendar calendar = Calendar.getInstance();
+					calendar.add(Calendar.DAY_OF_MONTH, validays);
+					decorationActivityItemPO.setExpireTime(new Timestamp(calendar.getTimeInMillis()));
+				}
 			}
 
 			// 设置 uniqueId，用于区分不同活动物品对应的被推荐装修单号和推荐装修单号的对应关系
 			decorationActivityItemPO.setUniqueId(memberOrderVO.getUniqueId());
+
+			// 积分商城备注(物品说明)落活动物品备注
+			decorationActivityItemPO.setContent(memberOrderItemVO.getContent());
 
 			decorationActivityItemDao.save(decorationActivityItemPO);
 		}
@@ -829,7 +841,8 @@ public class MemberServiceImpl implements MemberService {
 
 		decorationActivityItemPO.setNo(memberOrderVO.getPointOrderId());
 		decorationActivityItemPO.setAtttype(DecorationActivityItemPO.ATTTYPE_ONLINE_INT);
-		decorationActivityItemPO.setType(DecorationActivityItemPO.TYPE_THING_INT);
+		// 券口径: 积分商城兑换在装修单落券(生产存量一致; 10-05误改物品已纠正)
+		decorationActivityItemPO.setType(DecorationActivityItemPO.TYPE_COUPON_INT);
 		decorationActivityItemPO.setStateType(DecorationActivityItemPO.STATUSTYPE_POINTSHOP_INT);
 		decorationActivityItemPO.setNum((int) Arith.mul(memberOrderItemVO.getNum(), 1000000l));
 		decorationActivityItemPO.setMoney((int) Arith.mul(memberOrderItemVO.getPoint(), 1000000l));
