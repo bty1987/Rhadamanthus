@@ -1,5 +1,6 @@
 package com.fanglin.decoration.dao;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 import com.fanglin.core.dao.Dao;
@@ -42,5 +43,14 @@ public interface DecorationServiceDao extends Dao<DecorationServicePO> {
 	 * 获取订单的下一确认轮次
 	 */
 	public int getNextRoundForDesignConfirmByOrderId(String orderId);
+
+	/**
+	 * 按订单批量完结未闭环的设计确认记录(type=1, status=0→1)
+	 *
+	 * @param orderId 订单ID
+	 * @param finishTime 完结时间
+	 * @return 完结记录数
+	 */
+	public int updateDecorationServiceForFinishByOrderId(String orderId, Timestamp finishTime);
 
 }

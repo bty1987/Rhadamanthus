@@ -201,6 +201,13 @@ public class DecorationInfoServiceImpl implements DecorationInfoService {
 			throw new FLException(140074, "装修确认不可操作");
 		}
 
+		// 微改/大改仅限待确认(sourceStatus=0)阶段选择,合同/放线确认后再选会残留脏轮次(designStatus停在11/21)
+		if (decorationInfoVO.getSourceStatus() != DecorationPO.STATUS_CONTRACT_CONFIRMATION_INT
+				&& (decorationInfoVO.getSourceStatus() % 10) == DecorationPO.STATUS_CONTRACT_CONFIRMATION_INT
+				&& decorationPO.getSourceStatus() != DecorationPO.STATUS_INITIA_INT) {
+			throw new FLException(140074, "装修确认不可操作");
+		}
+
 		if (decorationPO.getSourceStatus() == DecorationPO.STATUS_INITIA_INT && decorationInfoVO.getSourceStatus() == DecorationPO.STATUS_SETTING_OUT_CONFIRMATION_INT) {
 			throw new FLException(140074, "装修确认不可操作");
 		}
@@ -215,6 +222,10 @@ public class DecorationInfoServiceImpl implements DecorationInfoService {
 			decorationPO.setDesignStatus(DecorationPO.DESIGNSTATUS_END_INT);
 			decorationPO.setSourceStatus(DecorationPO.STATUS_CONTRACT_CONFIRMATION_INT);
 			decorationPO.setSdesignTime(DateUtil.getDateToTimestamp(new Date()));
+
+			// 完成确认收官:完结该单未闭环的设计方案确认记录(微改/大改轮次)
+			decorationServiceDao.updateDecorationServiceForFinishByOrderId(orderId, DateUtil.getDateToTimestamp(new Date()));
+
 			messageService.sendMessage(designer.getUserId(), null, String.format("装修单: %s , 地址: %s , 合同设计方案客户已确认通过 , 持续关注客户服务及放线开工推进 .", orderId, houseAddr), MessagePO.TYPE_SEND_PERSONEL_INT, designer.getCompany());
 		} else if ((decorationInfoVO.getSourceStatus() % 10) == DecorationPO.STATUS_CONTRACT_CONFIRMATION_INT) {
 
