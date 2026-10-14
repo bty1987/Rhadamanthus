@@ -730,7 +730,8 @@ public class MemberServiceImpl implements MemberService {
 			decorationActivityItemPO.setReceiveTime(DateUtil.getDateToTimestamp(new Date()));
 
 			decorationActivityItemPO.setIsPrefor(memberOrderItemVO.getIsPrefer() != null ? memberOrderItemVO.getIsPrefer() : DecorationActivityItemPO.ISPREFOR_UNCAL_INT);
-			decorationActivityItemPO.setIsPayment(memberOrderItemVO.getIsPayment() != null ? memberOrderItemVO.getIsPayment() : DecorationActivityItemPO.ISPAYMENT_CAL_INT);
+			// 兜底定版: 未传值=UNCAL(1,不计入款项), 券不自动抵扣工程款(对齐存量1204行口径)
+			decorationActivityItemPO.setIsPayment(memberOrderItemVO.getIsPayment() != null ? memberOrderItemVO.getIsPayment() : DecorationActivityItemPO.ISPAYMENT_UNCAL_INT);
 
 			decorationActivityItemPO.setNo(memberOrderVO.getPointOrderId());
 			decorationActivityItemPO.setAtttype(DecorationActivityItemPO.ATTTYPE_ONLINE_INT);
@@ -837,7 +838,8 @@ public class MemberServiceImpl implements MemberService {
 		decorationActivityItemPO.setReceiveTime(DateUtil.getDateToTimestamp(new Date()));
 
 		decorationActivityItemPO.setIsPrefor(memberOrderItemVO.getIsPrefer() != null ? memberOrderItemVO.getIsPrefer() : DecorationActivityItemPO.ISPREFOR_UNCAL_INT);
-		decorationActivityItemPO.setIsPayment(memberOrderItemVO.getIsPayment() != null ? memberOrderItemVO.getIsPayment() : DecorationActivityItemPO.ISPAYMENT_CAL_INT);
+		// 兜底定版: 未传值=UNCAL(1,不计入款项), 券不自动抵扣工程款(对齐存量1204行口径)
+		decorationActivityItemPO.setIsPayment(memberOrderItemVO.getIsPayment() != null ? memberOrderItemVO.getIsPayment() : DecorationActivityItemPO.ISPAYMENT_UNCAL_INT);
 
 		decorationActivityItemPO.setNo(memberOrderVO.getPointOrderId());
 		decorationActivityItemPO.setAtttype(DecorationActivityItemPO.ATTTYPE_ONLINE_INT);
