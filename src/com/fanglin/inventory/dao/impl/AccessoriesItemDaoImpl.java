@@ -9,7 +9,6 @@ import org.springframework.stereotype.Repository;
 import com.fanglin.core.dao.impl.DaoImpl;
 import com.fanglin.inventory.dao.AccessoriesItemDao;
 import com.fanglin.inventory.po.AccessoriesItemPO;
-import com.fanglin.utils.Arith;
 
 @Repository("accessoriesItemDao")
 public class AccessoriesItemDaoImpl extends DaoImpl<AccessoriesItemPO> implements AccessoriesItemDao {
