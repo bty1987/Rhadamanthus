@@ -358,14 +358,34 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 
 		DecorationContractPO decorationContractPO = decorationContractDao.get(decorationContractVO.getDcid());
 
-		SignetPO signetPO = signetDao.get(signetVO.getSid());
-
 		if (decorationContractPO == null) {
 			throw new FLException(140067, "合同不存在");
 		}
 
 		if (decorationContractPO.getStatus() != DecorationContractPO.STATUS_VALID_INT) {
 			throw new FLException(130028, "合同状态不可操作");
+		}
+
+		SignetPO signetPO = signetDao.get(signetVO.getSid());
+
+		if (signetPO == null) {
+			// sid 未传时（app端）自动取合同所属公司的签章：唯一则直接使用，否则报错引导网页端选择
+			DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(decorationContractPO.getOrderId());
+			if (decorationPO == null) {
+				throw new FLException(130045, "装修单不存在, 无法定位公司签章");
+			}
+
+			List<SignetPO> signetPOs = signetDao.querySignet(null, decorationPO.getCompany());
+
+			if (signetPOs == null || signetPOs.isEmpty()) {
+				throw new FLException(130045, "该公司未维护有效签章, 请先维护");
+			}
+
+			if (signetPOs.size() > 1) {
+				throw new FLException(130045, "该公司存在多个签章, 请在网页端选择签章签署");
+			}
+
+			signetPO = signetPOs.get(0);
 		}
 
 		routeForRecord(decorationContractPO).autosign(signetPO.getSignno(), signetPO.getKeyword(), decorationContractPO, signetPO.getSignid());
