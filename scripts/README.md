@@ -2,9 +2,12 @@
 
 ERP 后台定时任务与数据导出/导入脚本集合。
 
-> ⚠️ **目录结构约定**：本目录为**平铺结构**，与生产服务器 `/home/fanglin/cronbin/` 保持一致。
-> 勿将脚本移入子目录——`config.json` 定位（`os.path.dirname(__file__)`）与
-> `from plan_util import *` 均依赖脚本与基建文件同目录，且生产 `task.filepath` 为平铺绝对路径。
+> 📁 **目录结构约定**（2026-10-14 归类）：按族分子目录归档——`crond/` 定时任务族、
+> `plan/` 计划任务族、`flask/` 部署脚本，根目录仅留仓库侧开发工具（i18n/菜单/加密等一次性工具）。
+> `plan/`、`crond/` 为生产执行器 `/home/fanglin/cronbin/` 的归档镜像，同名冲突以目录内
+> （执行器实况）为准；`config.json` 不入仓（执行器自备）。生产 `task.filepath` 为平铺绝对路径，
+> **部署时将对应族脚本平铺摆放至执行器目录**，族内脚本与基建（plan_util.py 等）同目录，
+> `config.json` 定位（`os.path.dirname(__file__)`）与 `from plan_util import *` 依赖不变。
 
 ---
 
