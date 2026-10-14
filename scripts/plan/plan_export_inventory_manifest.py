@@ -6,7 +6,7 @@ from plan_util import *
 class Exporter(Util):
 
     def __init__(self, host='', username='', password='', media='', pthost="", charset='utf8'):
-    
+
         self.dbconn = None
         self.cursor = None
 
@@ -17,30 +17,30 @@ class Exporter(Util):
         self.media = media
         self.pthost = pthost
         self.flag = True
-
+        self.list = []
         self.size = 300
 
-        self.column = u"""
-            m.code AS '货单号',
-            u.currentName AS '创建人',
-            m.createTime AS '创建时间',
-            m.manifestTime AS '货单时间',
-            g.no AS '商品编号',
-            g.name AS '商品名称',
-            g.category AS '品类',
-            g.brand AS '品牌',
-            c.name AS '颜色',
-            f.info AS '规格',
-            g.measurementUnit AS '单位',
-            g.pieceNum AS '件数',
-            mi.num AS '数量',
-            ish.name AS '进货仓库',
-            osh.name AS '出货仓库',
-            m.type AS '货单类型',
-            mi.inprice AS '入库价',
-            mi.outprice AS '出库价',
-            m.`comment` AS '订单备注',
-            mi.`comment` AS '项目备注'
+        self.colum = u"""
+            m.code,
+            u.currentName,
+            m.createTime,
+            m.manifestTime,
+            g.no,
+            g.name,
+            g.category,
+            g.brand,
+            c.name,
+            f.info,
+            g.measurementUnit,
+            g.pieceNum,
+            mi.num,
+            ish.name,
+            osh.name,
+            m.type,
+            mi.inprice,
+            mi.outprice,
+            m.`comment`,
+            mi.`comment`
         """
 
         self.SQL_QUERY = u"""
@@ -56,128 +56,62 @@ class Exporter(Util):
                 data.format f,
                 communion.`user` u
             WHERE
-                m.mid = mi.mid AND 
-                mi.gid = g.gid AND 
-                mi.cid = c.cid AND 
-                mi.fid = f.fid AND 
-                m.cuid = u.uid AND 
-                mi.siid = 0 AND 
+                m.mid = mi.mid AND
+                mi.gid = g.gid AND
+                mi.cid = c.cid AND
+                mi.fid = f.fid AND
+                m.cuid = u.uid AND
+                mi.siid = 0 AND
                 %s BETWEEN '%s 00:00:00' AND '%s 23:59:59'
-                %s 
+                %s
         """
 
-    # 公司条件识别
-    def company(self, cloumCompany, company):
+    def company(self, columnCompany, company):
+
         if company != 0:
-            companyId = u"AND %s = %s" % (cloumCompany, company)
+            companyString = u"AND %s = %s" % (columnCompany, company)
         else:
-            companyId = u" "
-        return companyId
+            companyString = u" "
+
+        return companyString
+
+    def sqler(self, type, args, company):
+
+        startTime, endTime = args.split("-")
+
+        timeColumn = u"m.createTime"
+        if type == "0":
+            timeColumn = u"m.createTime"
+        elif type == "1":
+            timeColumn = u"m.manifestTime"
+
+        return self.SQL_QUERY % ("%s", timeColumn, startTime, endTime, self.company(u"m.company", company))
+
+    def rower(self, row):
+
+        self.divNum(row, [11, 12, 16, 17])
+
+        if (row[13] is None): row[13] = u"无"
+        if (row[14] is None): row[14] = u"无"
+        if (row[18] is None): row[18] = ""
+        if (row[19] is None): row[19] = ""
+
+        row[15] = self.manifestType[row[15]]
+
+        return row
 
     def main(self, type, pid, args, company):
-        try:
-            self.getDBCursor(self.host, self.username, self.password, self.charset)
 
-            startTime, endTime = args.split("-")
-            
-            checkFlag = self.controlTime(startTime, endTime)
+        tableheads = [
+            u"货单号", u"创建人", u"创建时间", u"货单时间", u"商品编号", u"商品名称", u"品类", u"品牌", u"颜色", u"规格", u"单位", u"件数",
+            u"数量", u"进货仓库", u"出货仓库", u"货单类型", u"入库价", u"出库价", u"订单备注", u"项目备注"
+        ]
 
-            if checkFlag == False:
-                self.flag = False
-                self.updataSchedule(self.pthost, pid, {
-                    u"plan.status": 3,
-                    u"plan.info": '时间范围大于31天'
-                })
-                return False
+        self.getDBCursor(self.host, self.username, self.password, self.charset)
 
-            column = ""
-            if type == "0":
-                column = u"m.createTime"
-            elif type == "1":
-                column = u"m.manifestTime"
+        sql = self.sqler(type, args, company)
 
-            countSQL = self.SQL_QUERY % (u"count(*)", column, startTime, endTime, self.company(u"m.company", company))
-
-            count = self.count(countSQL)
-            if count == 0:
-                self.flag = False
-                self.updataSchedule(self.pthost, pid, {
-                    u"plan.status": 3,
-                    u"plan.info": '无可导出数据'
-                })
-                return False
-
-            all = count / 0.8
-            molecular = all * 0.1
-            schedule = (molecular / all) * 100
-
-            self.updataSchedule(self.pthost, pid, {
-                u"plan.schedule": schedule,
-                u"plan.status": 4
-            })
-
-            params = self.createWorkbook(u"货单")
-            workbook = params[0]
-            sheet = params[1]
-
-            tableHead = [
-                u"货单号", u"创建人", u"创建时间", u"货单时间", u"商品编号", u"商品名称", u"品类", u"品牌", u"颜色", u"规格", u"单位", u"件数",
-                u"数量", u"进货仓库", u"出货仓库", u"货单类型", u"入库价", u"出库价", u"订单备注", u"项目备注"
-            ]
-            self.createTableHead(sheet, tableHead)
-
-            sql = self.SQL_QUERY % (self.column, column, startTime, endTime, self.company(u"m.company", company))
-
-            nowPage = 1
-            length = 1
-            flag = True
-
-            while (flag):
-
-                rows = self.page(sql, nowPage, self.size)
-
-                for i, v in enumerate(rows):
-                
-                    data = list(v)
-                    
-                    self.divNum(data, [11, 12, 16, 17])
-                    
-                    if (data[13] is None): data[13] = "无"
-                    if (data[14] is None): data[14] = "无"
-                    if (data[18] is None): data[18] = ""
-                    if (data[19] is None): data[19] = ""
-                    
-                    data[15] = self.manifestType[data[15]]
-
-                    self.createTableHead(sheet, data, length)
-
-                    length = length + 1
-
-                molecular = molecular + len(rows)
-                schedules = (molecular / all) * 100
-
-                self.updataSchedule(self.pthost, pid, {
-                    u"plan.schedule": int(schedules)
-                })
-
-                nowPage = nowPage + 1
-
-                if len(rows) < self.size:
-                    flag = False
-
-            resultfilepath = self.packFile(pid, workbook)
-
-            self.updataSchedule(self.pthost, pid, {
-                u"plan.resultFilepath": resultfilepath
-            })
-
-        except Exception as e:
-            self.flag = False
-            self.errCall(pid, self.pthost, self.media, e)
-
-        finally:
-            self.modelEnd(pid, self.pthost, self.media, self.flag)
-            sys.exit(0)
+        self.exporter(pid, args, u"货单", tableheads, self.colum, sql, self.rower)
 
 if __name__ == '__main__':
 
@@ -189,23 +123,23 @@ if __name__ == '__main__':
             1.type        0(创建时间) 1(货单时间)
             2.pid         information.plan的主键;
             3.args        "2018/12/13-2018/12/13"
-            4.company     公司:1
+            4.company     公司cid, 0为全部(不传默认0)
 
         2.使用
             python plan_export_inventory_manifest.py type pid args company
             python plan_export_inventory_manifest.py   0  942 2018/12/01-2018/12/31 1
     """
-    
+
     modernFilePath = os.path.realpath(__file__)
     configPath = "%s/%s" % (os.path.dirname(modernFilePath), "config.json")
 
-    config = json.load(open(configPath))
+    config = json.load(open(configPath, encoding="utf-8"))
     dbconf = config.get("database")
 
     type = sys.argv[1]
     pid = sys.argv[2]
     args = sys.argv[3]
-    company = sys.argv[4]
+    company = sys.argv[4] if len(sys.argv) > 4 else 0
 
-    exporter = Exporter(dbconf.get("host"), dbconf.get("username"), dbconf.get("password"),config.get("media"), config.get("pthost"))
+    exporter = Exporter(dbconf.get("host"), dbconf.get("username"), dbconf.get("password"), config.get("media"), config.get("pthost"))
     exporter.main(type, pid, args, int(company))

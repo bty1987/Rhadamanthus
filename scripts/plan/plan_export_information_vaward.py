@@ -6,7 +6,7 @@ from plan_util import *
 class Exporter(Util):
 
     def __init__(self, host='', username='', password='', media='', pthost="", charset='utf8'):
-    
+
         self.dbconn = None
         self.cursor = None
 
@@ -29,87 +29,31 @@ class Exporter(Util):
         self.SQL_QUERY = u"""
             select
                 %s
-            from 
+            from
                 information.vaward
             where
                 status = 0
-                  """
+        """
+
+    def sqler(self):
+
+        return self.SQL_QUERY % ("%s")
+
+    def rower(self, row):
+
+        self.divNum(row, [2, 3])
+
+        return row
 
     def main(self, pid):
-        try:
-            self.getDBCursor(self.host, self.username, self.password, self.charset)
 
-            sqlcount = self.SQL_QUERY % ("count(*)")
+        tableheads = [u"编号", u"奖品名称", u"价格", u"数量"]
 
-            count = self.count(sqlcount)
+        self.getDBCursor(self.host, self.username, self.password, self.charset)
 
-            if count == 0:
-                self.flag = False
-                self.updataSchedule(self.pthost, pid, {
-                    u"plan.status": 3,
-                    u"plan.info": '无可导出数据'
-                })
-                return False
+        sql = self.sqler()
 
-            all = count / 0.8
-            molecular = all * 0.1
-            schedule = (molecular / all) * 100
-
-            self.updataSchedule(self.pthost, pid, {
-                u"plan.schedule": schedule,
-                u"plan.status": 4
-            })
-
-            sql = self.SQL_QUERY % (self.colum)
-
-            workbook, sheet = self.createWorkbook(u"大活动奖品")
-
-            tableHead = [u"编号", u"奖品名称", u"价格", u"数量"]
-
-            self.createTableHead(sheet, tableHead)
-
-            count = 1
-            nowPage = 1
-            flag = True
-            
-            while (flag):
-            
-                rows = self.page(sql, nowPage, self.size)
-
-                for i, v in enumerate(rows):
-                
-                    data = list(v)
-                    
-                    self.divNum(data, [2, 3])
-
-                    self.createTableHead(sheet, data, count)
-
-                    count += 1
-
-                nowPage = nowPage + 1
-                if len(rows) < self.size:
-                    flag = False
-
-                molecular = molecular + len(rows)
-                schedules = (molecular / all) * 100
-                self.updataSchedule(self.pthost, pid, {
-                    u"plan.schedule": int(schedules),
-                    u"plan.status": 4
-                })
-
-            resultfilepath = self.packFile(pid, workbook)
-
-            self.updataSchedule(self.pthost, pid, {
-                u"plan.resultFilepath": resultfilepath
-            })
-
-        except Exception as e:
-            self.flag = False
-            self.errCall(pid, self.pthost, self.media, e)
-
-        finally:
-            self.modelEnd(pid, self.pthost, self.media, self.flag)
-            sys.exit(0)
+        self.exporter(pid, '', u"大活动奖品", tableheads, self.colum, sql, self.rower)
 
 if __name__ == '__main__':
 
@@ -120,11 +64,12 @@ if __name__ == '__main__':
 
        1.参数说明参数要对应
            1.pid         information.plan的主键;
+           (information.vaward 表无公司列, 不支持company过滤)
        2.脚本传参说明:
-            plan_export_information_awardStock.py pid
-            plan_export_information_awardStock.py 929
+            plan_export_information_vaward.py pid
+            plan_export_information_vaward.py 929
     """
-    
+
     modernFilePath = os.path.realpath(__file__)
     configPath = "%s/%s" % (os.path.dirname(modernFilePath), "config.json")
 

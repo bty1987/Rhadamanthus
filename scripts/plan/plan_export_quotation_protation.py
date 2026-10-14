@@ -6,7 +6,7 @@ from plan_util import *
 class Exporter(Util):
 
     def __init__(self, host='', username='', password='', media='', pthost='', charset='utf8'):
-    
+
         self.dbconn = None
         self.cursor = None
         self.flag = True
@@ -19,36 +19,36 @@ class Exporter(Util):
         self.pthost = pthost
         self.size = 400
 
-        self.colum = """
-            d.orderId AS `装修单号`,
-            v.name AS `楼盘`,
-            h.housenumber AS `楼号`,
-            h.buildArea AS `建筑面积`,
-            h.innerArea AS `计价面积`,
-            dr.name AS `设计分区`,
-            dd.name AS `设计部`,
-            du.currentname AS `设计师`,
-            pp.name AS `预签产品`,
-            p.quoteArea AS `计价面积`,
-            p.quotePrice AS `起报价`,
-            p.preferPrice AS `优惠金额`,
-            p.managePrice AS `管理费`,
-            p.accdPrice + p.accmPrice AS `赋能总额`,
-            p.basicPrice AS `功能区总额`,
-            p.adddPrice + p.addmPrice AS `个性化总额`,
-            p.subdPrice + p.submPrice AS `减项总额`,
-            p.totalPrice AS `总额`,
-            p.discount AS `折扣`,
-            d.thingCut AS `物品优惠`,
-            d.couponCut AS `券优惠`,
-            d.thingCut + d.couponCut AS `优惠总额`,
-            communion.kv('decoration', 'decoration', 'status', d.status) AS `状态`
+        self.colum = u"""
+            d.orderId,
+            v.name,
+            h.housenumber,
+            h.buildArea,
+            h.innerArea,
+            dr.name,
+            dd.name,
+            du.currentname,
+            pp.name,
+            p.quoteArea,
+            p.quotePrice,
+            p.preferPrice,
+            p.managePrice,
+            p.accdPrice + p.accmPrice,
+            p.basicPrice,
+            p.adddPrice + p.addmPrice,
+            p.subdPrice + p.submPrice,
+            p.totalPrice,
+            p.discount,
+            d.thingCut,
+            d.couponCut,
+            d.thingCut + d.couponCut,
+            communion.kv('decoration', 'decoration', 'status', d.status)
         """
 
-        self.SELECT_SQL = """
-            select 
+        self.SELECT_SQL = u"""
+            select
                 %s
-            from 
+            from
                 decoration.decoration d,
                 quotation.protation p,
                 quotation.presignproduce pp,
@@ -57,109 +57,55 @@ class Exporter(Util):
                 communion.department dr,
                 communion.department dd,
                 communion.user du
-            where 
-                d.precontractTime > '%s 00:00:00'  
-                AND d.precontractTime < '%s 23:59:59'  
-                AND d.company = %s 
+            where
+                d.precontractTime > '%s 00:00:00'
+                AND d.precontractTime < '%s 23:59:59'
                 AND d.orderId = p.orderId
-                AND p.defaults = 1 
-                AND p.ppid = pp.ppid 
-                AND d.hid = h.hid 
-                AND h.vid = v.vid 
-                AND d.dsuid = du.uid 
-                AND du.deptId = dd.did 
+                AND p.defaults = 1
+                AND p.ppid = pp.ppid
+                AND d.hid = h.hid
+                AND h.vid = v.vid
+                AND d.dsuid = du.uid
+                AND du.deptId = dd.did
                 AND dd.fdid = dr.did
+                %s
         """
+
+    def company(self, columnCompany, company):
+
+        if company != 0:
+            companyString = u"AND %s = %s" % (columnCompany, company)
+        else:
+            companyString = u" "
+
+        return companyString
+
+    def sqler(self, args, company):
+
+        startTime, endTime = args.split("-")
+
+        return self.SELECT_SQL % ("%s", startTime, endTime, self.company("d.company", company))
+
+    def rower(self, row):
+
+        # 装修状态已由SQL层communion.kv翻译, rower仅做金额/面积÷1000
+        self.divNum(row, [3, 4, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21])
+
+        return row
 
     def main(self, pid, args, company):
 
-        try:
-            self.getDBCursor(self.host, self.username, self.password, self.charset)
+        tableheads = [
+            u"装修单号", u"楼盘", u"楼号", u"建筑面积", u"计价面积", u"设计分区", u"设计部", u"设计师", u"预签产品", u"计价面积",
+            u"起报价", u"优惠金额", u"管理费", u"赋能总额", u"功能区总额", u"个性化总额", u"减项总额", u"总额", u"折扣", u"物品优惠",
+            u"券优惠", u"优惠总额", u"装修状态"
+        ]
 
-            startTime, endTime = args.split("-")
-            checkFlag = self.controlTime(startTime, endTime)
+        self.getDBCursor(self.host, self.username, self.password, self.charset)
 
-            if checkFlag == False:
-                self.flag = False
-                self.updataSchedule(self.pthost, pid, {
-                    "plan.status": 3,
-                    "plan.info": '时间范围大于31天'
-                })
-                return False
+        sql = self.sqler(args, company)
 
-            sqlcount = self.SELECT_SQL % ("count(*)", startTime, endTime, company)
-
-            count = self.count(sqlcount)
-
-            if count == 0:
-                self.flag = False
-                self.updataSchedule(self.pthost, pid, {
-                    "plan.status": 3,
-                    "plan.info": '无可导出数据'
-                })
-                return False
-
-            all = count / 0.8
-            molecular = all * 0.1
-            schedule = (molecular / all) * 100
-
-            self.updataSchedule(self.pthost, pid, {
-                "plan.schedule": schedule,
-                "plan.status": 4
-            })
-
-            sql = self.SELECT_SQL % (self.colum, startTime, endTime, company)
-
-            workbook, sheet = self.createWorkbook("整装预签信息")
-
-            tableHead = [
-                "装修单号", "楼盘", "楼号", "建筑面积", "计价面积", "设计分区", "设计部", "设计师", "预签产品", "计价面积", 
-                "起报价", "优惠金额", "管理费", "赋能总额", "功能区总额", "个性化总额" ,"减项总额", "总额", "折扣", "物品优惠", 
-                "券优惠", "优惠总额", "装修状态"
-            ]
-
-            self.createTableHead(sheet, tableHead)
-
-            count = 1
-            nowPage = 1
-            flag = True
-            
-            while (flag):
-
-                data = self.page(sql, nowPage, self.size)
-
-                for i, v in enumerate(data):
-                    row = list(v)
-
-                    self.divNum(row, [3, 4, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21])
-
-                    self.createTableHead(sheet, row, count)
-                    count += 1
-
-                nowPage = nowPage + 1
-                if len(data) < self.size:
-                    flag = False
-
-                molecular = molecular + len(data)
-                schedules = (molecular / all) * 100
-                self.updataSchedule(self.pthost, pid, {
-                    "plan.schedule": int(schedules),
-                    "plan.status": 4
-                })
-
-            resultfilepath = self.packFile(pid, workbook)
-
-            self.updataSchedule(self.pthost, pid, {
-                "plan.resultFilepath": resultfilepath
-            })
-
-        except Exception as e:
-            self.flag = False
-            self.errCall(pid, self.pthost, self.media, e)
-
-        finally:
-            self.modelEnd(pid, self.pthost, self.media, self.flag)
-            sys.exit(0)
+        self.exporter(pid, args, u"整装预签信息", tableheads, self.colum, sql, self.rower)
 
 if __name__ == '__main__':
 
@@ -170,10 +116,10 @@ if __name__ == '__main__':
         1.参数说明参数要对应
             1.pid         information.plan的主键 3143;
             2.args        2018/11/01-2018/11/30
-            3.company     0
+            3.company     公司cid, 0为全部(不传默认0)
         2.脚本传参说明:
-            plan_export_quotation_protation.py  pid args
-            plan_export_quotation_protation.py  299 2018/11/01-2018/11/30
+            plan_export_quotation_protation.py  pid args company
+            plan_export_quotation_protation.py  299 2018/11/01-2018/11/30 1
 
     """
 
@@ -182,13 +128,9 @@ if __name__ == '__main__':
     config = json.load(open(configPath))
     dbconf = config.get("database")
 
-    # pid = 299
-    # args = '2023/03/01-2023/03/31'
-    # company = 1
-
     pid = sys.argv[1]
     args = sys.argv[2]
-    company = sys.argv[3]
+    company = sys.argv[3] if len(sys.argv) > 3 else 0
 
     exporter = Exporter(dbconf.get("host"), dbconf.get("username"), dbconf.get("password"), config.get("media"), config.get("pthost"))
     exporter.main(pid, args, int(company))

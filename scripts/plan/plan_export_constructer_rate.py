@@ -6,10 +6,9 @@ from plan_util import *
 class Exporter(Util):
 
     def __init__(self, host='', username='', password='', media='', pthost='', charset='utf8'):
-    
+
         self.dbconn = None
         self.cursor = None
-        self.flag = True
 
         self.host = host
         self.username = username
@@ -17,23 +16,24 @@ class Exporter(Util):
         self.charset = charset
         self.media = media
         self.pthost = pthost
+        self.flag = True
         self.size = 400
 
         self.colum = u"""
-            d.orderId AS `装修单号`,
-            v.name AS `楼盘`,
-            h.housenumber AS `楼号`,
-            su.userid AS `监理工号`,
-            su.currentname AS `监理`,
-            wu.userid AS `工人工号`,
-            wu.currentName AS `工人`,
-            cn.name AS `施工节点`,
-            cu.sendTime AS `推送时间`,
-            cu.finishTime AS `确认时间`,
-            cu.rate AS `工地卫生`,
-            cu.rate1 AS `质量标准`,
-            cu.rate2 AS `沟通服务`,
-            cu.assessment AS `备注`
+            d.orderId,
+            v.name,
+            h.housenumber,
+            su.userid,
+            su.currentname,
+            wu.userid,
+            wu.currentName,
+            cn.name,
+            cu.sendTime,
+            cu.finishTime,
+            cu.rate,
+            cu.rate1,
+            cu.rate2,
+            cu.assessment
         """
 
         self.SELECT_SQL = u"""
@@ -51,102 +51,41 @@ class Exporter(Util):
                 cu.sendTime >= '%s 00:00:00' AND
                 cu.sendTime <= '%s 23:59:59' AND
                 cu.orderId = d.orderId AND
-                d.hid = h.hid AND 
-                h.vid = v.vid AND 
-                cu.wuid = wu.uid AND 
+                d.hid = h.hid AND
+                h.vid = v.vid AND
+                cu.wuid = wu.uid AND
                 d.svuid = su.uid AND
-                cu.cnid = cn.cnid AND
-                d.company = %s
+                cu.cnid = cn.cnid
+                %s
         """
+
+    def company(self, columnCompany, company):
+
+        if company != 0:
+            companyString = u"AND %s = %s" % (columnCompany, company)
+        else:
+            companyString = u" "
+
+        return companyString
+
+    def sqler(self, args, company):
+
+        startTime, endTime = args.split("-")
+
+        return self.SELECT_SQL % ("%s", startTime, endTime, self.company("d.company", company))
 
     def main(self, pid, args, company):
 
-        try:
-            self.getDBCursor(self.host, self.username, self.password, self.charset)
+        tableheads = [
+            u"装修单号", u"楼盘", u"楼号", u"监理工号", u"监理", u"工人工号", u"工人", u"施工节点", u"推送时间", u"确认时间",
+            u"工地卫生", u"质量标准", u"沟通服务", u"备注"
+        ]
 
-            startTime, endTime = args.split("-")
+        self.getDBCursor(self.host, self.username, self.password, self.charset)
 
-            checkFlag = self.controlTime(startTime, endTime)
+        sql = self.sqler(args, company)
 
-            if checkFlag == False:
-                self.flag = False
-                self.updataSchedule(self.pthost, pid, {
-                    "plan.status": 3,
-                    "plan.info": "时间范围大于31天"
-                })
-                return False
-
-            sqlcount = self.SELECT_SQL % ("count(*)", startTime, endTime, company)
-
-            count = self.count(sqlcount)
-            if count == 0:
-                self.flag = False
-                self.updataSchedule(self.pthost, pid, {
-                    "plan.status": 3,
-                    "plan.info": "无可导出数据"
-                })
-                return False
-
-            all = count / 0.8
-            molecular = all * 0.1
-            schedule = (molecular / all) * 100
-
-            self.updataSchedule(self.pthost, pid, {
-                u"plan.schedule": schedule,
-                u"plan.status": 4
-            })
-
-            sql = self.SELECT_SQL % (self.colum, startTime, endTime, company)
-
-            workbook, sheet = self.createWorkbook(u"工人评分信息")
-
-            tableHead = [
-                u"装修单号", u"楼盘", u"楼号", u"监理工号", u"监理", u"工人工号", u"工人", u'施工节点', u'推送时间', u'确认时间',
-                u"工地卫生", u"质量标准", u"沟通服务", u"备注"
-            ]
-
-            self.createTableHead(sheet, tableHead)
-
-            count = 1
-            nowPage = 1
-            flag = True
-            
-            while (flag):
-
-                data = self.page(sql, nowPage, self.size)
-
-                for i, v in enumerate(data):
-                    row = list(v)
-
-                    row[9] = row[9] if row[9] else ''
-                    row[13] = row[13] if row[13] else ''
-                    self.createTableHead(sheet, row, count)
-                    count += 1
-
-                nowPage = nowPage + 1
-                if len(data) < self.size:
-                    flag = False
-
-                molecular = molecular + len(data)
-                schedules = (molecular / all) * 100
-                self.updataSchedule(self.pthost, pid, {
-                    u"plan.schedule": int(schedules),
-                    u"plan.status": 4
-                })
-
-            resultfilepath = self.packFile(pid, workbook)
-
-            self.updataSchedule(self.pthost, pid, {
-                u"plan.resultFilepath": resultfilepath
-            })
-
-        except Exception as e:
-            self.flag = False
-            self.errCall(pid, self.pthost, self.media, e)
-
-        finally:
-            self.modelEnd(pid, self.pthost, self.media, self.flag)
-            sys.exit(0)
+        self.exporter(pid, args, u"工人评分信息", tableheads, self.colum, sql, None)
 
 if __name__ == '__main__':
 
@@ -157,9 +96,9 @@ if __name__ == '__main__':
         1.参数说明参数要对应
             1.pid         information.plan的主键 3143;
             2.args        2018/11/01-2018/11/30
-            3.company     0
+            3.company     公司cid, 0为全部(不传默认0)
         2.脚本传参说明:
-            plan_export_constructer_rate.py  pid args company
+            plan_export_constructer_rate.py  pid args                  company
             plan_export_constructer_rate.py  299 2018/11/01-2018/11/30 1
 
     """
@@ -169,13 +108,9 @@ if __name__ == '__main__':
     config = json.load(open(configPath))
     dbconf = config.get("database")
 
-    # pid = 299
-    # args = '2023/04/01-2023/04/30'
-    # company = 1
-
     pid = sys.argv[1]
     args = sys.argv[2]
-    company = sys.argv[3]
+    company = sys.argv[3] if len(sys.argv) > 3 else 0
 
     exporter = Exporter(dbconf.get("host"), dbconf.get("username"), dbconf.get("password"), config.get("media"), config.get("pthost"))
 

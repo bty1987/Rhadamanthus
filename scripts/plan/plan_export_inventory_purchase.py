@@ -6,7 +6,7 @@ from plan_util import *
 class Exporter(Util):
 
     def __init__(self, host='', username='', password='', media='', pthost="", charset='utf8'):
-    
+
         self.dbconn = None
         self.cursor = None
 
@@ -17,24 +17,24 @@ class Exporter(Util):
         self.media = media
         self.pthost = pthost
         self.flag = True
-
+        self.list = []
         self.size = 300
 
-        self.column = u"""
-            p.`no` AS '采购单号',
-            cu.currentName AS '创建人',
-            g.category AS '品类',
-            g.brand AS '品牌',
-            c.`name` AS '颜色',
-            f.info AS '规格',
-            g.`no` AS '商品编号',
-            g.`name` AS '商品名',
-            pi.num AS '数量',
-            pi.surplus AS '剩余数量',
-            pi.inprice AS '采购价',
-            g.measurementUnit AS '单位',
-            p.deliveryTime AS '交货时间',
-            p.`comment` AS '备注'
+        self.colum = u"""
+            p.`no`,
+            cu.currentName,
+            g.category,
+            g.brand,
+            c.`name`,
+            f.info,
+            g.`no`,
+            g.`name`,
+            pi.num,
+            pi.surplus,
+            pi.inprice,
+            g.measurementUnit,
+            p.deliveryTime,
+            p.`comment`
         """
 
         self.SQL_QUERY = u"""
@@ -53,108 +53,44 @@ class Exporter(Util):
             AND pi.cid = c.cid
             AND pi.fid = f.fid
             AND p.cuid = cu.uid
-            AND p.createTime >= '%s 00:00:00' AND 
+            AND p.createTime >= '%s 00:00:00' AND
                 p.createTime <= '%s 23:59:59'
                 %s
         """
 
-    # 公司条件识别
-    def company(self, cloumCompany, company):
+    def company(self, columnCompany, company):
+
         if company != 0:
-            companyId = u"AND %s = %s" % (cloumCompany, company)
+            companyString = u"AND %s = %s" % (columnCompany, company)
         else:
-            companyId = u" "
-        return companyId
+            companyString = u" "
+
+        return companyString
+
+    def sqler(self, args, company):
+
+        startTime, endTime = args.split("-")
+
+        return self.SQL_QUERY % ("%s", startTime, endTime, self.company("p.company", company))
+
+    def rower(self, row):
+
+        self.divNum(row, [8, 9, 10])
+
+        return row
 
     def main(self, pid, args, company):
-    
-        try:
-            self.getDBCursor(self.host, self.username, self.password, self.charset)
 
-            startTime, endTime = args.split("-")
-            
-            checkFlag = self.controlTime(startTime, endTime)
+        tableheads = [
+            u"采购单号", u"创建人", u"品类", u"品牌", u"颜色", u"规格", u"商品编号", u"商品名", u"数量", u"剩余数量",
+            u"采购价", u"单位", u"交货时间", u"备注"
+        ]
 
-            if checkFlag == False:
-                self.flag = False
-                self.updataSchedule(self.pthost, pid, {
-                    u"plan.status": 3,
-                    u"plan.info": '时间范围大于31天'
-                })
-                return False
+        self.getDBCursor(self.host, self.username, self.password, self.charset)
 
-            countSQL = self.SQL_QUERY % (u"count(*)", startTime, endTime, self.company(u"p.company", company))
-            
-            count = self.count(countSQL)
-            
-            if count == 0:
-                self.flag = False
-                self.updataSchedule(self.pthost, pid, {
-                    u"plan.status": 3,
-                    u"plan.info": '无可导出数据'
-                })
-                return False
+        sql = self.sqler(args, company)
 
-            all = count / 0.8
-            molecular = all * 0.1
-            schedule = (molecular / all) * 100
-
-            self.updataSchedule(self.pthost, pid, {
-                u"plan.schedule": schedule,
-                u"plan.status": 4
-            })
-
-            params = self.createWorkbook(u"货单")
-            workbook = params[0]
-            sheet = params[1]
-
-            tableHead = [u"采购单号", u"创建人", u"品类", u"品牌", u"颜色", u"规格", u"商品编号", u"商品名", u"数量", u"剩余数量", u"采购价", u"单位", u"交货时间", u"备注"]
-            self.createTableHead(sheet, tableHead)
-
-            sql = self.SQL_QUERY % (self.column, startTime, endTime, self.company(u"p.company", company))
-
-            nowPage = 1
-            length = 1
-            flag = True
-
-            while (flag):
-
-                rows = self.page(sql, nowPage, self.size)
-
-                for i, v in enumerate(rows):
-                
-                    data = list(v)
-                    
-                    self.divNum(data, [8, 9, 10])
-
-                    self.createTableHead(sheet, data, length)
-
-                    length = length + 1
-
-                molecular = molecular + len(rows)
-                schedules = (molecular / all) * 100
-                self.updataSchedule(self.pthost, pid, {
-                    u"plan.schedule": int(schedules)
-                })
-
-                nowPage = nowPage + 1
-
-                if len(rows) < self.size:
-                    flag = False
-
-            resultfilepath = self.packFile(pid, workbook)
-
-            self.updataSchedule(self.pthost, pid, {
-                u"plan.resultFilepath": resultfilepath
-            })
-
-        except Exception as e:
-            self.flag = False
-            self.errCall(pid, self.pthost, self.media, e)
-
-        finally:
-            self.modelEnd(pid, self.pthost, self.media, self.flag)
-            sys.exit(0)
+        self.exporter(pid, args, u"货单", tableheads, self.colum, sql, self.rower)
 
 if __name__ == '__main__':
 
@@ -165,21 +101,22 @@ if __name__ == '__main__':
         1.传入必须参数说明
             1.pid         information.plan的主键;
             2.args        "2018/12/13-2018/12/13"
-            3.company     公司:1
+            3.company     公司cid, 0为全部(不传默认0)
+
         2.使用
             python plan_export_inventory_purchase.py pid args company
             python plan_export_inventory_purchase.py 942 2018/12/13-2018/12/13 1
     """
-    
+
     modernFilePath = os.path.realpath(__file__)
     configPath = "%s/%s" % (os.path.dirname(modernFilePath), "config.json")
 
-    config = json.load(open(configPath))
+    config = json.load(open(configPath, encoding="utf-8"))
     dbconf = config.get("database")
 
     pid = sys.argv[1]
     args = sys.argv[2]
-    company = sys.argv[3]
+    company = sys.argv[3] if len(sys.argv) > 3 else 0
 
-    exporter = Exporter(dbconf.get("host"), dbconf.get("username"), dbconf.get("password"),config.get("media"), config.get("pthost"))
-    exporter.main(pid, args, company)
+    exporter = Exporter(dbconf.get("host"), dbconf.get("username"), dbconf.get("password"), config.get("media"), config.get("pthost"))
+    exporter.main(pid, args, int(company))

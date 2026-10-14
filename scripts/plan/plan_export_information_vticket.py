@@ -6,7 +6,7 @@ from plan_util import *
 class Exporter(Util):
 
     def __init__(self, host='', username='', password='', media='', pthost="", charset='utf8'):
-    
+
         self.dbconn = None
         self.cursor = None
 
@@ -28,15 +28,15 @@ class Exporter(Util):
             v.name,
             c.name,
             cp.phone,
-            t.isregist,
-            t.iscome
+            communion.kv('information', 'vticket', 'isregist', t.isregist),
+            communion.kv('information', 'vticket', 'iscome', t.iscome)
         """
 
         self.SELECT_SQL = u"""
             SELECT
                 %s
-            FROM 
-                information.vticket t 
+            FROM
+                information.vticket t
                 LEFT JOIN communion.user bu ON t.buid = bu.uid
                 LEFT JOIN communion.department bd ON t.did = bd.did
                 LEFT JOIN communion.department br ON t.rid = br.did
@@ -49,82 +49,19 @@ class Exporter(Util):
                 t.expire = 0
         """
 
+    def sqler(self):
+
+        return self.SELECT_SQL % ("%s")
+
     def main(self, pid):
 
-        try:
-            self.getDBCursor(self.host, self.username, self.password, self.charset)
+        tableheads = [u"票号", u"操作人", u"部门", u"分区", u"装修单号", u"楼盘名称", u"客户姓名", u"客户电话", u"是否注册", u"是否到场"]
 
-            sqlcount = self.SELECT_SQL % ("count(*)")
+        self.getDBCursor(self.host, self.username, self.password, self.charset)
 
-            count = self.count(sqlcount)
+        sql = self.sqler()
 
-            if count == 0:
-                self.flag = False
-                self.updataSchedule(self.pthost, pid, {
-                    u"plan.status": 3,
-                    u"plan.info": '无可导出数据'
-                })
-                return False
-
-            all = count / 0.8
-            molecular = all * 0.1
-            schedule = (molecular / all) * 100
-            
-            self.updataSchedule(self.pthost, pid, {
-                u"plan.schedule": schedule,
-                u"plan.status": 4
-            })
-
-            sql = self.SELECT_SQL % (self.colum)
-
-            workbook, sheet = self.createWorkbook(u"大活动票")
-
-            tableHead = [u"票号", u"操作人", u"部门", u"分区", u"装修单号", u"楼盘名称", u'客户姓名', u'客户电话', u'是否注册', u'是否到场']
-
-            self.createTableHead(sheet, tableHead)
-
-            count = 1
-            nowPage = 1
-            flag = True
-            
-            while (flag):
-
-                rows = self.page(sql, nowPage, self.size)
-
-                for i, v in enumerate(rows):
-                    data = list(v)
-
-                    data[8] = self.vticketIsregist[data[8]]
-                    data[9] = self.vticketIscome[data[9]]
-
-                    self.createTableHead(sheet, data, count)
-
-                    count += 1
-
-                nowPage = nowPage + 1
-                if len(rows) < self.size:
-                    flag = False
-
-                molecular = molecular + len(rows)
-                schedules = (molecular / all) * 100
-                self.updataSchedule(self.pthost, pid, {
-                    u"plan.schedule": int(schedules),
-                    u"plan.status": 4
-                })
-
-            resultfilepath = self.packFile(pid, workbook)
-
-            self.updataSchedule(self.pthost, pid, {
-                u"plan.resultFilepath": resultfilepath
-            })
-
-        except Exception as e:
-            self.flag = False
-            self.errCall(pid, self.pthost, self.media, e)
-
-        finally:
-            self.modelEnd(pid, self.pthost, self.media, self.flag)
-            sys.exit(0)
+        self.exporter(pid, '', u"大活动票", tableheads, self.colum, sql, None)
 
 if __name__ == '__main__':
 
@@ -135,11 +72,12 @@ if __name__ == '__main__':
 
         1.参数说明参数要对应
             1.pid         information.plan的主键;
+            (information.vticket 表无公司列, 不支持company过滤)
         2.脚本传参说明:
-             plan_export_information_awardStock.py pid
-             plan_export_information_awardStock.py 929
+             plan_export_information_vticket.py pid
+             plan_export_information_vticket.py 929
     """
-    
+
     modernFilePath = os.path.realpath(__file__)
     configPath = "%s/%s" % (os.path.dirname(modernFilePath), "config.json")
 

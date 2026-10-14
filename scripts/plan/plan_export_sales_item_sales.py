@@ -6,7 +6,7 @@ from plan_util import *
 class Exporter(Util):
 
     def __init__(self, host='', username='', password='', media='', pthost="", charset='utf8'):
-    
+
         self.dbconn = None
         self.cursor = None
 
@@ -21,27 +21,27 @@ class Exporter(Util):
         self.size = 200
 
         self.colum = u"""
-            s.orderId AS '装修单号',
-	        s.no AS '销售单号',
+            s.orderId,
+            s.no,
             CONCAT(
                 v.`name`,
                 CONCAT('  ', h.houseNumber)
-            ) AS '楼盘地址',
-            u.userId AS '设计师编号',
-            u.currentName AS '设计师',
-            b.name AS '品牌',
-            g.no AS '型号',
-            ss.num AS '数量',
-            ss.price AS '折让价',
-            ss.disPrice AS '折扣价',
-            s.total AS '销售单总价',
-            ss.priceType AS '价格类型',
-            ss.ctype AS '结算类型',
-            ss.cvalue AS '结算值',
-            s.fullpay AS '补款金额',
-            ss.`comment` '备注',
-            b.kino AS '金蝶编号',
-            b.kiname AS '金蝶名称'
+            ),
+            u.userId,
+            u.currentName,
+            b.name,
+            g.no,
+            ss.num,
+            ss.price,
+            ss.disPrice,
+            s.total,
+            communion.kv('data', 'price', 'type', ss.priceType),
+            communion.kv('sales', 'salesItem', 'ctype', ss.ctype),
+            ss.cvalue,
+            s.fullpay,
+            ss.`comment`,
+            b.kino,
+            b.kiname
         """
 
         self.SQL_QUERY = u"""
@@ -67,6 +67,7 @@ class Exporter(Util):
                 AND s.fullpayTime BETWEEN '%s' AND '%s'
                 %s
         """
+
     def company(self, company):
 
         if company != 0:
@@ -75,100 +76,34 @@ class Exporter(Util):
             companyId = u" "
 
         return companyId
-    def main(self, pid, args, comapny):
 
-        try:
-            self.getDBCursor(self.host, self.username, self.password, self.charset)
+    def sqler(self, args, company):
 
-            startTime, endTime = args.split("-")
+        startTime, endTime = args.split("-")
+        startTime = startTime + " 00:00:00"
+        endTime = endTime + " 23:59:59"
 
-            checkFlag = self.controlTime(startTime, endTime)
-            if checkFlag == False:
-                self.flag = False
-                self.updataSchedule(self.pthost, pid, {
-                    "plan.status": 3,
-                    "plan.info": "时间范围大于31天"
-                })
-                return False
+        return self.SQL_QUERY % ("%s", startTime, endTime, self.company(company))
 
-            startTime = startTime + " 00:00:00"
-            endTime = endTime + " 23:59:59"
+    def rower(self, row):
 
-            sqlcount = self.SQL_QUERY % ("count(*)", startTime, endTime, self.company(comapny))
+        # 价格类型/结算类型已由SQL层communion.kv翻译, rower仅做金额÷1000
+        self.divNum(row, [7, 8, 9, 10, 13, 14])
 
-            count = self.count(sqlcount)
-            if count == 0:
-                self.flag = False
-                self.updataSchedule(self.pthost, pid, {
-                    "plan.status": 3,
-                    "plan.info": "无可导出数据"
-                })
-                return False
-            all = count / 0.8
-            molecular = all * 0.1
-            schedule = (molecular / all) * 100
+        return row
 
-            self.updataSchedule(self.pthost, pid, {
-                u"plan.schedule": schedule,
-                u"plan.status": 4
-            })
+    def main(self, pid, args, company):
 
-            sql = self.SQL_QUERY % (self.colum, startTime, endTime, self.company(comapny))
+        tableheads = [
+            u'装修单号', u'销售单号', u"楼盘地址", u'设计师编号', u'设计师', u'品牌', u'型号', u'数量', u'折让价', u'折扣价',
+            u'销售单总价', u'价格类型', u'结算类型', u'结算值', u'补款金额', u'备注', u'金蝶编号', u'金蝶名称'
+        ]
 
-            workbook, sheet = self.createWorkbook(u"销售明细")
+        self.getDBCursor(self.host, self.username, self.password, self.charset)
 
-            tableHead = [
-                u'装修单号', u'销售单号', u"楼盘地址", u'设计师编号', u'设计师', u'品牌', u'型号', u'数量', u'折让价', u'折扣价', 
-                u'销售单总价', u'价格类型', u'结算类型', u'结算值', u'补款金额', u'备注', u'金蝶编号', u'金蝶名称'
-            ]
+        sql = self.sqler(args, company)
 
-            self.createTableHead(sheet, tableHead)
-
-            count = 1
-            nowPage = 1
-            flag = True
-            
-            while (flag):
-
-                rows = self.page(sql, nowPage, self.size)
-
-                for i, v in enumerate(rows):
-                    data = list(v)
-
-                    self.divNum(data, [7, 8, 9, 10, 13, 14])
-                    
-                    data[11] = data[11] == 0 and u"正价" or u"特价"
-                    data[12] = data[12] == 0 and u"底价" or u"点位"
-                    
-                    self.createTableHead(sheet, data, count)
-
-                    count += 1
-
-                molecular = molecular + len(rows)
-                schedules = (molecular / all) * 100
-                self.updataSchedule(self.pthost, pid, {
-                    u"plan.schedule": int(schedules),
-                    u"plan.status": 4
-                })
-                
-                nowPage = nowPage + 1
-
-                if len(rows) < self.size:
-                    flag = False
-
-            resultfilepath = self.packFile(pid, workbook)
-
-            self.updataSchedule(self.pthost, pid, {
-                u"plan.resultFilepath": resultfilepath
-            })
-
-        except Exception as e:
-            self.flag = False
-            self.errCall(pid, self.pthost, self.media, e)
-
-        finally:
-            self.modelEnd(pid, self.pthost, self.media, self.flag)
-            sys.exit(0)
+        self.exporter(pid, args, u"销售明细", tableheads, self.colum, sql, self.rower)
 
 if __name__ == '__main__':
 
@@ -180,10 +115,10 @@ if __name__ == '__main__':
         1.参数说明参数要对应
             1.pid         information.plan的主键;
             2.args        "2018/12/13-2018/12/13"
-            3.company     公司:1
+            3.company     公司cid, 0为全部(不传默认0)
         2.脚本传参说明:
-             plan_export_sales.py      pid              args                company
-             plan_export_funds.py      299          2020/04/01-2020/04/30      1
+             plan_export_sales_item_sales.py      pid              args                company
+             plan_export_sales_item_sales.py      299          2020/04/01-2020/04/30      1
 
         3.注:
             1.结束时间不能大于开始时间31天
@@ -197,7 +132,7 @@ if __name__ == '__main__':
 
     pid = sys.argv[1]
     args = sys.argv[2]
-    company = sys.argv[3]
+    company = sys.argv[3] if len(sys.argv) > 3 else 0
 
     exporter = Exporter(dbconf.get("host"), dbconf.get("username"), dbconf.get("password"), config.get("media"), config.get("pthost"))
     exporter.main(pid, args, int(company))
