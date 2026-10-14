@@ -1,0 +1,10 @@
+crond_attendance_collect                人员考勤收集
+crond_decoration_contract_collecter     装修单签单信息收集
+crond_decoration_create_collecter       装修单量尺信息收集
+crond_material_collecter                主材单信息收集
+crond_material_sales_contract_collecter 主材/销售单信息收集
+crond_media_local_switcher              媒体文件本地化
+crond_payment_collecter                 款项收集(过时)
+crond_payment_detail_collecter          款项收集
+crond_plan_timing_handle                计划监控执行
+crond_system_index_monitor              服务器指标监控
