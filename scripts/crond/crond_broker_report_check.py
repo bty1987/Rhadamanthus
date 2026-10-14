@@ -33,25 +33,25 @@ from datetime import datetime, timedelta
 
 # 数据库配置
 DB_CONFIG = {
-    'host': '',           # TODO: 替换为实际数据库地址
+    'host': 'rm-2ze6qgdw1vit531v3io.mysql.rds.aliyuncs.com',           # TODO: 替换为实际数据库地址
     'port': 3306,
-    'user': '',                    # TODO: 替换为实际用户名
-    'password': '',            # TODO: 替换为实际密码
+    'user': 'root',                    # TODO: 替换为实际用户名
+    'password': 'fanglin1918',            # TODO: 替换为实际密码
     'charset': 'utf8',
     'cursorclass': pymysql.cursors.DictCursor
 }
 
 # fl-sync 服务配置
 FL_SYNC_CONFIG = {
-    'base_url': '',    # TODO: 替换为 fl-sync 实际地址
+    'base_url': 'https://daily-gateway.fanglin.vip/open-api/sync/',    # TODO: 替换为 fl-sync 实际地址
     'broker_check_path': '/clue/brokerReportCheck',
     'timeout': 10,                     # 请求超时（秒）
 }
 
 # API 签名配置
 API_SIGN_CONFIG = {
-    'appId': '',      # 应用标识（文档中已指定）
-    'appSecret': '',  # TODO: 替换为 erp_contacts_sync 对应的密钥
+    'appId': 'erp_project_sync',      # 应用标识（文档中已指定）
+    'appSecret': 'af7nPP/AzXXBDArwOYtLZdui',               # TODO: 替换为 erp_contacts_sync 对应的密钥
 }
 
 # customer.phone AES 解密配置
@@ -61,8 +61,8 @@ API_SIGN_CONFIG = {
 #   2. 旧格式（纯 Base64）→ 用同一密钥尝试解密
 #   3. 当作明文直接返回
 AES_CONFIG = {
-    'key': '',      # encryptKey
-    'iv': '',       # encryptIv
+    'key': 'b4d617b336124c63',      # encryptKey
+    'iv': 'b4d1a58a416957a5',       # encryptIv
 }
 
 # ============================================================
