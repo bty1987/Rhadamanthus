@@ -116,6 +116,11 @@ jQuery(function($) {
         prop: "brand.name",
         clazz: "grey"
     }, {
+        fieId: "name",
+        name: "名称",
+        prop: "name",
+        clazz: "grey"
+    }, {
         fieId: "status",
         name: "状态",
         prop: "status",
