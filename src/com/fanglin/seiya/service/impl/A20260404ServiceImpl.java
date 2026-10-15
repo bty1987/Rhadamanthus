@@ -288,8 +288,13 @@ public class A20260404ServiceImpl implements A20260404Service {
 			}
 		}
 
-		// 3. 通过编号(userId)判断驻店员是否存在
+		// 3. 通过编号(userId)或原编号(oldUserId)判断驻店员是否存在
 		UserPO instorerPO = userDao.queryUserByUserId(userId);
+
+		if (instorerPO == null) {
+			instorerPO = userDao.queryUserByOldUserId(userId);
+		}
+
 		String operation = "add";
 
 		if (instorerPO != null) {
@@ -348,19 +353,24 @@ public class A20260404ServiceImpl implements A20260404Service {
 				throw new FLException(400032, "驻店员职位配置无效(instorerDuty)");
 			}
 
-			// 8. 创建驻店员用户
+			// 8. 创建驻店员用户（userId 系统生成, 对齐手工创建驻店员: multicompany开=公司简称U-流水, 关=IM-流水; 外部原编号存 oldUserId）
+			int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_INSTORER_INT, CountingPO.COUNTING_DATE_SILNLE_STR, company);
+
+			StringBuffer no = new StringBuffer();
+			no.append(SystemConfig.getInt("multicompany", 0) != 0 ? String.format("%sU-", companyPO.getShortname()) : "IM-");
+			no.append(FormatUtil.fillZero(count, "00000"));
+
 			instorerPO = new UserPO();
-			instorerPO.setUserId(userId);
-			instorerPO.setLoginId(userId); // loginId = userId
+			instorerPO.setUserId(no.toString());
+			instorerPO.setLoginId(no.toString()); // loginId = userId
+			instorerPO.setOldUserId(userId);
 			instorerPO.setCurrentName(userName);
 			instorerPO.setUserName(userName);
 			instorerPO.setPhone(phone);
 
-			// gender/identity/oldUserId 为 NOT NULL 且无默认值，外部同步数据不含这几项，给空串占位
-			// （与生产 user 表既有空串占位数据一致，不伪造性别/身份证信息；identity 列即用户表证件号字段，驻店员同步不采集）
+			// gender/identity 为 NOT NULL 且无默认值：gender 给空串占位（identity 列即用户表证件号字段，驻店员同步不采集）
 			instorerPO.setGender("");
 			instorerPO.setIdentity("");
-			instorerPO.setOldUserId("");
 
 			// 设置默认密码
 			SystemConfigPO passwordConfig = systemConfigDao.querySystemConfig("password", company);
