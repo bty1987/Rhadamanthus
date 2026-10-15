@@ -20,7 +20,7 @@ public class RuotationItemDaoImpl extends DaoImpl<RuotationItemPO> implements Ru
 	@SuppressWarnings("unchecked")
 	public List<RuotationItemPO> queryRuotationItem(long qrid, long qfaId) {
 
-		return session().createCriteria(RuotationItemPO.class).add(Restrictions.eq("ruotation.qrid", qrid)).add(Restrictions.eq("quotationFunctionArea.qfaId", qfaId)).list();
+		return session().createCriteria(RuotationItemPO.class).createAlias("ruotation", "ruotation").createAlias("quotationFunctionArea", "quotationFunctionArea").add(Restrictions.eq("ruotation.qrid", qrid)).add(Restrictions.eq("quotationFunctionArea.qfaId", qfaId)).list();
 	}
 
 	@Override
