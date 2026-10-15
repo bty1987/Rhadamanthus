@@ -2353,7 +2353,7 @@ Condition.addupRule("data", {
     },
 
     // 报价规格 - 名称
-    "quotationFormat-name": {
+    "quotation-format-name": {
         label: "名称",
         type: "text",
         submitConfig: {
@@ -2364,7 +2364,7 @@ Condition.addupRule("data", {
     },
 
     // 报价规格 - 规格
-    "quotationFormat-format": {
+    "quotation-format-format": {
         label: "规格",
         type: "text",
         submitConfig: {
@@ -2375,7 +2375,7 @@ Condition.addupRule("data", {
     },
 
     // 报价规格 - 工种
-    "quotationFormat-workType": {
+    "quotation-format-workType": {
         label: "工种",
         type: "select",
         submitConfig: {
@@ -2393,7 +2393,7 @@ Condition.addupRule("data", {
     },
 
     // 报价规格 - 类型
-    "quotationFormat-type": {
+    "quotation-format-type": {
         label: "类型",
         type: "select",
         submitConfig: {
@@ -2411,7 +2411,7 @@ Condition.addupRule("data", {
     },
 
     // 报价规格 - 状态
-    "quotationFormat-status": {
+    "quotation-format-status": {
         label: "状态",
         type: "select",
         submitConfig: {
