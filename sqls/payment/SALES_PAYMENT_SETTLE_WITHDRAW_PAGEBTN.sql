@@ -1,4 +1,5 @@
--- 销售单落款/撤款 上线配置SQL（待生产）
+-- 销售单落款/撤款 上线配置SQL（✅已在生产执行——2026-10-15核验 pfrid=4300(pfid=91,type=8,company=1) 在产,
+--                             本文件留存作历史记录; 现行总控=sqls/sales/SALES_PAGE_BTN_SETTLE_WITHDRAW_BALANCE.sql）
 -- 背景：销售收款页(salesPayment, type=8)行操作"落款/撤款"由 platform.paymentfunctionright 行门控
 --       (前端 paymentUtils.getConfig(pageType, 8) 按 name+type 拉取, pageBtn 值进 pageConfig.pageBtn)。
 -- 现状(2026-10-05 生产核验)：
