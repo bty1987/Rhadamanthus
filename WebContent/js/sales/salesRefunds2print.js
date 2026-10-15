@@ -79,7 +79,7 @@ $(function() {
 
         var tr4 = $('<tr style="height: 30px;text-align: center; font-size: 13px;"></tr>').appendTo(table);
         var td5 = $('<td></td>').text("客户确认时间: ").appendTo(tr4);
-        var td6 = $('<td style="border-bottom: 1px solid #3F3F3F"></td>').text(data.affirmTime == null ? "" : data.affirmTime).appendTo(tr4);
+        var td6 = $('<td style="border-bottom: 1px solid #3F3F3F"></td>').text(refunds.affirmTime == null ? "" : refunds.affirmTime).appendTo(tr4);
         var td56 = $('<td></td>').text("客户电话: ").appendTo(tr4);
         var td57 = $('<td style="border-bottom: 1px solid #3F3F3F"></td>').appendTo(tr4);
 
