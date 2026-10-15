@@ -100,7 +100,7 @@ jQuery(function() {
                 var $small = $('<small></small>').addClass('blue').html(constant.payment().materialPayment.paymentType.keys[v.type]);
                 var $btnDiv = $('<div></div>').addClass('pull-right action-buttons');
 
-                var $btnRetrun = $('<a></a>').addClass('btn btn-minier btn-danger').html('退款');
+                var $btnRetrun = $('<a></a>').addClass('btn btn-minier btn-danger').html('撤款');
                 var $btnSettle = $('<a></a>').addClass('btn btn-minier btn-primary').html('落款');
 
                 var propertyArr = [["销售单号: ", v.sales.no, "blue"], ["品类: ", v.sales.category, "grey"], ["品牌: ", v.sales.brand.name, "grey"], ["应收额: ", v.referMoney, "blue"], ["收款时间: ", v.salesReceipt.collectTime, "grey"], ["确认时间: ", v.salesReceipt.confirmTime, "grey"], ["状态: ", v.status == 0 ? '初始' : v.status == 1 ? '待确认' : '已确认', "red"]];
@@ -139,13 +139,15 @@ jQuery(function() {
                     $liPropertys.appendTo($ulProperty);
                 });
 
-                $btnDiv.append($btnRetrun);
+                // 收款类(2定金/3补款/8不可退定金)初始态→落款, 其余(含收款类已流转/退款类记录)→撤款(审批流); balance入口(结算场景)不挂操作
+                if (salesPayment.type != "balance") {
 
-                if (v.status == constant.sales().sales.STATUS_INIT_INT) {
-                    $btnDiv.append($btnSettle);
-                }
+                    if ([2, 3, 8].indexOf(v.type) != -1 && v.status == constant.payment().materialPayment.STATUS_INIT_INT) {
+                        $btnDiv.append($btnSettle);
+                    } else {
+                        $btnDiv.append($btnRetrun);
+                    }
 
-                if (v.type == 8 && salesPayment.type != "balance") {
                     $h3.append($small).append($btnDiv);
                 } else {
                     $h3.append($small);
@@ -157,7 +159,7 @@ jQuery(function() {
 
                     salesPayment.sid = v.sales.sid;
 
-                    com.popup4mini("#miniPopUp", "#layerReturn", "退款信息", "", function() {
+                    com.popup4mini("#miniPopUp", "#layerReturn", "撤款信息", "", function() {
 
                         com.clearValidator();
                         closeReturnlayer();
