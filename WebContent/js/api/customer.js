@@ -997,11 +997,7 @@ $.extend(api, {
             type: "query",
             tranargs: [{
                 result: "memberPoints",
-                args: ["decorationPoint", "freezeDecorationPoint", "materialPoint"]
-            }, {
-                result: "memberPoints",
-                args: ["operatePoint"],
-                scale: 1000000
+                args: ["decorationPoint", "freezeDecorationPoint", "materialPoint", "operatePoint"]
             }]
         },
         queryMemberPointDetail: {
@@ -1015,8 +1011,7 @@ $.extend(api, {
                 args: ["money", "point"]
             }, {
                 result: "operatePointDetails",
-                args: ["money", "point"],
-                scale: 1000000
+                args: ["money", "point"]
             }]
         },
         createPointAccount: {

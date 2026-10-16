@@ -355,7 +355,7 @@ public class MemberServiceImpl implements MemberService {
 
 			// 来源单号: 积分商城单号, 手工调整时缺省落装修单号
 			detailVO.setTypeName(row[0] != null ? (String) row[0] : (row[1] == null ? "" : (String) row[1]));
-			// 变动积分/变动后运营积分均百万分位存储(1000000=1积分), 前端除10^6展示
+			// 变动积分/变动后余额存储为千分位(Arith.mul(x,1000000)即×1000, 与cppoint.opoint同口径), 前端tranargs统一÷1000展示
 			detailVO.setMoney(((Number) row[2]).longValue());
 			detailVO.setPoint(((Number) row[3]).longValue());
 			detailVO.setTime((Timestamp) row[4]);

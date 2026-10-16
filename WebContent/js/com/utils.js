@@ -104,9 +104,7 @@ var utils = {
         }
 
     },
-    accReduce: function(obj, options, scale) {
-
-        var factor = scale || 1000;
+    accReduce: function(obj, options) {
 
         if ($.isPlainObject(obj) && $.isArray(options)) {
             $.each(options, function(i, v) {
@@ -116,7 +114,7 @@ var utils = {
         } else if ($.isPlainObject(obj) && typeof options == "string") {
             cal(obj, options.split('-'));
         } else if ($.isNumeric(obj)) {
-            return utils.accDiv(obj, factor);
+            return utils.accDiv(obj, 1000);
         }
 
         function cal(o, props) {
@@ -124,7 +122,7 @@ var utils = {
             var prop = props.shift();
 
             if (props.length == 0 && $.isNumeric(o[prop])) {
-                o[prop] = utils.accDiv(o[prop], factor);
+                o[prop] = utils.accDiv(o[prop], 1000);
             } else if (o[prop]) {
                 cal(o[prop], props);
             }
