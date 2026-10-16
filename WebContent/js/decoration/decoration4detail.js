@@ -1889,7 +1889,7 @@ jQuery(function($) {
                     var $h4 = $('<h4></h4>').addClass('oid').append($('<b></b>').html(value.typeName));
                     var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
 
-                    // 运营积分流水行标题=来源单号; 百万分位换算由api tranargs的scale配置承担, 此处直取展示值
+                    // 运营积分流水行标题=来源单号; 存储×1000, 与装修/主材明细同走公共tranargs÷1000展示
                     var propertyArr = key == "operatePointDetails" ? [["变动积分:", value.money, "blue"], ["变动后:", value.point, "blue"], ["时间:", value.time == null ? "-" : value.time, "green"]] : [["金额:", value.money, "blue"], ["倍数:", utils.changeThrDecimal(value.multiple / 1000), "blue"], ["积分:", value.point, "blue"], ["状态:", value.status == null ? "-" : integralStatus(key, value.status), "red"], ["时间:", value.time == null ? "-" : value.time, "green"]];
 
                     $.each(propertyArr, function(index, value) {
