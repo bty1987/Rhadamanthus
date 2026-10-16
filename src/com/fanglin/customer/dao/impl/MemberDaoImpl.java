@@ -97,5 +97,14 @@ public class MemberDaoImpl extends DaoImpl<PointAccountPO> implements MemberDao 
 		return session().createSQLQuery(sql).setString("orderId", orderId).list();
 	}
 
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<Object[]> queryOperatePointDetailByOrderId(String orderId) {
+
+		// point/opoint百万分位存储(1000000=1积分); no=积分商城单号, 手工调整为空
+		String sql = "SELECT pr.no, pr.orderId, pr.point, pr.opoint, pr.operateTime from customer.cppointRecord pr where pr.orderId = :orderId and pr.pointType = 2 order by pr.cprid";
+		return session().createSQLQuery(sql).setString("orderId", orderId).list();
+	}
+
 }
 

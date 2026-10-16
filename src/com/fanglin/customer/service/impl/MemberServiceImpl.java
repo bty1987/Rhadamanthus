@@ -344,6 +344,28 @@ public class MemberServiceImpl implements MemberService {
 		return detailVOs;
 	}
 
+	@Override
+	public List<MemberPointDetailVO> queryOperatePointDetailByOrderId(String orderId) {
+
+		List<MemberPointDetailVO> detailVOs = new ArrayList<MemberPointDetailVO>();
+
+		for (Object[] row : memberDao.queryOperatePointDetailByOrderId(orderId)) {
+
+			MemberPointDetailVO detailVO = new MemberPointDetailVO();
+
+			// 来源单号: 积分商城单号, 手工调整时缺省落装修单号
+			detailVO.setTypeName(row[0] != null ? (String) row[0] : (row[1] == null ? "" : (String) row[1]));
+			// 变动积分/变动后运营积分均百万分位存储(1000000=1积分), 前端除10^6展示
+			detailVO.setMoney(((Number) row[2]).longValue());
+			detailVO.setPoint(((Number) row[3]).longValue());
+			detailVO.setTime((Timestamp) row[4]);
+
+			detailVOs.add(detailVO);
+		}
+
+		return detailVOs;
+	}
+
 	/**
 	 * 查询会员信息（优化版本）
 	 * 
@@ -735,8 +757,8 @@ public class MemberServiceImpl implements MemberService {
 
 			decorationActivityItemPO.setNo(memberOrderVO.getPointOrderId());
 			decorationActivityItemPO.setAtttype(DecorationActivityItemPO.ATTTYPE_ONLINE_INT);
-			// 券口径(与makeMemberOrderItem一致; 生产存量1204行即券, 10-05误改物品已纠正)
-			decorationActivityItemPO.setType(DecorationActivityItemPO.TYPE_COUPON_INT);
+			// 类型: 支持传参, 未传兜底物品(10-16拍板; 存量1204行仍为券口径不受影响)
+			decorationActivityItemPO.setType(memberOrderItemVO.getType() != null ? memberOrderItemVO.getType() : DecorationActivityItemPO.TYPE_THING_INT);
 			decorationActivityItemPO.setStateType(DecorationActivityItemPO.STATUSTYPE_POINTSHOP_INT);
 			decorationActivityItemPO.setNum((int) Arith.mul(memberOrderItemVO.getNum(), 1000000l));
 			decorationActivityItemPO.setMoney((int) Arith.mul(memberOrderItemVO.getPoint(), 1000000l));
@@ -843,8 +865,8 @@ public class MemberServiceImpl implements MemberService {
 
 		decorationActivityItemPO.setNo(memberOrderVO.getPointOrderId());
 		decorationActivityItemPO.setAtttype(DecorationActivityItemPO.ATTTYPE_ONLINE_INT);
-		// 券口径: 积分商城兑换在装修单落券(生产存量一致; 10-05误改物品已纠正)
-		decorationActivityItemPO.setType(DecorationActivityItemPO.TYPE_COUPON_INT);
+		// 类型: 支持传参, 未传兜底物品(10-16拍板; 存量1204行仍为券口径不受影响)
+		decorationActivityItemPO.setType(memberOrderItemVO.getType() != null ? memberOrderItemVO.getType() : DecorationActivityItemPO.TYPE_THING_INT);
 		decorationActivityItemPO.setStateType(DecorationActivityItemPO.STATUSTYPE_POINTSHOP_INT);
 		decorationActivityItemPO.setNum((int) Arith.mul(memberOrderItemVO.getNum(), 1000000l));
 		decorationActivityItemPO.setMoney((int) Arith.mul(memberOrderItemVO.getPoint(), 1000000l));
