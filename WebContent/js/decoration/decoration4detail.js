@@ -1839,7 +1839,7 @@ jQuery(function($) {
         }
     }
 
-    // 活动信息节点积分:可用装修/冻结装修/主材/运营四个展示位 + 装修/主材明细弹窗
+    // 活动信息节点积分:可用装修/冻结装修/主材/运营四个展示位 + 装修/主材/运营明细弹窗
     function initActivityIntegral(orderId) {
 
         com.post(api.customer.queryMemberPoint, {
@@ -1863,6 +1863,10 @@ jQuery(function($) {
         com.focusPage("#materialIntegralDetailBtn").unbind('click').click(function() {
             showIntegralDetail(orderId, "materialPointDetails", "主材积分明细");
         });
+
+        com.focusPage("#operateIntegralDetailBtn").unbind('click').click(function() {
+            showIntegralDetail(orderId, "operatePointDetails", "运营积分明细");
+        });
     }
 
     function showIntegralDetail(orderId, key, title) {
@@ -1885,7 +1889,8 @@ jQuery(function($) {
                     var $h4 = $('<h4></h4>').addClass('oid').append($('<b></b>').html(value.typeName));
                     var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
 
-                    var propertyArr = [["金额:", value.money, "blue"], ["倍数:", utils.changeThrDecimal(value.multiple / 1000), "blue"], ["积分:", value.point, "blue"], ["状态:", value.status == null ? "-" : integralStatus(key, value.status), "red"], ["时间:", value.time == null ? "-" : value.time, "green"]];
+                    // 运营积分流水: typeName=来源单号; 变动积分/变动后为百万分位存储(1000000=1积分), 公共tranargs写死÷1000不适用, 此处自行换算
+                    var propertyArr = key == "operatePointDetails" ? [["变动积分:", utils.accDiv(value.money, 1000000), "blue"], ["变动后:", utils.accDiv(value.point, 1000000), "blue"], ["时间:", value.time == null ? "-" : value.time, "green"]] : [["金额:", value.money, "blue"], ["倍数:", utils.changeThrDecimal(value.multiple / 1000), "blue"], ["积分:", value.point, "blue"], ["状态:", value.status == null ? "-" : integralStatus(key, value.status), "red"], ["时间:", value.time == null ? "-" : value.time, "green"]];
 
                     $.each(propertyArr, function(index, value) {
 

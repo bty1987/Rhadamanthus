@@ -43,6 +43,8 @@ public class MemberAction extends BaseListAction {
 
 	private List<MemberPointDetailVO> materialPointDetails;
 
+	private List<MemberPointDetailVO> operatePointDetails;
+
 	private MemberActivityVO memberActivity;
 
 	private MemberOrderVO memberOrder;
@@ -78,6 +80,7 @@ public class MemberAction extends BaseListAction {
 			String orderId = memberPoints.get(0).getOrderId();
 			decorationPointDetails = memberService.queryDecorationPointDetailByOrderId(orderId);
 			materialPointDetails = memberService.queryMaterialPointDetailByOrderId(orderId);
+			operatePointDetails = memberService.queryOperatePointDetailByOrderId(orderId);
 		}
 
 		return SUCCESS;
@@ -233,6 +236,14 @@ public class MemberAction extends BaseListAction {
 
 	public void setMaterialPointDetails(List<MemberPointDetailVO> materialPointDetails) {
 		this.materialPointDetails = materialPointDetails;
+	}
+
+	public List<MemberPointDetailVO> getOperatePointDetails() {
+		return operatePointDetails;
+	}
+
+	public void setOperatePointDetails(List<MemberPointDetailVO> operatePointDetails) {
+		this.operatePointDetails = operatePointDetails;
 	}
 
 }

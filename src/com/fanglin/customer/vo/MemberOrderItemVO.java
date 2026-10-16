@@ -23,6 +23,8 @@ public class MemberOrderItemVO implements Serializable {
 
 	private String content;
 
+	private Short type; // 类型: 0券/1物品, 未传兜底物品
+
 	public String getNo() {
 		return no;
 	}
@@ -85,6 +87,14 @@ public class MemberOrderItemVO implements Serializable {
 
 	public void setContent(String content) {
 		this.content = content;
+	}
+
+	public Short getType() {
+		return type;
+	}
+
+	public void setType(Short type) {
+		this.type = type;
 	}
 
 }

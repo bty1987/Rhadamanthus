@@ -25,4 +25,6 @@ public interface MemberDao extends Dao<PointAccountPO> {
 
 	public List<Object[]> queryMaterialPointDetailByOrderId(String orderId);
 
+	public List<Object[]> queryOperatePointDetailByOrderId(String orderId);
+
 }
