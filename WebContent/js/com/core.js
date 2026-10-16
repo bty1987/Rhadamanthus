@@ -249,10 +249,10 @@ var com = {
                                 if ($.isArray(o)) {
                                     $.each(o, function(i, vv) {
 
-                                        utils.accReduce(vv, v.args);
+                                        utils.accReduce(vv, v.args, v.scale);
                                     });
                                 } else if ($.isPlainObject(o)) {
-                                    utils.accReduce(o, v.args);
+                                    utils.accReduce(o, v.args, v.scale);
                                 }
                             });
                         });
