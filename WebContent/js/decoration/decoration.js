@@ -1377,52 +1377,6 @@ $(function() {
                     viewDecorationDetail(v);
                 }
             },
-            prosign: {
-                name: "预签单",
-                clazz: "btn-pink",
-                show: function(v) {
-
-                    return pageConfig.pageBtn.contains("prosign") && [constant.decoration().decoration.STATUS_INIT_INT, constant.decoration().decoration.STATUS_DEPOSIT_INT].indexOf(v.status) != -1;
-                },
-                handle: function(v) {
-
-                    params.quotation.orderId = v.orderId;
-                    com.switchPage("views/quotation/protationIndex.html");
-                }
-            },
-            pcontract: {
-                name: "预签",
-                clazz: "btn-danger",
-                show: function(v) {
-
-                    return pageConfig.pageBtn.contains("pcontract") && [constant.decoration().decoration.STATUS_INIT_INT, constant.decoration().decoration.STATUS_DEPOSIT_INT].indexOf(v.status) != -1;
-                },
-                handle: function(v) {
-
-                    com.showConfirm("确定进行预签", function() {
-
-                        var options = {
-                            "decoration.orderId": v.orderId
-                        };
-                        com.post(api.decoration.presignDecorationContract, options, function() {
-
-                            com.switchPage("/views/decoration/decoration.html");
-                        }, null, false);
-                    });
-                }
-            },
-            presignprepare: {
-                name: "预签准备",
-                clazz: "btn-yellow",
-                show: function(v) {
-
-                    return pageConfig.pageBtn.contains("presignprepare") && [constant.decoration().decoration.STATUS_INIT_INT, constant.decoration().decoration.STATUS_DEPOSIT_INT].indexOf(v.status) != -1;
-                },
-                handle: function(v) {
-
-                    openSignPrepare(v, "presign");
-                }
-            },
             revie: {
                 name: "回访",
                 clazz: "btn-success",
@@ -1493,6 +1447,19 @@ $(function() {
                 handle: function(v) {
 
                     viewDecorationInAudit(v.orderId);
+                }
+            },
+            prosign: {
+                name: "预签单",
+                clazz: "btn-pink",
+                show: function(v) {
+
+                    return pageConfig.pageBtn.contains("prosign") && [constant.decoration().decoration.STATUS_INIT_INT, constant.decoration().decoration.STATUS_DEPOSIT_INT].indexOf(v.status) != -1;
+                },
+                handle: function(v) {
+
+                    params.quotation.orderId = v.orderId;
+                    com.switchPage("views/quotation/protationIndex.html");
                 }
             },
             price: {
@@ -1603,18 +1570,6 @@ $(function() {
                     viewDecorationTimelineIndex(v.orderId);
                 }
             },
-            cal: {
-                name: "决算",
-                clazz: "btn-danger",
-                show: function(v) {
-
-                    return pageConfig.pageBtn.contains("cal") && [constant.decoration().decoration.STATUS_SIGNED_INT, constant.decoration().decoration.STATUS_FINAL_INT, constant.decoration().decoration.STATUS_COMPLETED_INT].indexOf(v.status) != -1;
-                },
-                handle: function(v) {
-
-                    viewDecorationFinalSettlement(v.orderId, v.typeness, v.status);
-                }
-            },
             profile: {
                 name: "画像",
                 clazz: "btn-success",
@@ -1675,28 +1630,16 @@ $(function() {
                     viewSalesActivity(v.orderId);
                 }
             },
-            'delete': {
-                name: "废单",
-                clazz: "btn-danger",
+            presignprepare: {
+                name: "预签准备",
+                clazz: "btn-yellow",
                 show: function(v) {
 
-                    return pageConfig.pageBtn.contains("delete") && v.status != constant.decoration().decoration.STATUS_SIGNED_INT && v.status != constant.decoration().decoration.STATUS_WASTE_INT && v.status != constant.decoration().decoration.STATUS_TERMINATION_INT;
+                    return pageConfig.pageBtn.contains("presignprepare") && [constant.decoration().decoration.STATUS_INIT_INT, constant.decoration().decoration.STATUS_DEPOSIT_INT].indexOf(v.status) != -1;
                 },
                 handle: function(v) {
 
-                    obsoleteOrder(v.orderId);
-                }
-            },
-            sign: {
-                name: "签约",
-                clazz: "btn-danger",
-                show: function(v) {
-
-                    return pageConfig.pageBtn.contains("sign") && [constant.decoration().decoration.STATUS_DEPOSIT_INT, constant.decoration().decoration.STATUS_PROSIGN_INT, constant.decoration().decoration.STATUS_RESIGNED_INT].indexOf(v.status) != -1;
-                },
-                handle: function(v) {
-
-                    signOrder(v.orderId, v.customer.cid, v.orderTotalPrice, v.notSalesmanRate, v.couponCut, v.thingCut);
+                    openSignPrepare(v, "presign");
                 }
             },
             signprepare: {
@@ -1709,6 +1652,39 @@ $(function() {
                 handle: function(v) {
 
                     openSignPrepare(v, "sign");
+                }
+            },
+            pcontract: {
+                name: "预签",
+                clazz: "btn-danger",
+                show: function(v) {
+
+                    return pageConfig.pageBtn.contains("pcontract") && [constant.decoration().decoration.STATUS_INIT_INT, constant.decoration().decoration.STATUS_DEPOSIT_INT].indexOf(v.status) != -1;
+                },
+                handle: function(v) {
+
+                    com.showConfirm("确定进行预签", function() {
+
+                        var options = {
+                            "decoration.orderId": v.orderId
+                        };
+                        com.post(api.decoration.presignDecorationContract, options, function() {
+
+                            com.switchPage("/views/decoration/decoration.html");
+                        }, null, false);
+                    });
+                }
+            },
+            sign: {
+                name: "签约",
+                clazz: "btn-danger",
+                show: function(v) {
+
+                    return pageConfig.pageBtn.contains("sign") && [constant.decoration().decoration.STATUS_DEPOSIT_INT, constant.decoration().decoration.STATUS_PROSIGN_INT, constant.decoration().decoration.STATUS_RESIGNED_INT].indexOf(v.status) != -1;
+                },
+                handle: function(v) {
+
+                    signOrder(v.orderId, v.customer.cid, v.orderTotalPrice, v.notSalesmanRate, v.couponCut, v.thingCut);
                 }
             },
             terminal: {
@@ -1736,6 +1712,18 @@ $(function() {
                     terminalOrder(v.orderId, v.status, v.precontractPrice);
                 }
             },
+            'delete': {
+                name: "废单",
+                clazz: "btn-danger",
+                show: function(v) {
+
+                    return pageConfig.pageBtn.contains("delete") && v.status != constant.decoration().decoration.STATUS_SIGNED_INT && v.status != constant.decoration().decoration.STATUS_WASTE_INT && v.status != constant.decoration().decoration.STATUS_TERMINATION_INT;
+                },
+                handle: function(v) {
+
+                    obsoleteOrder(v.orderId);
+                }
+            },
             resign: {
                 name: "重签",
                 clazz: "btn-danger",
@@ -1758,6 +1746,18 @@ $(function() {
                 handle: function(v) {
 
                     balanceOrder(v.orderId);
+                }
+            },
+            cal: {
+                name: "决算",
+                clazz: "btn-danger",
+                show: function(v) {
+
+                    return pageConfig.pageBtn.contains("cal") && [constant.decoration().decoration.STATUS_SIGNED_INT, constant.decoration().decoration.STATUS_FINAL_INT, constant.decoration().decoration.STATUS_COMPLETED_INT].indexOf(v.status) != -1;
+                },
+                handle: function(v) {
+
+                    viewDecorationFinalSettlement(v.orderId, v.typeness, v.status);
                 }
             },
             repair: {
