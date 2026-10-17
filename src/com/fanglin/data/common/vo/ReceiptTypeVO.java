@@ -18,6 +18,8 @@ public class ReceiptTypeVO implements java.io.Serializable {
 
 	private Short status;
 
+	private Short atttype; // 业务类型(对应decoration.typeness, -1通用)
+
 	private String grade;
 
 	private String kino;
@@ -82,6 +84,14 @@ public class ReceiptTypeVO implements java.io.Serializable {
 
 	public void setStatus(Short status) {
 		this.status = status;
+	}
+
+	public Short getAtttype() {
+		return atttype;
+	}
+
+	public void setAtttype(Short atttype) {
+		this.atttype = atttype;
 	}
 
 	public String getGrade() {

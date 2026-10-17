@@ -21,7 +21,7 @@ public interface ReceiptTypeService {
 
 	public void pageReceiptType(Paging paging, List<Filter> filters, int company);
 
-	public List<ReceiptTypeVO> queryReceiptType(int company);
+	public List<ReceiptTypeVO> queryReceiptType(int company, Short atttype);
 
 	public List<ReceiptTypeVO> queryReceiptTypeByType(ReceiptTypeVO receiptTypeVO, int company);
 

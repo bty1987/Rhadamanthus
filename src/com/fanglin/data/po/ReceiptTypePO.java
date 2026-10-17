@@ -26,6 +26,10 @@ public class ReceiptTypePO implements java.io.Serializable {
 
 	public static final String COLUMN_GRADE_STR = "grade";
 
+	public static final String COLUMN_ATTYPE_STR = "atttype";
+
+	public static final short ATTYPE_COMMON_INT = -1; // 业务类型通用(对应decoration.typeness, typeness真实值域0~15故通用取-1)
+
 	public static final short TYPE_CASH_INT = 1;
 
 	public static final short TYPE_BANK_INT = 2;
@@ -63,6 +67,8 @@ public class ReceiptTypePO implements java.io.Serializable {
 	private short fund;
 
 	private short status;
+
+	private short atttype; // 业务类型(对应decoration.typeness, -1通用)
 
 	private int company;
 
@@ -181,6 +187,15 @@ public class ReceiptTypePO implements java.io.Serializable {
 
 	public void setStatus(short status) {
 		this.status = status;
+	}
+
+	@Column(name = "atttype")
+	public short getAtttype() {
+		return this.atttype;
+	}
+
+	public void setAtttype(short atttype) {
+		this.atttype = atttype;
 	}
 
 	@Column(name = "company")

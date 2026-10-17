@@ -42,7 +42,7 @@ public class ReceiptTypeAction extends BaseListAction {
 
 		int company = receiptType != null && receiptType.getBompany() != null ? CompanyServiceImpl.decode(receiptType.getBompany()) : queryCompany();
 
-		receiptTypes = receiptTypeService.queryReceiptType(company);
+		receiptTypes = receiptTypeService.queryReceiptType(company, receiptType != null ? receiptType.getAtttype() : null);
 
 		return SUCCESS;
 	}

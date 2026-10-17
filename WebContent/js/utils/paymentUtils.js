@@ -550,6 +550,11 @@ var paymentUtils = {
             queryOptions["receiptType.bompany"] = payment.decoration.bompany
         }
 
+        // 装修单业务类型过滤收据类型(通用-1+对应typeness都带出)
+        if (payment.decoration && payment.decoration.typeness != null) {
+            queryOptions["receiptType.atttype"] = payment.decoration.typeness
+        }
+
         com.post(api.data.queryReceiptType, queryOptions, function(res) {
 
             $.each(res.receiptTypes, function(i, v) {
