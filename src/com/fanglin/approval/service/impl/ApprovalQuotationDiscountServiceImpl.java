@@ -130,33 +130,29 @@ public class ApprovalQuotationDiscountServiceImpl implements ApprovalQuotationDi
 			throw new FLException(140013, "装修单不存在");
 		}
 
-		List<Short> status = Arrays.asList(DecorationPO.STATUS_INIT_INT, DecorationPO.STATUS_DEPOSIT_INT, DecorationPO.STATUS_PROSIGN_INT);
+		List<Short> status = Arrays.asList(DecorationPO.STATUS_INIT_INT, DecorationPO.STATUS_DEPOSIT_INT, DecorationPO.STATUS_PROSIGN_INT, DecorationPO.STATUS_RESIGNED_INT);
 
 		if (!status.contains(decorationPO.getStatus())) {
-			approvalPO.setStatus(ApprovalPO.APPROVAL_STATUS_REFUSE_INT);
-			approvalPO.setComment(String.format("%s 订单状态:%s,不支持该操作通过.", approvalPO.getComment(), decorationPO.getStatus()));
-		} else {
-			QuotationPO quotationPO = quotationDao.get(approvalQuotationDiscountPO.getQid());
-
-			if (quotationPO == null) {
-				throw new FLException(200003, "报价不存在");
-			}
-
-			if (!status.contains(decorationPO.getStatus())) {
-				throw new FLException(200005, "报价不能修改");
-			}
-
-			quotationPO.setDiscount(approvalQuotationDiscountPO.getNewDiscount());
-			quotationPO.setBasePrice(approvalQuotationDiscountPO.getBasePrice());
-
-			if (quotationPO.getDefaults() == QuotationPO.DEFAULTS_DEFAULT_INT) {
-				decorationPO.setDiscount(quotationPO.getDiscount());
-
-				decorationDao.update(decorationPO);
-			}
-
-			quotationDao.update(quotationPO);
+			throw new FLException(240083, "订单状态不支持该操作通过");
 		}
+
+		QuotationPO quotationPO = quotationDao.get(approvalQuotationDiscountPO.getQid());
+
+		if (quotationPO == null) {
+			throw new FLException(200003, "报价不存在");
+		}
+
+		quotationPO.setDiscount(approvalQuotationDiscountPO.getNewDiscount());
+		quotationPO.setBasePrice(approvalQuotationDiscountPO.getBasePrice());
+
+		if (quotationPO.getDefaults() == QuotationPO.DEFAULTS_DEFAULT_INT) {
+			decorationPO.setDiscount(quotationPO.getDiscount());
+
+			decorationDao.update(decorationPO);
+		}
+
+		quotationDao.update(quotationPO);
+
 		return 0;
 	}
 
