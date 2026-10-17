@@ -67,9 +67,9 @@ public class ReceiptTypeServiceImpl implements ReceiptTypeService {
 	}
 
 	@Override
-	public List<ReceiptTypeVO> queryReceiptType(int company) {
+	public List<ReceiptTypeVO> queryReceiptType(int company, Short atttype) {
 
-		List<ReceiptTypePO> receiptTypePOs = receiptTypeDao.queryReceiptType(company);
+		List<ReceiptTypePO> receiptTypePOs = receiptTypeDao.queryReceiptType(company, atttype);
 		List<ReceiptTypeVO> receiptTypeVOs = new ArrayList<ReceiptTypeVO>();
 
 		for (ReceiptTypePO receiptTypePO : receiptTypePOs) {
@@ -86,7 +86,7 @@ public class ReceiptTypeServiceImpl implements ReceiptTypeService {
 	@Override
 	public List<ReceiptTypeVO> queryReceiptTypeByType(ReceiptTypeVO receiptTypeVO, int company) {
 
-		List<ReceiptTypePO> receiptTypePOs = receiptTypeDao.queryReceiptTypeByType(receiptTypeVO.getType(), receiptTypeVO.getGrade(), company);
+		List<ReceiptTypePO> receiptTypePOs = receiptTypeDao.queryReceiptTypeByType(receiptTypeVO.getType(), receiptTypeVO.getGrade(), company, receiptTypeVO.getAtttype());
 		List<ReceiptTypeVO> receiptTypeVOs = new ArrayList<ReceiptTypeVO>();
 
 		for (ReceiptTypePO receiptTypePO : receiptTypePOs) {
@@ -126,6 +126,9 @@ public class ReceiptTypeServiceImpl implements ReceiptTypeService {
 		receiptTypePO = new ReceiptTypePO();
 
 		BeanUtil.copyProperties(receiptTypeVO, receiptTypePO, Arrays.asList("receiptTypeItems"));
+
+		// 业务类型缺省通用(-1); typeness真实值域0~15, 不兜底会落Java默认0撞业务值
+		receiptTypePO.setAtttype(receiptTypeVO.getAtttype() != null ? receiptTypeVO.getAtttype() : ReceiptTypePO.ATTYPE_COMMON_INT);
 
 		receiptTypePO.setNo(String.valueOf(count));
 		receiptTypePO.setCompany(company);

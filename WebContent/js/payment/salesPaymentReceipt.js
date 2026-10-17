@@ -25,20 +25,8 @@ jQuery(function($) {
 
     params = parent.params;
 
-    com.post(api.data.queryReceiptType, {}, function(res) {
-
-        $.each(res.receiptTypes, function(i, v) {
-
-            if (v.type == parent.constant.data().receiptType.TYPE_CARD_INT) {
-                receipt.bankInfo[v.no] = v.name;
-            } else if (v.type == parent.constant.data().receiptType.TYPE_BANK_INT) {
-                receipt.checkBankInfo[v.no] = v.name;
-            }
-        });
-
-    }, null, false);
-    
     var receiptTitle = null;
+    var atttype = null;
 
     com.post(api.payment.querySalesPaymentForNotInitBySrid, {"salesReceipt.srId": params.payment.srId}, function(res) {
 
@@ -48,12 +36,21 @@ jQuery(function($) {
         var salesBrand = "";
         var salesPaymentDes = "";
 
+        // 经sales.orderId查装修单取业务类型
+        if (salesPayments.length > 0) {
+
+            com.post(api.decoration.queryDecorationForCommonByOrderId, {"decoration.orderId": salesPayments[0].sales.orderId}, function(res) {
+
+                atttype = res.decoration.typeness;
+            }, null, false);
+        }
+
         for ( var i = 0; i < salesPayments.length; i++) {
-            
+
             var salesPayment = salesPayments[i];
-            
+
             if(salesPayment.sales.grade == "A") receiptTitle = "装修材料明细单";
-            
+
             salesBrand = salesPayment.sales.brand.name;
 
             commonInfo["orderId"] = salesPayment.sales.orderId;
@@ -83,6 +80,19 @@ jQuery(function($) {
 
         receipt.commonInfo = commonInfo;
 
+    }, null, false);
+
+    // 按装修单业务类型过滤收据类型(通用-1+对应typeness), 前置同步查询先行
+    com.post(api.data.queryReceiptType, {"receiptType.atttype": atttype}, function(res) {
+
+        $.each(res.receiptTypes, function(i, v) {
+
+            if (v.type == parent.constant.data().receiptType.TYPE_CARD_INT) {
+                receipt.bankInfo[v.no] = v.name;
+            } else if (v.type == parent.constant.data().receiptType.TYPE_BANK_INT) {
+                receipt.checkBankInfo[v.no] = v.name;
+            }
+        });
     }, null, false);
 
     var querysalesReceiptBySrId = api.payment.querySalesReceiptBySrId;

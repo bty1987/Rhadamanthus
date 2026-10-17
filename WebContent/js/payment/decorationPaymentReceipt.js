@@ -26,18 +26,6 @@ jQuery(function($) {
 
     params = parent.params;
 
-    com.post(api.data.queryReceiptType, {}, function(res) {
-
-        $.each(res.receiptTypes, function(i, v) {
-
-            if (v.type == parent.constant.data().receiptType.TYPE_CARD_INT) {
-                receipt.bankInfo[v.no] = v.name;
-            } else if (v.type == parent.constant.data().receiptType.TYPE_BANK_INT) {
-                receipt.checkBankInfo[v.no] = v.name;
-            }
-        });
-    }, null, false);
-
     com.post(api.decoration.queryDecorationForCommonByOrderId, {"decoration.orderId": params.payment.orderId}, function(res) {
         receipt.order = res.decoration;
 
@@ -48,6 +36,19 @@ jQuery(function($) {
             receipt.organization = data.company.drganization.name;
         }, null, false);
 
+    }, null, false);
+
+    // 按装修单业务类型过滤收据类型(通用-1+对应typeness), 装修单同步查询先行
+    com.post(api.data.queryReceiptType, {"receiptType.atttype": receipt.order == null ? null : receipt.order.typeness}, function(res) {
+
+        $.each(res.receiptTypes, function(i, v) {
+
+            if (v.type == parent.constant.data().receiptType.TYPE_CARD_INT) {
+                receipt.bankInfo[v.no] = v.name;
+            } else if (v.type == parent.constant.data().receiptType.TYPE_BANK_INT) {
+                receipt.checkBankInfo[v.no] = v.name;
+            }
+        });
     }, null, false);
 
     com.post(api.payment.queryDecorationPaymentForNotInitByDrId, {"decorationReceipt.drId": params.payment.drId}, function(res) {

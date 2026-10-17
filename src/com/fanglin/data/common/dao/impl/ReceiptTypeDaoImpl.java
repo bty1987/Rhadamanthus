@@ -47,18 +47,31 @@ public class ReceiptTypeDaoImpl extends DaoImpl<ReceiptTypePO> implements Receip
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<ReceiptTypePO> queryReceiptType(int company) {
-		return session().createCriteria(ReceiptTypePO.class).add(Restrictions.eq("company", company)).list();
+	public List<ReceiptTypePO> queryReceiptType(int company, Short atttype) {
+
+		Criteria criteria = session().createCriteria(ReceiptTypePO.class).add(Restrictions.eq("company", company));
+
+		if (atttype != null) {
+			// 带出通用(-1)与对应业务类型的数据
+			criteria.add(Restrictions.or(Restrictions.eq(ReceiptTypePO.COLUMN_ATTYPE_STR, atttype), Restrictions.eq(ReceiptTypePO.COLUMN_ATTYPE_STR, ReceiptTypePO.ATTYPE_COMMON_INT)));
+		}
+
+		return criteria.list();
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<ReceiptTypePO> queryReceiptTypeByType(short type, String grade, int company) {
+	public List<ReceiptTypePO> queryReceiptTypeByType(short type, String grade, int company, Short atttype) {
 
 		Criteria criteria = session().createCriteria(ReceiptTypePO.class).add(Restrictions.eq("company", company)).add(Restrictions.eq(ReceiptTypePO.COLUMN_TYPE_STR, type));
 
 		if (grade != null) {
 			criteria.add(Restrictions.eq(ReceiptTypePO.COLUMN_GRADE_STR, grade));
+		}
+
+		if (atttype != null) {
+			// 带出通用(-1)与对应业务类型的数据
+			criteria.add(Restrictions.or(Restrictions.eq(ReceiptTypePO.COLUMN_ATTYPE_STR, atttype), Restrictions.eq(ReceiptTypePO.COLUMN_ATTYPE_STR, ReceiptTypePO.ATTYPE_COMMON_INT)));
 		}
 
 		return criteria.list();
@@ -77,6 +90,8 @@ public class ReceiptTypeDaoImpl extends DaoImpl<ReceiptTypePO> implements Receip
 					query.add(Restrictions.ilike("name", filter.getData(), MatchMode.ANYWHERE));
 				} else if ("type".equals(filter.getField())) {
 					query.add(Restrictions.eq("type", Short.valueOf(filter.getData())));
+				} else if ("atttype".equals(filter.getField())) {
+					query.add(Restrictions.eq("atttype", Short.valueOf(filter.getData())));
 				} else if ("status".equals(filter.getField())) {
 					query.add(Restrictions.eq("status", Short.valueOf(filter.getData())));
 				} else if ("fund".equals(filter.getField())) {

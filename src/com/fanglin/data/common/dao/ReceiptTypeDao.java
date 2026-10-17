@@ -21,9 +21,9 @@ public interface ReceiptTypeDao extends Dao<ReceiptTypePO> {
 
 	public List<ReceiptTypePO> pageReceiptType(Paging paging, List<Filter> filters, int company);
 
-	public List<ReceiptTypePO> queryReceiptType(int company);
+	public List<ReceiptTypePO> queryReceiptType(int company, Short atttype);
 
-	public List<ReceiptTypePO> queryReceiptTypeByType(short type, String grade, int company);
+	public List<ReceiptTypePO> queryReceiptTypeByType(short type, String grade, int company, Short atttype);
 
 	public ReceiptTypePO queryReceiptTypeByNo(String no, int company);
 

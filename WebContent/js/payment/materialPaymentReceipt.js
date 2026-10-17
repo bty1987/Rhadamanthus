@@ -24,23 +24,17 @@ jQuery(function($) {
 
 	params = parent.params;
 
-	com.post(api.data.queryReceiptType, {}, function (res) {
-		$.each(res.receiptTypes, function (i, v) {
-			if (v.type == parent.constant.data().receiptType.TYPE_CARD_INT) {
-				receipt.bankInfo[v.no] = v.name;
-			} else if (v.type == parent.constant.data().receiptType.TYPE_BANK_INT) {
-				receipt.checkBankInfo[v.no] = v.name;
-			}
-		});
-	}, null, false);
-
 	var queryDecorationForCommonByOrderId = api.decoration.queryDecorationForCommonByOrderId;
 	var queryMaterialPaymentForNotInitByMrId = api.payment.queryMaterialPaymentForNotInitByMrId;
+
+	var atttype = null;
 
 	com.post(queryDecorationForCommonByOrderId, {"decoration.orderId":params.payment.orderId}, function(res){
 		var decorationOrder = res.decoration;
 		var commonInfo = {};
-		
+
+		atttype = decorationOrder.typeness;
+
 		commonInfo["orderId"] = decorationOrder.orderId;
 		commonInfo["orderAddr"] = decorationOrder.house.village.cityProper.city.name + ' ' + decorationOrder.house.village.cityProper.name + ' ' + decorationOrder.house.village.name + " " + decorationOrder.house.houseNumber;
 		commonInfo["customerName"] = decorationOrder.customer.name;
@@ -61,7 +55,18 @@ jQuery(function($) {
 		}, null, false);
 
 	}, null, false);
-	
+
+	// 按装修单业务类型过滤收据类型(通用-1+对应typeness), 装修单同步查询先行
+	com.post(api.data.queryReceiptType, {"receiptType.atttype": atttype}, function (res) {
+		$.each(res.receiptTypes, function (i, v) {
+			if (v.type == parent.constant.data().receiptType.TYPE_CARD_INT) {
+				receipt.bankInfo[v.no] = v.name;
+			} else if (v.type == parent.constant.data().receiptType.TYPE_BANK_INT) {
+				receipt.checkBankInfo[v.no] = v.name;
+			}
+		});
+	}, null, false);
+
 	com.post(queryMaterialPaymentForNotInitByMrId, {"materialReceipt.mrId":params.payment.mrId}, function(res){
 		var materialPayments = res.materialPayments;
 		var materialBrand = "";
