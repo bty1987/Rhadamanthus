@@ -74,15 +74,9 @@
 
             com.post(api.data.queryConstant, options, function(res) {
 
-                // 清空本模块旧数据后重建(保留访问器函数本体):
-                // 失败重试/并发预取双发时防止datas数组重复翻倍。
-                $.each(constant[module], function(k, v) {
-                    if (k !== "load" && typeof v !== "function") {
-                        delete constant[module][k];
-                    }
-                });
-
                 var constants = res.constants;
+
+                var touched = {};
 
                 $.each(constants, function(i, v) {
 
@@ -90,7 +84,14 @@
                         constant[module][v.clazz] = {};
                     }
 
-                    if (!constant[module][v.clazz][v.type]) {
+                    // 每个(clazz,type)节点整体重建(非追加): 失败重试/并发双发时datas不翻倍。
+                    // 🔴只重建queryConstant响应管辖的节点——其他机制写入同节点的镜像
+                    //   (如loadConstructionNodes写入的decoration.projectStatus施工节点镜像)
+                    //   不在响应内,不得清除(decoration.js:777等直接读镜像.keys)。
+                    var nodeId = v.clazz + "/" + v.type;
+
+                    if (!touched[nodeId]) {
+                        touched[nodeId] = true;
                         constant[module][v.clazz][v.type] = {
                             "datas": [],
                             "keys": {},
