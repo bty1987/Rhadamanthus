@@ -74,6 +74,14 @@
 
             com.post(api.data.queryConstant, options, function(res) {
 
+                // 清空本模块旧数据后重建(保留访问器函数本体):
+                // 失败重试/并发预取双发时防止datas数组重复翻倍。
+                $.each(constant[module], function(k, v) {
+                    if (k !== "load" && typeof v !== "function") {
+                        delete constant[module][k];
+                    }
+                });
+
                 var constants = res.constants;
 
                 $.each(constants, function(i, v) {
@@ -103,9 +111,12 @@
                         "value": v.value
                     });
                 });
-            }, null, asyncFlag);
 
-            constant[module]["load"] = true;
+                // 🔴仅在成功回调置位: 失败(会话失效110000/110005/网络错等)不进本回调,
+                // load保持false, 下次访问自动重试——否则模块被永久污染(空字典+load=true),
+                // 只能整框重载(重新登录)恢复。
+                constant[module]["load"] = true;
+            }, null, asyncFlag);
 
             return constant[module];
         }
