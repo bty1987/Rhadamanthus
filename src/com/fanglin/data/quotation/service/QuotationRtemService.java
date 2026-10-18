@@ -19,6 +19,7 @@ import com.fanglin.data.quotation.vo.QuotationRtemVO;
 public interface QuotationRtemService {
 
 	public List<QuotationRtemVO> queryQuotationRtem(QuotationRtemVO quotationRtemVO) throws FLException;
+	public List<QuotationRtemVO> queryQuotationRtemByQuotationId(long quotationId) throws FLException;
 
 	public int addQuotationRtem(QuotationRtemVO quotationRtemVO) throws FLException;
 
