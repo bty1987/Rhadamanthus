@@ -185,8 +185,9 @@ public interface ElecsignService {
 	/**
 	 * 发起手动签署。
 	 * <p>对应 {@code Signature.extsign(String, Contract)}：返回厂商签署 URL 给客户/员工。
+	 * <p>注意：厂商调用失败直接抛 {@link FLException}（法大大原静态方法失败返回 null/error 串，统一在此抛错语义）。
 	 */
-	String extsign(String signno, Contract contract);
+	String extsign(String signno, Contract contract) throws FLException;
 
 	// ====================================================================================
 	// 六、预览 / 下载 / 归档

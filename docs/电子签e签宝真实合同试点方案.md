@@ -34,9 +34,13 @@
 | 3 | 试点公司机构实名 | 在 e签宝完成企业认证 | orgId |
 | 4 | 开通正式版 | **真实合同需要法律效力**：CA 证书 + 出证服务（涉及商务计费，提前确认） | 正式版权益开通 |
 | 5 | 开通静默签 | 企业签《自动落章授权书》，否则 autosign 失败 | 静默签授权生效 |
-| 6 | 重做装修合同模板 | **模板不互通**：在 e签宝控制台按法大大模板重建装修合同；**控件名必须与系统前端变量名一致**（模板表单页 `.conitem` 的 id，见 `views/contract/C-xxx.html` 对应 JS） | docTemplateId |
+| 6 | 重做装修合同模板 | **模板不互通，但底稿 PDF 自带 AcroForm 域**（域名=conitem 变量名，实测 61 域中 38 个与前端 47 变量直接同名）。流程：用工单工具生成底稿+变量清单 → e签宝控制台上传底稿、识别/导入自带域 → 人工补缺失控件 → 拿 docTemplateId | docTemplateId |
 
-> ⚠️ Phase 1.6 是试点最容易翻车的点：装修合同模板的填充变量（`con-sign-year`、`con-contract-total-cn`、`sin-customer-*` 等）是前端 JS 收集后 JSON 传给后端的，e签宝模板控件名必须一一对应，否则生成出的合同空白/错位。建议拿一份现有法大大合同 PDF 对照逐控件核对。
+> ✅ **Phase 1.6 已大幅降险（2026-10-18 调研实证）**：法大大模板底稿 PDF 本身带表单域，e签宝 可识别导入，
+> 人工只需补 9 个 PDF 缺失控件（con-company-* 公司信息族 + con-markup-two/thr）+ 签章区。
+> 工具：`python scripts/esign_template_workorder.py --cid <cid> --name <名> --page <模板页html> --pdf-url <path完整URL>`
+> （path 拼接 `https://service-erp.fanglin.vip/`；已产出 cid=11093/2889 两个主力模板工单于 `target/esign-templates/`）。
+> 剩余风险：9 个补建控件的位置人工对位；派生变量（con-sign-year 等 JS 追加）以测试环境抓包确认。
 
 ### Phase 2：系统侧代码收尾（1-2 天，与 Phase 1 并行）
 
@@ -115,7 +119,7 @@ INSERT INTO communion.systemconfig (`group`, `key`, `value`, `company`, `comment
 
 | 风险 | 等级 | 对策 |
 |------|:---:|------|
-| e签宝模板控件名与前端变量名不一致 → 合同空白/错位 | 🔴 高 | Phase 1.6 逐控件对照法大大合同 PDF 核对；生成后先 viewpdf 人工检查再签 |
+| e签宝模板控件名与前端变量名不一致 → 合同空白/错位 | 🟢 低（已降级） | 底稿 PDF 自带域与前端变量同体系（38/47 直接同名），e签宝 识别导入 + 工单核对；生成后先 viewpdf 人工检查再签 |
 | 真实合同法律效力（CA/出证）未开通 | 🔴 高 | Phase 1.4 商务提前确认正式版权益，演练用沙箱，**正式签署前必须确认正式版生效** |
 | 客户未实名直接进签署链接被拒 | 🟡 中 | Phase 2 联调确认 H5 实名引导能力；试点流程先认证后签署 |
 | 静默签授权未生效 → autosign 报错 | 🟡 中 | Phase 1.5 提前办；演练第 2 步即暴露 |

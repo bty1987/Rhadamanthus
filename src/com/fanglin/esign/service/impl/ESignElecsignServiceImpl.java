@@ -12,7 +12,6 @@
 package com.fanglin.esign.service.impl;
 
 import java.io.File;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -58,40 +57,47 @@ import com.fanglin.fadada.vo.SignatureVO;
  *   <li>getFile 认证文件下载</li>
  * </ul>
  *
- * <h3>联调核对清单（TODO）</h3>
- * <p>以下端点按 e签宝 v3 文档整理，上线联调须逐一核对（常量集中在下方）：
- * 机构/个人认证页面链接、模板填充生成文档、签署链接三个端点的请求/响应字段名。
+ * <h3>端点核对状态（2026-10 对照 v3 官方文档）</h3>
+ * <p>已核对修正：机构/个人认证链接（/v3/org-auth-url、/v3/psn-auth-url）、模板填充
+ * （/v3/files/create-by-doc-template + docTemplateId）、签署链接（POST /v3/sign-flow/{id}/sign-url）、
+ * 签署区关键字定位（signFields.normalSignFieldConfig.signFieldPosition）、认证状态字段（authenticated）。
+ * <p>剩余联调确认项（沙箱验证）：① org-auth-url 自动签署授权参数；② psn-auth-url 的 psnInfo 字段名；
+ * ③ 认证流详情（authFlowId）路径与状态字段；④ signFields 字段层级枚举值；⑤ sign-url 的 operator 入参形态；
+ * ⑥ tables 动态表格能力。
  */
 @Service("esignElecsignService")
 public class ESignElecsignServiceImpl implements ElecsignService, CompanyAware {
 
-	// ==================== 端点常量（联调核对处） ====================
+	// ==================== 端点常量（2026-10 对照 v3 官方文档核对，残留「联调确认」处待沙箱验证） ====================
 
-	/** 查询机构认证信息 */
-	private static final String EP_ORG_AUTH_INFO = "/v3/organization/auth-info";
+	/** 查询机构认证信息：GET /v3/organizations/{orgId}/auth-info，响应 authenticated 字段 */
+	private static final String EP_ORG_AUTH_INFO = "/v3/organizations/%s/auth-info";
 
-	/** 获取机构认证&授权页面链接 TODO 联调核对端点与参数 */
-	private static final String EP_ORG_AUTH_URL = "/v3/organization/auth-page-url";
+	/** 获取机构认证&授权页面链接：POST /v3/org-auth-url，入参 orgName(与orgId二选一)，响应 authFlowId/authPageUrl/orgId */
+	private static final String EP_ORG_AUTH_URL = "/v3/org-auth-url";
 
 	/** 查询个人认证信息 */
-	private static final String EP_PSN_AUTH_INFO = "/v3/person/auth-info";
+	private static final String EP_PSN_AUTH_INFO = "/v3/persons/identity-info";
 
-	/** 获取个人认证&授权页面链接 TODO 联调核对端点与参数 */
-	private static final String EP_PSN_AUTH_URL = "/v3/person/auth-page-url";
+	/** 获取个人认证&授权页面链接：POST /v3/psn-auth-url，响应 authFlowId/authPageUrl */
+	private static final String EP_PSN_AUTH_URL = "/v3/psn-auth-url";
+
+	/** 查询认证授权流程详情（按 authFlowId 跟踪认证进度） TODO 联调确认路径 */
+	private static final String EP_AUTH_FLOW_DETAIL = "/v3/auth-flows/%s";
 
 	/** 通过下载地址创建文件 */
 	private static final String EP_FILES_CREATE_BY_URL = "/v3/files/create-by-url";
 
-	/** 基于模板创建文档（模板填充） TODO 联调核对端点与参数 */
-	private static final String EP_DOC_CREATE_BY_TEMPLATE = "/v3/doc/create-by-template";
+	/** 基于文档模板创建文件（模板填充）：POST /v3/files/create-by-doc-template，入参 docTemplateId/components/fileName */
+	private static final String EP_DOC_CREATE_BY_TEMPLATE = "/v3/files/create-by-doc-template";
 
 	/** 基于文件创建签署流 */
 	private static final String EP_FLOW_CREATE_BY_FILE = "/v3/sign-flow/create-by-file";
 
 	/** 签署流详情 */
-	private static final String EP_FLOW_DETAIL = "/v3/sign-flow/detail/%s";
+	private static final String EP_FLOW_DETAIL = "/v3/sign-flow/%s/detail";
 
-	/** 获取签署链接 TODO 联调核对端点与参数 */
+	/** 获取签署链接：POST /v3/sign-flow/{signFlowId}/sign-url，入参 operator(psnId/psnAccount)，响应 url */
 	private static final String EP_FLOW_SIGN_URL = "/v3/sign-flow/%s/sign-url";
 
 	/** 获取文件下载地址 */
@@ -210,7 +216,7 @@ public class ESignElecsignServiceImpl implements ElecsignService, CompanyAware {
 	}
 
 	@Override
-	public String extsign(String signno, Contract contract) {
+	public String extsign(String signno, Contract contract) throws FLException {
 		return extsign(0, signno, contract);
 	}
 
@@ -245,15 +251,7 @@ public class ESignElecsignServiceImpl implements ElecsignService, CompanyAware {
 
 	void register(int company, SignetPO signetPO) throws FLException {
 
-		// e签宝无企业账号注册概念：机构已实名则取 orgId 写回 signno，未实名等待 authenticate 流程
-		Map<String, String> query = new HashMap<String, String>();
-		query.put("orgName", signetPO.getName());
-
-		JSONObject data = esignClient.get(company, EP_ORG_AUTH_INFO, query);
-
-		if (Boolean.TRUE.equals(data.getBoolean("verified"))) {
-			signetPO.setSignno(data.getString("orgId"));
-		}
+		// e签宝无企业账号注册概念：signno 先以业务编号占位，机构认证通过后由 orgId 覆盖（见 authenticate/company）
 	}
 
 	String authenticate(int company, SignetPO signetPO) throws FLException {
@@ -263,21 +261,28 @@ public class ESignElecsignServiceImpl implements ElecsignService, CompanyAware {
 
 		JSONObject data = esignClient.post(company, EP_ORG_AUTH_URL, body);
 
-		String url = data.getString("url");
+		// 响应：authFlowId(认证流程号) + authPageUrl(认证页面) + orgId(机构账号，认证过程中即分配)
+		String url = data.getString("authPageUrl");
 
+		signetPO.setToken(data.getString("authFlowId")); // token 复用为认证流程号（对齐法大大 token=交易号语义）
 		signetPO.setAuthurl(url);
+
+		if (data.getString("orgId") != null) {
+			signetPO.setSignno(data.getString("orgId"));
+		}
 
 		return url;
 	}
 
 	void company(int company, SignetPO signetPO) throws FLException {
 
-		Map<String, String> query = new HashMap<String, String>();
-		query.put("orgName", signetPO.getName());
+		if (signetPO.getSignno() == null || signetPO.getSignno().trim().isEmpty()) {
+			throw new FLException(130097, "e签宝接口调用失败, 机构账号缺失, 请先完成认证");
+		}
 
-		JSONObject data = esignClient.get(company, EP_ORG_AUTH_INFO, query);
+		JSONObject data = esignClient.get(company, String.format(EP_ORG_AUTH_INFO, signetPO.getSignno()), null);
 
-		if (!Boolean.TRUE.equals(data.getBoolean("verified"))) {
+		if (!Boolean.TRUE.equals(data.getBoolean("authenticated"))) {
 			throw new FLException(130097, "e签宝接口调用失败, 企业实名认证未通过");
 		}
 
@@ -286,10 +291,9 @@ public class ESignElecsignServiceImpl implements ElecsignService, CompanyAware {
 
 	String beforeauto(int company, SignetPO signetPO) throws FLException {
 
-		// 静默签授权：复用机构授权页面链接（认证&授权模式），返回厂商原始结果串
+		// 静默签授权：复用机构认证&授权页面链接 TODO 联调确认自动签署授权(mode/授权书模板)与 org-auth-url 的参数差异
 		JSONObject body = new JSONObject();
 		body.put("orgName", signetPO.getName());
-		body.put("authMode", "silent");
 
 		JSONObject data = esignClient.post(company, EP_ORG_AUTH_URL, body);
 
@@ -306,17 +310,21 @@ public class ESignElecsignServiceImpl implements ElecsignService, CompanyAware {
 
 		JSONObject body = new JSONObject();
 		body.put("psnAccount", phone);
-		body.put("psnInfo", new JSONObject().fluentPut("name", name).fluentPut("idNumber", identity).fluentPut("idType", type == 0 ? "CRED_PSN_CH_IDCARD" : "CRED_PSN_CH_PASSPORT"));
+		body.put("psnInfo", new JSONObject().fluentPut("psnName", name).fluentPut("psnIdCardNum", identity).fluentPut("psnIdCardType", type == 0 ? "CRED_PSN_CH_IDCARD" : "CRED_PSN_CH_PASSPORT"));
 
-		return esignClient.post(company, EP_PSN_AUTH_URL, body);
+		JSONObject data = esignClient.post(company, EP_PSN_AUTH_URL, body);
+
+		// 响应：authFlowId + authPageUrl（TODO 联调确认 psnInfo 字段名与响应结构）
+		data.put("url", data.getString("authPageUrl")); // 对齐法大大 authenticate 返回 data.url 的消费习惯
+
+		return data;
 	}
 
 	JSONObject person(int company, String token) throws FLException {
 
-		Map<String, String> query = new HashMap<String, String>();
-		query.put("psnAccount", token);
-
-		return esignClient.get(company, EP_PSN_AUTH_INFO, query);
+		// token 复用为认证流程号 authFlowId（authenticate 时写入），按流程查认证进度
+		// TODO 联调确认响应状态字段（认证完成判定），必要时对齐 CustomerServiceImpl.confirmCustomer 的判定逻辑
+		return esignClient.get(company, String.format(EP_AUTH_FLOW_DETAIL, token), null);
 	}
 
 	void certificate(int company, String no, String token) throws FLException {
@@ -326,10 +334,11 @@ public class ESignElecsignServiceImpl implements ElecsignService, CompanyAware {
 
 	void generate(int company, Contract contract, JSONObject json, JSONArray tables) throws FLException {
 
-		// 模板填充生成文档：templateCode()=e签宝控制台模板ID，json=填充控件值
+		// 基于文档模板创建文件：templateCode()=e签宝控制台模板ID(docTemplateId)，json=控件填充值(components)
 		JSONObject body = new JSONObject();
-		body.put("templateId", contract.templateCode());
+		body.put("docTemplateId", contract.templateCode());
 		body.put("components", buildComponents(json, tables));
+		body.put("fileName", String.format("%s.pdf", contract.title()));
 
 		JSONObject data = esignClient.post(company, EP_DOC_CREATE_BY_TEMPLATE, body);
 
@@ -356,25 +365,22 @@ public class ESignElecsignServiceImpl implements ElecsignService, CompanyAware {
 	}
 
 	void autosign(int company, String signno, String keyword, Contract contract) throws FLException {
-		createSignFlow(company, contract, null, keyword, true);
+
+		// signno=机构账号 orgId（印章认证后写入 signet.signno），作为静默签主体标识
+		createSignFlow(company, contract, signno, keyword, true);
 	}
 
-	String extsign(int company, String signno, Contract contract) {
+	String extsign(int company, String signno, Contract contract) throws FLException {
 
-		try {
+		// 建流（指定个人签署人）→ 获取签署链接；失败直接抛错，不让前端拿到空 URL 误判成功
+		String signFlowId = createSignFlow(company, contract, signno, null, false);
 
-			String signFlowId = createSignFlow(company, contract, signno, null, false);
+		JSONObject body = new JSONObject();
+		body.put("operator", new JSONObject().fluentPut("psnId", signno)); // TODO 联调确认 operator 入参形态(psnId/psnAccount)
 
-			Map<String, String> query = new HashMap<String, String>();
-			query.put("psnId", signno);
+		JSONObject data = esignClient.post(company, String.format(EP_FLOW_SIGN_URL, signFlowId), body);
 
-			JSONObject data = esignClient.get(company, String.format(EP_FLOW_SIGN_URL, signFlowId), query);
-
-			return data.getString("url");
-
-		} catch (FLException e) {
-			return null;
-		}
+		return data.getString("url");
 	}
 
 	String view(int company, Contract contract) {
@@ -409,12 +415,12 @@ public class ESignElecsignServiceImpl implements ElecsignService, CompanyAware {
 	 * 创建签署流。
 	 *
 	 * @param contract 合同（flowId() 此时为 fileId，建流后覆盖为 signFlowId）
-	 * @param psnId 个人签署人 psnId（null 表示平台主体静默签）
+	 * @param subject 签署主体标识：静默签=机构账号 orgId，个人签=个人 psnId
 	 * @param keyword 盖章关键字（静默签定位签署域）
 	 * @param autoSign true 平台主体自动落章 / false 个人手动签
 	 * @return signFlowId
 	 */
-	private String createSignFlow(int company, Contract contract, String psnId, String keyword, boolean autoSign) throws FLException {
+	private String createSignFlow(int company, Contract contract, String subject, String keyword, boolean autoSign) throws FLException {
 
 		String fileId = contract.flowId();
 
@@ -422,21 +428,26 @@ public class ESignElecsignServiceImpl implements ElecsignService, CompanyAware {
 			throw new FLException(130097, "e签宝接口调用失败, 合同文件未上传(缺少厂商文件号)");
 		}
 
+		// 签署区：关键字定位（TODO 联调确认 signFields/normalSignFieldConfig/signFieldPosition 字段层级与枚举值）
+		JSONObject position = new JSONObject().fluentPut("positionType", "KEYWORD");
+		if (keyword != null && !keyword.trim().isEmpty()) {
+			position.put("keyword", keyword);
+		}
+
 		JSONObject signField = new JSONObject();
 		signField.put("fileId", fileId);
-
-		if (keyword != null && !keyword.trim().isEmpty()) {
-			signField.put("posBean", new JSONObject().fluentPut("keyword", keyword));
-		}
+		signField.put("normalSignFieldConfig", new JSONObject().fluentPut("signFieldPosition", position));
 
 		JSONObject signer = new JSONObject();
 		signer.put("signFields", new JSONArray().fluentAdd(signField));
 
 		if (autoSign) {
-			// 平台主体静默签：e签宝后台自动取 appid 所属公司信息与默认印章
+			// 平台主体静默签：orgId 指定企业主体 + autoSign=true（需该主体在 e签宝开通自动签署能力）
+			signer.put("orgId", subject);
 			signer.put("autoSign", true);
 		} else {
-			signer.put("psnId", psnId);
+			// 个人签署人：psnId（实名后分配；未实名占位号需先走认证）
+			signer.put("psnId", subject);
 		}
 
 		JSONObject body = new JSONObject();
@@ -616,7 +627,7 @@ public class ESignElecsignServiceImpl implements ElecsignService, CompanyAware {
 		}
 
 		@Override
-		public String extsign(String signno, Contract contract) {
+		public String extsign(String signno, Contract contract) throws FLException {
 			return ESignElecsignServiceImpl.this.extsign(company, signno, contract);
 		}
 
