@@ -31,46 +31,67 @@ import com.fanglin.fadada.vo.SignatureVO;
 
 /**
  * e签宝实现（ElecsignService 的 e签宝适配）。
- *
- * <p>本类是 Spring 单例（bean 名 esignElecsignService，供 ElecsignRouter 发现），
- * 真正的接口调用请通过 {@code ElecsignRouter.route(company, scene)} 返回的
- * {@link #forCompany(int)} 公司绑定实例进行——绑定实例携带公司上下文，
- * e签宝凭证（elecsign.appId/appSecret）按该公司的 systemconfig 读取。
- * 直接注入本 bean 调用时按全局配置（company=0）执行。
- *
+ * 
+ * <p>
+ * 本类是 Spring 单例（bean 名 esignElecsignService，供 ElecsignRouter 发现）， 真正的接口调用请通过 {@code ElecsignRouter.route(company, scene)} 返回的 {@link #forCompany(int)} 公司绑定实例进行——绑定实例携带公司上下文， e签宝凭证（elecsign.appId/appSecret）按该公司的 systemconfig 读取。 直接注入本 bean 调用时按全局配置（company=0）执行。
+ * 
  * <h3>与法大大的概念映射</h3>
  * <table border="1">
- * <tr><th>法大大</th><th>e签宝 v3</th></tr>
- * <tr><td>合同编号 contentCode</td><td>业务编号由业务方管理；e签宝侧流程号存 {@link Contract#flowId()}：
- *     upload/generate 后存 fileId，签署建流后覆盖为 signFlowId</td></tr>
- * <tr><td>企业账号 signno</td><td>orgId（机构实名后产生）</td></tr>
- * <tr><td>个人账号 signno</td><td>psnId（个人实名后产生；未实名时以业务编号占位）</td></tr>
- * <tr><td>autosign 静默签</td><td>sign-flow/create-by-file，signers.autoSign=true（平台主体自动落章）</td></tr>
- * <tr><td>extsign 手动签</td><td>create-by-file（指定签署人 psnId）+ 获取签署链接</td></tr>
- * <tr><td>filing 归档</td><td>建流时 signFlowConfig.autoArchived=true，无独立归档接口（no-op）</td></tr>
- * <tr><td>certificate 申请证书</td><td>e签宝无需单独申请证书（no-op）</td></tr>
+ * <tr>
+ * <th>法大大</th>
+ * <th>e签宝 v3</th>
+ * </tr>
+ * <tr>
+ * <td>合同编号 contentCode</td>
+ * <td>业务编号由业务方管理；e签宝侧流程号存 {@link Contract#flowId()}： upload/generate 后存 fileId，签署建流后覆盖为 signFlowId</td>
+ * </tr>
+ * <tr>
+ * <td>企业账号 signno</td>
+ * <td>orgId（机构实名后产生）</td>
+ * </tr>
+ * <tr>
+ * <td>个人账号 signno</td>
+ * <td>psnId（个人实名后产生；未实名时以业务编号占位）</td>
+ * </tr>
+ * <tr>
+ * <td>autosign 静默签</td>
+ * <td>sign-flow/create-by-file，signers.autoSign=true（平台主体自动落章）</td>
+ * </tr>
+ * <tr>
+ * <td>extsign 手动签</td>
+ * <td>create-by-file（指定签署人 psnId）+ 获取签署链接</td>
+ * </tr>
+ * <tr>
+ * <td>filing 归档</td>
+ * <td>建流时 signFlowConfig.autoArchived=true，无独立归档接口（no-op）</td>
+ * </tr>
+ * <tr>
+ * <td>certificate 申请证书</td>
+ * <td>e签宝无需单独申请证书（no-op）</td>
+ * </tr>
  * </table>
- *
+ * 
  * <h3>不支持的能力（130098 显式报错）</h3>
  * <ul>
- *   <li>印章管理（query/add/defaults/delete/signature）：e签宝静默签自动使用主体默认印章，印章在 e签宝控制台维护</li>
- *   <li>template 合同模板上传：模板在 e签宝控制台维护（templateId 即控制台模板ID）</li>
- *   <li>getFile 认证文件下载</li>
+ * <li>印章管理（query/add/defaults/delete/signature）：e签宝静默签自动使用主体默认印章，印章在 e签宝控制台维护</li>
+ * <li>template 合同模板上传：模板在 e签宝控制台维护（templateId 即控制台模板ID）</li>
+ * <li>getFile 认证文件下载</li>
  * </ul>
- *
+ * 
  * <h3>联调状态（2026-10-18 沙箱全链路实测通过）</h3>
- * <p>已实测打通（appId 7439144015, smlopenapi.esign.cn）：签名鉴权 → 文件两步上传 →
- * 关键字坐标 → 建签署流（个人+坐标）→ 获取签署链接 → 流程详情，端到端 8 环节全部验证。
- * <p>实测确认的关键结构（与本实现一致）：
+ * <p>
+ * 已实测打通（appId 7439144015, smlopenapi.esign.cn）：签名鉴权 → 文件两步上传 → 关键字坐标 → 建签署流（个人+坐标）→ 获取签署链接 → 流程详情，端到端 8 环节全部验证。
+ * <p>
+ * 实测确认的关键结构（与本实现一致）：
  * <ul>
- *   <li>签名串 Date 段恒空（见 EsignClient）</li>
- *   <li>psn-auth-url 入参包 psnAuthConfig；identity-info 直查 psnId（realnameStatus=1 已实名）</li>
- *   <li>自动落章=normalSignFieldConfig.autoSign（个人不支持）；signFieldStyle 必传</li>
- *   <li>签署区纯坐标定位，keyword 先查 keyword-positions（POST keywords[]）</li>
- *   <li>sign-url：POST operator.psnId + urlType=2</li>
+ * <li>签名串 Date 段恒空（见 EsignClient）</li>
+ * <li>psn-auth-url 入参包 psnAuthConfig；identity-info 直查 psnId（realnameStatus=1 已实名）</li>
+ * <li>自动落章=normalSignFieldConfig.autoSign（个人不支持）；signFieldStyle 必传</li>
+ * <li>签署区纯坐标定位，keyword 先查 keyword-positions（POST keywords[]）</li>
+ * <li>sign-url：POST operator.psnId + urlType=2</li>
  * </ul>
- * <p>待沙箱继续验证：generate 模板填充（等控制台 docTemplateId）、org-auth-url 自动签署授权、
- * 动态表格能力、真实签署完成后的回调。
+ * <p>
+ * 待沙箱继续验证：generate 模板填充（等控制台 docTemplateId）、org-auth-url 自动签署授权、 动态表格能力、真实签署完成后的回调。
  */
 @Service("esignElecsignService")
 public class ESignElecsignServiceImpl implements ElecsignService, CompanyAware {
@@ -90,9 +111,11 @@ public class ESignElecsignServiceImpl implements ElecsignService, CompanyAware {
 	private static final String EP_PSN_AUTH_URL = "/v3/psn-auth-url";
 
 	/** 查询认证授权流程详情（按 authFlowId 跟踪认证进度） TODO 联调确认路径 */
+	@SuppressWarnings("unused")
 	private static final String EP_AUTH_FLOW_DETAIL = "/v3/auth-flows/%s";
 
 	/** 获取文件上传地址（本地两步上传 step1，step2=PUT 上传地址且带 Content-Type/Content-MD5 头） */
+	@SuppressWarnings("unused")
 	private static final String EP_FILES_FILE_UPLOAD_URL = "/v3/files/file-upload-url";
 
 	/** 关键字坐标查询：POST /v3/files/{fileId}/keyword-positions，body keywords[]（e签宝无 keyword 定位签署区，需先查坐标） */
@@ -323,10 +346,7 @@ public class ESignElecsignServiceImpl implements ElecsignService, CompanyAware {
 
 		// 实测确认（2026-10 沙箱）：psnAccount/psnInfo 需包在 psnAuthConfig 内，端点 POST /v3/psn-auth-url
 		// 已实名账号返回 1450005"个人用户已实名"——业务方先调 identity-info 查 psnId 再决定是否走认证
-		JSONObject psnInfo = new JSONObject()
-				.fluentPut("psnName", name)
-				.fluentPut("psnIdCardNum", identity)
-				.fluentPut("psnIdCardType", type == 0 ? "CRED_PSN_CH_IDCARD" : "CRED_PSN_CH_PASSPORT");
+		JSONObject psnInfo = new JSONObject().fluentPut("psnName", name).fluentPut("psnIdCardNum", identity).fluentPut("psnIdCardType", type == 0 ? "CRED_PSN_CH_IDCARD" : "CRED_PSN_CH_PASSPORT");
 
 		JSONObject body = new JSONObject();
 		body.put("psnAuthConfig", new JSONObject().fluentPut("psnAccount", phone).fluentPut("psnInfo", psnInfo));
@@ -441,16 +461,16 @@ public class ESignElecsignServiceImpl implements ElecsignService, CompanyAware {
 
 	/**
 	 * 创建签署流（2026-10 沙箱实测结构）。
-	 *
-	 * <p>实测要点：
+	 * 
+	 * <p>
+	 * 实测要点：
 	 * <ul>
-	 *   <li>签署方 = signerType(0个人/1机构) + psnSignerInfo{psnId} / orgSignerInfo{orgId}</li>
-	 *   <li>自动落章在 normalSignFieldConfig.autoSign（非 signer 层）；个人不支持 autoSign，
-	 *       机构限应用主体企业自身（或已做印章授权）</li>
-	 *   <li>signFieldStyle 必传（1=单页章），否则 1435002 参数错误</li>
-	 *   <li>签署区只支持坐标定位：keyword 需先调 keyword-positions 查坐标（两步，对应法大大一步 keyword）</li>
+	 * <li>签署方 = signerType(0个人/1机构) + psnSignerInfo{psnId} / orgSignerInfo{orgId}</li>
+	 * <li>自动落章在 normalSignFieldConfig.autoSign（非 signer 层）；个人不支持 autoSign， 机构限应用主体企业自身（或已做印章授权）</li>
+	 * <li>signFieldStyle 必传（1=单页章），否则 1435002 参数错误</li>
+	 * <li>签署区只支持坐标定位：keyword 需先调 keyword-positions 查坐标（两步，对应法大大一步 keyword）</li>
 	 * </ul>
-	 *
+	 * 
 	 * @param contract 合同（flowId() 此时为 fileId，建流后覆盖为 signFlowId）
 	 * @param subject 签署主体标识：个人=psnId，机构=orgId
 	 * @param keyword 盖章关键字（非空时先查坐标定位签署区）
@@ -474,10 +494,7 @@ public class ESignElecsignServiceImpl implements ElecsignService, CompanyAware {
 				throw new FLException(130097, "e签宝接口调用失败, 自动落章必须提供盖章关键字");
 			}
 			JSONObject pos = firstKeywordPosition(company, fileId, keyword);
-			normal.position = new JSONObject()
-					.fluentPut("positionPage", String.valueOf(pos.getIntValue("pageNum")))
-					.fluentPut("positionX", pos.getJSONArray("coordinates").getJSONObject(0).getDoubleValue("positionX"))
-					.fluentPut("positionY", pos.getJSONArray("coordinates").getJSONObject(0).getDoubleValue("positionY"));
+			normal.position = new JSONObject().fluentPut("positionPage", String.valueOf(pos.getIntValue("pageNum"))).fluentPut("positionX", pos.getJSONArray("coordinates").getJSONObject(0).getDoubleValue("positionX")).fluentPut("positionY", pos.getJSONArray("coordinates").getJSONObject(0).getDoubleValue("positionY"));
 		}
 
 		JSONObject signField = new JSONObject();
