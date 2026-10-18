@@ -205,6 +205,13 @@ query.add(query.getCriterion("otherField", value, "like")).desc("id");
 return query.list();
 ```
 
+### 🔴 生产SQL文件存放规范
+- **所有生产/变更 SQL 一律放 `sqls/` 目录**，禁止新建 `sql/` 或散放根目录
+- 按模块/库分子目录：`sqls/communion/`、`sqls/data/`、`sqls/construction/`、`sqls/customer/`、`sqls/elecsign/`、`sqls/misc/` 等
+- 命名：`[序号]_[用途].sql`（序号在该子目录内递增，禁止与已有文件重号）
+- 文件头注释必须包含：用途说明、执行前置条件、回滚方式、验证语句
+- 幂等优先：INSERT 用 NOT EXISTS 守卫，ALTER 只加列不删改
+
 ---
 
 ## 配置文件与路径
