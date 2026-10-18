@@ -366,8 +366,13 @@ public class ESignElecsignServiceImpl implements ElecsignService, CompanyAware {
 		String fileId = data.getString("fileId");
 
 		contract.flowId(fileId);
-		contract.download(fileUrl(company, fileId));
-		contract.viewpdf(fileUrl(company, fileId));
+		// 实测（2026-10 沙箱）响应直接带 fileDownloadUrl（OSS 临时地址），无需再调 /files/{id}/url
+		String downloadUrl = data.getString("fileDownloadUrl");
+		if (downloadUrl == null || downloadUrl.isEmpty()) {
+			downloadUrl = fileUrl(company, fileId);
+		}
+		contract.download(downloadUrl);
+		contract.viewpdf(downloadUrl);
 	}
 
 	void upload(int company, Contract contract, String path) throws FLException {
