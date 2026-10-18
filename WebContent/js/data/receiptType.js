@@ -10,6 +10,7 @@ $(function($) {
             name: com.focusPage("#name"),
             type: com.focusPage("#type"),
             fund: com.focusPage("#fund"),
+            atttype: com.focusPage("#atttype"),
             grade: com.focusPage("#grade"),
             kino: com.focusPage("#kino"),
             kiname: com.focusPage("#kiname"),
@@ -41,6 +42,8 @@ $(function($) {
 
     receiptType.items.grade.bindData(constant.data().receiptType.grade.datas, "key", "value");
     receiptType.items.fund.bindData(constant.data().receiptType.fund.datas, "key", "value");
+    // 业务类型: -1通用 + decoration.typeness全量(对应装修单typeness)
+    receiptType.items.atttype.bindData([{ "key": "-1", "value": "通用" }].concat(constant.decoration().decoration.typeness.datas), "key", "value");
     receiptType.receiptTypeItems.itemtype.bindData(constant.data().paymentType.type.datas, "key", "value");
     receiptType.receiptTypeItems.paytype.bindData(constant.data().paymentType.paytype.datas, "key", "value");
 
@@ -82,6 +85,11 @@ $(function($) {
             field: "fund",
             name: "资金类型",
             prop: function(v) { return receiptType.funds[v.fund]; },
+            clazz: "red"
+        }, {
+            field: "atttype",
+            name: "业务类型",
+            prop: function(v) { return v.atttype == null || v.atttype == -1 ? "通用" : (constant.decoration().decoration.typeness.keys[v.atttype] || ("未知(" + v.atttype + ")")); },
             clazz: "red"
         }, {
             field: "status",
@@ -170,6 +178,7 @@ $(function($) {
                     receiptType.items.name.val(v.name);
                     receiptType.items.type.val(v.type);
                     receiptType.items.fund.val(v.fund);
+                    receiptType.items.atttype.val(v.atttype == null ? "-1" : String(v.atttype));
                     receiptType.items.grade.val(v.grade);
                     receiptType.items.kino.val(v.kino);
                     receiptType.items.kiname.val(v.kiname);
@@ -229,6 +238,7 @@ $(function($) {
             "receiptType.name": receiptType.items.name.val(),
             "receiptType.type": receiptType.items.type.val(),
             "receiptType.fund": receiptType.items.fund.val(),
+            "receiptType.atttype": receiptType.items.atttype.val(),
             "receiptType.grade": receiptType.items.grade.val(),
             "receiptType.kino": receiptType.items.kino.val(),
             "receiptType.kiname": receiptType.items.kiname.val(),
