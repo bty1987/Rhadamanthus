@@ -24,4 +24,6 @@ public interface QuotationRtemDao extends Dao<QuotationRtemPO> {
 
 	public int countQuotationRtem(long sqiid);
 
+	public int countQuotationRtem(long sqiid, long tqiid);
+
 }
