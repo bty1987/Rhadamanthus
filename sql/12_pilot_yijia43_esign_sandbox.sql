@@ -16,29 +16,29 @@
 -- =============================================================================
 
 -- 1. 电子签厂商凭证与网关（沙箱联调期；转生产时换正式appId/secret/host并重置secret）
-INSERT INTO communion.systemconfig (`group`, `key`, `value`, `company`, `comment`)
-SELECT 'elecsign', 'elecsign.appId', '7439144015', 43, 'e签宝沙箱appId(联调期)'
+INSERT INTO communion.systemconfig (`group`, `key`, `value`, `company`, `cuid`, `comment`)
+SELECT 'elecsign', 'elecsign.appId', '7439144015', 43, 34, 'e签宝沙箱appId(联调期)'
 FROM DUAL WHERE NOT EXISTS (
   SELECT 1 FROM communion.systemconfig WHERE `group`='elecsign' AND `key`='elecsign.appId' AND company=43);
 
-INSERT INTO communion.systemconfig (`group`, `key`, `value`, `company`, `comment`)
-SELECT 'elecsign', 'elecsign.appSecret', '93f1ec459de3e4cf8b160741f6f78731', 43, 'e签宝沙箱secret(联调期明文,转生产前必须重置并加密)'
+INSERT INTO communion.systemconfig (`group`, `key`, `value`, `company`, `cuid`, `comment`)
+SELECT 'elecsign', 'elecsign.appSecret', '93f1ec459de3e4cf8b160741f6f78731', 43, 34, 'e签宝沙箱secret(联调期明文,转生产前必须重置并加密)'
 FROM DUAL WHERE NOT EXISTS (
   SELECT 1 FROM communion.systemconfig WHERE `group`='elecsign' AND `key`='elecsign.appSecret' AND company=43);
 
-INSERT INTO communion.systemconfig (`group`, `key`, `value`, `company`, `comment`)
-SELECT 'elecsign', 'elecsign.host', 'https://smlopenapi.esign.cn', 43, 'e签宝沙箱网关(转生产改 https://openapi.esign.cn)'
+INSERT INTO communion.systemconfig (`group`, `key`, `value`, `company`, `cuid`, `comment`)
+SELECT 'elecsign', 'elecsign.host', 'https://smlopenapi.esign.cn', 43, 34, 'e签宝沙箱网关(转生产改 https://openapi.esign.cn)'
 FROM DUAL WHERE NOT EXISTS (
   SELECT 1 FROM communion.systemconfig WHERE `group`='elecsign' AND `key`='elecsign.host' AND company=43);
 
 -- 2. 路由开关：仅装修合同+认证两个场景走 e签宝（员工/供应商/付款合同继续法大大）
-INSERT INTO communion.systemconfig (`group`, `key`, `value`, `company`, `comment`)
-SELECT 'elecsign', 'elecsign.provider.decoration', 'esign', 43, '装修合同场景走e签宝(试点)'
+INSERT INTO communion.systemconfig (`group`, `key`, `value`, `company`, `cuid`, `comment`)
+SELECT 'elecsign', 'elecsign.provider.decoration', 'esign', 43, 34, '装修合同场景走e签宝(试点)'
 FROM DUAL WHERE NOT EXISTS (
   SELECT 1 FROM communion.systemconfig WHERE `group`='elecsign' AND `key`='elecsign.provider.decoration' AND company=43);
 
-INSERT INTO communion.systemconfig (`group`, `key`, `value`, `company`, `comment`)
-SELECT 'elecsign', 'elecsign.provider.auth', 'esign', 43, '注册认证场景走e签宝(拿orgId/psnId必须)'
+INSERT INTO communion.systemconfig (`group`, `key`, `value`, `company`, `cuid`, `comment`)
+SELECT 'elecsign', 'elecsign.provider.auth', 'esign', 43, 34, '注册认证场景走e签宝(拿orgId/psnId必须)'
 FROM DUAL WHERE NOT EXISTS (
   SELECT 1 FROM communion.systemconfig WHERE `group`='elecsign' AND `key`='elecsign.provider.auth' AND company=43);
 
