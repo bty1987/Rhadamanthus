@@ -54,10 +54,11 @@ import com.fanglin.system.po.SystemConfigPO;
 @Component("esignClient")
 public class EsignClient {
 
-	private static final String ACCEPT = "application/json; charset=UTF-8";
+	private static final String ACCEPT = "*/*";
 
-	private static final String CONTENT_TYPE = "application/json;charset=UTF-8";
+	private static final String CONTENT_TYPE = "application/json; charset=UTF-8";
 
+	/** 生产网关；沙箱 https://smlopenapi.esign.cn 由 systemconfig elecsign.host 覆盖（联调期配置） */
 	private static final String DEFAULT_HOST = "https://openapi.esign.cn";
 
 	@Autowired
@@ -96,6 +97,9 @@ public class EsignClient {
 			contentMd5 = base64(md5(bodyStr.getBytes()));
 		}
 
+		// GET/DELETE 无 body 时 Content-Type 置空（官方 SDK 行为，参与签名与请求头一致）
+		String contentType = bodyStr.isEmpty() ? "" : CONTENT_TYPE;
+
 		String pathAndQuery = path;
 
 		if ("GET".equals(method) && payload instanceof Map && !((Map<?, ?>) payload).isEmpty()) {
@@ -116,8 +120,11 @@ public class EsignClient {
 
 		String timestamp = String.valueOf(System.currentTimeMillis());
 
-		// 待签名字符串：Method\nAccept\n[Content-MD5]\nContent-Type\nDate\nPathAndParameters（GET 无 body 时 Content-MD5 不参与）
-		String stringToSign = "POST".equals(method) ? String.format("%s\n%s\n%s\n%s\n%s\n%s", method, ACCEPT, contentMd5, CONTENT_TYPE, timestamp, pathAndQuery) : String.format("%s\n%s\n%s\n%s\n%s", method, ACCEPT, CONTENT_TYPE, timestamp, pathAndQuery);
+		// 签名串 6 段（官方 dev-guide3/tggw2e，2026-10 沙箱实测确认）：
+		// method \n "*/*" \n contentMD5 \n contentType(GET空) \n ""(Date段恒空,时间戳不参与签名) \n pathAndQuery
+		// 坑点：①Date 段是空串，时间戳只放 X-Tsign-Open-Ca-Timestamp 头；②Accept 恒为 "*/*"；
+		//      ③GET 的 Content-Type 段为空串。三者任一不符即 401 INVALID_SIGNATURE。
+		String stringToSign = String.join("\n", method, ACCEPT, contentMd5, contentType, "", pathAndQuery);
 
 		String signature = hmacSha256(config.appSecret, stringToSign);
 
@@ -136,10 +143,11 @@ public class EsignClient {
 			connection.setRequestProperty("X-Tsign-Open-Auth-Mode", "Signature");
 			connection.setRequestProperty("X-Tsign-Open-Ca-Signature", signature);
 			connection.setRequestProperty("X-Tsign-Open-Ca-Timestamp", timestamp);
+			connection.setRequestProperty("Date", "");
+			connection.setRequestProperty("Content-Type", contentType);
+			connection.setRequestProperty("Content-MD5", contentMd5);
 
 			if ("POST".equals(method)) {
-				connection.setRequestProperty("Content-Type", CONTENT_TYPE);
-				connection.setRequestProperty("Content-MD5", contentMd5);
 				connection.setDoOutput(true);
 			}
 
