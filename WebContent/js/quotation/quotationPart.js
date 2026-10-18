@@ -3890,9 +3890,21 @@ var QuotationDetail = (function() {
 
             expres = expres.replace(/\!\s*\(/g, "Math.ceil(");
 
+            // 防崩: 单项公式求值失败(NaN/引用缺失等)不再中断整个分区渲染, 该项数量按0展示;
+            // formula 一并归"0", 防坏串('NaN'等)经行保存再次写回
+            var num = 0;
+            var checked = false;
+
+            try {
+                num = evalFormula(expres);
+                checked = true;
+            } catch (e) {
+                num = 0;
+            }
+
             var formula = {
-                "formula": expres,
-                "num": evalFormula(expres)
+                "formula": checked ? expres : "0",
+                "num": num
             }
 
             return formula;
