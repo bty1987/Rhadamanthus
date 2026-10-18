@@ -377,9 +377,13 @@ public class DecorationServiceImpl implements DecorationService {
 			return;
 		}
 
-		List<CustomerPhonePO> customerPhones = customerPhoneDao.queryCustomerPhone(SensitiveDataHelper.getAllEncryptedForms(customerPhone), CustomerPhonePO.STATUS_ENABLE_INT, null, null);
+		// 电话→cid 转换仅在传入电话时执行（customerName 等 filters 条件可独立生效，不受 cid=-1 强塞影响）
+		if (customerPhone != null && !customerPhone.trim().isEmpty()) {
 
-		filters.add(new Filter("decoration.customer.cid", (null != customerPhones && !customerPhones.isEmpty()) ? String.valueOf(customerPhones.get(0).getCid()) : "-1", "eq"));
+			List<CustomerPhonePO> customerPhones = customerPhoneDao.queryCustomerPhone(SensitiveDataHelper.getAllEncryptedForms(customerPhone), CustomerPhonePO.STATUS_ENABLE_INT, null, null);
+
+			filters.add(new Filter("decoration.customer.cid", (null != customerPhones && !customerPhones.isEmpty()) ? String.valueOf(customerPhones.get(0).getCid()) : "-1", "eq"));
+		}
 
 		List<DecorationPO> decorationPOs = decorationDao.pageDecorationForCompany(paging, filters, null);
 		List<DecorationVO> decorationVOs = new ArrayList<DecorationVO>();

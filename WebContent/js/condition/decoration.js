@@ -685,6 +685,14 @@ Condition.addupRule("decoration", {
             alone: true
         }
     },
+    "customerName": {
+        label: "客户姓名",
+        type: "text",
+        submitConfig: {
+            name: "decoration.customer.name",
+            op: "cn"
+        }
+    },
     "company": {
         label: "公司",
         type: "select",
