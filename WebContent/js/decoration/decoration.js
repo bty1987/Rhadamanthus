@@ -3214,10 +3214,21 @@ $(function() {
 
     searcher.set("condList", "pagenation", "resultList", pageConfig.apiPage, extraParam, pageConfig.condArr, pageConfig.postDataName, null, false, buttons);
 
+    // 按配置顺序(decorationFunction.sort, getConfig已排序)重排行内按钮:
+    // pageBtn序优先, linebtns中未进配置清单的按钮按原定义序追加尾部(hidden等)。
+    var orderedLinebtns = {};
+
+    $.each(pageConfig.pageBtn.concat(Object.keys(linebtns)), function(i, name) {
+
+        if (linebtns.hasOwnProperty(name) && !orderedLinebtns.hasOwnProperty(name)) {
+            orderedLinebtns[name] = linebtns[name];
+        }
+    });
+
     searcher.line(function(v) {
 
         return v.orderId;
-    }, lineprops, linebtns).render();
+    }, lineprops, orderedLinebtns).render();
 
     function createToolButton(name, icon, text, clazz) {
 
