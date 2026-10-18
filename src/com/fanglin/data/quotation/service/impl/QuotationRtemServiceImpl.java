@@ -37,9 +37,16 @@ public class QuotationRtemServiceImpl implements QuotationRtemService {
 	private QuotationItemDao quotationItemDao;
 
 	@Override
-	public List<QuotationRtemVO> queryQuotationRtem(QuotationRtemVO quotationRtemVO) throws FLException {
+	public List<QuotationRtemVO> queryQuotationRtemByQuotationId(long quotationId) throws FLException {
 
-		List<QuotationRtemPO> quotationRtemPOs = quotationRtemDao.queryQuotationRtem(quotationRtemVO.getSource().getQiid());
+		List<QuotationRtemPO> quotationRtemPOs = quotationRtemDao.queryQuotationRtemByQuotationId(quotationId);
+
+		return ptvList(quotationRtemPOs);
+	}
+
+	// 分区实例项VO装配(source/target关联项随行带出)
+	private List<QuotationRtemVO> ptvList(List<QuotationRtemPO> quotationRtemPOs) {
+
 		List<QuotationRtemVO> quotationRtemVOs = new ArrayList<QuotationRtemVO>();
 
 		for (QuotationRtemPO quotationRtemPO : quotationRtemPOs) {
@@ -50,6 +57,11 @@ public class QuotationRtemServiceImpl implements QuotationRtemService {
 		}
 
 		return quotationRtemVOs;
+	}
+
+	@Override
+	public List<QuotationRtemVO> queryQuotationRtem(QuotationRtemVO quotationRtemVO) throws FLException {
+		return ptvList(quotationRtemDao.queryQuotationRtem(quotationRtemVO.getSource().getQiid()));
 	}
 
 	@Override

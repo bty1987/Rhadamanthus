@@ -461,6 +461,9 @@ $.extend(api, {
             }
         },
 
+        queryQuotationRtemByQuotationId: {
+            url: "queryQuotationRtemByQuotationId.do",
+        },
         queryQuotationRtem: {
             url: "queryQuotationRtem.do",
             type: "query",

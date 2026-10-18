@@ -5053,6 +5053,18 @@ var QuotationDetail = (function() {
             quo.quotationid = params.quotation.quotation.qid;
             quo.versionId = params.quotation.quotation.version.no;
 
+            // 批量预取本报价全部引用关系, 填充queryQuotationRtems的页面缓存(替代逐项懒取)
+            com.post(api.quotation.queryQuotationRtemByQuotationId, {
+                "quotationId": quo.quotationid
+            }, function(res) {
+
+                $.each(res.quotationRtems, function(i, r) {
+                    var sqiid = r.source ? r.source.qiid : null;
+                    if (sqiid == null) return;
+                    (rtems.quotationRtems[sqiid] = rtems.quotationRtems[sqiid] || []).push(r);
+                });
+            }, null, false);
+
             com.post(api.decoration.queryDecorationForCommonByOrderId, {
                 "decoration.orderId": quo.orderid
             }, function(res) {

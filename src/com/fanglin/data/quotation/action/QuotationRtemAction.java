@@ -38,11 +38,20 @@ public class QuotationRtemAction extends BaseListAction {
 	private QuotationRtemVO quotationRtem;
 
 	private List<QuotationRtemVO> quotationRtems;
+	private long quotationId;
 
 	@Action(value = "queryQuotationRtem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryQuotationRtem() throws FLException {
 
 		quotationRtems = quotationRtemService.queryQuotationRtem(quotationRtem);
+
+		return SUCCESS;
+	}
+
+	@Action(value = "queryQuotationRtemByQuotationId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryQuotationRtemByQuotationId() throws FLException {
+
+		quotationRtems = quotationRtemService.queryQuotationRtemByQuotationId(quotationId);
 
 		return SUCCESS;
 	}
@@ -69,6 +78,14 @@ public class QuotationRtemAction extends BaseListAction {
 
 	public void setQuotationRtem(QuotationRtemVO QuotationRtem) {
 		this.quotationRtem = QuotationRtem;
+	}
+
+	public long getQuotationId() {
+		return quotationId;
+	}
+
+	public void setQuotationId(long quotationId) {
+		this.quotationId = quotationId;
 	}
 
 	public List<QuotationRtemVO> getQuotationRtems() {

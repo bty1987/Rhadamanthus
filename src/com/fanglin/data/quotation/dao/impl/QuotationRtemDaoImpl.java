@@ -3,6 +3,7 @@ package com.fanglin.data.quotation.dao.impl;
 import java.math.BigInteger;
 import java.util.List;
 
+import org.hibernate.SQLQuery;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
@@ -45,6 +46,20 @@ public class QuotationRtemDaoImpl extends DaoImpl<QuotationRtemPO> implements Qu
 		BigInteger num = (BigInteger) session().createSQLQuery(sql).setLong("sqiid", sqiid).setLong("tqiid", tqiid).uniqueResult();
 
 		return num.intValue();
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<QuotationRtemPO> queryQuotationRtemByQuotationId(long quotationId) {
+
+		String sql = "SELECT r.* FROM quotation.quotationrtem r, quotation.quotationitem qi, quotation.quotation q "
+				+ "WHERE r.sqiid = qi.qiid AND qi.qvid = q.qvid AND q.qid = :quotationId";
+
+		SQLQuery query = session().createSQLQuery(sql).addEntity(QuotationRtemPO.class);
+
+		query.setLong("quotationId", quotationId);
+
+		return query.list();
 	}
 
 }
