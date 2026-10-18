@@ -12,6 +12,7 @@
 package com.fanglin.esign.service.impl;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -57,13 +58,19 @@ import com.fanglin.fadada.vo.SignatureVO;
  *   <li>getFile 认证文件下载</li>
  * </ul>
  *
- * <h3>端点核对状态（2026-10 对照 v3 官方文档）</h3>
- * <p>已核对修正：机构/个人认证链接（/v3/org-auth-url、/v3/psn-auth-url）、模板填充
- * （/v3/files/create-by-doc-template + docTemplateId）、签署链接（POST /v3/sign-flow/{id}/sign-url）、
- * 签署区关键字定位（signFields.normalSignFieldConfig.signFieldPosition）、认证状态字段（authenticated）。
- * <p>剩余联调确认项（沙箱验证）：① org-auth-url 自动签署授权参数；② psn-auth-url 的 psnInfo 字段名；
- * ③ 认证流详情（authFlowId）路径与状态字段；④ signFields 字段层级枚举值；⑤ sign-url 的 operator 入参形态；
- * ⑥ tables 动态表格能力。
+ * <h3>联调状态（2026-10-18 沙箱全链路实测通过）</h3>
+ * <p>已实测打通（appId 7439144015, smlopenapi.esign.cn）：签名鉴权 → 文件两步上传 →
+ * 关键字坐标 → 建签署流（个人+坐标）→ 获取签署链接 → 流程详情，端到端 8 环节全部验证。
+ * <p>实测确认的关键结构（与本实现一致）：
+ * <ul>
+ *   <li>签名串 Date 段恒空（见 EsignClient）</li>
+ *   <li>psn-auth-url 入参包 psnAuthConfig；identity-info 直查 psnId（realnameStatus=1 已实名）</li>
+ *   <li>自动落章=normalSignFieldConfig.autoSign（个人不支持）；signFieldStyle 必传</li>
+ *   <li>签署区纯坐标定位，keyword 先查 keyword-positions（POST keywords[]）</li>
+ *   <li>sign-url：POST operator.psnId + urlType=2</li>
+ * </ul>
+ * <p>待沙箱继续验证：generate 模板填充（等控制台 docTemplateId）、org-auth-url 自动签署授权、
+ * 动态表格能力、真实签署完成后的回调。
  */
 @Service("esignElecsignService")
 public class ESignElecsignServiceImpl implements ElecsignService, CompanyAware {
@@ -84,6 +91,12 @@ public class ESignElecsignServiceImpl implements ElecsignService, CompanyAware {
 
 	/** 查询认证授权流程详情（按 authFlowId 跟踪认证进度） TODO 联调确认路径 */
 	private static final String EP_AUTH_FLOW_DETAIL = "/v3/auth-flows/%s";
+
+	/** 获取文件上传地址（本地两步上传 step1，step2=PUT 上传地址且带 Content-Type/Content-MD5 头） */
+	private static final String EP_FILES_FILE_UPLOAD_URL = "/v3/files/file-upload-url";
+
+	/** 关键字坐标查询：POST /v3/files/{fileId}/keyword-positions，body keywords[]（e签宝无 keyword 定位签署区，需先查坐标） */
+	private static final String EP_FLOW_KEYWORD_POSITIONS = "/v3/files/%s/keyword-positions";
 
 	/** 通过下载地址创建文件 */
 	private static final String EP_FILES_CREATE_BY_URL = "/v3/files/create-by-url";
@@ -308,13 +321,18 @@ public class ESignElecsignServiceImpl implements ElecsignService, CompanyAware {
 
 	JSONObject authenticate(int company, String signno, String name, String phone, String identity, short type) throws FLException {
 
+		// 实测确认（2026-10 沙箱）：psnAccount/psnInfo 需包在 psnAuthConfig 内，端点 POST /v3/psn-auth-url
+		// 已实名账号返回 1450005"个人用户已实名"——业务方先调 identity-info 查 psnId 再决定是否走认证
+		JSONObject psnInfo = new JSONObject()
+				.fluentPut("psnName", name)
+				.fluentPut("psnIdCardNum", identity)
+				.fluentPut("psnIdCardType", type == 0 ? "CRED_PSN_CH_IDCARD" : "CRED_PSN_CH_PASSPORT");
+
 		JSONObject body = new JSONObject();
-		body.put("psnAccount", phone);
-		body.put("psnInfo", new JSONObject().fluentPut("psnName", name).fluentPut("psnIdCardNum", identity).fluentPut("psnIdCardType", type == 0 ? "CRED_PSN_CH_IDCARD" : "CRED_PSN_CH_PASSPORT"));
+		body.put("psnAuthConfig", new JSONObject().fluentPut("psnAccount", phone).fluentPut("psnInfo", psnInfo));
 
 		JSONObject data = esignClient.post(company, EP_PSN_AUTH_URL, body);
 
-		// 响应：authFlowId + authPageUrl（TODO 联调确认 psnInfo 字段名与响应结构）
 		data.put("url", data.getString("authPageUrl")); // 对齐法大大 authenticate 返回 data.url 的消费习惯
 
 		return data;
@@ -322,9 +340,12 @@ public class ESignElecsignServiceImpl implements ElecsignService, CompanyAware {
 
 	JSONObject person(int company, String token) throws FLException {
 
-		// token 复用为认证流程号 authFlowId（authenticate 时写入），按流程查认证进度
-		// TODO 联调确认响应状态字段（认证完成判定），必要时对齐 CustomerServiceImpl.confirmCustomer 的判定逻辑
-		return esignClient.get(company, String.format(EP_AUTH_FLOW_DETAIL, token), null);
+		// 实测确认：GET /v3/persons/identity-info?psnAccount=手机号 → data.psnId/realnameStatus(1=已实名)
+		// token 传手机号（个人账号标识），比 authFlowId 更稳定（认证前也可查）
+		Map<String, String> query = new HashMap<String, String>();
+		query.put("psnAccount", token);
+
+		return esignClient.get(company, EP_PSN_AUTH_INFO, query);
 	}
 
 	void certificate(int company, String no, String token) throws FLException {
@@ -366,17 +387,19 @@ public class ESignElecsignServiceImpl implements ElecsignService, CompanyAware {
 
 	void autosign(int company, String signno, String keyword, Contract contract) throws FLException {
 
-		// signno=机构账号 orgId（印章认证后写入 signet.signno），作为静默签主体标识
-		createSignFlow(company, contract, signno, keyword, true);
+		// signno=机构账号 orgId（机构认证后写回 signet.signno）；自动落章仅限应用主体企业或已授权机构
+		createSignFlow(company, contract, true, signno, keyword, true);
 	}
 
 	String extsign(int company, String signno, Contract contract) throws FLException {
 
-		// 建流（指定个人签署人）→ 获取签署链接；失败直接抛错，不让前端拿到空 URL 误判成功
-		String signFlowId = createSignFlow(company, contract, signno, null, false);
+		// 建流（个人手动签，无坐标=用户 H5 页面自选签章位置）→ 获取签署链接
+		String signFlowId = createSignFlow(company, contract, false, signno, null, false);
 
 		JSONObject body = new JSONObject();
-		body.put("operator", new JSONObject().fluentPut("psnId", signno)); // TODO 联调确认 operator 入参形态(psnId/psnAccount)
+		body.put("operator", new JSONObject().fluentPut("psnId", signno));
+		body.put("urlType", 2); // 2=签署链接（1=预览）
+		body.put("clientType", "ALL");
 
 		JSONObject data = esignClient.post(company, String.format(EP_FLOW_SIGN_URL, signFlowId), body);
 
@@ -412,15 +435,24 @@ public class ESignElecsignServiceImpl implements ElecsignService, CompanyAware {
 	// ====================================================================================
 
 	/**
-	 * 创建签署流。
+	 * 创建签署流（2026-10 沙箱实测结构）。
+	 *
+	 * <p>实测要点：
+	 * <ul>
+	 *   <li>签署方 = signerType(0个人/1机构) + psnSignerInfo{psnId} / orgSignerInfo{orgId}</li>
+	 *   <li>自动落章在 normalSignFieldConfig.autoSign（非 signer 层）；个人不支持 autoSign，
+	 *       机构限应用主体企业自身（或已做印章授权）</li>
+	 *   <li>signFieldStyle 必传（1=单页章），否则 1435002 参数错误</li>
+	 *   <li>签署区只支持坐标定位：keyword 需先调 keyword-positions 查坐标（两步，对应法大大一步 keyword）</li>
+	 * </ul>
 	 *
 	 * @param contract 合同（flowId() 此时为 fileId，建流后覆盖为 signFlowId）
-	 * @param subject 签署主体标识：静默签=机构账号 orgId，个人签=个人 psnId
-	 * @param keyword 盖章关键字（静默签定位签署域）
-	 * @param autoSign true 平台主体自动落章 / false 个人手动签
+	 * @param subject 签署主体标识：个人=psnId，机构=orgId
+	 * @param keyword 盖章关键字（非空时先查坐标定位签署区）
+	 * @param autoSign true 后台自动落章（仅机构）/ false 页面手动签
 	 * @return signFlowId
 	 */
-	private String createSignFlow(int company, Contract contract, String subject, String keyword, boolean autoSign) throws FLException {
+	private String createSignFlow(int company, Contract contract, boolean orgSigner, String subject, String keyword, boolean autoSign) throws FLException {
 
 		String fileId = contract.flowId();
 
@@ -428,27 +460,40 @@ public class ESignElecsignServiceImpl implements ElecsignService, CompanyAware {
 			throw new FLException(130097, "e签宝接口调用失败, 合同文件未上传(缺少厂商文件号)");
 		}
 
-		// 签署区：关键字定位（TODO 联调确认 signFields/normalSignFieldConfig/signFieldPosition 字段层级与枚举值）
-		JSONObject position = new JSONObject().fluentPut("positionType", "KEYWORD");
-		if (keyword != null && !keyword.trim().isEmpty()) {
-			position.put("keyword", keyword);
+		// 签署区：autoSign 场景用关键字查坐标；手动签场景不传位置则由用户在 H5 页面自选
+		NormalSignFieldHolder normal = new NormalSignFieldHolder();
+		normal.autoSign = autoSign;
+
+		if (autoSign) {
+			if (keyword == null || keyword.trim().isEmpty()) {
+				throw new FLException(130097, "e签宝接口调用失败, 自动落章必须提供盖章关键字");
+			}
+			JSONObject pos = firstKeywordPosition(company, fileId, keyword);
+			normal.position = new JSONObject()
+					.fluentPut("positionPage", String.valueOf(pos.getIntValue("pageNum")))
+					.fluentPut("positionX", pos.getJSONArray("coordinates").getJSONObject(0).getDoubleValue("positionX"))
+					.fluentPut("positionY", pos.getJSONArray("coordinates").getJSONObject(0).getDoubleValue("positionY"));
 		}
 
 		JSONObject signField = new JSONObject();
 		signField.put("fileId", fileId);
-		signField.put("normalSignFieldConfig", new JSONObject().fluentPut("signFieldPosition", position));
+		signField.put("signFieldType", 0);
+		JSONObject normalJson = new JSONObject();
+		normalJson.put("signFieldStyle", 1); // 1=单页签章（实测必传）
+		normalJson.put("autoSign", normal.autoSign);
+		if (normal.position != null) {
+			normalJson.put("signFieldPosition", normal.position);
+		}
+		signField.put("normalSignFieldConfig", normalJson);
 
 		JSONObject signer = new JSONObject();
-		signer.put("signFields", new JSONArray().fluentAdd(signField));
-
-		if (autoSign) {
-			// 平台主体静默签：orgId 指定企业主体 + autoSign=true（需该主体在 e签宝开通自动签署能力）
-			signer.put("orgId", subject);
-			signer.put("autoSign", true);
+		signer.put("signerType", orgSigner ? 1 : 0);
+		if (orgSigner) {
+			signer.put("orgSignerInfo", new JSONObject().fluentPut("orgId", subject));
 		} else {
-			// 个人签署人：psnId（实名后分配；未实名占位号需先走认证）
-			signer.put("psnId", subject);
+			signer.put("psnSignerInfo", new JSONObject().fluentPut("psnId", subject));
 		}
+		signer.put("signFields", new JSONArray().fluentAdd(signField));
 
 		JSONObject body = new JSONObject();
 		body.put("docs", new JSONArray().fluentAdd(new JSONObject().fluentPut("fileId", fileId)));
@@ -462,6 +507,34 @@ public class ESignElecsignServiceImpl implements ElecsignService, CompanyAware {
 		contract.flowId(signFlowId);
 
 		return signFlowId;
+	}
+
+	/** 关键字坐标查询（POST keywords[]）。多个命中取第一个（对应法大大 keywordStrategy=首个策略；全部命中策略待业务确认）。 */
+	private JSONObject firstKeywordPosition(int company, String fileId, String keyword) throws FLException {
+
+		JSONObject data = esignClient.post(company, String.format(EP_FLOW_KEYWORD_POSITIONS, fileId), new JSONObject().fluentPut("keywords", new JSONArray().fluentAdd(keyword)));
+
+		JSONArray list = data.getJSONArray("keywordPositions");
+
+		if (list == null || list.isEmpty()) {
+			throw new FLException(130097, String.format("e签宝接口调用失败, 关键字[%s]未在合同文件中定位到", keyword));
+		}
+
+		JSONObject first = list.getJSONObject(0);
+
+		if (!Boolean.TRUE.equals(first.getBoolean("searchResult")) || first.getJSONArray("positions") == null || first.getJSONArray("positions").isEmpty()) {
+			throw new FLException(130097, String.format("e签宝接口调用失败, 关键字[%s]未在合同文件中定位到", keyword));
+		}
+
+		return first.getJSONArray("positions").getJSONObject(0);
+	}
+
+	/** 签章区配置载体（内部传递用）。 */
+	private static class NormalSignFieldHolder {
+
+		private boolean autoSign;
+
+		private JSONObject position;
 	}
 
 	/** 签署流详情 → 文件下载地址。 */
