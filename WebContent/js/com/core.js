@@ -270,27 +270,17 @@ var com = {
                     }
                 } else if (res.errorCode == 110000) {
 
-                    params.errorCount += 1;
-
-                    var currentTime = new Date().getTime();
-
-                    if (params.errorCount >= 10 && (currentTime - params.errorTime) <= 60000) {
-                        if (parent.window.isPC) {
-                            document.getElementById('myiframe').contentWindow.document.getElementById("userLock").click();
-                        } else {
-                            window.location.href = '/';
-                        }
+                    // 会话失效首次命中即强制重登(原10次/60秒计数门槛会放行瞬态提示,
+                    // 用户在半绑定页面反复点击得不到任何反馈)
+                    if (parent.window.isPC) {
+                        document.getElementById('myiframe').contentWindow.document.getElementById("userLock").click();
+                    } else {
+                        window.location.href = '/';
                     }
 
-                    params.errorTime = currentTime;
+                    var reloginMsg = (window.i18n) ? i18n.t('msg.relogin') : "请重新登录或联系管理员";
 
-                    if (params.errorCount >= 5) {
-                        var reloginMsg = (window.i18n) ? i18n.t('msg.relogin') : "请重新登录或联系管理员";
-                        com.showAlert(com.error, res.errorMsg + "<br>" + reloginMsg);
-                        return res;
-                    }
-
-                    com.showAlert(com.error, com.errorMap[res.errorCode] || res.errorMsg);
+                    com.showAlert(com.error, reloginMsg);
 
                 } else if (res.errorCode == 110005) {
 
