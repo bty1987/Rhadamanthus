@@ -38,4 +38,13 @@ public class QuotationRtemDaoImpl extends DaoImpl<QuotationRtemPO> implements Qu
 		return num.intValue();
 	}
 
+	@Override
+	public int countQuotationRtem(long sqiid, long tqiid) {
+
+		String sql = "select count(*) from quotation.quotationrtem where sqiid = :sqiid and tqiid = :tqiid";
+		BigInteger num = (BigInteger) session().createSQLQuery(sql).setLong("sqiid", sqiid).setLong("tqiid", tqiid).uniqueResult();
+
+		return num.intValue();
+	}
+
 }

@@ -76,25 +76,21 @@ public class QuotationRtemServiceImpl implements QuotationRtemService {
 			throw new FLException(200013, "报价项不存在");
 		}
 
+		// 闸: 引用去重(库层唯一约束兜底见SQL)
+		if (quotationRtemDao.countQuotationRtem(source.getQiid(), target.getQiid()) > 0) {
+			throw new FLException(200130, "引用关系已存在");
+		}
+
+		// 闸: 环检测(自引用即单环)
+		checkCycle(source.getQiid(), target.getQiid());
+
 		QuotationRtemPO quotationRtemPO = new QuotationRtemPO(source, target);
 
 		BeanUtil.copyProperties(quotationRtemVO, quotationRtemPO, Arrays.asList("source", "target"));
 
 		quotationRtemDao.save(quotationRtemPO);
 
-		source.setIsRtem(quotationRtemDao.countQuotationRtem(source.getQiid()) > 0 ? QuotationItemPO.ISRTEM_CACSE_INT : QuotationItemPO.ISRTEM_NONE_INT);
-
-		List<QuotationRtemPO> quotaitonRtemPOs = quotationRtemDao.queryQuotationRtem(quotationRtemVO.getSource().getQiid());
-
-		StringBuffer rtemFlag = new StringBuffer();
-
-		for (QuotationRtemPO quotationRtemRO : quotaitonRtemPOs) {
-			rtemFlag.append(String.format("%s,", quotationRtemRO.getTarget().getQiid()));
-		}
-
-		source.setRtemFlag(rtemFlag.toString());
-
-		quotationItemDao.update(source);
+		refreshRtemState(source);
 
 		return 0;
 	}
@@ -109,12 +105,50 @@ public class QuotationRtemServiceImpl implements QuotationRtemService {
 
 		quotationRtemDao.delete(quotationRtemPO);
 
-		QuotationItemPO source = quotationRtemPO.getSource();
-
-		source.setIsRtem(quotationRtemDao.countQuotationRtem(source.getQiid()) > 0 ? QuotationItemPO.ISRTEM_CACSE_INT : QuotationItemPO.ISRTEM_NONE_INT);
-
-		quotationItemDao.update(source);
+		// 引用状态由真值行派生重建(add/delete对称维护, 勿在调用方散写)
+		refreshRtemState(quotationRtemPO.getSource());
 
 		return 0;
+	}
+
+	// 引用状态重建: isrtem/rtemFlag 一律由 quotationrtem 真值行派生, 勿在调用方散写
+	private void refreshRtemState(QuotationItemPO source) {
+
+		List<QuotationRtemPO> quotationRtemPOs = quotationRtemDao.queryQuotationRtem(source.getQiid());
+
+		StringBuffer rtemFlag = new StringBuffer();
+
+		for (QuotationRtemPO quotationRtemRO : quotationRtemPOs) {
+			rtemFlag.append(String.format("%s,", quotationRtemRO.getTarget().getQiid()));
+		}
+
+		source.setIsRtem(quotationRtemPOs.isEmpty() ? QuotationItemPO.ISRTEM_NONE_INT : QuotationItemPO.ISRTEM_CACSE_INT);
+		source.setRtemFlag(rtemFlag.toString());
+
+		quotationItemDao.update(source);
+	}
+
+	// 环检测: 沿引用链从target出发, 回到source即成环(自引用同为单环)
+	private void checkCycle(long sourceQiid, long targetQiid) throws FLException {
+
+		List<Long> chain = new ArrayList<Long>();
+		chain.add(targetQiid);
+
+		int cursor = 0;
+
+		while (cursor < chain.size() && chain.size() < 64) {
+
+			long current = chain.get(cursor);
+			cursor++;
+
+			if (current == sourceQiid) {
+				throw new FLException(200131, "引用关系成环");
+			}
+
+			for (QuotationRtemPO quotationRtemPO : quotationRtemDao.queryQuotationRtem(current)) {
+				Long next = quotationRtemPO.getTarget().getQiid();
+				if (!chain.contains(next)) chain.add(next);
+			}
+		}
 	}
 }
