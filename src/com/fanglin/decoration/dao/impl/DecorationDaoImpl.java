@@ -399,6 +399,8 @@ public class DecorationDaoImpl extends DaoImpl<DecorationPO> implements Decorati
 				query.add(query.getCriterion("customer.no", data, op));
 			} else if ("decoration.customer.cid".equals(field)) {
 				query.add(query.getCriterion("customer.cid", Long.valueOf(data), op));
+			} else if ("decoration.customer.name".equals(field)) {
+				query.add(query.getCriterion("customer.name", data, op));
 			} else if ("decoration.house.houseNumber".equals(field)) {
 				query.add(query.getCriterion("house.houseNumber", data, op));
 			} else if ("decoration.house.hid".equals(field)) {
