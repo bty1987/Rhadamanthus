@@ -124,7 +124,10 @@ public class EsignClient {
 		// method \n "*/*" \n contentMD5 \n contentType(GET空) \n ""(Date段恒空,时间戳不参与签名) \n pathAndQuery
 		// 坑点：①Date 段是空串，时间戳只放 X-Tsign-Open-Ca-Timestamp 头；②Accept 恒为 "*/*"；
 		//      ③GET 的 Content-Type 段为空串。三者任一不符即 401 INVALID_SIGNATURE。
-		String stringToSign = String.join("\n", method, ACCEPT, contentMd5, contentType, "", pathAndQuery);
+		// 🔴String.join 系 Java 8 API(1.7 JVM 报 NoSuchMethodError), 改 StringBuilder 拼接(拼接结果一致)
+		String stringToSign = new StringBuilder(method).append("\n").append(ACCEPT).append("\n")
+				.append(contentMd5).append("\n").append(contentType).append("\n").append("")
+				.append("\n").append(pathAndQuery).toString();
 
 		String signature = hmacSha256(config.appSecret, stringToSign);
 
