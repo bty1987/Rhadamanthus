@@ -1377,6 +1377,54 @@ $(function() {
                     viewDecorationDetail(v);
                 }
             },
+            profile: {
+                name: "画像",
+                clazz: "btn-success",
+                show: function() {
+
+                    return pageConfig.pageBtn.contains("profile");
+                },
+                handle: function(v) {
+
+                    viewDecorationProfile(v.orderId);
+                }
+            },
+            refer: {
+                name: "推荐",
+                clazz: "btn-success",
+                show: function() {
+
+                    return pageConfig.pageBtn.contains("refer");
+                },
+                handle: function(v) {
+
+                    viewDecorationRefer(v.orderId);
+                }
+            },
+            info: {
+                name: "详情",
+                clazz: "btn-success",
+                show: function() {
+
+                    return pageConfig.pageBtn.contains("info");
+                },
+                handle: function(v) {
+
+                    viewDecorationTimelineIndex(v.orderId);
+                }
+            },
+            services: {
+                name: "服务",
+                clazz: "btn-success",
+                show: function() {
+
+                    return pageConfig.pageBtn.contains("services");
+                },
+                handle: function(v) {
+
+                    viewDecorationService(v.orderId);
+                }
+            },
             revie: {
                 name: "回访",
                 clazz: "btn-success",
@@ -1475,7 +1523,7 @@ $(function() {
                 }
             },
             extension: {
-                name: "扩展项",
+                name: "扩展单",
                 clazz: "btn-pink",
                 show: function(v) {
 
@@ -1499,7 +1547,7 @@ $(function() {
                 }
             },
             selection: {
-                name: "选材项",
+                name: "选材单",
                 clazz: "btn-pink",
                 show: function() {
 
@@ -1511,7 +1559,7 @@ $(function() {
                 }
             },
             btnAddReduce: {
-                name: "增减项",
+                name: "增减单",
                 clazz: "btn-pink",
                 show: function(v) {
 
@@ -1523,7 +1571,7 @@ $(function() {
                 }
             },
             btnAddReduceD: {
-                name: "增减项",
+                name: "增减单",
                 clazz: "btn-pink",
                 show: function(v) {
 
@@ -1535,7 +1583,7 @@ $(function() {
                 }
             },
             btnAddReduceM: {
-                name: "增减项",
+                name: "增减单",
                 clazz: "btn-pink",
                 show: function(v) {
 
@@ -1556,54 +1604,6 @@ $(function() {
                 handle: function(v) {
 
                     viewConschePart(v.orderId);
-                }
-            },
-            info: {
-                name: "详情",
-                clazz: "btn-success",
-                show: function() {
-
-                    return pageConfig.pageBtn.contains("info");
-                },
-                handle: function(v) {
-
-                    viewDecorationTimelineIndex(v.orderId);
-                }
-            },
-            profile: {
-                name: "画像",
-                clazz: "btn-success",
-                show: function() {
-
-                    return pageConfig.pageBtn.contains("profile");
-                },
-                handle: function(v) {
-
-                    viewDecorationProfile(v.orderId);
-                }
-            },
-            services: {
-                name: "服务",
-                clazz: "btn-success",
-                show: function() {
-
-                    return pageConfig.pageBtn.contains("services");
-                },
-                handle: function(v) {
-
-                    viewDecorationService(v.orderId);
-                }
-            },
-            refer: {
-                name: "推荐",
-                clazz: "btn-success",
-                show: function() {
-
-                    return pageConfig.pageBtn.contains("refer");
-                },
-                handle: function(v) {
-
-                    viewDecorationRefer(v.orderId);
                 }
             },
             activity: {
