@@ -244,7 +244,27 @@ jQuery(function($) {
         paytran.modals.createPaytranModal.modal("show");
     });
 
-    paytran.btns.confirmBtn.bindClick(function() {
+    // 防重复提交: 点击即禁用, 覆盖com.post同接口5秒节流窗口(6s)后恢复
+    var guard = function($btn, handler) {
+
+        return function() {
+
+            if ($btn.data("submitting"))
+                return;
+
+            $btn.data("submitting", true).prop("disabled", true).addClass("disabled");
+
+            try {
+                handler();
+            } finally {
+                setTimeout(function() {
+                    $btn.data("submitting", false).prop("disabled", false).removeClass("disabled");
+                }, 6000);
+            }
+        };
+    };
+
+    paytran.btns.confirmBtn.on("click", guard(paytran.btns.confirmBtn, function() {
 
         if (com.validate("createPaytranModal"))
             return;
@@ -266,9 +286,9 @@ jQuery(function($) {
             searcher.doSearch();
             paytran.modals.createPaytranModal.modal("hide");
         });
-    }, 3000);
+    }));
 
-    paytran.btns.posConfirmBtn.bindClick(function() {
+    paytran.btns.posConfirmBtn.on("click", guard(paytran.btns.posConfirmBtn, function() {
 
         var option = {
             "paytran.ptid": paytran.currentPtid,
@@ -279,6 +299,6 @@ jQuery(function($) {
 
             com.showAlert(com.info, "推送成功");
         });
-    }, 3000);
+    }));
 
 });

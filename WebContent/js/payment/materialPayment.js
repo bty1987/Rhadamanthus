@@ -146,9 +146,29 @@ jQuery(function($) {
 		return false;
 	});
 
-	materialPayment.btns.collectBtn.bindClick(collect, 3000);
 
-	materialPayment.btns.refundBtn.bindClick(collect, 3000);
+    // 防重复提交: 点击即禁用, 覆盖com.post同接口5秒节流窗口(6s)后恢复
+    var guard = function($btn, handler) {
+
+        return function() {
+
+            if ($btn.data("submitting"))
+                return;
+
+            $btn.data("submitting", true).prop("disabled", true).addClass("disabled");
+
+            try {
+                handler();
+            } finally {
+                setTimeout(function() {
+                    $btn.data("submitting", false).prop("disabled", false).removeClass("disabled");
+                }, 6000);
+            }
+        };
+    };
+	materialPayment.btns.collectBtn.on("click", guard(materialPayment.btns.collectBtn, collect));
+
+	materialPayment.btns.refundBtn.on("click", guard(materialPayment.btns.refundBtn, collect));
 
 	materialPayment.btns.createPaytran.unbind().click(function(){
 		paymentUtils.pushPos(materialPayment, materialPayment.payment.material.orderId);

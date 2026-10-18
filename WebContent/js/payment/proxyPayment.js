@@ -125,9 +125,29 @@ jQuery(function($) {
         return false;
     });
 
-    proxyPayment.btns.collectBtn.bindClick(collect, 3000);
 
-    proxyPayment.btns.refundBtn.bindClick(collect, 3000);
+    // 防重复提交: 点击即禁用, 覆盖com.post同接口5秒节流窗口(6s)后恢复
+    var guard = function($btn, handler) {
+
+        return function() {
+
+            if ($btn.data("submitting"))
+                return;
+
+            $btn.data("submitting", true).prop("disabled", true).addClass("disabled");
+
+            try {
+                handler();
+            } finally {
+                setTimeout(function() {
+                    $btn.data("submitting", false).prop("disabled", false).removeClass("disabled");
+                }, 6000);
+            }
+        };
+    };
+	proxyPayment.btns.collectBtn.on("click", guard(proxyPayment.btns.collectBtn, collect));
+
+	proxyPayment.btns.refundBtn.on("click", guard(proxyPayment.btns.refundBtn, collect));
 
     proxyPayment.btns.createPaytran.unbind().click(function() {
 
@@ -275,7 +295,7 @@ jQuery(function($) {
         });
     });
 
-    proxyPayment.btns.createBtn.bindClick(function() {
+    proxyPayment.btns.createBtn.on("click", guard(proxyPayment.btns.createBtn, function() {
 
         if (com.validate("createProxyPaymentModal"))
             return;
@@ -295,7 +315,7 @@ jQuery(function($) {
             searcher.doSearch();
             proxyPayment.modals.createProxyPaymentModal.modal("hide");
         });
-    }, 3000);
+    }));
 
     // 收款-初始化模态框
     function initCollect(payment) {

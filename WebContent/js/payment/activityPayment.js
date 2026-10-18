@@ -148,8 +148,28 @@ jQuery(function($) {
     com.selectTypeahead("couponType", activityPayment.activityCouponType, 'key', 'value', null);
     com.selectTypeahead("bankName", activityPayment.bankUtil, "key", "value", null);
 
-    activityPayment.btns.collectBtn.bindClick(collect, 3000);
-    activityPayment.btns.saveBtn.bindClick(create, 3000);
+
+    // 防重复提交: 点击即禁用, 覆盖com.post同接口5秒节流窗口(6s)后恢复
+    var guard = function($btn, handler) {
+
+        return function() {
+
+            if ($btn.data("submitting"))
+                return;
+
+            $btn.data("submitting", true).prop("disabled", true).addClass("disabled");
+
+            try {
+                handler();
+            } finally {
+                setTimeout(function() {
+                    $btn.data("submitting", false).prop("disabled", false).removeClass("disabled");
+                }, 6000);
+            }
+        };
+    };
+	activityPayment.btns.collectBtn.on("click", guard(activityPayment.btns.collectBtn, collect));
+	activityPayment.btns.saveBtn.on("click", guard(activityPayment.btns.saveBtn, create));
 
     activityPayment.btns.createPaytran.unbind().click(function() {
 
