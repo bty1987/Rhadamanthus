@@ -152,8 +152,28 @@ jQuery(function($) {
     com.initTypeahead('brand', api.data.queryBrandByPinyin, "brand.pinyin", {}, "brands", "name", "name", null);
     com.selectTypeahead("bankName", oalesPayment.bankUtil, "key", "value", null);
 
-    oalesPayment.btns.collectBtn.bindClick(collect, 3000);
-    oalesPayment.btns.refundBtn.bindClick(collect, 3000);
+
+    // 防重复提交: 点击即禁用, 覆盖com.post同接口5秒节流窗口(6s)后恢复
+    var guard = function($btn, handler) {
+
+        return function() {
+
+            if ($btn.data("submitting"))
+                return;
+
+            $btn.data("submitting", true).prop("disabled", true).addClass("disabled");
+
+            try {
+                handler();
+            } finally {
+                setTimeout(function() {
+                    $btn.data("submitting", false).prop("disabled", false).removeClass("disabled");
+                }, 6000);
+            }
+        };
+    };
+	oalesPayment.btns.collectBtn.on("click", guard(oalesPayment.btns.collectBtn, collect));
+	oalesPayment.btns.refundBtn.on("click", guard(oalesPayment.btns.refundBtn, collect));
 
     oalesPayment.btns.createPaytran.unbind().click(function() {
 

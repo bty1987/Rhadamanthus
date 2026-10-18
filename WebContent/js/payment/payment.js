@@ -158,7 +158,27 @@ jQuery(function($) {
         return false;
     });
 
-    payment.btns.collectBtn.bindClick(collect, 3000);
+
+    // 防重复提交: 点击即禁用, 覆盖com.post同接口5秒节流窗口(6s)后恢复
+    var guard = function($btn, handler) {
+
+        return function() {
+
+            if ($btn.data("submitting"))
+                return;
+
+            $btn.data("submitting", true).prop("disabled", true).addClass("disabled");
+
+            try {
+                handler();
+            } finally {
+                setTimeout(function() {
+                    $btn.data("submitting", false).prop("disabled", false).removeClass("disabled");
+                }, 6000);
+            }
+        };
+    };
+	payment.btns.collectBtn.on("click", guard(payment.btns.collectBtn, collect));
 
     // 审批提款提交
     payment.btns.approveWithdrawBtn.on('click', function() {
@@ -224,7 +244,7 @@ jQuery(function($) {
         return false;
     });
 
-    payment.btns.createBtn.bindClick(function() {
+    payment.btns.createBtn.on("click", guard(payment.btns.createBtn, function() {
 
         if (com.validate("createPaymentModal"))
             return;
@@ -240,9 +260,9 @@ jQuery(function($) {
             searcher.doSearch();
             payment.modals.createModal.modal("hide");
         });
-    }, 3000);
+    }));
 
-    payment.btns.confirmBtn.bindClick(function() {
+    payment.btns.confirmBtn.on("click", guard(payment.btns.confirmBtn, function() {
 
         if (com.validate("createCollectPaymentModal"))
             return;
@@ -260,7 +280,7 @@ jQuery(function($) {
             searcher.doSearch();
             payment.modals.createCollectPaymentModal.modal("hide");
         });
-    }, 3000);
+    }));
 
     // 切换合同和主材预付款
     payment.items.advanceType.on("change", function() {
