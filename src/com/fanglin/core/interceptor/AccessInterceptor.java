@@ -17,6 +17,8 @@ import com.fanglin.log.service.LogService;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.service.UserService;
 import com.fanglin.personel.vo.UserVO;
+import com.fanglin.system.dao.SystemConfigDao;
+import com.fanglin.system.po.SystemConfigPO;
 import com.fanglin.system.po.OperationPO;
 import com.fanglin.system.service.OperationService;
 import com.fanglin.system.service.impl.CompanyServiceImpl;
@@ -49,6 +51,9 @@ public class AccessInterceptor extends AbstractInterceptor {
 
 	@Autowired
 	private UserDao userDao;
+
+	@Autowired
+	private SystemConfigDao systemConfigDao;
 
 	/** Phase 1: 操作日志落库辅助类，延迟初始化 */
 	private ActionLogRecorder actionLogRecorder;
@@ -185,7 +190,7 @@ public class AccessInterceptor extends AbstractInterceptor {
 						throw new FLException(110005, "登陆超时");
 					}
 
-					if (authentication.getTimout() != Authentication.TIMEOUT_INT && authentication.isOverTime(SystemConfig.getInt("cookieOvertime", 30))) {
+					if (authentication.getTimout() != Authentication.TIMEOUT_INT && authentication.isOverTime(readCookieOvertime())) {
 						throw new FLException(110005, "登陆超时");
 					}
 
@@ -254,5 +259,18 @@ public class AccessInterceptor extends AbstractInterceptor {
 			}
 		}
 		return actionLogRecorder;
+	}
+	// 登录时长(分钟): communion.systemconfig 全局行(key=cookieOvertime, company=0), 库中未配置缺省120; 改库即生效免重启
+	private int readCookieOvertime() {
+
+		try {
+
+			SystemConfigPO cookieOvertime = systemConfigDao.querySystemConfig("cookieOvertime", 0);
+
+			return cookieOvertime == null ? 120 : Integer.parseInt(cookieOvertime.getValue().trim());
+
+		} catch (Exception e) {
+			return 120;
+		}
 	}
 }
