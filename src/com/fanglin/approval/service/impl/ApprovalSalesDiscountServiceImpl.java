@@ -73,6 +73,15 @@ public class ApprovalSalesDiscountServiceImpl implements ApprovalSalesDiscountSe
 			throw new FLException(260012, "销售订单当前状态不能提交补款");
 		}
 
+		// 与addSalesPaymentForFullpay的150041守卫对齐:定金提交中不可发起补款审批,否则审批通过后depositpayStatus/fullpayStatus同落0,款项弹窗无对应状态分支
+		List<Short> depositTypes = Arrays.asList(SalesPaymentPO.TYPE_DEPOSIT_INT, SalesPaymentPO.TYPE_NOTDEPOSITREFUND_INT);
+
+		SalesPaymentPO depositSalesPaymentPO = salesPaymentDao.querySalesPayment(sid, depositTypes);
+
+		if (depositSalesPaymentPO != null && depositSalesPaymentPO.getStatus() == SalesPaymentPO.STATUS_INITIAL_INT) {
+			throw new FLException(150041, "定金状态不可操作");
+		}
+
 		salesPO.setFullpayStatus(SalesPO.FULLPAYSTATUS_APPROVAL_INT);
 
 		salesDao.update(salesPO);
@@ -119,6 +128,15 @@ public class ApprovalSalesDiscountServiceImpl implements ApprovalSalesDiscountSe
 
 		if (salesPO.getFullpayStatus() != SalesPO.FULLPAYSTATUS_APPROVAL_INT) {
 			throw new FLException(260012, "销售订单当前状态不能提交补款");
+		}
+
+		// 提交后至审批通过的窗口期内定金若又落回提交中,拒绝通过,防止depositpayStatus/fullpayStatus同落0
+		List<Short> depositTypes = Arrays.asList(SalesPaymentPO.TYPE_DEPOSIT_INT, SalesPaymentPO.TYPE_NOTDEPOSITREFUND_INT);
+
+		SalesPaymentPO depositSalesPaymentPO = salesPaymentDao.querySalesPayment(approvalSalesDiscountPO.getSid(), depositTypes);
+
+		if (depositSalesPaymentPO != null && depositSalesPaymentPO.getStatus() == SalesPaymentPO.STATUS_INITIAL_INT) {
+			throw new FLException(150041, "定金状态不可操作");
 		}
 
 		if (approvalSalesDiscountPO.getPaymentType() == SalesPaymentPO.TYPE_MAKEAREFUND_INT) {
