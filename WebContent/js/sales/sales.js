@@ -1361,6 +1361,20 @@ $(function() {
             sales.btns.malingBtn.removeClass('hide');
         }
 
+        if (depositpayStatus == constant.sales().sales.DESPOSITPAYSTATUS_UNPAY_SHORT && fullpayStatus == constant.sales().sales.FULLPAYSTATUS_UNPAY_SHORT) { // 定金补款同时提交中(补款审批通过早于定金收款形成),只放补款撤销,定金撤销后端因补款存在必拒
+
+            sales.btns.fullCancelBtn.removeClass('hide');
+
+            sales.items.depositPayment.val(depositpay);
+            sales.items.realDepositPayment.val(depositpay);
+            sales.items.depositPaymentInfo.html("提交中");
+
+            calcFullpayment(total);
+
+            sales.items.realFullPayment.val(sales.items.fullPayment.val());
+            sales.items.fullPaymentInfo.html("提交中");
+        }
+
         if (depositpayStatus == constant.sales().sales.DESPOSITPAYSTATUS_PAYED_SHORT && fullpayStatus == constant.sales().sales.FULLPAYSTATUS_INIT_SHORT) {
 
             sales.btns.depositRefundBtn.removeClass('hide');
