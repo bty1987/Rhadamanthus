@@ -359,9 +359,13 @@ public class ESignElecsignServiceImpl implements ElecsignService, CompanyAware {
 		JSONObject body = new JSONObject();
 		body.put("psnAuthConfig", new JSONObject().fluentPut("psnAccount", phone).fluentPut("psnInfo", psnInfo));
 
+		body.put("notifyUrl", SystemConfig.getString("isv") + "/esignAuthCallback.do"); // 个人认证完成回调
+
 		JSONObject data = esignClient.post(company, EP_PSN_AUTH_URL, body);
 
-		data.put("url", data.getString("authUrl")); // 对齐法大大 authenticate 返回 data.url 的消费习惯（实测字段 authUrl）
+		// 实测（2026-10 沙箱）：响应 authFlowId + authUrl + authShortUrl
+		data.put("url", data.getString("authUrl")); // 对齐法大大 authenticate 返回 data.url 的消费习惯
+		data.put("transactionNo", data.getString("authFlowId")); // 对齐法大大 token=交易号的消费习惯(authCustomer setToken)
 
 		return data;
 	}

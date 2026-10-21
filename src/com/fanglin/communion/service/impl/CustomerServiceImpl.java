@@ -621,6 +621,25 @@ public class CustomerServiceImpl implements CustomerService {
 
 		JSONObject info = elecsignRouter.route(customerPO.getProvider(), customerPO.getCompany()).person(customerPO.getToken());
 
+		// e签宝分支: identity-info 出于脱敏仅回 psnId/realnameStatus——实名信息源即客户注册录入
+		// (authenticate 时传 name/identity/phone 送核), 确认只需 psnId 写回 signno + 状态推进
+		if (customerPO.getProvider() != null && customerPO.getProvider() == ElecsignProvider.ESIGN.code()) {
+			Short realnameStatus = info.getShort("realnameStatus");
+
+			if (realnameStatus == null || realnameStatus.shortValue() != 1) {
+				throw new FLException(130027, "客户实名认证未完成, 请先完成认证");
+			}
+
+			customerPO.setSignno(info.getString("psnId"));
+			customerPO.setStatus(CustomerPO.STATUS_AUTH_INT);
+
+			customerDao.update(customerPO);
+
+			messageQueuingDao.save(new MessageCueuingPO().init(null, "confirmCustomer", "{\"cid\":" + customerPO.getCid() + ",\"no\":\"" + customerPO.getNo() + "\",\"event\":\"CUSTOMER_UPDATED\"}"));
+
+			return 0;
+		}
+
 		JSONObject person = info.getJSONObject("person");
 
 		customerPO.setName(person.getString("personName"));

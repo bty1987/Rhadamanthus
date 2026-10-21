@@ -64,6 +64,7 @@ public class CustomerDaoImpl extends DaoImpl<CustomerPO> implements CustomerDao 
 			sql.append("and c.company =:company ");
 		}
 
+
 		sql.append("group by c.cid ");
 		sql.append("limit :limit ");
 
@@ -81,6 +82,18 @@ public class CustomerDaoImpl extends DaoImpl<CustomerPO> implements CustomerDao 
 		}
 
 		return query.list();
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public CustomerPO queryCustomerByToken(String token) {
+
+		List<CustomerPO> customerPOs = session().createCriteria(CustomerPO.class)
+			.add(Restrictions.eq("token", token))
+			.add(Restrictions.ne("status", CustomerPO.STATUS_INIT_INT))
+			.list();
+
+		return customerPOs.isEmpty() ? null : customerPOs.get(0);
 	}
 
 	@Override
