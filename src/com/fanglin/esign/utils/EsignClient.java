@@ -106,8 +106,8 @@ public class EsignClient {
 
 		if ("GET".equals(method) && payload instanceof Map && !((Map<?, ?>) payload).isEmpty()) {
 
-			StringBuilder send = new StringBuilder(path);
-			StringBuilder sign = new StringBuilder(path);
+			StringBuilder send = new StringBuilder(path).append("?");
+			StringBuilder sign = new StringBuilder(path).append("?");
 
 			boolean first = true;
 
