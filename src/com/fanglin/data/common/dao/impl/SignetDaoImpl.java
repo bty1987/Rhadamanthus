@@ -56,6 +56,15 @@ public class SignetDaoImpl extends DaoImpl<SignetPO> implements SignetDao {
 		return count != null ? count.intValue() : 0;
 	}
 
+	@Override
+	public SignetPO querySignetByToken(String token) {
+
+		return (SignetPO) session().createCriteria(SignetPO.class)
+			.add(Restrictions.eq("token", token))
+			.add(Restrictions.ne("status", SignetPO.STATUS_CANCEL_INT))
+			.uniqueResult();
+	}
+
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {
 
 		if (filters == null) return;

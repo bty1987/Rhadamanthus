@@ -28,6 +28,7 @@ import com.fanglin.elecsign.service.ElecsignService;
 import com.fanglin.esign.utils.EsignClient;
 import com.fanglin.fadada.bean.Contract;
 import com.fanglin.fadada.vo.SignatureVO;
+import com.fanglin.utils.SystemConfig;
 
 /**
  * e签宝实现（ElecsignService 的 e签宝适配）。
@@ -294,6 +295,8 @@ public class ESignElecsignServiceImpl implements ElecsignService, CompanyAware {
 		body.put("orgAuthConfig", new JSONObject()
 				.fluentPut("orgName", signetPO.getName())
 				.fluentPut("orgInfo", orgInfo));
+		// 认证完成回调: 沙箱/生产同路径, ESignAuthCallback 按 authFlowId 自动推进印章状态
+		body.put("notifyUrl", SystemConfig.getString("isv") + "/esignAuthCallback.do");
 
 		JSONObject data = esignClient.post(company, EP_ORG_AUTH_URL, body);
 
