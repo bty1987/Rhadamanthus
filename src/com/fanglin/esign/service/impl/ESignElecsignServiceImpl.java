@@ -28,7 +28,8 @@ import com.fanglin.elecsign.service.ElecsignService;
 import com.fanglin.esign.utils.EsignClient;
 import com.fanglin.fadada.bean.Contract;
 import com.fanglin.fadada.vo.SignatureVO;
-import com.fanglin.utils.SystemConfig;
+import com.fanglin.system.dao.SystemConfigDao;
+import com.fanglin.system.po.SystemConfigPO;
 
 /**
  * e签宝实现（ElecsignService 的 e签宝适配）。
@@ -135,6 +136,9 @@ public class ESignElecsignServiceImpl implements ElecsignService, CompanyAware {
 
 	@Autowired
 	private EsignClient esignClient;
+
+	@Autowired
+	private SystemConfigDao systemConfigDao;
 
 	@Override
 	public ElecsignService forCompany(final int company) {
@@ -630,12 +634,17 @@ public class ESignElecsignServiceImpl implements ElecsignService, CompanyAware {
 		return fileUrl(company, fileId);
 	}
 
-	/** isv 归一化：去尾部斜杠（systemconfig 的 isv 值惯例带尾斜杠）。 */
+	/** isv 归一化：从 DB systemconfig(company=0) 读取(properties 文件无 isv key)，去尾部斜杠。 */
 	private String normalizeIsv() {
-		String isv = SystemConfig.getString("isv");
+
+		SystemConfigPO isvPO = systemConfigDao.querySystemConfig("isv");
+
+		String isv = isvPO == null ? null : isvPO.getValue();
+
 		if (isv != null && isv.endsWith("/")) {
 			isv = isv.substring(0, isv.length() - 1);
 		}
+
 		return isv == null ? "" : isv;
 	}
 
