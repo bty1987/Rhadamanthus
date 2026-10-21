@@ -578,7 +578,8 @@ private String createSignFlow(int company, Contract contract, boolean orgSigner,
 		JSONObject body = new JSONObject();
 		body.put("docs", new JSONArray().fluentAdd(new JSONObject().fluentPut("fileId", fileId)));
 		body.put("signers", new JSONArray().fluentAdd(signer));
-		body.put("signFlowConfig", new JSONObject().fluentPut("autoArchived", true).fluentPut("signFlowTitle", contract.title()));
+		// 实测(2026-10沙箱): v3字段名为autoFinish(传autoArchived无效被忽略, 流签完卡"签署中"不归档); signFlowTitle必填
+		body.put("signFlowConfig", new JSONObject().fluentPut("autoFinish", true).fluentPut("signFlowTitle", contract.title()));
 
 		JSONObject data = esignClient.post(company, EP_FLOW_CREATE_BY_FILE, body);
 
