@@ -857,7 +857,7 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 	private ElecsignService routeForCreate(DecorationContractPO decorationContractPO, int company) throws FLException {
 
 		if (decorationContractPO.getProvider() != null) {
-			return elecsignRouter.route(decorationContractPO.getProvider());
+			return elecsignRouter.route(decorationContractPO.getProvider(), company);
 		}
 
 		ElecsignProvider provider = elecsignRouter.resolveProvider(company, ElecsignScene.DECORATION);

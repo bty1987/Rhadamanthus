@@ -277,7 +277,7 @@ public class SupplierContractServiceImpl implements SupplierContractService {
 	private ElecsignService routeForCreate(SupplierContractPO supplierContractPO, int company) throws FLException {
 
 		if (supplierContractPO.getProvider() != null) {
-			return elecsignRouter.route(supplierContractPO.getProvider());
+			return elecsignRouter.route(supplierContractPO.getProvider(), company);
 		}
 
 		ElecsignProvider provider = elecsignRouter.resolveProvider(company, ElecsignScene.SUPPLIER);

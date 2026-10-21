@@ -1386,9 +1386,9 @@ public class UserServiceImpl implements UserService {
 
 		Short type = 0;
 
-		JSONObject info = elecsignRouter.route(userPO.getProvider()).authenticate(userPO.getSignNo(), userPO.getUserName(), userPO.getPhone(), userPO.getIdentity(), type);
+		JSONObject info = elecsignRouter.route(userPO.getProvider(), userPO.getCompany()).authenticate(userPO.getSignNo(), userPO.getUserName(), userPO.getPhone(), userPO.getIdentity(), type);
 
-		redirect = elecsignRouter.route(userPO.getProvider()).decode(info.getString("url"));
+		redirect = elecsignRouter.route(userPO.getProvider(), userPO.getCompany()).decode(info.getString("url"));
 
 		userPO.setToken(info.getString("transactionNo"));
 
@@ -1411,7 +1411,7 @@ public class UserServiceImpl implements UserService {
 			throw new FLException(190014, "人员状态不可操作");
 		}
 
-		JSONObject info = elecsignRouter.route(userPO.getProvider()).person(userPO.getToken());
+		JSONObject info = elecsignRouter.route(userPO.getProvider(), userPO.getCompany()).person(userPO.getToken());
 
 		JSONObject person = info.getJSONObject("person");
 
@@ -1445,7 +1445,7 @@ public class UserServiceImpl implements UserService {
 			throw new FLException(190005, "人员不存在");
 		}
 
-		elecsignRouter.route(userPO.getProvider()).signature(userPO.getSignNo(), imgbase);
+		elecsignRouter.route(userPO.getProvider(), userPO.getCompany()).signature(userPO.getSignNo(), imgbase);
 
 		userDao.update(userPO);
 

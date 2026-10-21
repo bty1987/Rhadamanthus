@@ -148,7 +148,7 @@ public class SignetServiceImpl implements SignetService {
 			throw new FLException(130047, "签章状态不可操作");
 		}
 
-		String path = elecsignRouter.route(signetPO.getProvider()).authenticate(signetPO);
+		String path = elecsignRouter.route(signetPO.getProvider(), signetPO.getCompany()).authenticate(signetPO);
 
 		signetPO.setStatus(SignetPO.STATUS_AUTH_INT);
 
@@ -173,7 +173,7 @@ public class SignetServiceImpl implements SignetService {
 			throw new FLException(130047, "签章状态不可操作");
 		}
 
-		elecsignRouter.route(signetPO.getProvider()).company(signetPO);
+		elecsignRouter.route(signetPO.getProvider(), signetPO.getCompany()).company(signetPO);
 
 		signetPO.setStatus(SignetPO.STATUS_CONFIRM_INT);
 
@@ -195,7 +195,7 @@ public class SignetServiceImpl implements SignetService {
 			throw new FLException(130047, "签章状态不可操作");
 		}
 
-		elecsignRouter.route(signetPO.getProvider()).signature(signetPO.getSignno(), signetVO.getData());
+		elecsignRouter.route(signetPO.getProvider(), signetPO.getCompany()).signature(signetPO.getSignno(), signetVO.getData());
 
 		return 0;
 	}
@@ -213,7 +213,7 @@ public class SignetServiceImpl implements SignetService {
 			throw new FLException(130047, "签章状态不可操作");
 		}
 
-		String path = elecsignRouter.route(signetPO.getProvider()).beforeauto(signetPO);
+		String path = elecsignRouter.route(signetPO.getProvider(), signetPO.getCompany()).beforeauto(signetPO);
 
 		signetVO.setPath(path);
 
