@@ -27,12 +27,15 @@ def invoke(method, path, body=None, query=None):
 
     path_and_query = path
     if query:
-        path_and_query = f"{path}?{urlencode({k: v for k, v in sorted(query.items())})}"
+        qs_sig = "&".join(f"{k}={v}" for k, v in sorted(query.items()))
+        qs_send = urlencode({k: v for k, v in sorted(query.items())})
+        path_and_query = f"{path}?{qs_send}"
+        path_and_query_sig = f"{path}?{qs_sig}"
 
     ts = str(int(time.time() * 1000))
     content_type = "application/json; charset=UTF-8" if body_bytes else ""
 
-    string_to_sign = "\n".join([method, "*/*", content_md5, content_type, "", path_and_query])
+    string_to_sign = "\n".join([method, "*/*", content_md5, content_type, "", path_and_query_sig if query else path_and_query])
     sig = base64.b64encode(hmac.new(secret.encode(), string_to_sign.encode("utf-8"), hashlib.sha256).digest()).decode()
 
     req = urllib.request.Request(host + path_and_query, data=body_bytes if method == "POST" else None, method=method)
