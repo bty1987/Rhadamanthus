@@ -286,8 +286,14 @@ public class ESignElecsignServiceImpl implements ElecsignService, CompanyAware {
 	String authenticate(int company, SignetPO signetPO) throws FLException {
 
 		// 实测（2026-10 沙箱）：orgName 需包在 orgAuthConfig 内（对齐个人认证 psnAuthConfig 结构）
+		// 沙箱 mock 规则（官方"构造企业实名认证测试数据"文档）：名称+证件号成对传入才识别为测试数据
+		JSONObject orgInfo = new JSONObject()
+				.fluentPut("orgIDCardNum", "910000040897920017")
+				.fluentPut("orgIDCardType", "ORGANIZE_USCC");
 		JSONObject body = new JSONObject();
-		body.put("orgAuthConfig", new JSONObject().fluentPut("orgName", signetPO.getName()));
+		body.put("orgAuthConfig", new JSONObject()
+				.fluentPut("orgName", signetPO.getName())
+				.fluentPut("orgInfo", orgInfo));
 
 		JSONObject data = esignClient.post(company, EP_ORG_AUTH_URL, body);
 
@@ -322,8 +328,13 @@ public class ESignElecsignServiceImpl implements ElecsignService, CompanyAware {
 	String beforeauto(int company, SignetPO signetPO) throws FLException {
 
 		// 静默签授权：复用机构认证&授权页面链接 TODO 联调确认自动签署授权(mode/授权书模板)与 org-auth-url 的参数差异
+		JSONObject orgInfo = new JSONObject()
+				.fluentPut("orgIDCardNum", "910000040897920017")
+				.fluentPut("orgIDCardType", "ORGANIZE_USCC");
 		JSONObject body = new JSONObject();
-		body.put("orgAuthConfig", new JSONObject().fluentPut("orgName", signetPO.getName()));
+		body.put("orgAuthConfig", new JSONObject()
+				.fluentPut("orgName", signetPO.getName())
+				.fluentPut("orgInfo", orgInfo));
 
 		JSONObject data = esignClient.post(company, EP_ORG_AUTH_URL, body);
 
