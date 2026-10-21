@@ -22,6 +22,8 @@ public interface CustomerDao extends Dao<CustomerPO> {
 
 	public List<CustomerPO> queryCustomerByPinyin(String pinyinName, int limit, Integer company);
 
+	public CustomerPO queryCustomerByToken(String token);
+
 	public List<CustomerPO> queryCustomer(String phone);
 
 	public List<CustomerPO> queryCustomer(List<String> phones);

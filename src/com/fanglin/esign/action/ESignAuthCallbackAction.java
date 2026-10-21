@@ -12,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.fanglin.communion.dao.CustomerDao;
+import com.fanglin.communion.po.CustomerPO;
 import com.fanglin.core.action.BaseAction;
 import com.fanglin.data.common.dao.SignetDao;
 import com.fanglin.data.po.SignetPO;
@@ -41,6 +43,9 @@ public class ESignAuthCallbackAction extends BaseAction {
 	private SignetDao signetDao;
 
 	@Autowired
+	private CustomerDao customerDao;
+
+	@Autowired
 	private ElecsignRouter elecsignRouter;
 
 	@Action(value = "esignAuthCallback", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
@@ -64,14 +69,28 @@ public class ESignAuthCallbackAction extends BaseAction {
 			return null;
 		}
 
-		// 认证通过: identity-info 取 orgId 写回 + 状态推进(对齐人工确认 confirmSignet)
+		// 认证通过
 		if ("SIGN_FLOW_PASS".equals(authAction)) {
 			try {
+				// 机构分支: identity-info 取 orgId 写回 + 状态推进(对齐人工 confirmSignet)
 				elecsignRouter.route(signetPO.getProvider(), signetPO.getCompany()).company(signetPO);
 				signetPO.setStatus(SignetPO.STATUS_CONFIRM_INT);
 				signetDao.update(signetPO);
 			} catch (Exception e) {
 				// 回调内失败不阻断应答, 人工确认兜底
+			}
+		}
+
+		// 个人认证回调: psnId 在 psnInfo 里, 按 token(authFlowId) 反查客户写回 signno + 状态推进
+		String psnId = request.getParameter("psnId");
+
+		if (psnId != null && !psnId.trim().isEmpty()) {
+			com.fanglin.communion.po.CustomerPO customerPO = customerDao.queryCustomerByToken(flowId);
+
+			if (customerPO != null) {
+				customerPO.setSignno(psnId);
+				customerPO.setStatus(CustomerPO.STATUS_AUTH_INT);
+				customerDao.update(customerPO);
 			}
 		}
 
