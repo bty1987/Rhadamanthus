@@ -554,10 +554,15 @@ public class ESignElecsignServiceImpl implements ElecsignService, CompanyAware {
 		signField.put("fileId", fileId);
 		signField.put("signFieldType", 0);
 		JSONObject normalJson = new JSONObject();
-		normalJson.put("signFieldStyle", 1); // 1=单页签章（实测必传）
 		normalJson.put("autoSign", normal.autoSign);
-		if (normal.position != null) {
+		if (normal.autoSign) {
+			// 指定位置签章：signFieldStyle=1(单页) + keyword 预查坐标
+			normalJson.put("signFieldStyle", 1);
 			normalJson.put("signFieldPosition", normal.position);
+		} else {
+			// 手动签=自由签章模式：不限制位置/样式/个数, 客户在 H5 页面自选(对齐法大大 extsign 自选语义);
+			// 非自由模式必须传 signFieldPosition 否则 1435002"非自由模式signFieldPosition不能为空"
+			normalJson.put("freeMode", true);
 		}
 		signField.put("normalSignFieldConfig", normalJson);
 
