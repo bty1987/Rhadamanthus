@@ -15,4 +15,6 @@ public interface SignetDao extends Dao<SignetPO> {
 
 	public int countSignet(String no);
 
+	public SignetPO querySignetByToken(String token);
+
 }
