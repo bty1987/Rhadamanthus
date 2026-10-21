@@ -100,22 +100,31 @@ public class EsignClient {
 		// GET/DELETE 无 body 时 Content-Type 置空（官方 SDK 行为，参与签名与请求头一致）
 		String contentType = bodyStr.isEmpty() ? "" : CONTENT_TYPE;
 
-		String pathAndQuery = path;
+		String pathAndQuery = path;      // 发送用（query 值 URL 编码）
+		String pathAndQuerySign = path;  // 签名用（query 值保持解码原值——网关重建签名时先 decode，
+		                                 // 编码值参与签名即 401 INVALID_SIGNATURE，2026-10 沙箱实测）
 
 		if ("GET".equals(method) && payload instanceof Map && !((Map<?, ?>) payload).isEmpty()) {
 
-			StringBuilder qs = new StringBuilder(path);
-			qs.append("?");
+			StringBuilder send = new StringBuilder(path);
+			StringBuilder sign = new StringBuilder(path);
 
 			boolean first = true;
 
 			for (Map.Entry<String, String> entry : new TreeMap<String, String>((Map<String, String>) payload).entrySet()) {
-				if (!first) qs.append("&");
-				qs.append(urlEncode(entry.getKey())).append("=").append(urlEncode(entry.getValue() == null ? "" : entry.getValue()));
+				String k = entry.getKey();
+				String v = entry.getValue() == null ? "" : entry.getValue();
+				if (!first) {
+					send.append("&");
+					sign.append("&");
+				}
+				send.append(urlEncode(k)).append("=").append(urlEncode(v));
+				sign.append(k).append("=").append(v);
 				first = false;
 			}
 
-			pathAndQuery = qs.toString();
+			pathAndQuery = send.toString();
+			pathAndQuerySign = sign.toString();
 		}
 
 		String timestamp = String.valueOf(System.currentTimeMillis());
@@ -127,7 +136,7 @@ public class EsignClient {
 		// 🔴String.join 系 Java 8 API(1.7 JVM 报 NoSuchMethodError), 改 StringBuilder 拼接(拼接结果一致)
 		String stringToSign = new StringBuilder(method).append("\n").append(ACCEPT).append("\n")
 				.append(contentMd5).append("\n").append(contentType).append("\n").append("")
-				.append("\n").append(pathAndQuery).toString();
+				.append("\n").append(pathAndQuerySign).toString();
 
 		String signature = hmacSha256(config.appSecret, stringToSign);
 
