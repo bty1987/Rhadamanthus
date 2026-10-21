@@ -98,21 +98,17 @@ public class ESignElecsignServiceImpl implements ElecsignService, CompanyAware {
 
 	// ==================== 端点常量（2026-10 对照 v3 官方文档核对，残留「联调确认」处待沙箱验证） ====================
 
-	/** 查询机构认证信息：GET /v3/organizations/{orgId}/auth-info，响应 authenticated 字段 */
-	private static final String EP_ORG_AUTH_INFO = "/v3/organizations/%s/auth-info";
+	/** 查询机构认证信息：GET /v3/organizations/identity-info?orgName=，响应 realnameStatus(1=已实名)/orgId */
+	private static final String EP_ORG_IDENTITY_INFO = "/v3/organizations/identity-info";
 
-	/** 获取机构认证&授权页面链接：POST /v3/org-auth-url，入参 orgName(与orgId二选一)，响应 authFlowId/authPageUrl/orgId */
+	/** 获取机构认证&授权页面链接：POST /v3/org-auth-url，入参 orgAuthConfig.orgName，响应 authFlowId/authUrl/authShortUrl */
 	private static final String EP_ORG_AUTH_URL = "/v3/org-auth-url";
 
 	/** 查询个人认证信息 */
 	private static final String EP_PSN_AUTH_INFO = "/v3/persons/identity-info";
 
-	/** 获取个人认证&授权页面链接：POST /v3/psn-auth-url，响应 authFlowId/authPageUrl */
+	/** 获取个人认证&授权页面链接：POST /v3/psn-auth-url，响应 authFlowId/authUrl(同机构侧字段风格) */
 	private static final String EP_PSN_AUTH_URL = "/v3/psn-auth-url";
-
-	/** 查询认证授权流程详情（按 authFlowId 跟踪认证进度） TODO 联调确认路径 */
-	@SuppressWarnings("unused")
-	private static final String EP_AUTH_FLOW_DETAIL = "/v3/auth-flows/%s";
 
 	/** 获取文件上传地址（本地两步上传 step1，step2=PUT 上传地址且带 Content-Type/Content-MD5 头） */
 	@SuppressWarnings("unused")
@@ -120,9 +116,6 @@ public class ESignElecsignServiceImpl implements ElecsignService, CompanyAware {
 
 	/** 关键字坐标查询：POST /v3/files/{fileId}/keyword-positions，body keywords[]（e签宝无 keyword 定位签署区，需先查坐标） */
 	private static final String EP_FLOW_KEYWORD_POSITIONS = "/v3/files/%s/keyword-positions";
-
-	/** 通过下载地址创建文件 */
-	private static final String EP_FILES_CREATE_BY_URL = "/v3/files/create-by-url";
 
 	/** 基于文档模板创建文件（模板填充）：POST /v3/files/create-by-doc-template，入参 docTemplateId/components/fileName */
 	private static final String EP_DOC_CREATE_BY_TEMPLATE = "/v3/files/create-by-doc-template";
@@ -298,29 +291,29 @@ public class ESignElecsignServiceImpl implements ElecsignService, CompanyAware {
 
 		JSONObject data = esignClient.post(company, EP_ORG_AUTH_URL, body);
 
-		// 响应：authFlowId(认证流程号) + authPageUrl(认证页面) + orgId(机构账号，认证过程中即分配)
-		String url = data.getString("authPageUrl");
+		// 实测（2026-10 沙箱）：响应 authFlowId + authUrl + authShortUrl；无 orgId
+		// （orgId 在认证完成后按 orgName 查 identity-info 获取，见 company()）
+		String url = data.getString("authUrl");
 
 		signetPO.setToken(data.getString("authFlowId")); // token 复用为认证流程号（对齐法大大 token=交易号语义）
 		signetPO.setAuthurl(url);
-
-		if (data.getString("orgId") != null) {
-			signetPO.setSignno(data.getString("orgId"));
-		}
 
 		return url;
 	}
 
 	void company(int company, SignetPO signetPO) throws FLException {
 
-		if (signetPO.getSignno() == null || signetPO.getSignno().trim().isEmpty()) {
-			throw new FLException(130097, "e签宝接口调用失败, 机构账号缺失, 请先完成认证");
-		}
+		// 实测（2026-10 沙箱）：按 orgName 查 identity-info（认证前无 orgId；
+		// 认证完成后 realnameStatus=1 并返回 orgId 写回 signno）
+		Map<String, String> query = new HashMap<String, String>();
+		query.put("orgName", signetPO.getName());
 
-		JSONObject data = esignClient.get(company, String.format(EP_ORG_AUTH_INFO, signetPO.getSignno()), null);
+		JSONObject data = esignClient.get(company, EP_ORG_IDENTITY_INFO, query);
 
-		if (!Boolean.TRUE.equals(data.getBoolean("authenticated"))) {
-			throw new FLException(130097, "e签宝接口调用失败, 企业实名认证未通过");
+		Short status = data.getShort("realnameStatus");
+
+		if (status == null || status.shortValue() != 1) {
+			throw new FLException(130097, "e签宝接口调用失败, 企业实名认证未通过, 请先完成认证");
 		}
 
 		signetPO.setSignno(data.getString("orgId"));
@@ -354,7 +347,7 @@ public class ESignElecsignServiceImpl implements ElecsignService, CompanyAware {
 
 		JSONObject data = esignClient.post(company, EP_PSN_AUTH_URL, body);
 
-		data.put("url", data.getString("authPageUrl")); // 对齐法大大 authenticate 返回 data.url 的消费习惯
+		data.put("url", data.getString("authUrl")); // 对齐法大大 authenticate 返回 data.url 的消费习惯（实测字段 authUrl）
 
 		return data;
 	}
@@ -398,17 +391,53 @@ public class ESignElecsignServiceImpl implements ElecsignService, CompanyAware {
 
 	void upload(int company, Contract contract, String path) throws FLException {
 
-		JSONObject body = new JSONObject();
-		body.put("url", path);
-		body.put("fileName", String.format("%s.pdf", contract.title()));
+		// 实测（2026-10 沙箱）：create-by-url 端点不存在(404)——走本地两步上传：
+		// 下载源 PDF → file-upload-url(step1) → PUT(step2, Content-Type/Content-MD5 与 step1 一致)
+		try {
+			java.net.URL source = new java.net.URL(path);
+			byte[] pdf;
+			try (java.io.InputStream is = source.openStream(); java.io.ByteArrayOutputStream bos = new java.io.ByteArrayOutputStream()) {
+				byte[] buf = new byte[8192];
+				int len;
+				while ((len = is.read(buf)) > 0) {
+					bos.write(buf, 0, len);
+				}
+				pdf = bos.toByteArray();
+			}
 
-		JSONObject data = esignClient.post(company, EP_FILES_CREATE_BY_URL, body);
+			String contentMd5 = org.apache.commons.codec.binary.Base64.encodeBase64String(java.security.MessageDigest.getInstance("MD5").digest(pdf));
 
-		String fileId = data.getString("fileId");
+			JSONObject step1 = esignClient.post(company, EP_FILES_FILE_UPLOAD_URL, new JSONObject()
+					.fluentPut("contentMd5", contentMd5)
+					.fluentPut("contentType", "application/pdf;")
+					.fluentPut("fileName", String.format("%s.pdf", contract.title()))
+					.fluentPut("fileSize", pdf.length));
 
-		contract.flowId(fileId);
-		contract.download(fileUrl(company, fileId));
-		contract.viewpdf(fileUrl(company, fileId));
+			String fileId = step1.getString("fileId");
+			String uploadUrl = step1.getString("fileUploadUrl");
+
+			java.net.HttpURLConnection connection = (java.net.HttpURLConnection) new java.net.URL(uploadUrl).openConnection();
+			connection.setRequestMethod("PUT");
+			connection.setDoOutput(true);
+			connection.setRequestProperty("Content-Type", "application/pdf;");
+			connection.setRequestProperty("Content-MD5", contentMd5);
+			try (java.io.OutputStream os = connection.getOutputStream()) {
+				os.write(pdf);
+			}
+			int code = connection.getResponseCode();
+			if (code != 200) {
+				throw new FLException(130097, String.format("e签宝接口调用失败, 文件上传PUT %d", code));
+			}
+
+			contract.flowId(fileId);
+			contract.download(fileUrl(company, fileId));
+			contract.viewpdf(fileUrl(company, fileId));
+
+		} catch (FLException e) {
+			throw e;
+		} catch (Exception e) {
+			throw new FLException(130097, String.format("e签宝接口调用失败, 文件上传异常, %s", e.getMessage()));
+		}
 	}
 
 	void autosign(int company, String signno, String keyword, Contract contract) throws FLException {
