@@ -296,7 +296,8 @@ public class ESignElecsignServiceImpl implements ElecsignService, CompanyAware {
 				.fluentPut("orgName", signetPO.getName())
 				.fluentPut("orgInfo", orgInfo));
 		// 认证完成回调: 沙箱/生产同路径, ESignAuthCallback 按 authFlowId 自动推进印章状态
-		body.put("notifyUrl", SystemConfig.getString("isv") + "/esignAuthCallback.do");
+		// isv 值带尾部斜杠(如 http://service-erp.fanglin.vip/), 拼接前归一化, 否则 e签宝 报 notifyUrl 格式错误
+		body.put("notifyUrl", normalizeIsv() + "/esignAuthCallback.do");
 
 		JSONObject data = esignClient.post(company, EP_ORG_AUTH_URL, body);
 
@@ -359,7 +360,7 @@ public class ESignElecsignServiceImpl implements ElecsignService, CompanyAware {
 		JSONObject body = new JSONObject();
 		body.put("psnAuthConfig", new JSONObject().fluentPut("psnAccount", phone).fluentPut("psnInfo", psnInfo));
 
-		body.put("notifyUrl", SystemConfig.getString("isv") + "/esignAuthCallback.do"); // 个人认证完成回调
+		body.put("notifyUrl", normalizeIsv() + "/esignAuthCallback.do"); // 个人认证完成回调
 
 		JSONObject data = esignClient.post(company, EP_PSN_AUTH_URL, body);
 
@@ -627,6 +628,15 @@ public class ESignElecsignServiceImpl implements ElecsignService, CompanyAware {
 		String fileId = docs.getJSONObject(0).getString("fileId");
 
 		return fileUrl(company, fileId);
+	}
+
+	/** isv 归一化：去尾部斜杠（systemconfig 的 isv 值惯例带尾斜杠）。 */
+	private String normalizeIsv() {
+		String isv = SystemConfig.getString("isv");
+		if (isv != null && isv.endsWith("/")) {
+			isv = isv.substring(0, isv.length() - 1);
+		}
+		return isv == null ? "" : isv;
 	}
 
 	/** 文件下载地址。 */
