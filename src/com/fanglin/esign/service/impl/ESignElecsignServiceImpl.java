@@ -530,13 +530,13 @@ public class ESignElecsignServiceImpl implements ElecsignService, CompanyAware {
 	 * @param autoSign true 后台自动落章（仅机构）/ false 页面手动签
 	 * @return signFlowId
 	 */
-	private String createSignFlow(int company, Contract contract, boolean orgSigner, String subject, String keyword, boolean autoSign) throws FLException {
+private String createSignFlow(int company, Contract contract, boolean orgSigner, String subject, String keyword, boolean autoSign) throws FLException {
 
-		String fileId = contract.flowId();
+	String fileId = resolveFileId(company, contract.flowId());
 
-		if (fileId == null || fileId.trim().isEmpty()) {
-			throw new FLException(130097, "e签宝接口调用失败, 合同文件未上传(缺少厂商文件号)");
-		}
+	if (fileId == null || fileId.trim().isEmpty()) {
+		throw new FLException(130097, "e签宝接口调用失败, 合同文件未上传(缺少厂商文件号)");
+	}
 
 		// 签署区：autoSign 场景用关键字查坐标；手动签场景不传位置则由用户在 H5 页面自选
 		NormalSignFieldHolder normal = new NormalSignFieldHolder();
@@ -587,6 +587,36 @@ public class ESignElecsignServiceImpl implements ElecsignService, CompanyAware {
 		contract.flowId(signFlowId);
 
 		return signFlowId;
+	}
+
+	/**
+	 * 解析真实文件ID（flowId 双语义：add/generate 后存 fileId，任一签署建流后覆盖为 signFlowId）。
+	 * 先企业签再客户签时 flowId 已是 signFlowId，直接当 fileId 建流会报"文档不存在"——
+	 * 先按签署流详情反查 docs[0].fileId，查不到（非流ID）则视为 fileId 原样使用。
+	 */
+	private String resolveFileId(int company, String id) throws FLException {
+
+		if (id == null || id.trim().isEmpty()) {
+			return null;
+		}
+
+		try {
+			JSONObject detail = esignClient.get(company, String.format(EP_FLOW_DETAIL, id), null);
+
+			JSONArray docs = detail.getJSONArray("docs");
+
+			if (docs != null && !docs.isEmpty()) {
+				String fileId = docs.getJSONObject(0).getString("fileId");
+
+				if (fileId != null && !fileId.trim().isEmpty()) {
+					return fileId;
+				}
+			}
+		} catch (FLException e) {
+			// 非流ID(即fileId本身), 按文件ID原样使用
+		}
+
+		return id;
 	}
 
 	/** 关键字坐标查询（POST keywords[]）。多个命中取第一个（对应法大大 keywordStrategy=首个策略；全部命中策略待业务确认）。 */
