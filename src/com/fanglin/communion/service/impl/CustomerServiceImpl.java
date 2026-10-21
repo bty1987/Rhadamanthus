@@ -619,10 +619,15 @@ public class CustomerServiceImpl implements CustomerService {
 			throw new FLException(130184, "客户状态不可操作");
 		}
 
-		JSONObject info = elecsignRouter.route(customerPO.getProvider(), customerPO.getCompany()).person(customerPO.getToken());
+		ElecsignService elecsignService = elecsignRouter.route(customerPO.getProvider(), customerPO.getCompany());
 
 		// e签宝分支: identity-info 出于脱敏仅回 psnId/realnameStatus——实名信息源即客户注册录入
 		// (authenticate 时传 name/identity/phone 送核), 确认只需 psnId 写回 signno + 状态推进
+		// 按 psnAccount=手机号查询; token 存的是 authFlowId 供认证回调反查, 不能当账号标识
+		JSONObject info = customerPO.getProvider() != null && customerPO.getProvider() == ElecsignProvider.ESIGN.code()
+			? elecsignService.person(SensitiveDataHelper.decrypt(customerPO.getPhone()))
+			: elecsignService.person(customerPO.getToken());
+
 		if (customerPO.getProvider() != null && customerPO.getProvider() == ElecsignProvider.ESIGN.code()) {
 			Short realnameStatus = info.getShort("realnameStatus");
 
