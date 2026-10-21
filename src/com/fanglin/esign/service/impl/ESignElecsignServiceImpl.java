@@ -292,8 +292,9 @@ public class ESignElecsignServiceImpl implements ElecsignService, CompanyAware {
 
 	String authenticate(int company, SignetPO signetPO) throws FLException {
 
+		// 实测（2026-10 沙箱）：orgName 需包在 orgAuthConfig 内（对齐个人认证 psnAuthConfig 结构）
 		JSONObject body = new JSONObject();
-		body.put("orgName", signetPO.getName());
+		body.put("orgAuthConfig", new JSONObject().fluentPut("orgName", signetPO.getName()));
 
 		JSONObject data = esignClient.post(company, EP_ORG_AUTH_URL, body);
 
@@ -329,7 +330,7 @@ public class ESignElecsignServiceImpl implements ElecsignService, CompanyAware {
 
 		// 静默签授权：复用机构认证&授权页面链接 TODO 联调确认自动签署授权(mode/授权书模板)与 org-auth-url 的参数差异
 		JSONObject body = new JSONObject();
-		body.put("orgName", signetPO.getName());
+		body.put("orgAuthConfig", new JSONObject().fluentPut("orgName", signetPO.getName()));
 
 		JSONObject data = esignClient.post(company, EP_ORG_AUTH_URL, body);
 
