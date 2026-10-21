@@ -310,7 +310,7 @@ public class UserContractServiceImpl implements UserContractService {
 	private ElecsignService routeForCreate(UserContractPO userContractPO, int company) throws FLException {
 
 		if (userContractPO.getProvider() != null) {
-			return elecsignRouter.route(userContractPO.getProvider());
+			return elecsignRouter.route(userContractPO.getProvider(), company);
 		}
 
 		ElecsignProvider provider = elecsignRouter.resolveProvider(company, ElecsignScene.USER);

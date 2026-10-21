@@ -338,7 +338,7 @@ public class PaymentContractServiceImpl implements PaymentContractService {
 	private ElecsignService routeForCreate(PaymentContractPO paymentContractPO, int company) throws FLException {
 
 		if (paymentContractPO.getProvider() != null) {
-			return elecsignRouter.route(paymentContractPO.getProvider());
+			return elecsignRouter.route(paymentContractPO.getProvider(), company);
 		}
 
 		ElecsignProvider provider = elecsignRouter.resolveProvider(company, ElecsignScene.PAYMENT);

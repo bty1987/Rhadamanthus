@@ -161,7 +161,7 @@ public class SupplierSignetServiceImpl implements SupplierSignetService {
 		signetPO.setSignno(supplierSignetPO.getSignno());
 		signetPO.setName(supplierSignetPO.getName());
 
-		String path = elecsignRouter.route(signetPO.getProvider()).authenticate(signetPO);
+		String path = elecsignRouter.route(signetPO.getProvider(), supplierSignetPO.getCompany()).authenticate(signetPO);
 
 		supplierSignetPO.setStatus(SignetPO.STATUS_AUTH_INT);
 		supplierSignetPO.setToken(signetPO.getToken());
@@ -192,7 +192,7 @@ public class SupplierSignetServiceImpl implements SupplierSignetService {
 
 		signetPO.setToken(supplierSignetPO.getToken());
 
-		elecsignRouter.route(signetPO.getProvider()).company(signetPO);
+		elecsignRouter.route(signetPO.getProvider(), supplierSignetPO.getCompany()).company(signetPO);
 
 		supplierSignetPO.setStatus(SignetPO.STATUS_CONFIRM_INT);
 
@@ -214,7 +214,7 @@ public class SupplierSignetServiceImpl implements SupplierSignetService {
 			throw new FLException(130047, "签章状态不可操作");
 		}
 
-		elecsignRouter.route(supplierSignetPO.getProvider()).signature(supplierSignetPO.getSignno(), supplierSignetVO.getData());
+		elecsignRouter.route(supplierSignetPO.getProvider(), supplierSignetPO.getCompany()).signature(supplierSignetPO.getSignno(), supplierSignetVO.getData());
 
 		return 0;
 	}
@@ -238,7 +238,7 @@ public class SupplierSignetServiceImpl implements SupplierSignetService {
 		signetPO.setToken(supplierSignetPO.getToken());
 		signetPO.setSignno(supplierSignetPO.getSignno());
 
-		String path = elecsignRouter.route(signetPO.getProvider()).beforeauto(signetPO);
+		String path = elecsignRouter.route(signetPO.getProvider(), supplierSignetPO.getCompany()).beforeauto(signetPO);
 
 		supplierSignetVO.setPath(path);
 

@@ -594,9 +594,9 @@ public class CustomerServiceImpl implements CustomerService {
 			type = 1;
 		}
 
-		JSONObject info = elecsignRouter.route(customerPO.getProvider()).authenticate(customerPO.getSignno(), customerPO.getName(), SensitiveDataHelper.decrypt(customerPO.getPhone()), authno, type);
+		JSONObject info = elecsignRouter.route(customerPO.getProvider(), customerPO.getCompany()).authenticate(customerPO.getSignno(), customerPO.getName(), SensitiveDataHelper.decrypt(customerPO.getPhone()), authno, type);
 
-		String redirect = elecsignRouter.route(customerPO.getProvider()).decode(info.getString("url"));
+		String redirect = elecsignRouter.route(customerPO.getProvider(), customerPO.getCompany()).decode(info.getString("url"));
 
 		customerPO.setToken(info.getString("transactionNo"));
 
@@ -619,7 +619,7 @@ public class CustomerServiceImpl implements CustomerService {
 			throw new FLException(130184, "客户状态不可操作");
 		}
 
-		JSONObject info = elecsignRouter.route(customerPO.getProvider()).person(customerPO.getToken());
+		JSONObject info = elecsignRouter.route(customerPO.getProvider(), customerPO.getCompany()).person(customerPO.getToken());
 
 		JSONObject person = info.getJSONObject("person");
 
@@ -684,7 +684,7 @@ public class CustomerServiceImpl implements CustomerService {
 			throw new FLException(130178, "客户信息不存在");
 		}
 
-		elecsignRouter.route(customerPO.getProvider()).signature(customerPO.getSignno(), imgbase);
+		elecsignRouter.route(customerPO.getProvider(), customerPO.getCompany()).signature(customerPO.getSignno(), imgbase);
 
 		customerPO.setSignPath(customerVO.getSignPath());
 

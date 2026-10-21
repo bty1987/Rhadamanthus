@@ -188,6 +188,19 @@ public class ElecsignRouter {
 		return requireImpl(BEAN_FADADA, provider);
 	}
 
+	/**
+	 * 按数据自身记录的厂商路由并绑定公司上下文（用于印章/客户/员工/供应商等
+	 * PO 自带 company 列的已有数据操作——e签宝凭证按该公司读取）。
+	 *
+	 * @param providerCode 数据记录的 provider 值（null 视同法大大）
+	 * @param company 该记录所属公司 cid
+	 * @return 厂商实现（e签宝为公司绑定实例；法大大无公司维度返回单例）
+	 * @throws FLException 厂商实现缺失
+	 */
+	public ElecsignService route(Short providerCode, int company) throws FLException {
+		return bindCompany(ElecsignProvider.of(providerCode == null ? PROVIDER_FADADA_INT : providerCode), company);
+	}
+
 	/** 对实现了 {@link com.fanglin.elecsign.service.CompanyAware} 的厂商实现返回公司绑定实例。 */
 	private ElecsignService bindCompany(ElecsignProvider provider, int company) throws FLException {
 
