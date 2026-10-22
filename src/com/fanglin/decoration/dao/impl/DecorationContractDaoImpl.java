@@ -32,4 +32,16 @@ public class DecorationContractDaoImpl extends DaoImpl<DecorationContractPO> imp
 	public List<DecorationContractPO> queryDecorationContractByOrderId(String orderId){
 		return session().createCriteria(DecorationContractPO.class).add(Restrictions.eq("orderId", orderId)).list();
 	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<DecorationContractPO> queryDecorationContractForFlowPatrol(Short provider, List<Short> status, java.sql.Timestamp deadline, int limit){
+		return session().createCriteria(DecorationContractPO.class)
+			.add(Restrictions.eq("provider", provider))
+			.add(Restrictions.in("status", status))
+			.add(Restrictions.le("createTime", deadline))
+			.addOrder(org.hibernate.criterion.Order.asc("dcid"))
+			.setMaxResults(limit)
+			.list();
+	}
 }

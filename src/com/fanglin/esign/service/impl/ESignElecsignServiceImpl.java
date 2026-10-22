@@ -128,6 +128,9 @@ public class ESignElecsignServiceImpl implements ElecsignService, CompanyAware {
 	/** 签署流详情 */
 	private static final String EP_FLOW_DETAIL = "/v3/sign-flow/%s/detail";
 
+	/** 发起方完结签署流（autoFinish 兜底：全部签署完成仍卡"签署中"时收口归档） */
+	private static final String EP_FLOW_FINISH = "/v3/sign-flow/%s/finish";
+
 	/** 获取签署链接：POST /v3/sign-flow/{signFlowId}/sign-url，入参 operator(psnId/psnAccount)，响应 url */
 	private static final String EP_FLOW_SIGN_URL = "/v3/sign-flow/%s/sign-url";
 
@@ -270,6 +273,16 @@ public class ESignElecsignServiceImpl implements ElecsignService, CompanyAware {
 	}
 
 	@Override
+	public boolean finish(Contract contract) throws FLException {
+		return finish(0, contract);
+	}
+
+	@Override
+	public boolean finishSignedFlow(Contract contract) throws FLException {
+		return finishSignedFlow(0, contract);
+	}
+
+	@Override
 	public String getFile(String uuid) {
 		throw new FLException(130098, "e签宝不支持该操作");
 	}
@@ -299,6 +312,9 @@ public class ESignElecsignServiceImpl implements ElecsignService, CompanyAware {
 		body.put("orgAuthConfig", new JSONObject()
 				.fluentPut("orgName", signetPO.getName())
 				.fluentPut("orgInfo", orgInfo));
+		// 认证+授权合一(D2): 带授权范围后, 经办人打开同一链接先实名再授权, 一次操作解锁企业静默签
+		// 未实名机构走两步引导, 已实名机构仅授权确认; autoSign解锁待授权E2E验证后如有增补范围在此调整
+		body.put("authorizedScopes", new JSONArray().fluentAdd("manage_org_resource"));
 		// 认证完成回调: 沙箱/生产同路径, ESignAuthCallback 按 authFlowId 自动推进印章状态
 		// isv 值带尾部斜杠(如 http://service-erp.fanglin.vip/), 拼接前归一化, 否则 e签宝 报 notifyUrl 格式错误
 		body.put("notifyUrl", normalizeIsv() + "/esignAuthCallback.do");
@@ -504,8 +520,71 @@ public class ESignElecsignServiceImpl implements ElecsignService, CompanyAware {
 
 	void filing(int company, Contract contract) throws FLException {
 
-		// e签宝建流时已配置 autoArchived 自动归档，无独立归档接口
+		// e签宝建流时已配置 autoFinish 自动归档，无独立归档接口
 		contract.status(Contract.STATUS_FILING_INT);
+	}
+
+	/**
+	 * 卡流判定+完结一体：流"签署中"且签署方全部完成 → 调完结收口，其余一律不动。
+	 *
+	 * <p>供巡检任务逐单调用：非流ID（仅生成未建流）、查不到、有人未签、已完结——
+	 * 全部静默返回 false（不兜底不报错），只有真卡单才 finish。
+	 */
+	boolean finishSignedFlow(int company, Contract contract) throws FLException {
+
+		String flowId = contract.flowId();
+
+		if (flowId == null || flowId.trim().isEmpty()) {
+			return false;
+		}
+
+		JSONObject detail;
+
+		try {
+			detail = esignClient.get(company, String.format(EP_FLOW_DETAIL, flowId), null);
+		} catch (FLException e) {
+			return false; // 非签署流ID(文件ID)或已不可查——非卡单
+		}
+
+		if (detail.getIntValue("signFlowStatus") != 1) {
+			return false; // 仅"签署中"存在卡单
+		}
+
+		JSONArray signers = detail.getJSONArray("signers");
+
+		if (signers == null || signers.isEmpty()) {
+			return false;
+		}
+
+		for (int i = 0; i < signers.size(); i++) {
+			if (signers.getJSONObject(i).getIntValue("signStatus") != 2) {
+				return false; // 有人未签完, 正常等待中
+			}
+		}
+
+		return finish(company, contract);
+	}
+
+	/**
+	 * 发起方完结签署流（无 operator——应用即发起方，实测免传）。
+	 *
+	 * <p>兜底场景：签署方全部完成但流仍卡"签署中"（autoFinish 失效的历史流/网络抖动）。
+	 * 全部未签署时 e签宝报 1437170"没有签署，无需归档"——调用方（巡检任务）应先查
+	 * detail 判定全部已签再调本方法。
+	 *
+	 * @return true=完结成功；false=无流程号（未建流，无需兜底）
+	 */
+	boolean finish(int company, Contract contract) throws FLException {
+
+		String flowId = contract.flowId();
+
+		if (flowId == null || flowId.trim().isEmpty()) {
+			return false;
+		}
+
+		esignClient.post(company, String.format(EP_FLOW_FINISH, flowId), new JSONObject());
+
+		return true;
 	}
 
 	// ====================================================================================
@@ -842,6 +921,16 @@ private String createSignFlow(int company, Contract contract, boolean orgSigner,
 		@Override
 		public void filing(Contract contract) throws FLException {
 			ESignElecsignServiceImpl.this.filing(company, contract);
+		}
+
+		@Override
+		public boolean finish(Contract contract) throws FLException {
+			return ESignElecsignServiceImpl.this.finish(company, contract);
+		}
+
+		@Override
+		public boolean finishSignedFlow(Contract contract) throws FLException {
+			return ESignElecsignServiceImpl.this.finishSignedFlow(company, contract);
 		}
 
 		@Override

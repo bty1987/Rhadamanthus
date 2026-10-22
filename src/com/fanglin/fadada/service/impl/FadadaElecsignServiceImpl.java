@@ -181,6 +181,16 @@ public class FadadaElecsignServiceImpl implements ElecsignService {
 	}
 
 	@Override
+	public boolean finish(Contract contract) throws FLException {
+		throw new FLException(130098, "法大大不支持该操作, 完结签署流为e签宝专属(finish)");
+	}
+
+	@Override
+	public boolean finishSignedFlow(Contract contract) throws FLException {
+		return false; // 法大大签署完成即定稿, 无"卡签署中"形态, 无需兜底
+	}
+
+	@Override
 	public String getFile(String uuid) {
 		return Signature.getFile(uuid);
 	}
