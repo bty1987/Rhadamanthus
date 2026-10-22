@@ -207,6 +207,26 @@ public interface ElecsignService {
 	void filing(Contract contract) throws FLException;
 
 	/**
+	 * 完结签署流（e签宝 autoFinish 兜底）。
+	 *
+	 * <p>签署流全部签署完成但未自动归档时（网络抖动/历史流），由发起方调用完结接口收口。
+	 * 仅 e签宝支持；法大大签署完成即定稿无此概念（实现抛"不支持"）。
+	 *
+	 * @param contract 合同（flowId() 为签署流号；未建流返回 false）
+	 * @return true=完结调用成功；false=无流程号未调用
+	 */
+	boolean finish(Contract contract) throws FLException;
+
+	/**
+	 * 卡流判定+完结一体：全部签署完成但仍未归档的流 → 完结收口，否则不动。
+	 *
+	 * <p>巡检兜底任务逐单调用；仅 e签宝有"卡签署中"形态，法大大恒返回 false。
+	 *
+	 * @return true=执行了完结；false=不满足兜底条件（未建流/非卡单）
+	 */
+	boolean finishSignedFlow(Contract contract) throws FLException;
+
+	/**
 	 * 按 UUID 下载认证文件（认证图片 / 企业申请表）。
 	 * <p>对应 {@code Signature.getFile(String uuid)}：返回厂商结果串。
 	 */
