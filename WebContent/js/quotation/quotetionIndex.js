@@ -76,13 +76,41 @@ $(function() {
 
     quotetion.items.replicaOrderId.on("blur", function() {
 
-        var options = {
-            "quotation.orderId": $(this).val()
-        };
-        com.post(api.quotation.queryQuotationByOrderId, options, function(res) {
+        var orderId = $(this).val();
 
-            quotetion.items.quotation.bindData(res.quotations, 'qid', 'name');
-        });
+        quotetion.items.quotation.bindData([], 'qid', 'name');
+
+        if (!orderId)
+            return;
+
+        // 归属约束: 仅设计师或业务员为当前操作人的装修单才可拷贝其报价
+        com.post(api.decoration.queryDecorationForCommonByOrderId, {
+            "decoration.orderId": orderId
+        }, function(res) {
+
+            var decoration = res.decoration;
+            var userId = params.userInfo.user.userId;
+
+            var owned = (decoration.designer != null && decoration.designer.userId == userId) ||
+                        (decoration.salesman != null && decoration.salesman.userId == userId);
+
+            if (!owned) {
+
+                com.showAlert(com.warning, "仅归属(设计师/业务员)为本人的装修单才可拷贝报价");
+                quotetion.items.replicaOrderId.val("");
+                return;
+            }
+
+            com.post(api.quotation.queryQuotationByOrderId, {
+                "quotation.orderId": orderId
+            }, function(res) {
+
+                quotetion.items.quotation.bindData(res.quotations, 'qid', 'name');
+            });
+        }, function(res) {
+
+            com.showAlert(com.error, res.errorMsg);
+        }, false);
     });
 
     quotetion.btns.createQuotetionBtn.on('click', function() {
