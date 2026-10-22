@@ -138,6 +138,41 @@
 				</div>
 			</div>
 		</div>
+
+		<div class="modal fade" id="salaryPrintModal" tabindex="-1">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal">
+							<span>&times;</span><span class="sr-only">Close</span>
+						</button>
+						<h4 class="modal-title">工费打印</h4>
+					</div>
+
+					<div class="modal-body">
+						<form class="form-horizontal">
+							<div class="form-group">
+								<label class="col-sm-3 control-label no-padding-right">施工节点</label>
+								<div class="col-sm-8">
+									<select id="salaryPrintNode" class="form-control"></select>
+								</div>
+							</div>
+							<div class="space-4"></div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label no-padding-right">打印内容</label>
+								<div class="col-sm-8" style="padding-top: 7px; text-align: left;">按所选施工节点出定额工费项目单, 汇入本单已开工费的增减项工费</div>
+							</div>
+							<div class="space-4"></div>
+						</form>
+					</div>
+
+					<div class="modal-footer">
+						<button type="button" id="salaryPrintBtn" class="btn btn-primary">打印</button>
+						<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+					</div>
+				</div>
+			</div>
+		</div>
 	</div>
 
 

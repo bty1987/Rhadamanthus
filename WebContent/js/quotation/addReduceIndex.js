@@ -22,7 +22,8 @@
 
         modals: {
             addReduceModal: com.focusPage("#addReduceModal"),
-            addReduceAccountModal: com.focusPage("#addReduceAccountModal")
+            addReduceAccountModal: com.focusPage("#addReduceAccountModal"),
+            salaryPrintModal: com.focusPage("#salaryPrintModal")
         },
 
         btns: {
@@ -312,9 +313,38 @@
         }
     };
 
+    // 工费打印: 仅已开工费(isSalary=1)的增减单显示, 打印前可选择施工节点
+    var salaryPrintbtn = {
+        name: "工费打印",
+        clazz: "btn-inverse",
+        show: function(v) {
+
+            return v.isSalary == constant.quotation().addreduce.ISSALARY_SALARY_INT;
+        },
+        handle: function(v) {
+
+            addReduce.salaryPrintSource = v;
+
+            com.post(api.data.queryConstructionNode, {}, function(res) {
+
+                var $node = com.focusPage('#salaryPrintNode').empty();
+
+                $.each(res.constructionNodes, function(i, node) {
+
+                    $("<option></option>").val(node.cnid).text(node.name).appendTo($node);
+                });
+
+                if (v.constructionNode != null && v.constructionNode.cnid != null)
+                    $node.val(v.constructionNode.cnid);
+
+                addReduce.modals.salaryPrintModal.modal("show");
+            }, null, false);
+        }
+    };
+
     if (addReduce.pageType == null) {
 
-        var linebtns = [btnMake, viewbtn, submitbtn, cancelbtn, allocationbtn, specialbtn, norefundbtn, affirmbtn, tagbtn, salaryOpenbtn, salaryRejectbtn, deletebtn, ];
+        var linebtns = [btnMake, viewbtn, submitbtn, cancelbtn, allocationbtn, specialbtn, norefundbtn, affirmbtn, tagbtn, salaryOpenbtn, salaryRejectbtn, salaryPrintbtn, deletebtn, ];
 
         com.focusPage('#fl-statement').statement("报价", "增减单").show();
         com.focusPage('#decorationInfo').show();
@@ -977,6 +1007,37 @@
         params.quotation.arids = _addReduceIds;
 
         com.popup("增减项打印", api.index.addReduceOutputIndex.url, null, null, true);
+    });
+
+    // 工费打印: 选定施工节点后复用定额工费单打印(normriceOutput), subtype=4 仅汇入增减项工费数据
+    com.focusPage('#salaryPrintBtn').click(function() {
+
+        var $node = com.focusPage('#salaryPrintNode');
+        var cnid = $node.val();
+
+        if (cnid == null || cnid == "") {
+
+            com.showAlert(com.warning, "请选择施工节点");
+            return false;
+        }
+
+        var source = addReduce.salaryPrintSource;
+
+        if (source == null)
+            return false;
+
+        addReduce.modals.salaryPrintModal.modal("hide");
+
+        // normriceOutput 参数约定(与监理页/装修单详情工费打印一致):
+        // type=1 定额工费项目单; subtype=4 仅增减项数据源; workType=所选施工节点cnid;
+        // pageType 非空激活过滤——未开费的需付款增项不打印, 已开工费增项正常出单
+        params.quotation.orderId = addReduce.orderId;
+        params.quotation.type = 1;
+        params.quotation.subtype = 4;
+        params.quotation.workType = parseInt(cnid);
+        params.quotation.pageType = "addReduceSalary";
+
+        com.popup("工费打印", "/views/quotation/normriceOutput.html", null, null, true);
     });
 
     // 发送按钮
