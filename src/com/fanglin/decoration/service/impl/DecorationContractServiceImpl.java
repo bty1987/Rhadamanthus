@@ -303,7 +303,7 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 
 		JSONArray tables = JSON.parseArray(table);
 
-		routeForCreate(decorationContractPO, contractPO.getCompany()).generate(decorationContractPO, params, tables);
+		routeForCreate(decorationContractPO, contractPO.getCompany(), contractPO.getPath()).generate(decorationContractPO, params, tables);
 
 		return 0;
 	}
@@ -347,7 +347,7 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 
 		JSONArray tables = JSON.parseArray(table);
 
-		routeForCreate(decorationContractPO, 0).generate(decorationContractPO, params, tables);
+		routeForCreate(decorationContractPO, 0, contractPO.getPath()).generate(decorationContractPO, params, tables);
 
 		return 0;
 	}
@@ -853,14 +853,14 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 
 		return customerChancePO != null ? ",\"ccid\":" + customerChancePO.getCcid() : "";
 	}
-	/** 电子签路由（生成/上传：重签按记录厂商，首签按公司×场景配置并记录厂商到合同 provider 字段） */
-	private ElecsignService routeForCreate(DecorationContractPO decorationContractPO, int company) throws FLException {
+	/** 电子签路由（生成/上传：重签按记录厂商，新建按 订单级→模板级→公司级 多层解析并记录厂商到合同 provider 字段） */
+	private ElecsignService routeForCreate(DecorationContractPO decorationContractPO, int company, String templatePath) throws FLException {
 
 		if (decorationContractPO.getProvider() != null) {
 			return elecsignRouter.route(decorationContractPO.getProvider(), company);
 		}
 
-		ElecsignProvider provider = elecsignRouter.resolveProvider(company, ElecsignScene.DECORATION);
+		ElecsignProvider provider = elecsignRouter.resolveProvider(company, ElecsignScene.DECORATION, templatePath, decorationContractPO.getOrderId());
 
 		decorationContractPO.setProvider(provider.code());
 
