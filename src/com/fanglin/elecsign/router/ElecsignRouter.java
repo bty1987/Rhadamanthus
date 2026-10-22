@@ -43,11 +43,15 @@ import com.fanglin.system.po.SystemConfigPO;
  *
  * <h3>路由优先级（resolveProvider）</h3>
  * <ol>
+ *   <li>订单级：{@code elecsign.provider.order.{orderId}}（company=0，一次性覆盖，最具体）—— 见多层重载</li>
+ *   <li>模板级：模板行 path 前缀厂商标记（{@code esign://} → e签宝、{@code fadada://} → 法大大）—— 见多层重载</li>
  *   <li>公司×场景级：{@code elecsign.provider.{scene}}（该公司该场景）</li>
  *   <li>公司级：{@code elecsign.provider}（该公司）</li>
  *   <li>全局默认：{@code elecsign.default.provider}（company=0）</li>
  *   <li>都没有 → 硬兜底 {@link ElecsignProvider#FADADA}（等价现状）</li>
  * </ol>
+ * <p>前两层（订单/模板）仅装修合同等携带模板与单号上下文的场景参与；认证等其他场景从公司级开始。
+ * 未打标记的老模板（path 为前端表单页路径）不短路，继续走公司级——法大大模板零迁移，e签宝按模板渐进切换。
  *
  * <h3>Bean 装配</h3>
  * <p>Spring 自动把所有 {@link ElecsignService} 实现按 bean 名注入 {@code impls} Map：
@@ -67,6 +71,15 @@ public class ElecsignRouter {
 
 	/** 公司×场景级厂商配置 key 前缀（+场景后缀，如 elecsign.provider.decoration） */
 	public static final String KEY_PROVIDER_SCENE_PREFIX = "elecsign.provider.";
+
+	/** 订单级厂商配置 key 前缀（+装修单号，如 elecsign.provider.order.1907310003，company=0，一次性覆盖） */
+	public static final String KEY_PROVIDER_ORDER_PREFIX = "elecsign.provider.order.";
+
+	/** 模板级厂商标记前缀：e签宝（data.contract.path，如 esign://docTemplate） */
+	public static final String MARKER_ESIGN = "esign://";
+
+	/** 模板级厂商标记前缀：法大大（显式把某模板钉在法大大，防公司级默认翻转误伤） */
+	public static final String MARKER_FADADA = "fadada://";
 
 	/** 全局 company 值（systemconfig 约定 0 表全局） */
 	public static final int COMPANY_GLOBAL = 0;
@@ -129,6 +142,43 @@ public class ElecsignRouter {
 
 		// 4. 硬兜底：法大大（等价现状）
 		return ElecsignProvider.FADADA;
+	}
+
+	/**
+	 * 多层路由解析（装修合同等带模板/单号上下文的场景，最具体优先）。
+	 *
+	 * <p>优先级：订单级 → 模板级 → 公司×场景级 → 公司级 → 全局默认 → 法大大兜底。
+	 *
+	 * @param companyId 公司 cid
+	 * @param scene 业务场景
+	 * @param templatePath 合同模板行 path（{@code esign://}/{@code fadada://} 前缀为厂商标记；
+	 *                     null 或未打标记（老模板的前端表单页路径）不短路，继续走公司级）
+	 * @param orderId 装修单号（非空时先查 {@code elecsign.provider.order.{orderId}}，运维一次性指定用）
+	 * @return 厂商枚举
+	 */
+	public ElecsignProvider resolveProvider(int companyId, ElecsignScene scene, String templatePath, String orderId) {
+
+		// 1. 订单级：elecsign.provider.order.{orderId}（company=0，最具体的运维覆盖）
+		if (orderId != null && !orderId.trim().isEmpty()) {
+			ElecsignProvider provider = readProvider(KEY_PROVIDER_ORDER_PREFIX + orderId.trim(), COMPANY_GLOBAL);
+			if (provider != null) {
+				return provider;
+			}
+		}
+
+		// 2. 模板级：模板行 path 前缀厂商标记
+		if (templatePath != null && !templatePath.trim().isEmpty()) {
+			String path = templatePath.trim().toLowerCase();
+			if (path.startsWith(MARKER_ESIGN)) {
+				return ElecsignProvider.ESIGN;
+			}
+			if (path.startsWith(MARKER_FADADA)) {
+				return ElecsignProvider.FADADA;
+			}
+		}
+
+		// 3. 公司级链（公司×场景 → 公司 → 全局 → 兜底）
+		return resolveProvider(companyId, scene);
 	}
 
 	/**
