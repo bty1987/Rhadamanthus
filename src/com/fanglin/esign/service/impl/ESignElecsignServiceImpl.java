@@ -26,8 +26,8 @@ import com.fanglin.data.po.SignetPO;
 import com.fanglin.elecsign.service.CompanyAware;
 import com.fanglin.elecsign.service.ElecsignService;
 import com.fanglin.esign.utils.EsignClient;
-import com.fanglin.fadada.bean.Contract;
-import com.fanglin.fadada.vo.SignatureVO;
+import com.fanglin.elecsign.bean.Contract;
+import com.fanglin.elecsign.vo.SignatureVO;
 import com.fanglin.system.dao.SystemConfigDao;
 import com.fanglin.system.po.SystemConfigPO;
 

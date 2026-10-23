@@ -1,6 +1,6 @@
 /**
  * @File Name		: Contract.java
- * @Package   	: com.fadada.bean
+ * @Package   	: com.fanglin.elecsign.bean
  * @Version		: 1.0
  * @Date			: 2019-11-4
  * @Copyright	: Copyright Creators 2014
@@ -9,7 +9,7 @@
  * @Describing	: 
  */
 
-package com.fanglin.fadada.bean;
+package com.fanglin.elecsign.bean;
 
 public interface Contract {
 

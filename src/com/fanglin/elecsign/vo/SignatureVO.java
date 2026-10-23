@@ -1,6 +1,6 @@
 /**
  * @File Name		: SignatureVO.java
- * @Package   	: com.fanglin.fadada.vo
+ * @Package   	: com.fanglin.elecsign.vo
  * @Version		: 1.0
  * @Date			: 2021-9-1
  * @Copyright	: Copyright Creators 2014
@@ -9,7 +9,7 @@
  * @Describing	: 
  */
 
-package com.fanglin.fadada.vo;
+package com.fanglin.elecsign.vo;
 
 import java.io.Serializable;
 

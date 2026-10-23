@@ -25,7 +25,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import com.fanglin.decoration.vo.DecorationContractVO;
-import com.fanglin.fadada.bean.Contract;
+import com.fanglin.elecsign.bean.Contract;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.utils.BeanUtil;
 
