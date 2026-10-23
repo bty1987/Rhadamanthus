@@ -175,7 +175,7 @@ public class NormriceItemServiceImpl implements NormriceItemService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int confirmNormriceItem(NormriceItemVO normriceItemVO) throws FLException {
+	public int confirmNormriceItem(NormriceItemVO normriceItemVO, String userId) throws FLException {
 
 		NormriceItemPO normriceItemPO = normriceItemDao.get(normriceItemVO.getNpiid());
 
@@ -185,7 +185,7 @@ public class NormriceItemServiceImpl implements NormriceItemService {
 
 		QuotationPO quotationPO = checkQuotationForStatusByEnabled(normriceItemPO.getQid());
 
-		normriceItemDao.confirmNormriceItem(normriceItemPO.getNpiid());
+		normriceItemDao.confirmNormriceItem(normriceItemPO.getNpiid(), userId);
 
 		// 更新工程计划附加项状态
 		updateConstructionScheduleForAdditemStatus(quotationPO, normriceItemPO.getConstructionNode().getCnid());

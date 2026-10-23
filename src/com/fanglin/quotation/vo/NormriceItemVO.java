@@ -1,6 +1,7 @@
 package com.fanglin.quotation.vo;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 
 import com.fanglin.data.common.vo.ConstructionNodeVO;
 
@@ -39,6 +40,10 @@ public class NormriceItemVO implements Serializable {
 	private Integer num;
 
 	private Short status;
+
+	private String confirmer; // 确认人(userId)
+
+	private Timestamp confirmTime; // 确认时间
 
 	public NormriceItemVO() {
 		super();
@@ -177,6 +182,22 @@ public class NormriceItemVO implements Serializable {
 
 	public void setStatus(Short status) {
 		this.status = status;
+	}
+
+	public String getConfirmer() {
+		return confirmer;
+	}
+
+	public void setConfirmer(String confirmer) {
+		this.confirmer = confirmer;
+	}
+
+	public Timestamp getConfirmTime() {
+		return confirmTime;
+	}
+
+	public void setConfirmTime(Timestamp confirmTime) {
+		this.confirmTime = confirmTime;
 	}
 
 }
