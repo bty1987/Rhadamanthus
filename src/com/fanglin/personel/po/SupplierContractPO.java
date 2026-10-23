@@ -14,7 +14,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import com.fanglin.fadada.bean.Contract;
+import com.fanglin.elecsign.bean.Contract;
 import com.fanglin.personel.vo.SupplierContractVO;
 import com.fanglin.utils.BeanUtil;
 

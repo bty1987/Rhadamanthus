@@ -10,7 +10,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import com.fanglin.fadada.bean.Signet;
+import com.fanglin.elecsign.bean.Signet;
 
 @Entity
 @Table(name = "signet", catalog = "data")
