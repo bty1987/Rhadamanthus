@@ -205,15 +205,8 @@ public class A20260324ServiceImpl implements A20260324Service {
 				throw new FLException(511001, "部门类型不存在: " + type);
 			}
 
-			// 2. 查询父部门（如果提供）—— parent_code 传的是父部门 did
-			DepartmentPO fatherDept = null;
-			if (parentCode != null && !parentCode.trim().isEmpty()) {
-				fatherDept = departmentDao.get(Integer.parseInt(parentCode));
-
-				if (fatherDept == null) {
-					throw new FLException(511002, "父部门不存在: " + parentCode);
-				}
-			}
+			// 2. 解析父部门（可选）：did优先、no兼容；不传=新增挂顶级/更新保持原父级，解析失败降级不阻断同步，待平台补传修正
+			DepartmentPO fatherDept = resolveFatherDept(parentCode);
 
 			// 3. 查询部门经理（如果提供）
 			UserPO manager = null;
@@ -395,8 +388,40 @@ public class A20260324ServiceImpl implements A20260324Service {
 	}
 
 	/**
+	 * 解析父部门：did优先、no兼容，解析失败降级为null不阻断同步
+	 *
+	 * @param parentCode 父部门编码（ERP部门did或部门编号no）
+	 * @return 父部门PO；未传或解析失败返回null（语义：新增挂公司顶级、更新保持原父级）
+	 */
+	private DepartmentPO resolveFatherDept(String parentCode) {
+
+		if (parentCode == null || parentCode.trim().isEmpty()) {
+			return null;
+		}
+
+		String code = parentCode.trim();
+
+		DepartmentPO fatherDept = null;
+
+		if (code.matches("^\\d+$")) {
+			// 纯数字：先按主键did查，未命中再按编号no兜底
+			fatherDept = departmentDao.get(Integer.parseInt(code));
+		}
+
+		if (fatherDept == null) {
+			fatherDept = departmentDao.queryDepartmentByNo(code);
+		}
+
+		if (fatherDept == null) {
+			logger.warn("父部门未解析到, 降级处理(新增挂顶级/更新保持原父级): parentCode={}", parentCode);
+		}
+
+		return fatherDept;
+	}
+
+	/**
 	 * 自动生成部门编号 规则：查询当前公司下最大的部门编号，递增生成
-	 * 
+	 *
 	 * @param companyId 公司ID
 	 * @return 部门编号
 	 * @throws FLException

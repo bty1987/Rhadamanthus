@@ -149,7 +149,7 @@ name=高级司机&code=POST9526&type=1&status=1&leader_flag=1
 | name | String | 是 | 部门名称 |
 | code | String | 否 | 部门编码(如DEPT9526)，更新时提供 |
 | type | Integer | 是 | 部门类型ID |
-| parent_code | String | 否 | 父部门编号(如DEPT9525) |
+| parent_code | String | 否 | 父部门did或编号(纯数字优先按did查,否则按编号no查);不传=新增挂公司顶级/更新保持原父级;解析失败降级不报错 |
 | org_code | String | 是 | 组织编码(即公司ID，如"1") |
 | status | Integer | 否 | 状态：1=启用，2=禁用 |
 | leader_code | String | 否 | 部门经理工号(如FL-09527) |
@@ -195,7 +195,7 @@ posts字段为JSON字符串，key为职位ID，value为人员上限值:
 
 1. 校验 name、org_code、type 必填
 2. 查询部门类型(DepartmentTypePO)，不存在则报错
-3. 查询父部门(如提供parent_code)，不存在则报错
+3. 解析父部门(如提供parent_code):纯数字先按did查再按编号no兜底,非数字按编号no查;解析不到时降级(warn日志,新增挂顶级/更新保持原父级),不报错
 4. 查询部门经理(如提供leader_code)，不存在则报错
 5. 状态转换: 外部1=启用 → 内部STATUS_ENABLE，其他 → STATUS_DISABLE
 6. org_code转为Integer作为公司ID
@@ -215,7 +215,6 @@ posts字段为JSON字符串，key为职位ID，value为人员上限值:
 | 401003 | 部门类型不能为空 |
 | 130017 | 部门名称已存在(同公司下重复) |
 | 511001 | 部门类型不存在 |
-| 511002 | 父部门不存在 |
 | 511003 | 部门经理不存在 |
 | 511004 | 组织编码格式错误(必须为数字) |
 | 230015 | 公司不存在 |
