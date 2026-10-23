@@ -155,7 +155,7 @@ $(function() {
         quotetion.items.replicaQuotetionNo.removeClass("hide");
         quotetion.items.cloneOrderId.addClass("hide");
 
-        com.focusPage("#replicaQuotetionDialog").text("预报单拷贝");
+        com.focusPage("#replicaQuotetionDialog").text("预报拷贝");
 
         quotetion.modals.replicaQuotetionModal.modal("show");
     });
@@ -172,7 +172,7 @@ $(function() {
         quotetion.items.replicaQuotetionNo.addClass("hide");
         quotetion.items.cloneOrderId.removeClass("hide");
 
-        com.focusPage("#replicaQuotetionDialog").text("个人报价拷贝");
+        com.focusPage("#replicaQuotetionDialog").text("报价拷贝");
 
         quotetion.modals.replicaQuotetionModal.modal("show");
     });
@@ -189,7 +189,7 @@ $(function() {
         quotetion.items.replicaQuotetionNo.addClass("hide");
         quotetion.items.cloneOrderId.removeClass("hide");
 
-        com.focusPage("#replicaQuotetionDialog").text("他人报价拷贝");
+        com.focusPage("#replicaQuotetionDialog").text("报价拷贝");
 
         quotetion.modals.replicaQuotetionModal.modal("show");
     });
