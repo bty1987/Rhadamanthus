@@ -240,8 +240,20 @@ jQuery(function($) {
         "balanceStatus": {
             field: "balanceStatus",
             name: "结算状态",
-            prop: "balanceStatus",
-            dataset: constant.construction().construction.balance.keys,
+            prop: function(v) {
+
+                // 结算状态追加结算人与结算时间(已结算且有值才显示; prop为函数时dataset不生效, 自行翻译)
+                var status = constant.construction().construction.balance.keys[v.balanceStatus];
+                var extra = "";
+
+                if (v.balanceStatus == 1) {
+
+                    if (v.balancer && v.balancer.currentName) extra += v.balancer.currentName;
+                    if (v.balanceTime) extra += (extra ? " " : "") + v.balanceTime.substr(0, 16);
+                }
+
+                return extra ? status + " (" + extra + ")" : status;
+            },
             clazz: "red"
         },
         "terminalStatus": {
