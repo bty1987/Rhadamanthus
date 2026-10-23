@@ -432,16 +432,29 @@ public class ESignElecsignServiceImpl implements ElecsignService, CompanyAware {
 
 		// 实测（2026-10 沙箱）：create-by-url 端点不存在(404)——走本地两步上传：
 		// 下载源 PDF → file-upload-url(step1) → PUT(step2, Content-Type/Content-MD5 与 step1 一致)
+		// 🔴JDK1.7环境兼容: 不用try-with-resources(依赖1.7+语法与Throwable.addSuppressed),
+		// 改经典try/finally, close异常吞掉不掩盖主异常
+		java.io.InputStream is = null;
+		java.io.ByteArrayOutputStream bos = null;
+		java.io.OutputStream os = null;
+		java.net.HttpURLConnection connection = null;
+
 		try {
 			java.net.URL source = new java.net.URL(path);
 			byte[] pdf;
-			try (java.io.InputStream is = source.openStream(); java.io.ByteArrayOutputStream bos = new java.io.ByteArrayOutputStream()) {
+			try {
+				is = source.openStream();
+				bos = new java.io.ByteArrayOutputStream();
+
 				byte[] buf = new byte[8192];
 				int len;
 				while ((len = is.read(buf)) > 0) {
 					bos.write(buf, 0, len);
 				}
 				pdf = bos.toByteArray();
+			} finally {
+				if (is != null) try { is.close(); } catch (Exception e) { }
+				if (bos != null) try { bos.close(); } catch (Exception e) { }
 			}
 
 			String contentMd5 = org.apache.commons.codec.binary.Base64.encodeBase64String(java.security.MessageDigest.getInstance("MD5").digest(pdf));
@@ -455,13 +468,16 @@ public class ESignElecsignServiceImpl implements ElecsignService, CompanyAware {
 			String fileId = step1.getString("fileId");
 			String uploadUrl = step1.getString("fileUploadUrl");
 
-			java.net.HttpURLConnection connection = (java.net.HttpURLConnection) new java.net.URL(uploadUrl).openConnection();
+			connection = (java.net.HttpURLConnection) new java.net.URL(uploadUrl).openConnection();
 			connection.setRequestMethod("PUT");
 			connection.setDoOutput(true);
 			connection.setRequestProperty("Content-Type", "application/pdf;");
 			connection.setRequestProperty("Content-MD5", contentMd5);
-			try (java.io.OutputStream os = connection.getOutputStream()) {
+			try {
+				os = connection.getOutputStream();
 				os.write(pdf);
+			} finally {
+				if (os != null) try { os.close(); } catch (Exception e) { }
 			}
 			int code = connection.getResponseCode();
 			if (code != 200) {
