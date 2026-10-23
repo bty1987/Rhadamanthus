@@ -280,6 +280,9 @@ $.extend(api, {
         refuseApproval: {
             url: "refuseApproval.do"
         },
+        updateApprovalForLocal: {
+            url: "updateApprovalForLocal.do"
+        },
         submitApprovalForSalesDayment: {
             url: "submitApprovalForSalesDayment.do"
         },

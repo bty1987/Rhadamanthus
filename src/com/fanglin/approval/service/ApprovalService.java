@@ -57,4 +57,10 @@ public interface ApprovalService {
 	 */
 	public int refuse(ApprovalVO approvalVO, String userId) throws FLException;
 
+	/**
+	 * 钉钉流程转本地处理：解除piid绑定(置空), 本地通过/拒绝入口恢复;
+	 * piid置空后钉钉回调按piid查单即失配(240001), 天然阻断回调重复触发后置业务。
+	 */
+	public int updateApprovalForLocal(ApprovalVO approvalVO, String userId) throws FLException;
+
 }

@@ -12,6 +12,7 @@
 package com.fanglin.approval.service.impl;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -468,6 +469,33 @@ public class ApprovalServiceImpl implements ApprovalService {
 		approvalPO.setAnnotate(approvalVO.getAnnotate());
 
 		approvalPO = refuse(approvalPO);
+
+		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int updateApprovalForLocal(ApprovalVO approvalVO, String userId) throws FLException {
+
+		ApprovalPO approvalPO = approvalDao.get(approvalVO.getAid());
+
+		if (approvalPO == null) {
+			throw new FLException(240009, "审批信息不存在");
+		}
+
+		if (approvalPO.getPiid() == null || approvalPO.getPiid().isEmpty()) {
+			throw new FLException(240084, "审批单未接入钉钉流程,不可转本地");
+		}
+
+		// 与本地通过/拒绝按钮同一状态集(初始/确认中/已确认)
+		if (!Arrays.asList(ApprovalPO.APPROVAL_STATUS_INIT_INT, ApprovalPO.APPROVAL_STATUS_CONFIRM_INT, ApprovalPO.APPROVAL_STATUS_CONFIRMED_INT).contains(approvalPO.getStatus())) {
+			throw new FLException(240085, "审批状态不可转本地处理");
+		}
+
+		approvalPO.setPiid(null);
+		approvalPO.setAnnotate((approvalPO.getAnnotate() == null || approvalPO.getAnnotate().isEmpty() ? "" : approvalPO.getAnnotate() + ";") + String.format("钉钉流程转本地处理:%s", userId));
+
+		approvalDao.update(approvalPO);
 
 		return 0;
 	}
