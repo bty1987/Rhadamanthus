@@ -412,6 +412,15 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 			throw new FLException(130028, "合同状态不可操作");
 		}
 
+		// 命名空间守卫: signno双厂商同列(法大大customerId/e签宝psnId, 靠customer.provider区分),
+		// 跨厂商直接传会拿别家ID当自家账号(签署链接必炸), 拦截引导按合同厂商重实名(130189)
+		boolean contractEsign = decorationContractPO.getProvider() != null && decorationContractPO.getProvider() == ElecsignProvider.ESIGN.code();
+		boolean customerEsign = customerPO.getProvider() != null && customerPO.getProvider() == ElecsignProvider.ESIGN.code();
+
+		if (contractEsign != customerEsign) {
+			throw new FLException(130189, "客户实名认证未完成, 请先发起实名认证");
+		}
+
 		return routeForRecord(decorationContractPO).extsign(customerPO.getSignno(), decorationContractPO);
 	}
 
