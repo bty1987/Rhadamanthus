@@ -1228,10 +1228,12 @@ var decorationUtils = {
                 });
 
                 if (isDesign) {
-                    if (v.paymentStatus == 2 && v.oneType == 0) {
-                        if (v.twoType != 2) {
-                            $divBtnWrap.append($refundBtn);
-                        }
+                    // 违约金款项(合同终止收取, terminalDecoration硬编码oneType=1/twoType=1)按名称全等放行退款:
+                    // 全等恰好排除"违约金退款"(atttype同=4, 对其再退即二次退款)与"综合违约金"(oneType=0本就可退)
+                    var penaltyRefund = v.paymentType == "违约金" && v.twoType != 2;
+
+                    if (v.paymentStatus == 2 && ((v.oneType == 0 && v.twoType != 2) || penaltyRefund)) {
+                        $divBtnWrap.append($refundBtn);
                     }
                 }
 
