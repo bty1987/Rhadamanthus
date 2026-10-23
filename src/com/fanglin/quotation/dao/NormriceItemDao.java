@@ -33,7 +33,7 @@ public interface NormriceItemDao extends Dao<NormriceItemPO> {
 
 	public int deleteNormriceItem(long qid, long sid, short type);
 
-	public int confirmNormriceItem(long npiid);
+	public int confirmNormriceItem(long npiid, String confirmer);
 
 	public int rejectNormriceItem(long npiid);
 

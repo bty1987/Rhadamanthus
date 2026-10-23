@@ -1,6 +1,7 @@
 package com.fanglin.quotation.po;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -77,6 +78,10 @@ public class NormriceItemPO implements Serializable {
 	private int num;
 
 	private short status;
+
+	private String confirmer; // 确认人(userId)
+
+	private Timestamp confirmTime; // 确认时间
 
 	public NormriceItemPO() {
 		super();
@@ -240,5 +245,23 @@ public class NormriceItemPO implements Serializable {
 
 	public void setStatus(short status) {
 		this.status = status;
+	}
+
+	@Column(name = "confirmer")
+	public String getConfirmer() {
+		return confirmer;
+	}
+
+	public void setConfirmer(String confirmer) {
+		this.confirmer = confirmer;
+	}
+
+	@Column(name = "confirmTime")
+	public Timestamp getConfirmTime() {
+		return confirmTime;
+	}
+
+	public void setConfirmTime(Timestamp confirmTime) {
+		this.confirmTime = confirmTime;
 	}
 }

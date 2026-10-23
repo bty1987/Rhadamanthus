@@ -16,7 +16,7 @@ public interface NormriceItemService {
 
 	public int deleteNormriceItem(NormtionVO normtionVO, NormriceItemVO normriceItemsVO) throws FLException;
 
-	public int confirmNormriceItem(NormriceItemVO normriceItemVO) throws FLException;
+	public int confirmNormriceItem(NormriceItemVO normriceItemVO, String userId) throws FLException;
 
 	public int rejectNormriceItem(NormriceItemVO normriceItemVO) throws FLException;
 }
