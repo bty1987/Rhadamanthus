@@ -30,6 +30,8 @@ $(function() {
 
             createQuotetionBtn: com.focusPage("#createQuotetionBtn"),
             copyQuotetionBtn: com.focusPage("#copyQuotetionBtn"),
+            copyOwnQuotetionBtn: com.focusPage("#copyOwnQuotetionBtn"),
+            copyOtherQuotetionBtn: com.focusPage("#copyOtherQuotetionBtn"),
             compareQuotetionBtn: com.focusPage("#compareQuotetionBtn"),
 
             updateQuotetionBtn: com.focusPage("#updateQuotetionBtn", "#updateQuotetionModal"),
@@ -38,6 +40,8 @@ $(function() {
 
         quotetion: null,
         cuotetion: null,
+
+        replicaMode: null, // 拷贝模式: quotetion=预报单拷贝(唯一编号) / own=个人报价拷贝(校验归属) / other=他人报价拷贝(不校验)
 
         version: [],
 
@@ -83,23 +87,39 @@ $(function() {
         if (!orderId)
             return;
 
-        // 归属约束: 仅设计师或业务员为当前操作人的装修单才可拷贝其报价
-        com.post(api.decoration.queryDecorationForCommonByOrderId, {
-            "decoration.orderId": orderId
-        }, function(res) {
+        // 个人报价拷贝(replicaMode='own'): 仅设计师或业务员为当前操作人的装修单才可拷贝;
+        // 他人报价拷贝(mode='other')不校验归属; 预报单拷贝不走本输入框
+        if (quotetion.replicaMode == 'own') {
 
-            var decoration = res.decoration;
-            var userId = params.userInfo.user.userId;
+            com.post(api.decoration.queryDecorationForCommonByOrderId, {
+                "decoration.orderId": orderId
+            }, function(res) {
 
-            var owned = (decoration.designer != null && decoration.designer.userId == userId) ||
-                        (decoration.salesman != null && decoration.salesman.userId == userId);
+                var decoration = res.decoration;
+                var userId = params.userInfo.user.userId;
 
-            if (!owned) {
+                var owned = (decoration.designer != null && decoration.designer.userId == userId) ||
+                            (decoration.salesman != null && decoration.salesman.userId == userId);
 
-                com.showAlert(com.warning, "仅归属(设计师/业务员)为本人的装修单才可拷贝报价");
-                quotetion.items.replicaOrderId.val("");
-                return;
-            }
+                if (!owned) {
+
+                    com.showAlert(com.warning, "仅归属(设计师/业务员)为本人的装修单才可个人拷贝报价");
+                    quotetion.items.replicaOrderId.val("");
+                    return;
+                }
+
+                com.post(api.quotation.queryQuotationByOrderId, {
+                    "quotation.orderId": orderId
+                }, function(res) {
+
+                    quotetion.items.quotation.bindData(res.quotations, 'qid', 'name');
+                });
+            }, function(res) {
+
+                com.showAlert(com.error, res.errorMsg);
+            }, false);
+
+        } else {
 
             com.post(api.quotation.queryQuotationByOrderId, {
                 "quotation.orderId": orderId
@@ -107,10 +127,7 @@ $(function() {
 
                 quotetion.items.quotation.bindData(res.quotations, 'qid', 'name');
             });
-        }, function(res) {
-
-            com.showAlert(com.error, res.errorMsg);
-        }, false);
+        }
     });
 
     quotetion.btns.createQuotetionBtn.on('click', function() {
@@ -126,30 +143,65 @@ $(function() {
         quotetion.modals.updateQuotetionModal.modal("show");
     });
 
+    // 预报单拷贝: 按唯一编号克隆预报单
     quotetion.btns.copyQuotetionBtn.on('click', function() {
 
         com.clearValidator();
         com.cleanItems(quotetion.items);
 
-        quotetion.items.replicaType.on("change", function(e) {
+        quotetion.replicaMode = 'quotetion';
+        quotetion.items.replicaType.val("0").addClass("hide");
 
-            var that = $(this);
+        quotetion.items.replicaQuotetionNo.removeClass("hide");
+        quotetion.items.cloneOrderId.addClass("hide");
 
-            if (that.val() == 0) {
-                quotetion.items.replicaQuotetionNo.removeClass("hide");
-                quotetion.items.cloneOrderId.addClass("hide");
-            } else {
-                quotetion.items.replicaQuotetionNo.addClass("hide");
-                quotetion.items.cloneOrderId.removeClass("hide");
-            }
-
-            quotetion.items.replicaOrderId.val("");
-            quotetion.items.quotetionNo.val("");
-            quotetion.items.quotation.bindData([], 'qid', 'quotationName');
-        }).trigger("change");
+        com.focusPage("#replicaQuotetionDialog").text("预报单拷贝");
 
         quotetion.modals.replicaQuotetionModal.modal("show");
     });
+
+    // 个人报价拷贝: 按装修单号拷贝归属(设计师/业务员)为本人的装修单报价
+    quotetion.btns.copyOwnQuotetionBtn.on('click', function() {
+
+        com.clearValidator();
+        com.cleanItems(quotetion.items);
+
+        quotetion.replicaMode = 'own';
+        quotetion.items.replicaType.val("1").addClass("hide");
+
+        quotetion.items.replicaQuotetionNo.addClass("hide");
+        quotetion.items.cloneOrderId.removeClass("hide");
+
+        com.focusPage("#replicaQuotetionDialog").text("个人报价拷贝");
+
+        quotetion.modals.replicaQuotetionModal.modal("show");
+    });
+
+    // 他人报价拷贝: 按装修单号拷贝任意装修单报价, 不校验归属
+    quotetion.btns.copyOtherQuotetionBtn.on('click', function() {
+
+        com.clearValidator();
+        com.cleanItems(quotetion.items);
+
+        quotetion.replicaMode = 'other';
+        quotetion.items.replicaType.val("1").addClass("hide");
+
+        quotetion.items.replicaQuotetionNo.addClass("hide");
+        quotetion.items.cloneOrderId.removeClass("hide");
+
+        com.focusPage("#replicaQuotetionDialog").text("他人报价拷贝");
+
+        quotetion.modals.replicaQuotetionModal.modal("show");
+    });
+
+    // 页面变体(params.urlLoadParams.type): designer=预报单拷贝+个人报价拷贝; quoter=预报单拷贝+他人报价拷贝; 未指定全部显示
+    var pageVariant = params.urlLoadParams.type;
+
+    if (pageVariant == 'quoter')
+        quotetion.btns.copyOwnQuotetionBtn.addClass("hide");
+
+    if (pageVariant == 'designer')
+        quotetion.btns.copyOtherQuotetionBtn.addClass("hide");
 
     quotetion.pageConfig = getConfig(params['urlLoadParams'].depage, 1);
 
