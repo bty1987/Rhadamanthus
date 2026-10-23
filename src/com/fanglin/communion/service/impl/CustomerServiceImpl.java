@@ -574,8 +574,23 @@ public class CustomerServiceImpl implements CustomerService {
 			throw new FLException(130178, "客户信息不存在");
 		}
 
-		if (customerPO.getStatus() != CustomerPO.STATUS_INIT_INT) {
+		// 定向重实名(厂商命名空间切换): 显式传customer.provider且与现命名空间不同时,
+		// 允许跨状态重走该厂商实名(如法大大已实名客户要签e签宝模板合同), 重置命名空间字段
+		Short targetProvider = customerVO.getProvider();
+		boolean namespaceSwitch = targetProvider != null
+				&& customerPO.getStatus() != CustomerPO.STATUS_INIT_INT
+				&& (customerPO.getProvider() == null || targetProvider.shortValue() != customerPO.getProvider().shortValue());
+
+		if (!namespaceSwitch && customerPO.getStatus() != CustomerPO.STATUS_INIT_INT) {
 			throw new FLException(130184, "客户状态不可操作");
+		}
+
+		if (namespaceSwitch) {
+			ElecsignProvider target = ElecsignProvider.of(targetProvider);
+			customerPO.setProvider(target.code());
+			customerPO.setSignno(elecsignRouter.route(target, customerPO.getCompany()).register(customerPO.getNo()));
+			customerPO.setAuthurl(null);
+			customerPO.setToken(null);
 		}
 
 		if (customerPO.getSignno() == null || "".equals(customerPO.getSignno())) {
@@ -615,7 +630,11 @@ public class CustomerServiceImpl implements CustomerService {
 			throw new FLException(130178, "客户信息不存在");
 		}
 
-		if (customerPO.getStatus() != CustomerPO.STATUS_INIT_INT) {
+		// e签宝命名空间放行重实名(定向切换后状态可能为已实名/已签署), 真实门槛=identity-info核验;
+		// 法大大路径维持仅初始状态可确认
+		boolean esignNamespace = customerPO.getProvider() != null && customerPO.getProvider() == ElecsignProvider.ESIGN.code();
+
+		if (!esignNamespace && customerPO.getStatus() != CustomerPO.STATUS_INIT_INT) {
 			throw new FLException(130184, "客户状态不可操作");
 		}
 
@@ -632,11 +651,14 @@ public class CustomerServiceImpl implements CustomerService {
 			Short realnameStatus = info.getShort("realnameStatus");
 
 			if (realnameStatus == null || realnameStatus.shortValue() != 1) {
-				throw new FLException(130027, "客户实名认证未完成, 请先完成认证");
+				throw new FLException(130189, "客户实名认证未完成, 请先发起实名认证");
 			}
 
 			customerPO.setSignno(info.getString("psnId"));
-			customerPO.setStatus(CustomerPO.STATUS_AUTH_INT);
+
+			if (customerPO.getStatus() == CustomerPO.STATUS_INIT_INT) {
+				customerPO.setStatus(CustomerPO.STATUS_AUTH_INT);
+			}
 
 			customerDao.update(customerPO);
 

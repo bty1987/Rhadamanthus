@@ -371,4 +371,15 @@ public class CustomerVO implements Serializable {
 	public void setCustomerAccounts(List<CustomerAccountVO> customerAccounts) {
 		this.customerAccounts = customerAccounts;
 	}
+
+	/** 实名厂商(定向重实名入参): 与现命名空间不同时允许跨状态重走该厂商实名 */
+	private Short provider;
+
+	public Short getProvider() {
+		return provider;
+	}
+
+	public void setProvider(Short provider) {
+		this.provider = provider;
+	}
 }

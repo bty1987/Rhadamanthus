@@ -251,6 +251,19 @@ public class ElecsignRouter {
 		return bindCompany(ElecsignProvider.of(providerCode == null ? PROVIDER_FADADA_INT : providerCode), company);
 	}
 
+	/**
+	 * 按厂商枚举路由并绑定公司上下文（同 {@link #route(Short, int)}，供调用方已持枚举的场景，
+	 * 如客户定向重实名按目标厂商路由）。
+	 *
+	 * @param provider 厂商枚举
+	 * @param company 该记录所属公司 cid
+	 * @return 厂商实现（e签宝为公司绑定实例；法大大无公司维度返回单例）
+	 * @throws FLException 厂商实现缺失
+	 */
+	public ElecsignService route(ElecsignProvider provider, int company) throws FLException {
+		return bindCompany(provider, company);
+	}
+
 	/** 对实现了 {@link com.fanglin.elecsign.service.CompanyAware} 的厂商实现返回公司绑定实例。 */
 	private ElecsignService bindCompany(ElecsignProvider provider, int company) throws FLException {
 
