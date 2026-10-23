@@ -612,6 +612,15 @@ var QuotationDetail = (function() {
                     return true;
                 }
 
+                // 🔴坏串闸: 公式含'NaN'字面量(历史脏数据形态)不参与求值与回写——该项按0展示(防渲染中断),
+                // 也不发起update(防坏串经行保存回流); 其余求值失败保持原throw中止语义(写入链不落库)
+                if (expres.indexOf("NaN") != -1) {
+
+                    $item.find('.cell.formula .cell-wrap span').text("0");
+                    $item.find('.cell.num .cell-wrap .number').text(0);
+                    return true;
+                }
+
                 var quoteFormula = quote.quotationFunctionAreaFormula(expres, cpWidget, 0);
 
                 $item.find('.cell.formula .cell-wrap span').text(quoteFormula.formula);
@@ -2876,6 +2885,15 @@ var QuotationDetail = (function() {
             var oldFormula = handler.find('.cell.formula .cell-wrap span').text();
             var oldNum = handler.find('.cell.num .cell-wrap .number').text();
             var _type = handler.find('.type').attr('data-type');
+
+            // 🔴NaN字面量闸: 聚合数非法(count-num缺失/空被parseFloat成NaN, 历史脏数据成因)时不写单元格也不落库
+            // ($.param会把NaN数字序列化成字面"NaN", formula是String列后端原样入库——本页所有写formula的路径中仅此处写计算数值)
+            if (!isFinite(parseFloat(newNum))) {
+
+                console.warn("quotationPart: 引用聚合数非法, 已跳过回写", handler.attr("data-qfaiid"), newNum);
+                return false;
+            }
+
             handler.find('.cell.formula .cell-wrap span').text(newNum);
             handler.find('.cell.num .cell-wrap .number').text(newNum);
             handler.find(".icon-arrow-up").removeClass("grey").addClass("green");
@@ -3890,21 +3908,12 @@ var QuotationDetail = (function() {
 
             expres = expres.replace(/\!\s*\(/g, "Math.ceil(");
 
-            // 防崩: 单项公式求值失败(NaN/引用缺失等)不再中断整个分区渲染, 该项数量按0展示;
-            // formula 一并归"0", 防坏串('NaN'等)经行保存再次写回
-            var num = 0;
-            var checked = false;
-
-            try {
-                num = evalFormula(expres);
-                checked = true;
-            } catch (e) {
-                num = 0;
-            }
-
+            // 🔴保持throw语义: 求值失败向上抛, 由调用方(写入链)中止——写入链"失败即不落库"是
+            // 防'NaN'回流DB的闸; 'NaN'字面量的渲染防崩在calculateQuoFeesPost的9998循环做字符串闸,
+            // 勿在本函数吞异常, 否则写入链会带着0值继续把覆盖写打到DB(10-18回归教训)
             var formula = {
-                "formula": checked ? expres : "0",
-                "num": num
+                "formula": expres,
+                "num": evalFormula(expres)
             }
 
             return formula;
@@ -5052,18 +5061,6 @@ var QuotationDetail = (function() {
             quo.orderid = params.quotation.orderId;
             quo.quotationid = params.quotation.quotation.qid;
             quo.versionId = params.quotation.quotation.version.no;
-
-            // 批量预取本报价全部引用关系, 填充queryQuotationRtems的页面缓存(替代逐项懒取)
-            com.post(api.quotation.queryQuotationRtemByQuotationId, {
-                "quotationId": quo.quotationid
-            }, function(res) {
-
-                $.each(res.quotationRtems, function(i, r) {
-                    var sqiid = r.source ? r.source.qiid : null;
-                    if (sqiid == null) return;
-                    (rtems.quotationRtems[sqiid] = rtems.quotationRtems[sqiid] || []).push(r);
-                });
-            }, null, false);
 
             com.post(api.decoration.queryDecorationForCommonByOrderId, {
                 "decoration.orderId": quo.orderid
