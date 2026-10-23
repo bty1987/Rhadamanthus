@@ -151,6 +151,11 @@ public class AcceptanceServiceImpl implements AcceptanceService {
 
 		constructionPO.setFinishTime(DateUtil.getDateToTimestamp(new Date()));
 
+		// 工程验收后自动锁定辅料控制(ACCESSORY_LOCK): 锁定后不能再创建普通辅料单;
+		// 与手工lockConstruction同effect, 自动锁定无操作人不记locker, 仅留lockTime
+		constructionPO.setAccessory(ConstructionPO.ACCESSORY_LOCK_SHORT);
+		constructionPO.setLockTime(DateUtil.getDateToTimestamp(new Date()));
+
 		if (constructionPO.getProcess() == ConstructionPO.PROCESS_INIT_INT) {
 			constructionPO.setProcess(ConstructionPO.PROCESS_FINISH_INT);
 			constructionPO.setProcessTime(DateUtil.getDateToTimestamp(new Date()));
