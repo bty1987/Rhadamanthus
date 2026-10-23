@@ -235,6 +235,31 @@ jQuery(function($) {
             };
         }
 
+        if (approvalCustomerSource.pageConfig.pageBtn.contains("local")) {
+            btns.local = {
+                name: "转本地",
+                clazz: "btn-warning",
+                show: function(v) {
+
+                    // 钉钉流程单(piid非空)且状态可处理时, 可解除钉钉绑定转本地通过/拒绝
+                    return v.piid && [constant.approval().approval.STATUS_INIT_INT, constant.approval().approval.STATUS_CONFIRM_INT, constant.approval().approval.STATUS_CONFIRMED_INT].indexOf(v.approval.status) != -1 && params.urlLoadParams.type != 'send';
+                },
+                handle: function(v) {
+
+                    com.showConfirm("确认将该审批单转本地处理? 转本地后钉钉流程不再回调, 可在本地通过/拒绝", function() {
+
+                        com.post(api.approval.updateApprovalForLocal, {
+                            "approval.aid": v.approval.aid
+                        }, function(res) {
+
+                            com.showAlert(com.info, "操作成功");
+                            searcher.doSearch();
+                        });
+                    });
+                }
+            };
+        }
+
         return btns;
     })();
 

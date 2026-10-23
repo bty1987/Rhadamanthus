@@ -105,6 +105,14 @@ public class ApprovalAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "updateApprovalForLocal", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateApprovalForLocal() throws FLException {
+
+		approvalService.updateApprovalForLocal(approval, queryUserId());
+
+		return SUCCESS;
+	}
+
 	@Action(value = "affirmApproval", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String affirm() throws FLException {
 
