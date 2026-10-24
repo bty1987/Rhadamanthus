@@ -696,7 +696,10 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 		// 保存原来的orderId，用于后续比较
 		String originalOrderId = customerChancePO.getOrderId();
 
-		decorationService.tranDecoration(decorationVO, decorationInfoVO, company);
+		// 公司归属取客源自身company(客源分配时页面选定), 不取设计师(belonger)/操作人公司; 客源无公司(0)时回退调用方公司
+		int tranCompany = customerChancePO.getCompany() > 0 ? customerChancePO.getCompany() : company;
+
+		decorationService.tranDecoration(decorationVO, decorationInfoVO, tranCompany);
 
 		// 判断orderId是否发生变化，如果不同则更新
 		if (!decorationVO.getOrderId().equals(originalOrderId)) {
