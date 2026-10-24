@@ -377,7 +377,7 @@ $(function() {
         },
         show: function(v) {
 
-            // 开始接单仅部门/分区维度视角提供(管理视角由四口径按钮接管)
+            // 开始接单: 各维度视角均可, 状态须为失效态(1/2/3/5)——启用后归 0(个人口径)或 6(管理口径)
             return btnVisible("start") && (customerUserRule.depage == "dept" || customerUserRule.depage == "fatherDept") && (v.status == constant.customer().customerUserRule.STATUS_USER_INVALID_INT || v.status == constant.customer().customerUserRule.STATUS_DEPT_INVALID_INT || v.status == constant.customer().customerUserRule.STATUS_REGION_INVALID_INT || v.status == constant.customer().customerUserRule.STATUS_ADVANCE_INVALID_INT);
         }
     }, {
@@ -419,10 +419,32 @@ $(function() {
             return btnVisible("stop") && (customerUserRule.depage == "dept" || customerUserRule.depage == "fatherDept") && (v.status == constant.customer().customerUserRule.STATUS_ENABLE_INT || v.status == constant.customer().customerUserRule.STATUS_ADVANCE_ENABLE_INT);
         }
     }, {
-        // 管理视角口径按钮(显式目标状态): 个人停用/管理启用/管理禁用;
-        // 个人口径的"启用"动作不提供——归属人经自身入口(小程序/信息平台)完成, 管理页不代操作
-        // (🔴个人启用不给管理页: 否则归属人可借本页完成启用, 绕开330122管理禁用锁语义)
+        // 管理视角四口径按钮(高级/管理两个视角恒显, 不随状态收放, 显式目标状态直写):
+        // 个人启用(→0)/个人停用(→1)/管理启用(→6)/管理禁用(→5);
+        // 失效(4)为终态: 前端本地拦截, 后端330082同样拒; 归属人本人在5/6态由后端330122/330123拒
+        name: "个人启用",
+        clazz: "btn-success",
+        handle: function(v, check) {
 
+            if (v.status == constant.customer().customerUserRule.STATUS_DISABLE_INT) {
+                com.showAlert(com.warning, "状态不可操作.");
+                return false;
+            }
+
+            com.post(api.customer.updateCustomerUserRuleForStatus, {
+                "customerUserRule.curid": v.curid,
+                "customerUserRule.status": 0
+            }, function(res) {
+
+                searcher.doSearch();
+                return false;
+            });
+        },
+        show: function(v) {
+
+            return customerUserRule.depage == null || customerUserRule.depage == "company";
+        }
+    }, {
         name: "个人停用",
         clazz: "btn-danger",
         handle: function(v, check) {
@@ -443,8 +465,7 @@ $(function() {
         },
         show: function(v) {
 
-            // 目标状态=1(个人停用): 当前非1且非硬禁用即可转换
-            return (customerUserRule.depage == null || customerUserRule.depage == "company") && v.status != constant.customer().customerUserRule.STATUS_USER_INVALID_INT && v.status != constant.customer().customerUserRule.STATUS_DISABLE_INT;
+            return customerUserRule.depage == null || customerUserRule.depage == "company";
         }
     }, {
         name: "管理启用",
@@ -467,13 +488,17 @@ $(function() {
         },
         show: function(v) {
 
-            // 目标状态=6(管理启用): 当前非6且非硬禁用即可转换
-            return (customerUserRule.depage == null || customerUserRule.depage == "company") && v.status != constant.customer().customerUserRule.STATUS_ADVANCE_ENABLE_INT && v.status != constant.customer().customerUserRule.STATUS_DISABLE_INT;
+            return customerUserRule.depage == null || customerUserRule.depage == "company";
         }
     }, {
         name: "管理禁用",
         clazz: "btn-danger",
         handle: function(v, check) {
+
+            if (v.status == constant.customer().customerUserRule.STATUS_DISABLE_INT) {
+                com.showAlert(com.warning, "状态不可操作.");
+                return false;
+            }
 
             com.post(api.customer.updateCustomerUserRuleForStatus, {
                 "customerUserRule.curid": v.curid,
@@ -486,8 +511,7 @@ $(function() {
         },
         show: function(v) {
 
-            // 目标状态=5(管理禁用): 当前非5且非硬禁用即可转换
-            return (customerUserRule.depage == null || customerUserRule.depage == "company") && v.status != constant.customer().customerUserRule.STATUS_ADVANCE_INVALID_INT && v.status != constant.customer().customerUserRule.STATUS_DISABLE_INT;
+            return customerUserRule.depage == null || customerUserRule.depage == "company";
         }
     }, {
         name: "状态",
