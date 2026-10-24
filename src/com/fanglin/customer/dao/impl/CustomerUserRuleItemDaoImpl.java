@@ -30,7 +30,7 @@ public class CustomerUserRuleItemDaoImpl extends DaoImpl<CustomerUserRuleItemPO>
 
 	@Override
 	public CustomerUserRuleItemPO pullCustomerUserRuleItem(int company) {
-		return (CustomerUserRuleItemPO) session().createCriteria(CustomerUserRulePO.class).add(Restrictions.ge("surplus", 1000)).add(Restrictions.eq("company", company)).addOrder(Order.desc("surplus")).add(Restrictions.eq("status", CustomerUserRulePO.STATUS_ENABLE_INT)).setMaxResults(1).uniqueResult();
+		return (CustomerUserRuleItemPO) session().createCriteria(CustomerUserRulePO.class).add(Restrictions.ge("surplus", 1000)).add(Restrictions.eq("company", company)).addOrder(Order.desc("surplus")).add(Restrictions.in("status", new Short[] { CustomerUserRulePO.STATUS_ENABLE_INT, CustomerUserRulePO.STATUS_ADVANCE_ENABLE_INT })).setMaxResults(1).uniqueResult();
 	}
 
 	@Override
@@ -40,7 +40,7 @@ public class CustomerUserRuleItemDaoImpl extends DaoImpl<CustomerUserRuleItemPO>
 
 		uids.add(0);
 
-		String sql = "select curi.* from customer.customeruserrule cur, customer.customeruserruleitem curi where cur.curid = curi.curid and cur.company = :company and cur.status = 0 and curi.status = 0 and ((curi.type = 0 and curi.uppval < :uppval and curi.lowval >= :lowval) or (curi.type = 1) or (curi.type = 2 and curi.did = :did and curi.uppval < :uppval1 and curi.lowval >= :lowval1) or (curi.type = 3 and curi.dtid = :dtid and curi.uppval < :uppval2 and curi.lowval >= :lowval2) or (curi.type = 6 and curi.uppval < :uppval3 and curi.lowval >= :lowval3)) and TIMEDIFF(now(), cur.updateTime) > '00:05:00' AND cur.uid NOT IN :uids order by curi.priority desc, (case when curi.type = 6 then curi.chance else 0 end) desc, curi.handletime, cur.surplus desc limit 1";
+		String sql = "select curi.* from customer.customeruserrule cur, customer.customeruserruleitem curi where cur.curid = curi.curid and cur.company = :company and cur.status in (0, 6) and curi.status = 0 and ((curi.type = 0 and curi.uppval < :uppval and curi.lowval >= :lowval) or (curi.type = 1) or (curi.type = 2 and curi.did = :did and curi.uppval < :uppval1 and curi.lowval >= :lowval1) or (curi.type = 3 and curi.dtid = :dtid and curi.uppval < :uppval2 and curi.lowval >= :lowval2) or (curi.type = 6 and curi.uppval < :uppval3 and curi.lowval >= :lowval3)) and TIMEDIFF(now(), cur.updateTime) > '00:05:00' AND cur.uid NOT IN :uids order by curi.priority desc, (case when curi.type = 6 then curi.chance else 0 end) desc, curi.handletime, cur.surplus desc limit 1";
 
 		SQLQuery query = session().createSQLQuery(sql.toString()).addEntity(CustomerUserRuleItemPO.class);
 
@@ -56,7 +56,7 @@ public class CustomerUserRuleItemDaoImpl extends DaoImpl<CustomerUserRuleItemPO>
 
 		uids.add(0);
 
-		String sql = "select curi.* from customer.customeruserrule cur, customer.customeruserruleitem curi where cur.curid = curi.curid and cur.company = :company and cur.status = 0 and curi.status = 0 and ((curi.type = 0 and curi.uppval < :uppval and curi.lowval >= :lowval) OR (curi.type = 1) or (curi.type = 6 and curi.uppval < :uppval1 and curi.lowval >= :lowval1)) AND TIMEDIFF(now(), cur.updateTime) > '00:05:00' AND cur.uid NOT IN :uids order by curi.priority desc, (case when curi.type = 6 then curi.chance else 0 end) desc, curi.handletime, cur.surplus desc limit 1";
+		String sql = "select curi.* from customer.customeruserrule cur, customer.customeruserruleitem curi where cur.curid = curi.curid and cur.company = :company and cur.status in (0, 6) and curi.status = 0 and ((curi.type = 0 and curi.uppval < :uppval and curi.lowval >= :lowval) OR (curi.type = 1) or (curi.type = 6 and curi.uppval < :uppval1 and curi.lowval >= :lowval1)) AND TIMEDIFF(now(), cur.updateTime) > '00:05:00' AND cur.uid NOT IN :uids order by curi.priority desc, (case when curi.type = 6 then curi.chance else 0 end) desc, curi.handletime, cur.surplus desc limit 1";
 
 		SQLQuery query = session().createSQLQuery(sql.toString()).addEntity(CustomerUserRuleItemPO.class);
 
@@ -72,7 +72,7 @@ public class CustomerUserRuleItemDaoImpl extends DaoImpl<CustomerUserRuleItemPO>
 
 		uids.add(0);
 
-		String sql = "select curi.* from customer.customeruserrule cur, customer.customeruserruleitem curi where cur.curid = curi.curid and cur.company = :company and cur.status = 0 and curi.status = 0 and ((curi.type = 1) or (curi.type = 3 and curi.dtid = :dtid and curi.uppval < :uppval1 and curi.lowval >= :lowval1) or (curi.type = 6 and curi.uppval < :uppval2 and curi.lowval >= :lowval2)) and TIMEDIFF(now(), cur.updateTime) > '00:05:00' AND cur.uid NOT IN :uids order by curi.priority desc, (case when curi.type = 6 then curi.chance else 0 end) desc, curi.handletime, cur.surplus desc limit 1";
+		String sql = "select curi.* from customer.customeruserrule cur, customer.customeruserruleitem curi where cur.curid = curi.curid and cur.company = :company and cur.status in (0, 6) and curi.status = 0 and ((curi.type = 1) or (curi.type = 3 and curi.dtid = :dtid and curi.uppval < :uppval1 and curi.lowval >= :lowval1) or (curi.type = 6 and curi.uppval < :uppval2 and curi.lowval >= :lowval2)) and TIMEDIFF(now(), cur.updateTime) > '00:05:00' AND cur.uid NOT IN :uids order by curi.priority desc, (case when curi.type = 6 then curi.chance else 0 end) desc, curi.handletime, cur.surplus desc limit 1";
 
 		SQLQuery query = session().createSQLQuery(sql.toString()).addEntity(CustomerUserRuleItemPO.class);
 
@@ -88,7 +88,7 @@ public class CustomerUserRuleItemDaoImpl extends DaoImpl<CustomerUserRuleItemPO>
 
 		uids.add(0);
 
-		String sql = "select curi.* from customer.customeruserrule cur, customer.customeruserruleitem curi where cur.curid = curi.curid and cur.company = :company and cur.status = 0 and curi.status = 0 and ((curi.type = 1) or (curi.type = 2 and curi.did = :did and curi.uppval < :uppval1 and curi.lowval >= :lowval1) or (curi.type = 6 and curi.uppval < :uppval2 and curi.lowval >= :lowval2)) and TIMEDIFF(now(), cur.updateTime) > '00:05:00' AND cur.uid NOT IN :uids order by curi.priority desc, (case when curi.type = 6 then curi.chance else 0 end) desc, curi.handletime, cur.surplus desc limit 1";
+		String sql = "select curi.* from customer.customeruserrule cur, customer.customeruserruleitem curi where cur.curid = curi.curid and cur.company = :company and cur.status in (0, 6) and curi.status = 0 and ((curi.type = 1) or (curi.type = 2 and curi.did = :did and curi.uppval < :uppval1 and curi.lowval >= :lowval1) or (curi.type = 6 and curi.uppval < :uppval2 and curi.lowval >= :lowval2)) and TIMEDIFF(now(), cur.updateTime) > '00:05:00' AND cur.uid NOT IN :uids order by curi.priority desc, (case when curi.type = 6 then curi.chance else 0 end) desc, curi.handletime, cur.surplus desc limit 1";
 
 		SQLQuery query = session().createSQLQuery(sql.toString()).addEntity(CustomerUserRuleItemPO.class);
 
@@ -114,7 +114,7 @@ public class CustomerUserRuleItemDaoImpl extends DaoImpl<CustomerUserRuleItemPO>
 		uids.add(0);
 
 		// 城区规则支持：type = 4 and curi.cpid = :cpid
-		String sql = "select curi.* from customer.customeruserrule cur, customer.customeruserruleitem curi where cur.curid = curi.curid and cur.company = :company and cur.status = 0 and curi.status = 0 and ((curi.type = 0 and curi.uppval < :uppval and curi.lowval >= :lowval) or (curi.type = 1) or (curi.type = 2 and curi.did = :did and curi.uppval < :uppval1 and curi.lowval >= :lowval1) or (curi.type = 4 and curi.cpid = :cpid) or (curi.type = 6 and curi.uppval < :uppval2 and curi.lowval >= :lowval2)) and TIMEDIFF(now(), cur.updateTime) > '00:05:00' AND cur.uid NOT IN :uids order by curi.priority desc, (case when curi.type = 6 then curi.chance else 0 end) desc, curi.handletime, cur.surplus desc limit 1";
+		String sql = "select curi.* from customer.customeruserrule cur, customer.customeruserruleitem curi where cur.curid = curi.curid and cur.company = :company and cur.status in (0, 6) and curi.status = 0 and ((curi.type = 0 and curi.uppval < :uppval and curi.lowval >= :lowval) or (curi.type = 1) or (curi.type = 2 and curi.did = :did and curi.uppval < :uppval1 and curi.lowval >= :lowval1) or (curi.type = 4 and curi.cpid = :cpid) or (curi.type = 6 and curi.uppval < :uppval2 and curi.lowval >= :lowval2)) and TIMEDIFF(now(), cur.updateTime) > '00:05:00' AND cur.uid NOT IN :uids order by curi.priority desc, (case when curi.type = 6 then curi.chance else 0 end) desc, curi.handletime, cur.surplus desc limit 1";
 
 		SQLQuery query = session().createSQLQuery(sql.toString()).addEntity(CustomerUserRuleItemPO.class);
 
@@ -136,7 +136,7 @@ public class CustomerUserRuleItemDaoImpl extends DaoImpl<CustomerUserRuleItemPO>
 		uids.add(0);
 
 		// 城区规则支持：type = 4 and curi.cpid = :cpid
-		String sql = "select curi.* from customer.customeruserrule cur, customer.customeruserruleitem curi where cur.curid = curi.curid and cur.company = :company and cur.status = 0 and curi.status = 0 and ((curi.type = 0 and curi.uppval < :uppval and curi.lowval >= :lowval) or (curi.type = 1) or (curi.type = 2 and curi.did = :did and curi.uppval < :uppval1 and curi.lowval >= :lowval1) or (curi.type = 3 and curi.dtid = :dtid and curi.uppval < :uppval2 and curi.lowval >= :lowval2) or (curi.type = 4 and curi.cpid = :cpid) or (curi.type = 6 and curi.uppval < :uppval3 and curi.lowval >= :lowval3)) and TIMEDIFF(now(), cur.updateTime) > '00:05:00' AND cur.uid NOT IN :uids order by curi.priority desc, (case when curi.type = 6 then curi.chance else 0 end) desc, curi.handletime, cur.surplus desc limit 1";
+		String sql = "select curi.* from customer.customeruserrule cur, customer.customeruserruleitem curi where cur.curid = curi.curid and cur.company = :company and cur.status in (0, 6) and curi.status = 0 and ((curi.type = 0 and curi.uppval < :uppval and curi.lowval >= :lowval) or (curi.type = 1) or (curi.type = 2 and curi.did = :did and curi.uppval < :uppval1 and curi.lowval >= :lowval1) or (curi.type = 3 and curi.dtid = :dtid and curi.uppval < :uppval2 and curi.lowval >= :lowval2) or (curi.type = 4 and curi.cpid = :cpid) or (curi.type = 6 and curi.uppval < :uppval3 and curi.lowval >= :lowval3)) and TIMEDIFF(now(), cur.updateTime) > '00:05:00' AND cur.uid NOT IN :uids order by curi.priority desc, (case when curi.type = 6 then curi.chance else 0 end) desc, curi.handletime, cur.surplus desc limit 1";
 
 		SQLQuery query = session().createSQLQuery(sql.toString()).addEntity(CustomerUserRuleItemPO.class);
 
