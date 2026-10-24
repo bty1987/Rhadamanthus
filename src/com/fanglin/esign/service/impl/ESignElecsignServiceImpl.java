@@ -136,6 +136,7 @@ public class ESignElecsignServiceImpl implements ElecsignService, CompanyAware {
 
 	/** 获取文件下载地址 */
 	private static final String EP_FILE_URL = "/v3/files/%s/url";
+	private static final String EP_FLOW_FILE_DOWNLOAD_URL = "/v3/sign-flow/%s/file-download-url";
 
 	@Autowired
 	private EsignClient esignClient;
@@ -752,9 +753,23 @@ private String createSignFlow(int company, Contract contract, boolean orgSigner,
 			return null;
 		}
 
-		JSONObject data = esignClient.get(company, String.format(EP_FLOW_DETAIL, signFlowId), null);
+		// 优先: 流程产物文件下载(流完成后的带章归档文件; 沙箱实测2026-10)——
+		// 流程产物 fileId 走应用空间 /v3/files/{id}/url 是 404, 必须用流程下载端点
+		try {
+			JSONObject data = esignClient.get(company, String.format(EP_FLOW_FILE_DOWNLOAD_URL, signFlowId), null);
 
-		JSONArray docs = data.getJSONArray("docs");
+			JSONArray files = data.getJSONArray("files");
+
+			if (files != null && !files.isEmpty()) {
+				return files.getJSONObject(0).getString("downloadUrl");
+			}
+		} catch (FLException e) {
+			// 流未完成/产物未生成: 回退应用空间文件地址
+		}
+
+		JSONObject detail = esignClient.get(company, String.format(EP_FLOW_DETAIL, signFlowId), null);
+
+		JSONArray docs = detail.getJSONArray("docs");
 
 		if (docs == null || docs.isEmpty()) {
 			return null;
