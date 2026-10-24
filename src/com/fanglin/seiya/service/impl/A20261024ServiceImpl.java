@@ -24,6 +24,10 @@ import org.springframework.transaction.annotation.Transactional;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.customer.dao.CustomerChanceDao;
 import com.fanglin.customer.po.CustomerChancePO;
+import com.fanglin.data.po.PresignProducePO;
+import com.fanglin.data.po.QuotationVersionPO;
+import com.fanglin.data.quotation.dao.PresignProduceDao;
+import com.fanglin.data.quotation.dao.QuotationVersionDao;
 import com.fanglin.decoration.dao.DecorationAdditionDao;
 import com.fanglin.decoration.dao.DecorationBelongDao;
 import com.fanglin.decoration.dao.DecorationDao;
@@ -39,7 +43,9 @@ import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.quotation.dao.ProtationDao;
 import com.fanglin.quotation.po.ProtationPO;
+import com.fanglin.quotation.vo.ProtationVO;
 import com.fanglin.seiya.service.A20261024Service;
+import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
 
 @Service("a20261024Service")
@@ -70,9 +76,15 @@ public class A20261024ServiceImpl implements A20261024Service {
 	@Autowired
 	private CustomerChanceDao customerChanceDao;
 
+	@Autowired
+	private PresignProduceDao presignProduceDao;
+
+	@Autowired
+	private QuotationVersionDao quotationVersionDao;
+
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public Map<String, Object> syncProsignForNerp(String orderId, String name, Long price, String userId) throws FLException {
+	public Map<String, Object> syncProsignForNerp(String orderId, ProtationVO protation, Long qvid, String userId) throws FLException {
 
 		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(orderId);
 
@@ -92,24 +104,57 @@ public class A20261024ServiceImpl implements A20261024Service {
 			throw new FLException(400040, "操作账号无效");
 		}
 
+		// 预签产品挂接校验（>0 时须存在, 防垃圾外键）
+		Long ppid = protation.getPpid();
+
+		if (ppid != null && ppid.longValue() > 0 && presignProduceDao.get(ppid.longValue()) == null) {
+			throw new FLException(130080, "预签产品不存在");
+		}
+
+		// 报价版本挂接校验（>0 时须存在, 防垃圾外键）
+		QuotationVersionPO versionPO = null;
+
+		if (qvid != null && qvid.longValue() > 0) {
+			versionPO = quotationVersionDao.get(qvid.longValue());
+
+			if (versionPO == null) {
+				throw new FLException(200050, "报价版本不存在");
+			}
+		}
+
 		if (protationDao.queryProtationForDefaultByOrderId(orderId) != null) {
 			throw new FLException(400044, "预签单已存在");
 		}
 
-		long precontractPrice = price == null ? 0 : price.longValue();
+		long precontractPrice = protation.getTotalPrice() == null ? 0 : protation.getTotalPrice().longValue();
 
-		// 凭空创建无明细的锁定预签单（ppid/qvid 不挂预签产品与报价版本, 金额取入参）
+		if (protation.getName() == null || protation.getName().trim().isEmpty()) {
+			protation.setName("预签单");
+		}
+
+		if (protation.getQuotePrice() == null) {
+			protation.setQuotePrice(protation.getTotalPrice());
+		}
+
+		// 凭空创建无明细的锁定预签单（业务字段按VO回填, 未传字段保持PO缺省0; 明细不生成）
 		ProtationPO protationPO = new ProtationPO();
 
+		BeanUtil.copyPropertie(protation, protationPO, Arrays.asList("pid", "orderId", "createTime", "creater", "version", "status", "defaults", "decoration"));
+
 		protationPO.setOrderId(orderId);
-		protationPO.setPpid(0);
-		protationPO.setName(name == null || name.trim().isEmpty() ? "预签单" : name.trim());
+
+		if (ppid == null || ppid.longValue() <= 0) {
+			protationPO.setPpid(0);
+		}
+
 		protationPO.setCreater(operater);
 		protationPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
-		protationPO.setQuotePrice(precontractPrice);
-		protationPO.setTotalPrice(precontractPrice);
 		protationPO.setStatus(ProtationPO.STATUS_LOCK_INT);
 		protationPO.setDefaults(ProtationPO.DEFAULT_DEFAULT_INT);
+
+		if (versionPO != null) {
+			protationPO.setVersion(versionPO);
+		}
 
 		protationDao.save(protationPO);
 
