@@ -361,23 +361,10 @@ $(function() {
                 return false;
             }
 
-            var status = customerUserRule.depage == "dept" ? 2 : (customerUserRule.depage == "fatherDept" || customerUserRule.depage == "company") ? 3 : 1;
-            
-            if(customerUserRule.depage == "fatherDept" || customerUserRule.depage == "company"){
-                status = constant.customer().customerUserRule.STATUS_REGION_INVALID_INT;
-            }
-            
-            if(customerUserRule.depage == "dept"){
-                status = constant.customer().customerUserRule.STATUS_DEPT_INVALID_INT;
-            }
-            
-            if(customerUserRule.depage == null){
-                status = constant.customer().customerUserRule.STATUS_ADVANCE_INVALID_INT;
-            }
-
+            // 开始接单=启用(target=0): 后端按操作方落口径(归属人→0个人口径/管理侧→6管理启用)
             com.post(api.customer.updateCustomerUserRuleForStatus, {
                 "customerUserRule.curid": v.curid,
-                "customerUserRule.status": status
+                "customerUserRule.status": 0
             }, function(res) {
 
                 searcher.doSearch();
@@ -390,7 +377,8 @@ $(function() {
         },
         show: function(v) {
 
-            return btnVisible("start") && (v.status == constant.customer().customerUserRule.STATUS_USER_INVALID_INT || v.status == constant.customer().customerUserRule.STATUS_DEPT_INVALID_INT || v.status == constant.customer().customerUserRule.STATUS_REGION_INVALID_INT || v.status == constant.customer().customerUserRule.STATUS_ADVANCE_INVALID_INT);
+            // 开始接单仅部门/分区维度视角提供(管理视角由四口径按钮接管)
+            return btnVisible("start") && (customerUserRule.depage == "dept" || customerUserRule.depage == "fatherDept") && (v.status == constant.customer().customerUserRule.STATUS_USER_INVALID_INT || v.status == constant.customer().customerUserRule.STATUS_DEPT_INVALID_INT || v.status == constant.customer().customerUserRule.STATUS_REGION_INVALID_INT || v.status == constant.customer().customerUserRule.STATUS_ADVANCE_INVALID_INT);
         }
     }, {
         name: "停止接单",
@@ -427,8 +415,96 @@ $(function() {
         },
         show: function(v) {
 
-            // 停止接单对启用口径两态(0个人启用/6管理启用)均可用——6态无此按钮则管理侧无法停用
-            return btnVisible("stop") && (v.status == constant.customer().customerUserRule.STATUS_ENABLE_INT || v.status == constant.customer().customerUserRule.STATUS_ADVANCE_ENABLE_INT);
+            // 停止接单仅部门/分区维度视角提供(管理视角由四口径按钮接管); 对启用口径两态(0/6)均可用
+            return btnVisible("stop") && (customerUserRule.depage == "dept" || customerUserRule.depage == "fatherDept") && (v.status == constant.customer().customerUserRule.STATUS_ENABLE_INT || v.status == constant.customer().customerUserRule.STATUS_ADVANCE_ENABLE_INT);
+        }
+    }, {
+        // 管理视角四口径按钮(显式目标状态, 替代按操作人身份推断口径)
+        name: "个人启用",
+        clazz: "btn-success",
+        handle: function(v, check) {
+
+            if (v.status == constant.customer().customerUserRule.STATUS_DISABLE_INT) {
+                com.showAlert(com.warning, "状态不可操作.");
+                return false;
+            }
+
+            com.post(api.customer.updateCustomerUserRuleForStatus, {
+                "customerUserRule.curid": v.curid,
+                "customerUserRule.status": 0
+            }, function(res) {
+
+                searcher.doSearch();
+                return false;
+            });
+        },
+        show: function(v) {
+
+            return (customerUserRule.depage == null || customerUserRule.depage == "company") && v.status == constant.customer().customerUserRule.STATUS_USER_INVALID_INT;
+        }
+    }, {
+        name: "个人停用",
+        clazz: "btn-danger",
+        handle: function(v, check) {
+
+            if (v.status == constant.customer().customerUserRule.STATUS_DISABLE_INT) {
+                com.showAlert(com.warning, "状态不可操作.");
+                return false;
+            }
+
+            com.post(api.customer.updateCustomerUserRuleForStatus, {
+                "customerUserRule.curid": v.curid,
+                "customerUserRule.status": 1
+            }, function(res) {
+
+                searcher.doSearch();
+                return false;
+            });
+        },
+        show: function(v) {
+
+            return (customerUserRule.depage == null || customerUserRule.depage == "company") && v.status == constant.customer().customerUserRule.STATUS_ENABLE_INT;
+        }
+    }, {
+        name: "管理启用",
+        clazz: "btn-success",
+        handle: function(v, check) {
+
+            if (v.status == constant.customer().customerUserRule.STATUS_DISABLE_INT) {
+                com.showAlert(com.warning, "状态不可操作.");
+                return false;
+            }
+
+            com.post(api.customer.updateCustomerUserRuleForStatus, {
+                "customerUserRule.curid": v.curid,
+                "customerUserRule.status": 6
+            }, function(res) {
+
+                searcher.doSearch();
+                return false;
+            });
+        },
+        show: function(v) {
+
+            return (customerUserRule.depage == null || customerUserRule.depage == "company") && (v.status == constant.customer().customerUserRule.STATUS_USER_INVALID_INT || v.status == constant.customer().customerUserRule.STATUS_DEPT_INVALID_INT || v.status == constant.customer().customerUserRule.STATUS_REGION_INVALID_INT || v.status == constant.customer().customerUserRule.STATUS_ADVANCE_INVALID_INT);
+        }
+    }, {
+        name: "管理禁用",
+        clazz: "btn-danger",
+        handle: function(v, check) {
+
+            com.post(api.customer.updateCustomerUserRuleForStatus, {
+                "customerUserRule.curid": v.curid,
+                "customerUserRule.status": 5
+            }, function(res) {
+
+                searcher.doSearch();
+                return false;
+            });
+        },
+        show: function(v) {
+
+            return (customerUserRule.depage == null || customerUserRule.depage == "company") && v.status != constant.customer().customerUserRule.STATUS_DISABLE_INT && v.status != constant.customer().customerUserRule.STATUS_ADVANCE_ENABLE_INT;
         }
     }, {
         name: "状态",
