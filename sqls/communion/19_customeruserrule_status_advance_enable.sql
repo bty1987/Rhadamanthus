@@ -23,10 +23,19 @@ SELECT '启用(管理)', 'customer', 'customerUserRule', 'status', 'STATUS_ADVAN
 FROM DUAL
 WHERE NOT EXISTS (SELECT 1 FROM communion.constant WHERE clazz = 'customerUserRule' AND field = 'STATUS_ADVANCE_ENABLE_INT');
 
+-- ② 四态口径文案对齐(个人启用/个人停用/管理禁用/管理启用), 与管理页四按钮一一对应:
+--    0=启用(个人) / 1=停止(个人) / 5=禁用(管理) / 6=启用(管理)
+--    (2停止部门/3停止分区为维度失效态, 不属四口径, 文案维持)
+UPDATE communion.constant SET value = '启用(个人)', name = '启用(个人)'
+WHERE clazz = 'customerUserRule' AND field = 'STATUS_ENABLE_INT' AND value <> '启用(个人)';
+
+UPDATE communion.constant SET value = '禁用(管理)', name = '禁用(管理)'
+WHERE clazz = 'customerUserRule' AND field = 'STATUS_ADVANCE_INVALID_INT' AND value <> '禁用(管理)';
+
 -- ============================================================================
 -- 验证语句(执行后核对):
 --   SELECT field, `key`, value FROM communion.constant
 --    WHERE clazz='customerUserRule' AND type='status' ORDER BY CAST(`key` AS UNSIGNED);
---   期望 0启用/1停止(个人)/2停止(部门)/3停止(分区)/4失效/5停止(管理)/6启用(管理) 七行
+--   期望 0启用(个人)/1停止(个人)/2停止(部门)/3停止(分区)/4失效/5禁用(管理)/6启用(管理) 七行
 -- 生效方式: constant表驱动, 前端刷新即生效(状态列翻译+JS逻辑值), 免发版。
 -- ============================================================================
