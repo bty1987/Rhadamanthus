@@ -219,32 +219,21 @@ public class CustomerUserRuleServiceImpl implements CustomerUserRuleService {
 			throw new FLException(330082, "规则不可操作");
 		}
 
-		// 管理禁用(管理失效)为硬锁: 规则归属人(个人)不可自行启用, 仅管理侧可操作;
-		// 个人禁用(个人失效)为软锁: 个人与管理均可启用
-		if (status == CustomerUserRulePO.STATUS_ADVANCE_INVALID_INT && owner && customerUserRuleVO.getStatus() == CustomerUserRulePO.STATUS_ENABLE_INT) {
-			throw new FLException(330122, "管理禁用状态下, 无法自行启用");
+		// 个人侧硬锁(按操作方身份, 对任意目标状态生效): 5管理禁用禁个人启用/6管理启用禁个人停用
+		if (owner && status == CustomerUserRulePO.STATUS_ADVANCE_INVALID_INT) {
+			throw new FLException(330122, "管理禁用状态下, 个人无法操作");
 		}
 
-		// 管理启用(管理启用态)为硬锁: 归属人(个人)不可自行停用, 仅管理侧可操作
-		if (status == CustomerUserRulePO.STATUS_ADVANCE_ENABLE_INT && owner && customerUserRuleVO.getStatus() != CustomerUserRulePO.STATUS_ENABLE_INT) {
-			throw new FLException(330123, "管理启用状态下, 无法自行停用");
-		}
-
-		// 降级守卫(仅数值序 0<1<2<3<5 生效): 管理启用(6)为启用口径的平行态, 管理侧可自6停用至2/3/5
-		if (customerUserRuleVO.getStatus() != CustomerUserRulePO.STATUS_ENABLE_INT && status != CustomerUserRulePO.STATUS_ADVANCE_ENABLE_INT && customerUserRuleVO.getStatus() < status) {
-			throw new FLException(330082, "规则不可操作");
+		if (owner && status == CustomerUserRulePO.STATUS_ADVANCE_ENABLE_INT) {
+			throw new FLException(330123, "管理启用状态下, 个人无法操作");
 		}
 
 		if (customerUserRuleVO.getStatus() == CustomerUserRulePO.STATUS_USER_INVALID_INT && systemConfigDao.querySystemConfig("CUSTOMER_USER_RULE_CONTROL", customerUserRulePO.getCompany()) != null) {
 			throw new FLException(330082, "规则不可操作");
 		}
 
-		// 启用口径: 个人(归属人)启用→ENABLE(0, 个人可再自行停用); 管理侧启用→ADVANCE_ENABLE(6, 个人不可自行停用)
-		if (status != CustomerUserRulePO.STATUS_ENABLE_INT) {
-			customerUserRulePO.setStatus(owner ? CustomerUserRulePO.STATUS_ENABLE_INT : CustomerUserRulePO.STATUS_ADVANCE_ENABLE_INT);
-		} else {
-			customerUserRulePO.setStatus(customerUserRuleVO.getStatus());
-		}
+		// target驱动直写(0/1/2/3/5/6均为显式目标状态, 由前端按钮选择口径与目标)
+		customerUserRulePO.setStatus(customerUserRuleVO.getStatus());
 
 		customerUserRuleDao.update(customerUserRulePO);
 
