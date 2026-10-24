@@ -440,7 +440,8 @@ $(function() {
         },
         show: function(v) {
 
-            return (customerUserRule.depage == null || customerUserRule.depage == "company") && v.status == constant.customer().customerUserRule.STATUS_USER_INVALID_INT;
+            // 目标状态=0(个人启用): 当前非0且非硬禁用即可转换(含从5/6回转个人口径)
+            return (customerUserRule.depage == null || customerUserRule.depage == "company") && v.status != constant.customer().customerUserRule.STATUS_ENABLE_INT && v.status != constant.customer().customerUserRule.STATUS_DISABLE_INT;
         }
     }, {
         name: "个人停用",
@@ -463,7 +464,8 @@ $(function() {
         },
         show: function(v) {
 
-            return (customerUserRule.depage == null || customerUserRule.depage == "company") && v.status == constant.customer().customerUserRule.STATUS_ENABLE_INT;
+            // 目标状态=1(个人停用): 当前非1且非硬禁用即可转换
+            return (customerUserRule.depage == null || customerUserRule.depage == "company") && v.status != constant.customer().customerUserRule.STATUS_USER_INVALID_INT && v.status != constant.customer().customerUserRule.STATUS_DISABLE_INT;
         }
     }, {
         name: "管理启用",
@@ -486,7 +488,8 @@ $(function() {
         },
         show: function(v) {
 
-            return (customerUserRule.depage == null || customerUserRule.depage == "company") && (v.status == constant.customer().customerUserRule.STATUS_USER_INVALID_INT || v.status == constant.customer().customerUserRule.STATUS_DEPT_INVALID_INT || v.status == constant.customer().customerUserRule.STATUS_REGION_INVALID_INT || v.status == constant.customer().customerUserRule.STATUS_ADVANCE_INVALID_INT);
+            // 目标状态=6(管理启用): 当前非6且非硬禁用即可转换
+            return (customerUserRule.depage == null || customerUserRule.depage == "company") && v.status != constant.customer().customerUserRule.STATUS_ADVANCE_ENABLE_INT && v.status != constant.customer().customerUserRule.STATUS_DISABLE_INT;
         }
     }, {
         name: "管理禁用",
@@ -504,7 +507,8 @@ $(function() {
         },
         show: function(v) {
 
-            return (customerUserRule.depage == null || customerUserRule.depage == "company") && v.status != constant.customer().customerUserRule.STATUS_DISABLE_INT && v.status != constant.customer().customerUserRule.STATUS_ADVANCE_ENABLE_INT;
+            // 目标状态=5(管理禁用): 当前非5且非硬禁用即可转换
+            return (customerUserRule.depage == null || customerUserRule.depage == "company") && v.status != constant.customer().customerUserRule.STATUS_ADVANCE_INVALID_INT && v.status != constant.customer().customerUserRule.STATUS_DISABLE_INT;
         }
     }, {
         name: "状态",
