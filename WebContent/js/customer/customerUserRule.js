@@ -427,7 +427,8 @@ $(function() {
         },
         show: function(v) {
 
-            return btnVisible("stop") && v.status == constant.customer().customerUserRule.STATUS_ENABLE_INT;
+            // 停止接单对启用口径两态(0个人启用/6管理启用)均可用——6态无此按钮则管理侧无法停用
+            return btnVisible("stop") && (v.status == constant.customer().customerUserRule.STATUS_ENABLE_INT || v.status == constant.customer().customerUserRule.STATUS_ADVANCE_ENABLE_INT);
         }
     }, {
         name: "状态",
