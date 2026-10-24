@@ -103,7 +103,7 @@ public class CustomerUserRuleDaoImpl extends DaoImpl<CustomerUserRulePO> impleme
 
 	@Override
 	public CustomerUserRulePO pullCustomerUserRule(int company) {
-		return (CustomerUserRulePO) session().createCriteria(CustomerUserRulePO.class).add(Restrictions.ge("surplus", 1000)).add(Restrictions.eq("company", company)).addOrder(Order.desc("surplus")).add(Restrictions.eq("status", CustomerUserRulePO.STATUS_ENABLE_INT)).setMaxResults(1).uniqueResult();
+		return (CustomerUserRulePO) session().createCriteria(CustomerUserRulePO.class).add(Restrictions.ge("surplus", 1000)).add(Restrictions.eq("company", company)).addOrder(Order.desc("surplus")).add(Restrictions.in("status", new Short[] { CustomerUserRulePO.STATUS_ENABLE_INT, CustomerUserRulePO.STATUS_ADVANCE_ENABLE_INT })).setMaxResults(1).uniqueResult();
 	}
 
 	@Override
@@ -113,7 +113,7 @@ public class CustomerUserRuleDaoImpl extends DaoImpl<CustomerUserRulePO> impleme
 
 		uids.add(0);
 
-		String sql = "select cur.* from customer.customeruserrule cur, customer.customeruserruleitem curi where cur.curid = curi.curid and cur.company = :company and cur.status = 0 and curi.status = 0 and curi.uppval < :uppval and curi.lowval >= :lowval and TIMEDIFF(now(), cur.updateTime) > '00:05:00' AND cur.uid NOT IN :uids order by curi.priority desc, cur.surplus desc limit 1";
+		String sql = "select cur.* from customer.customeruserrule cur, customer.customeruserruleitem curi where cur.curid = curi.curid and cur.company = :company and cur.status in (0, 6) and curi.status = 0 and curi.uppval < :uppval and curi.lowval >= :lowval and TIMEDIFF(now(), cur.updateTime) > '00:05:00' AND cur.uid NOT IN :uids order by curi.priority desc, cur.surplus desc limit 1";
 
 		SQLQuery query = session().createSQLQuery(sql.toString()).addEntity(CustomerUserRulePO.class);
 
@@ -143,7 +143,7 @@ public class CustomerUserRuleDaoImpl extends DaoImpl<CustomerUserRulePO> impleme
 	@Override
 	public int countCustomerUserRule(int company, int area) {
 
-		String sql = "select count(*) from customer.customeruserrule cur, customer.customeruserruleitem curi where cur.curid = curi.curid and cur.company = :company and cur.status = 0 and curi.uppval < :uppval and curi.lowval >= :lowval";
+		String sql = "select count(*) from customer.customeruserrule cur, customer.customeruserruleitem curi where cur.curid = curi.curid and cur.company = :company and cur.status in (0, 6) and curi.uppval < :uppval and curi.lowval >= :lowval";
 		BigInteger count = (BigInteger) session().createSQLQuery(sql).setInteger("company", company).setInteger("uppval", area).setInteger("lowval", area).uniqueResult();
 
 		return count == null ? 0 : count.intValue();

@@ -51,6 +51,8 @@ public class CustomerUserRulePO implements Serializable {
 
 	public static final short STATUS_ADVANCE_INVALID_INT = 5; // 管理实效
 
+	public static final short STATUS_ADVANCE_ENABLE_INT = 6; // 管理启用(启用状态由管理侧设定, 个人不可自行停用)
+
 	private long curid;
 
 	private UserPO user;
