@@ -16,10 +16,13 @@ page/name/title/atttype 复用源法大大行, 老行并存不停用)。
       esign_template_id = e签宝 docTemplateId
       new_name          = 可选, 缺省 "【e签宝】"+源行名
 
-【模式2 全公司铺开】一个 docTemplateId 铺到所有拥有同名模板的公司(推荐, 连CSV都不用填):
+【模式2 同名铺开】仅限同名且底稿逐字一致的场景(如集团统一文本"初见合同"24家):
     python esign_contract_row_import.py --spread <源行cid> <docTemplateId> [--only 43,1] [--exclude 90]
       自动找出与源行同名同 atttype 的全部模板行所在公司, 逐公司生成;
       --only/--exclude 控制公司范围; 幂等, 可随新 docTemplateId 追加执行。
+      🔴适用边界: 实证有效模板945行中92%(659/717名)为单公司独有底稿——每公司每类合同
+      底稿独立, 跨公司共用 docTemplate 仅限集团统一文本; 常规迁移主路径=模式1 CSV 逐行
+      精确导入(每公司每类合同一个独立 docTemplate)。
 
 输出到 stdout, 人工核对后落盘 sqls/elecsign/ 执行(先跑预览 SELECT 再 INSERT)。
 """
