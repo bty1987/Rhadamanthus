@@ -48,9 +48,13 @@
 
 | 文件 | 说明 |
 |------|------|
+| A20251113Action_SSO_API.md | A20251113Action SSO 单点登录接口说明文档（第三方接入） |
 | A20251208Action_API.md | A20251208Action 平台项目对接接口文档 |
 | A20260103Action_API.md | A20260103Action 客户线索接入接口文档 |
 | A20260324Action_API_DOC.md | A20260324Action 接口说明文档 |
+| A20260404Action_API_DOC.md | A20260404Action 供应商/驻店员同步接口文档（syncSupplier/syncInstorer） |
+| A20260904Action_API_DOC.md | A20260904Action 库存数据同步接口文档（辅材/仓库/出入库） |
+| A20261024Action_API_DOC.md | A20261024Action NERP 凭空预签接口文档（syncProsignForNerp，protation 全字段回填） |
 | ADD_CUSTOMER_CHANCE_EXCEPTIONS.md | addCustomerChance 异常场景汇总文档 |
 | ADD_CUSTOMER_LEAD_EXCEPTIONS.md | addCustomerLead 异常场景汇总文档 |
 | API.md | Rhadamanthus ERP API 接口总览文档 |
