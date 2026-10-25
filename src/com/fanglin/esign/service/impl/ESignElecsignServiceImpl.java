@@ -305,14 +305,20 @@ public class ESignElecsignServiceImpl implements ElecsignService, CompanyAware {
 	String authenticate(int company, SignetPO signetPO) throws FLException {
 
 		// 实测（2026-10 沙箱）：orgName 需包在 orgAuthConfig 内（对齐个人认证 psnAuthConfig 结构）
-		// 沙箱 mock 规则（官方"构造企业实名认证测试数据"文档）：名称+证件号成对传入才识别为测试数据
-		JSONObject orgInfo = new JSONObject()
-				.fluentPut("orgIDCardNum", "910000040897920017")
-				.fluentPut("orgIDCardType", "ORGANIZE_USCC");
+		// orgInfo(信用代码)按需传入: systemconfig 键 esign.orginfo.{company} 或全局 esign.orginfo 配置了才带——
+		// 沙箱 mock 需名称+证件号成对识别测试数据; 正式环境不传=经办人 H5 自填证件号, e签宝按真实工商库 E 比对
+		JSONObject orgAuthConfig = new JSONObject().fluentPut("orgName", signetPO.getName());
+
+		String idCardNum = orgIDCardNum(company);
+
+		if (idCardNum != null) {
+			orgAuthConfig.fluentPut("orgInfo", new JSONObject()
+					.fluentPut("orgIDCardNum", idCardNum)
+					.fluentPut("orgIDCardType", "ORGANIZE_USCC"));
+		}
+
 		JSONObject body = new JSONObject();
-		body.put("orgAuthConfig", new JSONObject()
-				.fluentPut("orgName", signetPO.getName())
-				.fluentPut("orgInfo", orgInfo));
+		body.put("orgAuthConfig", orgAuthConfig);
 		// 认证+授权合一(D2): 带授权范围后, 经办人打开同一链接先实名再授权, 一次操作解锁企业静默签
 		// 未实名机构走两步引导, 已实名机构仅授权确认; autoSign解锁待授权E2E验证后如有增补范围在此调整
 		body.put("authorizedScopes", new JSONArray().fluentAdd("manage_org_resource"));
@@ -353,13 +359,19 @@ public class ESignElecsignServiceImpl implements ElecsignService, CompanyAware {
 	String beforeauto(int company, SignetPO signetPO) throws FLException {
 
 		// 静默签授权：复用机构认证&授权页面链接 TODO 联调确认自动签署授权(mode/授权书模板)与 org-auth-url 的参数差异
-		JSONObject orgInfo = new JSONObject()
-				.fluentPut("orgIDCardNum", "910000040897920017")
-				.fluentPut("orgIDCardType", "ORGANIZE_USCC");
+		// orgInfo 同 authenticate 按需传入(配置驱动), 正式环境缺省不传
+		JSONObject orgAuthConfig = new JSONObject().fluentPut("orgName", signetPO.getName());
+
+		String idCardNum = orgIDCardNum(company);
+
+		if (idCardNum != null) {
+			orgAuthConfig.fluentPut("orgInfo", new JSONObject()
+					.fluentPut("orgIDCardNum", idCardNum)
+					.fluentPut("orgIDCardType", "ORGANIZE_USCC"));
+		}
+
 		JSONObject body = new JSONObject();
-		body.put("orgAuthConfig", new JSONObject()
-				.fluentPut("orgName", signetPO.getName())
-				.fluentPut("orgInfo", orgInfo));
+		body.put("orgAuthConfig", orgAuthConfig);
 
 		JSONObject data = esignClient.post(company, EP_ORG_AUTH_URL, body);
 
@@ -778,6 +790,18 @@ private String createSignFlow(int company, Contract contract, boolean orgSigner,
 		String fileId = docs.getJSONObject(0).getString("fileId");
 
 		return fileUrl(company, fileId);
+	}
+
+	/** 机构证件号: systemconfig 键 esign.orginfo.{company} → 全局 esign.orginfo → null(不传orgInfo, 经办人H5自填) */
+	private String orgIDCardNum(int company) {
+
+		SystemConfigPO configPO = systemConfigDao.querySystemConfig("esign.orginfo." + company, company);
+
+		if (configPO == null || configPO.getValue() == null || "".equals(configPO.getValue().trim())) {
+			configPO = systemConfigDao.querySystemConfig("esign.orginfo");
+		}
+
+		return configPO == null || configPO.getValue() == null || "".equals(configPO.getValue().trim()) ? null : configPO.getValue().trim();
 	}
 
 	/** isv 归一化：从 DB systemconfig(company=0) 读取(properties 文件无 isv key)，去尾部斜杠。 */
