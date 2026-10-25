@@ -105,8 +105,8 @@ public class ESignAuthCallbackAction extends BaseAction {
 				try {
 					elecsignAuthDao.update(authPO);
 
-					// customer 双写(最近一次认证视图), 行侧为准
-					CustomerPO synced = customerDao.get(authPO.getCid());
+					// customer 双写(最近一次认证视图), 行侧为准; get须Long装箱(PO主键Long,int装箱Integer报wrong type)
+					CustomerPO synced = customerDao.get((long) authPO.getCid());
 					if (synced != null) {
 						synced.setProvider((short) 2);
 						synced.setSignno(psnId);

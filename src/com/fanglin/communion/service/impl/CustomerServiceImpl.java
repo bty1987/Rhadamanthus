@@ -949,7 +949,8 @@ public class CustomerServiceImpl implements CustomerService {
 	@Override
 	public String queryCustomerSignnoForProvider(int cid, short provider) {
 
-		CustomerPO customerPO = customerDao.get(cid);
+		// get(Serializable)装箱规则: 必须Long(PO主键类型), int装箱Integer会报wrong type
+		CustomerPO customerPO = customerDao.get((long) cid);
 
 		if (customerPO == null) {
 			return null;
