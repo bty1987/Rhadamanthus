@@ -1,5 +1,5 @@
 -- ============================================================================
--- 文件: 21_userpartner_type_supplier_dict.sql
+-- 文件: 22_userpartner_type_supplier_dict.sql
 -- 库表: communion.constant(前端字典)
 -- 用途: userpartner 复用为「厂商↔驻店员关联用户」关系表——新增搭档类型 type=5(厂商):
 --       uid=厂商(user.type=1), puid=驻店员(user.type=4), 一个用户仅可归属一个厂商。
