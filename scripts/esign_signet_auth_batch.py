@@ -37,7 +37,7 @@ CTX.verify_mode = ssl.CERT_NONE
 SEED_SQL = (
     "SELECT s.sid, s.company, s.no, s.name AS signet_name, s.status, c.fullname "
     "FROM data.signet s LEFT JOIN communion.company c ON c.cid = s.company "
-    "WHERE s.provider = 2 AND s.status IN (0, 1) {company_cond} "
+    "WHERE s.provider = 2 AND s.status IN (0, 1, 2) AND (s.signno IS NULL OR s.signno = '') {company_cond} "
     "ORDER BY s.company"
 )
 
