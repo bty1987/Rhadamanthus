@@ -23,7 +23,9 @@ import com.fanglin.data.material.vo.ColorVO;
 import com.fanglin.data.material.vo.FormatVO;
 import com.fanglin.data.material.vo.GoodsVO;
 import com.fanglin.personel.dao.UserDao;
+import com.fanglin.personel.dao.UserPartnerDao;
 import com.fanglin.personel.po.UserPO;
+import com.fanglin.personel.po.UserPartnerPO;
 import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.right.dao.SalesDeliveryStatusRightDao;
 import com.fanglin.right.po.SalesDeliveryStatusRightPO;
@@ -58,6 +60,9 @@ public class SalesDeliveryServiceImpl implements SalesDeliveryService {
 
 	@Autowired
 	private UserDao userDao;
+
+	@Autowired
+	private UserPartnerDao userPartnerDao;
 
 	@Autowired
 	private SalesDao salesDao;
@@ -99,7 +104,19 @@ public class SalesDeliveryServiceImpl implements SalesDeliveryService {
 
 		if (userPO == null) return;
 
-		List<SalesDeliveryItemPO> salesDeliveryItemPOs = salesDeliveryItemDao.pageSalesDeliveryItem(paging, filters, company, userPO.getUid());
+		int uid = userPO.getUid();
+
+		// 驻店员经归属关系(userpartner type=5, uid=厂商/puid=驻店员)查其归属厂商的数据
+		if (userPO.getType() == UserPO.TYPE_INSTORER_INT) {
+
+			UserPartnerPO partnerPO = userPartnerDao.queryUserPartnerByPuid(userPO.getUid(), UserPartnerPO.TYPE_SUPPLIER_INT, company);
+
+			if (partnerPO == null) return;
+
+			uid = partnerPO.getUid();
+		}
+
+		List<SalesDeliveryItemPO> salesDeliveryItemPOs = salesDeliveryItemDao.pageSalesDeliveryItem(paging, filters, company, uid);
 		List<SalesDeliveryItemVO> salesDeliveryItemVOs = new ArrayList<SalesDeliveryItemVO>();
 
 		for (SalesDeliveryItemPO salesDeliveryItemPO : salesDeliveryItemPOs) {

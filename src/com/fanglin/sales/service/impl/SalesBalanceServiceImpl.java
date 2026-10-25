@@ -29,7 +29,9 @@ import com.fanglin.decoration.vo.DecorationVO;
 import com.fanglin.payment.dao.SalesPaymentDao;
 import com.fanglin.payment.po.SalesPaymentPO;
 import com.fanglin.personel.dao.UserDao;
+import com.fanglin.personel.dao.UserPartnerDao;
 import com.fanglin.personel.po.UserPO;
+import com.fanglin.personel.po.UserPartnerPO;
 import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.right.dao.SalesDeliveryStatusRightDao;
 import com.fanglin.sales.dao.SalesBalanceDao;
@@ -88,6 +90,9 @@ public class SalesBalanceServiceImpl implements SalesBalanceService {
 
 	@Autowired
 	private UserDao userDao;
+
+	@Autowired
+	private UserPartnerDao userPartnerDao;
 
 	@Autowired
 	private ApprovalDao approvalDao;
@@ -168,7 +173,19 @@ public class SalesBalanceServiceImpl implements SalesBalanceService {
 
 		if (userPO == null) return;
 
-		List<SalesBalancePO> salesBalancePOs = salesBalanceDao.pageSalesBalanceForSupplier(paging, filters, pompany, userPO.getUid());
+		int uid = userPO.getUid();
+
+		// 驻店员经归属关系(userpartner type=5, uid=厂商/puid=驻店员)查其归属厂商的数据
+		if (userPO.getType() == UserPO.TYPE_INSTORER_INT) {
+
+			UserPartnerPO partnerPO = userPartnerDao.queryUserPartnerByPuid(userPO.getUid(), UserPartnerPO.TYPE_SUPPLIER_INT, pompany);
+
+			if (partnerPO == null) return;
+
+			uid = partnerPO.getUid();
+		}
+
+		List<SalesBalancePO> salesBalancePOs = salesBalanceDao.pageSalesBalanceForSupplier(paging, filters, pompany, uid);
 
 		List<SalesBalanceVO> salesBalanceVOs = pageSalesBalance(salesBalancePOs);
 
