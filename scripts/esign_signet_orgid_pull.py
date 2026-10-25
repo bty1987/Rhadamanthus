@@ -30,7 +30,7 @@ USER = "fanglin1918"
 PASS = "Fanglin1918!"
 
 PENDING_SQL = (
-    "SELECT s.sid, s.company, IFNULL(c.fullname, '') AS fullname, s.no, s.name "
+    "SELECT s.sid, s.company, IFNULL(c.fullname, '') AS fullname, s.no, s.name, s.keyword "
     "FROM data.signet s LEFT JOIN communion.company c ON c.cid = s.company "
     "WHERE s.provider = 2 AND s.status IN (0, 1, 2) AND (s.signno IS NULL OR s.signno = '') "
     "{cond} ORDER BY s.company"
@@ -64,24 +64,26 @@ def main():
     print("待核签章 %d 把, 逐把直查 identity-info...\n" % len(seeds))
     pulled, unknown, errors = [], [], []
 
-    for sid, company, fullname, no, name in seeds:
+    for sid, company, fullname, no, name, keyword in seeds:
+        # 查询键=keyword(营业执照企业全称): 章名多为简称/用途名(如"方林家居"), identity-info按全称精确匹配
+        org_name = (keyword or "").strip() or name
         try:
-            r = esign_flow.invoke("GET", "/v3/organizations/identity-info", query={"orgName": name})
+            r = esign_flow.invoke("GET", "/v3/organizations/identity-info", query={"orgName": org_name})
             data = r.get("data") or {}
             code = str(r.get("code") or "")
             if r.get("code") == 0 and data.get("realnameStatus") == 1:
                 pulled.append((sid, company, fullname, no, name, data["orgId"]))
-                print("[PULL] company=%s(%s) %s '%s' -> orgId=%s (已实名, 免点链接)" % (company, fullname or "-", no, name, data["orgId"][:12]))
+                print("[PULL] company=%s(%s) %s '%s'(主体:%s) -> orgId=%s (已实名, 免点链接)" % (company, fullname or "-", no, name, org_name, data["orgId"][:12]))
             elif r.get("code") == 0 or code == "1435203":
                 # 1435203=正式应用无该企业档案(未实名), 与 code=0 未实名同归待点链接
                 unknown.append((sid, company, fullname, no, name))
-                print("[WAIT] company=%s %s '%s' 未实名 -> 走认证链接" % (company, no, name))
+                print("[WAIT] company=%s %s '%s'(主体:%s) 未实名 -> 走认证链接" % (company, no, name, org_name))
             else:
                 errors.append((sid, company, no, name, "%s %s" % (r.get("code"), r.get("message"))))
                 print("[ERR ] company=%s %s '%s': %s %s" % (company, no, name, r.get("code"), r.get("message")))
         except Exception as e:
             errors.append((sid, company, no, name, str(e)))
-            print("[ERR ] company=%s %s '%s': %s" % (company, no, name, e))
+            print("[ERR ] company=%s %s '%s'(主体:%s): %s" % (company, no, name, org_name, e))
         time.sleep(args.sleep)
 
     if pulled and args.out_sql:
