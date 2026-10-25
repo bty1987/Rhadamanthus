@@ -31,7 +31,7 @@ public class UserPartnerAction extends BaseListAction {
 	@Action(value = "queryUserPartner", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryUserPartner() throws FLException {
 
-		userPartners = userPartnerService.queryUserPartner(userPartner);
+		userPartners = userPartnerService.queryUserPartner(userPartner, queryCompany());
 
 		return SUCCESS;
 	}

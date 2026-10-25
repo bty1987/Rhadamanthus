@@ -184,6 +184,15 @@ $(function() {
                     com.popup4page('#layerPopUp', api.index.supplierContractService.url, "厂商服务费");
                 }
             };
+            btns.partner = {
+                name: "关联用户",
+                clazz: "btn-success",
+                handle: function(v) {
+
+                    params.personel.uid = v.uid;
+                    com.popup4page('#layerPopUp', api.index.supplier4partner.url, "关联用户");
+                }
+            };
             btns.right = {
                 name: "权配",
                 clazz: "btn-success",
@@ -229,6 +238,15 @@ $(function() {
 
                     params.personel.uid = v.uid;
                     com.popup4page('#layerPopUp', api.index.supplierContractService.url, "厂商服务费");
+                }
+            };
+            btns.partner = {
+                name: "关联用户",
+                clazz: "btn-success",
+                handle: function(v) {
+
+                    params.personel.uid = v.uid;
+                    com.popup4page('#layerPopUp', api.index.supplier4partner.url, "关联用户");
                 }
             };
         }

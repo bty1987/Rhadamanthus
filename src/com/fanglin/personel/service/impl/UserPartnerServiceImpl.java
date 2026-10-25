@@ -27,9 +27,10 @@ public class UserPartnerServiceImpl implements UserPartnerService {
 	private UserDao userDao;
 
 	@Override
-	public List<UserPartnerVO> queryUserPartner(UserPartnerVO userPartnerVO) throws FLException {
+	public List<UserPartnerVO> queryUserPartner(UserPartnerVO userPartnerVO, int company) throws FLException {
 
-		List<UserPartnerPO> userPartnerPOs = userPartnerDao.queryUserPartner(userPartnerVO.getUid());
+		List<UserPartnerPO> userPartnerPOs = userPartnerVO.getType() == null ? userPartnerDao.queryUserPartner(userPartnerVO.getUid()) : userPartnerDao.queryUserPartnerByUid(userPartnerVO.getUid(), userPartnerVO.getType(), company);
+
 		List<UserPartnerVO> userPartnerVOs = new ArrayList<UserPartnerVO>();
 
 		for (UserPartnerPO userPartnerPO : userPartnerPOs) {
@@ -43,10 +44,28 @@ public class UserPartnerServiceImpl implements UserPartnerService {
 	@Transactional(rollbackFor = Exception.class)
 	public int addUserPartner(UserPartnerVO userPartnerVO, int company) throws FLException {
 
-		UserPartnerPO userPartnerPO = new UserPartnerPO();
-
 		UserPO userPO = userDao.queryUserByUserId(userPartnerVO.getPartner().getUserId());
 
+		if (userPO == null) {
+			throw new FLException(190005, "人员不存在");
+		}
+
+		// 厂商关联用户(type=5)唯一归属: 一个用户仅可归属一个厂商, 重复添加或跨厂商添加均拦截
+		if (userPartnerVO.getType() != null && userPartnerVO.getType() == UserPartnerPO.TYPE_SUPPLIER_INT) {
+
+			UserPartnerPO existPO = userPartnerDao.queryUserPartnerByPuid(userPO.getUid(), UserPartnerPO.TYPE_SUPPLIER_INT, company);
+
+			if (existPO != null) {
+
+				if (existPO.getUid() == userPartnerVO.getUid()) {
+					throw new FLException(190015, "该用户已关联该厂商");
+				}
+
+				throw new FLException(190016, "该用户已关联其他厂商");
+			}
+		}
+
+		UserPartnerPO userPartnerPO = new UserPartnerPO();
 		userPartnerPO.setUid(userPartnerVO.getUid());
 		userPartnerPO.setPartner(userPO);
 		userPartnerPO.setType(userPartnerVO.getType());

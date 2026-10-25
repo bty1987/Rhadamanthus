@@ -10,4 +10,8 @@ public interface UserPartnerDao extends Dao<UserPartnerPO> {
 	public List<UserPartnerPO> queryUserPartner(int uid);
 
 	public UserPartnerPO queryUserPartner(int uid, short type, int company);
+
+	public List<UserPartnerPO> queryUserPartnerByUid(int uid, short type, int company);
+
+	public UserPartnerPO queryUserPartnerByPuid(int puid, short type, int company);
 }

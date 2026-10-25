@@ -41,8 +41,10 @@ import com.fanglin.personel.dao.InstorerDao;
 import com.fanglin.personel.dao.SupplierDao;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.dao.UserInfoDao;
+import com.fanglin.personel.dao.UserPartnerDao;
 import com.fanglin.personel.dao.UserRoleDao;
 import com.fanglin.personel.po.UserInfoPO;
+import com.fanglin.personel.po.UserPartnerPO;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.po.UserRolePO;
 import com.fanglin.seiya.service.A20260404Service;
@@ -69,6 +71,9 @@ public class A20260404ServiceImpl implements A20260404Service {
 
 	@Autowired
 	private InstorerDao instorerDao;
+
+	@Autowired
+	private UserPartnerDao userPartnerDao;
 
 	@Autowired
 	private BrandDao brandDao;
@@ -453,7 +458,34 @@ public class A20260404ServiceImpl implements A20260404Service {
 			}
 		}
 
-		// 12. 返回结果
+		// 12. 厂商归属关系落库(userpartner type=5, uid=厂商/puid=驻店员): supplierUserId必传, 以本次传入为准——无则建, 同则不动, 异则把关系行改挂到新厂商
+		UserPartnerPO partnerPO = userPartnerDao.queryUserPartnerByPuid(instorerPO.getUid(), UserPartnerPO.TYPE_SUPPLIER_INT, company);
+
+		if (partnerPO == null) {
+
+			UserPartnerPO userPartnerPO = new UserPartnerPO();
+			userPartnerPO.setUid(supplierPO.getUid());
+			userPartnerPO.setPartner(instorerPO);
+			userPartnerPO.setType(UserPartnerPO.TYPE_SUPPLIER_INT);
+			userPartnerPO.setStatus(UserPartnerPO.STATUS_VALID_INT);
+			userPartnerPO.setCompany(company);
+
+			userPartnerDao.save(userPartnerPO);
+			logger.info("新增厂商归属关系: 厂商uid={}, 驻店员uid={}, supplierUserId={}", supplierPO.getUid(), instorerPO.getUid(), supplierPO.getUserId());
+
+		} else if (partnerPO.getUid() != supplierPO.getUid()) {
+
+			logger.info("厂商归属变更: 驻店员uid={}, 原厂商uid={}, 新厂商uid={}", instorerPO.getUid(), partnerPO.getUid(), supplierPO.getUid());
+
+			partnerPO.setUid(supplierPO.getUid());
+
+			userPartnerDao.update(partnerPO);
+
+		} else {
+			logger.info("厂商归属关系不变: 驻店员uid={}, 厂商uid={}", instorerPO.getUid(), supplierPO.getUid());
+		}
+
+		// 13. 返回结果
 		result.put("success", true);
 		result.put("operation", operation);
 		result.put("uid", instorerPO.getUid());

@@ -74,6 +74,9 @@ $.extend(api.index, {
     supplierContractService: {
         url: "/views/personnel/supplierContractService.html"
     },
+    supplier4partner: {
+        url: "/views/personnel/supplier4partner.html"
+    },
     supplierContractGoods: {
         url: "/views/personnel/supplierContractGoods.html"
     },

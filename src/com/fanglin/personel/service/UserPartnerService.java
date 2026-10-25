@@ -7,7 +7,7 @@ import com.fanglin.personel.vo.UserPartnerVO;
 
 public interface UserPartnerService {
 
-	public List<UserPartnerVO> queryUserPartner(UserPartnerVO userPartnerVO) throws FLException;
+	public List<UserPartnerVO> queryUserPartner(UserPartnerVO userPartnerVO, int company) throws FLException;
 
 	public int addUserPartner(UserPartnerVO userPartnerVO, int company) throws FLException;
 
