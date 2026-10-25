@@ -52,7 +52,8 @@ public class SalesDeliveryItemDaoImpl extends DaoImpl<SalesDeliveryItemPO> imple
 
 		PagingQuery<SalesDeliveryItemPO> query = pagingQuery(paging, SalesDeliveryItemPO.class);
 
-		query.alias("sales", "sales").alias("sales.instorer", "instorer").add(query.getCriterion(SalesPO.COLUMN_IUID_STR, uid, "eq"));
+		// 驻店/导购双身份: 单据的驻店人或导购人是登录人即命中(sales.instorer/guider生产零null, inner join安全)
+		query.alias("sales", "sales").alias("sales.instorer", "instorer").alias("sales.guider", "guider").add(Restrictions.or(query.getCriterion(SalesPO.COLUMN_IUID_STR, uid, "eq"), query.getCriterion(SalesPO.COLUMN_GUID_STR, uid, "eq")));
 
 		queryFilterExcute(query, filters);
 

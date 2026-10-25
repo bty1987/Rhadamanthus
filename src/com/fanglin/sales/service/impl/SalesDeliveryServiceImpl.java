@@ -129,8 +129,10 @@ public class SalesDeliveryServiceImpl implements SalesDeliveryService {
 	@Override
 	public void pageSalesDeliveryItemForInstorer(Paging paging, List<Filter> filters, String userId, int company, String companyType) throws FLException {
 
-		if (companyType != null) filters.add(new Filter(companyType, String.valueOf(company), "eq"));
-		else return;
+		// 前端未传companyType时按销售公司维度兜底(对齐老版页面else分支语义), 不再直接返回空
+		if (companyType == null) companyType = "company";
+
+		filters.add(new Filter(companyType, String.valueOf(company), "eq"));
 
 		UserPO userPO = userDao.queryUserByUserId(userId);
 
