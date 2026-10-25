@@ -55,6 +55,8 @@ public class DecorationContractVO implements Serializable {
 
 	private Short noticeStatus;// 客户需求确认状态
 
+	private Short provider;// 电子签厂商(1法大大/2e签宝), 前端认证/签署按合同厂商对齐客户命名空间
+
 	private List<DecorationPaymentVO> payments;
 
 	private List<Integer> paymentRates;
@@ -261,6 +263,14 @@ public class DecorationContractVO implements Serializable {
 
 	public void setNoticeStatus(Short noticeStatus) {
 		this.noticeStatus = noticeStatus;
+	}
+
+	public Short getProvider() {
+		return provider;
+	}
+
+	public void setProvider(Short provider) {
+		this.provider = provider;
 	}
 
 }

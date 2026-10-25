@@ -46,6 +46,9 @@ public class ESignAuthCallbackAction extends BaseAction {
 	private CustomerDao customerDao;
 
 	@Autowired
+	private com.fanglin.elecsign.dao.ElecsignAuthDao elecsignAuthDao;
+
+	@Autowired
 	private ElecsignRouter elecsignRouter;
 
 	@Action(value = "esignAuthCallback", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
@@ -81,14 +84,49 @@ public class ESignAuthCallbackAction extends BaseAction {
 			}
 		}
 
-		// 个人认证回调: psnId 在 psnInfo 里, 按 token(authFlowId) 反查客户写回 signno + 状态推进
+		// 个人认证回调: psnId 在 psnInfo 里, 按 token(authFlowId) 反查认证行写回 signno + 状态推进;
+		// 行查不到(未迁入/新表未建)回退 customer.token 反查——双写保持 customer 兼容视图
 		String psnId = request.getParameter("psnId");
 
 		if (psnId != null && !psnId.trim().isEmpty()) {
-			com.fanglin.communion.po.CustomerPO customerPO = customerDao.queryCustomerByToken(flowId);
+
+			com.fanglin.elecsign.po.ElecsignAuthPO authPO = null;
+
+			try {
+				authPO = elecsignAuthDao.queryElecsignAuthByToken(flowId);
+			} catch (Exception e) {
+				// 兜底: 新表不可用, 走 customer 回查
+			}
+
+			if (authPO != null) {
+				authPO.setSignno(psnId);
+				authPO.setStatus(com.fanglin.elecsign.po.ElecsignAuthPO.STATUS_AUTH_INT);
+
+				try {
+					elecsignAuthDao.update(authPO);
+
+					// customer 双写(最近一次认证视图), 行侧为准
+					CustomerPO synced = customerDao.get(authPO.getCid());
+					if (synced != null) {
+						synced.setProvider((short) 2);
+						synced.setSignno(psnId);
+						if (synced.getStatus() == CustomerPO.STATUS_INIT_INT) synced.setStatus(CustomerPO.STATUS_AUTH_INT);
+						customerDao.update(synced);
+					}
+
+					response.getWriter().write("success");
+					return null;
+				} catch (Exception e) {
+					// 行更新失败落 customer 兜底
+				}
+			}
+
+			CustomerPO customerPO = customerDao.queryCustomerByToken(flowId);
 
 			if (customerPO != null) {
 				customerPO.setSignno(psnId);
+				// 回调必然来自e签宝, provider幂等兜底(防数据修正后命名空间错位)
+				customerPO.setProvider((short) 2);
 				customerPO.setStatus(CustomerPO.STATUS_AUTH_INT);
 				customerDao.update(customerPO);
 			}

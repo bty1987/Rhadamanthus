@@ -9,8 +9,10 @@
 
 package com.fanglin.communion.service.impl;
 
+import com.fanglin.elecsign.dao.ElecsignAuthDao;
 import com.fanglin.elecsign.enums.ElecsignProvider;
 import com.fanglin.elecsign.enums.ElecsignScene;
+import com.fanglin.elecsign.po.ElecsignAuthPO;
 import com.fanglin.elecsign.router.ElecsignRouter;
 import com.fanglin.elecsign.service.ElecsignService;
 import java.util.ArrayList;
@@ -57,6 +59,8 @@ public class CustomerServiceImpl implements CustomerService {
 
 	@Autowired
 	private ElecsignRouter elecsignRouter;
+	@Autowired
+	private ElecsignAuthDao elecsignAuthDao;
 	@Autowired
 	private CustomerDao customerDao;
 
@@ -531,7 +535,12 @@ public class CustomerServiceImpl implements CustomerService {
 		}
 
 		if (customerPO.getSignno() == null || "".equals(customerPO.getSignno())) {
-			customerPO.setSignno(routeForAuth(customerPO).register(customerPO.getNo()));
+			ElecsignService route = routeForAuth(customerPO);
+			customerPO.setSignno(route.register(customerPO.getNo()));
+
+			// 按厂商落认证行(customer.provider已被routeForAuth置为本次注册厂商)
+			ElecsignAuthPO authPO = obtainElecsignAuth(customerPO, currentProvider(customerPO));
+			syncCustomerAuth(customerPO, authPO, customerPO.getSignno(), null, null, (short) ElecsignAuthPO.STATUS_INIT_INT);
 		}
 
 		customerDao.update(customerPO);
@@ -552,6 +561,22 @@ public class CustomerServiceImpl implements CustomerService {
 		String currentDate = DateUtil.current("yyyyMMdd").toString().substring(2);
 		int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_CUSTOMER_INT, currentDate, customerPO.getCompany());
 		String no = currentDate + FormatUtil.fillZero(FormatUtil.offset(count), "0000");
+
+		// 重置=换编号, 现行厂商认证行同步清空(旧编号注册的账号作废), 其他厂商行不动
+		ElecsignAuthPO authPO = obtainElecsignAuth(customerPO, currentProvider(customerPO));
+
+		if (authPO != null) {
+			authPO.setSignno(null);
+			authPO.setAuthurl(null);
+			authPO.setToken(null);
+			authPO.setStatus(ElecsignAuthPO.STATUS_INIT_INT);
+
+			try {
+				elecsignAuthDao.update(authPO);
+			} catch (Exception e) {
+				// 兜底: 行清空失败不阻断
+			}
+		}
 
 		customerPO.setNo(no);
 		customerPO.setToken(null);
@@ -574,31 +599,53 @@ public class CustomerServiceImpl implements CustomerService {
 			throw new FLException(130178, "客户信息不存在");
 		}
 
-		// 定向重实名(厂商命名空间切换): 显式传customer.provider且与现命名空间不同时,
-		// 允许跨状态重走该厂商实名(如法大大已实名客户要签e签宝模板合同), 重置命名空间字段
+		// 目标厂商: 显式传customer.provider优先(定向重实名: 法大大已实名客户要签e签宝模板合同), 否则按客户现行命名空间
 		Short targetProvider = customerVO.getProvider();
-		boolean namespaceSwitch = targetProvider != null
-				&& customerPO.getStatus() != CustomerPO.STATUS_INIT_INT
-				&& (customerPO.getProvider() == null || targetProvider.shortValue() != customerPO.getProvider().shortValue());
+		short target = targetProvider != null ? targetProvider.shortValue() : currentProvider(customerPO);
+		boolean crossNamespace = targetProvider != null && targetProvider.shortValue() != currentProvider(customerPO);
 
-		if (!namespaceSwitch && customerPO.getStatus() != CustomerPO.STATUS_INIT_INT) {
+		// 认证行: 目标厂商获取即建(customer同命名空间存量值懒迁入, 新表不可用时返回null退化为单列模式)
+		ElecsignAuthPO authPO = obtainElecsignAuth(customerPO, target);
+
+		// 守卫(对齐旧行为): 非定向且该厂商已完成实名 → 拒, 防误触重置; 显式跨厂商 = 定向重实名放行
+		short rowStatus = authPO != null ? authPO.getStatus()
+				: (customerPO.getStatus() == CustomerPO.STATUS_INIT_INT ? ElecsignAuthPO.STATUS_INIT_INT : ElecsignAuthPO.STATUS_AUTH_INT);
+
+		if (!crossNamespace && rowStatus != ElecsignAuthPO.STATUS_INIT_INT) {
 			throw new FLException(130184, "客户状态不可操作");
 		}
 
-		if (namespaceSwitch) {
-			ElecsignProvider target = ElecsignProvider.of(targetProvider);
-			customerPO.setProvider(target.code());
-			customerPO.setSignno(elecsignRouter.route(target, customerPO.getCompany()).register(customerPO.getNo()));
-			customerPO.setAuthurl(null);
-			customerPO.setToken(null);
+		String signno = authPO != null ? authPO.getSignno() : customerPO.getSignno();
+
+		if (crossNamespace) {
+			// 定向重实名: 按目标厂商重新开户(覆盖该厂商行signno), 行凭证清空待新认证流, customer.status不降(保持已实名视图)
+			ElecsignService route = elecsignRouter.route(ElecsignProvider.of(target), customerPO.getCompany());
+			syncCustomerAuth(customerPO, authPO, route.register(customerPO.getNo()), null, null, (short) ElecsignAuthPO.STATUS_INIT_INT);
+
+			signno = authPO != null ? authPO.getSignno() : customerPO.getSignno();
+
+		} else if (signno == null || "".equals(signno)) {
+
+			ElecsignService route;
+
+			if (targetProvider == null && customerPO.getProvider() == null) {
+				// 全新客户: 公司×AUTH场景路由决定厂商(routeForAuth会把决策厂商stamp到customer.provider)
+				route = routeForAuth(customerPO);
+				authPO = obtainElecsignAuth(customerPO, currentProvider(customerPO));
+			} else {
+				// 显式指定厂商(或已有命名空间): 按目标厂商注册——INIT新客户传provider时直达目标厂商, 不再被公司级路由覆盖
+				route = elecsignRouter.route(ElecsignProvider.of(target), customerPO.getCompany());
+			}
+
+			syncCustomerAuth(customerPO, authPO, route.register(customerPO.getNo()), null, null, (short) ElecsignAuthPO.STATUS_INIT_INT);
+
+			signno = authPO != null ? authPO.getSignno() : customerPO.getSignno();
 		}
 
-		if (customerPO.getSignno() == null || "".equals(customerPO.getSignno())) {
-			customerPO.setSignno(routeForAuth(customerPO).register(customerPO.getNo()));
-		}
+		String authurl = authPO != null ? authPO.getAuthurl() : customerPO.getAuthurl();
 
-		if (customerPO.getAuthurl() != null && !"".equals(customerPO.getAuthurl())) {
-			return customerPO.getAuthurl();
+		if (authurl != null && !"".equals(authurl)) {
+			return authurl;
 		}
 
 		String authno = customerPO.getIdentity();
@@ -609,11 +656,12 @@ public class CustomerServiceImpl implements CustomerService {
 			type = 1;
 		}
 
-		JSONObject info = elecsignRouter.route(customerPO.getProvider(), customerPO.getCompany()).authenticate(customerPO.getSignno(), customerPO.getName(), SensitiveDataHelper.decrypt(customerPO.getPhone()), authno, type);
+		JSONObject info = elecsignRouter.route(ElecsignProvider.of(target), customerPO.getCompany()).authenticate(signno, customerPO.getName(), SensitiveDataHelper.decrypt(customerPO.getPhone()), authno, type);
 
-		String redirect = elecsignRouter.route(customerPO.getProvider(), customerPO.getCompany()).decode(info.getString("url"));
+		String redirect = elecsignRouter.route(ElecsignProvider.of(target), customerPO.getCompany()).decode(info.getString("url"));
 
-		customerPO.setToken(info.getString("transactionNo"));
+		// 认证流凭证写行+customer(回调按token反查行, 查不到回退customer)
+		syncCustomerAuth(customerPO, authPO, null, null, info.getString("transactionNo"), null);
 
 		customerDao.update(customerPO);
 
@@ -630,31 +678,40 @@ public class CustomerServiceImpl implements CustomerService {
 			throw new FLException(130178, "客户信息不存在");
 		}
 
+		// 确认按客户现行命名空间路由(认证发起同厂商), 认证行获取即建(无行/表异常时退化为customer单列)
+		short provider = currentProvider(customerPO);
+		boolean esignNamespace = provider == ElecsignProvider.ESIGN.code();
+
+		ElecsignAuthPO authPO = obtainElecsignAuth(customerPO, provider);
+
 		// e签宝命名空间放行重实名(定向切换后状态可能为已实名/已签署), 真实门槛=identity-info核验;
 		// 法大大路径维持仅初始状态可确认
-		boolean esignNamespace = customerPO.getProvider() != null && customerPO.getProvider() == ElecsignProvider.ESIGN.code();
+		short rowStatus = authPO != null ? authPO.getStatus() : customerPO.getStatus();
 
-		if (!esignNamespace && customerPO.getStatus() != CustomerPO.STATUS_INIT_INT) {
+		if (!esignNamespace && rowStatus != ElecsignAuthPO.STATUS_INIT_INT && customerPO.getStatus() != CustomerPO.STATUS_INIT_INT) {
 			throw new FLException(130184, "客户状态不可操作");
 		}
 
-		ElecsignService elecsignService = elecsignRouter.route(customerPO.getProvider(), customerPO.getCompany());
+		ElecsignService elecsignService = elecsignRouter.route(provider, customerPO.getCompany());
 
 		// e签宝分支: identity-info 出于脱敏仅回 psnId/realnameStatus——实名信息源即客户注册录入
 		// (authenticate 时传 name/identity/phone 送核), 确认只需 psnId 写回 signno + 状态推进
 		// 按 psnAccount=手机号查询; token 存的是 authFlowId 供认证回调反查, 不能当账号标识
-		JSONObject info = customerPO.getProvider() != null && customerPO.getProvider() == ElecsignProvider.ESIGN.code()
-			? elecsignService.person(SensitiveDataHelper.decrypt(customerPO.getPhone()))
-			: elecsignService.person(customerPO.getToken());
+		String token = authPO != null && authPO.getToken() != null ? authPO.getToken() : customerPO.getToken();
 
-		if (customerPO.getProvider() != null && customerPO.getProvider() == ElecsignProvider.ESIGN.code()) {
+		JSONObject info = esignNamespace
+			? elecsignService.person(SensitiveDataHelper.decrypt(customerPO.getPhone()))
+			: elecsignService.person(token);
+
+		if (esignNamespace) {
 			Short realnameStatus = info.getShort("realnameStatus");
 
 			if (realnameStatus == null || realnameStatus.shortValue() != 1) {
 				throw new FLException(130189, "客户实名认证未完成, 请先发起实名认证");
 			}
 
-			customerPO.setSignno(info.getString("psnId"));
+			// psnId 写行+customer, 行/客户状态推进AUTH(sync单调不降: 已AUTHED不降级)
+			syncCustomerAuth(customerPO, authPO, info.getString("psnId"), null, null, (short) ElecsignAuthPO.STATUS_AUTH_INT);
 
 			if (customerPO.getStatus() == CustomerPO.STATUS_INIT_INT) {
 				customerPO.setStatus(CustomerPO.STATUS_AUTH_INT);
@@ -680,6 +737,17 @@ public class CustomerServiceImpl implements CustomerService {
 		customerPO.setIdentityPathB(person.getString("backgroundIdCardPath"));
 
 		customerPO.setStatus(CustomerPO.STATUS_AUTH_INT);
+
+		// 行状态同步AUTH(signno认证发起时已落行, 此处只推进状态)
+		if (authPO != null) {
+			authPO.setStatus(ElecsignAuthPO.STATUS_AUTH_INT);
+
+			try {
+				elecsignAuthDao.update(authPO);
+			} catch (Exception e) {
+				// 兜底: 行写入失败不阻断
+			}
+		}
 
 		customerDao.update(customerPO);
 
@@ -730,7 +798,11 @@ public class CustomerServiceImpl implements CustomerService {
 			throw new FLException(130178, "客户信息不存在");
 		}
 
-		elecsignRouter.route(customerPO.getProvider(), customerPO.getCompany()).signature(customerPO.getSignno(), imgbase);
+		// 签名画押按现行命名空间取号(行优先→customer回退)
+		short provider = currentProvider(customerPO);
+		String signno = queryCustomerSignnoForProvider((int) customerPO.getCid(), provider);
+
+		elecsignRouter.route(provider, customerPO.getCompany()).signature(signno, imgbase);
 
 		customerPO.setSignPath(customerVO.getSignPath());
 
@@ -806,6 +878,99 @@ public class CustomerServiceImpl implements CustomerService {
 		customerPO.setProvider(provider.code());
 
 		return elecsignRouter.route(provider);
+	}
+
+	/** customer.provider 归一（null 视为法大大兜底, 与签署守卫/认证路由同口径） */
+	private short currentProvider(CustomerPO customerPO) {
+		return customerPO.getProvider() == null ? ElecsignProvider.FADADA.code() : customerPO.getProvider();
+	}
+
+	/**
+	 * 认证行获取即建（按厂商各一份, UNIQUE cid+provider）。
+	 * 目标厂商无行时: customer 同命名空间存量值迁入建行（懒迁移, 一次）; 异命名空间则全新 INIT 行。
+	 * 行读写全程容错——表未建/查询异常视为无行, 写入失败仅落 customer（等价旧行为, 不阻断认证主流程）。
+	 */
+	private ElecsignAuthPO obtainElecsignAuth(CustomerPO customerPO, short provider) {
+
+		int cid = (int) customerPO.getCid();
+
+		try {
+			ElecsignAuthPO authPO = elecsignAuthDao.queryElecsignAuthByCidAndProvider(cid, provider);
+			if (authPO != null) {
+				return authPO;
+			}
+
+			authPO = new ElecsignAuthPO();
+			authPO.setCid(cid);
+			authPO.setProvider(provider);
+
+			if (currentProvider(customerPO) == provider) {
+				authPO.setSignno(customerPO.getSignno());
+				authPO.setAuthurl(customerPO.getAuthurl());
+				authPO.setToken(customerPO.getToken());
+				authPO.setStatus(customerPO.getStatus());
+			} else {
+				authPO.setStatus(ElecsignAuthPO.STATUS_INIT_INT);
+			}
+
+			elecsignAuthDao.save(authPO);
+
+			return authPO;
+		} catch (Exception e) {
+			// 兜底: 新表不可用时认证退化为 customer 单列模式（无行可写, 调用方只双写 customer）
+			return null;
+		}
+	}
+
+	/** 认证值双写: 行为主, customer 同步保持"最近一次认证"视图（signateCustomer/报表/前端认证态等旧读取方零感知） */
+	private void syncCustomerAuth(CustomerPO customerPO, ElecsignAuthPO authPO, String signno, String authurl, String token, Short status) {
+
+		if (authPO != null) {
+			if (signno != null) authPO.setSignno(signno);
+			if (authurl != null) authPO.setAuthurl(authurl);
+			if (token != null) authPO.setToken(token);
+			if (status != null) authPO.setStatus(status);
+
+			try {
+				elecsignAuthDao.update(authPO);
+			} catch (Exception e) {
+				// 兜底: 行写入失败不阻断, customer 侧照常落值
+			}
+		}
+
+		if (signno != null) customerPO.setSignno(signno);
+		if (authurl != null) customerPO.setAuthurl(authurl);
+		if (token != null) customerPO.setToken(token);
+		if (status != null && status.shortValue() > customerPO.getStatus()) customerPO.setStatus(status.shortValue());
+
+		if (authPO != null) customerPO.setProvider(authPO.getProvider());
+	}
+
+	@Override
+	public String queryCustomerSignnoForProvider(int cid, short provider) {
+
+		CustomerPO customerPO = customerDao.get(cid);
+
+		if (customerPO == null) {
+			return null;
+		}
+
+		// 行优先; 异常/无行回退 customer 同命名空间存量值（兼容存量11万认证客户, 零数据迁移）
+		try {
+			ElecsignAuthPO authPO = elecsignAuthDao.queryElecsignAuthByCidAndProvider(cid, provider);
+
+			if (authPO != null && authPO.getSignno() != null && !"".equals(authPO.getSignno())) {
+				return authPO.getSignno();
+			}
+		} catch (Exception e) {
+			// 兜底: 新表不可用时走 customer
+		}
+
+		if (currentProvider(customerPO) == provider && customerPO.getSignno() != null && !"".equals(customerPO.getSignno())) {
+			return customerPO.getSignno();
+		}
+
+		return null;
 	}
 
 }

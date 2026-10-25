@@ -132,7 +132,12 @@ jQuery(function($) {
 
     com.post(api.data.querySignet, {}, function(res) {
 
-        decorationContract.items.signet.bindData(res.signets, "sid", "name", false);
+        // 印章按厂商标注(1法大大/2e签宝), 供公司签时与合同厂商对齐防串号
+        decorationContract.signets = res.signets || [];
+
+        decorationContract.items.signet.bindData($.map(decorationContract.signets, function(s) {
+            return $.extend({}, s, { name: s.name + (s.provider == 2 ? "(e签宝)" : "(法大大)") });
+        }), "sid", "name", false);
     });
 
     if (decorationContract.pageType == "finance") {
@@ -274,6 +279,19 @@ jQuery(function($) {
         name: "装修单号",
         prop: "orderId",
         clazz: "blue",
+    }, {
+        fieId: "provider",
+        name: "签约厂商",
+        prop: "provider",
+        clazz: "red",
+        dataset: {
+            1: "法大大",
+            2: "e签宝"
+        },
+        show: function(v) {
+
+            return v.provider = v.provider == 2 ? 2 : 1;
+        }
     }, {
         fieId: "name",
         name: "状态",
@@ -439,7 +457,7 @@ jQuery(function($) {
         clazz: "btn-purple",
         handle: function(v) {
 
-            companySign(v.dcid);
+            companySign(v);
         },
         show: function(v) {
 
@@ -450,7 +468,7 @@ jQuery(function($) {
         clazz: "btn-purple",
         handle: function(v) {
 
-            customerSign(v.dcid);
+            customerSign(v);
         },
         show: function(v) {
 
@@ -603,10 +621,14 @@ jQuery(function($) {
 
         decorationContract.items.qrcodeCustomer.html("");
 
-        com.post(api.data.authCustomer, {
+        // contractProvider=目标合同厂商(客户签/公司签时缓存): 传provider按该厂商实名(跨厂商自动定向重实名, 不覆盖其他厂商认证信息)
+        var authParams = {
             "customer.cid": params.decoration.cid,
             "customer.identity": decorationContract.identity
-        }, function(res) {
+        };
+        if (decorationContract.contractProvider) authParams["customer.provider"] = decorationContract.contractProvider;
+
+        com.post(api.data.authCustomer, authParams, function(res) {
 
             showQRCode(decorationContract.items.qrcodeCustomer, res.redirect);
             com.showAlert(com.info, "二维码已生成");
@@ -618,25 +640,31 @@ jQuery(function($) {
 
         decorationContract.items.qrcodeCustomer.html("");
 
-        com.post(api.data.authCustomer, {
+        var authParams = {
             "customer.cid": params.decoration.cid,
             "customer.passport": decorationContract.passport
-        }, function(res) {
+        };
+        if (decorationContract.contractProvider) authParams["customer.provider"] = decorationContract.contractProvider;
+
+        com.post(api.data.authCustomer, authParams, function(res) {
 
             showQRCode(decorationContract.items.qrcodeCustomer, res.redirect);
             com.showAlert(com.info, "二维码已生成");
         });
     });
-    
+
     // 认证-港澳通行证二维码
     decorationContract.btns.passhkmBtn.on("click", function() {
 
         decorationContract.items.qrcodeCustomer.html("");
 
-        com.post(api.data.authCustomer, {
+        var authParams = {
             "customer.cid": params.decoration.cid,
             "customer.passhkm": decorationContract.passhkm
-        }, function(res) {
+        };
+        if (decorationContract.contractProvider) authParams["customer.provider"] = decorationContract.contractProvider;
+
+        com.post(api.data.authCustomer, authParams, function(res) {
 
             showQRCode(decorationContract.items.qrcodeCustomer, res.redirect);
             com.showAlert(com.info, "二维码已生成");
@@ -666,6 +694,18 @@ jQuery(function($) {
     });
 
     decorationContract.btns.signBtn.on('click', function() {
+
+        // 章厂商与合同厂商防呆(双方provider齐备才拦, 历史null数据保持旧行为)
+        var sid = decorationContract.items.signet.val();
+        var signet = null;
+        $.each(decorationContract.signets || [], function(i, s) {
+            if (s.sid == sid) { signet = s; return false; }
+        });
+
+        if (signet && signet.provider != null && decorationContract.contractProvider != null && signet.provider != decorationContract.contractProvider) {
+            com.showAlert(com.warning, "所选印章为" + (signet.provider == 2 ? "e签宝" : "法大大") + "印章, 与该合同签约厂商不一致, 请选择同厂商印章");
+            return;
+        }
 
         com.post(api.decoration.signDecorationContractForCompany, {
             "decorationContract.dcid": decorationContract.dcid,
@@ -768,21 +808,47 @@ jQuery(function($) {
     }
 
     // 公司签按钮
-    function companySign(dcid) {
+    function companySign(v) {
 
-        decorationContract.dcid = dcid;
+        decorationContract.dcid = v.dcid;
+        decorationContract.contractProvider = v.provider;
+
+        // 印章下拉按合同厂商过滤(双并行防呆: 只显示同厂商的章), 无匹配章给明确提示
+        var provider = v.provider == 2 ? 2 : 1;
+        var matched = $.map(decorationContract.signets || [], function(s) {
+            return (s.provider == null ? 1 : s.provider) == provider ? s : null;
+        });
+
+        decorationContract.items.signet.bindData($.map(matched, function(s) {
+            return $.extend({}, s, { name: s.name + (s.provider == 2 ? "(e签宝)" : "(法大大)") });
+        }), "sid", "name", false);
+
+        if (matched.length == 0) {
+            com.showAlert(com.warning, "该公司暂无" + (provider == 2 ? "e签宝" : "法大大") + "印章, 请先在印章维护中补全并完成认证授权");
+        }
+
         decorationContract.modals.decorationContractModal.modal("show");
     }
 
     // 客户签按钮
-    function customerSign(dcid) {
+    function customerSign(v) {
+
+        decorationContract.contractProvider = v.provider;
 
         com.post(api.decoration.signDecorationContractForCustomer, {
-            "decorationContract.dcid": dcid,
+            "decorationContract.dcid": v.dcid,
             "customer.cid": params.decoration.cid
         }, function(res) {
 
             com.popup4frame("客户签", res.redirect);
+        }, function(res) {
+
+            // 130189=按合同厂商无认证账号: 引导定向重实名(行式认证, 不覆盖其他厂商的认证信息)
+            if (res.errorCode == 130189) {
+                com.showConfirm("客户未按该合同的签约厂商完成实名认证, 是否按合同厂商重新发起实名认证? 认证完成后请重新签署", function() {
+                    decorationContract.modals.customerModal.modal("show");
+                });
+            }
         });
     }
     

@@ -20,6 +20,7 @@ import com.fanglin.approval.dao.ApprovalDao;
 import com.fanglin.communion.dao.CustomerDao;
 import com.fanglin.communion.po.CustomerPO;
 import com.fanglin.communion.po.DepartmentTypePO;
+import com.fanglin.communion.service.CustomerService;
 import com.fanglin.communion.vo.CustomerVO;
 import com.fanglin.construction.dao.ConstructionInfoDao;
 import com.fanglin.construction.po.ConstructionInfoPO;
@@ -87,6 +88,8 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 
 	@Autowired
 	private ElecsignRouter elecsignRouter;
+	@Autowired
+	private CustomerService customerService;
 	@Autowired
 	private CustomerChanceDao customerChanceDao;
 
@@ -412,16 +415,17 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 			throw new FLException(130028, "合同状态不可操作");
 		}
 
-		// 命名空间守卫: signno双厂商同列(法大大customerId/e签宝psnId, 靠customer.provider区分),
-		// 跨厂商直接传会拿别家ID当自家账号(签署链接必炸), 拦截引导按合同厂商重实名(130189)
-		boolean contractEsign = decorationContractPO.getProvider() != null && decorationContractPO.getProvider() == ElecsignProvider.ESIGN.code();
-		boolean customerEsign = customerPO.getProvider() != null && customerPO.getProvider() == ElecsignProvider.ESIGN.code();
+		// 按合同厂商取客户认证账号: elecsignauth 行优先(按厂商各一份, 切换签约方式互不覆盖),
+		// 无行/新表不可用回退 customer.signno 同命名空间存量值; 两处皆无 → 130189 引导按合同厂商重实名
+		short provider = decorationContractPO.getProvider() == null ? ElecsignProvider.FADADA.code() : decorationContractPO.getProvider();
 
-		if (contractEsign != customerEsign) {
+		String signno = customerService.queryCustomerSignnoForProvider((int) customerPO.getCid(), provider);
+
+		if (signno == null || "".equals(signno)) {
 			throw new FLException(130189, "客户实名认证未完成, 请先发起实名认证");
 		}
 
-		return routeForRecord(decorationContractPO).extsign(customerPO.getSignno(), decorationContractPO);
+		return routeForRecord(decorationContractPO).extsign(signno, decorationContractPO);
 	}
 
 	@Override

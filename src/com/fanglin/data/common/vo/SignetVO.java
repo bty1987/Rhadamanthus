@@ -28,6 +28,8 @@ public class SignetVO implements Serializable {
 
 	private String company;
 
+	private Short provider;// 电子签厂商(1法大大/2e签宝), 前端印章选择按厂商标签区分
+
 	public SignetVO() {
 		super();
 	}
@@ -118,6 +120,14 @@ public class SignetVO implements Serializable {
 
 	public void setType(short type) {
 		this.type = type;
+	}
+
+	public Short getProvider() {
+		return provider;
+	}
+
+	public void setProvider(Short provider) {
+		this.provider = provider;
 	}
 
 }

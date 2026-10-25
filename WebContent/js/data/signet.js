@@ -118,6 +118,19 @@ jQuery(function($) {
         prop: "type",
         dataset: signet.type,
         clazz: "red"
+    }, {
+        field: "provider",
+        name: "厂商",
+        prop: "provider",
+        dataset: {
+            1: "法大大",
+            2: "e签宝"
+        },
+        clazz: "grey",
+        show: function(v) {
+
+            return v.provider = v.provider == 2 ? 2 : 1;
+        }
     }, ];
 
     var linebtns = [{

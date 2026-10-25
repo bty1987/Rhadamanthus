@@ -24,7 +24,12 @@ jQuery(function($) {
     addDecorationContract.items.contractGroup.removeClass("hide");
 
     com.post(api.data.queryContract, {"contract.atttype": constant.data().contract.ATTTYPE_DECORATION_INT}, function(res) {
-        addDecorationContract.items.contract.bindData(res.contracts, "cid", "name", " ");
+
+        // 模板按厂商标注: path前缀esign://=e签宝/fadada://=法大大, 未标记=默认法大大(与路由resolveProvider模板级口径一致)
+        addDecorationContract.items.contract.bindData($.map(res.contracts, function(c) {
+            var vendor = (c.path || "").indexOf("esign://") == 0 ? "(e签宝)" : ((c.path || "").indexOf("fadada://") == 0 ? "(法大大)" : "");
+            return $.extend({}, c, { name: c.name + vendor });
+        }), "cid", "name", " ");
 
         addDecorationContract.contracts = res.contracts.split("cid", "page");
     });
