@@ -605,7 +605,9 @@ jQuery(function($) {
             "decorationActivityItem.activityName": activityName,
 
             "decorationActivityItem.activityItemName": activityItem.name,
-            "decorationActivityItem.type": decorationActivityItem.activityItems.itemType.val(),
+            // 优惠额度物品(type 10/11/12)按配置值提交, aiid 供服务端精确识别
+            "decorationActivityItem.aiid": activityItem.aiid,
+            "decorationActivityItem.type": activityItem.type >= 10 ? activityItem.type : decorationActivityItem.activityItems.itemType.val(),
             "decorationActivityItem.num": decorationActivityItem.activityItems.itemNum.val(),
             "decorationActivityItem.money": activityItem.money,
             "decorationActivityItem.stateType": decorationActivityItem.activityItems.receiveType1.val(),

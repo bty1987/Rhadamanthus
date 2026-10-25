@@ -17,10 +17,16 @@
 | goodspackage套餐功能按钮修改方案.md | 套餐功能按钮修改方案 |
 | 前端模板样式切换调整计划.md | 前端页面模板样式切换调整计划 |
 | 方案-报价版本报价项维护功能优化.md | 报价版本/报价项 维护功能优化方案 |
+| office小程序分配沟通移动端方案.md | 报价分配沟通模块 office 小程序移动端方案（纯前端复用两接口） |
+| 敏感数据存量明文迁移方案.md | 敏感字段（user.phone/identity、house.houseNumber、customer 族）存量明文/旧密文分批迁移为 ENC(V1:) 的方案 |
+| 生产集群零中断升级方案.md | M/C/S1/S2 四节点 Tomcat 对翻转蓝绿升级：include 化 nginx、静态软链、runbook 与回滚 |
 | 电子签扩展方案.md | 电子签扩展支持 e签宝（含多公司路由）方案 |
 | 税金折扣独立化调整方案.md | 税金折扣独立化调整方案 |
 | 工程节点集团版与分子公司关联方案.md | 数据-工程节点集团主数据+分公司 pcnid 关联归集（无快照全字段自由、创建须先关联集团、存量归纳一次挂接，对齐 noods pnid 先例） |
 | 报价项集团共享项与关联字段方案.md | 数据-共享项（共用项/规格）字段扩展+报价项关联 v2.1【已实施未提交/待编译】：规格加 13 列镜像报价项、三定额挂 qfid（cormrice 迁移挂点+company 落 0、cormtime/cormood 新建、集团数据无 company）、quotationItem 加 qfid 预留、规格页 modal 维护三定额+整页保留复用 |
+| T环境Redis与library服务可用方案.md | T（daily）library 栈三断点修复【已实施并验证 2026-10-08】：本机 Redis 6.2.24 部署+uwsgi 拉起并补 chkconfig 头注册自启+daily 库 factory.server library 死地址置空回退同源；C 样板=uwsgi+云 Redis（本机 redis 装而未用） |
+| 优惠额度活动物品创建校验方案.md | 优惠额度活动物品（decorationactivityitem）创建校验方案【回到接口调用+轻量化（额度现算致数据同步废止）】：activityitem.type 扩展 10/11/12（额度物品/券/红包，不加字段）、两条落行路径（直接添加+审批）Service 层一行封装调 fl-sync 签名接口（erp_project_sync/SHA-256，砍展示/缓存/冗余码）、aiid/asid 服务端识别+type 覆盖写、校验结果缓存落 decorationactivitycost 表（只写档/不显示/不参与校验判定，DDL 先于 jar）、审批多明细合并一次校验、fail-closed、跨单额度缺口待 fl-yy 扣减流程收口 |
+| 优惠额度活动物品创建校验部署说明.md | 上述方案部署手册：前置条件（fl-sync 入口+erp_project_sync 密钥）、SQL 22/23 → sysconfig 2 键 → 四节点 jar（decoration/approval/information）→ 前端两 js、冒烟清单（fail-closed/金额口径回归/审批路径）、回滚与已知限制（现算 3.4s/跨单缺口/时钟 30s） |
 
 ## 二、需求/功能 · `02-需求功能/`
 

@@ -20,4 +20,6 @@ public interface ActivityItemDao extends Dao<ActivityItemPO> {
 
 	public List<ActivityItemPO> queryActivityItemByAid(long aId);
 
+	public List<ActivityItemPO> queryActivityItemByAsid(long asid);
+
 }

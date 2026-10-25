@@ -33,4 +33,10 @@ public class ActivityItemDaoImpl extends DaoImpl<ActivityItemPO> implements Acti
 		return session().createCriteria(ActivityItemPO.class).add(Restrictions.eq(ActivityItemPO.COLUMN_AID_STR, aId)).list();
 	}
 
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<ActivityItemPO> queryActivityItemByAsid(long asid) {
+		return session().createCriteria(ActivityItemPO.class).add(Restrictions.eq("asid", asid)).list();
+	}
+
 }

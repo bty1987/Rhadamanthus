@@ -311,6 +311,16 @@ public class DecorationActivityItemVO implements java.io.Serializable {
 		this.uniqueId = uniqueId;
 	}
 
+	private Long aiid;
+
+	public Long getAiid() {
+		return aiid;
+	}
+
+	public void setAiid(Long aiid) {
+		this.aiid = aiid;
+	}
+
 	@JSON(format = "yyyy-MM-dd")
 	public Timestamp getExpireTime() {
 		return expireTime;

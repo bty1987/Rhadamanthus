@@ -20,6 +20,12 @@ public class ActivityItemPO implements java.io.Serializable {
 
 	public static final short TYPE_REDPACKAGE_INT = 2;// 红包
 
+	public static final short TYPE_COST_COUPON_INT = 10;// 优惠额度-券
+
+	public static final short TYPE_COST_THING_INT = 11;// 优惠额度-物品
+
+	public static final short TYPE_COST_REDPACKAGE_INT = 12;// 优惠额度-红包
+
 	public static final String COLUMN_AID_STR = "aid";
 
 	private long aiid;

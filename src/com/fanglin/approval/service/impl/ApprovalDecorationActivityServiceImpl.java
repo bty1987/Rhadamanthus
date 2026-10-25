@@ -14,7 +14,9 @@ package com.fanglin.approval.service.impl;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -39,7 +41,10 @@ import com.fanglin.decoration.po.DecorationActivityItemPO;
 import com.fanglin.decoration.po.DecorationActivityPO;
 import com.fanglin.decoration.po.DecorationActivityRecordPO;
 import com.fanglin.decoration.po.DecorationPO;
+import com.fanglin.decoration.utils.DecorationActivityCost;
+import com.fanglin.information.dao.ActivityItemDao;
 import com.fanglin.information.dao.AwardStockDao;
+import com.fanglin.information.po.ActivityItemPO;
 import com.fanglin.information.po.AwardStockPO;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
@@ -77,6 +82,12 @@ public class ApprovalDecorationActivityServiceImpl implements ApprovalDecoration
 
 	@Autowired
 	private DecorationActivityDao decorationActivityDao;
+
+	@Autowired
+	private ActivityItemDao activityItemDao;
+
+	@Autowired
+	private DecorationActivityCost decorationActivityCost;
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
@@ -151,6 +162,25 @@ public class ApprovalDecorationActivityServiceImpl implements ApprovalDecoration
 
 		List<ApprovalDecorationActivityItemPO> approvalDecorationActivityItemPOs = approvalDecorationActivityItemDao.queryApprovalDecorationActivityItemByAaId(approvalDecorationActivityPO.getAdaId());
 
+		// 额度类明细识别与合并校验: 同单同员工多明细合并金额一次校验(N 次现算 → 1 次)
+		Map<Long, ActivityItemPO> costItemMap = new HashMap<Long, ActivityItemPO>();
+
+		long costAmountSum = 0;
+
+		for (ApprovalDecorationActivityItemPO approvalDecorationActivityItemPO : approvalDecorationActivityItemPOs) {
+
+			List<ActivityItemPO> activityItemPOs = activityItemDao.queryActivityItemByAsid(approvalDecorationActivityItemPO.getAsid());
+
+			ActivityItemPO activityItemPO = activityItemPOs != null && activityItemPOs.size() > 0 ? activityItemPOs.get(0) : null;
+
+			if (decorationActivityCost.isCostItem(activityItemPO)) {
+				costItemMap.put(approvalDecorationActivityItemPO.getAsid(), activityItemPO);
+				costAmountSum = Arith.add(costAmountSum, Arith.mul((long) approvalDecorationActivityItemPO.getMoney(), approvalDecorationActivityItemPO.getNum()));
+			}
+		}
+
+		DecorationActivityCost.CostSnapshot costSnapshot = costItemMap.size() > 0 ? decorationActivityCost.checkBeforeCreate(decorationPO.getOrderId(), approvalPO.getSender().getUserId(), Arith.div(costAmountSum, 1000000L)) : null;
+
 		for (ApprovalDecorationActivityItemPO approvalDecorationActivityItemPO : approvalDecorationActivityItemPOs) {
 
 			AwardStockPO awardStockPO = awardStockDao.get(approvalDecorationActivityItemPO.getAsid());
@@ -170,6 +200,14 @@ public class ApprovalDecorationActivityServiceImpl implements ApprovalDecoration
 			decorationActivityItemPO.setIsPayment(awardStockPO.getIsPayment());
 			decorationActivityItemPO.setReceiveTime(approvalPO.getApprovalTime());
 
+			// 额度类 type 服务端按配置覆盖(不信前端), type∈{10,11,12} 天然不进 couponCut/thingCut 金额口径
+			ActivityItemPO activityItemPO = costItemMap.get(approvalDecorationActivityItemPO.getAsid());
+
+			if (activityItemPO != null) {
+				decorationActivityItemPO.setType(activityItemPO.getType());
+				decorationActivityItemPO.setContent(costSnapshot.getSummary());
+			}
+
 			if (Arrays.asList(DecorationActivityItemPO.TYPE_COUPON_INT).contains(decorationActivityItemPO.getType()) && decorationActivityItemPO.getIsPayment() == DecorationActivityItemPO.ISPAYMENT_CAL_INT) {
 				couponCut = Arith.add(couponCut, Arith.mul(decorationActivityItemPO.getMoney(), decorationActivityItemPO.getNum()));
 			} else if (Arrays.asList(DecorationActivityItemPO.TYPE_THING_INT).contains(decorationActivityItemPO.getType()) && decorationActivityItemPO.getIsPayment() == DecorationActivityItemPO.ISPAYMENT_CAL_INT) {
@@ -184,6 +222,11 @@ public class ApprovalDecorationActivityServiceImpl implements ApprovalDecoration
 			DecorationActivityRecordPO decorationActivityRecordPO = new DecorationActivityRecordPO().init(decorationActivityItemPO.getAid(), decorationActivityItemPO, DecorationActivityItemPO.STATUS_INIT_INT, approvalPO.getSender(), "");
 
 			decorationActivityRecordDao.save(decorationActivityRecordPO);
+
+			// 校验结果缓存档(只写档: 不展示/不参与校验/系统逻辑不读)
+			if (activityItemPO != null) {
+				decorationActivityCost.saveCostRecord(decorationPO.getOrderId(), decorationActivityItemPO.getDaiId(), decorationActivityItemPO.getMoney(), decorationActivityItemPO.getNum(), costSnapshot, Integer.valueOf(decorationPO.getCompany()));
+			}
 		}
 
 		List<DecorationActivityPO> decorationActivityPOs = decorationActivityDao.queryDecorationActivityByOrderId(decorationPO.getOrderId());

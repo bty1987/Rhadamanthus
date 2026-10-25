@@ -43,6 +43,8 @@ import com.fanglin.information.dao.AwardStockDao;
 import com.fanglin.information.po.AwardRecordPO;
 import com.fanglin.information.po.AwardStockPO;
 import com.fanglin.information.po.MessageCueuingPO;
+import com.fanglin.information.dao.ActivityItemDao;
+import com.fanglin.information.po.ActivityItemPO;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserBaseVO;
@@ -52,6 +54,7 @@ import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.FormatUtil;
 import com.fanglin.wechat.service.WeChatAppService;
 import com.fanglin.wechat.vo.WeChatPhoneInfoVO;
+import com.fanglin.decoration.utils.DecorationActivityCost;
 
 @Service("decorationActivityItemService")
 @Transactional(readOnly = true)
@@ -92,6 +95,12 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 	@Autowired
 	private com.fanglin.information.dao.MessageQueuingDao messageQueuingDao;
 
+	@Autowired
+	private ActivityItemDao activityItemDao;
+
+	@Autowired
+	private DecorationActivityCost decorationActivityCost;
+
 	@Override
 	public List<DecorationActivityItemVO> queryDecorationActivityItemByOrderId(DecorationVO decorationVO) {
 
@@ -117,6 +126,22 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 	@Transactional(rollbackFor = Exception.class)
 	public int addDecorationActivityItem(DecorationActivityItemVO decorationActivityItemVO, String userId) throws FLException {
 
+		// 额度类物品识别: aiid 优先(新前端必传), 兼容存量前端按 asid 反查; 反查不到配置视为非额度类走原逻辑
+		ActivityItemPO activityItemPO = null;
+
+		if (decorationActivityItemVO.getAiid() != null) {
+			activityItemPO = activityItemDao.get(decorationActivityItemVO.getAiid());
+		} else {
+			List<ActivityItemPO> activityItemPOs = activityItemDao.queryActivityItemByAsid(decorationActivityItemVO.getAsid());
+			activityItemPO = activityItemPOs != null && activityItemPOs.size() > 0 ? activityItemPOs.get(0) : null;
+		}
+
+		int money = decorationActivityItemVO.getMoney() == null ? 0 : decorationActivityItemVO.getMoney();
+		int num = decorationActivityItemVO.getNum() == null ? 0 : decorationActivityItemVO.getNum();
+
+		// 额度类物品(type>=10)创建前调 fl-yy validate 校验资格(现算), 非额度类返回 null 走原逻辑
+		DecorationActivityCost.CostSnapshot costSnapshot = decorationActivityCost.checkBeforeCreate(decorationActivityItemVO.getOrderId(), userId, activityItemPO, money, num);
+
 		AwardStockPO awardStockPO = awardStockDao.get(decorationActivityItemVO.getAsid());
 
 		if (awardStockPO == null) {
@@ -136,6 +161,12 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 		decorationActivityItemPO.setIsStock(awardStockPO.getIsStock());
 		decorationActivityItemPO.setIsPayment(DecorationActivityItemPO.ISPAYMENT_UNCAL_INT);
 
+		// 额度类 type 服务端按配置覆盖(不信前端), type∈{10,11,12} 天然不进 couponCut/thingCut 金额口径
+		if (costSnapshot != null) {
+			decorationActivityItemPO.setType(activityItemPO.getType());
+			decorationActivityItemPO.setContent(costSnapshot.getSummary());
+		}
+
 		decorationActivityItemPO.setCreater(creater);
 		decorationActivityItemPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 
@@ -146,6 +177,12 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 		DecorationActivityRecordPO decorationActivityRecordPO = new DecorationActivityRecordPO().init(decorationActivityItemPO.getAid(), decorationActivityItemPO, DecorationActivityItemPO.STATUS_INIT_INT, creater, "");
 
 		decorationActivityRecordDao.save(decorationActivityRecordPO);
+
+		// 校验结果缓存档(只写档: 不展示/不参与校验/系统逻辑不读)
+		if (costSnapshot != null) {
+			DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(decorationActivityItemVO.getOrderId());
+			decorationActivityCost.saveCostRecord(decorationActivityItemVO.getOrderId(), decorationActivityItemPO.getDaiId(), money, num, costSnapshot, decorationPO == null ? null : Integer.valueOf(decorationPO.getCompany()));
+		}
 
 		return 0;
 	}
