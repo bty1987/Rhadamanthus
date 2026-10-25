@@ -54,8 +54,7 @@
 | A20260324Action_API_DOC.md | A20260324Action 接口说明文档 |
 | A20260404Action_API_DOC.md | A20260404Action 供应商/驻店员同步接口文档（syncSupplier/syncInstorer） |
 | A20260904Action_API_DOC.md | A20260904Action 库存数据同步接口文档（辅材/仓库/出入库） |
-| A20261024Action_API_DOC.md | A20261024Action NERP 凭空预签接口文档（syncProsignForNerp，protation 全字段回填） |
-| A20261025Action_API_DOC.md | A20261025Action NERP 签约/款项同步接口文档（凭空签约 syncSignContractForNerp + 款项计划 syncDecorationPaymentForNerp） |
+| A20261025Action_API_DOC.md | A20261025Action NERP 预签/签约/款项同步接口文档（凭空预签 syncProsignForNerp + 凭空签约 syncSignContractForNerp + 款项计划 syncDecorationPaymentForNerp；v2.0 原 A20261024Action 预签文档并入） |
 | ADD_CUSTOMER_CHANCE_EXCEPTIONS.md | addCustomerChance 异常场景汇总文档 |
 | ADD_CUSTOMER_LEAD_EXCEPTIONS.md | addCustomerLead 异常场景汇总文档 |
 | API.md | Rhadamanthus ERP API 接口总览文档 |
