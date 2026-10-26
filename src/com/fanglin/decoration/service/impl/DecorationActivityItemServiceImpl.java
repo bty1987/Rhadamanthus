@@ -161,9 +161,12 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 		decorationActivityItemPO.setIsStock(awardStockPO.getIsStock());
 		decorationActivityItemPO.setIsPayment(DecorationActivityItemPO.ISPAYMENT_UNCAL_INT);
 
-		// 额度类 type 服务端按配置覆盖(不信前端), type∈{10,11,12} 天然不进 couponCut/thingCut 金额口径
-		if (costSnapshot != null) {
+		// 额度类 type 服务端按配置覆盖(不信前端), type∈{10,11,12} 天然不进 couponCut/thingCut 金额口径(校验跳过时同样覆盖)
+		if (decorationActivityCost.isCostItem(activityItemPO)) {
 			decorationActivityItemPO.setType(activityItemPO.getType());
+		}
+
+		if (costSnapshot != null) {
 			decorationActivityItemPO.setContent(costSnapshot.getSummary());
 		}
 

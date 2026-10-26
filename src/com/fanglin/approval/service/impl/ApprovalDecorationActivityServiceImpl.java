@@ -200,11 +200,14 @@ public class ApprovalDecorationActivityServiceImpl implements ApprovalDecoration
 			decorationActivityItemPO.setIsPayment(awardStockPO.getIsPayment());
 			decorationActivityItemPO.setReceiveTime(approvalPO.getApprovalTime());
 
-			// 额度类 type 服务端按配置覆盖(不信前端), type∈{10,11,12} 天然不进 couponCut/thingCut 金额口径
+			// 额度类 type 服务端按配置覆盖(不信前端), type∈{10,11,12} 天然不进 couponCut/thingCut 金额口径(校验跳过时同样覆盖)
 			ActivityItemPO activityItemPO = costItemMap.get(approvalDecorationActivityItemPO.getAsid());
 
 			if (activityItemPO != null) {
 				decorationActivityItemPO.setType(activityItemPO.getType());
+			}
+
+			if (costSnapshot != null && activityItemPO != null) {
 				decorationActivityItemPO.setContent(costSnapshot.getSummary());
 			}
 
@@ -223,8 +226,8 @@ public class ApprovalDecorationActivityServiceImpl implements ApprovalDecoration
 
 			decorationActivityRecordDao.save(decorationActivityRecordPO);
 
-			// 校验结果缓存档(只写档: 不展示/不参与校验/系统逻辑不读)
-			if (activityItemPO != null) {
+			// 校验结果缓存档(只写档: 不展示/不参与校验/系统逻辑不读; 仅实际校验通过时落行)
+			if (costSnapshot != null && activityItemPO != null) {
 				decorationActivityCost.saveCostRecord(decorationPO.getOrderId(), decorationActivityItemPO.getDaiId(), decorationActivityItemPO.getMoney(), decorationActivityItemPO.getNum(), costSnapshot, Integer.valueOf(decorationPO.getCompany()));
 			}
 		}

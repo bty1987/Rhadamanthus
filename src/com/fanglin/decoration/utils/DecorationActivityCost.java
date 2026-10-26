@@ -28,11 +28,16 @@ import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.SystemConfig;
 
 /**
- * 优惠额度校验客户端: 额度类活动物品(activityitem.type>=10)创建前调 fl-yy validate 接口校验资格。
+ * 优惠额度校验哨兵: 额度类活动物品(activityitem.type>=10)创建前调 fl-yy validate 接口校验资格。
  * 
  * <p>
  * 纯 HTTP 实现(HttpURLConnection + SHA-256 应用签名), 不引入外部 SDK。额度为现算(实测 3.4s/次),
  * 校验通过后响应快照落 {@link DecorationActivityCostPO} 缓存档——只写档: 不展示、不参与校验判定、系统逻辑不读。
+ * 
+ * <p>
+ * 🔴尽力而为语义(唯一拦截条件 = 接口明确 usable=false → 140108):
+ * 未配置 cost.*、配置反查不到、金额无效、网络/超时/签名/接口非 0 等一切无法完成校验的情形,
+ * 一律记日志后跳过校验放行创建(返回 null)——外挂不在场时业务照走, 不存在"异常时拦截"路径。
  * 
  * <h3>配置(sysconfig.properties)</h3>
  * <ul>
@@ -71,7 +76,7 @@ public class DecorationActivityCost {
 	private DecorationActivityCostDao decorationActivityCostDao;
 
 	/**
-	 * 校验结果缓存档快照: balance/toplimit 为厘(接口元值×1000, 接口未返回时为 null)。
+	 * 校验结果缓存档快照: 仅校验通过时返回; balance/toplimit 为厘(接口元值×1000, 接口未返回时为 null)。
 	 */
 	public static class CostSnapshot {
 
@@ -109,11 +114,12 @@ public class DecorationActivityCost {
 	}
 
 	/**
-	 * 创建前校验(单条): 非额度类返回 null(调用方照旧落行); 额度类同步调 validate, 通过返回快照, 拒绝抛 FLException。
+	 * 创建前校验(单条): 非额度类/配置反查不到/金额无效/未配置/请求异常 → 返回 null(跳过校验放行创建);
+	 * 接口明确 usable=false → 抛 140108(reason 原文)拦截创建; 校验通过 → 返回缓存档快照。
 	 * 
 	 * @param orderId 装修单号
 	 * @param userId 员工编码(当前登录人/审批发起人), 即接口 staffCode
-	 * @param activityItemPO 活动物品配置(调用方按 aiid 直查或 asid 反查)
+	 * @param activityItemPO 活动物品配置(调用方按 aiid 直查或 asid 反查, 可为 null)
 	 * @param money 物品单价(厘)
 	 * @param num 数量(毫个)
 	 */
@@ -124,58 +130,35 @@ public class DecorationActivityCost {
 			return null;
 		}
 
-		return checkBeforeCreate(orderId, userId, amount(money, num));
+		long amount = amount(money, num);
+
+		// 金额异常无法校验, 尽力而为跳过(不拦截创建)
+		if (amount <= 0) {
+			log.warn(String.format("优惠额度物品金额无效, 跳过校验放行, orderId:%s, money:%s, num:%s", orderId, money, num));
+			return null;
+		}
+
+		return tryValidate(orderId, userId, amount);
 	}
 
 	/**
 	 * 创建前校验(合并金额): 审批路径同单同员工多明细合并金额一次校验(N 次现算 → 1 次)。
+	 * 语义同单条版: 仅接口明确 usable=false 才抛 140108, 其余一切异常返回 null 跳过放行。
 	 * 
 	 * @param amount 合并申请额度(元)
 	 */
 	public CostSnapshot checkBeforeCreate(String orderId, String userId, long amount) throws FLException {
 
 		if (amount <= 0) {
-			throw new FLException(140111, "优惠额度物品金额无效");
+			log.warn(String.format("优惠额度合并金额无效, 跳过校验放行, orderId:%s, amount:%s", orderId, amount));
+			return null;
 		}
 
-		String url = SystemConfig.getString("cost.validate.url");
-		String secret = SystemConfig.getString("cost.app.secret");
-
-		if (url == null || "".equals(url) || secret == null || "".equals(secret)) {
-			throw new FLException(140110, "优惠额度功能未启用");
-		}
-
-		JSONObject body = new JSONObject();
-		body.put("staffCode", userId);
-		body.put("orderId", orderId);
-		body.put("amount", amount);
-
-		JSONObject response = post(url, body.toJSONString(), secret);
-
-		int code = response.getIntValue("code");
-
-		if (code != 0) {
-			log.error(String.format("优惠额度校验接口处理失败, orderId:%s, userId:%s, response:%s", orderId, userId, response.toJSONString()));
-			throw new FLException(140109, "优惠额度校验服务不可用,请稍后重试");
-		}
-
-		JSONObject data = response.getJSONObject("data");
-
-		if (data == null) {
-			log.error(String.format("优惠额度校验接口响应缺 data, orderId:%s, response:%s", orderId, response.toJSONString()));
-			throw new FLException(140109, "优惠额度校验服务不可用,请稍后重试");
-		}
-
-		if (!data.getBooleanValue("usable")) {
-			String reason = data.getString("reason");
-			throw new FLException(140108, reason == null ? "优惠额度校验未通过" : reason);
-		}
-
-		return snapshot(data);
+		return tryValidate(orderId, userId, amount);
 	}
 
 	/**
-	 * 落缓存档(物品行 save 之后调, 携带 daiId): 只写档, 非额度类(snapshot 为 null)跳过。
+	 * 落缓存档(物品行 save 之后调, 携带 daiId): 只写档, 仅校验通过(snapshot 非 null)落行。
 	 * 
 	 * @param money 物品单价(厘)
 	 * @param num 数量(毫个); cost.money = 本次使用总额(厘) = money×num÷10³
@@ -197,6 +180,52 @@ public class DecorationActivityCost {
 		po.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 
 		decorationActivityCostDao.save(po);
+	}
+
+	/**
+	 * 尽力而为校验: 唯一拦截 = usable=false(140108); 未配置/请求异常/响应不完整一律 log 后返回 null 放行。
+	 */
+	private CostSnapshot tryValidate(String orderId, String userId, long amount) throws FLException {
+
+		String url = SystemConfig.getString("cost.validate.url");
+		String secret = SystemConfig.getString("cost.app.secret");
+
+		if (url == null || "".equals(url) || secret == null || "".equals(secret)) {
+			log.warn(String.format("优惠额度校验未配置(cost.validate.url/cost.app.secret), 跳过校验放行, orderId:%s", orderId));
+			return null;
+		}
+
+		JSONObject body = new JSONObject();
+		body.put("staffCode", userId);
+		body.put("orderId", orderId);
+		body.put("amount", amount);
+
+		JSONObject response = post(url, body.toJSONString(), secret);
+
+		if (response == null) {
+			return null;
+		}
+
+		int code = response.getIntValue("code");
+
+		if (code != 0) {
+			log.error(String.format("优惠额度校验接口处理失败, 跳过校验放行, orderId:%s, userId:%s, response:%s", orderId, userId, response.toJSONString()));
+			return null;
+		}
+
+		JSONObject data = response.getJSONObject("data");
+
+		if (data == null) {
+			log.error(String.format("优惠额度校验接口响应缺 data, 跳过校验放行, orderId:%s, response:%s", orderId, response.toJSONString()));
+			return null;
+		}
+
+		if (!data.getBooleanValue("usable")) {
+			String reason = data.getString("reason");
+			throw new FLException(140108, reason == null ? "优惠额度校验未通过" : reason);
+		}
+
+		return snapshot(data);
 	}
 
 	private long amount(int money, int num) {
@@ -221,12 +250,19 @@ public class DecorationActivityCost {
 		return value.movePointRight(3).setScale(0, RoundingMode.DOWN).intValue();
 	}
 
-	private JSONObject post(String url, String rawBody, String secret) throws FLException {
+	/**
+	 * 签名 POST: 任何失败(网络/超时/HTTP 非 200/解析)仅 log.error 并返回 null, 由调用方跳过放行。
+	 */
+	private JSONObject post(String url, String rawBody, String secret) {
 
 		String timestamp = String.valueOf(System.currentTimeMillis());
 		String nonce = nonce();
 		String headerString = "appId=" + APP_ID + "&nonce=" + nonce + "&timestamp=" + timestamp;
 		String sign = sha256Hex("#" + rawBody + "##" + headerString + "###" + secret);
+
+		if (sign == null) {
+			return null;
+		}
 
 		HttpURLConnection connection = null;
 
@@ -267,16 +303,14 @@ public class DecorationActivityCost {
 
 			if (result == null) {
 				log.error(String.format("优惠额度校验接口响应为空, url:%s, httpCode:%s, response:%s", url, code, response.toString()));
-				throw new FLException(140109, "优惠额度校验服务不可用,请稍后重试");
+				return null;
 			}
 
 			return result;
 
-		} catch (FLException e) {
-			throw e;
 		} catch (Exception e) {
-			log.error(String.format("优惠额度校验接口调用异常, url:%s", url), e);
-			throw new FLException(140109, "优惠额度校验服务不可用,请稍后重试");
+			log.error(String.format("优惠额度校验接口调用异常, 跳过校验放行, url:%s", url), e);
+			return null;
 		} finally {
 			if (connection != null) {
 				connection.disconnect();
@@ -299,7 +333,7 @@ public class DecorationActivityCost {
 		return sb.toString();
 	}
 
-	private String sha256Hex(String text) throws FLException {
+	private String sha256Hex(String text) {
 
 		try {
 
@@ -317,7 +351,7 @@ public class DecorationActivityCost {
 
 		} catch (Exception e) {
 			log.error("优惠额度签名计算异常", e);
-			throw new FLException(140109, "优惠额度校验服务不可用,请稍后重试");
+			return null;
 		}
 	}
 
