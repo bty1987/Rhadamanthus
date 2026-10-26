@@ -1,8 +1,8 @@
 # 辅材与辅料费用开发文档
 
 > **模块**: data.material (辅材) / inventory (辅料)
-> **最后更新**: 2026-03-22
-> **版本**: v1.0
+> **最后更新**: 2026-10-26
+> **版本**: v1.4
 
 ---
 
@@ -60,30 +60,16 @@
 | `normnum` | `int` | 定额数量 | 2 |
 | `storeunit` | `String` | 库房单位 | "kg" |
 | `storenum` | `int` | 库房数量 | 50 |
-| **`aoodsCharge`** | **`int`** | **辅材费用（单位：分）** | **500** ⭐ 新增 |
-| `balance` | `int` | 结算价（单位：分） | 4500 |
-| `selling` | `int` | 销售价（单位：分） | 5000 |
+| `balance` | `int` | 结算价（单位：厘，×1000） | 4500000 |
+| `selling` | `int` | 销售价（单位：厘，×1000） | 5000000 |
 | `status` | `short` | 状态 | 0-启用 |
+
+> 🔴 **用户定调（2026-10-26）**：辅材费用**不落 `data.aoods` 列**——v1.0 文档中的 `aoodsCharge` 字段设计作废（代码与 DDL 中也从未落过该字段），费用一律按费用项逐行读写 `data.aoodscharge` 表，见下文 AoodsChargePO 一节。
 
 **价格关系**：
 ```
-采购成本 → 辅材费用 → 结算价 → 销售价
-   ↑        ↑          ↑        ↑
- (可选)  aoodsCharge  balance  selling
-```
-
-**字段定义代码**：
-```java
-@Column(name = "aoodsCharge")
-private int aoodsCharge; // 辅材费用（单位：分）
-
-public int getAoodsCharge() {
-    return aoodsCharge;
-}
-
-public void setAoodsCharge(int aoodsCharge) {
-    this.aoodsCharge = aoodsCharge;
-}
+data.aoods 表（价格体系不含费用）:   balance(结算价) → selling(销售价)
+费用独立事实源:  data.aoodscharge 表行（price 价格 + surplus 浮动额，status=启用，按 sort 升序逐项累加）
 ```
 
 ### 2. AoodsChargePO - 辅材费用明细 ⭐ 新增
@@ -99,8 +85,8 @@ public void setAoodsCharge(int aoodsCharge) {
 | `acid` | `long` | 费用ID（主键） | 10001 |
 | `aid` | `long` | 辅材ID（外键） | 1001 |
 | `name` | `String` | 费用名称 | "运输费" |
-| `price` | `int` | 价格（单位：分） | 500 |
-| `surplus` | `int` | 浮动额（单位：分） | 100 |
+| `price` | `int` | 价格（单位：厘，×1000） | 5000000 |
+| `surplus` | `int` | 浮动额（单位：厘，×1000） | 100000 |
 | `type` | `short` | 类型：0-通用，1-超阶 | 0 |
 | `status` | `short` | 状态：0-启用，1-禁用 | 0 |
 | `sort` | `int` | 排序 | 1 |
@@ -121,13 +107,13 @@ public static final short TYPE_UPGRADE_SHORT = 1;  // 超阶费用
 
 **使用场景**：
 ```java
-// 查询某个辅材的所有启用的费用项
-List<AoodsChargePO> charges = aoodsChargeDao.queryAoodsChargeByAid(aid);
+// 查询某个辅材的所有启用的费用项（type 传 null 不过滤，sort 升序）
+List<AoodsChargePO> charges = aoodsChargeDao.queryAoodsChargeByAid(aid, null);
 
-// 计算辅材总费用（包含所有费用项）
+// 计算辅材总费用（包含所有费用项，单位厘）
 long totalCharge = 0;
 for (AoodsChargePO charge : charges) {
-    totalCharge += charge.getPrice();
+    totalCharge = Arith.add(totalCharge, charge.getPrice());
 }
 ```
 
@@ -325,36 +311,26 @@ constructionAccessoryPO.setNum(
 );
 ```
 
-### 4. 辅材费用（aoodsCharge）使用场景
+### 4. 辅材费用（data.aoodscharge）使用场景
 
-**潜在应用场景**：
+**🔴 取数唯一姿势**：费用行来自 `data.aoodscharge` 表，禁止读 `aoodsPO` 上的费用字段（该字段不存在，也不允许新增）：
 
-1. **报价计算**：
-   ```java
-   // 报价时考虑辅材费用
-   long totalPrice = Arith.add(
-       aoodsPO.getSelling(),      // 销售价
-       aoodsPO.getAoodsCharge()   // 辅材费用
-   );
-   ```
+```java
+// 取某辅材全部启用费用项（status=启用，sort 升序，type 传 null 不过滤）
+List<AoodsChargePO> charges = aoodsChargeDao.queryAoodsChargeByAid(aid, null);
 
-2. **成本核算**：
-   ```java
-   // 核算辅材总成本
-   long totalCost = Arith.add(
-       aoodsPO.getBalance(),      // 结算价
-       aoodsPO.getAoodsCharge()   // 辅材费用
-   );
-   ```
+// 费用合计 = Σ(启用费用行 price)，单位厘
+long chargeTotal = 0;
+for (AoodsChargePO charge : charges) {
+    chargeTotal = Arith.add(chargeTotal, charge.getPrice());
+}
 
-3. **定额计算**：
-   ```java
-   // 根据定额数量计算辅材费用
-   long chargeTotal = Arith.mul(
-       aoodsPO.getNormnum(),
-       aoodsPO.getAoodsCharge()
-   );
-   ```
+// 只取通用费用
+List<AoodsChargePO> commonCharges =
+    aoodsChargeDao.queryAoodsChargeByAid(aid, AoodsChargePO.TYPE_COMMON_SHORT);
+```
+
+**消费方式由业务方决定**（报价/领料/核算是并入还是分列、超阶费用如何触发），本表只提供事实源；`selling`/`balance` 与费用行是两套口径，不得在消费点混算。
 
 ---
 
@@ -392,60 +368,24 @@ long result = Arith.div(a, b);
 - ✅ 金额单位统一使用"分"
 - ✅ 避免浮点数运算，使用 `long` 类型
 
-### 3. 字段添加流程
+### 3. 辅材费用取数与维护流程（🔴 以 data.aoodscharge 表为准）
 
-**步骤1：修改 PO 类**
+**用户定调（2026-10-26）**：辅材费用不落 `data.aoods` 列，一律读写 `data.aoodscharge` 表；v1.0 文档中"PO/VO/ptv/ALTER 四步加 aoodsCharge 字段"的教程随该定调作废。
+
+**读取**（业务消费方）：
 ```java
-// AoodsPO.java
-@Column(name = "aoodsCharge")
-private int aoodsCharge;
-
-public int getAoodsCharge() {
-    return aoodsCharge;
-}
-
-public void setAoodsCharge(int aoodsCharge) {
-    this.aoodsCharge = aoodsCharge;
-}
+// 取某辅材全部启用费用项（status=启用，sort 升序，type 传 null 不过滤）
+List<AoodsChargePO> charges = aoodsChargeDao.queryAoodsChargeByAid(aid, null);
 ```
 
-**步骤2：修改 VO 类**
-```java
-// AoodsVO.java
-private Integer aoodsCharge;
+**维护**（管理端五层已建齐，勿重复建设）：
+- 页面：`WebContent/views/data/aoodsCharge.html` + `WebContent/js/data/aoodsCharge.js`（aoods 行按钮弹层）
+- 接口：`pageAoodsCharge` / `queryAoodsChargeByAid` / `addAoodsCharge` / `updateAoodsCharge` / `deleteAoodsCharge`
+- 批量导入：`import_aoodscharge` Plan（脚本 `scripts/plan/plan_import_data_aoodscharge.py` 已就绪；🔴部署序=脚本先传生产 `/home/fanglin/cronbin/py3/` 再执行 30 号 SQL，顺序颠倒则计划可建、执行必败）
 
-public Integer getAoodsCharge() {
-    return aoodsCharge;
-}
-
-public void setAoodsCharge(Integer aoodsCharge) {
-    this.aoodsCharge = aoodsCharge;
-}
-```
-
-**步骤3：更新 PO→VO 转换**
-```java
-// AoodsPO.java
-public AoodsVO ptv(AoodsVO aoodsVO) {
-    BeanUtil.copyProperties(this, aoodsVO,
-        Arrays.asList("goods", "accessoriesType", "sortType", "noods", "constructionNode"));
-
-    // 复制新增字段
-    aoodsVO.setAoodsCharge(getAoodsCharge());
-
-    // ... 其他字段复制
-
-    return aoodsVO;
-}
-```
-
-**步骤4：数据库添加列**
-```sql
--- 为 data.aoods 表添加 aoodsCharge 字段
-ALTER TABLE `data`.`aoods`
-ADD COLUMN `aoodsCharge` INT DEFAULT 0 COMMENT '辅材费用（分）'
-AFTER `selling`;
-```
+**禁止**：
+- 在 `data.aoods` 表新增 `aoodsCharge` 等费用列
+- 在业务侧自建费用快照/冗余列——费用以 aoodscharge 行为唯一事实源，变更即时生效
 
 ### 4. 业务校验规范
 
@@ -510,15 +450,17 @@ if (Arith.add(constructionAccessoryPO.getNum(), item.getNum())
 
 ### 场景3：辅材费用计算
 
-**场景**：报价时需要考虑辅材费用
+**场景**：报价/领料需要计算某辅材的费用合计
 
 **示例代码**：
 ```java
-// 计算辅材总价（含辅材费用）
-public long calculateAoodsTotalPrice(AoodsPO aoods, int quantity) {
-    long basePrice = Arith.mul(aoodsPO.getSelling(), quantity);
-    long charge = Arith.mul(aoodsPO.getAoodsCharge(), quantity);
-    return Arith.add(basePrice, charge);
+// 费用合计 = Σ(启用费用行 price)，数据来自 data.aoodscharge 表
+public long calculateAoodsChargeTotal(long aid) {
+    long chargeTotal = 0;
+    for (AoodsChargePO charge : aoodsChargeDao.queryAoodsChargeByAid(aid, null)) {
+        chargeTotal = Arith.add(chargeTotal, charge.getPrice());
+    }
+    return chargeTotal;
 }
 ```
 
@@ -570,11 +512,14 @@ public void distributeOccessoriesCost(AccessoriesPO accessories) {
 | Action | `src/com/fanglin/data/material/action/AoodsChargeAction.java` | 辅材费用控制器 ⭐ 新增 |
 | Action | `src/com/fanglin/data/material/action/AoodsCostAction.java` | 辅材费用控制器 |
 | Service | `src/com/fanglin/data/material/service/impl/AoodsServiceImpl.java` | 辅材业务逻辑 |
+| Service | `src/com/fanglin/data/material/service/AoodsChargeService.java` | 辅材费用服务接口 ⭐ 新增 |
 | Service | `src/com/fanglin/data/material/service/impl/AoodsChargeServiceImpl.java` | 辅材费用业务逻辑 ⭐ 新增 |
 | Service | `src/com/fanglin/data/material/service/impl/AoodsCostServiceImpl.java` | 辅材费用业务逻辑 |
 | DAO | `src/com/fanglin/data/material/dao/AoodsDao.java` | 辅材数据访问 |
 | DAO | `src/com/fanglin/data/material/dao/AoodsChargeDao.java` | 辅材费用数据访问 ⭐ 新增 |
+| DAO | `src/com/fanglin/data/material/dao/impl/AoodsChargeDaoImpl.java` | 辅材费用数据访问实现 ⭐ 新增 |
 | DAO | `src/com/fanglin/data/material/dao/AoodsCostDao.java` | 辅材费用数据访问 |
+| 前端 | `WebContent/views/data/aoodsCharge.html` + `WebContent/js/data/aoodsCharge.js` | 辅材费用维护页（aoods 行按钮弹层） |
 
 ### 辅料相关
 
@@ -598,18 +543,17 @@ public void distributeOccessoriesCost(AccessoriesPO accessories) {
 
 ## 常见问题 (FAQ)
 
-### Q1: aoodsCharge 与 balance、selling 的区别？
+### Q1: 辅材费用存哪里？与 balance、selling 的区别？
 
 **答**：
-- `aoodsCharge`: 辅材费用，是辅材的附加费用（如加工费、服务费等）
+- 辅材费用**不落 `data.aoods` 列**（2026-10-26 用户定调），按费用项逐行存于 `data.aoodscharge` 表（price 价格 + surplus 浮动额）
 - `balance`: 结算价，是公司与供应商结算的价格
 - `selling`: 销售价，是向客户销售的价格
 
 **价格关系**：
 ```
-采购成本 → 辅材费用 → 结算价 → 销售价
-   ↑        ↑          ↑        ↑
- (可选)  aoodsCharge  balance  selling
+data.aoods 表:          balance(结算价) → selling(销售价)
+费用独立事实源:          data.aoodscharge 表行（status=启用，sort 升序逐项累加）
 ```
 
 ### Q2: 辅料单的总金额是如何计算的？
@@ -670,7 +614,43 @@ constructionAccessoryPO.setNum(
 
 ---
 
+## 已知存量缺陷（2026-10-26 盘点）
+
+| # | 位置 | 问题 | 影响 |
+|---|------|------|------|
+| 1 | `aoodsCharge.js` updateData() | 六个字段（name/price/surplus/type/status/sort）全部误读 `#addAoodsCharge` 添加表单，应为 `#editAoodsCharge` 编辑表单（editData 回显填的是编辑域，提交却读添加域） | 编辑确认把该行覆写成添加表单残留值（未用过添加表单时 price/surplus 落 0、name 落空），**编辑功能实际不可用** |
+| 2 | `aoodsCharge.js` saveData()/editData() | editData 回显 `(v.price/1000).toFixed(3)` 与框架响应侧÷1000 双重换算；saveData 提交原值由框架×1000 本属正确但与回显口径矛盾 | 编辑框数值缩小 1000 倍，与列表显示不一致 |
+| 3 | `aoodsCharge.js` 171-173 行 | console.log 调试残留 | 控制台噪音 |
+| 4 | `sqls/material/30_add_aoodscharge_import_task.sql` | 注册的 `import_aoodscharge` Plan 指向 `script/plan_import_data_aoodscharge.py`，**脚本不存在** | 执行 30 号 SQL 后导入功能空挂 |
+| 5 | `AoodsChargePO.java` / `10_aoodscharge.sql` | 金额注释写"分" | 与实际存储口径 ×1000（厘）不符，注释待校准 |
+| 6 | `sqls/material/10_aoodscharge.sql` | `DROP TABLE IF EXISTS` 非幂等 | 重复执行会清空费用数据；生产已建表则不得重跑 |
+
+> **2026-10-26 处置进展**：六项全部修复——①②③随 v1.3（金额换算收编 api tranargs 框架转换/updateData 改读编辑表单/console.log 清除）；④⑤⑥随 v1.4（导入脚本落地 scripts/plan/ + PO/SQL 注释校准厘 + 10 号 SQL 幂等化 + 30 号 SQL 照生产实况修正），详见变更记录。遗留动作仅剩部署：脚本传 cronbin/py3 → 依次执行 10/30 号 SQL。
+
+---
+
 ## 变更记录
+
+### 2026-10-26 - v1.4
+- ④ **导入脚本落地**：`scripts/plan/plan_import_data_aoodscharge.py`（照 `plan_import_data_soods.py` 同构：plan_util Util 基类 + config.json + argv=`pid path aid`；6 列=费用名称/价格元/浮动额元/类型/状态/排序；价格浮动额×1000 折厘入库与页面 tranargs 口径一致；aid 须存在于 data.aoods 否则整单失败；逐行校验错误行跳过记 log）
+- ⑤ **金额注释校准**：AoodsChargePO 与 10 号 SQL 的 price/surplus 注释"分"→"厘(×1000)"
+- ⑥ **10 号 SQL 幂等化**：`DROP TABLE IF EXISTS`+CREATE 改 `CREATE TABLE IF NOT EXISTS`，补用途/前置/回滚/验证文件头（原版重跑会清空费用数据）
+- 30 号 SQL 照生产实况修正：filepath 相对路径 `script/...` 改部署绝对路径 `/home/fanglin/cronbin/py3/...`（照 information/30 导入选材先例），type 0→2、handle 0→1、isShow 0→1（照 import_data_* 八行实况），INSERT 改先删后插幂等；🔴部署序=脚本先上 cronbin/py3 再执行本 SQL
+- 缺陷表④⑤⑥关闭；遗留动作仅剩部署（脚本→cronbin/py3，10/30 号 SQL 依次执行）
+
+### 2026-10-26 - v1.3
+- 🔴 **金额换算双轨修复**：页面层去掉全部手工 ×/÷1000，统一交给 api tranargs 框架转换（core.js：`type=update` 发送前 `utils.accExtend` ×1000 折厘；`type=query` 响应后 `utils.accReduce` ÷1000 折元，Searcher 走 `com.post` 同样吃到转换）——api/data.js 四接口 tranargs 本已声明齐全，页面此前未遵循
+- editData 回显去掉 `(v.price/1000).toFixed(3)`（框架已÷1000，原写法双重换算致编辑框缩小 1000 倍，与列表显示不一致）
+- updateData 六字段改读编辑表单（editData 回显域），修复误读添加表单致编辑覆写残留值的不可用缺陷
+- saveData 清除 console.log 残留；提交链路维持原值（元）直传由框架折厘
+- 缺陷表①②③关闭，④（导入脚本缺失）⑤（注释单位）⑥（DROP TABLE 非幂等）待处置
+
+### 2026-10-26 - v1.2
+- 🔴 **用户定调**：辅材费用不落 `data.aoods` 列（v1.0/v1.1 的 `AoodsPO.aoodsCharge` 字段设计作废，代码与 DDL 从未落过该字段），一律取 `data.aoodscharge` 表数据
+- 取数入口收敛为 `AoodsChargeDao.queryAoodsChargeByAid(aid, type)`（status=启用、sort 升序）
+- 金额口径核正为厘（×1000）：依据前端编辑回显 `v.price/1000` 与仓内定点算术惯例（num×storenum ÷1000 同量纲）
+- 全文清除 aoodsCharge 字段相关段落（AoodsPO 核心字段行/字段定义代码/ptv 复制/ALTER 步骤/FAQ Q1），"字段添加流程"改写为"辅材费用取数与维护流程"
+- 新增"已知存量缺陷"盘点表（updateData 误读表单/添加缺 ×1000 换算/console.log 残留/导入脚本缺失/注释单位/DROP TABLE 非幂等）
 
 ### 2026-03-22 - v1.1
 - ✅ 创建 `AoodsChargePO` 实体类（辅材费用明细表）

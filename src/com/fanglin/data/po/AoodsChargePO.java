@@ -43,9 +43,9 @@ public class AoodsChargePO implements Serializable {
 
 	private String name; // 费用名称
 
-	private int price; // 价格（分）
+	private int price; // 价格（厘，×1000）
 
-	private int surplus; // 浮动额（分）
+	private int surplus; // 浮动额（厘，×1000）
 
 	private short type; // 类型：0-通用，1-超阶
 

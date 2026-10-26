@@ -168,10 +168,7 @@ $(function() {
             "aoodsCharge.sort": com.focusPage("#sort", "#addAoodsCharge").val() || 0
         };
         
-        console.log(aoodsCharge.items.name)
-        
-        console.log(options)
-        
+        // 提交原值（元），api tranargs 在请求侧×1000折成厘
         com.post(api.data.addAoodsCharge, options, function() {
             com.showAlert(com.info, "添加成功");
             com.closePopup(com.focusPage("#confirmBtn", "#miniPopUp"));
@@ -183,10 +180,10 @@ $(function() {
     function editData(v) {
         aoodsCharge.acid = v.acid;
 
-        // 填充表单
+        // 填充表单（price/surplus 已由 api tranargs 在响应侧÷1000折成元，页面勿再手工换算）
         aoodsCharge.items.editName.val(v.name);
-        aoodsCharge.items.editPrice.val((v.price / 1000).toFixed(3));
-        aoodsCharge.items.editSurplus.val((v.surplus / 1000).toFixed(3));
+        aoodsCharge.items.editPrice.val(v.price);
+        aoodsCharge.items.editSurplus.val(v.surplus);
         aoodsCharge.items.editType.val(v.type);
         aoodsCharge.items.editStatus.val(v.status);
         aoodsCharge.items.editSort.val(v.sort);
@@ -200,14 +197,15 @@ $(function() {
             return false;
         }
 
+        // 🔴只读编辑表单(editData回显域)，误读添加表单会把行数据覆写成残留值；提交原值(元)，api tranargs请求侧×1000折厘
         var options = {
             "aoodsCharge.acid": aoodsCharge.acid,
-            "aoodsCharge.name": com.focusPage("#name", "#addAoodsCharge").val(),
-            "aoodsCharge.price": com.focusPage("#price", "#addAoodsCharge").val()|| 0,
-            "aoodsCharge.surplus": com.focusPage("#surplus", "#addAoodsCharge").val() || 0,
-            "aoodsCharge.type": com.focusPage("#type", "#addAoodsCharge").val(),
-            "aoodsCharge.status": com.focusPage("#status", "#addAoodsCharge").val(),
-            "aoodsCharge.sort": com.focusPage("#sort", "#addAoodsCharge").val() || 0
+            "aoodsCharge.name": aoodsCharge.items.editName.val(),
+            "aoodsCharge.price": aoodsCharge.items.editPrice.val() || 0,
+            "aoodsCharge.surplus": aoodsCharge.items.editSurplus.val() || 0,
+            "aoodsCharge.type": aoodsCharge.items.editType.val(),
+            "aoodsCharge.status": aoodsCharge.items.editStatus.val(),
+            "aoodsCharge.sort": aoodsCharge.items.editSort.val() || 0
         };
 
         com.post(api.data.updateAoodsCharge, options, function() {
