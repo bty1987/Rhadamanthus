@@ -1287,6 +1287,9 @@ public class ESignElecsignServiceImpl implements ElecsignService, CompanyAware {
 
 			if (json != null) {
 				for (Map.Entry<String, Object> entry : json.entrySet()) {
+					if (entry.getKey().startsWith("_flow_")) {
+						continue; // 流程上下文键非控件, 不参与核对
+					}
 					if (!templateKeys.contains(entry.getKey())) {
 						unknown.add(entry.getKey());
 					}
@@ -1384,6 +1387,10 @@ public class ESignElecsignServiceImpl implements ElecsignService, CompanyAware {
 
 		if (json != null) {
 			for (Map.Entry<String, Object> entry : json.entrySet()) {
+				// _flow_* 为流程模板路线的发起上下文(签署人/主体企业), 非文档模板控件——透传会被e签宝以"控件不存在"拒绝
+				if (entry.getKey().startsWith("_flow_")) {
+					continue;
+				}
 				components.add(new JSONObject().fluentPut("componentKey", entry.getKey()).fluentPut("componentValue", String.valueOf(entry.getValue())));
 			}
 		}
