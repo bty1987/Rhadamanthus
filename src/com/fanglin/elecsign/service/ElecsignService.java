@@ -240,9 +240,7 @@ public interface ElecsignService {
 	 * @param contract 合同（flowId=签署流ID）
 	 * @return 经办人签署页面 URL
 	 */
-	default String transactorSignUrl(Contract contract) throws FLException {
-		throw new FLException(130098, "该厂商不支持此操作");
-	}
+	String transactorSignUrl(Contract contract) throws FLException;
 
 	// ====================================================================================
 	// 六、预览 / 下载 / 归档

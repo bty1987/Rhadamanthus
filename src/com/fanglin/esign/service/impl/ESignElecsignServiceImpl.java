@@ -1526,6 +1526,11 @@ public class ESignElecsignServiceImpl implements ElecsignService, CompanyAware {
 		}
 
 		@Override
+		public String transactorSignUrl(Contract contract) throws FLException {
+			return ESignElecsignServiceImpl.this.transactorSignUrl(company, contract);
+		}
+
+		@Override
 		public String view(Contract contract) {
 			return ESignElecsignServiceImpl.this.view(company, contract);
 		}

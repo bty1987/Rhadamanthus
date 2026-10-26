@@ -168,6 +168,11 @@ public class FadadaElecsignServiceImpl implements ElecsignService {
 	}
 
 	@Override
+	public String transactorSignUrl(Contract contract) throws FLException {
+		// 法大大无此场景(企业落章走法大大自身流程), 仅e签宝流程模板路线的降级通道
+		throw new FLException(130098, "该厂商不支持此操作");
+	}
+
 	public String extsignBoth(String psnSignno, Contract contract, String orgId, String orgKeyword) throws FLException {
 		// 法大大签署顺序不受限, 企业侧信息忽略
 		return extsign(psnSignno, contract);
