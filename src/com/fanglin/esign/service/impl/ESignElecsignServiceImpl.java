@@ -311,6 +311,11 @@ public class ESignElecsignServiceImpl implements ElecsignService, CompanyAware {
 	}
 
 	@Override
+	public String transactorSignUrl(Contract contract) throws FLException {
+		return transactorSignUrl(0, contract);
+	}
+
+	@Override
 	public boolean finishSignedFlow(Contract contract) throws FLException {
 		return finishSignedFlow(0, contract);
 	}
@@ -748,7 +753,7 @@ public class ESignElecsignServiceImpl implements ElecsignService, CompanyAware {
 	 * 平台受理即成功(异步落章); 若企业未授权自动签, 平台登记不执行(autoExecuteSign=false)——
 	 * 此时抛错引导经办人经签署链接手动落章(与法大大时期公司签业务习惯一致)。
 	 */
-	private void autosignByFlowTemplate(int company, Contract contract) throws FLException {
+	private String autosignByFlowTemplate(int company, Contract contract) throws FLException {
 
 		String signFlowId = contract.flowId();
 
@@ -793,11 +798,44 @@ public class ESignElecsignServiceImpl implements ElecsignService, CompanyAware {
 			JSONArray executed = result.getJSONArray("signFields");
 
 			if (executed != null && !executed.isEmpty() && executed.getJSONObject(0).getBooleanValue("autoExecuteSign")) {
-				return; // 受理并自动落章
+				return null; // 受理并自动落章
 			}
 		}
 
-		throw new FLException(130097, "e签宝接口调用失败, 企业自动落章未受理, 请经办人通过签署链接手动落章");
+		// 未受理(企业未授权自动签)→ 无缝降级: 返回经办人签署链接(H5手动落章, 与法大大时期公司签用法一致)
+		return transactorSignUrl(company, contract);
+	}
+
+	/**
+	 * 经办人签署链接: 流程详情企业签署方的经办人 psnId → sign-url。
+	 * 公司自动落章未受理时的降级通道(经办人H5手动落章), 对齐法大大时期"公司签=经办人点链接"用法。
+	 */
+	String transactorSignUrl(int company, Contract contract) throws FLException {
+
+		String signFlowId = contract.flowId();
+
+		JSONObject detail = esignClient.get(company, String.format(EP_FLOW_DETAIL, signFlowId), null);
+
+		JSONArray signers = detail.getJSONArray("signers");
+
+		for (int i = 0; signers != null && i < signers.size(); i++) {
+
+			JSONObject signer = signers.getJSONObject(i);
+			JSONObject orgSigner = signer.getJSONObject("orgSigner");
+
+			if (orgSigner == null) {
+				continue;
+			}
+
+			JSONObject transactor = orgSigner.getJSONObject("transactor");
+			String psnId = transactor == null ? null : transactor.getString("psnId");
+
+			if (psnId != null && !psnId.trim().isEmpty()) {
+				return signUrl(company, signFlowId, psnId);
+			}
+		}
+
+		throw new FLException(130097, "e签宝接口调用失败, 签署流程中未找到企业经办人");
 	}
 
 	/** 企业印章 sealId: sealBizType 合同专用章优先, 回退默认章; 无印章返回 null。 */

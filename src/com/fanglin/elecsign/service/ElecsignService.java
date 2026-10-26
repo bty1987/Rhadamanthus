@@ -230,6 +230,20 @@ public interface ElecsignService {
 	 */
 	String extsignBoth(String psnSignno, Contract contract, String orgId, String orgKeyword) throws FLException;
 
+	/**
+	 * 经办人签署链接（企业落章降级通道）。
+	 *
+	 * <p>e签宝流程模板路线：企业自动落章未受理（企业未授权自动签）时，返回企业经办人的
+	 * 签署页面链接，经办人 H5 手动落章——与法大大时期"公司签=经办人点链接"业务习惯一致。
+	 * <p>法大大：不支持（无此场景），抛 130098。
+	 *
+	 * @param contract 合同（flowId=签署流ID）
+	 * @return 经办人签署页面 URL
+	 */
+	default String transactorSignUrl(Contract contract) throws FLException {
+		throw new FLException(130098, "该厂商不支持此操作");
+	}
+
 	// ====================================================================================
 	// 六、预览 / 下载 / 归档
 	// 对应 Signature.view / download / filing / getFile
