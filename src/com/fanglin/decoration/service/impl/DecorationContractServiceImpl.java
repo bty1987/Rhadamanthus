@@ -444,6 +444,16 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 			throw new FLException(140013, "装修单不存在");
 		}
 
+		short provider = decorationContractPO.getProvider() == null ? ElecsignProvider.FADADA.code() : decorationContractPO.getProvider();
+
+		if (provider == ElecsignProvider.ESIGN.code()) {
+
+			// 流程模板路线: 签署流程已在合同生成时发起(create-by-sign-template),
+			// 公司签=返回经办人签署链接——企业已授权自动签的平台发起时已自动落章(链接打开显示已完成),
+			// 未授权企业由经办人经此链接H5手动落章; comsignTime由签署完成回调推进; 不需要ERP签章
+			return routeForRecord(decorationContractPO).transactorSignUrl(decorationContractPO);
+		}
+
 		SignetPO signetPO = signetDao.get(signetVO.getSid());
 
 		if (signetPO == null) {
@@ -461,9 +471,7 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 			signetPO = signetPOs.get(0);
 		}
 
-		// 单流合流: 带上对手方客户签署账号一次建流(企业章+客户签字同文件)——e签宝客户未实名由实现侧拦(130189);
-		// 法大大忽略客户账号, 企业签行为与原先完全一致
-		short provider = decorationContractPO.getProvider() == null ? ElecsignProvider.FADADA.code() : decorationContractPO.getProvider();
+		// 法大大: 单流合流建流+落章, 企业签行为与原先完全一致
 		String psnSignno = customerService.queryCustomerSignnoForProvider((int) decorationPO.getCustomer().getCid(), provider);
 
 		routeForRecord(decorationContractPO).autosignBoth(signetPO.getSignno(), signetPO.getKeyword(), decorationContractPO, signetPO.getSignid(), psnSignno);
