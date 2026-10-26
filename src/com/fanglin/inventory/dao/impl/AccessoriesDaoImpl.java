@@ -38,6 +38,22 @@ public class AccessoriesDaoImpl extends DaoImpl<AccessoriesPO> implements Access
 		return session().createCriteria(AccessoriesPO.class).add(Restrictions.eq(AccessoriesPO.COLUMN_ORDERID_STR, orderId)).list();
 	}
 
+	@Override
+	public List<AccessoriesPO> pageAccessoriesForSupplier(Paging paging, List<Filter> filters, int uid) {
+
+		PagingQuery<AccessoriesPO> query = pagingQuery(paging, AccessoriesPO.class);
+
+		query.alias("supplier", "supplier");
+
+		query.add(query.getCriterion("supplier.uid", uid, "eq"));
+
+		queryFilterExcute(query, filters);
+
+		query.desc("aid");
+
+		return query.list();
+	}
+
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {
 
 		if (filters == null || filters.size() == 0) return;

@@ -12,11 +12,15 @@ public interface AccessoriesService {
 
 	public void pageAccessories(Paging paging, List<Filter> filters, int company);
 
+	public void pageAccessoriesForSupplier(Paging paging, List<Filter> filters, String userId, AccessoriesVO accessoriesVO);
+
 	public List<AccessoriesVO> queryAccessoriesByOrderId(AccessoriesVO accessoriesVO);
 
 	public AccessoriesVO queryAccessoriesByAid(AccessoriesVO accessoriesVO);
 
 	public int addAccessories(AccessoriesVO accessoriesVO, List<AccessoriesItemVO> accessoriesItemVOs, String userId) throws FLException;
+
+	public int bindAccessories(AccessoriesVO accessoriesVO) throws FLException;
 
 	public int preoutAccessories(AccessoriesVO accessoriesVO, String userId) throws FLException;
 
@@ -27,6 +31,8 @@ public interface AccessoriesService {
 	public int updateAccessoriesForPrint(AccessoriesVO accessoriesVO) throws FLException;
 
 	public int deliveAccessories(AccessoriesVO accessoriesVO, String userId) throws FLException;
+
+	public int balanceAccessories(AccessoriesVO accessoriesVO, String userId) throws FLException;
 
 	public int auditAccessories(AccessoriesVO accessoriesVO) throws FLException;
 

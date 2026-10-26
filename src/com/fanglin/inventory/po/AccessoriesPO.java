@@ -66,6 +66,8 @@ public class AccessoriesPO implements Serializable {
 
 	public static final short STATUS_AUDIT_INT = 7; // 审批
 
+	public static final short STATUS_BALANCED_INT = 8; // 已结算
+
 	private long aid;
 
 	private String no;
@@ -86,6 +88,10 @@ public class AccessoriesPO implements Serializable {
 
 	private UserPO deliver;
 
+	private UserPO supplier; // 厂商
+
+	private UserPO balancer; // 结算人
+
 	private Timestamp createTime;
 
 	private Timestamp approverTime;
@@ -101,6 +107,12 @@ public class AccessoriesPO implements Serializable {
 	private short schedule;
 
 	private long total;
+
+	private long charge; // 费用额（厘，按data.aoodscharge模板自动算）
+
+	private int balance; // 结算额（厘）
+
+	private Timestamp balanceTime;
 
 	private int printnum; // 打印次数
 
@@ -319,6 +331,53 @@ public class AccessoriesPO implements Serializable {
 		this.deliverTime = deliverTime;
 	}
 
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "supplier", referencedColumnName = "uid")
+	public UserPO getSupplier() {
+		return supplier;
+	}
+
+	public void setSupplier(UserPO supplier) {
+		this.supplier = supplier;
+	}
+
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(nullable = true, name = "buid", referencedColumnName = "uid")
+	public UserPO getBalancer() {
+		return balancer;
+	}
+
+	public void setBalancer(UserPO balancer) {
+		this.balancer = balancer;
+	}
+
+	@Column(name = "charge")
+	public long getCharge() {
+		return charge;
+	}
+
+	public void setCharge(long charge) {
+		this.charge = charge;
+	}
+
+	@Column(name = "balance")
+	public int getBalance() {
+		return balance;
+	}
+
+	public void setBalance(int balance) {
+		this.balance = balance;
+	}
+
+	@Column(name = "balanceTime")
+	public Timestamp getBalanceTime() {
+		return balanceTime;
+	}
+
+	public void setBalanceTime(Timestamp balanceTime) {
+		this.balanceTime = balanceTime;
+	}
+
 	public AccessoriesPO init(String no, String orderId, long csid, long cnid, HousePO house, UserPO creater, Timestamp fetchTime, short schedule, String comment, int company) {
 
 		setNo(no);
@@ -344,13 +403,23 @@ public class AccessoriesPO implements Serializable {
 
 	public AccessoriesVO ptv(AccessoriesVO accessoriesVO) {
 
-		BeanUtil.copyProperties(this, accessoriesVO, Arrays.asList("house", "creater", "approver", "supervisor", "deliver"));
+		BeanUtil.copyProperties(this, accessoriesVO, Arrays.asList("house", "creater", "approver", "supervisor", "deliver", "supplier", "balancer"));
 
 		if (accessoriesVO.getHouse() != null && getHouse() != null) getHouse().ptv(accessoriesVO.getHouse());
 
 		if (accessoriesVO.getCreater() != null && getCreater() != null) accessoriesVO.getCreater().setBaseInfo(getCreater());
 		if (accessoriesVO.getApprover() != null && getApprover() != null) accessoriesVO.getApprover().setBaseInfo(getApprover());
 		if (accessoriesVO.getSupervisor() != null && getSupervisor() != null) accessoriesVO.getSupervisor().setBaseInfo(getSupervisor());
+
+		if (getSupplier() != null) {
+			if (accessoriesVO.getSupplier() == null) accessoriesVO.setSupplier(new UserBaseVO());
+			accessoriesVO.getSupplier().setBaseInfo(getSupplier());
+		}
+
+		if (getBalancer() != null) {
+			if (accessoriesVO.getBalancer() == null) accessoriesVO.setBalancer(new UserBaseVO());
+			accessoriesVO.getBalancer().setBaseInfo(getBalancer());
+		}
 
 		return accessoriesVO;
 	}

@@ -55,6 +55,14 @@ public class AccessoriesAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "pageAccessoriesForSupplier", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String pageAccessoriesForSupplier() throws FLException {
+
+		accessoriesService.pageAccessoriesForSupplier(getPaging(), getFilters(), queryUserId(), accessories);
+
+		return SUCCESS;
+	}
+
 	@Action(value = "queryAccessoriesByOrderId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryAccessoriesByOrderId() throws FLException {
 
@@ -75,6 +83,14 @@ public class AccessoriesAction extends BaseListAction {
 	public String addAccessories() throws FLException {
 
 		accessoriesService.addAccessories(accessories, accessoriesItems, queryUserId());
+
+		return SUCCESS;
+	}
+
+	@Action(value = "bindAccessories", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String bindAccessories() throws FLException {
+
+		accessoriesService.bindAccessories(accessories);
 
 		return SUCCESS;
 	}
@@ -123,6 +139,14 @@ public class AccessoriesAction extends BaseListAction {
 	public String deliveAccessories() throws FLException {
 
 		accessoriesService.deliveAccessories(accessories, queryUserId());
+
+		return SUCCESS;
+	}
+
+	@Action(value = "balanceAccessories", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String balanceAccessories() throws FLException {
+
+		accessoriesService.balanceAccessories(accessories, queryUserId());
 
 		return SUCCESS;
 	}

@@ -6,9 +6,13 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionSynchronizationAdapter;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 import com.fanglin.common.po.CountingPO;
 import com.fanglin.common.service.CountingService;
@@ -24,6 +28,8 @@ import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.po.DecorationPO;
+import com.fanglin.information.po.MessagePO;
+import com.fanglin.information.service.MessageService;
 import com.fanglin.inventory.dao.AccessoriesDao;
 import com.fanglin.inventory.dao.AccessoriesItemDao;
 import com.fanglin.inventory.po.AccessoriesItemPO;
@@ -46,11 +52,16 @@ import com.fanglin.utils.Paging;
 @Transactional(readOnly = true)
 public class AccessoriesServiceImpl implements AccessoriesService {
 
+	private static final Logger log = LoggerFactory.getLogger(AccessoriesServiceImpl.class);
+
 	@Autowired
 	private CompanyDao companyDao;
 
 	@Autowired
 	private AccessoriesDao accessoriesDao;
+
+	@Autowired
+	private MessageService messageService;
 
 	@Autowired
 	private AccessoriesItemDao accessoriesItemDao;
@@ -80,6 +91,21 @@ public class AccessoriesServiceImpl implements AccessoriesService {
 	public void pageAccessories(Paging paging, List<Filter> filters, int company) {
 
 		List<AccessoriesPO> accessoriesPOs = accessoriesDao.pageAccessories(paging, filters, company);
+		List<AccessoriesVO> accessoriesVOs = new ArrayList<AccessoriesVO>();
+
+		for (AccessoriesPO accessoriesPO : accessoriesPOs) {
+			accessoriesVOs.add(accessoriesPO.ptv(new AccessoriesVO(new HouseVO(new VillageVO()), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO())));
+		}
+
+		paging.setData(accessoriesVOs);
+	}
+
+	@Override
+	public void pageAccessoriesForSupplier(Paging paging, List<Filter> filters, String userId, AccessoriesVO accessoriesVO) {
+
+		UserPO user = userDao.queryUserByUserId(userId);
+
+		List<AccessoriesPO> accessoriesPOs = accessoriesDao.pageAccessoriesForSupplier(paging, filters, user.getUid());
 		List<AccessoriesVO> accessoriesVOs = new ArrayList<AccessoriesVO>();
 
 		for (AccessoriesPO accessoriesPO : accessoriesPOs) {
@@ -190,6 +216,10 @@ public class AccessoriesServiceImpl implements AccessoriesService {
 			accessoriesItemDao.save(new AccessoriesItemPO().init(accessoriesPO.getAid(), accessoriesItemVO));
 		}
 
+		accessoriesPO.setCharge(accessoriesItemService.amountAccessoriesCharge(accessoriesPO));
+
+		accessoriesDao.update(accessoriesPO);
+
 		if (accessoriesVO.getType() == AccessoriesPO.TYPE_POST_INT) { // 售后类型辅料单不需要处理工程单和工程辅料
 			return 0;
 		}
@@ -214,6 +244,50 @@ public class AccessoriesServiceImpl implements AccessoriesService {
 			constructionAccessoryPO.setNum(Arith.add(constructionAccessoryPO.getNum(), accessoriesItemVO.getNum()));
 
 			constructionAccessoryDao.update(constructionAccessoryPO);
+		}
+
+		return 0;
+	}
+
+	// 分配厂商（状态不动，属性行为；初始/预出/出货可分配可改派）
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int bindAccessories(AccessoriesVO accessoriesVO) throws FLException {
+
+		AccessoriesPO accessoriesPO = accessoriesDao.get(accessoriesVO.getAid());
+
+		if (accessoriesPO == null) {
+			throw new FLException(260023, "辅料单不存在");
+		}
+
+		List<Short> status = Arrays.asList(AccessoriesPO.STATUS_INIT_INT, AccessoriesPO.STATUS_ADVANCE_INT, AccessoriesPO.STATUS_BATCHOUT_INT);
+
+		if (!status.contains(accessoriesPO.getStatus())) {
+			throw new FLException(260024, "辅料单状态不可操作");
+		}
+
+		UserPO supplier = accessoriesVO.getSupplier() != null ? userDao.get(accessoriesVO.getSupplier().getUid()) : null;
+
+		if (supplier == null) {
+			throw new FLException(260091, "厂商不存在");
+		}
+
+		accessoriesPO.setSupplier(supplier);
+
+		accessoriesDao.update(accessoriesPO);
+
+		final UserPO supervisor = accessoriesPO.getSupervisor();
+
+		if (supervisor != null) {
+
+			final String content = String.format("装修单号:%s,楼盘:%s,辅料单号:%s,厂商名称:%s,已经分配完厂商", accessoriesPO.getOrderId(), accessoriesPO.getHouse() != null && accessoriesPO.getHouse().getVillage() != null ? accessoriesPO.getHouse().getVillage().getName() : "", accessoriesPO.getNo(), supplier.getUserName());
+
+			sendMessageAfterCommit(new Runnable() {
+
+				public void run() {
+					messageService.sendMessage(supervisor.getUserId(), null, content, MessagePO.TYPE_SEND_CONSTRUCTION_INT, supervisor.getCompany());
+				}
+			});
 		}
 
 		return 0;
@@ -398,6 +472,37 @@ public class AccessoriesServiceImpl implements AccessoriesService {
 		return 0;
 	}
 
+	// 结算（到货态终态化：写结算额/结算人/结算时间，推已结算）
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int balanceAccessories(AccessoriesVO accessoriesVO, String userId) throws FLException {
+
+		UserPO userPO = userDao.queryUserByUserId(userId);
+
+		AccessoriesPO accessoriesPO = accessoriesDao.get(accessoriesVO.getAid());
+
+		if (accessoriesPO == null) {
+			throw new FLException(260023, "辅料单不存在");
+		}
+
+		if (accessoriesPO.getStatus() != AccessoriesPO.STATUS_DELIVER_INT) {
+			throw new FLException(260024, "辅料单状态不可操作");
+		}
+
+		if (accessoriesVO.getBalance() == null || accessoriesVO.getBalance() < 0) {
+			throw new FLException(260092, "结算额无效");
+		}
+
+		accessoriesPO.setBalance(accessoriesVO.getBalance());
+		accessoriesPO.setBalancer(userPO);
+		accessoriesPO.setBalanceTime(DateUtil.getDateToTimestamp(new Date()));
+		accessoriesPO.setStatus(AccessoriesPO.STATUS_BALANCED_INT);
+
+		accessoriesDao.update(accessoriesPO);
+
+		return 0;
+	}
+
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public int auditAccessories(AccessoriesVO accessoriesVO) throws FLException {
@@ -417,6 +522,26 @@ public class AccessoriesServiceImpl implements AccessoriesService {
 		accessoriesDao.update(accessoriesPO);
 
 		return 0;
+	}
+
+	private void sendMessageAfterCommit(final Runnable task) {
+
+		if (!TransactionSynchronizationManager.isSynchronizationActive()) {
+			task.run();
+			return;
+		}
+
+		TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronizationAdapter() {
+
+			@Override
+			public void afterCommit() {
+				try {
+					task.run();
+				} catch (Exception e) {
+					log.error("accessories message send after commit failed", e);
+				}
+			}
+		});
 	}
 
 }

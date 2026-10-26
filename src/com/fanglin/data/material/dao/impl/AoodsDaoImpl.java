@@ -79,6 +79,12 @@ public class AoodsDaoImpl extends DaoImpl<AoodsPO> implements AoodsDao {
 	}
 
 	@Override
+	@SuppressWarnings("unchecked")
+	public List<AoodsPO> queryAoodsByGid(long gid, int bompany) {
+		return session().createCriteria(AoodsPO.class).createAlias("goods", "goods").add(Restrictions.eq(AoodsPO.COLUMN_GID_STR, gid)).add(Restrictions.eq(AoodsPO.COLUMN_BOMPANY_STR, bompany)).list();
+	}
+
+	@Override
 	public int countAoods(long gid, int bompany) {
 
 		String sql = "select count(*) from `data`.aoods where gid= :gid and bompany= :bompany";

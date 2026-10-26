@@ -27,6 +27,7 @@
 | T环境Redis与library服务可用方案.md | T（daily）library 栈三断点修复【已实施并验证 2026-10-08】：本机 Redis 6.2.24 部署+uwsgi 拉起并补 chkconfig 头注册自启+daily 库 factory.server library 死地址置空回退同源；C 样板=uwsgi+云 Redis（本机 redis 装而未用） |
 | 优惠额度活动物品创建校验方案.md | 优惠额度活动物品（decorationactivityitem）创建校验方案【回到接口调用+轻量化（额度现算致数据同步废止）】：activityitem.type 扩展 10/11/12（额度物品/券/红包，不加字段）、两条落行路径（直接添加+审批）Service 层一行封装调 fl-sync 签名接口（erp_project_sync/SHA-256，砍展示/缓存/冗余码）、aiid/asid 服务端识别+type 覆盖写、校验结果缓存落 decorationactivitycost 表（只写档/不显示/不参与校验判定，DDL 先于 jar）、审批多明细合并一次校验、fail-closed、跨单额度缺口待 fl-yy 扣减流程收口 |
 | 优惠额度活动物品创建校验部署说明.md | 上述方案部署手册：前置条件（fl-sync 入口+erp_project_sync 密钥）、SQL 22/23 → sysconfig 2 键 → 四节点 jar（decoration/approval/information）→ 前端两 js、冒烟清单（fail-closed/金额口径回归/审批路径）、回滚与已知限制（现算 3.4s/跨单缺口/时钟 30s） |
+| 辅料单厂商配送与费用结算方案.md | 辅料单（inventory.accessories）模仿外辅单加厂商分配/费用/结算【v1.2 已实施待编译部署，DDL 50/60 先于 jar】：四拍板=状态机独立（仅新增 8已结算，分配厂商不占态）/费用模板自动算（(price+surplus)×num 对齐外辅先例，不建明细表，amountAccessoriesCharge 四处明细变更触发重算）/结算额单列（balanceAccessories 合一接口）/PC 端；配送链已有零开发；开放问题已闭合（surplus 计入/厂商视角授权开放配置 pageBtn 逐公司自配 70 号模板/存量不回算/同 gid 多 aoods 聚合+告警）；新码 260091/260092 |
 
 ## 二、需求/功能 · `02-需求功能/`
 

@@ -1,0 +1,34 @@
+-- =====================================================================
+-- 用途:【模板·勿直接执行】辅料单"分配厂商"入口按钮授权——逐公司开放配置
+--   【辅料单厂商配送与费用结算方案 v1.1 拍板②】: 厂商视角入口不锁角色,
+--   由各公司按需自行配置授权; 默认不插行=全公司不可见, 开通一家配一家。
+--   🔴 本文件为操作模板: 每次开通公司将 @CID 替换为目标公司ID后执行,
+--   勿整批执行、勿写入发版脚本。
+-- 机制说明:
+--   新按钮无 company=0 回退, 须逐公司插行; 采用 INSERT-SELECT 复制同页
+--   既有按钮授权集方式(照 depot 功能授权先例), 保证角色维度完整。
+-- 执行前置条件:
+--   1. fanglin-inventory jar 已发(bindAccessories/pageAccessoriesForSupplier 接口在位)
+--   2. 前端 accessories 页面已发(行按钮"分配厂商"pageBtn 键在位)
+--   3. 目标公司页面功能授权行已存在(以本页"查看"按钮授权集为复制源)
+-- 回滚方式:
+--   DELETE FROM `right` WHERE name LIKE 'accessories4supplier%' AND company = @CID;
+--   (以实际插入行的 name 前缀为准, 执行前先 SELECT 核对)
+-- 验证语句:
+--   SELECT company, name, COUNT(*) FROM `right`
+--   WHERE name LIKE 'accessories4supplier%' GROUP BY company, name;
+-- 幂等性: 非幂等(重复执行产生重复授权行), 每公司仅执行一次
+-- =====================================================================
+
+-- SET @CID = 0;  -- 🔴 开通时替换为目标公司ID并取消注释
+
+-- 复制同页既有按钮授权集为"分配厂商"按钮(角色维度对齐本页既有授权):
+-- INSERT INTO `right` (company, name, type, rid)
+-- SELECT company, CONCAT(name, '_accessories4supplier'), type, rid
+-- FROM `right`
+-- WHERE company = @CID AND name LIKE 'accessories%'
+--   AND name NOT LIKE '%_accessories4supplier';
+
+-- 🔴 注: 上语句为机制示意。实际执行前必须先核对目标库 right 表本页
+-- 既有授权行的 name/type/rid 取值形态(各环境命名不一致), 由实施人按
+-- 同页"查看"按钮授权集逐列对齐后再执行; 插入后用页面实测按钮可见性。

@@ -10,7 +10,9 @@ import com.fanglin.utils.Paging;
 public interface AccessoriesDao extends Dao<AccessoriesPO>{
 	
 	public List<AccessoriesPO> pageAccessories(Paging paging,List<Filter> filters,int company);
-	
+
+	public List<AccessoriesPO> pageAccessoriesForSupplier(Paging paging, List<Filter> filters, int uid);
+
 	public List<AccessoriesPO> queryAccessoriesByOrderId(String orderId);
 	
 }

@@ -9,6 +9,61 @@
 
 <div id="layerPopUp" class="portlet box page-content"></div>
 
+<div class="modal fade" id="bindAccessoriesModal" tabindex="-1">
+    <div class="modal-dialog" style="margin-top: 10%;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span>&times;</span><span class="sr-only">Close</span>
+                </button>
+                <h4 class="modal-title">分配厂商</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal">
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right" for="supplier">厂商</label>
+                        <div class="col-sm-9">
+                            <input type="text" id="supplier" class="col-xs-10 col-sm-5 v_required"
+                                   data-toggle="popover" data-trigger='manual' maxlength="15"/>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="saveBindAccessoriesBtn" class="btn btn-primary">保存</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="balanceAccessoriesModal" tabindex="-1">
+    <div class="modal-dialog" style="margin-top: 10%; width: 500px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">
+                    <span>&times;</span><span class="sr-only">Close</span>
+                </button>
+                <h4 class="modal-title">辅料单结算</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal">
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label no-padding-right" for="balanceInput">结算额（元）</label>
+                        <div class="col-sm-7">
+                            <input type="text" id="balanceInput" class="form-control input-sm v_required v_float_3"
+                                   placeholder="请输入结算额" />
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="saveBalanceAccessoriesBtn" class="btn btn-primary">保存</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script type="text/javascript">
     $.loadScript(['js/utils/kingdeeUtils.js', 'js/manifest/accessories.js']);
 </script>

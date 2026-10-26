@@ -11,9 +11,12 @@ import com.fanglin.construction.dao.ConstructionDao;
 import com.fanglin.construction.po.ConstructionAccessoryPO;
 import com.fanglin.construction.po.ConstructionPO;
 import com.fanglin.core.interceptor.FLException;
+import com.fanglin.data.material.dao.AoodsChargeDao;
 import com.fanglin.data.material.dao.NoodsDao;
 import com.fanglin.data.material.vo.AccessoriesTypeVO;
 import com.fanglin.data.material.vo.GoodsVO;
+import com.fanglin.data.po.AoodsChargePO;
+import com.fanglin.data.po.AoodsPO;
 import com.fanglin.data.po.NoodsPO;
 import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.po.DecorationPO;
@@ -30,16 +33,26 @@ import com.fanglin.quotation.dao.QuotationDao;
 import com.fanglin.quotation.po.NormtionPO;
 import com.fanglin.quotation.po.QuotationPO;
 import com.fanglin.utils.Arith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Service("accessoriesItemService")
 @Transactional(readOnly = true)
 public class AccessoriesItemServiceImpl implements AccessoriesItemService {
+
+	private static final Logger logger = LoggerFactory.getLogger(AccessoriesItemServiceImpl.class);
 
 	@Autowired
 	private AccessoriesItemDao accessoriesItemDao;
 
 	@Autowired
 	private AccessoriesDao accessoriesDao;
+
+	@Autowired
+	private AoodsDao aoodsDao;
+
+	@Autowired
+	private AoodsChargeDao aoodsChargeDao;
 
 	@Autowired
 	private ConstructionDao constructionDao;
@@ -150,6 +163,35 @@ public class AccessoriesItemServiceImpl implements AccessoriesItemService {
 	}
 
 	@Override
+	public long amountAccessoriesCharge(AccessoriesPO accessoriesPO) {
+
+		List<AccessoriesItemPO> accessoriesItemPOs = accessoriesItemDao.queryAccessoriesItem(accessoriesPO.getAid());
+
+		long charge = 0;
+
+		for (AccessoriesItemPO accessoriesItemPO : accessoriesItemPOs) {
+
+			if (accessoriesItemPO.getGoods() == null) continue;
+
+			List<AoodsPO> aoodsPOs = aoodsDao.queryAoodsByGid(accessoriesItemPO.getGoods().getGid(), accessoriesPO.getCompany());
+
+			// 同gid多行属数据异常,聚合全部费用行并告警,不静默取一(2026-10-26拍板④)
+			if (aoodsPOs.size() > 1) {
+				logger.warn("辅料费用模板gid重复, 聚合全部费用行: company:{}, gid:{}, aoods行数:{}", accessoriesPO.getCompany(), accessoriesItemPO.getGoods().getGid(), aoodsPOs.size());
+			}
+
+			for (AoodsPO aoodsPO : aoodsPOs) {
+
+				for (AoodsChargePO aoodsChargePO : aoodsChargeDao.queryAoodsChargeByAid(aoodsPO.getAid(), null)) {
+					charge = Arith.add(charge, Arith.mul(accessoriesItemPO.getNum(), Arith.add(aoodsChargePO.getPrice(), aoodsChargePO.getSurplus())));
+				}
+			}
+		}
+
+		return charge;
+	}
+
+	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public int addAccessoriesItem(AccessoriesVO accessoriesVO, AccessoriesItemVO accessoriesItemVO) throws FLException {
 
@@ -178,6 +220,10 @@ public class AccessoriesItemServiceImpl implements AccessoriesItemService {
 		accessoriesItemDao.save(accessoriesItemPO);
 
 		accessoriesItemVO.setAiid(accessoriesItemPO.getAiid());
+
+		accessoriesPO.setCharge(amountAccessoriesCharge(accessoriesPO));
+
+		accessoriesDao.update(accessoriesPO);
 
 		if (accessoriesVO.getType() == AccessoriesPO.TYPE_POST_INT) { // 售后类型辅料单不需要处理工程单和工程辅料
 			return 0;
@@ -237,6 +283,8 @@ public class AccessoriesItemServiceImpl implements AccessoriesItemService {
 
 		accessoriesPO.setTotal(Arith.add(accessoriesPO.getTotal(), total));
 
+		accessoriesPO.setCharge(amountAccessoriesCharge(accessoriesPO));
+
 		accessoriesDao.update(accessoriesPO);
 
 		if (accessoriesPO.getType() == AccessoriesPO.TYPE_POST_INT) { // 售后类型辅料单不需要处理工程单和工程辅料
@@ -289,9 +337,11 @@ public class AccessoriesItemServiceImpl implements AccessoriesItemService {
 
 		accessoriesPO.setTotal(Arith.sub(accessoriesPO.getTotal(), total));
 
-		accessoriesDao.update(accessoriesPO);
-
 		accessoriesItemDao.delete(accessoriesItemPO); // 删除前置,与 addAccessoriesItem 对称,确保售后类型辅料单也能删除
+
+		accessoriesPO.setCharge(amountAccessoriesCharge(accessoriesPO));
+
+		accessoriesDao.update(accessoriesPO);
 
 		if (accessoriesPO.getType() == AccessoriesPO.TYPE_POST_INT) { // 售后类型辅料单不需要处理工程单和工程辅料
 			return 0;

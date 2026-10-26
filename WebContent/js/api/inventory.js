@@ -376,7 +376,16 @@ $.extend(api, {
             type: "query",
             tranargs: [{
                 result: "paging-data",
-                args: ["total"]
+                args: ["total", "charge", "balance"]
+            }]
+
+        },
+        pageAccessoriesForSupplier: {
+            url: "pageAccessoriesForSupplier.do",
+            type: "query",
+            tranargs: [{
+                result: "paging-data",
+                args: ["total", "charge", "balance"]
             }]
 
         },
@@ -385,7 +394,7 @@ $.extend(api, {
             type: "query",
             tranargs: [{
                 result: "accessoriess",
-                args: ["total"]
+                args: ["total", "charge", "balance"]
             }]
         },
         queryAccessoriesByAid: {
@@ -393,7 +402,7 @@ $.extend(api, {
             type: "query",
             tranargs: [{
                 result: "accessoriess",
-                args: ["total"]
+                args: ["total", "charge", "balance"]
             }]
         },
         addAccessories: {
@@ -401,6 +410,20 @@ $.extend(api, {
             type: "update",
             tranargs: {
                 args: ["accessories.total", "accessoriesItems.selling", "accessoriesItems.num", "accessoriesItems.surplus", "accessoriesItems.total", "accessoriesItems.normnum", "accessoriesItems.normunit", "accessoriesItems.storenum", "accessoriesItems.storeunit"]
+            }
+        },
+        bindAccessories: {
+            url: "bindAccessories.do",
+            type: "update",
+            tranargs: {
+                args: []
+            }
+        },
+        balanceAccessories: {
+            url: "balanceAccessories.do",
+            type: "update",
+            tranargs: {
+                args: ["accessories.balance"]
             }
         },
         refundAccessories: {

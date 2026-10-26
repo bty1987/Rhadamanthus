@@ -52,6 +52,16 @@ public class AccessoriesVO implements Serializable {
 
 	private Timestamp deliverTime;
 
+	private UserBaseVO supplier; // 厂商
+
+	private UserBaseVO balancer; // 结算人
+
+	private Long charge; // 费用额（厘）
+
+	private Integer balance; // 结算额（厘）
+
+	private Timestamp balanceTime;
+
 	public AccessoriesVO() {
 		super();
 	}
@@ -231,6 +241,47 @@ public class AccessoriesVO implements Serializable {
 
 	public void setDeliverTime(Timestamp deliverTime) {
 		this.deliverTime = deliverTime;
+	}
+
+	public UserBaseVO getSupplier() {
+		return supplier;
+	}
+
+	public void setSupplier(UserBaseVO supplier) {
+		this.supplier = supplier;
+	}
+
+	public UserBaseVO getBalancer() {
+		return balancer;
+	}
+
+	public void setBalancer(UserBaseVO balancer) {
+		this.balancer = balancer;
+	}
+
+	public Long getCharge() {
+		return charge;
+	}
+
+	public void setCharge(Long charge) {
+		this.charge = charge;
+	}
+
+	public Integer getBalance() {
+		return balance;
+	}
+
+	public void setBalance(Integer balance) {
+		this.balance = balance;
+	}
+
+	@JSON(format = "yyyy-MM-dd HH:mm:ss")
+	public Timestamp getBalanceTime() {
+		return balanceTime;
+	}
+
+	public void setBalanceTime(Timestamp balanceTime) {
+		this.balanceTime = balanceTime;
 	}
 
 }
