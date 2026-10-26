@@ -19,6 +19,7 @@ import javax.persistence.Table;
 import com.fanglin.communion.po.HousePO;
 import com.fanglin.inventory.vo.AccessoriesVO;
 import com.fanglin.personel.po.UserPO;
+import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
 

@@ -12,6 +12,7 @@ import com.fanglin.construction.po.ConstructionAccessoryPO;
 import com.fanglin.construction.po.ConstructionPO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.data.material.dao.AoodsChargeDao;
+import com.fanglin.data.material.dao.AoodsDao;
 import com.fanglin.data.material.dao.NoodsDao;
 import com.fanglin.data.material.vo.AccessoriesTypeVO;
 import com.fanglin.data.material.vo.GoodsVO;
