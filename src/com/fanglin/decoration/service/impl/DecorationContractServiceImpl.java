@@ -89,9 +89,9 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 	@Autowired
 	private ElecsignRouter elecsignRouter;
 	@Autowired
-	private CustomerService customerService;
-	@Autowired
 	private CustomerChanceDao customerChanceDao;
+	@Autowired
+	private com.fanglin.elecsign.dao.ElecsignAuthDao elecsignAuthDao;
 	@Autowired
 	private com.fanglin.system.dao.CompanyDao companyDao;
 
@@ -472,7 +472,7 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 		}
 
 		// 法大大: 单流合流建流+落章, 企业签行为与原先完全一致
-		String psnSignno = customerService.queryCustomerSignnoForProvider((int) decorationPO.getCustomer().getCid(), provider);
+		String psnSignno = resolveCustomerSignno((int) decorationPO.getCustomer().getCid(), provider);
 
 		routeForRecord(decorationContractPO).autosignBoth(signetPO.getSignno(), signetPO.getKeyword(), decorationContractPO, signetPO.getSignid(), psnSignno);
 
@@ -502,7 +502,7 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 		// 无行/新表不可用回退 customer.signno 同命名空间存量值; 两处皆无 → 130189 引导按合同厂商重实名
 		short provider = decorationContractPO.getProvider() == null ? ElecsignProvider.FADADA.code() : decorationContractPO.getProvider();
 
-		String signno = customerService.queryCustomerSignnoForProvider((int) customerPO.getCid(), provider);
+		String signno = resolveCustomerSignno((int) customerPO.getCid(), provider);
 
 		if (signno == null || "".equals(signno)) {
 			throw new FLException(130189, "客户实名认证未完成, 请先发起实名认证");
@@ -969,6 +969,38 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 	}
 
 	/** 电子签路由（签署/查看/归档：按合同记录的厂商路由，保证全链路厂商一致与历史可回溯；null 视同法大大） */
+	/**
+	 * 按厂商解析客户电子签账号(法大大customerId/e签宝psnId):
+	 * elecsignauth 认证行优先; 无行/表不可用回退 customer.signno 同命名空间存量值; 两处皆无返回 null。
+	 * Dao 层方法支撑, 独立CustomerService调用。
+	 */
+	private String resolveCustomerSignno(int cid, short provider) {
+
+		try {
+			com.fanglin.elecsign.po.ElecsignAuthPO authPO = elecsignAuthDao.queryElecsignAuthByCidAndProvider(cid, provider);
+
+			if (authPO != null && authPO.getSignno() != null && !authPO.getSignno().trim().isEmpty()) {
+				return authPO.getSignno();
+			}
+		} catch (Exception e) {
+			// 认证行不可用(新表未建等)走 customer 回退
+		}
+
+		com.fanglin.communion.po.CustomerPO customerPO = customerDao.get((long) cid);
+
+		if (customerPO == null) {
+			return null;
+		}
+
+		short current = customerPO.getProvider() == null ? com.fanglin.elecsign.enums.ElecsignProvider.FADADA.code() : customerPO.getProvider().shortValue();
+
+		if (current == provider && customerPO.getSignno() != null && !customerPO.getSignno().trim().isEmpty()) {
+			return customerPO.getSignno();
+		}
+
+		return null;
+	}
+
 	private ElecsignService routeForRecord(DecorationContractPO decorationContractPO) throws FLException {
 		return elecsignRouter.route(decorationContractPO.getProvider());
 	}

@@ -946,8 +946,8 @@ public class CustomerServiceImpl implements CustomerService {
 		if (authPO != null) customerPO.setProvider(authPO.getProvider());
 	}
 
-	@Override
-	public String queryCustomerSignnoForProvider(int cid, short provider) {
+	/** 按厂商取客户认证账号: elecsignauth 行优先, 无行/新表不可用回退 customer.signno 同命名空间存量值 */
+	private String queryCustomerSignnoForProvider(int cid, short provider) {
 
 		// get(Serializable)装箱规则: 必须Long(PO主键类型), int装箱Integer会报wrong type
 		CustomerPO customerPO = customerDao.get((long) cid);

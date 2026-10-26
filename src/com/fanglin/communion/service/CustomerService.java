@@ -55,10 +55,5 @@ public interface CustomerService {
 
 	public int signateCustomer(CustomerVO customerVO, String imgbase) throws FLException;
 
-	/**
-	 * 按厂商取客户认证账号(法大大customerId/e签宝psnId)——elecsignauth 行优先,
-	 * 无行/新表不可用时回退 customer.signno 同命名空间存量值, 两处皆无返回 null
-	 */
-	public String queryCustomerSignnoForProvider(int cid, short provider);
 
 }
