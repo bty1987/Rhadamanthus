@@ -311,9 +311,12 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 
 		JSONObject params = JSONObject.parseObject(data);
 
-		// 流程模板路线上下文(e签宝 signTemplate 发起需要签署人信息, _flow_ 前缀键对文档模板路线无影响):
+		// 流程模板路线上下文(e签宝 signTemplate 发起需要签署人信息):
+		// 仅e签宝模板行(esign://前缀)塞入——法大大/文档模板行的params保持原样透传(历史行为零变化);
 		// 个人方=装修单客户, 企业方=签章主体(装修单公司)
-		if (decorationPO != null && decorationPO.getCustomer() != null && params != null) {
+		boolean esignTemplateRow = contractPO.getPath() != null && contractPO.getPath().startsWith("esign://");
+
+		if (esignTemplateRow && decorationPO != null && decorationPO.getCustomer() != null && params != null) {
 
 			com.fanglin.communion.po.CustomerPO flowCustomer = decorationPO.getCustomer();
 
@@ -387,9 +390,10 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 
 		JSONObject params = JSONObject.parseObject(data);
 
-		// 流程模板路线上下文(e签宝 signTemplate 发起需要签署人信息, _flow_ 前缀键对文档模板路线无影响):
-		// 个人方=装修单客户, 企业方=签章主体(装修单公司)
-		if (decorationPO != null && decorationPO.getCustomer() != null && params != null) {
+		// 流程模板路线上下文: 仅e签宝模板行(esign://前缀)塞入, 法大大/文档模板行params保持原样
+		boolean esignTemplateRow = contractPO.getPath() != null && contractPO.getPath().startsWith("esign://");
+
+		if (esignTemplateRow && decorationPO != null && decorationPO.getCustomer() != null && params != null) {
 
 			com.fanglin.communion.po.CustomerPO flowCustomer = decorationPO.getCustomer();
 
