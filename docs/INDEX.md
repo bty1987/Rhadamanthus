@@ -39,6 +39,7 @@
 | CUSTOMER_CITY_RULE_IMPLEMENTATION.md | 客户城区分配规则 - 实施完成报告 |
 | CUSTOMER_PROTECT_RULE.md | 客户保护规则业务说明文档 |
 | FEATURE_DECORATION_ACTIVITY_ITEM_CONSUME.md | 装修活动物品核销功能 |
+| FEATURE_GROSS_MARGIN_LINE_QUOTA_PRD.md | 毛利率管理线与订单额度 PRD（提案,2026-10-25）——fl-yy 已验证口径反哺:三口径看板/管理线版本化发布/订单额度贡献消耗/兑现预估;口径权威=fl-yy 说明文档 |
 | FEATURE_MEMBER_ACTIVITY_RECOMMENDATION.md | 会员活动推荐信息功能文档 |
 | OALES_RECORD_使用指南.md | 外销单操作记录功能 - 完整交付文档 |
 | OalesItem_使用指南.md | OalesItem 外销单项目明细使用指南 |
@@ -47,6 +48,7 @@
 | makeMemberOrder_业务逻辑分析.md | makeMemberOrder 方法业务逻辑分析 |
 | normtime_implementation_summary.md | Normtime 模块开发完成总结 |
 | quotationassigntalk.md | QuotationAssignTalk 报价分配沟通消息模块 |
+| 电子合同业务逻辑功能总结.md | 电子合同业务逻辑功能总结（fl-sign 反哺，2026-10-25）——新微服务线合同中心深读：15 表领域模型/实例十态状态机/模板版本链/撤销与解约/主体-经办人-印章三层/e签宝 V3 接口与 6 类回调全清单/与老系统电子签差异对照及落地建议（回调推状态、解约补齐、印章授权台账、验签统一） |
 
 ## 三、API 文档 · `03-API文档/`
 
@@ -237,4 +239,4 @@
 
 ---
 
-> 统计：方案 10 | 需求 15 | API 12+Sphinx | 问题 5 | 优化 9 | 重构 5 | 总结 4 | 安全 6 | SQL 2 | 指南 8 | 构建 5 | 规范 4 | 集成 6 | 分析 1 | 知识库 0 | 杂项 0 | mover 11 | 根 3
+> 统计：方案 10 | 需求 16 | API 12+Sphinx | 问题 5 | 优化 9 | 重构 5 | 总结 4 | 安全 6 | SQL 2 | 指南 8 | 构建 5 | 规范 4 | 集成 6 | 分析 1 | 知识库 0 | 杂项 0 | mover 11 | 根 3

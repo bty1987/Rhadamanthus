@@ -44,4 +44,13 @@ public class DecorationContractDaoImpl extends DaoImpl<DecorationContractPO> imp
 			.setMaxResults(limit)
 			.list();
 	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<DecorationContractPO> queryDecorationContractByFlowId(Short provider, String flowId){
+		return session().createCriteria(DecorationContractPO.class)
+			.add(Restrictions.eq("provider", provider))
+			.add(Restrictions.eq("flowId", flowId))
+			.list();
+	}
 }

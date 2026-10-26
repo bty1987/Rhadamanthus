@@ -150,6 +150,18 @@ jQuery(function($) {
             return false;
         }
     }, {
+        name: "自动落章授权",
+        clazz: "btn-purple",
+        handle: function(v) {
+
+            autoSignAuth(v);
+            return false;
+        },
+        show: function(v) {
+
+            return v.provider == 2 && v.status == constant.data().signet.STATUS_CONFIRM_INT;
+        }
+    }, {
         name: "更新",
         clazz: "btn-yellow",
         handle: function(v) {
@@ -442,8 +454,50 @@ jQuery(function($) {
         signet.imgsrc = com.showImg(signet.items.signetImg, v.path, 150, 150, '', null, 0);
     }
 
-    function editSignet(v) {
+    // 自动落章授权: 调 internal-auth 将印章授权给全部成员在指定流程模板上自动使用,
+    // 返回《电子印章授权书》签署链接, 企业管理员/法定代表人签署完成即生效(长期有效)
+    function autoSignAuth(v) {
 
+        var html = '<div style="padding:12px 18px;">' +
+            '<div style="margin-bottom:8px;color:#666;">绑定流程模板编号(多个用英文逗号分隔, 从模板管理-更多-复制模板编号获取):</div>' +
+            '<textarea id="autoSignTplIds" style="width:96%;height:64px;" placeholder="如: befdeb9a772845ff8f490b677e6b643b, 另一个模板ID"></textarea>' +
+            '<div style="margin-top:10px;color:#f60;" id="autoSignAuthResult"></div>' +
+            '</div>';
+
+        var layerIndex = layer.open({
+            type: 1,
+            title: "自动落章授权 - " + v.name,
+            area: ["520px", "300px"],
+            content: html,
+            btn: ["发起授权", "取消"],
+            yes: function(index) {
+
+                var tplIds = $("#autoSignTplIds").val();
+
+                if (!tplIds || !tplIds.trim()) {
+                    com.showAlert(com.warning, "请填写模板编号");
+                    return false;
+                }
+
+                com.post(api.data.esignAutoSignAuth, {
+                    "orgId": v.signno,
+                    "templateIds": tplIds.trim()
+                }, function(res) {
+
+                    var link = res.authorizationSignShortUrl || res.authorizationSignUrl;
+
+                    $("#autoSignAuthResult").html('授权书签署链接(发企业管理员/法定代表人打开签署, 盖企业公章+个人章后生效):<br><a href="' + link + '" target="_blank">' + link + '</a>');
+                }, function(res) {
+
+                    $("#autoSignAuthResult").text(res.errorMsg || "发起失败");
+                });
+
+                return false; // 不关闭弹窗, 展示链接
+            }
+        });
+    }
+
+    function editSignet(v) {
         signet.items.no.val(v.no).prop("disabled", true);
         signet.items.name.val(v.name);
         signet.items.keyword.val(v.keyword);

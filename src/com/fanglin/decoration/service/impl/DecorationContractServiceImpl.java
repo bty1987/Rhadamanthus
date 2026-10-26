@@ -92,6 +92,8 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 	private CustomerService customerService;
 	@Autowired
 	private CustomerChanceDao customerChanceDao;
+	@Autowired
+	private com.fanglin.system.dao.CompanyDao companyDao;
 
 	@Autowired
 	private DecorationContractDao decorationContractDao;
@@ -247,7 +249,10 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 			SystemConfigPO isv = systemConfigDao.querySystemConfig("isv");
 			url = String.format("%s/signature.html?cid=%d&name=%s", isv.getValue(), decorationPO.getCustomer().getCid(), decorationPO.getCustomer().getName());
 		} else if (type == DecorationContractPO.TYPE_SIGN_INT && status == DecorationContractPO.STATUS_VALID_INT) {
-			url = routeForRecord(decorationContractPO).extsign(decorationPO.getCustomer().getSignno(), decorationContractPO);
+			// 单流合流: 带企业侧账号——e签宝已建流直接取链接, 未建流补建双方流; 法大大忽略企业侧信息行为不变
+			short provider = decorationContractPO.getProvider() == null ? ElecsignProvider.FADADA.code() : decorationContractPO.getProvider();
+			SignetPO companySignet = querySignetForProvider(decorationPO.getCompany(), provider);
+			url = routeForRecord(decorationContractPO).extsignBoth(decorationPO.getCustomer().getSignno(), decorationContractPO, companySignet == null ? null : companySignet.getSignno(), companySignet == null ? null : companySignet.getKeyword());
 		} else if (type == DecorationContractPO.TYPE_VIEW_INT && status == DecorationContractPO.STATUS_VALID_INT) {
 			url = decorationContractPO.getViewpdf();
 		} else if (type == DecorationContractPO.TYPE_DOWNLOAD_INT && status == DecorationContractPO.STATUS_SIGN_INT) {
@@ -302,7 +307,39 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 			decorationContractRecordDao.save(recordPO);
 		}
 
+		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(decorationContractVO.getOrderId());
+
 		JSONObject params = JSONObject.parseObject(data);
+
+		// 流程模板路线上下文(e签宝 signTemplate 发起需要签署人信息, _flow_ 前缀键对文档模板路线无影响):
+		// 个人方=装修单客户, 企业方=签章主体(装修单公司)
+		if (decorationPO != null && decorationPO.getCustomer() != null && params != null) {
+
+			com.fanglin.communion.po.CustomerPO flowCustomer = decorationPO.getCustomer();
+
+			try {
+				params.put("_flow_psnName", flowCustomer.getName());
+				params.put("_flow_psnPhone", com.fanglin.core.security.SensitiveDataHelper.decrypt(flowCustomer.getPhone()));
+			} catch (Exception e) {
+				throw new FLException(130097, "客户信息缺失, 无法发起电子签流程");
+			}
+
+			if (decorationPO.getCompany() > 0) {
+				com.fanglin.system.po.CompanyPO flowCompany = companyDao.get(decorationPO.getCompany());
+				if (flowCompany != null && flowCompany.getFullname() != null && !flowCompany.getFullname().trim().isEmpty()) {
+					params.put("_flow_orgName", flowCompany.getFullname());
+				}
+			}
+
+			if (creater != null) {
+				params.put("_flow_transactorName", creater.getUserName());
+				try {
+					params.put("_flow_transactorPhone", creater.getPhone() == null ? null : com.fanglin.core.security.SensitiveDataHelper.decrypt(creater.getPhone()));
+				} catch (Exception e) {
+					params.put("_flow_transactorPhone", null);
+				}
+			}
+		}
 
 		JSONArray tables = JSON.parseArray(table);
 
@@ -346,7 +383,39 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 
 		decorationContractDao.save(decorationContractPO);
 
+		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(decorationContractPO.getOrderId());
+
 		JSONObject params = JSONObject.parseObject(data);
+
+		// 流程模板路线上下文(e签宝 signTemplate 发起需要签署人信息, _flow_ 前缀键对文档模板路线无影响):
+		// 个人方=装修单客户, 企业方=签章主体(装修单公司)
+		if (decorationPO != null && decorationPO.getCustomer() != null && params != null) {
+
+			com.fanglin.communion.po.CustomerPO flowCustomer = decorationPO.getCustomer();
+
+			try {
+				params.put("_flow_psnName", flowCustomer.getName());
+				params.put("_flow_psnPhone", com.fanglin.core.security.SensitiveDataHelper.decrypt(flowCustomer.getPhone()));
+			} catch (Exception e) {
+				throw new FLException(130097, "客户信息缺失, 无法发起电子签流程");
+			}
+
+			if (decorationPO.getCompany() > 0) {
+				com.fanglin.system.po.CompanyPO flowCompany = companyDao.get(decorationPO.getCompany());
+				if (flowCompany != null && flowCompany.getFullname() != null && !flowCompany.getFullname().trim().isEmpty()) {
+					params.put("_flow_orgName", flowCompany.getFullname());
+				}
+			}
+
+			if (creater != null) {
+				params.put("_flow_transactorName", creater.getUserName());
+				try {
+					params.put("_flow_transactorPhone", creater.getPhone() == null ? null : com.fanglin.core.security.SensitiveDataHelper.decrypt(creater.getPhone()));
+				} catch (Exception e) {
+					params.put("_flow_transactorPhone", null);
+				}
+			}
+		}
 
 		JSONArray tables = JSON.parseArray(table);
 
@@ -369,15 +438,16 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 			throw new FLException(130028, "合同状态不可操作");
 		}
 
+		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(decorationContractPO.getOrderId());
+
+		if (decorationPO == null) {
+			throw new FLException(140013, "装修单不存在");
+		}
+
 		SignetPO signetPO = signetDao.get(signetVO.getSid());
 
 		if (signetPO == null) {
 			// sid 未传时（app端）自动取合同所属公司的签章：唯一则直接使用，否则报错引导网页端选择
-			DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(decorationContractPO.getOrderId());
-			if (decorationPO == null) {
-				throw new FLException(130045, "装修单不存在, 无法定位公司签章");
-			}
-
 			List<SignetPO> signetPOs = signetDao.querySignet(null, decorationPO.getCompany());
 
 			if (signetPOs == null || signetPOs.isEmpty()) {
@@ -391,7 +461,12 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 			signetPO = signetPOs.get(0);
 		}
 
-		routeForRecord(decorationContractPO).autosign(signetPO.getSignno(), signetPO.getKeyword(), decorationContractPO, signetPO.getSignid());
+		// 单流合流: 带上对手方客户签署账号一次建流(企业章+客户签字同文件)——e签宝客户未实名由实现侧拦(130189);
+		// 法大大忽略客户账号, 企业签行为与原先完全一致
+		short provider = decorationContractPO.getProvider() == null ? ElecsignProvider.FADADA.code() : decorationContractPO.getProvider();
+		String psnSignno = customerService.queryCustomerSignnoForProvider((int) decorationPO.getCustomer().getCid(), provider);
+
+		routeForRecord(decorationContractPO).autosignBoth(signetPO.getSignno(), signetPO.getKeyword(), decorationContractPO, signetPO.getSignid(), psnSignno);
 
 		decorationContractPO.setComsignTime(DateUtil.getDateToTimestamp(new Date()));
 
@@ -425,7 +500,12 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 			throw new FLException(130189, "客户实名认证未完成, 请先发起实名认证");
 		}
 
-		return routeForRecord(decorationContractPO).extsign(signno, decorationContractPO);
+		// 单流合流: 带企业侧账号——e签宝已建流(企业签先行)直接取签署链接, 未建流补建双方流(无签章由实现侧引导先企业签);
+		// 法大大忽略企业侧信息, 行为与原先完全一致
+		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(decorationContractPO.getOrderId());
+		SignetPO companySignet = decorationPO == null ? null : querySignetForProvider(decorationPO.getCompany(), provider);
+
+		return routeForRecord(decorationContractPO).extsignBoth(signno, decorationContractPO, companySignet == null ? null : companySignet.getSignno(), companySignet == null ? null : companySignet.getKeyword());
 	}
 
 	@Override
@@ -883,6 +963,28 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 	/** 电子签路由（签署/查看/归档：按合同记录的厂商路由，保证全链路厂商一致与历史可回溯；null 视同法大大） */
 	private ElecsignService routeForRecord(DecorationContractPO decorationContractPO) throws FLException {
 		return elecsignRouter.route(decorationContractPO.getProvider());
+	}
+
+	/**
+	 * 按厂商取公司签章（单流合流建流用，best-effort）：优先厂商匹配，无匹配且仅一枚时取该枚。
+	 *
+	 * @return 未维护签章返回 null
+	 */
+	private SignetPO querySignetForProvider(int company, short provider) {
+
+		List<SignetPO> signetPOs = signetDao.querySignet(null, company);
+
+		if (signetPOs == null || signetPOs.isEmpty()) {
+			return null;
+		}
+
+		for (SignetPO signetPO : signetPOs) {
+			if (signetPO.getProvider() != null && signetPO.getProvider().shortValue() == provider) {
+				return signetPO;
+			}
+		}
+
+		return signetPOs.size() == 1 ? signetPOs.get(0) : null;
 	}
 
 }

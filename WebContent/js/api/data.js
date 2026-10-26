@@ -1910,6 +1910,9 @@ $.extend(api, {
         authSignet: {
             url: "authSignet.do"
         },
+        esignAutoSignAuth: {
+            url: "esignAutoSignAuth.do"
+        },
         confirmSignet: {
             url: "confirmSignet.do"
         },

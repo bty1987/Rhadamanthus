@@ -12,10 +12,15 @@
 package com.fanglin.esign.service.impl;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -57,7 +62,8 @@ import com.fanglin.system.po.SystemConfigPO;
  * </tr>
  * <tr>
  * <td>autosign 静默签</td>
- * <td>sign-flow/create-by-file，signers.autoSign=true（平台主体自动落章）</td>
+ * <td>sign-flow/create-by-file，signers.autoSign=true（平台主体自动落章）；
+ * 双方场景走 autosignBoth/extsignBoth 单流合流——一份合同一张流，企业章与客户签字同文件</td>
  * </tr>
  * <tr>
  * <td>extsign 手动签</td>
@@ -93,7 +99,9 @@ import com.fanglin.system.po.SystemConfigPO;
  * <li>sign-url：POST operator.psnId + urlType=2</li>
  * </ul>
  * <p>
- * 待沙箱继续验证：generate 模板填充（等控制台 docTemplateId）、org-auth-url 自动签署授权、 动态表格能力、真实签署完成后的回调。
+ * 待沙箱继续验证：generate 模板填充（等控制台 docTemplateId）、动态表格能力、单流合流双方签署
+ * （autosignBoth 建流→企业即时落章→extsignBoth 取链接→终稿双章同文件）、签署流完结回调
+ * （SIGN_FLOW_COMPLETE，需控制台配置应用回调地址）。
  */
 @Service("esignElecsignService")
 public class ESignElecsignServiceImpl implements ElecsignService, CompanyAware {
@@ -137,6 +145,17 @@ public class ESignElecsignServiceImpl implements ElecsignService, CompanyAware {
 	/** 获取文件下载地址 */
 	private static final String EP_FILE_URL = "/v3/files/%s/url";
 	private static final String EP_FLOW_FILE_DOWNLOAD_URL = "/v3/sign-flow/%s/file-download-url";
+
+	/** 文档模板详情（控件清单回读，generate 前核对控件漂移/漏值用） */
+	private static final String EP_DOC_TEMPLATE_DETAIL = "/v3/doc-templates/%s";
+
+	/** 流程模板(signTemplate)体系端点——web.esign.cn SaaS 模板管理创建的模板属该体系, 与文档模板(docTemplateId)并存 */
+	private static final String EP_ST_DETAIL = "/v3/sign-templates/detail";
+	private static final String EP_FLOW_CREATE_BY_SIGN_TEMPLATE = "/v3/sign-flow/create-by-sign-template";
+	private static final String EP_SEAL_ORG_LIST = "/v3/seals/org-own-seal-list";
+	private static final String EP_FLOW_SIGN_FIELDS = "/v3/sign-flow/%s/sign-fields";
+
+	private static final Logger logger = LoggerFactory.getLogger(ESignElecsignServiceImpl.class);
 
 	@Autowired
 	private EsignClient esignClient;
@@ -259,6 +278,16 @@ public class ESignElecsignServiceImpl implements ElecsignService, CompanyAware {
 	}
 
 	@Override
+	public void autosignBoth(String orgId, String keyword, Contract contract, String signatureId, String psnSignno) throws FLException {
+		autosignBoth(0, orgId, keyword, contract, psnSignno);
+	}
+
+	@Override
+	public String extsignBoth(String psnSignno, Contract contract, String orgId, String orgKeyword) throws FLException {
+		return extsignBoth(0, psnSignno, contract, orgId, orgKeyword);
+	}
+
+	@Override
 	public String view(Contract contract) {
 		return view(0, contract);
 	}
@@ -358,7 +387,8 @@ public class ESignElecsignServiceImpl implements ElecsignService, CompanyAware {
 
 	String beforeauto(int company, SignetPO signetPO) throws FLException {
 
-		// 静默签授权：复用机构认证&授权页面链接 TODO 联调确认自动签署授权(mode/授权书模板)与 org-auth-url 的参数差异
+		// 静默签授权与认证&授权同端点(org-auth-url), 已实名机构打开同一链接仅授权确认, 一次人工操作解锁企业静默签
+		// 🔴授权范围必须与 authenticate 一致(manage_org_resource): 缺了办出来的授权不解锁 autoSign, 签署时报 1435011 不允许自动签署
 		// orgInfo 同 authenticate 按需传入(配置驱动), 正式环境缺省不传
 		JSONObject orgAuthConfig = new JSONObject().fluentPut("orgName", signetPO.getName());
 
@@ -372,10 +402,18 @@ public class ESignElecsignServiceImpl implements ElecsignService, CompanyAware {
 
 		JSONObject body = new JSONObject();
 		body.put("orgAuthConfig", orgAuthConfig);
+		body.put("authorizedScopes", new JSONArray().fluentAdd("manage_org_resource"));
+		// 授权完成回调按 authFlowId 反查印章(与 authenticate 同一回调入口)
+		body.put("notifyUrl", normalizeIsv() + "/esignAuthCallback.do");
 
 		JSONObject data = esignClient.post(company, EP_ORG_AUTH_URL, body);
 
-		return data.toJSONString();
+		// 响应 authFlowId + authUrl/authShortUrl; token 复用为认证/授权流程号, 供回调反查
+		signetPO.setToken(data.getString("authFlowId"));
+		signetPO.setAuthurl(data.getString("authUrl"));
+
+		// 返回授权页URL(对齐法大大 beforeauto 返回授权链接语义; 原实现返回整个JSON串前端无法直接跳转)
+		return signetPO.getAuthurl();
 	}
 
 	String register(int company, String no) throws FLException {
@@ -421,7 +459,19 @@ public class ESignElecsignServiceImpl implements ElecsignService, CompanyAware {
 
 	void generate(int company, Contract contract, JSONObject json, JSONArray tables) throws FLException {
 
+		// 流程模板分支: templateCode 为 signTemplateId(web.esign.cn 模板管理创建)时走 create-by-sign-template
+		// 一步发起(替代文档模板的 生成文件+建流 两步), 判据=systemconfig esign.orgid.{company} 配置了模板归属企业 orgId
+		String flowOrgId = orgIdFor(company);
+
+		if (flowOrgId != null && isFlowTemplate(company, contract.templateCode(), flowOrgId)) {
+			generateByFlowTemplate(company, contract, json, flowOrgId);
+			return;
+		}
+
 		// 基于文档模板创建文件：templateCode()=e签宝控制台模板ID(docTemplateId)，json=控件填充值(components)
+		// 生成前核对模板控件清单(告警不阻断): 控件名漂移/漏值在签出空白合同前暴露
+		checkTemplateComponents(company, contract.templateCode(), json);
+
 		JSONObject body = new JSONObject();
 		body.put("docTemplateId", contract.templateCode());
 		body.put("components", buildComponents(json, tables));
@@ -439,6 +489,164 @@ public class ESignElecsignServiceImpl implements ElecsignService, CompanyAware {
 		}
 		contract.download(downloadUrl);
 		contract.viewpdf(downloadUrl);
+	}
+
+	/** 模板归属企业 orgId: systemconfig 键 esign.orgid.{company} → 全局 esign.orgid → null(非流程模板路线) */
+	private String orgIdFor(int company) {
+
+		SystemConfigPO configPO = systemConfigDao.querySystemConfig("esign.orgid." + company, company);
+
+		if (configPO == null || configPO.getValue() == null || "".equals(configPO.getValue().trim())) {
+			configPO = systemConfigDao.querySystemConfig("esign.orgid");
+		}
+
+		return configPO == null || configPO.getValue() == null || "".equals(configPO.getValue().trim()) ? null : configPO.getValue().trim();
+	}
+
+	/**
+	 * 流程模板探测: sign-templates/detail 查得到即流程模板(signTemplateId 体系)。
+	 * 查不到(1430011 等)视为文档模板——与既有文档模板路线自动分流, 模板 ID 无需前缀区分。
+	 */
+	private boolean isFlowTemplate(int company, String templateId, String orgId) {
+
+		try {
+			Map<String, String> query = new HashMap<String, String>();
+			query.put("signTemplateId", templateId);
+			query.put("orgId", orgId);
+			query.put("queryComponents", "true");
+			JSONObject detail = esignClient.get(company, EP_ST_DETAIL, query);
+			return detail != null && detail.getString("signTemplateId") != null;
+		} catch (FLException e) {
+			return false;
+		}
+	}
+
+	/**
+	 * 流程模板路线生成=直接发起签署流程（create-by-sign-template 一步替代 生成文件+建流 两步）。
+	 *
+	 * <p>json 中以下划线前缀的键为流程上下文（docTemplate 路线忽略）：_flow_orgName=签章主体企业全称、
+	 * _flow_transactorName/_flow_transactorPhone=企业经办人、_flow_psnName/_flow_psnPhone=个人签署方（客户）。
+	 * participants 按模板详情的 participantId 绑定：企业方传 orgName+经办人（经办人不影响签署区自动落章）、
+	 * 个人方传 psnAccount+psnName。components 按 componentKey 匹配填充值（建模板时控件须配置 key）。
+	 * 发起后 flowId=signFlowId 写回, 文件下载/预览地址从流程详情取。
+	 */
+	private void generateByFlowTemplate(int company, Contract contract, JSONObject json, String orgId) throws FLException {
+
+		String templateId = contract.templateCode();
+
+		Map<String, String> detailQuery = new HashMap<String, String>();
+		detailQuery.put("signTemplateId", templateId);
+		detailQuery.put("orgId", orgId);
+		detailQuery.put("queryComponents", "true");
+		JSONObject templateDetail = esignClient.get(company, EP_ST_DETAIL, detailQuery);
+
+		JSONArray stParticipants = templateDetail.getJSONArray("participants");
+
+		if (stParticipants == null || stParticipants.isEmpty()) {
+			throw new FLException(130097, "e签宝接口调用失败, 流程模板无参与方配置");
+		}
+
+		// 参与方绑定: 模板详情顺序即配置顺序, 企业方(含orgParticipant)绑企业信息, 个人方绑客户信息
+		JSONArray participants = new JSONArray();
+		JSONArray components = new JSONArray();
+
+		for (int i = 0; i < stParticipants.size(); i++) {
+
+			JSONObject stp = stParticipants.getJSONObject(i);
+			String participantId = stp.getString("participantId");
+			boolean isOrg = stp.getJSONObject("orgParticipant") != null;
+
+			JSONObject p = new JSONObject().fluentPut("participantId", participantId);
+
+			if (isOrg) {
+				// 实测(2026-10-25正式): orgId/orgName二选一必传(缺一报1451000), transactor支持transactorPsnAccount(手机号)
+				JSONObject orgParticipant = new JSONObject();
+				String orgName = json.getString("_flow_orgName");
+				if (orgName == null || orgName.trim().isEmpty()) {
+					throw new FLException(130097, "e签宝流程模板发起缺少签章主体企业名称(_flow_orgName)");
+				}
+				orgParticipant.fluentPut("orgName", orgName.trim());
+				String transactorName = json.getString("_flow_transactorName");
+				String transactorPhone = json.getString("_flow_transactorPhone");
+				if (transactorPhone != null && !transactorPhone.trim().isEmpty()) {
+					orgParticipant.fluentPut("transactor", new JSONObject()
+							.fluentPut("transactorPsnAccount", transactorPhone.trim())
+							.fluentPut("transactorName", transactorName == null ? null : transactorName.trim()));
+				}
+				p.fluentPut("orgParticipant", orgParticipant);
+			} else {
+				JSONObject psnParticipant = new JSONObject();
+				String psnPhone = json.getString("_flow_psnPhone");
+				String psnName = json.getString("_flow_psnName");
+				if (psnPhone == null || psnPhone.trim().isEmpty()) {
+					throw new FLException(130097, "e签宝流程模板发起缺少客户手机号(_flow_psnPhone)");
+				}
+				psnParticipant.fluentPut("psnAccount", psnPhone.trim());
+				psnParticipant.fluentPut("psnName", psnName == null ? null : psnName.trim());
+				p.fluentPut("psnParticipant", psnParticipant);
+			}
+
+			participants.add(p);
+		}
+
+		// 控件填充: 模板详情 components 的 componentKey 与 json 同名键匹配(componentKey 为空的签章区跳过)
+		JSONArray stComponents = templateDetail.getJSONArray("components");
+
+		if (stComponents != null) {
+			for (int i = 0; i < stComponents.size(); i++) {
+				JSONObject c = stComponents.getJSONObject(i);
+				String key = c.getString("componentKey");
+				if (key == null || key.trim().isEmpty() || !json.containsKey(key)) {
+					continue;
+				}
+				String value = json.getString(key);
+				if (value == null || value.trim().isEmpty()) {
+					continue;
+				}
+				components.add(new JSONObject()
+						.fluentPut("fileId", c.getString("fileId"))
+						.fluentPut("componentId", c.getString("componentId"))
+						.fluentPut("componentValue", value));
+			}
+		}
+
+		JSONObject body = new JSONObject()
+				.fluentPut("signTemplateId", templateId)
+				.fluentPut("signFlowConfig", new JSONObject()
+						.fluentPut("signFlowTitle", contract.title())
+						.fluentPut("autoFinish", true)
+						.fluentPut("autoStart", true))
+				.fluentPut("participants", participants);
+
+		if (!components.isEmpty()) {
+			body.put("components", components);
+		}
+
+		JSONObject data = esignClient.post(company, EP_FLOW_CREATE_BY_SIGN_TEMPLATE, body);
+
+		String signFlowId = data.getString("signFlowId");
+
+		contract.flowId(signFlowId);
+
+		// 文件下载/预览地址: 流程详情 docs[].fileDownloadUrl(签署中即有临时地址)
+		String fileUrl = flowTemplateFileUrl(company, signFlowId);
+		contract.download(fileUrl);
+		contract.viewpdf(fileUrl);
+	}
+
+	/** 流程详情 docs[0] 的 fileDownloadUrl(签署过程中的临时地址, 完结后为归档文件地址)。 */
+	private String flowTemplateFileUrl(int company, String signFlowId) {
+
+		try {
+			JSONObject detail = esignClient.get(company, String.format(EP_FLOW_DETAIL, signFlowId), null);
+			JSONArray docs = detail == null ? null : detail.getJSONArray("docs");
+			if (docs != null && !docs.isEmpty()) {
+				return docs.getJSONObject(0).getString("fileDownloadUrl");
+			}
+		} catch (FLException e) {
+			// 查询失败返回 null, 调用方回退 contract 既有值
+		}
+		return null;
 	}
 
 	void upload(int company, Contract contract, String path) throws FLException {
@@ -510,23 +718,228 @@ public class ESignElecsignServiceImpl implements ElecsignService, CompanyAware {
 
 	void autosign(int company, String signno, String keyword, Contract contract) throws FLException {
 
+		// 流程模板分支: flowId 即 signFlowId → sign-fields 指定印章落章;
+		// 印章=该企业名下 sealBizType 合同专用章(缺省回退默认章), operator=流程内企业经办人 psnId;
+		// 印章未授权自动签时平台登记不执行(autoExecuteSign=false)——降级为经办人签署链接模式(业务与法大大时期一致)
+		if (isSignFlow(company, contract.flowId())) {
+			autosignByFlowTemplate(company, contract);
+			return;
+		}
+
 		// signno=机构账号 orgId（机构认证后写回 signet.signno）；自动落章仅限应用主体企业或已授权机构
-		createSignFlow(company, contract, true, signno, keyword, true);
+		// 仅企业方单方流——装修合同等双方场景请走 autosignBoth（单流合流），否则章与客户签字分属两份文件
+		createSignFlow(company, contract, signno, keyword, null);
+	}
+
+	/**
+	 * 流程模板路线的企业落章: sign-fields 指定企业印章(合同专用章→默认章回退), operator=流程内企业经办人。
+	 * 平台受理即成功(异步落章); 若企业未授权自动签, 平台登记不执行(autoExecuteSign=false)——
+	 * 此时抛错引导经办人经签署链接手动落章(与法大大时期公司签业务习惯一致)。
+	 */
+	private void autosignByFlowTemplate(int company, Contract contract) throws FLException {
+
+		String signFlowId = contract.flowId();
+
+		JSONObject detail = esignClient.get(company, String.format(EP_FLOW_DETAIL, signFlowId), null);
+
+		JSONArray signers = detail.getJSONArray("signers");
+
+		for (int i = 0; signers != null && i < signers.size(); i++) {
+
+			JSONObject signer = signers.getJSONObject(i);
+			JSONObject orgSigner = signer.getJSONObject("orgSigner");
+
+			if (orgSigner == null) {
+				continue;
+			}
+
+			JSONArray signFields = signer.getJSONArray("signFields");
+
+			if (signFields == null || signFields.isEmpty()) {
+				continue;
+			}
+
+			JSONObject signField = new JSONObject().fluentPut("signFieldId", signFields.getJSONObject(0).getString("signFieldId"));
+
+			String sealId = orgContractSealId(company, orgSigner.getString("orgId"));
+
+			if (sealId != null) {
+				signField.fluentPut("sealId", sealId);
+			}
+
+			JSONObject transactor = orgSigner.getJSONObject("transactor");
+			String psnId = transactor == null ? null : transactor.getString("psnId");
+
+			JSONObject body = new JSONObject();
+			if (psnId != null && !psnId.trim().isEmpty()) {
+				body.put("operator", new JSONObject().fluentPut("psnId", psnId));
+			}
+			body.put("signFields", new JSONArray().fluentAdd(signField));
+
+			JSONObject result = esignClient.post(company, String.format(EP_FLOW_SIGN_FIELDS, signFlowId), body);
+
+			JSONArray executed = result.getJSONArray("signFields");
+
+			if (executed != null && !executed.isEmpty() && executed.getJSONObject(0).getBooleanValue("autoExecuteSign")) {
+				return; // 受理并自动落章
+			}
+		}
+
+		throw new FLException(130097, "e签宝接口调用失败, 企业自动落章未受理, 请经办人通过签署链接手动落章");
+	}
+
+	/** 企业印章 sealId: sealBizType 合同专用章优先, 回退默认章; 无印章返回 null。 */
+	private String orgContractSealId(int company, String orgId) {
+
+		if (orgId == null || orgId.trim().isEmpty()) {
+			return null;
+		}
+
+		try {
+			Map<String, String> sealQuery = new HashMap<String, String>();
+			sealQuery.put("orgId", orgId);
+			sealQuery.put("pageNum", "1");
+			sealQuery.put("pageSize", "20");
+			JSONObject list = esignClient.get(company, EP_SEAL_ORG_LIST, sealQuery);
+
+			JSONArray seals = list.getJSONArray("seals");
+
+			String fallback = null;
+
+			for (int i = 0; seals != null && i < seals.size(); i++) {
+
+				JSONObject seal = seals.getJSONObject(i);
+
+				if (seal.getIntValue("sealStatus") != 1) {
+					continue;
+				}
+
+				if ("CONTRACT".equals(seal.getString("sealBizType"))) {
+					return seal.getString("sealId");
+				}
+
+				if (fallback == null && seal.getBooleanValue("defaultSealFlag")) {
+					fallback = seal.getString("sealId");
+				}
+			}
+
+			return fallback;
+		} catch (FLException e) {
+			return null;
+		}
+	}
+
+	/**
+	 * 单流合流的企业自动签：预置双方签署方一次建流，企业方 autoSign 即时落章；
+	 * 客户后续经 {@link #extsign} 从同一流取链接续签（签在同一份已盖章文件上）。
+	 * 流已存在时幂等不重建（客户先行场景的企业签补点）。
+	 */
+	void autosignBoth(int company, String orgId, String keyword, Contract contract, String psnSignno) throws FLException {
+
+		if (isSignFlow(company, contract.flowId())) {
+			return; // 流已建(客户先行/重复点击): 一份合同一张流, 不重建
+		}
+
+		if (psnSignno == null || psnSignno.trim().isEmpty()) {
+			// 个人方未实名(无 psnId)时若只建企业方流, 客户后续将无法并入同一流——双章分家问题复活, 显式拦下
+			throw new FLException(130189, "客户实名认证未完成, 请先发起实名认证");
+		}
+
+		createSignFlow(company, contract, orgId, keyword, psnSignno);
 	}
 
 	String extsign(int company, String signno, Contract contract) throws FLException {
 
-		// 建流（个人手动签，无坐标=用户 H5 页面自选签章位置）→ 获取签署链接
-		String signFlowId = createSignFlow(company, contract, false, signno, null, false);
+		// 流程模板分支: flowId 即 signFlowId, 客户 psnId 从流程详情的个人签署方取(发起时按手机号已注册),
+		// 无需依赖 signno(docTemplate 体系 psnId)——signno 参数在此分支忽略
+		if (isSignFlow(company, contract.flowId())) {
+			return extsignByFlowTemplate(company, contract);
+		}
+
+		// 流已建(企业签先行)→ 直接取该个人账号的签署链接, 不新建流(否则客户签的是未盖章原件, 章与签字分家);
+		// 尚未建流 → 走 extsignBoth 语义(需要企业侧信息才能单流合流), 此处无企业信息按原样仅个人方建流
+		return extsignBoth(company, signno, contract, null, null);
+	}
+
+	/**
+	 * 流程模板路线的客户签署链接: 流程详情个人签署方(signerType=0/psnSigner 非空)的 psnId 作为 operator。
+	 * 流程发起时已按客户手机号注册签署档案, 详情中的 psnId 即客户在该流程的签署身份。
+	 */
+	private String extsignByFlowTemplate(int company, Contract contract) throws FLException {
+
+		String signFlowId = contract.flowId();
+
+		JSONObject detail = esignClient.get(company, String.format(EP_FLOW_DETAIL, signFlowId), null);
+
+		JSONArray signers = detail.getJSONArray("signers");
+
+		for (int i = 0; signers != null && i < signers.size(); i++) {
+
+			JSONObject signer = signers.getJSONObject(i);
+
+			if (signer.getJSONObject("psnSigner") == null) {
+				continue;
+			}
+
+			String psnId = signer.getJSONObject("psnSigner").getString("psnId");
+
+			if (psnId != null && !psnId.trim().isEmpty()) {
+				return signUrl(company, signFlowId, psnId);
+			}
+		}
+
+		throw new FLException(130097, "e签宝接口调用失败, 签署流程中未找到个人签署方");
+	}
+
+	/**
+	 * 单流合流的个人手动签：流已存在直接取链接；未建流则以双方流发起（企业方即时落章）后取链接。
+	 */
+	String extsignBoth(int company, String psnSignno, Contract contract, String orgId, String orgKeyword) throws FLException {
+
+		String flowId = contract.flowId();
+
+		if (isSignFlow(company, flowId)) {
+			return signUrl(company, flowId, psnSignno);
+		}
+
+		if (orgId == null || orgId.trim().isEmpty()) {
+			// 未建流且无企业侧信息: 只能建个人方单方流, 企业章将无法落在同一份文件上——引导先企业签
+			throw new FLException(130097, "e签宝接口调用失败, 合同尚未发起企业签署, 请先完成企业签章再发送客户签署");
+		}
+
+		createSignFlow(company, contract, orgId, orgKeyword, psnSignno);
+
+		return signUrl(company, contract.flowId(), psnSignno);
+	}
+
+	/** 获取个人签署链接（operator=psnId，urlType=2 签署链接）。 */
+	private String signUrl(int company, String signFlowId, String psnId) throws FLException {
 
 		JSONObject body = new JSONObject();
-		body.put("operator", new JSONObject().fluentPut("psnId", signno));
+		body.put("operator", new JSONObject().fluentPut("psnId", psnId));
 		body.put("urlType", 2); // 2=签署链接（1=预览）
 		body.put("clientType", "ALL");
 
 		JSONObject data = esignClient.post(company, String.format(EP_FLOW_SIGN_URL, signFlowId), body);
 
 		return data.getString("url");
+	}
+
+	/**
+	 * flowId 是否已是签署流号（建过流）：能查到流详情即 true，查不到视为文件ID（未建流）。
+	 */
+	private boolean isSignFlow(int company, String flowId) {
+
+		if (flowId == null || flowId.trim().isEmpty()) {
+			return false;
+		}
+
+		try {
+			JSONObject detail = esignClient.get(company, String.format(EP_FLOW_DETAIL, flowId), null);
+			return detail != null && detail.getString("signFlowId") != null;
+		} catch (FLException e) {
+			return false;
+		}
 	}
 
 	String view(int company, Contract contract) {
@@ -621,73 +1034,89 @@ public class ESignElecsignServiceImpl implements ElecsignService, CompanyAware {
 	// ====================================================================================
 
 	/**
-	 * 创建签署流（2026-10 沙箱实测结构）。
-	 * 
+	 * 创建签署流（2026-10 沙箱实测结构；单流合流：一次放入企业方+个人方全部签署方）。
+	 *
 	 * <p>
 	 * 实测要点：
 	 * <ul>
-	 * <li>签署方 = signerType(0个人/1机构) + psnSignerInfo{psnId} / orgSignerInfo{orgId}</li>
+	 * <li>签署方 = signerType(0个人/1机构) + psnSignerInfo{psnId} / orgSignerInfo{orgId}，signers 数组可含多方</li>
 	 * <li>自动落章在 normalSignFieldConfig.autoSign（非 signer 层）；个人不支持 autoSign， 机构限应用主体企业自身（或已做印章授权）</li>
 	 * <li>signFieldStyle 必传（1=单页章），否则 1435002 参数错误</li>
 	 * <li>签署区只支持坐标定位：keyword 需先调 keyword-positions 查坐标（两步，对应法大大一步 keyword）</li>
+	 * <li>无序签署（默认）：企业方 autoSign 建流即落章，个人方随时可签且签在同一份已盖章文件上；
+	 *     流完结 autoFinish 归档，一份终稿双章齐全</li>
 	 * </ul>
-	 * 
+	 *
 	 * @param contract 合同（flowId() 此时为 fileId，建流后覆盖为 signFlowId）
-	 * @param subject 签署主体标识：个人=psnId，机构=orgId
-	 * @param keyword 盖章关键字（非空时先查坐标定位签署区）
-	 * @param autoSign true 后台自动落章（仅机构）/ false 页面手动签
+	 * @param orgId 企业签署账号 orgId（null=不含企业方）
+	 * @param keyword 盖章关键字（企业方必传，先查坐标定位签署区）
+	 * @param psnId 个人签署账号 psnId（null=不含个人方）
 	 * @return signFlowId
 	 */
-private String createSignFlow(int company, Contract contract, boolean orgSigner, String subject, String keyword, boolean autoSign) throws FLException {
+	private String createSignFlow(int company, Contract contract, String orgId, String keyword, String psnId) throws FLException {
 
-	String fileId = resolveFileId(company, contract.flowId());
+		String fileId = resolveFileId(company, contract.flowId());
 
-	if (fileId == null || fileId.trim().isEmpty()) {
-		throw new FLException(130097, "e签宝接口调用失败, 合同文件未上传(缺少厂商文件号)");
-	}
+		if (fileId == null || fileId.trim().isEmpty()) {
+			throw new FLException(130097, "e签宝接口调用失败, 合同文件未上传(缺少厂商文件号)");
+		}
 
-		// 签署区：autoSign 场景用关键字查坐标；手动签场景不传位置则由用户在 H5 页面自选
-		NormalSignFieldHolder normal = new NormalSignFieldHolder();
-		normal.autoSign = autoSign;
+		JSONArray signers = new JSONArray();
 
-		if (autoSign) {
+		if (orgId != null && !orgId.trim().isEmpty()) {
+
 			if (keyword == null || keyword.trim().isEmpty()) {
 				throw new FLException(130097, "e签宝接口调用失败, 自动落章必须提供盖章关键字");
 			}
+
 			JSONObject pos = firstKeywordPosition(company, fileId, keyword);
-			normal.position = new JSONObject().fluentPut("positionPage", String.valueOf(pos.getIntValue("pageNum"))).fluentPut("positionX", pos.getJSONArray("coordinates").getJSONObject(0).getDoubleValue("positionX")).fluentPut("positionY", pos.getJSONArray("coordinates").getJSONObject(0).getDoubleValue("positionY"));
+
+			JSONObject orgNormalJson = new JSONObject();
+			orgNormalJson.put("autoSign", true);
+			// 指定位置签章：signFieldStyle=1(单页) + keyword 预查坐标
+			orgNormalJson.put("signFieldStyle", 1);
+			orgNormalJson.put("signFieldPosition", new JSONObject()
+					.fluentPut("positionPage", String.valueOf(pos.getIntValue("pageNum")))
+					.fluentPut("positionX", pos.getJSONArray("coordinates").getJSONObject(0).getDoubleValue("positionX"))
+					.fluentPut("positionY", pos.getJSONArray("coordinates").getJSONObject(0).getDoubleValue("positionY")));
+
+			JSONObject orgSigner = new JSONObject();
+			orgSigner.put("signerType", 1);
+			orgSigner.put("orgSignerInfo", new JSONObject().fluentPut("orgId", orgId));
+			orgSigner.put("signFields", new JSONArray().fluentAdd(signField(fileId, orgNormalJson)));
+
+			signers.add(orgSigner);
 		}
 
-		JSONObject signField = new JSONObject();
-		signField.put("fileId", fileId);
-		signField.put("signFieldType", 0);
-		JSONObject normalJson = new JSONObject();
-		normalJson.put("autoSign", normal.autoSign);
-		if (normal.autoSign) {
-			// 指定位置签章：signFieldStyle=1(单页) + keyword 预查坐标
-			normalJson.put("signFieldStyle", 1);
-			normalJson.put("signFieldPosition", normal.position);
-		} else {
+		if (psnId != null && !psnId.trim().isEmpty()) {
+
 			// 手动签=自由签章模式：不限制位置/样式/个数, 客户在 H5 页面自选(对齐法大大 extsign 自选语义);
 			// 非自由模式必须传 signFieldPosition 否则 1435002"非自由模式signFieldPosition不能为空"
-			normalJson.put("freeMode", true);
-		}
-		signField.put("normalSignFieldConfig", normalJson);
+			JSONObject psnNormalJson = new JSONObject();
+			psnNormalJson.put("autoSign", false);
+			psnNormalJson.put("freeMode", true);
 
-		JSONObject signer = new JSONObject();
-		signer.put("signerType", orgSigner ? 1 : 0);
-		if (orgSigner) {
-			signer.put("orgSignerInfo", new JSONObject().fluentPut("orgId", subject));
-		} else {
-			signer.put("psnSignerInfo", new JSONObject().fluentPut("psnId", subject));
+			JSONObject psnSigner = new JSONObject();
+			psnSigner.put("signerType", 0);
+			psnSigner.put("psnSignerInfo", new JSONObject().fluentPut("psnId", psnId));
+			psnSigner.put("signFields", new JSONArray().fluentAdd(signField(fileId, psnNormalJson)));
+
+			signers.add(psnSigner);
 		}
-		signer.put("signFields", new JSONArray().fluentAdd(signField));
+
+		if (signers.isEmpty()) {
+			throw new FLException(130097, "e签宝接口调用失败, 签署方为空(企业方与个人方账号均未提供)");
+		}
 
 		JSONObject body = new JSONObject();
 		body.put("docs", new JSONArray().fluentAdd(new JSONObject().fluentPut("fileId", fileId)));
-		body.put("signers", new JSONArray().fluentAdd(signer));
+		body.put("signers", signers);
 		// 实测(2026-10沙箱): v3字段名为autoFinish(传autoArchived无效被忽略, 流签完卡"签署中"不归档); signFlowTitle必填
-		body.put("signFlowConfig", new JSONObject().fluentPut("autoFinish", true).fluentPut("signFlowTitle", contract.title()));
+		// notifyUrl: 签署流完结回调——v3以应用控制台回调配置推送为主, 此处一并尝试下发(未知字段实测被静默忽略, 不致错)
+		body.put("signFlowConfig", new JSONObject()
+				.fluentPut("autoFinish", true)
+				.fluentPut("signFlowTitle", contract.title())
+				.fluentPut("notifyUrl", normalizeIsv() + "/esignAuthCallback.do"));
 
 		JSONObject data = esignClient.post(company, EP_FLOW_CREATE_BY_FILE, body);
 
@@ -696,6 +1125,17 @@ private String createSignFlow(int company, Contract contract, boolean orgSigner,
 		contract.flowId(signFlowId);
 
 		return signFlowId;
+	}
+
+	/** 签署域（普通签章）公共结构：fileId + signFieldType=0 + normalSignFieldConfig。 */
+	private JSONObject signField(String fileId, JSONObject normalJson) {
+
+		JSONObject signField = new JSONObject();
+		signField.put("fileId", fileId);
+		signField.put("signFieldType", 0);
+		signField.put("normalSignFieldConfig", normalJson);
+
+		return signField;
 	}
 
 	/**
@@ -748,12 +1188,67 @@ private String createSignFlow(int company, Contract contract, boolean orgSigner,
 		return first.getJSONArray("positions").getJSONObject(0);
 	}
 
-	/** 签章区配置载体（内部传递用）。 */
-	private static class NormalSignFieldHolder {
+	/**
+	 * 模板控件核对（告警不阻断，生成前把关）。
+	 *
+	 * <p>对照控制台模板控件清单，报告两类漂移——都是"签出空白/错位合同"的前兆：
+	 * <ul>
+	 * <li>模板有控件但本次未赋值 → 该位置将渲染空白</li>
+	 * <li>前端传了模板上没有的控件 key → e签宝静默忽略（实测），值不会出现</li>
+	 * </ul>
+	 * 每次生成多一次模板详情 GET；核对失败只记日志不影响生成。
+	 */
+	private void checkTemplateComponents(int company, String docTemplateId, JSONObject json) {
 
-		private boolean autoSign;
+		try {
+			JSONObject detail = esignClient.get(company, String.format(EP_DOC_TEMPLATE_DETAIL, docTemplateId), null);
 
-		private JSONObject position;
+			JSONArray components = detail.getJSONArray("components");
+
+			if (components == null || components.isEmpty()) {
+				return;
+			}
+
+			Set<String> templateKeys = new HashSet<String>();
+
+			for (int i = 0; i < components.size(); i++) {
+				String key = components.getJSONObject(i).getString("componentKey");
+				if (key != null && !key.trim().isEmpty()) {
+					templateKeys.add(key);
+				}
+			}
+
+			if (templateKeys.isEmpty()) {
+				return;
+			}
+
+			// 模板控件缺值 → 渲染空白
+			List<String> blank = new ArrayList<String>();
+
+			for (String key : templateKeys) {
+				String value = json == null ? null : json.getString(key);
+				if (value == null || value.trim().isEmpty()) {
+					blank.add(key);
+				}
+			}
+
+			// 前端多传 → e签宝静默忽略
+			List<String> unknown = new ArrayList<String>();
+
+			if (json != null) {
+				for (Map.Entry<String, Object> entry : json.entrySet()) {
+					if (!templateKeys.contains(entry.getKey())) {
+						unknown.add(entry.getKey());
+					}
+				}
+			}
+
+			if (!blank.isEmpty() || !unknown.isEmpty()) {
+				logger.warn("e签宝模板控件核对[{}]: 模板有控件未赋值(将渲染空白)={}, 传了模板上没有的控件key(被忽略)={}", docTemplateId, blank, unknown);
+			}
+		} catch (Exception e) {
+			logger.warn("e签宝模板控件核对失败[{}](不影响生成): {}", docTemplateId, e.getMessage());
+		}
 	}
 
 	/** 签署流详情 → 文件下载地址。 */
@@ -961,6 +1456,16 @@ private String createSignFlow(int company, Contract contract, boolean orgSigner,
 		@Override
 		public String extsign(String signno, Contract contract) throws FLException {
 			return ESignElecsignServiceImpl.this.extsign(company, signno, contract);
+		}
+
+		@Override
+		public void autosignBoth(String orgId, String keyword, Contract contract, String signatureId, String psnSignno) throws FLException {
+			ESignElecsignServiceImpl.this.autosignBoth(company, orgId, keyword, contract, psnSignno);
+		}
+
+		@Override
+		public String extsignBoth(String psnSignno, Contract contract, String orgId, String orgKeyword) throws FLException {
+			return ESignElecsignServiceImpl.this.extsignBoth(company, psnSignno, contract, orgId, orgKeyword);
 		}
 
 		@Override

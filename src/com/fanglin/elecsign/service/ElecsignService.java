@@ -190,6 +190,47 @@ public interface ElecsignService {
 	String extsign(String signno, Contract contract) throws FLException;
 
 	// ====================================================================================
+	// 五（续）、单流合流签署
+	// 背景：法大大"同文档多次签署自然叠加"，autosign/extsign 各调一次即可；
+	// e签宝为签署流模型，若按法大大习惯企业、客户各建一流，企业章与客户签字会分属两份文件
+	// （终稿缺企业章、出证证据链分裂）。两方法让厂商差异封在实现内，业务方调用方式不变。
+	// ====================================================================================
+
+	/**
+	 * 企业自动签（预置对手方个人签署方，单流合流发起）。
+	 *
+	 * <p>e签宝：首次调用创建含双方签署方的<b>单一签署流</b>——企业方 autoSign 即时落章，
+	 * 个人方随后经 {@link #extsign} 取链接在同一份文件上续签（可见企业章），
+	 * 流完结即一份双章齐全的终稿。同一合同重复调用幂等（流已存在时不重建）。
+	 * <p>法大大：等价于 {@code autosign(orgId, keyword, contract, signatureId)}——
+	 * psnSignno 忽略，客户侧仍走 extsign 独立签署，同文档叠加语义不受影响。
+	 *
+	 * @param orgId       企业签署账号（e签宝=机构认证后的 orgId）
+	 * @param keyword     盖章关键字
+	 * @param contract    合同
+	 * @param signatureId 印章标识（e签宝当前用主体默认章，入参保留对齐法大大语义）
+	 * @param psnSignno   对手方个人签署账号（客户 psnId；e签宝必传——未实名抛错引导先实名；
+	 *                    法大大忽略）
+	 */
+	void autosignBoth(String orgId, String keyword, Contract contract, String signatureId, String psnSignno) throws FLException;
+
+	/**
+	 * 个人手动签署（单流合流语义的 extsign）。
+	 *
+	 * <p>e签宝：合同已有签署流 → 直接取该个人账号的签署链接（不新建流）；
+	 * 尚未建流 → 单流合流发起（此时 orgId/orgKeyword 必传，企业方 autoSign 即时落章）后取链接；
+	 * orgId 缺失抛错引导先完成企业签署——保证一份合同一张流、双章同文件。
+	 * <p>法大大：等价于 {@code extsign(psnSignno, contract)}——orgId/orgKeyword 忽略，签署顺序不受限。
+	 *
+	 * @param psnSignno  个人签署账号
+	 * @param contract   合同
+	 * @param orgId      企业签署账号（个人先签场景补建流用，可为 null，见上）
+	 * @param orgKeyword 盖章关键字（同上）
+	 * @return 签署 URL
+	 */
+	String extsignBoth(String psnSignno, Contract contract, String orgId, String orgKeyword) throws FLException;
+
+	// ====================================================================================
 	// 六、预览 / 下载 / 归档
 	// 对应 Signature.view / download / filing / getFile
 	// ====================================================================================

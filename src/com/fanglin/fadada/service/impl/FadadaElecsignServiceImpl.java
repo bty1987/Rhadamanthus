@@ -161,6 +161,18 @@ public class FadadaElecsignServiceImpl implements ElecsignService {
 		return Signature.extsign(signno, contract);
 	}
 
+	@Override
+	public void autosignBoth(String orgId, String keyword, Contract contract, String signatureId, String psnSignno) throws FLException {
+		// 法大大同文档多次签署自然叠加, 无流概念: 企业签原样, psnSignno 忽略(客户侧仍走 extsign)
+		autosign(orgId, keyword, contract, signatureId);
+	}
+
+	@Override
+	public String extsignBoth(String psnSignno, Contract contract, String orgId, String orgKeyword) throws FLException {
+		// 法大大签署顺序不受限, 企业侧信息忽略
+		return extsign(psnSignno, contract);
+	}
+
 	// ====================================================================================
 	// 六、预览 / 下载 / 归档
 	// ====================================================================================

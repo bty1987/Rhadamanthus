@@ -29,4 +29,12 @@ public interface DecorationContractDao extends Dao<DecorationContractPO> {
 	 * @param limit 单次最大行数
 	 */
 	public List<DecorationContractPO> queryDecorationContractForFlowPatrol(Short provider, List<Short> status, java.sql.Timestamp deadline, int limit);
+
+	/**
+	 * 按厂商流程号查合同（e签宝签署流完结回调反查用）。
+	 *
+	 * @param provider 厂商码
+	 * @param flowId 厂商流程号（e签宝 signFlowId）
+	 */
+	public List<DecorationContractPO> queryDecorationContractByFlowId(Short provider, String flowId);
 }

@@ -247,6 +247,7 @@ $.extend(api, { data: {
     updateSignet:  { url: 'updateSignet.do' },
     registSignet:  { url: 'registSignet.do' },
     authSignet:    { url: 'authSignet.do' },
+        esignAutoSignAuth: { url: 'esignAutoSignAuth.do' },
     confirmSignet: { url: 'confirmSignet.do' },
     signateSignet: { url: 'signateSignet.do' },
     autoSignet:    { url: 'autoSignet.do' },
