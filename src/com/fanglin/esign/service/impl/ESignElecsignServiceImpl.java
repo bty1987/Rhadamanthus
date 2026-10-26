@@ -155,6 +155,9 @@ public class ESignElecsignServiceImpl implements ElecsignService, CompanyAware {
 	private static final String EP_SEAL_ORG_LIST = "/v3/seals/org-own-seal-list";
 	private static final String EP_FLOW_SIGN_FIELDS = "/v3/sign-flow/%s/sign-fields";
 
+	/** 流程模板探测结果缓存(templateId→是否流程模板): 法大大/docTemplate模板缓存false后零探测开销 */
+	private static final java.util.concurrent.ConcurrentHashMap<String, Boolean> FLOW_TEMPLATE_PROBE_CACHE = new java.util.concurrent.ConcurrentHashMap<String, Boolean>();
+
 	private static final Logger logger = LoggerFactory.getLogger(ESignElecsignServiceImpl.class);
 
 	@Autowired
@@ -509,14 +512,23 @@ public class ESignElecsignServiceImpl implements ElecsignService, CompanyAware {
 	 */
 	private boolean isFlowTemplate(int company, String templateId, String orgId) {
 
+		Boolean cached = FLOW_TEMPLATE_PROBE_CACHE.get(templateId);
+
+		if (cached != null) {
+			return cached.booleanValue();
+		}
+
 		try {
 			Map<String, String> query = new HashMap<String, String>();
 			query.put("signTemplateId", templateId);
 			query.put("orgId", orgId);
 			query.put("queryComponents", "true");
 			JSONObject detail = esignClient.get(company, EP_ST_DETAIL, query);
-			return detail != null && detail.getString("signTemplateId") != null;
+			boolean hit = detail != null && detail.getString("signTemplateId") != null;
+			FLOW_TEMPLATE_PROBE_CACHE.put(templateId, Boolean.valueOf(hit));
+			return hit;
 		} catch (FLException e) {
+			FLOW_TEMPLATE_PROBE_CACHE.put(templateId, Boolean.FALSE);
 			return false;
 		}
 	}
