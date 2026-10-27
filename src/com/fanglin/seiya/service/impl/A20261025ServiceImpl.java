@@ -36,7 +36,6 @@ import com.fanglin.data.common.dao.PaymentTypeDao;
 import com.fanglin.data.po.DecorationBusitypePO;
 import com.fanglin.data.po.PaymentScaleItemPO;
 import com.fanglin.data.po.PaymentTypePO;
-import com.fanglin.data.po.PresignProducePO;
 import com.fanglin.data.po.QuotationVersionPO;
 import com.fanglin.data.quotation.dao.PresignProduceDao;
 import com.fanglin.data.quotation.dao.QuotationVersionDao;
