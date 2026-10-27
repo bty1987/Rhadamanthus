@@ -1501,6 +1501,105 @@ var com = {
         });
     },
     /**
+     * 弹窗 , 侧面抽屉类型(右侧滑出)
+     *
+     * 内容形态与 popup4page 同为内嵌页 , 差异在呈现方式:面板从右侧滑出 ,
+     * 保留列表/页面上下文 , 适合详情查看、向导式编辑等场景。
+     * 单实例:重复打开自动关闭前一个;ESC / 点蒙板 / 点关闭钮均可关闭。
+     *
+     * @param url 地址
+     * @param title 标题
+     * @param success 成功回调(内容加载完成后触发)
+     * @param cancel 取消回调(关闭时触发,含手动关闭)
+     * @param prepare 前置回调
+     * @param width 抽屉宽度 , 数值(px)或 'full'(留 60px 露出列表) , 默认 450
+     * @returns 抽屉面板对象 , 可传入 com.closeDrawer 关闭
+     */
+    popup4drawer: function(url, title, success, cancel, prepare, width) {
+
+        if (prepare && typeof (prepare) == 'function')
+            prepare();
+
+        com.closeDrawer();
+
+        if ($("#com-drawer-style").length == 0) {
+
+            $("<style></style>").attr("id", "com-drawer-style").text(
+                ".com-drawer-mask{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.3);opacity:0;transition:opacity 0.25s;z-index:4000;}" +
+                ".com-drawer-mask.open{opacity:1;}" +
+                ".com-drawer-panel{position:fixed;top:0;right:0;bottom:0;background:#fff;box-shadow:-8px 0 24px rgba(0,0,0,0.15);display:flex;flex-direction:column;z-index:4001;transform:translateX(100%);transition:transform 0.25s ease;}" +
+                ".com-drawer-panel.open{transform:translateX(0);}" +
+                ".com-drawer-header{flex:none;display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid #e8e8e8;}" +
+                ".com-drawer-title{font-size:16px;font-weight:500;color:#333;}" +
+                ".com-drawer-close{width:24px;height:24px;line-height:22px;text-align:center;border-radius:50%;color:#999;font-size:14px;cursor:pointer;user-select:none;}" +
+                ".com-drawer-close:hover{background:rgba(0,0,0,0.06);color:#333;}" +
+                ".com-drawer-body{flex:1;overflow-y:auto;padding:12px 16px;}"
+            ).appendTo($("head"));
+        }
+
+        if (utils.isMobile())
+            width = 'full';
+
+        var _maxWidth = $(window).width() - 60;
+        var _width = width == 'full' ? _maxWidth : Math.min(parseInt(width) || 450, _maxWidth);
+
+        var _mask = $("<div></div>").addClass("com-drawer-mask").appendTo($("body"));
+        var _panel = $("<div></div>").addClass("com-drawer-panel").css("width", _width + "px").appendTo($("body"));
+        var _header = $("<div></div>").addClass("com-drawer-header").appendTo(_panel);
+        $("<span></span>").addClass("com-drawer-title").text(title || "").appendTo(_header);
+        var _close = $("<span></span>").addClass("com-drawer-close").html("&times;").appendTo(_header);
+        var _body = $("<div></div>").addClass("com-drawer-body").appendTo(_panel);
+
+        var _closed = false;
+
+        var close = function() {
+
+            if (_closed)
+                return;
+            _closed = true;
+
+            _mask.removeClass("open");
+            _panel.removeClass("open");
+
+            $(document).unbind("keyup.comDrawer");
+            $("body").css("overflow", "");
+
+            setTimeout(function() {
+
+                _mask.remove();
+                _panel.remove();
+
+                if (cancel && typeof (cancel) == 'function')
+                    cancel();
+            }, 250);
+        };
+
+        _close.click(close);
+        _mask.click(close);
+        $(document).bind("keyup.comDrawer", function(e) {
+            if (e.keyCode == 27) close();
+        });
+
+        $("body").css("overflow", "hidden");
+
+        _body.load(url, function(response, status) {
+
+            if (status == "error")
+                _body.html('<div class="alert alert-warning">内容加载失败, 请稍后重试</div>');
+
+            if (success && typeof (success) == 'function')
+                success();
+        });
+
+        setTimeout(function() {
+
+            _mask.addClass("open");
+            _panel.addClass("open");
+        }, 10);
+
+        return _panel;
+    },
+    /**
      * 关闭弹窗
      * 
      * @param type 类型为字符串(tips/page) , 类型为对象 , 关闭对象所属的弹窗
@@ -1514,6 +1613,20 @@ var com = {
         } else {
             layer.closeAll()
         }
+    },
+    /**
+     * 关闭抽屉弹窗(popup4drawer 创建)
+     *
+     * @param panel 抽屉面板对象(可传 popup4drawer 的返回值;不传则关闭当前抽屉)
+     */
+    closeDrawer: function(panel) {
+
+        var _target = (panel && panel.hasClass && panel.hasClass("com-drawer-panel")) ? panel : $(".com-drawer-panel").last();
+
+        if (_target.length == 0)
+            return;
+
+        _target.find(".com-drawer-close").trigger("click");
     },
     /**
      * 日志打印信息
