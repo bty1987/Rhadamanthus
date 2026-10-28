@@ -19,9 +19,8 @@ import com.fanglin.approval.vo.ApprovalVO;
 import com.fanglin.communion.dao.CustomerDao;
 import com.fanglin.communion.po.CustomerPO;
 import com.fanglin.core.interceptor.FLException;
-import com.fanglin.customer.dao.PointAccountDao;
-import com.fanglin.customer.po.PointAccountPO;
 import com.fanglin.customer.service.DecorationService;
+import com.fanglin.customer.service.PointAccountService;
 import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.decoration.service.DecorationAdditionService;
@@ -79,7 +78,7 @@ public class ApprovalPaymentWithdrawServiceImpl implements ApprovalPaymentWithdr
 	private UserDao userDao;
 
 	@Autowired
-	private PointAccountDao pointAccountDao;
+	private PointAccountService pointAccountService;
 
 	@Autowired
 	private DingTalkApprovalService approvalService;
@@ -254,8 +253,8 @@ public class ApprovalPaymentWithdrawServiceImpl implements ApprovalPaymentWithdr
 	}
 
 	/**
-	 * 主材可用积分校验(仅主材预付款提现): 该单积分账户spoint>0时主材积分权益未结清,不可提现(150101);
-	 * spoint<=0(含无积分账户/负值)视为符合。双闸调用: submit资格审+approve通过复核。
+	 * 主材可用积分校验(仅主材预付款提现): 委托 customer 模块按积分流水现算校验(spoint流水>0即权益未结清,150101);
+	 * 双闸调用: submit资格审+approve通过复核。
 	 */
 	private void checkMaterialPoint(DecorationPO decorationPO, short paymentType) throws FLException {
 
@@ -263,11 +262,7 @@ public class ApprovalPaymentWithdrawServiceImpl implements ApprovalPaymentWithdr
 			return;
 		}
 
-		PointAccountPO pointAccountPO = pointAccountDao.queryPointAccountByOrderId(decorationPO.getCompany(), decorationPO.getCustomer().getCid(), decorationPO.getOrderId());
-
-		if (pointAccountPO != null && pointAccountPO.getMaterialPoint() > 0) {
-			throw new FLException(150101, "主材可用积分不符,不可提现");
-		}
+		pointAccountService.checkMaterialPointForWithdraw(decorationPO);
 	}
 
 	private String getPaymentTypeName(short paymentType) {

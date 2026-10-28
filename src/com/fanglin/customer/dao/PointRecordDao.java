@@ -26,4 +26,10 @@ public interface PointRecordDao extends Dao<PointRecordPO> {
 
 	public void updatePointRecordByNo(String pointOrderId);
 
+	/**
+	 * 按积分流水现算某账户的主材可用积分(以流水为准,不依赖cppoint.spoint字段):
+	 * SUM(type=0加) - SUM(type=1扣), 仅计有效(status=0)且主材类(pointType=1)流水。
+	 */
+	public long sumMaterialPoint(long accountId);
+
 }

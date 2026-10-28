@@ -43,4 +43,14 @@ public class PointRecordDaoImpl extends DaoImpl<PointRecordPO> implements PointR
 
 	}
 
+	@Override
+	public long sumMaterialPoint(long accountId) {
+
+		String sql = "select IFNULL(sum(case when type = :add then point else -point end), 0) from customer.cppointrecord where cpid = :cpid and pointType = :pointType and status = :status";
+
+		Object result = session().createSQLQuery(sql).setLong("cpid", accountId).setShort("add", PointRecordPO.TYPE_ADDUP_INT).setShort("pointType", PointRecordPO.POINTTYPE_SALES_INT).setShort("status", PointRecordPO.STATUS_ABLE_SHORT).uniqueResult();
+
+		return result == null ? 0 : ((Number) result).longValue();
+	}
+
 }

@@ -263,4 +263,23 @@ public class PointAccountServiceImpl implements PointAccountService {
 
 		return pointAccountVO;
 	}
+
+	/**
+	 * 主材可用积分校验(预付款提现闸): 以积分流水现算该单账户主材可用积分(不依赖cppoint.spoint字段,
+	 * 免疫手工改库漂移), >0 时主材积分权益未结清抛150101不可提现; 无积分账户或<=0(含负值)放行。
+	 * 调用方: approval审批提现双闸 + payment直提withdrawPayment。
+	 */
+	@Override
+	public void checkMaterialPointForWithdraw(DecorationPO decorationPO) throws FLException {
+
+		PointAccountPO pointAccountPO = pointAccountDao.queryPointAccountByOrderId(decorationPO.getCompany(), decorationPO.getCustomer().getCid(), decorationPO.getOrderId());
+
+		if (pointAccountPO == null) {
+			return;
+		}
+
+		if (pointRecordDao.sumMaterialPoint(pointAccountPO.getAccountId()) > 0) {
+			throw new FLException(150101, "主材可用积分不符,不可提现");
+		}
+	}
 }

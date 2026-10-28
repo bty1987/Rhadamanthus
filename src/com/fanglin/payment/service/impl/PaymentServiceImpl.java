@@ -30,6 +30,7 @@ import com.fanglin.core.vo.Filter;
 import com.fanglin.customer.dao.CustomerChanceDao;
 import com.fanglin.customer.po.CustomerChancePO;
 import com.fanglin.customer.service.DecorationService;
+import com.fanglin.customer.service.PointAccountService;
 import com.fanglin.data.common.dao.ConstructionNodeDao;
 import com.fanglin.data.po.ConstructionNodePO;
 import com.fanglin.decoration.dao.DecorationActivityDao;
@@ -93,6 +94,9 @@ public class PaymentServiceImpl implements PaymentService {
 
 	@Autowired
 	private DecorationService decorationService;
+
+	@Autowired
+	private PointAccountService pointAccountService;
 
 	@Autowired
 	private DecorationAdditionService decorationAdditionService;
@@ -400,6 +404,11 @@ public class PaymentServiceImpl implements PaymentService {
 
 		if (balance < recharge) {
 			throw new FLException(150010, "预付款余额不足");
+		}
+
+		// 主材预付款提现,校验主材可用积分(积分流水现算,spoint流水>0即权益未结清,150101)
+		if (paymentType == PaymentPO.PAYMENT_PAYMENTTYPE_MATERIAL_INT) {
+			pointAccountService.checkMaterialPointForWithdraw(decorationPO);
 		}
 
 		overBalance = Arith.sub(balance, recharge);
