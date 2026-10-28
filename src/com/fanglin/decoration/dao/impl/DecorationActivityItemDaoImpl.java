@@ -54,7 +54,7 @@ public class DecorationActivityItemDaoImpl extends DaoImpl<DecorationActivityIte
 	@Override
 	public long amountDecorationActivityItem(String orderId, short isPayment) {
 
-		String sql = "SELECT COALESCE(SUM(money*num), 0) as priceSum FROM decoration.decorationActivityitem WHERE orderId =:orderId AND type = 0 AND isPayment =:isPayment AND ((atttype = 0 AND state = 0) OR (atttype = 1 AND state = 10))";
+		String sql = "SELECT COALESCE(SUM(money*num), 0) as priceSum FROM decoration.decorationActivityitem WHERE orderId =:orderId AND type = 0 AND isPayment =:isPayment AND ((atttype = 0 AND state = 0) OR (atttype = 1 AND state IN (2, 10)))";
 		BigDecimal sqlQuery = (BigDecimal) session().createSQLQuery(sql).setString("orderId", orderId).setShort("isPayment", isPayment).uniqueResult();
 
 		return Arith.div(sqlQuery.longValue(), 1000000);
@@ -65,7 +65,7 @@ public class DecorationActivityItemDaoImpl extends DaoImpl<DecorationActivityIte
 
 		StringBuffer sql = new StringBuffer();
 
-		sql.append("SELECT COALESCE(SUM(money*num), 0) AS priceSum FROM decoration.decorationActivityitem WHERE orderId = :orderId AND ((atttype = 0 and state in (:state)) OR (atttype = 1 and state = 10))");
+		sql.append("SELECT COALESCE(SUM(money*num), 0) AS priceSum FROM decoration.decorationActivityitem WHERE orderId = :orderId AND ((atttype = 0 and state in (:state)) OR (atttype = 1 and state IN (2, 10)))");
 
 		if (type != null) {
 			sql.append(" AND type = :type");
