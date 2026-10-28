@@ -332,11 +332,17 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 					params.put("_flow_orgName", flowCompany.getFullname());
 				}
 
-				// 签章主体orgId: 取公司e签宝已认证签章登记的orgId(签章表=主体登记处), 建流时企业参与方orgId/orgName二选一——传orgId免全称逐字匹配
-				String flowOrgId = queryConfirmedSignnoForProvider(decorationPO.getCompany(), ElecsignProvider.ESIGN.code());
+				// 签章主体: 取公司e签宝已认证签章(签章表=主体登记处)——orgId(signno)与实名主体全称(keyword)成对塞入,
+				// 建流企业参与方优先orgName+经办人手机(e签宝实测配对规则: orgName配transactorPsnAccount/orgId配transactorPsnId, 不可交叉)
+				SignetPO flowSignet = queryConfirmedSignetForProvider(decorationPO.getCompany(), ElecsignProvider.ESIGN.code());
 
-				if (flowOrgId != null) {
-					params.put("_flow_orgId", flowOrgId);
+				if (flowSignet != null) {
+					if (flowSignet.getKeyword() != null && !flowSignet.getKeyword().trim().isEmpty()) {
+						params.put("_flow_orgName", flowSignet.getKeyword().trim());
+					}
+					if (flowSignet.getSignno() != null && !flowSignet.getSignno().trim().isEmpty()) {
+						params.put("_flow_orgId", flowSignet.getSignno().trim());
+					}
 				}
 			}
 
@@ -416,11 +422,17 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 					params.put("_flow_orgName", flowCompany.getFullname());
 				}
 
-				// 签章主体orgId: 取公司e签宝已认证签章登记的orgId(签章表=主体登记处), 建流时企业参与方orgId/orgName二选一——传orgId免全称逐字匹配
-				String flowOrgId = queryConfirmedSignnoForProvider(decorationPO.getCompany(), ElecsignProvider.ESIGN.code());
+				// 签章主体: 取公司e签宝已认证签章(签章表=主体登记处)——orgId(signno)与实名主体全称(keyword)成对塞入,
+				// 建流企业参与方优先orgName+经办人手机(e签宝实测配对规则: orgName配transactorPsnAccount/orgId配transactorPsnId, 不可交叉)
+				SignetPO flowSignet = queryConfirmedSignetForProvider(decorationPO.getCompany(), ElecsignProvider.ESIGN.code());
 
-				if (flowOrgId != null) {
-					params.put("_flow_orgId", flowOrgId);
+				if (flowSignet != null) {
+					if (flowSignet.getKeyword() != null && !flowSignet.getKeyword().trim().isEmpty()) {
+						params.put("_flow_orgName", flowSignet.getKeyword().trim());
+					}
+					if (flowSignet.getSignno() != null && !flowSignet.getSignno().trim().isEmpty()) {
+						params.put("_flow_orgId", flowSignet.getSignno().trim());
+					}
 				}
 			}
 
@@ -1027,13 +1039,12 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 	 * 
 	 * @return 未维护签章返回 null
 	 */
-	/** 公司指定厂商已认证签章登记的主体标识(e签宝=orgId): 多把时取sid最大(最近认证), 无已认证章返回null */
-	private String queryConfirmedSignnoForProvider(int company, short provider) {
+	/** 公司指定厂商已认证签章(签章表=主体登记处: signno=e签宝orgId, keyword=实名主体全称): 多把时取sid最大(最近认证), 无已认证章返回null */
+	private SignetPO queryConfirmedSignetForProvider(int company, short provider) {
 
 		List<SignetPO> signetPOs = signetDao.querySignet(null, company);
 
-		String signno = null;
-		long latestSid = 0L;
+		SignetPO latest = null;
 
 		for (SignetPO signetPO : signetPOs == null ? new ArrayList<SignetPO>() : signetPOs) {
 
@@ -1049,13 +1060,12 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 				continue;
 			}
 
-			if (signetPO.getSid() > latestSid) {
-				latestSid = signetPO.getSid();
-				signno = signetPO.getSignno();
+			if (latest == null || signetPO.getSid() > latest.getSid()) {
+				latest = signetPO;
 			}
 		}
 
-		return signno;
+		return latest;
 	}
 
 	private SignetPO querySignetForProvider(int company, short provider) {
