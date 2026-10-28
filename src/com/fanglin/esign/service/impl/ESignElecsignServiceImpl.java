@@ -990,20 +990,38 @@ public class ESignElecsignServiceImpl implements ElecsignService, CompanyAware {
 
 	String view(int company, Contract contract) {
 
+		String url;
+
 		try {
-			return flowFileUrl(company, contract);
+			url = flowFileUrl(company, contract);
 		} catch (FLException e) {
-			return contract.viewpdf();
+			url = contract.viewpdf();
 		}
+
+		// 流程签署中产物未生成且生成时未缓存预览地址时为null——null传前端弹窗会崩溃, 明确报错由页面提示
+		if (url == null || url.trim().isEmpty()) {
+			throw new FLException(130097, "合同暂无可预览文件(签署中或文件未生成), 签署完成归档后可查看");
+		}
+
+		return url;
 	}
 
 	String download(int company, Contract contract) {
 
+		String url;
+
 		try {
-			return flowFileUrl(company, contract);
+			url = flowFileUrl(company, contract);
 		} catch (FLException e) {
-			return contract.download();
+			url = contract.download();
 		}
+
+		// 同view: null会使前端window.open异常, 明确报错
+		if (url == null || url.trim().isEmpty()) {
+			throw new FLException(130097, "合同暂无可下载文件(签署中或文件未生成), 签署完成归档后可下载");
+		}
+
+		return url;
 	}
 
 	void filing(int company, Contract contract) throws FLException {

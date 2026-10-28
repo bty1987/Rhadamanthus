@@ -883,6 +883,12 @@ jQuery(function($) {
             "decorationContract.dcid": dcid
         }, function(res) {
 
+            // 签署中/未生成的合同redirect为空, 空地址开弹窗会崩溃(layui null[1])
+            if (!res.redirect) {
+                com.showAlert(com.warning, "合同暂无可预览文件(签署中或文件未生成)");
+                return;
+            }
+
             com.popup4frame("合同查看", res.redirect);
         });
     }
