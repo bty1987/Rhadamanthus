@@ -1,9 +1,5 @@
 package com.fanglin.decoration.service.impl;
 
-import com.fanglin.elecsign.enums.ElecsignProvider;
-import com.fanglin.elecsign.enums.ElecsignScene;
-import com.fanglin.elecsign.router.ElecsignRouter;
-import com.fanglin.elecsign.service.ElecsignService;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -20,7 +16,6 @@ import com.fanglin.approval.dao.ApprovalDao;
 import com.fanglin.communion.dao.CustomerDao;
 import com.fanglin.communion.po.CustomerPO;
 import com.fanglin.communion.po.DepartmentTypePO;
-import com.fanglin.communion.service.CustomerService;
 import com.fanglin.communion.vo.CustomerVO;
 import com.fanglin.construction.dao.ConstructionInfoDao;
 import com.fanglin.construction.po.ConstructionInfoPO;
@@ -60,6 +55,10 @@ import com.fanglin.decoration.service.DecorationAccountStatusService;
 import com.fanglin.decoration.service.DecorationContractService;
 import com.fanglin.decoration.vo.DecorationContractVO;
 import com.fanglin.decoration.vo.DecorationVO;
+import com.fanglin.elecsign.enums.ElecsignProvider;
+import com.fanglin.elecsign.enums.ElecsignScene;
+import com.fanglin.elecsign.router.ElecsignRouter;
+import com.fanglin.elecsign.service.ElecsignService;
 import com.fanglin.information.dao.MessageQueuingDao;
 import com.fanglin.information.po.MessageCueuingPO;
 import com.fanglin.information.po.MessagePO;
@@ -958,6 +957,7 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 
 		return customerChancePO != null ? ",\"ccid\":" + customerChancePO.getCcid() : "";
 	}
+
 	/** 电子签路由（生成/上传：重签按记录厂商，新建按 订单级→模板级→公司级 多层解析并记录厂商到合同 provider 字段） */
 	private ElecsignService routeForCreate(DecorationContractPO decorationContractPO, int company, String templatePath) throws FLException {
 
@@ -974,9 +974,7 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 
 	/** 电子签路由（签署/查看/归档：按合同记录的厂商路由，保证全链路厂商一致与历史可回溯；null 视同法大大） */
 	/**
-	 * 按厂商解析客户电子签账号(法大大customerId/e签宝psnId):
-	 * elecsignauth 认证行优先; 无行/表不可用回退 customer.signno 同命名空间存量值; 两处皆无返回 null。
-	 * Dao 层方法支撑, 独立CustomerService调用。
+	 * 按厂商解析客户电子签账号(法大大customerId/e签宝psnId): elecsignauth 认证行优先; 无行/表不可用回退 customer.signno 同命名空间存量值; 两处皆无返回 null。 Dao 层方法支撑, 独立CustomerService调用。
 	 */
 	private String resolveCustomerSignno(int cid, short provider) {
 
@@ -1011,7 +1009,7 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 
 	/**
 	 * 按厂商取公司签章（单流合流建流用，best-effort）：优先厂商匹配，无匹配且仅一枚时取该枚。
-	 *
+	 * 
 	 * @return 未维护签章返回 null
 	 */
 	private SignetPO querySignetForProvider(int company, short provider) {

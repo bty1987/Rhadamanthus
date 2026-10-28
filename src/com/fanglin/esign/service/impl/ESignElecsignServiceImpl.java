@@ -28,11 +28,11 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.data.po.SignetPO;
+import com.fanglin.elecsign.bean.Contract;
 import com.fanglin.elecsign.service.CompanyAware;
 import com.fanglin.elecsign.service.ElecsignService;
-import com.fanglin.esign.utils.EsignClient;
-import com.fanglin.elecsign.bean.Contract;
 import com.fanglin.elecsign.vo.SignatureVO;
+import com.fanglin.esign.utils.EsignClient;
 import com.fanglin.system.dao.SystemConfigDao;
 import com.fanglin.system.po.SystemConfigPO;
 
@@ -62,8 +62,7 @@ import com.fanglin.system.po.SystemConfigPO;
  * </tr>
  * <tr>
  * <td>autosign 静默签</td>
- * <td>sign-flow/create-by-file，signers.autoSign=true（平台主体自动落章）；
- * 双方场景走 autosignBoth/extsignBoth 单流合流——一份合同一张流，企业章与客户签字同文件</td>
+ * <td>sign-flow/create-by-file，signers.autoSign=true（平台主体自动落章）； 双方场景走 autosignBoth/extsignBoth 单流合流——一份合同一张流，企业章与客户签字同文件</td>
  * </tr>
  * <tr>
  * <td>extsign 手动签</td>
@@ -99,9 +98,7 @@ import com.fanglin.system.po.SystemConfigPO;
  * <li>sign-url：POST operator.psnId + urlType=2</li>
  * </ul>
  * <p>
- * 待沙箱继续验证：generate 模板填充（等控制台 docTemplateId）、动态表格能力、单流合流双方签署
- * （autosignBoth 建流→企业即时落章→extsignBoth 取链接→终稿双章同文件）、签署流完结回调
- * （SIGN_FLOW_COMPLETE，需控制台配置应用回调地址）。
+ * 待沙箱继续验证：generate 模板填充（等控制台 docTemplateId）、动态表格能力、单流合流双方签署 （autosignBoth 建流→企业即时落章→extsignBoth 取链接→终稿双章同文件）、签署流完结回调 （SIGN_FLOW_COMPLETE，需控制台配置应用回调地址）。
  */
 @Service("esignElecsignService")
 public class ESignElecsignServiceImpl implements ElecsignService, CompanyAware {
@@ -121,7 +118,6 @@ public class ESignElecsignServiceImpl implements ElecsignService, CompanyAware {
 	private static final String EP_PSN_AUTH_URL = "/v3/psn-auth-url";
 
 	/** 获取文件上传地址（本地两步上传 step1，step2=PUT 上传地址且带 Content-Type/Content-MD5 头） */
-	@SuppressWarnings("unused")
 	private static final String EP_FILES_FILE_UPLOAD_URL = "/v3/files/file-upload-url";
 
 	/** 关键字坐标查询：POST /v3/files/{fileId}/keyword-positions，body keywords[]（e签宝无 keyword 定位签署区，需先查坐标） */
@@ -349,9 +345,7 @@ public class ESignElecsignServiceImpl implements ElecsignService, CompanyAware {
 		String idCardNum = orgIDCardNum(company);
 
 		if (idCardNum != null) {
-			orgAuthConfig.fluentPut("orgInfo", new JSONObject()
-					.fluentPut("orgIDCardNum", idCardNum)
-					.fluentPut("orgIDCardType", "ORGANIZE_USCC"));
+			orgAuthConfig.fluentPut("orgInfo", new JSONObject().fluentPut("orgIDCardNum", idCardNum).fluentPut("orgIDCardType", "ORGANIZE_USCC"));
 		}
 
 		JSONObject body = new JSONObject();
@@ -403,9 +397,7 @@ public class ESignElecsignServiceImpl implements ElecsignService, CompanyAware {
 		String idCardNum = orgIDCardNum(company);
 
 		if (idCardNum != null) {
-			orgAuthConfig.fluentPut("orgInfo", new JSONObject()
-					.fluentPut("orgIDCardNum", idCardNum)
-					.fluentPut("orgIDCardType", "ORGANIZE_USCC"));
+			orgAuthConfig.fluentPut("orgInfo", new JSONObject().fluentPut("orgIDCardNum", idCardNum).fluentPut("orgIDCardType", "ORGANIZE_USCC"));
 		}
 
 		JSONObject body = new JSONObject();
@@ -512,8 +504,7 @@ public class ESignElecsignServiceImpl implements ElecsignService, CompanyAware {
 	}
 
 	/**
-	 * 流程模板探测: sign-templates/detail 查得到即流程模板(signTemplateId 体系)。
-	 * 查不到(1430011 等)视为文档模板——与既有文档模板路线自动分流, 模板 ID 无需前缀区分。
+	 * 流程模板探测: sign-templates/detail 查得到即流程模板(signTemplateId 体系)。 查不到(1430011 等)视为文档模板——与既有文档模板路线自动分流, 模板 ID 无需前缀区分。
 	 */
 	private boolean isFlowTemplate(int company, String templateId, String orgId) {
 
@@ -540,12 +531,9 @@ public class ESignElecsignServiceImpl implements ElecsignService, CompanyAware {
 
 	/**
 	 * 流程模板路线生成=直接发起签署流程（create-by-sign-template 一步替代 生成文件+建流 两步）。
-	 *
-	 * <p>json 中以下划线前缀的键为流程上下文（docTemplate 路线忽略）：_flow_orgName=签章主体企业全称、
-	 * _flow_transactorName/_flow_transactorPhone=企业经办人、_flow_psnName/_flow_psnPhone=个人签署方（客户）。
-	 * participants 按模板详情的 participantId 绑定：企业方传 orgName+经办人（经办人不影响签署区自动落章）、
-	 * 个人方传 psnAccount+psnName。components 按 componentKey 匹配填充值（建模板时控件须配置 key）。
-	 * 发起后 flowId=signFlowId 写回, 文件下载/预览地址从流程详情取。
+	 * 
+	 * <p>
+	 * json 中以下划线前缀的键为流程上下文（docTemplate 路线忽略）：_flow_orgName=签章主体企业全称、 _flow_transactorName/_flow_transactorPhone=企业经办人、_flow_psnName/_flow_psnPhone=个人签署方（客户）。 participants 按模板详情的 participantId 绑定：企业方传 orgName+经办人（经办人不影响签署区自动落章）、 个人方传 psnAccount+psnName。components 按 componentKey 匹配填充值（建模板时控件须配置 key）。 发起后 flowId=signFlowId 写回, 文件下载/预览地址从流程详情取。
 	 */
 	private void generateByFlowTemplate(int company, Contract contract, JSONObject json, String orgId) throws FLException {
 
@@ -586,9 +574,7 @@ public class ESignElecsignServiceImpl implements ElecsignService, CompanyAware {
 				String transactorName = json.getString("_flow_transactorName");
 				String transactorPhone = json.getString("_flow_transactorPhone");
 				if (transactorPhone != null && !transactorPhone.trim().isEmpty()) {
-					orgParticipant.fluentPut("transactor", new JSONObject()
-							.fluentPut("transactorPsnAccount", transactorPhone.trim())
-							.fluentPut("transactorName", transactorName == null ? null : transactorName.trim()));
+					orgParticipant.fluentPut("transactor", new JSONObject().fluentPut("transactorPsnAccount", transactorPhone.trim()).fluentPut("transactorName", transactorName == null ? null : transactorName.trim()));
 				}
 				p.fluentPut("orgParticipant", orgParticipant);
 			} else {
@@ -620,20 +606,11 @@ public class ESignElecsignServiceImpl implements ElecsignService, CompanyAware {
 				if (value == null || value.trim().isEmpty()) {
 					continue;
 				}
-				components.add(new JSONObject()
-						.fluentPut("fileId", c.getString("fileId"))
-						.fluentPut("componentId", c.getString("componentId"))
-						.fluentPut("componentValue", value));
+				components.add(new JSONObject().fluentPut("fileId", c.getString("fileId")).fluentPut("componentId", c.getString("componentId")).fluentPut("componentValue", value));
 			}
 		}
 
-		JSONObject body = new JSONObject()
-				.fluentPut("signTemplateId", templateId)
-				.fluentPut("signFlowConfig", new JSONObject()
-						.fluentPut("signFlowTitle", contract.title())
-						.fluentPut("autoFinish", true)
-						.fluentPut("autoStart", true))
-				.fluentPut("participants", participants);
+		JSONObject body = new JSONObject().fluentPut("signTemplateId", templateId).fluentPut("signFlowConfig", new JSONObject().fluentPut("signFlowTitle", contract.title()).fluentPut("autoFinish", true).fluentPut("autoStart", true)).fluentPut("participants", participants);
 
 		if (!components.isEmpty()) {
 			body.put("components", components);
@@ -691,17 +668,19 @@ public class ESignElecsignServiceImpl implements ElecsignService, CompanyAware {
 				}
 				pdf = bos.toByteArray();
 			} finally {
-				if (is != null) try { is.close(); } catch (Exception e) { }
-				if (bos != null) try { bos.close(); } catch (Exception e) { }
+				if (is != null) try {
+					is.close();
+				} catch (Exception e) {
+				}
+				if (bos != null) try {
+					bos.close();
+				} catch (Exception e) {
+				}
 			}
 
 			String contentMd5 = org.apache.commons.codec.binary.Base64.encodeBase64String(java.security.MessageDigest.getInstance("MD5").digest(pdf));
 
-			JSONObject step1 = esignClient.post(company, EP_FILES_FILE_UPLOAD_URL, new JSONObject()
-					.fluentPut("contentMd5", contentMd5)
-					.fluentPut("contentType", "application/pdf;")
-					.fluentPut("fileName", String.format("%s.pdf", contract.title()))
-					.fluentPut("fileSize", pdf.length));
+			JSONObject step1 = esignClient.post(company, EP_FILES_FILE_UPLOAD_URL, new JSONObject().fluentPut("contentMd5", contentMd5).fluentPut("contentType", "application/pdf;").fluentPut("fileName", String.format("%s.pdf", contract.title())).fluentPut("fileSize", pdf.length));
 
 			String fileId = step1.getString("fileId");
 			String uploadUrl = step1.getString("fileUploadUrl");
@@ -715,7 +694,10 @@ public class ESignElecsignServiceImpl implements ElecsignService, CompanyAware {
 				os = connection.getOutputStream();
 				os.write(pdf);
 			} finally {
-				if (os != null) try { os.close(); } catch (Exception e) { }
+				if (os != null) try {
+					os.close();
+				} catch (Exception e) {
+				}
 			}
 			int code = connection.getResponseCode();
 			if (code != 200) {
@@ -749,9 +731,7 @@ public class ESignElecsignServiceImpl implements ElecsignService, CompanyAware {
 	}
 
 	/**
-	 * 流程模板路线的企业落章: sign-fields 指定企业印章(合同专用章→默认章回退), operator=流程内企业经办人。
-	 * 平台受理即成功(异步落章); 若企业未授权自动签, 平台登记不执行(autoExecuteSign=false)——
-	 * 此时抛错引导经办人经签署链接手动落章(与法大大时期公司签业务习惯一致)。
+	 * 流程模板路线的企业落章: sign-fields 指定企业印章(合同专用章→默认章回退), operator=流程内企业经办人。 平台受理即成功(异步落章); 若企业未授权自动签, 平台登记不执行(autoExecuteSign=false)—— 此时抛错引导经办人经签署链接手动落章(与法大大时期公司签业务习惯一致)。
 	 */
 	private String autosignByFlowTemplate(int company, Contract contract) throws FLException {
 
@@ -807,8 +787,7 @@ public class ESignElecsignServiceImpl implements ElecsignService, CompanyAware {
 	}
 
 	/**
-	 * 经办人签署链接: 流程详情企业签署方的经办人 psnId → sign-url。
-	 * 公司自动落章未受理时的降级通道(经办人H5手动落章), 对齐法大大时期"公司签=经办人点链接"用法。
+	 * 经办人签署链接: 流程详情企业签署方的经办人 psnId → sign-url。 公司自动落章未受理时的降级通道(经办人H5手动落章), 对齐法大大时期"公司签=经办人点链接"用法。
 	 */
 	String transactorSignUrl(int company, Contract contract) throws FLException {
 
@@ -880,9 +859,7 @@ public class ESignElecsignServiceImpl implements ElecsignService, CompanyAware {
 	}
 
 	/**
-	 * 单流合流的企业自动签：预置双方签署方一次建流，企业方 autoSign 即时落章；
-	 * 客户后续经 {@link #extsign} 从同一流取链接续签（签在同一份已盖章文件上）。
-	 * 流已存在时幂等不重建（客户先行场景的企业签补点）。
+	 * 单流合流的企业自动签：预置双方签署方一次建流，企业方 autoSign 即时落章； 客户后续经 {@link #extsign} 从同一流取链接续签（签在同一份已盖章文件上）。 流已存在时幂等不重建（客户先行场景的企业签补点）。
 	 */
 	void autosignBoth(int company, String orgId, String keyword, Contract contract, String psnSignno) throws FLException {
 
@@ -912,8 +889,7 @@ public class ESignElecsignServiceImpl implements ElecsignService, CompanyAware {
 	}
 
 	/**
-	 * 流程模板路线的客户签署链接: 流程详情个人签署方(signerType=0/psnSigner 非空)的 psnId 作为 operator。
-	 * 流程发起时已按客户手机号注册签署档案, 详情中的 psnId 即客户在该流程的签署身份。
+	 * 流程模板路线的客户签署链接: 流程详情个人签署方(signerType=0/psnSigner 非空)的 psnId 作为 operator。 流程发起时已按客户手机号注册签署档案, 详情中的 psnId 即客户在该流程的签署身份。
 	 */
 	private String extsignByFlowTemplate(int company, Contract contract) throws FLException {
 
@@ -1018,9 +994,9 @@ public class ESignElecsignServiceImpl implements ElecsignService, CompanyAware {
 
 	/**
 	 * 卡流判定+完结一体：流"签署中"且签署方全部完成 → 调完结收口，其余一律不动。
-	 *
-	 * <p>供巡检任务逐单调用：非流ID（仅生成未建流）、查不到、有人未签、已完结——
-	 * 全部静默返回 false（不兜底不报错），只有真卡单才 finish。
+	 * 
+	 * <p>
+	 * 供巡检任务逐单调用：非流ID（仅生成未建流）、查不到、有人未签、已完结—— 全部静默返回 false（不兜底不报错），只有真卡单才 finish。
 	 */
 	boolean finishSignedFlow(int company, Contract contract) throws FLException {
 
@@ -1059,11 +1035,10 @@ public class ESignElecsignServiceImpl implements ElecsignService, CompanyAware {
 
 	/**
 	 * 发起方完结签署流（无 operator——应用即发起方，实测免传）。
-	 *
-	 * <p>兜底场景：签署方全部完成但流仍卡"签署中"（autoFinish 失效的历史流/网络抖动）。
-	 * 全部未签署时 e签宝报 1437170"没有签署，无需归档"——调用方（巡检任务）应先查
-	 * detail 判定全部已签再调本方法。
-	 *
+	 * 
+	 * <p>
+	 * 兜底场景：签署方全部完成但流仍卡"签署中"（autoFinish 失效的历史流/网络抖动）。 全部未签署时 e签宝报 1437170"没有签署，无需归档"——调用方（巡检任务）应先查 detail 判定全部已签再调本方法。
+	 * 
 	 * @return true=完结成功；false=无流程号（未建流，无需兜底）
 	 */
 	boolean finish(int company, Contract contract) throws FLException {
@@ -1085,7 +1060,7 @@ public class ESignElecsignServiceImpl implements ElecsignService, CompanyAware {
 
 	/**
 	 * 创建签署流（2026-10 沙箱实测结构；单流合流：一次放入企业方+个人方全部签署方）。
-	 *
+	 * 
 	 * <p>
 	 * 实测要点：
 	 * <ul>
@@ -1093,10 +1068,9 @@ public class ESignElecsignServiceImpl implements ElecsignService, CompanyAware {
 	 * <li>自动落章在 normalSignFieldConfig.autoSign（非 signer 层）；个人不支持 autoSign， 机构限应用主体企业自身（或已做印章授权）</li>
 	 * <li>signFieldStyle 必传（1=单页章），否则 1435002 参数错误</li>
 	 * <li>签署区只支持坐标定位：keyword 需先调 keyword-positions 查坐标（两步，对应法大大一步 keyword）</li>
-	 * <li>无序签署（默认）：企业方 autoSign 建流即落章，个人方随时可签且签在同一份已盖章文件上；
-	 *     流完结 autoFinish 归档，一份终稿双章齐全</li>
+	 * <li>无序签署（默认）：企业方 autoSign 建流即落章，个人方随时可签且签在同一份已盖章文件上； 流完结 autoFinish 归档，一份终稿双章齐全</li>
 	 * </ul>
-	 *
+	 * 
 	 * @param contract 合同（flowId() 此时为 fileId，建流后覆盖为 signFlowId）
 	 * @param orgId 企业签署账号 orgId（null=不含企业方）
 	 * @param keyword 盖章关键字（企业方必传，先查坐标定位签署区）
@@ -1125,10 +1099,7 @@ public class ESignElecsignServiceImpl implements ElecsignService, CompanyAware {
 			orgNormalJson.put("autoSign", true);
 			// 指定位置签章：signFieldStyle=1(单页) + keyword 预查坐标
 			orgNormalJson.put("signFieldStyle", 1);
-			orgNormalJson.put("signFieldPosition", new JSONObject()
-					.fluentPut("positionPage", String.valueOf(pos.getIntValue("pageNum")))
-					.fluentPut("positionX", pos.getJSONArray("coordinates").getJSONObject(0).getDoubleValue("positionX"))
-					.fluentPut("positionY", pos.getJSONArray("coordinates").getJSONObject(0).getDoubleValue("positionY")));
+			orgNormalJson.put("signFieldPosition", new JSONObject().fluentPut("positionPage", String.valueOf(pos.getIntValue("pageNum"))).fluentPut("positionX", pos.getJSONArray("coordinates").getJSONObject(0).getDoubleValue("positionX")).fluentPut("positionY", pos.getJSONArray("coordinates").getJSONObject(0).getDoubleValue("positionY")));
 
 			JSONObject orgSigner = new JSONObject();
 			orgSigner.put("signerType", 1);
@@ -1163,10 +1134,7 @@ public class ESignElecsignServiceImpl implements ElecsignService, CompanyAware {
 		body.put("signers", signers);
 		// 实测(2026-10沙箱): v3字段名为autoFinish(传autoArchived无效被忽略, 流签完卡"签署中"不归档); signFlowTitle必填
 		// notifyUrl: 签署流完结回调——v3以应用控制台回调配置推送为主, 此处一并尝试下发(未知字段实测被静默忽略, 不致错)
-		body.put("signFlowConfig", new JSONObject()
-				.fluentPut("autoFinish", true)
-				.fluentPut("signFlowTitle", contract.title())
-				.fluentPut("notifyUrl", normalizeIsv() + "/esignAuthCallback.do"));
+		body.put("signFlowConfig", new JSONObject().fluentPut("autoFinish", true).fluentPut("signFlowTitle", contract.title()).fluentPut("notifyUrl", normalizeIsv() + "/esignAuthCallback.do"));
 
 		JSONObject data = esignClient.post(company, EP_FLOW_CREATE_BY_FILE, body);
 
@@ -1189,9 +1157,7 @@ public class ESignElecsignServiceImpl implements ElecsignService, CompanyAware {
 	}
 
 	/**
-	 * 解析真实文件ID（flowId 双语义：add/generate 后存 fileId，任一签署建流后覆盖为 signFlowId）。
-	 * 先企业签再客户签时 flowId 已是 signFlowId，直接当 fileId 建流会报"文档不存在"——
-	 * 先按签署流详情反查 docs[0].fileId，查不到（非流ID）则视为 fileId 原样使用。
+	 * 解析真实文件ID（flowId 双语义：add/generate 后存 fileId，任一签署建流后覆盖为 signFlowId）。 先企业签再客户签时 flowId 已是 signFlowId，直接当 fileId 建流会报"文档不存在"—— 先按签署流详情反查 docs[0].fileId，查不到（非流ID）则视为 fileId 原样使用。
 	 */
 	private String resolveFileId(int company, String id) throws FLException {
 
@@ -1240,8 +1206,9 @@ public class ESignElecsignServiceImpl implements ElecsignService, CompanyAware {
 
 	/**
 	 * 模板控件核对（告警不阻断，生成前把关）。
-	 *
-	 * <p>对照控制台模板控件清单，报告两类漂移——都是"签出空白/错位合同"的前兆：
+	 * 
+	 * <p>
+	 * 对照控制台模板控件清单，报告两类漂移——都是"签出空白/错位合同"的前兆：
 	 * <ul>
 	 * <li>模板有控件但本次未赋值 → 该位置将渲染空白</li>
 	 * <li>前端传了模板上没有的控件 key → e签宝静默忽略（实测），值不会出现</li>
