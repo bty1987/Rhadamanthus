@@ -569,17 +569,27 @@ public class ESignElecsignServiceImpl implements ElecsignService, CompanyAware {
 			if (isOrg) {
 				// 实测(2026-10-25正式): orgId/orgName二选一必传(缺一报1451000), transactor支持transactorPsnAccount(手机号)
 				JSONObject orgParticipant = new JSONObject();
-				// 实测配对规则: orgName配transactorPsnAccount 或 orgId配transactorPsnId, 不可交叉(orgId+PsnAccount报"参数错误")——
-				// 主体全称优先走orgName路线(来源: 公司e签宝签章keyword=实名主体全称, 兜底公司全称); 仅orgId无全称时回退orgId路线(经办人只能传psnId场景由调用方保证)
-				String signOrgId = json.getString("_flow_orgId");
-				String orgName = json.getString("_flow_orgName");
+				// 固定企业参与方(模板详情自带orgParticipant, 如setMode=4): 主体以模板为准——传入不一致报"企业信息和模板中固定信息需一致", 仅经办人从上下文取;
+				// 使用模板时指定(详情orgParticipant为null占位): 上下文取主体——orgName(签章keyword实名全称)优先与PsnAccount配对, orgId仅无全称时回退(orgId须配PsnId)
+				JSONObject tplOrg = stp.getJSONObject("orgParticipant");
+				String tplOrgId = tplOrg == null ? null : tplOrg.getString("orgId");
+				String tplOrgName = tplOrg == null ? null : tplOrg.getString("orgName");
 
-				if (orgName != null && !orgName.trim().isEmpty()) {
-					orgParticipant.fluentPut("orgName", orgName.trim());
-				} else if (signOrgId != null && !signOrgId.trim().isEmpty()) {
-					orgParticipant.fluentPut("orgId", signOrgId.trim());
+				if (tplOrgId != null && !tplOrgId.trim().isEmpty()) {
+					orgParticipant.fluentPut("orgId", tplOrgId.trim());
+				} else if (tplOrgName != null && !tplOrgName.trim().isEmpty()) {
+					orgParticipant.fluentPut("orgName", tplOrgName.trim());
 				} else {
-					throw new FLException(130097, "e签宝流程模板发起缺少签章主体企业标识(_flow_orgId/_flow_orgName)");
+					String orgName = json.getString("_flow_orgName");
+					String signOrgId = json.getString("_flow_orgId");
+
+					if (orgName != null && !orgName.trim().isEmpty()) {
+						orgParticipant.fluentPut("orgName", orgName.trim());
+					} else if (signOrgId != null && !signOrgId.trim().isEmpty()) {
+						orgParticipant.fluentPut("orgId", signOrgId.trim());
+					} else {
+						throw new FLException(130097, "e签宝流程模板发起缺少签章主体企业标识(_flow_orgId/_flow_orgName)");
+					}
 				}
 				String transactorName = json.getString("_flow_transactorName");
 				String transactorPhone = json.getString("_flow_transactorPhone");
