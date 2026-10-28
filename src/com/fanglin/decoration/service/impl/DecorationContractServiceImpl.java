@@ -983,7 +983,8 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 
 		decorationContractPO.setProvider(provider.code());
 
-		return elecsignRouter.route(provider);
+		// 🔴必须带公司绑定: route(provider)单例按company=0读凭证与配置, esign.orgid.{company}探测/凭证全落空(新合同分支曾漏绑,流程模板路线必Route A失败)
+		return elecsignRouter.route(provider, company);
 	}
 
 	/** 电子签路由（签署/查看/归档：按合同记录的厂商路由，保证全链路厂商一致与历史可回溯；null 视同法大大） */
