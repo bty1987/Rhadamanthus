@@ -612,8 +612,36 @@ public class ESignElecsignServiceImpl implements ElecsignService, CompanyAware {
 			participants.add(p);
 		}
 
-		// 控件填充: 模板详情 components 的 componentKey 与 json 同名键匹配(componentKey 为空的签章区跳过)
+		// 控件填充: 模板详情的填写控件与 json 同名键匹配(componentKey 为空的签章区跳过)——
+		// 🔴填写控件挂在 participants[].components[] 下(签章区与填写区混排), 顶层 components 恒为空(cf69cbff实测)——只读顶层会漏全部填充致空白合同
 		JSONArray stComponents = templateDetail.getJSONArray("components");
+
+		if (stComponents == null || stComponents.isEmpty()) {
+
+			stComponents = new JSONArray();
+
+			JSONArray flowParticipants = templateDetail.getJSONArray("participants");
+
+			for (int i = 0; flowParticipants != null && i < flowParticipants.size(); i++) {
+
+			JSONArray pcs = flowParticipants.getJSONObject(i).getJSONArray("components");
+
+				if (pcs == null) {
+					continue;
+				}
+
+				for (int j = 0; j < pcs.size(); j++) {
+					stComponents.add(pcs.getJSONObject(j));
+				}
+			}
+		}
+
+		String docFileId = null;
+		JSONArray stDocs = templateDetail.getJSONArray("docs");
+
+		if (stDocs != null && !stDocs.isEmpty()) {
+			docFileId = stDocs.getJSONObject(0).getString("fileId");
+		}
 
 		if (stComponents != null) {
 			for (int i = 0; i < stComponents.size(); i++) {
@@ -626,7 +654,8 @@ public class ESignElecsignServiceImpl implements ElecsignService, CompanyAware {
 				if (value == null || value.trim().isEmpty()) {
 					continue;
 				}
-				components.add(new JSONObject().fluentPut("fileId", c.getString("fileId")).fluentPut("componentId", c.getString("componentId")).fluentPut("componentValue", value));
+				String cFileId = c.getString("fileId") == null ? docFileId : c.getString("fileId");
+				components.add(new JSONObject().fluentPut("fileId", cFileId).fluentPut("componentId", c.getString("componentId")).fluentPut("componentValue", value));
 			}
 		}
 
