@@ -559,7 +559,10 @@ public class ESignElecsignServiceImpl implements ElecsignService, CompanyAware {
 
 			JSONObject stp = stParticipants.getJSONObject(i);
 			String participantId = stp.getString("participantId");
-			boolean isOrg = stp.getJSONObject("orgParticipant") != null;
+			// 模板详情的orgParticipant/psnParticipant恒null("使用模板时指定"占位, 绑定发生在发起时)——
+			// 企业/个人由participantType区分(实测befdeb9a: 1=企业章方/2=个人章签名方), orgParticipant块仅当模板固定成员时才有值
+			boolean isOrg = stp.getJSONObject("orgParticipant") != null
+					|| (stp.getInteger("participantType") != null && stp.getInteger("participantType").intValue() == 1);
 
 			JSONObject p = new JSONObject().fluentPut("participantId", participantId);
 
