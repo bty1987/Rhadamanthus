@@ -125,7 +125,12 @@ public class SignetServiceImpl implements SignetService {
 			throw new FLException(130047, "签章状态不可操作");
 		}
 
-		routeForAuth(signetPO).register(signetPO);
+		// 厂商已显式指定(创建时选择)则按指定厂商注册, 仅空厂商行按公司路由解析兜底——路由覆盖会冲掉显式选择
+		if (signetPO.getProvider() == null) {
+			routeForAuth(signetPO).register(signetPO);
+		} else {
+			elecsignRouter.route(signetPO.getProvider(), signetPO.getCompany()).register(signetPO);
+		}
 
 		signetPO.setStatus(SignetPO.STATUS_REGIST_INT);
 

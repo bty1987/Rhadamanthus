@@ -15,6 +15,7 @@ jQuery(function($) {
             name: com.focusPage("#name", "#signetModal"),
             keyword: com.focusPage("#keyword", "#signetModal"),
             type: com.focusPage("#type", "#signetModal"),
+            provider: com.focusPage("#provider", "#signetModal"),
             path: com.focusPage("#path", "#signetModal"),
 
             signetImg: com.focusPage("#signetImg"),
@@ -389,6 +390,11 @@ jQuery(function($) {
             "signet.data": config.server + signet.items.path.val(),
         }
 
+        // 厂商显式选择才传(空=注册时按公司路由解析, 存量行为零变化)
+        if (signet.items.provider.val()) {
+            options["signet.provider"] = signet.items.provider.val();
+        }
+
         if (signet.sid) {
             options["signet.sid"] = signet.sid;
 
@@ -450,6 +456,7 @@ jQuery(function($) {
         signet.items.no.val(v.no).prop("disabled", false);
         signet.items.name.val(v.name);
         signet.items.keyword.val(v.keyword);
+        signet.items.provider.val(v.provider ? String(v.provider) : "");
         signet.items.path.val(v.path).prop("disabled", false);
         signet.imgsrc = com.showImg(signet.items.signetImg, v.path, 150, 150, '', null, 0);
     }
@@ -501,6 +508,7 @@ jQuery(function($) {
         signet.items.no.val(v.no).prop("disabled", true);
         signet.items.name.val(v.name);
         signet.items.keyword.val(v.keyword);
+        signet.items.provider.val(v.provider ? String(v.provider) : "");
         signet.items.path.val(v.path).prop("disabled", true);
         signet.imgsrc = com.showImg(signet.items.signetImg, v.path, 150, 150, '', null, 0);
     }

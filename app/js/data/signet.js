@@ -3,7 +3,7 @@ app.ready(function () {
 layui.use(['table', 'laypage', 'form', 'layer', 'upload', 'jquery'], function () {
     var table = layui.table, laypage = layui.laypage, form = layui.form, layer = layui.layer, upload = layui.upload, $ = layui.jquery;
     var state = { page: 1, rows: 10, total: 0, editIndex: null, editId: null };
-    var F = ['sid','no','name','keyword','type','path'];
+    var F = ['sid','no','name','keyword','type','provider','path'];
     app.uploadImage({ elem: '#btnUpload', done: function (res) { $('#path').val(res.resUrl || ''); } });
     var ST = { 0: '初始化', 1: '已注册', 2: '已认证', 3: '已签章', 4: '已确认', 5: '已作废' };
     function stB(d) { var c = ''; switch (d.status) { case 0: c = 'layui-bg-gray'; break; case 3: c = 'layui-bg-green'; break; case 5: c = 'layui-bg-red'; break; default: c = 'layui-bg-blue'; } return '<span class="layui-badge ' + c + '">' + (ST[d.status] || d.status) + '<\/span>'; }
@@ -17,7 +17,7 @@ layui.use(['table', 'laypage', 'form', 'layer', 'upload', 'jquery'], function ()
     function query(pg) { state.page = pg || 1; app.post(api.data.pageSignet, $.extend({}, bF(), { 'paging.page': state.page, 'paging.rows': state.rows }), function (res) { var p = res.paging || {}; table.reload('resultTable', { data: p.data || [] }); state.total = p.totalRecords || 0; rpg(); }); }
     function rpg() { laypage.render({ elem: 'pagenation', count: state.total, curr: state.page, limit: state.rows, limits: [10, 30], layout: ['count', 'prev', 'page', 'next', 'limit', 'skip'], jump: function (o, f) { state.rows = o.limit; if (!f) query(o.curr); } }); }
     function openEdit(d) { app.clearValidator(); $('#editForm')[0].reset(); state.editId = null; if (d) { state.editId = d.sid; F.forEach(function (k) { $('#editForm [name="' + k + '"]').val(d[k] != null ? d[k] : ''); }); } form.render('select'); state.editIndex = layer.open({ type: 1, title: d ? '编辑签章' : '添加签章', content: $('#editBox'), area: ['520px', 'auto'] }); }
-    function doSave() { if (app.validate('editForm')) return; var o = {}; F.forEach(function (k) { o['signet.' + k] = $('#editForm [name="' + k + '"]').val(); }); var ad; if (state.editId) { o['signet.sid'] = state.editId; ad = api.data.updateSignet; } else { delete o['signet.sid']; ad = api.data.addSignet; } app.post(ad, o, function () { app.showAlert(app.success, '保存成功'); layer.close(state.editIndex); state.editIndex = null; query(state.page); }); }
+    function doSave() { if (app.validate('editForm')) return; var o = {}; F.forEach(function (k) { o['signet.' + k] = $('#editForm [name="' + k + '"]').val(); }); if (!o['signet.provider']) delete o['signet.provider']; var ad; if (state.editId) { o['signet.sid'] = state.editId; ad = api.data.updateSignet; } else { delete o['signet.sid']; ad = api.data.addSignet; } app.post(ad, o, function () { app.showAlert(app.success, '保存成功'); layer.close(state.editIndex); state.editIndex = null; query(state.page); }); }
     function doCancel(id) { app.showConfirm('确认作废？', function () { app.post(api.data.cancelSignet, { 'signet.sid': id }, function () { app.showAlert(app.success, '已作废'); query(state.page); }); }); }
     // 自动落章授权: internal-auth 将印章授权给全部成员在指定流程模板自动使用, 返回授权书签署链接
     function doAutoSignAuth(d) {
