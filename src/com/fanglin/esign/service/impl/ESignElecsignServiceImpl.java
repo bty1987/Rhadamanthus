@@ -575,10 +575,10 @@ public class ESignElecsignServiceImpl implements ElecsignService, CompanyAware {
 				String tplOrgId = tplOrg == null ? null : tplOrg.getString("orgId");
 				String tplOrgName = tplOrg == null ? null : tplOrg.getString("orgName");
 
-				if (tplOrgId != null && !tplOrgId.trim().isEmpty()) {
-					orgParticipant.fluentPut("orgId", tplOrgId.trim());
-				} else if (tplOrgName != null && !tplOrgName.trim().isEmpty()) {
+				if (tplOrgName != null && !tplOrgName.trim().isEmpty()) {
 					orgParticipant.fluentPut("orgName", tplOrgName.trim());
+				} else if (tplOrgId != null && !tplOrgId.trim().isEmpty()) {
+					orgParticipant.fluentPut("orgId", tplOrgId.trim());
 				} else {
 					String orgName = json.getString("_flow_orgName");
 					String signOrgId = json.getString("_flow_orgId");
