@@ -138,7 +138,9 @@ public class ApprovalDecorationActivityServiceImpl implements ApprovalDecoration
 
 			BeanUtil.copyProperties(approvalDecorationActivityItemVO, approvalDecorationActivityItemPO);
 
-			// content 列 NOT NULL: 前端未回传时置空串兜底(否则插行 ConstraintViolation 110000)
+			// orderId/content 列 NOT NULL: VO 无此二属性( orderId 在主VO/ content 由额度校验摘要生成), 缺省兜底否则插行 ConstraintViolation 110000
+			approvalDecorationActivityItemPO.setOrderId(approvalDecorationActivityVO.getOrderId());
+
 			if (approvalDecorationActivityItemPO.getContent() == null) {
 				approvalDecorationActivityItemPO.setContent("");
 			}
