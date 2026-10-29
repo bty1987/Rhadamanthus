@@ -111,10 +111,10 @@ jQuery(function($) {
             else labels[name] = "已签署";
         });
 
-        var html = "客户认证状态：e签宝 <b style='color:" + (labels["e签宝"] == "已实名" ? "green" : "#d9534f") + ";'>" + (labels["e签宝"] || "未注册") + "</b>";
-        html += " ｜ 法大大 <b style='color:" + (labels["法大大"] == "已实名" ? "green" : "#d9534f") + ";'>" + (labels["法大大"] || "未注册") + "</b>";
+        var html = "e签宝 <b style='color:" + (labels["e签宝"] == "已实名" ? "green" : "#d9534f") + ";'>" + (labels["e签宝"] || "未注册") + "</b> ｜ 法大大 <b style='color:" + (labels["法大大"] == "已实名" ? "green" : "#d9534f") + ";'>" + (labels["法大大"] || "未注册") + "</b>";
 
-        com.focusPage("#customerAuthBar").html(html).show();
+        // 认证状态进客户信息卡片(顶部横幅不再使用)
+        com.focusPage("#customerAuthPlatform").html(html);
     }, null, false);
     
     com.post(api.data.confirmCustomer, {
@@ -186,6 +186,7 @@ jQuery(function($) {
         $('<div></div>').append($('<label></label>').attr('for', 'form-field').text('客户关系: ' + decoration.customer.relationshipType));
         $('<div></div>').append($('<label></label>').attr('for', 'form-field').text('身份证: ' + (decoration.customer.identity == "" || decoration.customer.identity == null ? "暂无" : decoration.customer.identity.replace(/(.{6}).*(.{4})/, '$1********$2')))).appendTo($info);
         $('<div></div>').append($('<label></label>').attr('for', 'form-field').addClass("red").text('认证: ' + (decorationContract.authFlag ? "已认证" : "未认证"))).appendTo($info);
+        $('<div></div>').append($('<label></label>').attr('for', 'form-field').text('电子签认证: ').append($('<span></span>').attr('id', 'customerAuthPlatform').text('加载中...'))).appendTo($info);
 
         var $widget2 = $('<div></div>').addClass("").prependTo(decorationContract.decorationInfo);
         var $box2 = $('<div></div>').addClass("widget-box").appendTo($widget2);
@@ -644,9 +645,9 @@ jQuery(function($) {
         // contractProvider=目标合同厂商(客户签/公司签时缓存): 传provider按该厂商实名(跨厂商自动定向重实名, 不覆盖其他厂商认证信息)
         var authParams = {
             "customer.cid": params.decoration.cid,
-            "customer.identity": decorationContract.identity
+            "customer.identity": decorationContract.identity,
+            "customer.provider": $("input[name='authProvider']:checked", "#customerModal").val()
         };
-        if (decorationContract.contractProvider) authParams["customer.provider"] = decorationContract.contractProvider;
 
         com.post(api.data.authCustomer, authParams, function(res) {
 
@@ -662,9 +663,9 @@ jQuery(function($) {
 
         var authParams = {
             "customer.cid": params.decoration.cid,
-            "customer.passport": decorationContract.passport
+            "customer.passport": decorationContract.passport,
+            "customer.provider": $("input[name='authProvider']:checked", "#customerModal").val()
         };
-        if (decorationContract.contractProvider) authParams["customer.provider"] = decorationContract.contractProvider;
 
         com.post(api.data.authCustomer, authParams, function(res) {
 
@@ -680,9 +681,9 @@ jQuery(function($) {
 
         var authParams = {
             "customer.cid": params.decoration.cid,
-            "customer.passhkm": decorationContract.passhkm
+            "customer.passhkm": decorationContract.passhkm,
+            "customer.provider": $("input[name='authProvider']:checked", "#customerModal").val()
         };
-        if (decorationContract.contractProvider) authParams["customer.provider"] = decorationContract.contractProvider;
 
         com.post(api.data.authCustomer, authParams, function(res) {
 
