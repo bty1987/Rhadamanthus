@@ -1,4 +1,4 @@
-package com.fanglin.decoration.vo;
+package com.fanglin.elecsign.vo;
 
 import java.io.Serializable;
 

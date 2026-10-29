@@ -15,7 +15,6 @@ import com.fanglin.core.interceptor.FLException;
 import com.fanglin.data.common.vo.ContractVO;
 import com.fanglin.data.common.vo.SignetVO;
 import com.fanglin.decoration.service.DecorationContractService;
-import com.fanglin.decoration.vo.ElecsignAuthVO;
 import com.fanglin.decoration.vo.DecorationContractVO;
 import com.fanglin.decoration.vo.DecorationVO;
 
@@ -29,8 +28,6 @@ public class DecorationContractAction extends BaseListAction {
 	private DecorationContractVO decorationContract;
 
 	private List<DecorationContractVO> decorationContracts;
-
-	private List<ElecsignAuthVO> elecsignAuths;
 
 	private DecorationVO decoration;
 
@@ -55,14 +52,6 @@ public class DecorationContractAction extends BaseListAction {
 	public String queryDecorationContractByOrderId() throws FLException {
 
 		decorationContracts = decorationContractService.queryDecorationContractByOrderId(decorationContract);
-
-		return SUCCESS;
-	}
-
-	@Action(value = "queryElecsignAuthByCid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryElecsignAuthByCid() throws FLException {
-
-		elecsignAuths = decorationContractService.queryElecsignAuthByCid(customer.getCid().intValue());
 
 		return SUCCESS;
 	}
@@ -217,14 +206,6 @@ public class DecorationContractAction extends BaseListAction {
 
 	public void setDecorationContracts(List<DecorationContractVO> decorationContracts) {
 		this.decorationContracts = decorationContracts;
-	}
-
-	public List<ElecsignAuthVO> getCustomerElecsignAuths() {
-		return elecsignAuths;
-	}
-
-	public void setCustomerElecsignAuths(List<ElecsignAuthVO> elecsignAuths) {
-		this.elecsignAuths = elecsignAuths;
 	}
 
 	public CustomerVO getCustomer() {
