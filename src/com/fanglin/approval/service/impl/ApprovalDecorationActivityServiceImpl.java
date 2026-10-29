@@ -45,8 +45,10 @@ import com.fanglin.decoration.service.DecorationActivityCostService;
 import com.fanglin.decoration.vo.ActivityCostVO;
 import com.fanglin.information.dao.ActivityItemDao;
 import com.fanglin.information.dao.AwardStockDao;
+import com.fanglin.information.dao.MessageQueuingDao;
 import com.fanglin.information.po.ActivityItemPO;
 import com.fanglin.information.po.AwardStockPO;
+import com.fanglin.information.po.MessageCueuingPO;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.utils.Arith;
@@ -89,6 +91,9 @@ public class ApprovalDecorationActivityServiceImpl implements ApprovalDecoration
 
 	@Autowired
 	private DecorationActivityCostService decorationActivityCostService;
+
+	@Autowired
+	private MessageQueuingDao messageQueuingDao;
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
@@ -262,6 +267,9 @@ public class ApprovalDecorationActivityServiceImpl implements ApprovalDecoration
 			if (costSnapshot != null && activityItemPO != null) {
 				decorationActivityCostService.addActivityCost(decorationPO.getOrderId(), decorationActivityItemPO.getDaiId(), decorationActivityItemPO.getMoney(), decorationActivityItemPO.getNum(), costSnapshot, Integer.valueOf(decorationPO.getCompany()));
 			}
+
+			// 添加类操作同步 messagecueuing: args=orderId/daiId/designerId(装修单设计师, 空则缺省)
+			messageQueuingDao.save(new MessageCueuingPO().init(decorationPO.getOrderId(), "addDecorationActivityItem", "{\"orderId\":\"" + decorationPO.getOrderId() + "\",\"daiId\":\"" + decorationActivityItemPO.getDaiId() + "\"" + (decorationPO.getDesigner() != null ? ",\"designerId\":\"" + decorationPO.getDesigner().getUserId() + "\"" : "") + "}"));
 		}
 
 		List<DecorationActivityPO> decorationActivityPOs = decorationActivityDao.queryDecorationActivityByOrderId(decorationPO.getOrderId());

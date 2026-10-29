@@ -182,11 +182,15 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 
 		decorationActivityRecordDao.save(decorationActivityRecordPO);
 
+		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(decorationActivityItemVO.getOrderId());
+
 		// 校验结果缓存档(只写档: 不展示/不参与校验/系统逻辑不读)
 		if (costSnapshot != null) {
-			DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(decorationActivityItemVO.getOrderId());
 			decorationActivityCostService.addActivityCost(decorationActivityItemVO.getOrderId(), decorationActivityItemPO.getDaiId(), money, num, costSnapshot, decorationPO == null ? null : Integer.valueOf(decorationPO.getCompany()));
 		}
+
+		// 添加类操作同步 messagecueuing: args=orderId/daiId/designerId(装修单设计师, 空则缺省)
+		messageQueuingDao.save(new MessageCueuingPO().init(decorationActivityItemVO.getOrderId(), "addDecorationActivityItem", "{\"orderId\":\"" + decorationActivityItemVO.getOrderId() + "\",\"daiId\":\"" + decorationActivityItemPO.getDaiId() + "\"" + (decorationPO != null && decorationPO.getDesigner() != null ? ",\"designerId\":\"" + decorationPO.getDesigner().getUserId() + "\"" : "") + "}"));
 
 		return 0;
 	}
@@ -283,6 +287,9 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 		DecorationActivityRecordPO decorationActivityRecordPO = new DecorationActivityRecordPO().init(decorationActivityItemPO.getAid(), decorationActivityItemPO, DecorationActivityItemPO.STATUS_UNVALID_INT, operater, decorationActivityItemVO.getContent());
 
 		decorationActivityRecordDao.save(decorationActivityRecordPO);
+
+		// 删除类(作废)操作同步 messagecueuing: args=orderId/daiId/designerId
+		messageQueuingDao.save(new MessageCueuingPO().init(decorationActivityItemPO.getOrderId(), "abateDecorationActivityItem", "{\"orderId\":\"" + decorationActivityItemPO.getOrderId() + "\",\"daiId\":\"" + decorationActivityItemPO.getDaiId() + "\"" + (decorationPO.getDesigner() != null ? ",\"designerId\":\"" + decorationPO.getDesigner().getUserId() + "\"" : "") + "}"));
 
 		return 0;
 	}
@@ -431,6 +438,9 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 		awardRecordDao.save(awardRecordPO);
 
 		subDecorationForCut(decorationPO, decorationActivityItemPO);
+
+		// 删除类(退款)操作同步 messagecueuing: args=orderId/daiId/designerId
+		messageQueuingDao.save(new MessageCueuingPO().init(decorationActivityItemPO.getOrderId(), "refundDecorationActivityItem", "{\"orderId\":\"" + decorationActivityItemPO.getOrderId() + "\",\"daiId\":\"" + decorationActivityItemPO.getDaiId() + "\"" + (decorationPO.getDesigner() != null ? ",\"designerId\":\"" + decorationPO.getDesigner().getUserId() + "\"" : "") + "}"));
 
 		return 0;
 	}
