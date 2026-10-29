@@ -53,6 +53,7 @@ import com.fanglin.decoration.po.DecorationOperatePO;
 import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.decoration.service.DecorationAccountStatusService;
 import com.fanglin.decoration.service.DecorationContractService;
+import com.fanglin.decoration.vo.CustomerElecsignAuthVO;
 import com.fanglin.decoration.vo.DecorationContractVO;
 import com.fanglin.decoration.vo.DecorationVO;
 import com.fanglin.elecsign.enums.ElecsignProvider;
@@ -177,6 +178,33 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 		}
 
 		return decorationContractVOs;
+	}
+
+	@Override
+	public List<CustomerElecsignAuthVO> queryCustomerElecsignAuth(int cid) throws FLException {
+
+		List<CustomerElecsignAuthVO> authVOs = new ArrayList<CustomerElecsignAuthVO>();
+
+		// 电子签厂商固定两家(1法大大/2e签宝), 逐厂商查认证行; 无行=未注册(status置null, 页面显示"未注册")
+		for (short provider : new short[] { ElecsignProvider.FADADA.code(), ElecsignProvider.ESIGN.code() }) {
+
+			CustomerElecsignAuthVO authVO = new CustomerElecsignAuthVO();
+			authVO.setProvider(provider);
+
+			try {
+				com.fanglin.elecsign.po.ElecsignAuthPO authPO = elecsignAuthDao.queryElecsignAuthByCidAndProvider(cid, provider);
+
+				if (authPO != null) {
+					authVO.setStatus(Short.valueOf(authPO.getStatus()));
+				}
+			} catch (Exception e) {
+				// 认证行查询不可用(新表未建等)按未注册处理, 不阻断页面
+			}
+
+			authVOs.add(authVO);
+		}
+
+		return authVOs;
 	}
 
 	@Override

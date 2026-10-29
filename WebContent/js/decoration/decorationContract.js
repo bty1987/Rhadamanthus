@@ -93,8 +93,28 @@ jQuery(function($) {
         decorationContract.passhkm = decoration.customer.passhkm;
         
         params.customer.cid = decoration.customer.cid;
-        
+
         decorationContract.decoration = decoration;
+    }, null, false);
+
+    // 客户电子签认证状态横幅(elecsignauth: 0注册未实名/1已实名/2已签署, 无记录=未注册)
+    com.post(api.decoration.queryCustomerElecsignAuth, {
+        "customer.cid": params.customer.cid
+    }, function(res) {
+
+        var labels = {};
+        $.each(res.customerElecsignAuths || [], function(i, a) {
+            var name = a.provider == 2 ? "e签宝" : "法大大";
+            if (a.status === null || a.status === undefined) labels[name] = "未注册";
+            else if (a.status == 0) labels[name] = "注册未实名";
+            else if (a.status == 1) labels[name] = "已实名";
+            else labels[name] = "已签署";
+        });
+
+        var html = "客户认证状态：e签宝 <b style='color:" + (labels["e签宝"] == "已实名" ? "green" : "#d9534f") + ";'>" + (labels["e签宝"] || "未注册") + "</b>";
+        html += " ｜ 法大大 <b style='color:" + (labels["法大大"] == "已实名" ? "green" : "#d9534f") + ";'>" + (labels["法大大"] || "未注册") + "</b>";
+
+        com.focusPage("#customerAuthBar").html(html).show();
     }, null, false);
     
     com.post(api.data.confirmCustomer, {

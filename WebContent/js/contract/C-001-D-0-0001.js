@@ -446,6 +446,10 @@ jQuery(function($) {
                 "table": JSON.stringify(contractEdit.table)
             };
 
+            // 签署厂商透传(创建弹窗厂商选择: 2=e签宝/1=法大大, 空=按公司路由)
+            var vendor = com.focusPage("#vendor").val();
+            if (vendor) options["decorationContract.provider"] = vendor;
+
             if (params.decoration.contract && params.decoration.contract.dcid) {
                 url = api.decoration.makeDecorationContract;
                 options["decorationContract.dcid"] = params.decoration.contract.dcid;
