@@ -23,9 +23,10 @@ import com.fanglin.core.interceptor.FLException;
 import com.fanglin.decoration.dao.DecorationActivityCostDao;
 import com.fanglin.decoration.po.DecorationActivityCostPO;
 import com.fanglin.information.po.ActivityItemPO;
+import com.fanglin.system.dao.SystemConfigDao;
+import com.fanglin.system.po.SystemConfigPO;
 import com.fanglin.utils.Arith;
 import com.fanglin.utils.DateUtil;
-import com.fanglin.utils.SystemConfig;
 
 /**
  * 优惠额度校验哨兵: 额度类活动物品(activityitem.type>=10)创建前调 fl-yy validate 接口校验资格。
@@ -39,12 +40,13 @@ import com.fanglin.utils.SystemConfig;
  * 未配置 cost.*、配置反查不到、金额无效、网络/超时/签名/接口非 0 等一切无法完成校验的情形,
  * 一律记日志后跳过校验放行创建(返回 null)——外挂不在场时业务照走, 不存在"异常时拦截"路径。
  * 
- * <h3>配置(sysconfig.properties)</h3>
+ * <h3>配置(communion.systemconfig 表, 全局 key=company 0)</h3>
  * <ul>
  * <li>{@code cost.validate.url}: validate 接口地址(daily/正式各自网关地址)</li>
  * <li>{@code cost.app.secret}: erp_project_sync 应用密钥(按环境分配, 复用既有密钥禁止覆盖)</li>
  * </ul>
  * appId 固定 erp_project_sync(接口文档明示), 硬编码常量不设配置键。
+ * 任一未配置 = 跳过校验放行(尽力而为语义, log.warn 留痕)。
  * 
  * <h3>签名(fl-sync 统一验签)</h3>
  * Header 必传 appId/timestamp(毫秒, 与服务器时差≤30s)/nonce(60s 防重)/sign;
@@ -72,8 +74,17 @@ public class DecorationActivityCost {
 
 	private static final SecureRandom RANDOM = new SecureRandom();
 
+	/** systemconfig 配置键: validate 接口地址 */
+	public static final String KEY_VALIDATE_URL = "cost.validate.url";
+
+	/** systemconfig 配置键: erp_project_sync 应用密钥 */
+	public static final String KEY_APP_SECRET = "cost.app.secret";
+
 	@Autowired
 	private DecorationActivityCostDao decorationActivityCostDao;
+
+	@Autowired
+	private SystemConfigDao systemConfigDao;
 
 	/**
 	 * 校验结果缓存档快照: 仅校验通过时返回; balance/toplimit 为厘(接口元值×1000, 接口未返回时为 null)。
@@ -187,13 +198,17 @@ public class DecorationActivityCost {
 	 */
 	private CostSnapshot tryValidate(String orderId, String userId, long amount) throws FLException {
 
-		String url = SystemConfig.getString("cost.validate.url");
-		String secret = SystemConfig.getString("cost.app.secret");
+		// 配置读 communion.systemconfig(全局 key): 任一未配置 = 跳过校验放行(尽力而为)
+		SystemConfigPO urlConfig = systemConfigDao.querySystemConfig(KEY_VALIDATE_URL);
+		SystemConfigPO secretConfig = systemConfigDao.querySystemConfig(KEY_APP_SECRET);
 
-		if (url == null || "".equals(url) || secret == null || "".equals(secret)) {
-			log.warn(String.format("优惠额度校验未配置(cost.validate.url/cost.app.secret), 跳过校验放行, orderId:%s", orderId));
+		if (urlConfig == null || urlConfig.getValue() == null || "".equals(urlConfig.getValue().trim()) || secretConfig == null || secretConfig.getValue() == null || "".equals(secretConfig.getValue().trim())) {
+			log.warn(String.format("优惠额度校验未配置(%s/%s), 跳过校验放行, orderId:%s", KEY_VALIDATE_URL, KEY_APP_SECRET, orderId));
 			return null;
 		}
+
+		String url = urlConfig.getValue().trim();
+		String secret = secretConfig.getValue().trim();
 
 		JSONObject body = new JSONObject();
 		body.put("staffCode", userId);
