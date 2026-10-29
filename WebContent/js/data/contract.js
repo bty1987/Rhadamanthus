@@ -14,12 +14,43 @@ jQuery(function($) {
             path: com.focusPage("#path"),
             videopath: com.focusPage("#videopath"),
             noticePath: com.focusPage("#noticePath"),
-            atttype: com.focusPage("#atttype")
+            atttype: com.focusPage("#atttype"),
+            vendor: com.focusPage("#vendor")
         },
 
         cid: null
 
     };
+
+    // 厂商切换: 法大大=文件上传(现状); e签宝=流程模板(无需本地文件, path固定esign://docTemplate, 编号填e签宝流程模板ID)
+    contract.items.vendor.on('change', function() {
+
+        var esign = contract.items.vendor.val() == "2";
+
+        com.focusPage("#esignTipRow").toggle(esign);
+        com.focusPage("#pathRow").toggle(!esign);
+        com.focusPage("#videoRow").toggle(!esign);
+        com.focusPage("#noticePathRow").toggle(!esign);
+        com.focusPage("#uploadNoticeRow").toggle(!esign);
+        com.focusPage("#uploadRow").toggle(!esign);
+        com.focusPage("#uploadVideoRow").toggle(!esign);
+
+        if (esign) {
+            contract.items.path.val("esign://docTemplate");
+            contract.items.videopath.val("esign://docTemplate");
+            contract.items.noticePath.val("");
+        } else {
+            if (contract.items.path.val() == "esign://docTemplate") contract.items.path.val("");
+            if (contract.items.videopath.val() == "esign://docTemplate") contract.items.videopath.val("");
+        }
+    });
+
+    contract.items.vendor.trigger('change');
+
+    com.focusPage("#esignConsoleBtn").on('click', function() {
+
+        window.open("https://web.esign.cn/", "_blank");
+    });
 
     contract.items.page.bindData(constant.data().contract.type.datas.sort(function(a, b) {
 
@@ -80,6 +111,14 @@ jQuery(function($) {
         field: "title",
         name: "标题: ",
         prop: "title",
+        clazz: "grey"
+    }, {
+        field: "path",
+        name: "厂商",
+        prop: function(v) {
+
+            return (v.path || "").indexOf("esign://") == 0 ? "e签宝" : "法大大";
+        },
         clazz: "grey"
     }, {
         field: "page",
@@ -150,6 +189,9 @@ jQuery(function($) {
 
         com.cleanItems(contract.items);
 
+        // 新增默认法大大形态, 重置表单行显隐
+        contract.items.vendor.val("1").trigger('change');
+
         com.popup4model('#layerAdd', '添加', null, function() {
 
             com.clearValidator();
@@ -166,6 +208,9 @@ jQuery(function($) {
         contract.items.videopath.val(v.videopath);
         contract.items.noticePath.val(v.noticePath);
         contract.items.atttype.val(v.atttype);
+
+        // 编辑按path前缀回显厂商(esign://=签宝流程模板, 其余=文件上传), 触发change切换表单形态
+        contract.items.vendor.val((v.path || "").indexOf("esign://") == 0 ? "2" : "1").trigger('change');
     }
 
     function saveData() {

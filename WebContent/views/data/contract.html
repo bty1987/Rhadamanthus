@@ -34,34 +34,59 @@
             </div>
 
             <div class="form-group">
+                 <label class="col-sm-3 control-label no-padding-right orange">厂商</label>
+                 <div class="col-sm-8">
+                     <select id='vendor' class="col-xs-8 m-wrap">
+                         <option value="1">法大大(文件上传)</option>
+                         <option value="2">e签宝(流程模板)</option>
+                     </select>
+                 </div>
+            </div>
+
+            <div class="form-group">
                 <label class="col-sm-3 control-label no-padding-right orange" for="path">页面</label>
                 <div class="col-sm-9">
                     <select id='page'  class="col-xs-10 col-sm-7"></select>
                 </div>
             </div>
 
-            <div class="form-group">
+            <div class="form-group" id="esignTipRow" style="display: none;">
+                <label class="col-sm-3 control-label no-padding-right"></label>
+                <div class="col-sm-9" style="padding-top: 5px;">
+                    <div style="margin-bottom: 6px;">
+                        流程模板在e签宝控制台创建: 上传底稿PDF → 添加填写控件与签章区 → 保存后将
+                        <b style="color: orange;">流程模板ID</b> 复制填入上方
+                        <b style="color: orange;">编号</b> 栏 (本条即完成模板部署, 无需本地上传文件)。
+                    </div>
+                    <button type="button" id="esignConsoleBtn" class="btn btn-primary btn-minier">
+                        <i class="icon-external-link"></i> 打开e签宝模板操作页
+                    </button>
+                    <span style="color: #999; margin-left: 8px;">授权与签章区配置见e签宝控制台, 模板定稿后勿再修改(授权随模板修改失效)</span>
+                </div>
+            </div>
+
+            <div class="form-group" id="pathRow">
                 <label class="col-sm-3 control-label no-padding-right orange" for="path">文件路径</label>
                 <div class="col-sm-9">
                     <input type="text" id="path" class="col-xs-10 col-sm-7 v_required" data-toggle="popover" data-trigger='manual' readonly/>
                 </div>
             </div>
 
-            <div class="form-group">
+            <div class="form-group" id="videoRow">
                 <label class="col-sm-3 control-label no-padding-right orange" for="videopath">视频路径</label>
                 <div class="col-sm-9">
                     <input type="text" id="videopath" class="col-xs-10 col-sm-7 v_required" data-toggle="popover" data-trigger='manual' readonly/>
                 </div>
             </div>
 
-            <div class="form-group">
+            <div class="form-group" id="noticePathRow">
                 <label class="col-sm-3 control-label no-padding-right" for="noticePath">须知文件</label>
                 <div class="col-sm-9">
                     <input type="text" id="noticePath" class="col-xs-10 col-sm-7" data-toggle="popover" data-trigger='manual' readonly/>
                 </div>
             </div>
 
-            <div class="form-group">
+            <div class="form-group" id="uploadNoticeRow">
                 <label class="col-sm-3 control-label no-padding-right"></label>
                 <div class="col-sm-9" id="uploadNotice">
                     <div id="noticeUpload"></div>
@@ -75,14 +100,14 @@
                 </div>
             </div>
 
-            <div class="form-group">
-                 <label class="col-sm-3 control-label no-padding-right"></label>
+            <div class="form-group" id="uploadRow">
+                <label class="col-sm-3 control-label no-padding-right"></label>
                 <div class="col-sm-9" id="upload">
                     <div id="fileUpload"></div>
                 </div>
             </div>
 
-            <div class="form-group">
+            <div class="form-group" id="uploadVideoRow">
                 <label class="col-sm-3 control-label no-padding-right"></label>
                 <div class="col-sm-9" id="uploadVideo">
                     <div id="videoUpload"></div>
