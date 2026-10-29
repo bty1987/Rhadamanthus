@@ -4,6 +4,7 @@ $(function () {
         items: {},
         activity: {},
         activityItem: {},
+        activityItemMap: {},
         data:{}
     };
 
@@ -55,16 +56,22 @@ $(function () {
         if ($this.val()) {
             com.post(api.information.queryActivityItemByAid, options, function (res) {
                 var _ = res.activityItems;
+
+                // 优惠额度物品(type 10/11)按 -10 归入同形态组, 并缓存原始 type 供提交使用(对齐 decoration4detail; 本页无红包组, 12 与 type=2 一致不可见)
+                materialActivityItem.activityItemMap = {};
+
                 for (var i = 0; i < _.length; i++) {
 
                     var _activityItem = _[i];
 
-                    if (_activityItem.type == 0) {
+                    materialActivityItem.activityItemMap[_activityItem.asid] = _activityItem.type;
+
+                    if (_activityItem.type == 0 || _activityItem.type == 10) {
                         _coupons.push({
                             asid: _activityItem.asid,
                             activityItemName: _activityItem.name + " 金额:" + _activityItem.money
                         });
-                    } else if (_activityItem.type == 1) {
+                    } else if (_activityItem.type == 1 || _activityItem.type == 11) {
                         _things.push({
                             asid: _activityItem.asid,
                             activityItemName: _activityItem.name + " 金额:" + _activityItem.money
@@ -430,7 +437,8 @@ $(function () {
             options["materialActivityItems[" + index + "].asid"] = _things.children('span').attr("asid");
             options["materialActivityItems[" + index + "].activity"] = activityName;
             options["materialActivityItems[" + index + "].name"] = _things.children('span').attr("thingsName").split(" ")[0];
-            options["materialActivityItems[" + index + "].type"] = 1;
+            var costType = materialActivityItem.activityItemMap[_things.children('span').attr("asid")];
+            options["materialActivityItems[" + index + "].type"] = costType >= 10 ? costType : 1;
             options["materialActivityItems[" + index + "].num"] = _things.children('span').attr("num");
             options["materialActivityItems[" + index + "].money"] = _things.children('span').attr("thingsName").split(" ")[1].split(':')[1];
             options["materialActivityItems[" + index + "].content"] = content;
@@ -447,7 +455,8 @@ $(function () {
             options["materialActivityItems[" + index + "].asid"] = _coupons.children('span').attr("asid");
             options["materialActivityItems[" + index + "].activity"] = activityName;
             options["materialActivityItems[" + index + "].name"] = _coupons.children('span').attr("couponsName").split(" ")[0];
-            options["materialActivityItems[" + index + "].type"] = 0;
+            var costType = materialActivityItem.activityItemMap[_coupons.children('span').attr("asid")];
+            options["materialActivityItems[" + index + "].type"] = costType >= 10 ? costType : 0;
             options["materialActivityItems[" + index + "].num"] = _coupons.children('span').attr("num");
             options["materialActivityItems[" + index + "].money"] = _coupons.children('span').attr("couponsName").split(" ")[1].split(':')[1];
             options["materialActivityItems[" + index + "].content"] = content;

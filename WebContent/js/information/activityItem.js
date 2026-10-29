@@ -91,6 +91,15 @@ jQuery(function($) {
         } else if (_activityItem.type == constant.information().activityItem.TYPE_REDPACKAGE_INT) {
             widgetHeader.addClass("header-color-red");
             widgetHeaderH5.text("红包");
+        } else if (_activityItem.type == constant.information().activityItem.TYPE_COST_COUPON_INT) {
+            widgetHeader.addClass("header-color-purple");
+            widgetHeaderH5.text("优惠额度券");
+        } else if (_activityItem.type == constant.information().activityItem.TYPE_COST_THING_INT) {
+            widgetHeader.addClass("header-color-grey");
+            widgetHeaderH5.text("优惠额度物品");
+        } else if (_activityItem.type == constant.information().activityItem.TYPE_COST_REDPACKAGE_INT) {
+            widgetHeader.addClass("header-color-dark");
+            widgetHeaderH5.text("优惠额度红包");
         }
 
         var widgetBody = $("<div></div>").addClass("widget-body").appendTo(widgetBox);

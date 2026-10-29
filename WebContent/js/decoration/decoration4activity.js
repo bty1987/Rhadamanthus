@@ -3,7 +3,8 @@ jQuery(function($) {
     var decorationActivityItem = {
         items: {},
         identi: {},
-        activityItems: {}
+        activityItems: {},
+        activityItemMap: {}
     };
 
     var decorationActivity = {
@@ -46,6 +47,9 @@ jQuery(function($) {
 
             var activity = res.activityItems;
 
+            // 优惠额度物品(type 10/11/12)按 -10 归入同形态组, 并缓存原始 type 供提交使用(对齐 decoration4detail)
+            decorationActivityItem.activityItemMap = {};
+
             for ( var i = 0; i < activity.length; i++) {
 
                 var activityItem = activity[i];
@@ -54,11 +58,13 @@ jQuery(function($) {
                     activityItemName: activityItem.name + " 金额:" + activityItem.money
                 };
 
-                if (activityItem.type == 0) {
+                decorationActivityItem.activityItemMap[activityItem.asid] = activityItem.type;
+
+                if (activityItem.type == 0 || activityItem.type == 10) {
                     coupons.push(item);
-                } else if (activityItem.type == 1) {
+                } else if (activityItem.type == 1 || activityItem.type == 11) {
                     things.push(item);
-                } else if (activityItem.type == 2) {
+                } else if (activityItem.type == 2 || activityItem.type == 12) {
                     papers.push(item);
                 }
             }
@@ -529,7 +535,8 @@ jQuery(function($) {
             options["approvalDecorationActivityItems[" + index + "].orderId"] = orderId;
             options["approvalDecorationActivityItems[" + index + "].activityName"] = activityName;
             options["approvalDecorationActivityItems[" + index + "].activityItemName"] = _.children('span').attr("typename").split(" ")[0];
-            options["approvalDecorationActivityItems[" + index + "].type"] = 1;
+            var costType = decorationActivityItem.activityItemMap[_.children('span').attr("asid")];
+            options["approvalDecorationActivityItems[" + index + "].type"] = costType >= 10 ? costType : 1;
             options["approvalDecorationActivityItems[" + index + "].num"] = _.children('span').attr('num');
             options["approvalDecorationActivityItems[" + index + "].money"] = _.children('span').attr("typename").split(" ")[1].split(':')[1];
             options["approvalDecorationActivityItems[" + index + "].content"] = "";
@@ -545,7 +552,8 @@ jQuery(function($) {
             options["approvalDecorationActivityItems[" + index + "].orderId"] = orderId;
             options["approvalDecorationActivityItems[" + index + "].activityName"] = activityName;
             options["approvalDecorationActivityItems[" + index + "].activityItemName"] = _.children('span').attr("typename").split(" ")[0];
-            options["approvalDecorationActivityItems[" + index + "].type"] = 0;
+            var costType = decorationActivityItem.activityItemMap[_.children('span').attr("asid")];
+            options["approvalDecorationActivityItems[" + index + "].type"] = costType >= 10 ? costType : 0;
             options["approvalDecorationActivityItems[" + index + "].num"] = _.children('span').attr('num');
             options["approvalDecorationActivityItems[" + index + "].money"] = _.children('span').attr("typename").split(" ")[1].split(':')[1];
             options["approvalDecorationActivityItems[" + index + "].content"] = "";
@@ -562,7 +570,8 @@ jQuery(function($) {
             options["approvalDecorationActivityItems[" + index + "].orderId"] = orderId;
             options["approvalDecorationActivityItems[" + index + "].activityName"] = activityName;
             options["approvalDecorationActivityItems[" + index + "].activityItemName"] = _.children('span').attr("typename").split(" ")[0];
-            options["approvalDecorationActivityItems[" + index + "].type"] = 2;
+            var costType = decorationActivityItem.activityItemMap[_.children('span').attr("asid")];
+            options["approvalDecorationActivityItems[" + index + "].type"] = costType >= 10 ? costType : 2;
             options["approvalDecorationActivityItems[" + index + "].num"] = _.children('span').attr('num');
             options["approvalDecorationActivityItems[" + index + "].money"] = _.children('span').attr("typename").split(" ")[1].split(':')[1];
             options["approvalDecorationActivityItems[" + index + "].content"] = "";

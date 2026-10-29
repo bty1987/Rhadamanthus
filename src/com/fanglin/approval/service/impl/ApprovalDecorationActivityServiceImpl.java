@@ -116,6 +116,27 @@ public class ApprovalDecorationActivityServiceImpl implements ApprovalDecoration
 			throw new FLException(140061, "已参加活动");
 		}
 
+		// 额度类明细识别与合并校验: 提交即校验(通过时 approve 再实时校验一次, 校验永远现算), usable=false → 140108 拦截提交
+		long costAmountSum = 0;
+
+		int costItemCount = 0;
+
+		for (ApprovalDecorationActivityItemVO approvalDecorationActivityItemVO : approvalDecorationActivityItemVOs) {
+
+			List<ActivityItemPO> activityItemPOs = activityItemDao.queryActivityItemByAsid(approvalDecorationActivityItemVO.getAsid());
+
+			ActivityItemPO activityItemPO = activityItemPOs != null && activityItemPOs.size() > 0 ? activityItemPOs.get(0) : null;
+
+			if (decorationActivityCostService.isCostItem(activityItemPO)) {
+				costItemCount++;
+				costAmountSum = Arith.add(costAmountSum, Arith.mul((long) (approvalDecorationActivityItemVO.getMoney() == null ? 0 : approvalDecorationActivityItemVO.getMoney()), approvalDecorationActivityItemVO.getNum() == null ? 0 : approvalDecorationActivityItemVO.getNum()));
+			}
+		}
+
+		if (costItemCount > 0) {
+			decorationActivityCostService.queryActivityCost(orderId, userId, Arith.div(costAmountSum, 1000000L));
+		}
+
 		UserPO receiver = userDao.queryUserByUserId(approvalVO.getReceiver().getUserId());
 		UserPO sender = userDao.queryUserByUserId(userId);
 
