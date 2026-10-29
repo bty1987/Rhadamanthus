@@ -1,4 +1,4 @@
-package com.fanglin.decoration.utils;
+package com.fanglin.decoration.service.impl;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -15,13 +15,15 @@ import java.util.Date;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.decoration.dao.DecorationActivityCostDao;
 import com.fanglin.decoration.po.DecorationActivityCostPO;
+import com.fanglin.decoration.service.DecorationActivityCostService;
+import com.fanglin.decoration.vo.ActivityCostVO;
 import com.fanglin.information.po.ActivityItemPO;
 import com.fanglin.system.dao.SystemConfigDao;
 import com.fanglin.system.po.SystemConfigPO;
@@ -30,16 +32,16 @@ import com.fanglin.utils.DateUtil;
 
 /**
  * 优惠额度校验哨兵: 额度类活动物品(activityitem.type>=10)创建前调 fl-yy validate 接口校验资格。
- * 
+ *
  * <p>
  * 纯 HTTP 实现(HttpURLConnection + SHA-256 应用签名), 不引入外部 SDK。额度为现算(实测 3.4s/次),
  * 校验通过后响应快照落 {@link DecorationActivityCostPO} 缓存档——只写档: 不展示、不参与校验判定、系统逻辑不读。
- * 
+ *
  * <p>
  * 🔴尽力而为语义(唯一拦截条件 = 接口明确 usable=false → 140108):
  * 未配置 cost.*、配置反查不到、金额无效、网络/超时/签名/接口非 0 等一切无法完成校验的情形,
  * 一律记日志后跳过校验放行创建(返回 null)——外挂不在场时业务照走, 不存在"异常时拦截"路径。
- * 
+ *
  * <h3>配置(communion.systemconfig 表, 全局 key=company 0)</h3>
  * <ul>
  * <li>{@code cost.validate.url}: validate 接口地址(daily/正式各自网关地址)</li>
@@ -47,17 +49,17 @@ import com.fanglin.utils.DateUtil;
  * </ul>
  * appId 固定 erp_project_sync(接口文档明示), 硬编码常量不设配置键。
  * 任一未配置 = 跳过校验放行(尽力而为语义, log.warn 留痕)。
- * 
+ *
  * <h3>签名(fl-sync 统一验签)</h3>
  * Header 必传 appId/timestamp(毫秒, 与服务器时差≤30s)/nonce(60s 防重)/sign;
  * sign = SHA256_HEX(queryString + "#" + rawBody + "##" + headerString + "###" + appSecret),
  * 本接口业务参数全在 Body(queryString 空串), headerString 仅 appId/nonce/timestamp 按名称升序;
  * rawBody 签名与发送必须同一份序列化串。
  */
-@Component("decorationActivityCost")
-public class DecorationActivityCost {
+@Service("decorationActivityCostService")
+public class DecorationActivityCostServiceImpl implements DecorationActivityCostService {
 
-	private static final Logger log = LoggerFactory.getLogger(DecorationActivityCost.class);
+	private static final Logger log = LoggerFactory.getLogger(DecorationActivityCostServiceImpl.class);
 
 	/** 对外接口固定应用标识(fl-sync 验签, 接口文档明示固定值) */
 	private static final String APP_ID = "erp_project_sync";
@@ -75,10 +77,10 @@ public class DecorationActivityCost {
 	private static final SecureRandom RANDOM = new SecureRandom();
 
 	/** systemconfig 配置键: validate 接口地址 */
-	public static final String KEY_VALIDATE_URL = "cost.validate.url";
+	private static final String KEY_VALIDATE_URL = "cost.validate.url";
 
 	/** systemconfig 配置键: erp_project_sync 应用密钥 */
-	public static final String KEY_APP_SECRET = "cost.app.secret";
+	private static final String KEY_APP_SECRET = "cost.app.secret";
 
 	@Autowired
 	private DecorationActivityCostDao decorationActivityCostDao;
@@ -86,55 +88,13 @@ public class DecorationActivityCost {
 	@Autowired
 	private SystemConfigDao systemConfigDao;
 
-	/**
-	 * 校验结果缓存档快照: 仅校验通过时返回; balance/toplimit 为厘(接口元值×1000, 接口未返回时为 null)。
-	 */
-	public static class CostSnapshot {
-
-		private final Integer balance;
-
-		private final Integer toplimit;
-
-		private final String summary;
-
-		public CostSnapshot(Integer balance, Integer toplimit, String summary) {
-			super();
-			this.balance = balance;
-			this.toplimit = toplimit;
-			this.summary = summary;
-		}
-
-		public Integer getBalance() {
-			return balance;
-		}
-
-		public Integer getToplimit() {
-			return toplimit;
-		}
-
-		public String getSummary() {
-			return summary;
-		}
-	}
-
-	/**
-	 * 额度类判定: 配置端 activityitem.type >= 10(10/11/12 = 额度的券/物品/红包, 对齐 0=券/1=物品/2=红包 语义)。
-	 */
+	@Override
 	public boolean isCostItem(ActivityItemPO activityItemPO) {
 		return activityItemPO != null && activityItemPO.getType() >= ActivityItemPO.TYPE_COST_COUPON_INT;
 	}
 
-	/**
-	 * 创建前校验(单条): 非额度类/配置反查不到/金额无效/未配置/请求异常 → 返回 null(跳过校验放行创建);
-	 * 接口明确 usable=false → 抛 140108(reason 原文)拦截创建; 校验通过 → 返回缓存档快照。
-	 * 
-	 * @param orderId 装修单号
-	 * @param userId 员工编码(当前登录人/审批发起人), 即接口 staffCode
-	 * @param activityItemPO 活动物品配置(调用方按 aiid 直查或 asid 反查, 可为 null)
-	 * @param money 物品单价(厘)
-	 * @param num 数量(毫个)
-	 */
-	public CostSnapshot checkBeforeCreate(String orderId, String userId, ActivityItemPO activityItemPO, int money, int num) throws FLException {
+	@Override
+	public ActivityCostVO queryActivityCost(String orderId, String userId, ActivityItemPO activityItemPO, int money, int num) throws FLException {
 
 		// 配置反查不到(含存量前端未传 aiid 且 asid 无配置行)视为非额度类, 走原逻辑
 		if (activityItemPO == null || !isCostItem(activityItemPO)) {
@@ -152,13 +112,8 @@ public class DecorationActivityCost {
 		return tryValidate(orderId, userId, amount);
 	}
 
-	/**
-	 * 创建前校验(合并金额): 审批路径同单同员工多明细合并金额一次校验(N 次现算 → 1 次)。
-	 * 语义同单条版: 仅接口明确 usable=false 才抛 140108, 其余一切异常返回 null 跳过放行。
-	 * 
-	 * @param amount 合并申请额度(元)
-	 */
-	public CostSnapshot checkBeforeCreate(String orderId, String userId, long amount) throws FLException {
+	@Override
+	public ActivityCostVO queryActivityCost(String orderId, String userId, long amount) throws FLException {
 
 		if (amount <= 0) {
 			log.warn(String.format("优惠额度合并金额无效, 跳过校验放行, orderId:%s, amount:%s", orderId, amount));
@@ -168,13 +123,8 @@ public class DecorationActivityCost {
 		return tryValidate(orderId, userId, amount);
 	}
 
-	/**
-	 * 落缓存档(物品行 save 之后调, 携带 daiId): 只写档, 仅校验通过(snapshot 非 null)落行。
-	 * 
-	 * @param money 物品单价(厘)
-	 * @param num 数量(毫个); cost.money = 本次使用总额(厘) = money×num÷10³
-	 */
-	public void saveCostRecord(String orderId, long daiId, int money, int num, CostSnapshot snapshot, Integer company) {
+	@Override
+	public void addActivityCost(String orderId, long daiId, int money, int num, ActivityCostVO snapshot, Integer company) {
 
 		if (snapshot == null) {
 			return;
@@ -196,7 +146,7 @@ public class DecorationActivityCost {
 	/**
 	 * 尽力而为校验: 唯一拦截 = usable=false(140108); 未配置/请求异常/响应不完整一律 log 后返回 null 放行。
 	 */
-	private CostSnapshot tryValidate(String orderId, String userId, long amount) throws FLException {
+	private ActivityCostVO tryValidate(String orderId, String userId, long amount) throws FLException {
 
 		// 配置读 communion.systemconfig(全局 key): 任一未配置 = 跳过校验放行(尽力而为)
 		SystemConfigPO urlConfig = systemConfigDao.querySystemConfig(KEY_VALIDATE_URL);
@@ -247,13 +197,13 @@ public class DecorationActivityCost {
 		return Arith.div(Arith.mul((long) money, num), MONEY_SCALE);
 	}
 
-	private CostSnapshot snapshot(JSONObject data) {
+	private ActivityCostVO snapshot(JSONObject data) {
 
 		Integer balance = toCostMoney(data.getBigDecimal("availableAmount"));
 		Integer toplimit = toCostMoney(data.getBigDecimal("perOrderLimit"));
 		String summary = String.format("优惠额度抵扣 校验通过(可用%s/上限%s)", data.getString("availableAmount"), data.getString("perOrderLimit"));
 
-		return new CostSnapshot(balance, toplimit, summary);
+		return new ActivityCostVO(balance, toplimit, summary);
 	}
 
 	private Integer toCostMoney(BigDecimal value) {

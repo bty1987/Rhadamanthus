@@ -41,7 +41,8 @@ import com.fanglin.decoration.po.DecorationActivityItemPO;
 import com.fanglin.decoration.po.DecorationActivityPO;
 import com.fanglin.decoration.po.DecorationActivityRecordPO;
 import com.fanglin.decoration.po.DecorationPO;
-import com.fanglin.decoration.utils.DecorationActivityCost;
+import com.fanglin.decoration.service.DecorationActivityCostService;
+import com.fanglin.decoration.vo.ActivityCostVO;
 import com.fanglin.information.dao.ActivityItemDao;
 import com.fanglin.information.dao.AwardStockDao;
 import com.fanglin.information.po.ActivityItemPO;
@@ -87,7 +88,7 @@ public class ApprovalDecorationActivityServiceImpl implements ApprovalDecoration
 	private ActivityItemDao activityItemDao;
 
 	@Autowired
-	private DecorationActivityCost decorationActivityCost;
+	private DecorationActivityCostService decorationActivityCostService;
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
@@ -173,13 +174,13 @@ public class ApprovalDecorationActivityServiceImpl implements ApprovalDecoration
 
 			ActivityItemPO activityItemPO = activityItemPOs != null && activityItemPOs.size() > 0 ? activityItemPOs.get(0) : null;
 
-			if (decorationActivityCost.isCostItem(activityItemPO)) {
+			if (decorationActivityCostService.isCostItem(activityItemPO)) {
 				costItemMap.put(approvalDecorationActivityItemPO.getAsid(), activityItemPO);
 				costAmountSum = Arith.add(costAmountSum, Arith.mul((long) approvalDecorationActivityItemPO.getMoney(), approvalDecorationActivityItemPO.getNum()));
 			}
 		}
 
-		DecorationActivityCost.CostSnapshot costSnapshot = costItemMap.size() > 0 ? decorationActivityCost.checkBeforeCreate(decorationPO.getOrderId(), approvalPO.getSender().getUserId(), Arith.div(costAmountSum, 1000000L)) : null;
+		ActivityCostVO costSnapshot = costItemMap.size() > 0 ? decorationActivityCostService.queryActivityCost(decorationPO.getOrderId(), approvalPO.getSender().getUserId(), Arith.div(costAmountSum, 1000000L)) : null;
 
 		for (ApprovalDecorationActivityItemPO approvalDecorationActivityItemPO : approvalDecorationActivityItemPOs) {
 
@@ -228,7 +229,7 @@ public class ApprovalDecorationActivityServiceImpl implements ApprovalDecoration
 
 			// 校验结果缓存档(只写档: 不展示/不参与校验/系统逻辑不读; 仅实际校验通过时落行)
 			if (costSnapshot != null && activityItemPO != null) {
-				decorationActivityCost.saveCostRecord(decorationPO.getOrderId(), decorationActivityItemPO.getDaiId(), decorationActivityItemPO.getMoney(), decorationActivityItemPO.getNum(), costSnapshot, Integer.valueOf(decorationPO.getCompany()));
+				decorationActivityCostService.addActivityCost(decorationPO.getOrderId(), decorationActivityItemPO.getDaiId(), decorationActivityItemPO.getMoney(), decorationActivityItemPO.getNum(), costSnapshot, Integer.valueOf(decorationPO.getCompany()));
 			}
 		}
 

@@ -54,7 +54,8 @@ import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.FormatUtil;
 import com.fanglin.wechat.service.WeChatAppService;
 import com.fanglin.wechat.vo.WeChatPhoneInfoVO;
-import com.fanglin.decoration.utils.DecorationActivityCost;
+import com.fanglin.decoration.service.DecorationActivityCostService;
+import com.fanglin.decoration.vo.ActivityCostVO;
 
 @Service("decorationActivityItemService")
 @Transactional(readOnly = true)
@@ -99,7 +100,7 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 	private ActivityItemDao activityItemDao;
 
 	@Autowired
-	private DecorationActivityCost decorationActivityCost;
+	private DecorationActivityCostService decorationActivityCostService;
 
 	@Override
 	public List<DecorationActivityItemVO> queryDecorationActivityItemByOrderId(DecorationVO decorationVO) {
@@ -140,7 +141,7 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 		int num = decorationActivityItemVO.getNum() == null ? 0 : decorationActivityItemVO.getNum();
 
 		// 额度类物品(type>=10)创建前调 fl-yy validate 校验资格(现算), 非额度类返回 null 走原逻辑
-		DecorationActivityCost.CostSnapshot costSnapshot = decorationActivityCost.checkBeforeCreate(decorationActivityItemVO.getOrderId(), userId, activityItemPO, money, num);
+		ActivityCostVO costSnapshot = decorationActivityCostService.queryActivityCost(decorationActivityItemVO.getOrderId(), userId, activityItemPO, money, num);
 
 		AwardStockPO awardStockPO = awardStockDao.get(decorationActivityItemVO.getAsid());
 
@@ -162,7 +163,7 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 		decorationActivityItemPO.setIsPayment(DecorationActivityItemPO.ISPAYMENT_UNCAL_INT);
 
 		// 额度类 type 服务端按配置覆盖(不信前端), type∈{10,11,12} 天然不进 couponCut/thingCut 金额口径(校验跳过时同样覆盖)
-		if (decorationActivityCost.isCostItem(activityItemPO)) {
+		if (decorationActivityCostService.isCostItem(activityItemPO)) {
 			decorationActivityItemPO.setType(activityItemPO.getType());
 		}
 
@@ -184,7 +185,7 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 		// 校验结果缓存档(只写档: 不展示/不参与校验/系统逻辑不读)
 		if (costSnapshot != null) {
 			DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(decorationActivityItemVO.getOrderId());
-			decorationActivityCost.saveCostRecord(decorationActivityItemVO.getOrderId(), decorationActivityItemPO.getDaiId(), money, num, costSnapshot, decorationPO == null ? null : Integer.valueOf(decorationPO.getCompany()));
+			decorationActivityCostService.addActivityCost(decorationActivityItemVO.getOrderId(), decorationActivityItemPO.getDaiId(), money, num, costSnapshot, decorationPO == null ? null : Integer.valueOf(decorationPO.getCompany()));
 		}
 
 		return 0;
