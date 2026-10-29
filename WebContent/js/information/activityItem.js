@@ -93,7 +93,7 @@ jQuery(function($) {
             widgetHeaderH5.text("红包");
         } else if (_activityItem.type == constant.information().activityItem.TYPE_COST_COUPON_INT) {
             widgetHeader.addClass("header-color-purple");
-            widgetHeaderH5.text("优惠额度券");
+            widgetHeaderH5.text("额度券");
         } else if (_activityItem.type == constant.information().activityItem.TYPE_COST_THING_INT) {
             widgetHeader.addClass("header-color-grey");
             widgetHeaderH5.text("优惠额度物品");
