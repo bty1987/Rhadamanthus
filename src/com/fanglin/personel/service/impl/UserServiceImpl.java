@@ -1386,7 +1386,8 @@ public class UserServiceImpl implements UserService {
 
 		Short type = 0;
 
-		JSONObject info = elecsignRouter.route(userPO.getProvider(), userPO.getCompany()).authenticate(userPO.getSignNo(), userPO.getUserName(), userPO.getPhone(), userPO.getIdentity(), type);
+		// 🔴手机/身份证为ENC(V1:)密文存储, 实名认证传参须解密(传密文法大大实核返回"暂时不能加载,请稍后再试")
+		JSONObject info = elecsignRouter.route(userPO.getProvider(), userPO.getCompany()).authenticate(userPO.getSignNo(), userPO.getUserName(), SensitiveDataHelper.decrypt(userPO.getPhone()), SensitiveDataHelper.decrypt(userPO.getIdentity()), type);
 
 		redirect = elecsignRouter.route(userPO.getProvider(), userPO.getCompany()).decode(info.getString("url"));
 
