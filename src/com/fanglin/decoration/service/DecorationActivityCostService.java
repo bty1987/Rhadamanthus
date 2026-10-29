@@ -1,5 +1,7 @@
 package com.fanglin.decoration.service;
 
+import java.util.List;
+
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.decoration.vo.ActivityCostVO;
 import com.fanglin.information.po.ActivityItemPO;
@@ -38,5 +40,15 @@ public interface DecorationActivityCostService {
 	 * @param num 数量(毫个); cost.money = 本次使用总额(厘) = money×num÷10³
 	 */
 	void addActivityCost(String orderId, long daiId, int money, int num, ActivityCostVO snapshot, Integer company);
+
+	/**
+	 * 额度值独立更新入口: 按单重调 validate 接口(逐缓存行以行内 money÷1000 为校验金额, 身份=装修单设计师),
+	 * 用最新 availableAmount/perOrderLimit 回写该单全部缓存行的 balance/toplimit/createTime。
+	 * 与创建校验不同: usable=false 不视为异常, 照常回写并在 summary 标注(便于额度治理对账);
+	 * 无缓存行(140109)/装修单或设计师缺失(140013)/接口不可用(140110) 才抛错。
+	 *
+	 * @return 逐行更新结果(balance/toplimit 厘 + summary 含 usable/reason)
+	 */
+	List<ActivityCostVO> updateDecorationActivityCost(String orderId) throws FLException;
 
 }

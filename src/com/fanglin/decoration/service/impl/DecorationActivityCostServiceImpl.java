@@ -10,18 +10,23 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.security.MessageDigest;
 import java.security.SecureRandom;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.decoration.dao.DecorationActivityCostDao;
+import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.po.DecorationActivityCostPO;
+import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.decoration.service.DecorationActivityCostService;
 import com.fanglin.decoration.vo.ActivityCostVO;
 import com.fanglin.information.po.ActivityItemPO;
@@ -86,6 +91,9 @@ public class DecorationActivityCostServiceImpl implements DecorationActivityCost
 	private DecorationActivityCostDao decorationActivityCostDao;
 
 	@Autowired
+	private DecorationDao decorationDao;
+
+	@Autowired
 	private SystemConfigDao systemConfigDao;
 
 	@Override
@@ -141,6 +149,72 @@ public class DecorationActivityCostServiceImpl implements DecorationActivityCost
 		po.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 
 		decorationActivityCostDao.save(po);
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public List<ActivityCostVO> updateDecorationActivityCost(String orderId) throws FLException {
+
+		List<DecorationActivityCostPO> costPOs = decorationActivityCostDao.queryDecorationActivityCostByOrderId(orderId);
+
+		if (costPOs == null || costPOs.size() == 0) {
+			throw new FLException(140109, "优惠额度校验缓存记录不存在");
+		}
+
+		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(orderId);
+
+		if (decorationPO == null || decorationPO.getDesigner() == null) {
+			throw new FLException(140013, "装修单不存在");
+		}
+
+		List<ActivityCostVO> vos = new ArrayList<ActivityCostVO>();
+
+		for (DecorationActivityCostPO costPO : costPOs) {
+			vos.add(refreshActivityCost(orderId, decorationPO.getDesigner().getUserId(), costPO));
+		}
+
+		return vos;
+	}
+
+	/**
+	 * 独立更新单行: 以缓存行 money÷1000(厘→元)为校验金额重调接口(身份=装修单设计师), 最新额度回写缓存行。
+	 * 与创建校验的尽力而为不同: 本入口是显式维护操作, 接口不可用/响应不完整直接抛 140110;
+	 * usable=false 照常回写最新额度并在 summary 标注(额度治理对账用)。
+	 */
+	private ActivityCostVO refreshActivityCost(String orderId, String userId, DecorationActivityCostPO costPO) throws FLException {
+
+		SystemConfigPO urlConfig = systemConfigDao.querySystemConfig(KEY_VALIDATE_URL);
+		SystemConfigPO secretConfig = systemConfigDao.querySystemConfig(KEY_APP_SECRET);
+
+		if (urlConfig == null || urlConfig.getValue() == null || "".equals(urlConfig.getValue().trim()) || secretConfig == null || secretConfig.getValue() == null || "".equals(secretConfig.getValue().trim())) {
+			throw new FLException(140110, "优惠额度校验接口不可用");
+		}
+
+		JSONObject body = new JSONObject();
+		body.put("staffCode", userId);
+		body.put("orderId", orderId);
+		body.put("amount", costPO.getMoney() / 1000);
+
+		JSONObject response = post(urlConfig.getValue().trim(), body.toJSONString(), secretConfig.getValue().trim());
+
+		if (response == null || response.getIntValue("code") != 0 || response.getJSONObject("data") == null) {
+			throw new FLException(140110, "优惠额度校验接口不可用");
+		}
+
+		JSONObject data = response.getJSONObject("data");
+
+		Integer balance = toCostMoney(data.getBigDecimal("availableAmount"));
+		Integer toplimit = toCostMoney(data.getBigDecimal("perOrderLimit"));
+
+		costPO.setBalance(balance);
+		costPO.setToplimit(toplimit);
+		costPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
+
+		decorationActivityCostDao.update(costPO);
+
+		String reason = data.getString("reason");
+
+		return new ActivityCostVO(balance, toplimit, String.format("优惠额度抵扣 更新(可用%s/上限%s%s)", data.getString("availableAmount"), data.getString("perOrderLimit"), data.getBooleanValue("usable") ? "" : ", 未通过:" + (reason == null ? "" : reason)));
 	}
 
 	/**
