@@ -564,6 +564,15 @@ public class ESignElecsignServiceImpl implements ElecsignService, CompanyAware {
 			boolean isOrg = stp.getJSONObject("orgParticipant") != null
 					|| (stp.getInteger("participantType") != null && stp.getInteger("participantType").intValue() == 1);
 
+			// 🔴固定成员(setMode=2)参与方不得传participants绑定(官方participants参数说明:"固定成员/发起人本人配置时此参数
+			// 不要指定,否则接口会报错";《流程模板功能配置指引》平台方自动落章:"participants参数中不要传入平台方的参与方信息,
+			// 流程发起后平台方企业印章将自动加盖")——违规传入的流程创建即"成功"但被平台异步回收(1435011实测)。
+			// 固定企业(setMode=4)相反必须传绑定(org取模板自带,经办人取上下文);使用模板时指定(setMode=1)传上下文绑定。
+			Integer participantSetMode = stp.getInteger("participantSetMode");
+			if (participantSetMode != null && participantSetMode.intValue() == 2) {
+				continue;
+			}
+
 			JSONObject p = new JSONObject().fluentPut("participantId", participantId);
 
 			if (isOrg) {
@@ -659,7 +668,16 @@ public class ESignElecsignServiceImpl implements ElecsignService, CompanyAware {
 			}
 		}
 
-		JSONObject body = new JSONObject().fluentPut("signTemplateId", templateId).fluentPut("signFlowConfig", new JSONObject().fluentPut("signFlowTitle", contract.title()).fluentPut("autoFinish", true).fluentPut("autoStart", true)).fluentPut("participants", participants);
+		// autoFillAndSubmit=true: 参与方必填控件已全部预填时自动跳过填写步骤(官方文档signConfig参数), 配合建流components预填实现填写免人工提交
+		JSONObject signFlowConfig = new JSONObject().fluentPut("signFlowTitle", contract.title()).fluentPut("autoFinish", true).fluentPut("autoStart", true)
+				.fluentPut("signConfig", new JSONObject().fluentPut("autoFillAndSubmit", true));
+
+		JSONObject body = new JSONObject().fluentPut("signTemplateId", templateId).fluentPut("signFlowConfig", signFlowConfig);
+
+		// 固定成员模板(全部参与方固定)participants整键不传; 含"使用模板时指定"参与方才传绑定数组
+		if (!participants.isEmpty()) {
+			body.put("participants", participants);
+		}
 
 		if (!components.isEmpty()) {
 			body.put("components", components);
