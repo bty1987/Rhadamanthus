@@ -157,17 +157,15 @@ jQuery(function() {
 
                 $btnRetrun.click(function() {
 
-                    salesPayment.sid = v.sales.sid;
+                    com.showConfirm("是否确认撤款, 撤款金额 " + v.referMoney + " 将退回主材预付款余额", function() {
 
-                    com.popup4mini("#miniPopUp", "#layerReturn", "撤款信息", "", function() {
+                        com.post(api.payment.cancelSalesPayment, {
+                            "salesPayment.sales.sid": v.sales.sid
+                        }, function(res) {
 
-                        com.clearValidator();
-                        closeReturnlayer();
-                        salesPayment.items.approver.empty();
-                    }, function() {
-
-                        salesPayment.items.returnTotal.val(v.referMoney);
-                        approvalUtils.initqueryApprovalUser("salesItemDetialapprover", 18);
+                            com.showAlert(com.info, "撤款成功。");
+                            querySalesPayment();
+                        });
                     });
 
                 });

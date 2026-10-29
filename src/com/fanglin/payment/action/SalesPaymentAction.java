@@ -151,6 +151,14 @@ public class SalesPaymentAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "cancelSalesPayment", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String cancelSalesPayment() throws FLException, Exception {
+
+		salesPaymentService.cancelSalesPayment(salesPayment, queryUserId(), queryCompany());
+
+		return SUCCESS;
+	}
+
 	@Action(value = "collectSalesPayments", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String collectSalesPayments() throws FLException, Exception {
 

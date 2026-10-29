@@ -39,6 +39,14 @@ public interface SalesPaymentService {
 
 	public int withdrawSalesPayment(SalesPaymentVO salesPaymentVO, String userId, Integer company) throws FLException;
 
+	/**
+	 * 销售撤款直执行(去审批): 按单内款项类型分派——
+	 * type=8不可退定金已确认 → 定金不退撤单(建type=7退款行+销售单废单+定金清零+预结算对冲);
+	 * type=3补款已确认 → 对冲撤款(建type=5补款退款行+退款收据+退回主材预付款余额, 前置活动积分校验);
+	 * 两类皆无 → 150036无可撤款项。
+	 */
+	public int cancelSalesPayment(SalesPaymentVO salesPaymentVO, String userId, Integer company) throws FLException;
+
 	public int confirmSalesPayment(List<Long> spids, String userId) throws FLException;
 
 	public int affirmSalesPayment(SalesPaymentVO salesPayment, String securityCode, String verifyCode, String phoneCode, String company) throws FLException;
