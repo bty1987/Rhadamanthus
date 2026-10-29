@@ -869,10 +869,9 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 	}
 
 	/**
-	 * 销售撤款直执行(去审批): 按单内款项类型分派——
-	 * type=8不可退定金已确认 → 定金不退撤单(建type=7退款行+销售单废单+定金清零+预结算对冲, 迁移自原审批通过逻辑);
-	 * type=3补款已确认 → 对冲撤款(建type=5补款退款行+退款收据+退回主材预付款余额, 前置活动积分校验);
-	 * 两类皆无 → 150036无可撤款项。
+	 * 销售撤款直执行(去审批): 仅支持已落款且已确认的收款类行(type∈{2定金,3补款,8不可退定金})——
+	 * 不退定金(type=8)场景不支持撤单语义; 退款渠道跟随落款收据: 现金/转账/银行/预付四渠道合计退回主材预付款余额,
+	 * 券(coupon)部分不退; 原行翻转为退款型(type 3→5, 2/8→7), 前置活动积分校验; 无可撤款项 → 150036。
 	 */
 	@Override
 	@Transactional(rollbackFor = Exception.class)
@@ -896,137 +895,69 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 			throw new FLException(190005, "人员不存在");
 		}
 
-		SalesPaymentPO notDeposit = salesPaymentDao.querySalesPayment(sid, Arrays.asList(SalesPaymentPO.TYPE_NOTDEPOSITREFUND_INT));
+		List<SalesPaymentPO> salesPaymentPOs = salesPaymentDao.querySalesPaymentsBySid(sid);
 
-		// 定金不退撤单(迁移自原审批通过逻辑 approveForSalesDayment, 落账口径一致)
-		if (notDeposit != null && notDeposit.getStatus() == SalesPaymentPO.STATUS_CONFIRMED_INT) {
+		boolean canceled = false;
 
-			if (salesPaymentDao.countSalesPayment(sid, Arrays.asList(SalesPaymentPO.TYPE_REPLENISHMENT_INT, SalesPaymentPO.TYPE_MAKEAREFUND_INT)) != 0) {
-				throw new FLException(150040, "补款已存在");
+		for (SalesPaymentPO salesPaymentPO : salesPaymentPOs) {
+
+			short type = salesPaymentPO.getType();
+
+			// 仅撤已落款且已确认的收款类行(2定金/3补款/8不可退定金)
+			if (type != SalesPaymentPO.TYPE_DEPOSIT_INT && type != SalesPaymentPO.TYPE_REPLENISHMENT_INT && type != SalesPaymentPO.TYPE_NOTDEPOSITREFUND_INT) {
+				continue;
 			}
 
-			salesActivityService.checkSalesActivity(sid, notDeposit.getReferMoney());
-
-			SalesPaymentPO salesPaymentPO = new SalesPaymentPO(new UserPO(), new SalesPO());
-
-			salesPaymentPO.setSales(salesPO);
-			salesPaymentPO.setType(SalesPaymentPO.TYPE_DEPOSITREFUND_INT);
-			salesPaymentPO.setStatus(SalesPaymentPO.STATUS_INITIAL_INT);
-			salesPaymentPO.setCategory(salesPO.getCategory());
-			salesPaymentPO.setBrand(salesPO.getBrand().getName());
-			salesPaymentPO.setCreater(operater);
-			salesPaymentPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
-			salesPaymentPO.setReferMoney(notDeposit.getReferMoney());
-			salesPaymentPO.setCompany(salesPO.getCompany());
-
-			salesPaymentDao.save(salesPaymentPO);
-
-			salesPO.setDepositpay(0);
-			salesPO.setDepositpayStatus(SalesPO.DESPOSITPAYSTATUS_INIT_SHORT);
-			salesPO.setStatus(SalesPO.STATUS_WAST_SHORT);
-
-			salesDao.update(salesPO);
-
-			SalesBalancePO salesBalancePO = salesBalanceDao.querySalesBalance(sid, SalesBalancePO.TYPE_DEPOSITPAY_INT, SalesBalancePO.ONETYPE_INIT_INT);
-
-			if (salesBalancePO != null) {
-
-				long depospay = salesPO.getDepositpay();
-				long balance = salesBalancePO.getBalance();
-
-				SalesBalancePO reveBalancePO = new SalesBalancePO();
-
-				BeanUtil.copyPropertie(salesBalancePO, reveBalancePO);
-
-				long vbalance = Arith.sub(Arith.round(depospay, 0, Arith.ROUND_FLOOR), Arith.round(balance, 0, Arith.ROUND_CEILING));
-
-				reveBalancePO.setStatus(SalesBalancePO.STATUS_PREBALANCE_INT);
-				reveBalancePO.setOnetype(SalesBalancePO.ONETYPE_REFUND_INT);
-				reveBalancePO.setBalance(-balance);
-				reveBalancePO.setPbalance(-vbalance);
-				reveBalancePO.setVbalance(-vbalance);
-				reveBalancePO.setTotal(-salesBalancePO.getTotal());
-				reveBalancePO.setRate(1000);
-
-				salesBalanceDao.save(reveBalancePO);
+			if (salesPaymentPO.getStatus() != SalesPaymentPO.STATUS_CONFIRMED_INT || salesPaymentPO.getSalesReceipt() == null) {
+				continue;
 			}
 
-			return 0;
-		}
+			// 退款渠道跟随落款收据: 现金/转账/银行/预付四渠道合计退回主材预付款余额, 券不退
+			SalesReceiptPO originReceipt = salesPaymentPO.getSalesReceipt();
 
-		// 补款对冲撤款: 已确认补款(type=3)建补款退款行(type=5)直接执行, 款额退回主材预付款余额
-		List<SalesPaymentPO> replenishments = salesPaymentDao.querySalesPaymentsBySid(sid);
+			long refundAmount = Arith.add(Arith.add(originReceipt.getCash(), originReceipt.getBank()), Arith.add(originReceipt.getCheckv(), originReceipt.getAdvance()));
 
-		long confirmTotal = 0;
-
-		for (SalesPaymentPO replenishment : replenishments) {
-			if (replenishment.getType() == SalesPaymentPO.TYPE_REPLENISHMENT_INT && replenishment.getStatus() == SalesPaymentPO.STATUS_CONFIRMED_INT) {
-				confirmTotal = Arith.add(confirmTotal, replenishment.getReferMoney());
+			if (refundAmount <= 0) {
+				continue;
 			}
-		}
-
-		if (confirmTotal > 0) {
 
 			// 撤款使已支付积分额度减少, 校验已领取活动物品积分是否超出
-			salesActivityService.checkSalesActivity(sid, confirmTotal);
+			salesActivityService.checkSalesActivity(sid, refundAmount);
 
-			for (SalesPaymentPO replenishment : replenishments) {
+			// 退款收据(TYPE_REFUND, 实退金额=四渠道合计退预付款)
+			SalesReceiptPO refundReceipt = new SalesReceiptPO();
 
-				if (replenishment.getType() != SalesPaymentPO.TYPE_REPLENISHMENT_INT || replenishment.getStatus() != SalesPaymentPO.STATUS_CONFIRMED_INT) {
-					continue;
-				}
+			refundReceipt.setCollecter(operater);
+			refundReceipt.setCollecterName(operater.getUserName());
+			refundReceipt.setCollectTime(new Timestamp(System.currentTimeMillis()));
+			refundReceipt.setComment(String.format("销售单:%s,款项撤款,退回主材预付款余额%s%s", salesPO.getNo(), refundAmount, originReceipt.getCoupon() > 0 ? ",券部分不退" : ""));
+			refundReceipt.setType(SalesReceiptPO.TYPE_REFUND_INT);
+			refundReceipt.setRealMoney(refundAmount);
+			refundReceipt.setAdvance(refundAmount);
+			refundReceipt.setCash(SalesReceiptPO.COLUMN_MONEY_INT);
+			refundReceipt.setBank(SalesReceiptPO.COLUMN_MONEY_INT);
+			refundReceipt.setCheckv(SalesReceiptPO.COLUMN_MONEY_INT);
+			refundReceipt.setCoupon(SalesReceiptPO.COLUMN_COUPON_INT);
 
-				// 退款收据(退回主材预付款余额)
-				SalesReceiptVO salesReceiptVO = new SalesReceiptVO();
+			salesReceiptDao.save(refundReceipt);
 
-				salesReceiptVO.setAdvance(replenishment.getReferMoney());
-				salesReceiptVO.setRealMoney(replenishment.getReferMoney());
-				salesReceiptVO.setComment(String.format("销售单:%s,补款撤款,退回主材预付款余额", salesPO.getNo()));
+			// 原行翻转为退款型(3补款→5补款退款, 2定金/8不可退定金→7定金退款), 状态保持已确认
+			salesPaymentPO.setType(type == SalesPaymentPO.TYPE_REPLENISHMENT_INT ? SalesPaymentPO.TYPE_MAKEAREFUND_INT : SalesPaymentPO.TYPE_DEPOSITREFUND_INT);
+			salesPaymentPO.setSalesReceipt(refundReceipt);
 
-				SalesReceiptPO salesReceiptPO = new SalesReceiptPO();
+			salesPaymentDao.update(salesPaymentPO);
 
-				UserPO receipter = operater;
+			// 退回主材预付款余额
+			paymentService.returnPayment(new PaymentVO().trans(salesPO.getOrderId(), PaymentPO.PAYMENT_PAYMENTTYPE_MATERIAL_INT, refundAmount, String.format("SA%sR", salesPaymentPO.getSpid()), String.format("装修单号:%s,销售单:%s,款项撤款退回主材预付款", salesPO.getOrderId(), salesPO.getNo())), userId);
 
-				salesReceiptPO.setCollecter(receipter);
-				salesReceiptPO.setCollecterName(receipter.getUserName());
-				salesReceiptPO.setCollectTime(new Timestamp(System.currentTimeMillis()));
-				salesReceiptPO.setComment(salesReceiptVO.getComment());
-				salesReceiptPO.setType(SalesReceiptPO.TYPE_REFUND_INT);
-				salesReceiptPO.setRealMoney(salesReceiptVO.getRealMoney());
-				salesReceiptPO.setAdvance(salesReceiptVO.getAdvance());
-
-				salesReceiptDao.save(salesReceiptPO);
-
-				// 对冲行(type=5补款退款, 直接已付: 款额即时退回主材预付款余额)
-				SalesPaymentPO revealPO = new SalesPaymentPO(new UserPO(), new SalesPO());
-
-				revealPO.setSales(salesPO);
-				revealPO.setType(SalesPaymentPO.TYPE_MAKEAREFUND_INT);
-				revealPO.setStatus(SalesPaymentPO.STATUS_PAIDFOR_INT);
-				revealPO.setCategory(salesPO.getCategory());
-				revealPO.setBrand(salesPO.getBrand().getName());
-				revealPO.setReferMoney(replenishment.getReferMoney());
-				revealPO.setSalesReceipt(salesReceiptPO);
-				revealPO.setCreater(operater);
-				revealPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
-				revealPO.setCompany(salesPO.getCompany());
-
-				salesPaymentDao.save(revealPO);
-
-				// 退回主材预付款余额
-				paymentService.returnPayment(new PaymentVO().trans(salesPO.getOrderId(), PaymentPO.PAYMENT_PAYMENTTYPE_MATERIAL_INT, replenishment.getReferMoney(), String.format("SA%sR", revealPO.getSpid()), String.format("装修单号:%s,销售单:%s,补款撤款退回主材预付款", salesPO.getOrderId(), salesPO.getNo())), userId);
-			}
-
-			if (salesPO.getFullpayStatus() == SalesPO.FULLPAYSTATUS_CONFIRM_SHORT) {
-				salesPO.setFullpayStatus(SalesPO.FULLPAYSTATUS_PAYED_SHORT);
-
-				salesDao.update(salesPO);
-			}
-
-			return 0;
+			canceled = true;
 		}
 
-		throw new FLException(150036, "无可撤款项");
+		if (!canceled) {
+			throw new FLException(150036, "无可撤款项");
+		}
+
+		return 0;
 	}
 
 	@Override
