@@ -49,7 +49,8 @@ jQuery(function($) {
 
     com.focusPage("#esignConsoleBtn").on('click', function() {
 
-        window.open("https://web.esign.cn/", "_blank");
+        // PC客户端环境新标签页不可用, 页内弹窗承载(近全屏iframe); web.esign.cn未设X-Frame-Options可嵌
+        com.popup4frame("e签宝模板操作页", "https://web.esign.cn/");
     });
 
     contract.items.page.bindData(constant.data().contract.type.datas.sort(function(a, b) {
