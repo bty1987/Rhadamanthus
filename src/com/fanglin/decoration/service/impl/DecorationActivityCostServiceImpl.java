@@ -165,11 +165,7 @@ public class DecorationActivityCostServiceImpl implements DecorationActivityCost
 		body.put("orderId", orderId);
 		body.put("amount", amount);
 
-		System.out.println("优惠额度校验请求 url:" + url + ", body:" + body.toJSONString());
-
 		JSONObject response = post(url, body.toJSONString(), secret);
-
-		System.out.println("优惠额度校验响应 response:" + (response == null ? null : response.toJSONString()));
 
 		if (response == null) {
 			return null;
