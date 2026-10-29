@@ -1281,6 +1281,10 @@ var com = {
 
         return setTimeout(function() {
 
+            // Bootstrap modal 焦点陷阱解除: iframe 弹层承载于 modal 之上时, enforceFocus 会抢焦点致 iframe 内容无法操作
+            // (modal 下次 show 时 BS3 自动重绑, 动态平衡无需恢复)
+            $(document).off('focusin.bs.modal');
+
             layer.open(options)
         }, 200);
     },
@@ -2692,3 +2696,21 @@ var com = {
     }
 
 })(jQuery);
+
+/**
+ * Bootstrap modal 与 layer 弹层互叠适配:
+ * frame(layer zIndex 2500)之上再弹 modal 时, modal 默认 z-index(1050/backdrop 1040)被 frame 覆盖无法操作——
+ * shown.bs.modal 时将 modal 与 backdrop 动态提层至当前最高 layer 之上;
+ * 反向(modal 之上弹 frame)由 com.popup 内 focusin.bs.modal 焦点陷阱解除适配。两件正交, 覆盖全部互叠组合。
+ */
+$(document).on('shown.bs.modal', '.modal', function() {
+
+    var zi = 2500;
+
+    $('.layui-layer').each(function() {
+        zi = Math.max(zi, parseInt($(this).css('z-index'), 10) || 0);
+    });
+
+    $(this).css('z-index', zi + 10);
+    $('.modal-backdrop').last().css('z-index', zi + 5);
+});
