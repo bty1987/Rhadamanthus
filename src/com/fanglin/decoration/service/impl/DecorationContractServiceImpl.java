@@ -53,7 +53,7 @@ import com.fanglin.decoration.po.DecorationOperatePO;
 import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.decoration.service.DecorationAccountStatusService;
 import com.fanglin.decoration.service.DecorationContractService;
-import com.fanglin.decoration.vo.CustomerElecsignAuthVO;
+import com.fanglin.decoration.vo.ElecsignAuthVO;
 import com.fanglin.decoration.vo.DecorationContractVO;
 import com.fanglin.decoration.vo.DecorationVO;
 import com.fanglin.elecsign.enums.ElecsignProvider;
@@ -181,14 +181,14 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 	}
 
 	@Override
-	public List<CustomerElecsignAuthVO> queryCustomerElecsignAuth(int cid) throws FLException {
+	public List<ElecsignAuthVO> queryElecsignAuthByCid(int cid) throws FLException {
 
-		List<CustomerElecsignAuthVO> authVOs = new ArrayList<CustomerElecsignAuthVO>();
+		List<ElecsignAuthVO> authVOs = new ArrayList<ElecsignAuthVO>();
 
 		// 电子签厂商固定两家(1法大大/2e签宝), 逐厂商查认证行; 无行=未注册(status置null, 页面显示"未注册")
 		for (short provider : new short[] { ElecsignProvider.FADADA.code(), ElecsignProvider.ESIGN.code() }) {
 
-			CustomerElecsignAuthVO authVO = new CustomerElecsignAuthVO();
+			ElecsignAuthVO authVO = new ElecsignAuthVO();
 			authVO.setProvider(provider);
 
 			try {

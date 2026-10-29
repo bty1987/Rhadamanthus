@@ -203,8 +203,8 @@ $.extend(api, {
                 args: ["referMoney"]
             }]
         },
-        queryCustomerElecsignAuth: {
-            url: "queryCustomerElecsignAuth.do",
+        queryElecsignAuthByCid: {
+            url: "queryElecsignAuthByCid.do",
             type: "query"
         },
         queryDecorationContract: {

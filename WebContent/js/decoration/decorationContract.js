@@ -98,12 +98,12 @@ jQuery(function($) {
     }, null, false);
 
     // 客户电子签认证状态横幅(elecsignauth: 0注册未实名/1已实名/2已签署, 无记录=未注册)
-    com.post(api.decoration.queryCustomerElecsignAuth, {
+    com.post(api.decoration.queryElecsignAuthByCid, {
         "customer.cid": params.customer.cid
     }, function(res) {
 
         var labels = {};
-        $.each(res.customerElecsignAuths || [], function(i, a) {
+        $.each(res.elecsignAuths || [], function(i, a) {
             var name = a.provider == 2 ? "e签宝" : "法大大";
             if (a.status === null || a.status === undefined) labels[name] = "未注册";
             else if (a.status == 0) labels[name] = "注册未实名";

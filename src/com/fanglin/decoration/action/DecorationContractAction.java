@@ -15,7 +15,7 @@ import com.fanglin.core.interceptor.FLException;
 import com.fanglin.data.common.vo.ContractVO;
 import com.fanglin.data.common.vo.SignetVO;
 import com.fanglin.decoration.service.DecorationContractService;
-import com.fanglin.decoration.vo.CustomerElecsignAuthVO;
+import com.fanglin.decoration.vo.ElecsignAuthVO;
 import com.fanglin.decoration.vo.DecorationContractVO;
 import com.fanglin.decoration.vo.DecorationVO;
 
@@ -30,7 +30,7 @@ public class DecorationContractAction extends BaseListAction {
 
 	private List<DecorationContractVO> decorationContracts;
 
-	private List<CustomerElecsignAuthVO> customerElecsignAuths;
+	private List<ElecsignAuthVO> elecsignAuths;
 
 	private DecorationVO decoration;
 
@@ -59,10 +59,10 @@ public class DecorationContractAction extends BaseListAction {
 		return SUCCESS;
 	}
 
-	@Action(value = "queryCustomerElecsignAuth", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryCustomerElecsignAuth() throws FLException {
+	@Action(value = "queryElecsignAuthByCid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryElecsignAuthByCid() throws FLException {
 
-		customerElecsignAuths = decorationContractService.queryCustomerElecsignAuth(customer.getCid().intValue());
+		elecsignAuths = decorationContractService.queryElecsignAuthByCid(customer.getCid().intValue());
 
 		return SUCCESS;
 	}
@@ -219,12 +219,12 @@ public class DecorationContractAction extends BaseListAction {
 		this.decorationContracts = decorationContracts;
 	}
 
-	public List<CustomerElecsignAuthVO> getCustomerElecsignAuths() {
-		return customerElecsignAuths;
+	public List<ElecsignAuthVO> getCustomerElecsignAuths() {
+		return elecsignAuths;
 	}
 
-	public void setCustomerElecsignAuths(List<CustomerElecsignAuthVO> customerElecsignAuths) {
-		this.customerElecsignAuths = customerElecsignAuths;
+	public void setCustomerElecsignAuths(List<ElecsignAuthVO> elecsignAuths) {
+		this.elecsignAuths = elecsignAuths;
 	}
 
 	public CustomerVO getCustomer() {

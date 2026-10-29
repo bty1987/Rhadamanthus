@@ -7,7 +7,7 @@ import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Authentication;
 import com.fanglin.data.common.vo.ContractVO;
 import com.fanglin.data.common.vo.SignetVO;
-import com.fanglin.decoration.vo.CustomerElecsignAuthVO;
+import com.fanglin.decoration.vo.ElecsignAuthVO;
 import com.fanglin.decoration.vo.DecorationContractVO;
 import com.fanglin.decoration.vo.DecorationVO;
 
@@ -15,7 +15,7 @@ public interface DecorationContractService {
 
 	public List<DecorationContractVO> queryDecorationContractByOrderId(DecorationContractVO decorationContract) throws FLException;
 
-	public List<CustomerElecsignAuthVO> queryCustomerElecsignAuth(int cid) throws FLException;
+	public List<ElecsignAuthVO> queryElecsignAuthByCid(int cid) throws FLException;
 
 	public void sendDecorationContractForAuth(DecorationContractVO decorationContractVO) throws FLException;
 

@@ -47,11 +47,11 @@ jQuery(function($) {
     addDecorationContract.items.contractGroup.removeClass("hide");
 
     // 客户认证状态查询(签宝/法大大各一条)
-    com.post(api.decoration.queryCustomerElecsignAuth, {
+    com.post(api.decoration.queryElecsignAuthByCid, {
         "customer.cid": params.customer.cid
     }, function(res) {
 
-        $.each(res.customerElecsignAuths || [], function(i, a) {
+        $.each(res.elecsignAuths || [], function(i, a) {
             addDecorationContract.customerAuth[a.provider] = a.status;
         });
 
