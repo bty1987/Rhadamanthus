@@ -607,13 +607,23 @@ public class A20260324ServiceImpl implements A20260324Service {
 				userStatus = (short) 2; // 2 停薪留职
 			}
 
-			// 5. 判断是新增还是更新
+			// 5. 判断是新增还是更新：工号/手机号/身份证任一命中既有用户即执行更新
 			UserPO userPO = null;
 
+			// 5.1 优先按工号(code)查找
 			if (code != null && !code.trim().isEmpty()) {
-				// code 有值，尝试通过工号查找现有用户进行更新
 				userPO = userDao.queryUserByUserId(code);
-				if (userPO == null) {
+			}
+
+			// 5.2 工号未命中时，按手机号/身份证查找（任一命中即视为同一用户）
+			if (userPO == null) {
+				List<UserPO> existUsers = userDao.queryUserByPhoneAIdent(phone, identity);
+				if (existUsers != null && existUsers.size() == 1) {
+					userPO = existUsers.get(0);
+					logger.info("手机号/身份证命中既有用户，转为更新: uid={}, userId={}, code={}, phone={}, identity={}", userPO.getUid(), userPO.getUserId(), code, phone, identity);
+				} else if (existUsers != null && existUsers.size() > 1) {
+					throw new FLException(402014, "手机号或身份证命中多个用户");
+				} else if (code != null && !code.trim().isEmpty()) {
 					logger.warn("根据code未找到用户，视为新增: code={}", code);
 				}
 			}
@@ -716,6 +726,14 @@ public class A20260324ServiceImpl implements A20260324Service {
 
 			} else {
 				// ========== 更新场景 ==========
+
+				// 7.0 校验手机号/身份证未被其他用户占用（工号命中的场景下防止更新后产生重复档案）
+				List<UserPO> existUsers = userDao.queryUserByPhoneAIdent(phone, identity);
+				for (UserPO existUser : existUsers) {
+					if (existUser.getUid() != userPO.getUid()) {
+						throw new FLException(402011, "手机号或身份证已被使用");
+					}
+				}
 
 				// 7.1 更新基本信息
 				userPO.setUserName(name);
