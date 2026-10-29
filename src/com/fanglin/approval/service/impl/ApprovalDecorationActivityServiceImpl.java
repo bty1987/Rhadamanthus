@@ -138,6 +138,11 @@ public class ApprovalDecorationActivityServiceImpl implements ApprovalDecoration
 
 			BeanUtil.copyProperties(approvalDecorationActivityItemVO, approvalDecorationActivityItemPO);
 
+			// content 列 NOT NULL: 前端未回传时置空串兜底(否则插行 ConstraintViolation 110000)
+			if (approvalDecorationActivityItemPO.getContent() == null) {
+				approvalDecorationActivityItemPO.setContent("");
+			}
+
 			approvalDecorationActivityItemPO.setAdaId(approvalDecorationActivityPO.getAdaId());
 
 			approvalDecorationActivityItemDao.save(approvalDecorationActivityItemPO);
@@ -210,6 +215,9 @@ public class ApprovalDecorationActivityServiceImpl implements ApprovalDecoration
 
 			if (costSnapshot != null && activityItemPO != null) {
 				decorationActivityItemPO.setContent(costSnapshot.getSummary());
+			} else {
+				// content 列 NOT NULL: 校验跳过/非额度类时置空串兜底(否则插行 ConstraintViolation 110000)
+				decorationActivityItemPO.setContent("");
 			}
 
 			if (Arrays.asList(DecorationActivityItemPO.TYPE_COUPON_INT).contains(decorationActivityItemPO.getType()) && decorationActivityItemPO.getIsPayment() == DecorationActivityItemPO.ISPAYMENT_CAL_INT) {
