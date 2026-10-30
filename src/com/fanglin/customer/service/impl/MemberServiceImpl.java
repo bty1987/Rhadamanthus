@@ -748,7 +748,7 @@ public class MemberServiceImpl implements MemberService {
 
 			decorationActivityItemPO.setActivityItemName(memberOrderItemVO.getName());
 			// 积分商城同步产生即已领, 首次操作时间=同步时间(对齐makeMemberOrderItem; 线上物品核销仅认初始/已领, 落配送会卡140102)
-			decorationActivityItemPO.setState(DecorationActivityItemPO.STATUS_RECEIVE_INT);
+			decorationActivityItemPO.setState(DecorationActivityItemPO.STATUS_VERIFY_INT);
 			decorationActivityItemPO.setReceiveTime(DateUtil.getDateToTimestamp(new Date()));
 
 			decorationActivityItemPO.setIsPrefor(memberOrderItemVO.getIsPrefer() != null ? memberOrderItemVO.getIsPrefer() : DecorationActivityItemPO.ISPREFOR_UNCAL_INT);
@@ -856,7 +856,7 @@ public class MemberServiceImpl implements MemberService {
 
 		decorationActivityItemPO.setActivityItemName(memberOrderItemVO.getName());
 		// 积分商城同步产生即已领, 首次操作时间=同步时间
-		decorationActivityItemPO.setState(DecorationActivityItemPO.STATUS_RECEIVE_INT);
+		decorationActivityItemPO.setState(DecorationActivityItemPO.STATUS_VERIFY_INT);
 		decorationActivityItemPO.setReceiveTime(DateUtil.getDateToTimestamp(new Date()));
 
 		decorationActivityItemPO.setIsPrefor(memberOrderItemVO.getIsPrefer() != null ? memberOrderItemVO.getIsPrefer() : DecorationActivityItemPO.ISPREFOR_UNCAL_INT);
