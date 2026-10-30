@@ -18,6 +18,8 @@ import org.apache.struts2.convention.annotation.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
+import com.alibaba.fastjson.JSONObject;
+
 import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.seiya.service.A20260324Service;
@@ -152,12 +154,12 @@ public class A20260324Action extends BaseListAction {
 	 * 
 	 * 请求参数示例： { "code": "FL-09527", // 用户工号（更新时提供，新增时为空） "name": "张三", // 姓名（必填） "current_name": "张三", // 现用名（可选，默认使用name） "gender": 1, // 性别：0女，1男（可选，默认1） "identity": "210xxx...", // 身份证号（必填） "phone": "13800138000", // 手机号（必填） "login_id": "zhangsan", // 登录用户名（可选，默认使用userId） "dept_id": 123, // 部门ID（必填） "duty_id": 456, // 职位ID（必填） "company": 1, // 公司ID（必填，user.company） "status": 1 // 状态：1在职, 0离职, 2停薪留职（可选，默认1） }
 	 * 
-	 * 响应示例： { "errorCode": 0, "errorMsg": "", "data": { "code": "12345", // user.uid "belong_org_code": "1", // user.company "userId": "FL-09527" // user.userId（工号） } }
+	 * 响应示例： { "errorCode": 0, "errorMsg": "", "code": "FL-09527", // 工号userId(顶层, 新增) "data": { "code": "12345", // user.uid "belong_org_code": "1", // user.company "userId": "FL-09527" // user.userId（工号, 原样保留兼容既有解析方） } }
 	 * 
 	 * @return SUCCESS
 	 * @throws FLException 业务异常
 	 */
-	@Action(value = "syncUser", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false", "includeProperties", "errorCode,errorMsg,data" }) }, params = { "contentType", "text/html" })
+	@Action(value = "syncUser", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false", "includeProperties", "errorCode,errorMsg,data,code" }) }, params = { "contentType", "text/html" })
 	public String syncUser() throws FLException {
 
 		// 参数必填验证
@@ -182,6 +184,9 @@ public class A20260324Action extends BaseListAction {
 
 		// 调用服务层处理
 		data = a20260324Service.syncUser(code, name, current_name, gender, identity, phone, login_id, dept_id, duty_id, company, status);
+
+		// 工号拆分到响应顶层 code(data 内 userId 原样保留, 兼容既有解析方); code 为空的新增场景即返回自动生成的工号
+		this.code = JSONObject.parseObject(data).getString("userId");
 
 		return SUCCESS;
 	}
