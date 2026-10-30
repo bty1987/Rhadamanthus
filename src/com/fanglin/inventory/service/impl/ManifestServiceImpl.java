@@ -646,6 +646,11 @@ public class ManifestServiceImpl implements ManifestService {
 				throw new FLException(260024, "辅料单状态不可操作");
 			}
 
+			// 出库闸: 已标记需分配但未分配厂商的辅料单不可出库
+			if (accessoriesPO.getAssignFlag() == AccessoriesPO.ASSIGNFLAG_MARKED_INT && accessoriesPO.getSupplier() == null) {
+				throw new FLException(260094, "辅料单需分配厂商后方可出库");
+			}
+
 			accessoriesPO.setStatus(AccessoriesPO.STATUS_BATCHOUT_INT);
 			accessoriesPO.setApprover(creater);
 			accessoriesPO.setApproverTime(DateUtil.getDateToTimestamp(new Date()));

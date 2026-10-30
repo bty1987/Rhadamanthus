@@ -50,8 +50,9 @@
                     <div class="form-group">
                         <label class="col-sm-4 control-label no-padding-right" for="balanceInput">结算额（元）</label>
                         <div class="col-sm-7">
-                            <input type="text" id="balanceInput" class="form-control input-sm v_required v_float_3"
-                                   placeholder="请输入结算额" />
+                            <!-- 结算额公式化: 服务端Σ(辅材结算价×数量)计算, 此处只读预览 -->
+                            <input type="text" id="balanceInput" class="form-control input-sm" readonly="readonly"
+                                   placeholder="打开弹窗自动计算" />
                         </div>
                     </div>
                 </form>

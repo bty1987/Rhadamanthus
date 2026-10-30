@@ -42,6 +42,8 @@ public class AccessoriesVO implements Serializable {
 
 	private Short status;
 
+	private Short assignFlag; // 分配标记: 0未标记 1需分配
+
 	private Long total;
 
 	private Integer printnum;
@@ -200,6 +202,14 @@ public class AccessoriesVO implements Serializable {
 
 	public void setStatus(Short status) {
 		this.status = status;
+	}
+
+	public Short getAssignFlag() {
+		return assignFlag;
+	}
+
+	public void setAssignFlag(Short assignFlag) {
+		this.assignFlag = assignFlag;
 	}
 
 	public Long getTotal() {

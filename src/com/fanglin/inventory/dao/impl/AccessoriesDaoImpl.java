@@ -47,6 +47,9 @@ public class AccessoriesDaoImpl extends DaoImpl<AccessoriesPO> implements Access
 
 		query.add(query.getCriterion("supplier.uid", uid, "eq"));
 
+		// 厂商视角仅见已标记需分配的辅料单
+		query.add(query.getCriterion("assignFlag", AccessoriesPO.ASSIGNFLAG_MARKED_INT, "eq"));
+
 		queryFilterExcute(query, filters);
 
 		query.desc("aid");

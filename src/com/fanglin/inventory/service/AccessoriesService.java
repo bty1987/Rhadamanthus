@@ -18,6 +18,13 @@ public interface AccessoriesService {
 
 	public AccessoriesVO queryAccessoriesByAid(AccessoriesVO accessoriesVO);
 
+	/**
+	 * 结算额公式预览: Σ(辅材结算价data.aoods.balance×辅料项数量)
+	 * @param accessoriesVO 需包含aid
+	 * @return balance=公式结算额（厘）
+	 */
+	public AccessoriesVO queryAccessoriesBalance(AccessoriesVO accessoriesVO);
+
 	public int addAccessories(AccessoriesVO accessoriesVO, List<AccessoriesItemVO> accessoriesItemVOs, String userId) throws FLException;
 
 	public int bindAccessories(AccessoriesVO accessoriesVO) throws FLException;
@@ -29,6 +36,12 @@ public interface AccessoriesService {
 	public int refuseAccessories(AccessoriesVO accessoriesVO, String userId) throws FLException;
 
 	public int updateAccessoriesForPrint(AccessoriesVO accessoriesVO) throws FLException;
+
+	/**
+	 * 标记/取消需分配（属性行为; 已结算单不可标）
+	 * @param accessoriesVO 需包含aid与assignFlag(1标记 0取消)
+	 */
+	public int updateAccessoriesForAssign(AccessoriesVO accessoriesVO) throws FLException;
 
 	public int deliveAccessories(AccessoriesVO accessoriesVO, String userId) throws FLException;
 

@@ -30,12 +30,15 @@ import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.information.po.MessagePO;
 import com.fanglin.information.service.MessageService;
+import com.fanglin.inventory.dao.AccessoriesChargeDao;
 import com.fanglin.inventory.dao.AccessoriesDao;
 import com.fanglin.inventory.dao.AccessoriesItemDao;
+import com.fanglin.inventory.po.AccessoriesChargePO;
 import com.fanglin.inventory.po.AccessoriesItemPO;
 import com.fanglin.inventory.po.AccessoriesPO;
 import com.fanglin.inventory.service.AccessoriesItemService;
 import com.fanglin.inventory.service.AccessoriesService;
+import com.fanglin.inventory.vo.AccessoriesChargeVO;
 import com.fanglin.inventory.vo.AccessoriesItemVO;
 import com.fanglin.inventory.vo.AccessoriesVO;
 import com.fanglin.personel.dao.UserDao;
@@ -87,6 +90,9 @@ public class AccessoriesServiceImpl implements AccessoriesService {
 	@Autowired
 	private AccessoriesItemService accessoriesItemService;
 
+	@Autowired
+	private AccessoriesChargeDao accessoriesChargeDao;
+
 	@Override
 	public void pageAccessories(Paging paging, List<Filter> filters, int company) {
 
@@ -134,6 +140,19 @@ public class AccessoriesServiceImpl implements AccessoriesService {
 		AccessoriesPO accessoriesPO = accessoriesDao.get(accessoriesVO.getAid());
 
 		if (accessoriesPO != null) return accessoriesPO.ptv(new AccessoriesVO(new HouseVO(new VillageVO()), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO()));
+
+		return accessoriesVO;
+	}
+
+	// 结算额公式预览: Σ(辅材结算价×数量), 供结算弹窗展示
+	@Override
+	public AccessoriesVO queryAccessoriesBalance(AccessoriesVO accessoriesVO) {
+
+		AccessoriesPO accessoriesPO = accessoriesDao.get(accessoriesVO.getAid());
+
+		if (accessoriesPO != null) {
+			accessoriesVO.setBalance((int) accessoriesItemService.amountAccessoriesBalance(accessoriesPO));
+		}
 
 		return accessoriesVO;
 	}
@@ -213,10 +232,29 @@ public class AccessoriesServiceImpl implements AccessoriesService {
 				accessoriesItemService.checkAccessoriesItem(accessoriesVO, accessoriesItemVO);
 			}
 
-			accessoriesItemDao.save(new AccessoriesItemPO().init(accessoriesPO.getAid(), accessoriesItemVO));
+			AccessoriesItemPO accessoriesItemPO = new AccessoriesItemPO().init(accessoriesPO.getAid(), accessoriesItemVO);
+
+			accessoriesItemDao.save(accessoriesItemPO);
+
+			// 创建期费用行: VO带非空行则落行(创建弹窗可编辑), 无行时重算自动回退模板现算(老调用方/app兼容)
+			if (accessoriesItemVO.getAccessoriesCharges() != null) {
+
+				for (AccessoriesChargeVO accessoriesChargeVO : accessoriesItemVO.getAccessoriesCharges()) {
+
+					AccessoriesChargePO accessoriesChargePO = new AccessoriesChargePO();
+					accessoriesChargePO.setAccessories(accessoriesPO);
+					accessoriesChargePO.setAccessoriesItem(accessoriesItemPO);
+					accessoriesChargePO.setName(accessoriesChargeVO.getName());
+					accessoriesChargePO.setPrice(accessoriesChargeVO.getPrice() == null ? 0 : accessoriesChargeVO.getPrice());
+					accessoriesChargePO.setSurplus(accessoriesChargeVO.getSurplus() == null ? 0 : accessoriesChargeVO.getSurplus());
+					accessoriesChargePO.setNum(accessoriesChargeVO.getNum() == null ? 0 : accessoriesChargeVO.getNum());
+
+					accessoriesChargeDao.save(accessoriesChargePO);
+				}
+			}
 		}
 
-		accessoriesPO.setCharge(accessoriesItemService.amountAccessoriesCharge(accessoriesPO));
+		accessoriesPO.setCharge(accessoriesItemService.refreshAccessoriesCharge(accessoriesPO));
 
 		accessoriesDao.update(accessoriesPO);
 
@@ -264,6 +302,11 @@ public class AccessoriesServiceImpl implements AccessoriesService {
 
 		if (!status.contains(accessoriesPO.getStatus())) {
 			throw new FLException(260024, "辅料单状态不可操作");
+		}
+
+		// 分配闸: 须先标记需分配, 未标记单不开放分配厂商功能
+		if (accessoriesPO.getAssignFlag() != AccessoriesPO.ASSIGNFLAG_MARKED_INT) {
+			throw new FLException(260093, "辅料单未标记需分配");
 		}
 
 		UserPO supplier = accessoriesVO.getSupplier() != null ? userDao.get(accessoriesVO.getSupplier().getUid()) : null;
@@ -447,6 +490,28 @@ public class AccessoriesServiceImpl implements AccessoriesService {
 		return 0;
 	}
 
+	// 标记/取消需分配（属性行为; 已结算单不可标）
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int updateAccessoriesForAssign(AccessoriesVO accessoriesVO) throws FLException {
+
+		AccessoriesPO accessoriesPO = accessoriesDao.get(accessoriesVO.getAid());
+
+		if (accessoriesPO == null) {
+			throw new FLException(260023, "辅料单不存在");
+		}
+
+		if (accessoriesPO.getStatus() == AccessoriesPO.STATUS_BALANCED_INT) {
+			throw new FLException(260024, "辅料单状态不可操作");
+		}
+
+		accessoriesPO.setAssignFlag(accessoriesVO.getAssignFlag() != null && accessoriesVO.getAssignFlag() == AccessoriesPO.ASSIGNFLAG_MARKED_INT ? AccessoriesPO.ASSIGNFLAG_MARKED_INT : AccessoriesPO.ASSIGNFLAG_INIT_INT);
+
+		accessoriesDao.update(accessoriesPO);
+
+		return 0;
+	}
+
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public int deliveAccessories(AccessoriesVO accessoriesVO, String userId) throws FLException {
@@ -489,11 +554,14 @@ public class AccessoriesServiceImpl implements AccessoriesService {
 			throw new FLException(260024, "辅料单状态不可操作");
 		}
 
-		if (accessoriesVO.getBalance() == null || accessoriesVO.getBalance() < 0) {
+		// 结算额公式化: Σ(辅材结算价data.aoods.balance×辅料项数量), 入参金额不再信任(服务端为准)
+		long balance = accessoriesItemService.amountAccessoriesBalance(accessoriesPO);
+
+		if (balance < 0) {
 			throw new FLException(260092, "结算额无效");
 		}
 
-		accessoriesPO.setBalance(accessoriesVO.getBalance());
+		accessoriesPO.setBalance((int) balance);
 		accessoriesPO.setBalancer(userPO);
 		accessoriesPO.setBalanceTime(DateUtil.getDateToTimestamp(new Date()));
 		accessoriesPO.setStatus(AccessoriesPO.STATUS_BALANCED_INT);

@@ -405,11 +405,51 @@ $.extend(api, {
                 args: ["total", "charge", "balance"]
             }]
         },
+        queryAccessoriesBalance: {
+            url: "queryAccessoriesBalance.do",
+            type: "query",
+            tranargs: [{
+                result: "accessoriess",
+                args: ["balance"]
+            }]
+        },
         addAccessories: {
             url: "addAccessories.do",
             type: "update",
             tranargs: {
-                args: ["accessories.total", "accessoriesItems.selling", "accessoriesItems.num", "accessoriesItems.surplus", "accessoriesItems.total", "accessoriesItems.normnum", "accessoriesItems.normunit", "accessoriesItems.storenum", "accessoriesItems.storeunit"]
+                args: ["accessories.total", "accessoriesItems.selling", "accessoriesItems.num", "accessoriesItems.surplus", "accessoriesItems.total", "accessoriesItems.normnum", "accessoriesItems.normunit", "accessoriesItems.storenum", "accessoriesItems.storeunit", "accessoriesItems.accessoriesCharges.price", "accessoriesItems.accessoriesCharges.surplus", "accessoriesItems.accessoriesCharges.num"]
+            }
+        },
+        queryAccessoriesCharge: {
+            url: "queryAccessoriesCharge.do",
+            type: "query",
+            tranargs: [{
+                result: "accessoriesCharges",
+                args: ["price", "surplus"]
+            }]
+        },
+        addAccessoriesCharge: {
+            url: "addAccessoriesCharge.do",
+            type: "update",
+            tranargs: {
+                args: ["accessoriesCharge.price", "accessoriesCharge.surplus"]
+            }
+        },
+        updateAccessoriesCharge: {
+            url: "updateAccessoriesCharge.do",
+            type: "update",
+            tranargs: {
+                args: ["accessoriesCharge.price", "accessoriesCharge.surplus"]
+            }
+        },
+        deleteAccessoriesCharge: {
+            url: "deleteAccessoriesCharge.do"
+        },
+        batchAccessoriesCharge: {
+            url: "batchAccessoriesCharge.do",
+            type: "update",
+            tranargs: {
+                args: ["accessoriesCharges.price", "accessoriesCharges.surplus"]
             }
         },
         bindAccessories: {

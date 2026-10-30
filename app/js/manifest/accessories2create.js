@@ -38,8 +38,8 @@ layui.use(['form', 'laydate', 'jquery'], function () {
 
     function renderHead() {
         var html = '<table class="layui-table"><colgroup>' +
-            '<col width="50"><col><col><col><col><col width="90"></colgroup>' +
-            '<thead><tr><th>#</th><th>商品gid</th><th>数量</th><th>售价</th><th>辅料caid</th><th>操作</th></tr></thead>' +
+            '<col width="50"><col><col><col><col><col width="90"><col width="90"></colgroup>' +
+            '<thead><tr><th>#</th><th>商品gid</th><th>数量</th><th>售价</th><th>辅料caid</th><th>费用额(元,选填)</th><th>操作</th></tr></thead>' +
             '<tbody id="itemTableBody"></tbody></table>';
         $('#itemTableWrap').html(html);
     }
@@ -51,6 +51,7 @@ layui.use(['form', 'laydate', 'jquery'], function () {
             '<td><input type="text" class="layui-input app-cell v_float_3" name="num" placeholder="数量" style="width:90px;"></td>' +
             '<td><input type="text" class="layui-input app-cell v_float_3" name="selling" placeholder="售价" style="width:100px;"></td>' +
             '<td><input type="text" class="layui-input app-cell" name="caid" placeholder="辅料caid" style="width:110px;"></td>' +
+            '<td><input type="text" class="layui-input app-cell v_float_3" name="charge" placeholder="费用额" style="width:90px;"></td>' +
             '<td><button type="button" class="layui-btn layui-btn-xs layui-btn-danger btn-del">删除</button></td>' +
             '</tr>';
         $('#itemTableBody').append(html);
@@ -92,6 +93,14 @@ layui.use(['form', 'laydate', 'jquery'], function () {
             opt['accessoriesItems[' + i + '].selling'] = $t.find('[name="selling"]').val();
             opt['accessoriesItems[' + i + '].caid'] = $t.find('[name="caid"]').val();
             opt['accessoriesItems[' + i + '].total'] = app.utils.accMul(parseFloat($t.find('[name="num"]').val() || 0), parseFloat($t.find('[name="selling"]').val() || 0));
+            // 费用额(元,选填)映射为单条费用行走行Σ路径; 留空不上送, 后端回退 aoodscharge 模板现算(价格经 tranargs ×1000 折厘)
+            var chargeVal = parseFloat($t.find('[name="charge"]').val());
+            if (!isNaN(chargeVal) && chargeVal > 0) {
+                opt['accessoriesItems[' + i + '].accessoriesCharges[0].name'] = '费用';
+                opt['accessoriesItems[' + i + '].accessoriesCharges[0].price'] = chargeVal;
+                opt['accessoriesItems[' + i + '].accessoriesCharges[0].surplus'] = 0;
+                opt['accessoriesItems[' + i + '].accessoriesCharges[0].num'] = 1;
+            }
             if (!opt['accessoriesItems[' + i + '].goods.gid'] || !opt['accessoriesItems[' + i + '].num']) { valid = false; return false; }
         });
         if (!valid) { app.showAlert(app.warning, '请填写每行的商品gid和数量'); return; }

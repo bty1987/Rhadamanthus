@@ -69,6 +69,10 @@ public class AccessoriesPO implements Serializable {
 
 	public static final short STATUS_BALANCED_INT = 8; // 已结算
 
+	public static final short ASSIGNFLAG_INIT_INT = 0; // 未标记
+
+	public static final short ASSIGNFLAG_MARKED_INT = 1; // 需分配（分配厂商/出库闸依据）
+
 	private long aid;
 
 	private String no;
@@ -107,6 +111,8 @@ public class AccessoriesPO implements Serializable {
 
 	private short schedule;
 
+	private short assignFlag; // 分配标记: 0未标记 1需分配
+
 	private long total;
 
 	private long charge; // 费用额（厘，按data.aoodscharge模板自动算）
@@ -123,6 +129,11 @@ public class AccessoriesPO implements Serializable {
 
 	public AccessoriesPO() {
 		super();
+	}
+
+	public AccessoriesPO(long aid) {
+		super();
+		this.aid = aid;
 	}
 
 	public AccessoriesPO(String no) {
@@ -257,6 +268,15 @@ public class AccessoriesPO implements Serializable {
 
 	public void setSchedule(short schedule) {
 		this.schedule = schedule;
+	}
+
+	@Column(name = "assignFlag")
+	public short getAssignFlag() {
+		return assignFlag;
+	}
+
+	public void setAssignFlag(short assignFlag) {
+		this.assignFlag = assignFlag;
 	}
 
 	@Column(name = "type")

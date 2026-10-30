@@ -79,6 +79,14 @@ public class AccessoriesAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "queryAccessoriesBalance", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryAccessoriesBalance() throws FLException {
+
+		accessories = accessoriesService.queryAccessoriesBalance(accessories);
+
+		return SUCCESS;
+	}
+
 	@Action(value = "addAccessories", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addAccessories() throws FLException {
 
@@ -131,6 +139,14 @@ public class AccessoriesAction extends BaseListAction {
 	public String updateAccessoriesForPrint() throws FLException {
 
 		accessoriesService.updateAccessoriesForPrint(accessories);
+
+		return SUCCESS;
+	}
+
+	@Action(value = "updateAccessoriesForAssign", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateAccessoriesForAssign() throws FLException {
+
+		accessoriesService.updateAccessoriesForAssign(accessories);
 
 		return SUCCESS;
 	}

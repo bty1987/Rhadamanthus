@@ -34,7 +34,11 @@ jQuery(function() {
             comment: com.focusPage('#comment')
         },
 
-        constructionNode: {}
+        constructionNode: {},
+
+        chargesCache: {}, // 费用行缓存(键=行data-charge-idx), 照外辅 occcessories2create 同款
+        chargeIdx: 0, // 行费用唯一键计数
+        currentChargeIdx: null // 当前费用弹窗编辑的行键
     };
 
     com.datetime(accessories.rightitems.fetchTime, "date", false);
@@ -102,6 +106,11 @@ jQuery(function() {
         }
 
         var $liList = $('<li></li>').addClass('list-group-item').attr("data-gid", gid).attr("data-num", num).attr("data-selling", selling).attr('data-caid', caid).attr('data-normnum', normnum).attr('data-normunit', normunit).attr('data-storenum', storenum).attr('data-storeunit', storeunit);
+
+        // 行费用键: 费用弹窗缓存与提交收集的关联键
+        var chargeIdx = ++accessories.chargeIdx;
+        $liList.attr('data-charge-idx', chargeIdx);
+
         var $h4 = $('<h4></h4>').html(name + ' ' + no).attr('gid', gid);
 
         if (schedule) {
@@ -144,6 +153,13 @@ jQuery(function() {
             $h4.append($query);
         }
 
+        // 费用按钮: 弹窗编辑该行费用(模板预填+可编辑数量), 缓存于 chargesCache
+        var $chargeBtn = $('<div></div>').css('margin-right', '5px').addClass('pull-right action-button').append($('<a></a>').addClass('btn btn-warning btn-minier').html('费用')).click(function() {
+
+            openChargeModal(chargeIdx, caid);
+        });
+        $h4.append($chargeBtn);
+
         $liList.append(addSpan('品类 : ', 's_category', category, " ", 'b_category', null)).append(addSpan('品牌 : ', 's_brand', brand, " ", 'b_brand', null)).append(addSpan('单位 : ', 's_unit', measurementUnit, " ", 'b_unit', null)).append(addSpan('数量 : ', 's_number', num, 'red', 'b_number'));
 
         accessories.itemlist.append($liList);
@@ -183,6 +199,96 @@ jQuery(function() {
 
         return $span;
     }
+
+    // 打开行费用弹窗(照外辅 openChargeModal 同款): 缓存优先, 无缓存按辅材费用模板预填
+    function openChargeModal(chargeIdx, caid) {
+
+        accessories.currentChargeIdx = chargeIdx;
+
+        com.focusPage('#chargeTableBody').html('');
+
+        if (accessories.chargesCache[chargeIdx] && accessories.chargesCache[chargeIdx].length > 0) {
+
+            $.each(accessories.chargesCache[chargeIdx], function(i, charge) {
+                addChargeRow(charge.name, charge.price, charge.surplus, charge.num);
+            });
+        } else if (caid) {
+            loadAoodsChargeTemplate(caid);
+        } else {
+            com.focusPage('#chargeTableBody').html('<tr><td colspan="2" class="text-center">该辅料项未关联辅材, 无法加载费用模板</td></tr>');
+        }
+
+        com.focusPage('#chargeModal').modal('show');
+    }
+
+    // 加载辅材费用模板(data.aoodscharge, 响应经api tranargs已折元)
+    function loadAoodsChargeTemplate(caid) {
+
+        com.post(api.data.queryAoodsChargeByAid, {
+            "aoodsCharge.aoods.aid": caid
+        }, function(data) {
+
+            if (data && data.aoodsCharges && data.aoodsCharges.length > 0) {
+                $.each(data.aoodsCharges, function(i, charge) {
+                    addChargeRow(charge.name, charge.price, charge.surplus, charge.num);
+                });
+            } else {
+                com.focusPage('#chargeTableBody').html('<tr><td colspan="2" class="text-center">该辅材暂无费用模板</td></tr>');
+            }
+        });
+    }
+
+    // 添加费用行: 名称/单价/浮动额只读(模板口径), 数量可编辑
+    function addChargeRow(name, price, surplus, num) {
+
+        var $row = $('<tr></tr>');
+
+        var $nameTd = $('<td></td>');
+        $nameTd.text(name);
+        $row.append($nameTd);
+
+        var $priceInput = $('<input type="hidden" class="charge-price">').val(price);
+        $row.append($priceInput);
+
+        var $surplusInput = $('<input type="hidden" class="charge-surplus">').val(surplus || 0);
+        $row.append($surplusInput);
+
+        var $numTd = $('<td></td>');
+        var displayNum = (num !== undefined && num !== null && num !== '') ? num : 0;
+        var $numInput = $('<input type="text" class="form-control input-sm v_int" placeholder="0">').val(displayNum);
+        $numTd.append($numInput);
+        $row.append($numTd);
+
+        com.focusPage('#chargeTableBody').append($row);
+    }
+
+    // 保存行费用到缓存(提交时随accessoriesItems嵌套上送)
+    com.focusPage('#saveChargeBtn').click(function() {
+
+        var charges = [];
+
+        com.focusPage('#chargeTableBody tr').each(function() {
+
+            var $row = $(this);
+            var name = $row.find('td:eq(0)').text().trim();
+            var price = $row.find('input.charge-price').val();
+            var surplus = $row.find('input.charge-surplus').val();
+            var num = $row.find('td:eq(1) input').val();
+
+            if (name && name !== '该辅料项未关联辅材, 无法加载费用模板' && name !== '该辅材暂无费用模板') {
+                charges.push({
+                    name: name,
+                    price: price,
+                    surplus: surplus || 0,
+                    num: num || 1
+                });
+            }
+        });
+
+        accessories.chargesCache[accessories.currentChargeIdx] = charges;
+
+        com.focusPage('#chargeModal').modal('hide');
+    });
 
     accessories.rightitems.orderId.on("change", function() {
 
@@ -276,6 +382,17 @@ jQuery(function() {
                 options["accessoriesItems[" + i + "].schedule"] = $v.attr('data-schedule');
 
             options["accessoriesItems[" + i + "].total"] = utils.accMul($v.attr('data-num'), $v.attr('data-selling'));
+
+            // 行费用嵌套上送(价格元经api tranargs ×1000折厘), 未编辑行不上送, 后端回退模板现算
+            var charges = accessories.chargesCache[$v.attr('data-charge-idx')] || [];
+
+            $.each(charges, function(j, c) {
+
+                options["accessoriesItems[" + i + "].accessoriesCharges[" + j + "].name"] = c.name;
+                options["accessoriesItems[" + i + "].accessoriesCharges[" + j + "].price"] = c.price;
+                options["accessoriesItems[" + i + "].accessoriesCharges[" + j + "].surplus"] = c.surplus || 0;
+                options["accessoriesItems[" + i + "].accessoriesCharges[" + j + "].num"] = c.num || 1;
+            });
         });
 
         com.post(api.inventory.addAccessories, options, function(data) {

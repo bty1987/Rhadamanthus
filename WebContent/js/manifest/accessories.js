@@ -256,6 +256,29 @@ $(function() {
             return (accessories.pageType != "advance" && v.status == constant.inventory().accessories.STATUS_BATCHOUT_INT)
         }
     }, {
+        // 需分配标记(开关): 标记后开放分配厂商功能, 标记未分配不可出库(后端闸)
+        name: "需分配",
+        type: "switch",
+        clazz: "status-lbl",
+        handle: function (v, flag) {
+
+            com.post(api.inventory.updateAccessoriesForAssign, {
+                "accessories.aid": v.aid,
+                "accessories.assignFlag": flag ? 1 : 0
+            }, function() {
+
+                com.showAlert(com.info, "操作成功");
+                searcher.doSearch();
+            });
+            return false;
+        },
+        init: function (v) {
+            return v.assignFlag == 1;
+        },
+        show: function (v) {
+            return (accessories.pageType != "supplier" && v.status != constant.inventory().accessories.STATUS_BALANCED_INT)
+        }
+    }, {
         name: "分配厂商",
         clazz: "btn-info",
         handle: function (v) {
@@ -268,7 +291,8 @@ $(function() {
             return false;
         },
         show: function (v) {
-            return (accessories.pageType != "supplier" && (v.status == 0 || v.status == 1 || v.status == 2))
+            // 分配闸: 仅标记需分配的单开放(后端260093兜底)
+            return (accessories.pageType != "supplier" && v.assignFlag == 1 && (v.status == 0 || v.status == 1 || v.status == 2))
         }
     }, {
         name: "结算",
@@ -279,7 +303,15 @@ $(function() {
                 return false;
             }
             accessories.aid = v.aid;
-            accessories.modals.balanceAccessoriesModal.modal("show");
+
+            // 结算额公式预览: Σ(辅材结算价×数量), 服务端计算为准
+            com.post(api.inventory.queryAccessoriesBalance, {
+                "accessories.aid": accessories.aid
+            }, function(res) {
+
+                accessories.items.balanceInput.val(res.accessories.balance || 0);
+                accessories.modals.balanceAccessoriesModal.modal("show");
+            });
             return false;
         },
         show: function (v) {

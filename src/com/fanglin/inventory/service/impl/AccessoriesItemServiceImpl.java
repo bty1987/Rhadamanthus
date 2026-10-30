@@ -21,8 +21,10 @@ import com.fanglin.data.po.AoodsPO;
 import com.fanglin.data.po.NoodsPO;
 import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.po.DecorationPO;
+import com.fanglin.inventory.dao.AccessoriesChargeDao;
 import com.fanglin.inventory.dao.AccessoriesDao;
 import com.fanglin.inventory.dao.AccessoriesItemDao;
+import com.fanglin.inventory.po.AccessoriesChargePO;
 import com.fanglin.inventory.po.AccessoriesItemPO;
 import com.fanglin.inventory.po.AccessoriesPO;
 import com.fanglin.inventory.service.AccessoriesItemService;
@@ -48,6 +50,9 @@ public class AccessoriesItemServiceImpl implements AccessoriesItemService {
 
 	@Autowired
 	private AccessoriesDao accessoriesDao;
+
+	@Autowired
+	private AccessoriesChargeDao accessoriesChargeDao;
 
 	@Autowired
 	private AoodsDao aoodsDao;
@@ -171,21 +176,90 @@ public class AccessoriesItemServiceImpl implements AccessoriesItemService {
 		long charge = 0;
 
 		for (AccessoriesItemPO accessoriesItemPO : accessoriesItemPOs) {
+			charge = Arith.add(charge, amountItemChargeByTemplate(accessoriesPO, accessoriesItemPO));
+		}
+
+		return charge;
+	}
+
+	@Override
+	public long refreshAccessoriesCharge(AccessoriesPO accessoriesPO) {
+
+		List<AccessoriesItemPO> accessoriesItemPOs = accessoriesItemDao.queryAccessoriesItem(accessoriesPO.getAid());
+
+		long charge = 0;
+
+		for (AccessoriesItemPO accessoriesItemPO : accessoriesItemPOs) {
+			charge = Arith.add(charge, resolveItemCharge(accessoriesPO, accessoriesItemPO));
+		}
+
+		return charge;
+	}
+
+	@Override
+	public long amountAccessoriesBalance(AccessoriesPO accessoriesPO) {
+
+		List<AccessoriesItemPO> accessoriesItemPOs = accessoriesItemDao.queryAccessoriesItem(accessoriesPO.getAid());
+
+		long balance = 0;
+
+		for (AccessoriesItemPO accessoriesItemPO : accessoriesItemPOs) {
 
 			if (accessoriesItemPO.getGoods() == null) continue;
 
 			List<AoodsPO> aoodsPOs = aoodsDao.queryAoodsByGid(accessoriesItemPO.getGoods().getGid(), accessoriesPO.getCompany());
 
-			// 同gid多行属数据异常,聚合全部费用行并告警,不静默取一(2026-10-26拍板④)
+			// 同gid多行属数据异常,聚合全部并告警,不静默取一(同费用口径)
 			if (aoodsPOs.size() > 1) {
-				logger.warn("辅料费用模板gid重复, 聚合全部费用行: company:{}, gid:{}, aoods行数:{}", accessoriesPO.getCompany(), accessoriesItemPO.getGoods().getGid(), aoodsPOs.size());
+				logger.warn("辅料结算价gid重复, 聚合全部: company:{}, gid:{}, aoods行数:{}", accessoriesPO.getCompany(), accessoriesItemPO.getGoods().getGid(), aoodsPOs.size());
 			}
 
 			for (AoodsPO aoodsPO : aoodsPOs) {
+				balance = Arith.add(balance, Arith.mul(accessoriesItemPO.getNum(), aoodsPO.getBalance()));
+			}
+		}
 
-				for (AoodsChargePO aoodsChargePO : aoodsChargeDao.queryAoodsChargeByAid(aoodsPO.getAid(), null)) {
-					charge = Arith.add(charge, Arith.mul(accessoriesItemPO.getNum(), Arith.add(aoodsChargePO.getPrice(), aoodsChargePO.getSurplus())));
-				}
+		return balance;
+	}
+
+	// 项级费用: 费用行Σ优先(创建弹窗可编辑行), 无行回退模板现算(老调用方/app兼容)
+	private long resolveItemCharge(AccessoriesPO accessoriesPO, AccessoriesItemPO accessoriesItemPO) {
+
+		List<AccessoriesChargePO> accessoriesChargePOs = accessoriesItemPO.getAiid() == 0 ? new ArrayList<AccessoriesChargePO>()
+				: accessoriesChargeDao.queryAccessoriesChargeByIid(accessoriesItemPO.getAiid());
+
+		if (accessoriesChargePOs != null && !accessoriesChargePOs.isEmpty()) {
+
+			long itemCharge = 0;
+
+			for (AccessoriesChargePO accessoriesChargePO : accessoriesChargePOs) {
+				itemCharge = Arith.add(itemCharge, Arith.mul(accessoriesChargePO.getNum(), Arith.add(accessoriesChargePO.getPrice(), accessoriesChargePO.getSurplus())));
+			}
+
+			return itemCharge;
+		}
+
+		return amountItemChargeByTemplate(accessoriesPO, accessoriesItemPO);
+	}
+
+	// 模板现算(单级): Σ(num×Σ(price+surplus)), amountAccessoriesCharge 原循环体
+	private long amountItemChargeByTemplate(AccessoriesPO accessoriesPO, AccessoriesItemPO accessoriesItemPO) {
+
+		if (accessoriesItemPO.getGoods() == null) return 0;
+
+		List<AoodsPO> aoodsPOs = aoodsDao.queryAoodsByGid(accessoriesItemPO.getGoods().getGid(), accessoriesPO.getCompany());
+
+		// 同gid多行属数据异常,聚合全部费用行并告警,不静默取一(2026-10-26拍板④)
+		if (aoodsPOs.size() > 1) {
+			logger.warn("辅料费用模板gid重复, 聚合全部费用行: company:{}, gid:{}, aoods行数:{}", accessoriesPO.getCompany(), accessoriesItemPO.getGoods().getGid(), aoodsPOs.size());
+		}
+
+		long charge = 0;
+
+		for (AoodsPO aoodsPO : aoodsPOs) {
+
+			for (AoodsChargePO aoodsChargePO : aoodsChargeDao.queryAoodsChargeByAid(aoodsPO.getAid(), null)) {
+				charge = Arith.add(charge, Arith.mul(accessoriesItemPO.getNum(), Arith.add(aoodsChargePO.getPrice(), aoodsChargePO.getSurplus())));
 			}
 		}
 
@@ -222,7 +296,7 @@ public class AccessoriesItemServiceImpl implements AccessoriesItemService {
 
 		accessoriesItemVO.setAiid(accessoriesItemPO.getAiid());
 
-		accessoriesPO.setCharge(amountAccessoriesCharge(accessoriesPO));
+		accessoriesPO.setCharge(refreshAccessoriesCharge(accessoriesPO));
 
 		accessoriesDao.update(accessoriesPO);
 
@@ -284,7 +358,7 @@ public class AccessoriesItemServiceImpl implements AccessoriesItemService {
 
 		accessoriesPO.setTotal(Arith.add(accessoriesPO.getTotal(), total));
 
-		accessoriesPO.setCharge(amountAccessoriesCharge(accessoriesPO));
+		accessoriesPO.setCharge(refreshAccessoriesCharge(accessoriesPO));
 
 		accessoriesDao.update(accessoriesPO);
 
@@ -340,7 +414,12 @@ public class AccessoriesItemServiceImpl implements AccessoriesItemService {
 
 		accessoriesItemDao.delete(accessoriesItemPO); // 删除前置,与 addAccessoriesItem 对称,确保售后类型辅料单也能删除
 
-		accessoriesPO.setCharge(amountAccessoriesCharge(accessoriesPO));
+		// 级联删除费用行(补外辅缺口: 外辅删项不删费用行致费用脱钩)
+		for (AccessoriesChargePO accessoriesChargePO : accessoriesChargeDao.queryAccessoriesChargeByIid(accessoriesItemPO.getAiid())) {
+			accessoriesChargeDao.delete(accessoriesChargePO);
+		}
+
+		accessoriesPO.setCharge(refreshAccessoriesCharge(accessoriesPO));
 
 		accessoriesDao.update(accessoriesPO);
 

@@ -25,6 +25,8 @@ layui.use(['table', 'laypage', 'form', 'jquery'], function () {
                 { field: 'approver', title: '审批人', width: 100, templet: function (d) { return d.approver ? d.approver.userName : ''; } },
                 { field: 'approverTime', title: '审批时间', width: 120 },
                 { field: 'total', title: '总价', width: 100, align: 'right', templet: function (d) { return app.formatMoney(d.total); } },
+                { field: 'charge', title: '费用额', width: 100, align: 'right', templet: function (d) { return app.formatMoney(d.charge); } },
+                { field: 'balance', title: '结算额', width: 100, align: 'right', templet: function (d) { return app.formatMoney(d.balance); } },
                 { field: 'status', title: '状态', width: 90, templet: function (d) { return statusMap[String(d.status)] || '---'; } },
                 { field: 'type', title: '类型', width: 80, templet: function (d) { return typeMap[String(d.type)] || '---'; } },
                 { field: 'comment', title: '备注', minWidth: 120 },

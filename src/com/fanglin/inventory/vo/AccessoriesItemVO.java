@@ -55,6 +55,8 @@ public class AccessoriesItemVO implements Serializable {
 
 	private Integer storenum;// 库房数量
 
+	private List<AccessoriesChargeVO> accessoriesCharges; // 辅料费用列表
+
 	public AccessoriesItemVO() {
 		super();
 	}
@@ -70,6 +72,14 @@ public class AccessoriesItemVO implements Serializable {
 
 	public void setAiid(Long aiid) {
 		this.aiid = aiid;
+	}
+
+	public List<AccessoriesChargeVO> getAccessoriesCharges() {
+		return accessoriesCharges;
+	}
+
+	public void setAccessoriesCharges(List<AccessoriesChargeVO> accessoriesCharges) {
+		this.accessoriesCharges = accessoriesCharges;
 	}
 
 	public Long getAid() {
