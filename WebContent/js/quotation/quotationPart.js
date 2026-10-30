@@ -26,17 +26,20 @@ var QuotationDetail = (function() {
         }
     };
 
-    function evalFormula(expres) {
+    function evalFormula(expres, num) {
 
         expres = (expres == null || expres === "") ? "0" : String(expres);
         expres = expres.replace(/\!\s*\(/g, "Math.ceil(");
 
         var result = new Function("return function(){return " + expres + "}")()();
 
-        // 🔴NaN兼容: 公式含'NaN'脏串或引用变量缺失导致求值结果非有限数时, 按0参与计算与展示,
-        // 不再throw中断——原throw会使综合分区渲染中断(2610110261)或级联写回链中止(15845219)
-        if (typeof result != "number" || isNaN(result) || !isFinite(result))
-            return utils.changeThrDecimal(0);
+        // 🔴NaN兼容: 公式含'NaN'脏串或引用变量缺失导致求值结果非有限数时, 按该项工程量num兜底返回
+        // (历史脏形态formula='NaN'但num正确, num不可用再归0), 不再throw中断渲染与写回链
+        if (typeof result != "number" || isNaN(result) || !isFinite(result)) {
+
+            num = parseFloat(num);
+            return utils.changeThrDecimal(isFinite(num) ? num : 0);
+        }
 
         return utils.changeThrDecimal(result);
     }
@@ -614,7 +617,8 @@ var QuotationDetail = (function() {
                     return true;
                 }
 
-                var quoteFormula = quote.quotationFunctionAreaFormula(expres, cpWidget, 0);
+                // initNum传该项当前num: 公式求值失败时evalFormula按num兜底(formula='NaN'但num正确行)
+                var quoteFormula = quote.quotationFunctionAreaFormula(expres, cpWidget, parseFloat($item.find('.cell.num .cell-wrap .number').text()));
 
                 $item.find('.cell.formula .cell-wrap span').text(quoteFormula.formula);
                 $item.find('.cell.num .cell-wrap .number').text(quoteFormula.num);
@@ -3894,7 +3898,7 @@ var QuotationDetail = (function() {
 
             var formula = {
                 "formula": expres,
-                "num": evalFormula(expres)
+                "num": evalFormula(expres, initNum)
             }
 
             return formula;
@@ -4321,7 +4325,7 @@ var QuotationDetail = (function() {
 
                     v.formula = v.formula.replace(/\!\s*\(/g, "Math.ceil(");
 
-                    var formulaNum = evalFormula(v.formula);
+                    var formulaNum = evalFormula(v.formula, v.num);
 
                     v.formula = v.qfaiId != null ? v.formula : formulaNum;
                     v.num = formulaNum;
