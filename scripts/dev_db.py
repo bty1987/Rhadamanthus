@@ -1,12 +1,14 @@
 # -*- coding: utf-8 -*-
-# dev(5.21)库直连小工具: 允许写(仅dev), SQL从argv[1]或--file读取
+# dev/testerp库直连小工具: 允许写(仅dev/test), SQL从argv[1]或--file读取
+# 环境变量覆盖: FL_DB_HOST / FL_DB_USER / FL_DB_PASS (缺省=dev 5.21)
+import os
 import sys
 import pymysql
 
-HOST = "192.168.5.21"
-USER = "root"
-PASS = "Neusoft!"
-PORT = 3306
+HOST = os.environ.get("FL_DB_HOST", "192.168.5.21")
+USER = os.environ.get("FL_DB_USER", "root")
+PASS = os.environ.get("FL_DB_PASS", "Neusoft!")
+PORT = int(os.environ.get("FL_DB_PORT", "3306"))
 
 def main():
     sql = sys.argv[1]
