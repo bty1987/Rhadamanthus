@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<!-- app/views/sales/sales2pu.html —— 销售单转采购单（列表 + 批量/单条转采购）
+  type 决定 pageSalesForXxx 接口与显示字段，默认 pageSalesForPompany。
+  url 参数 ?type=xxx 切换视图。 -->
+<html lang="zh-CN"><head><meta charset="utf-8"><title>销售单转采购单</title>
+<link rel="stylesheet" href="../../layui/css/layui.css"><link rel="stylesheet" href="../../css/app.css"></head>
+<body><div class="app-page">
+    <div class="app-search"><form class="layui-form" id="searchForm"><div class="layui-form-item">
+        <div class="layui-inline"><label class="layui-form-label">销售单号</label><div class="layui-input-inline"><input type="text" name="no" data-op="cn" placeholder="销售单号" class="layui-input" autocomplete="off"></div></div>
+        <div class="layui-inline"><label class="layui-form-label">订单号</label><div class="layui-input-inline"><input type="text" name="orderId" data-op="cn" placeholder="装修单号" class="layui-input" autocomplete="off"></div></div>
+        <div class="layui-inline"><label class="layui-form-label">品牌</label><div class="layui-input-inline"><input type="text" name="brand.name" data-op="cn" placeholder="品牌" class="layui-input" autocomplete="off"></div></div>
+        <div class="layui-inline"><button type="button" class="layui-btn" id="btnSearch"><i class="layui-icon layui-icon-search"></i>查询</button><button type="reset" class="layui-btn layui-btn-primary" id="btnReset">重置</button></div>
+        <div class="layui-inline"><button type="button" class="layui-btn layui-btn-warm" id="btnBatchPu"><i class="layui-icon layui-icon-rmb"></i>批量采购单</button></div>
+    </div></form></div>
+    <div class="app-table"><table id="resultTable" lay-filter="resultTable"></table></div>
+    <div id="pagenation" class="app-pagenation"></div>
+    <div id="editBox" style="display:none; padding:20px;">
+        <form class="layui-form" id="editForm">
+            <div class="layui-form-item"><label class="layui-form-label">交货时间</label><div class="layui-input-block"><input type="text" name="deliveryTime" id="deliveryTime" placeholder="yyyy-MM-dd" class="layui-input"></div></div>
+            <div class="layui-form-item"><label class="layui-form-label">备注</label><div class="layui-input-block"><input type="text" name="comment" class="layui-input"></div></div>
+        </form>
+        <h3 style="font-size:14px;font-weight:bold;padding:8px 0;color:#333;margin-top:10px;">销售项明细（勾选需转采购的商品）</h3>
+        <div class="app-table"><table id="itemTable" lay-filter="itemTable"></table></div>
+        <div style="margin-top:10px;text-align:right;"><button type="button" class="layui-btn" id="puSaveBtn">提交采购单</button></div>
+    </div>
+    <script type="text/html" id="rowToolbar"><button class="layui-btn layui-btn-xs layui-btn-warm" lay-event="purchase">采购单</button></script>
+    <script type="text/html" id="itemToolbar"><input type="checkbox" lay-event="check"></script>
+</div>
+<script src="../../layui/layui.js"></script><script src="../../js/app/config.js"></script><script src="../../js/app/server.js"></script><script src="../../js/app/utils.js"></script><script src="../../js/app/post.js"></script><script src="../../js/app/api.js"></script><script src="../../js/app/core.js"></script><script src="../../js/app/validate.js"></script><script src="../../js/app/bootstrap.js"></script><script src="../../js/sales/sales2pu.js"></script>
+</body></html>

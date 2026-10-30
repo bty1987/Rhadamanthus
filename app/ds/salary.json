@@ -1,0 +1,89 @@
+{
+  "salaryTypeList": [
+    {"key": "报价扣款", "value": "报价扣款"},
+    {"key": "考勤扣款", "value": "考勤扣款"},
+    {"key": "保险扣款", "value": "保险扣款"},
+    {"key": "其他扣款", "value": "其他扣款"},
+    {"key": "月度奖金", "value": "月度奖金"},
+    {"key": "季度奖金", "value": "季度奖金"},
+    {"key": "年终奖金", "value": "年终奖金"},
+    {"key": "其他奖金", "value": "其他奖金"},
+    {"key": "补款", "value": "补款"}
+  ],
+ 
+  "SalaryTwoType": [
+    {"key": "1", "name": "工费","oneType":"0", "status": "0"},
+    {"key": "2", "name": "增项","oneType":"0", "status": "0"},
+    {"key": "3", "name": "油工一级奖励","oneType":"0", "status": "0"},
+    {"key": "4", "name": "维修款","oneType":"2", "status": "0"},
+    {"key": "5", "name": "罚款","oneType":"1", "status": "0"},
+    {"key": "6", "name": "工程质保金","oneType":"3", "status": "1"},
+    {"key": "7", "name": "工具押金","oneType":"3", "status": "1"},
+    {"key": "8", "name": "借款","oneType":"3", "status": "1"},
+    {"key": "9", "name": "工人家属保险","oneType":"3", "status": "1"},
+    {"key": "10", "name": "附加项","oneType":"0", "status": "0"},
+    {"key": "11", "name": "预支工费","oneType":"0", "status": "0"},
+    {"key": "12", "name": "运费","oneType":"0", "status": "0"},
+    {"key": "13", "name": "上楼费","oneType":"0", "status": "0"},
+    {"key": "14", "name": "工人维修款","oneType":"0", "status": "0"}
+  ],
+  "type":[
+    {"id": 0, "name": "加"},
+    {"id": 1, "name": "减"}
+  ],
+  "oneType": [
+    {"id": 0, "name": "工费"},
+    {"id": 1, "name": "扣/罚"},
+    {"id": 2, "name": "转款"},
+    {"id": 3, "name": "其他"}
+  ],
+  "twoType": [
+    {"id": 0, "oneType": 0, "name": "基本"},
+    {"id": 1, "oneType": 0, "name": "提成"},
+    {"id": 2, "oneType": 1, "name": "扣款"},
+    {"id": 3, "oneType": 0, "name": "其他"}
+  ],
+  "thrType": [
+    {"id": 0, "oneType": 0, "twoType": 0, "name": "基本"},
+    {"id": 0, "oneType": 1, "twoType": 2, "name": "基本"},
+    {"id": 0, "oneType": 1, "twoType": 3, "name": "基本"},
+    {"id": 1, "oneType": 0, "twoType": 1, "name": "设计"},
+    {"id": 2, "oneType": 0, "twoType": 1, "name": "业务"}
+  ],
+  "forType": [
+    {"id": 0, "oneType": 0, "twoType": 0, "thrType": 0, "name": "基本"},
+    {"id": 0, "oneType": 1, "twoType": 0, "thrType": 0, "name": "基本"},
+    {"id": 1, "oneType": 0, "twoType": 1, "thrType": 1, "name": "主材"},
+    {"id": 1, "oneType": 0, "twoType": 1, "thrType": 2, "name": "主材"},
+    {"id": 2, "oneType": 0, "twoType": 1, "thrType": 1, "name": "销售"},
+    {"id": 2, "oneType": 0, "twoType": 1, "thrType": 2, "name": "销售"},
+    {"id": 3, "oneType": 1, "twoType": 2, "thrType": 0, "name": "迟到"},
+    {"id": 4, "oneType": 1, "twoType": 2, "thrType": 0, "name": "早退"}
+  ],
+  "status" :[
+    {"key":"0", "value":"初始"},
+    {"key":"1", "value":"通过"},
+    {"key":"2", "value":"驳回"},
+    {"key":"3", "value":"撤销"}
+  ],
+  "statusBalance" :[
+    {"key":"0", "value":"有效"},
+    {"key":"1", "value":"无效"}
+  ],
+  "withholdType" :[
+    {"key":"0", "value":"标准"},
+    {"key":"1", "value":"装修款"}
+  ],
+  "withholdStatus" :[
+    {"key":"0", "value":"初始"}
+  ],
+  "stage" :[
+    {"key":"0", "value":"全部"},
+    {"key":"1", "value":"首提"},
+    {"key":"2", "value":"中提"},
+    {"key":"3", "value":"尾提"}
+
+  ],
+"errorCode": 0,
+  "errorMsg": null
+}

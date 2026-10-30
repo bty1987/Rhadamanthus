@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<!-- app/views/construction/normtion.html —— 定额材料（报价定额 vs 库房领料 对比汇总）
+  上下文：app.params.quotation = { orderId }。
+  左：报价/扩展/增减定额（normood）+ 定制项；右：库房辅料单（accessories）。
+  下：按施工节点汇总（辅料总额 vs 材料费总额）。工具栏：打印（normoodOutput）。 -->
+<html lang="zh-CN"><head><meta charset="utf-8"><title>定额材料</title>
+<link rel="stylesheet" href="../../layui/css/layui.css"><link rel="stylesheet" href="../../css/app.css">
+<style>
+.nt-table { width: 100%; border-collapse: collapse; background: #fff; }
+.nt-table th, .nt-table td { border: 1px solid #e6e6e6; padding: 6px 8px; font-size: 12px; text-align: center; }
+.nt-table th { background: #f8f8f8; }
+.nt-footer { padding: 8px 0; font-weight: bold; }
+</style></head>
+<body><div class="app-page">
+    <div class="app-toolbar" style="padding:10px 15px 0;">
+        <span style="font-size:16px;font-weight:bold;">定额材料</span>
+        <button type="button" class="layui-btn layui-btn-sm" id="printBtn"><i class="layui-icon layui-icon-print"></i>打印</button>
+    </div>
+
+    <div style="padding:10px 15px;">
+        <table class="nt-table">
+            <thead><tr>
+                <th colspan="6">定额（报价/扩展/增减/定制项）</th>
+                <th colspan="6">领取（库房辅料单）</th>
+            </tr><tr>
+                <th>名称</th><th>定额数量</th><th>定额单位</th><th>库房数量</th><th>库房单位</th><th>定额总额</th>
+                <th>名称</th><th>领取数量</th><th>领取单位</th><th>库房数量</th><th>库房单位</th><th>领取总额</th>
+            </tr></thead>
+            <tbody id="normoods"></tbody>
+        </table>
+        <div class="nt-footer">
+            <span style="color:#e2737d;margin-right:40px;">定额总额: <span id="rightTotal">0.000</span></span>
+            <span style="color:#e2737d;">领取总额: <span id="leftTotal">0.000</span></span>
+        </div>
+
+        <table class="nt-table" style="margin-top:16px;">
+            <thead><tr>
+                <th colspan="2">辅料单（按节点）</th>
+                <th colspan="2">定额材料（按节点）</th>
+            </tr><tr>
+                <th>名称</th><th>辅料总额</th><th>名称</th><th>材料费总额</th>
+            </tr></thead>
+            <tbody id="accessories"></tbody>
+        </table>
+    </div>
+
+    <div id="printNormoodBox" style="display:none;padding:20px 30px;">
+        <form class="layui-form" id="printForm">
+            <div class="layui-form-item"><label class="layui-form-label">显示项</label><div class="layui-input-block">
+                <input type="checkbox" name="printType" lay-skin="primary" value="1" title="工费"><input type="checkbox" name="printType" lay-skin="primary" value="2" title="定额">
+            </div></div>
+        </form>
+    </div>
+</div>
+<script src="../../layui/layui.js"></script><script src="../../js/app/config.js"></script><script src="../../js/app/server.js"></script><script src="../../js/app/utils.js"></script><script src="../../js/app/post.js"></script><script src="../../js/app/api.js"></script><script src="../../js/app/core.js"></script><script src="../../js/app/validate.js"></script><script src="../../js/app/bootstrap.js"></script><script src="../../js/construction/construction-common.js"></script><script src="../../js/construction/normtion.js"></script>
+</body></html>

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<!-- app/views/salary/materialSalary.html —— 主材薪资（列表查询）
+  字段：msid decoration(装修单) sales(销售单) belonger(归属人) period(账期) money(金额) rate(比例)
+       stage(阶段) createTime comment
+  pagetype=belong 时按当前登录用户过滤，隐藏归属人列 -->
+<html lang="zh-CN">
+<head><meta charset="utf-8"><title>主材薪资</title>
+<link rel="stylesheet" href="../../layui/css/layui.css"><link rel="stylesheet" href="../../css/app.css"></head>
+<body>
+<div class="app-page">
+    <div class="app-search"><form class="layui-form" id="searchForm"><div class="layui-form-item">
+        <div class="layui-inline"><label class="layui-form-label">装修单号</label><div class="layui-input-inline"><input type="text" name="orderId" data-op="eq" placeholder="装修单号" class="layui-input" autocomplete="off"></div></div>
+        <div class="layui-inline"><label class="layui-form-label">销售单号</label><div class="layui-input-inline"><input type="text" name="no" data-op="eq" placeholder="销售单号" class="layui-input" autocomplete="off"></div></div>
+        <div class="layui-inline"><label class="layui-form-label">归属人</label><div class="layui-input-inline"><input type="text" name="belonger" data-op="eq" placeholder="userId" class="layui-input" autocomplete="off"></div></div>
+        <div class="layui-inline"><label class="layui-form-label">阶段</label><div class="layui-input-inline"><select name="stage" data-op="eq"><option value="">全部</option><option value="0">全部</option><option value="1">首提</option><option value="2">中提</option><option value="3">尾提</option></select></div></div>
+        <div class="layui-inline"><label class="layui-form-label">创建时间</label><div class="layui-input-inline"><input type="text" name="createTime" id="createTime" data-op="between" placeholder="创建时间" class="layui-input" autocomplete="off"></div></div>
+        <div class="layui-inline"><button type="button" class="layui-btn" id="btnSearch"><i class="layui-icon layui-icon-search"></i>查询</button><button type="reset" class="layui-btn layui-btn-primary" id="btnReset">重置</button></div>
+    </div></form></div>
+    <div class="app-table"><table id="resultTable" lay-filter="resultTable"></table></div>
+    <div id="pagenation" class="app-pagenation"></div>
+</div>
+<script src="../../layui/layui.js"></script><script src="../../js/app/config.js"></script><script src="../../js/app/server.js"></script>
+<script src="../../js/app/utils.js"></script><script src="../../js/app/post.js"></script>
+<script src="../../js/app/api.js"></script><script src="../../js/app/core.js"></script>
+<script src="../../js/app/validate.js"></script><script src="../../js/app/bootstrap.js"></script>
+<script src="../../js/salary/materialSalary.js"></script>
+</body></html>

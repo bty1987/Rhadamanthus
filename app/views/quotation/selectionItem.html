@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<!-- app/views/quotation/selectionItem.html —— 选材项管理（?type=supplier|escorter|expert|init|tran|check|confirm|finish|review|balance|material|account
+  配置驱动 pageSelectionItem*；行操作：编辑/配送/审核/确认/完结/核对/驳回/退货/补量/删除/对账/图片/修改厂商；批量结算 submitBalanceSelection） -->
+<html lang="zh-CN"><head><meta charset="utf-8"><title>选材项</title>
+<link rel="stylesheet" href="../../layui/css/layui.css"><link rel="stylesheet" href="../../css/app.css"></head>
+<body><div class="app-page">
+    <div class="app-search"><form class="layui-form" id="searchForm"><div class="layui-form-item">
+        <div class="layui-inline"><label class="layui-form-label">装修单号</label><div class="layui-input-inline"><input name="decoration.orderId" data-op="eq" class="layui-input" placeholder="装修单号"></div></div>
+        <div class="layui-inline"><label class="layui-form-label">楼盘</label><div class="layui-input-inline"><input name="decoration.village.no" data-op="eq" class="layui-input" placeholder="楼盘编号"></div></div>
+        <div class="layui-inline"><label class="layui-form-label">品牌</label><div class="layui-input-inline"><input name="goods.brand" data-op="cn" class="layui-input" placeholder="品牌"></div></div>
+        <div class="layui-inline"><label class="layui-form-label">品类</label><div class="layui-input-inline"><input name="goods.category" data-op="cn" class="layui-input" placeholder="品类"></div></div>
+        <div class="layui-inline"><label class="layui-form-label">状态</label><div class="layui-input-inline"><select name="status" data-op="eq"><option value="">全部</option><option value="0">初始</option><option value="1">配送</option><option value="2">审核</option><option value="3">确认</option><option value="4">完结</option><option value="5">核对</option><option value="6">申请</option><option value="7">失效</option></select></div></div>
+        <div class="layui-inline"><button type="button" class="layui-btn" id="btnSearch"><i class="layui-icon layui-icon-search"></i>查询</button><button type="button" class="layui-btn layui-btn-primary" id="btnReset">重置</button></div>
+    </div></form></div>
+    <div class="app-toolbar" style="padding:0 15px 10px;">
+        <button type="button" class="layui-btn layui-btn-sm layui-btn-normal" id="btnBatchBalance"><i class="layui-icon layui-icon-dollar"></i>批量结算</button>
+    </div>
+    <div class="app-table"><table id="resultTable" lay-filter="resultTable"></table></div>
+    <div id="pagenation" class="app-pagenation"></div>
+    <script type="text/html" id="rowToolbar"></script>
+
+    <div id="editBox" style="display:none;padding:20px 30px;">
+        <div class="layui-form-item"><label class="layui-form-label">数量</label><div class="layui-input-inline"><input id="num" class="layui-input"></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">说明</label><div class="layui-input-inline" style="width:320px;"><input id="comment" class="layui-input"></div></div>
+    </div>
+    <div id="tranBox" style="display:none;padding:20px 30px;">
+        <div class="layui-form-item"><label class="layui-form-label">数量</label><div class="layui-input-inline"><input id="tranNum" class="layui-input"></div></div>
+    </div>
+    <div id="refundBox" style="display:none;padding:20px 30px;">
+        <div class="layui-form-item"><label class="layui-form-label">退货量</label><div class="layui-input-inline"><input id="refnum" class="layui-input" placeholder="退货量（与实用量二选一）"></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">实用量</label><div class="layui-input-inline"><input id="utilitynum" class="layui-input" placeholder="实用量"></div></div>
+    </div>
+    <div id="addedBox" style="display:none;padding:20px 40px;">
+        <div class="layui-form-item"><label class="layui-form-label">补量</label><div class="layui-input-inline"><input id="added" class="layui-input"></div></div>
+    </div>
+    <div id="supplierBox" style="display:none;padding:20px 30px;">
+        <div class="layui-form-item"><label class="layui-form-label">厂商</label><div class="layui-input-inline" style="width:260px;"><select id="supplierSelect"></select></div></div>
+    </div>
+    <div id="balanceBox" style="display:none;padding:20px 30px;">
+        <div class="layui-form-item"><label class="layui-form-label">结算单</label><div class="layui-input-inline"><input id="balanceSales" class="layui-input" placeholder="结算单 bsid"></div></div>
+    </div>
+    <div id="picBox" style="display:none;padding:15px 25px;max-height:70%;overflow:auto;">
+        <button type="button" class="layui-btn layui-btn-sm" id="btnAddPic"><i class="layui-icon layui-icon-add-1"></i>上传图片</button>
+        <input type="file" id="picFile" style="display:none;" accept="image/*">
+        <div id="picList"></div>
+    </div>
+</div>
+<script src="../../layui/layui.js"></script><script src="../../js/app/upload.js"></script><script src="../../js/app/config.js"></script><script src="../../js/app/server.js"></script><script src="../../js/app/utils.js"></script><script src="../../js/app/post.js"></script><script src="../../js/app/api.js"></script><script src="../../js/app/core.js"></script><script src="../../js/app/validate.js"></script><script src="../../js/app/bootstrap.js"></script><script src="../../js/quotation/quotation-common.js"></script><script src="../../js/quotation/selectionItem.js"></script>
+</body></html>

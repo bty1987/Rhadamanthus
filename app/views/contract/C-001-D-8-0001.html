@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<!-- app/views/contract/C-001-D-8-0001.html —— 14天无理由退合同（模板表单页）
+  上下文：app.params.decoration = { orderId, contractargs:{cid,company}, contract? }。 -->
+<html lang="zh-CN"><head><meta charset="utf-8"><title>14天无理由退合同</title>
+<link rel="stylesheet" href="../../layui/css/layui.css"><link rel="stylesheet" href="../../css/app.css"></head>
+<body><div class="app-page" style="max-width:900px;margin:0 auto;">
+    <blockquote class="layui-elem-quote layui-quote-nm" style="margin-bottom:10px;">* 橙色标记为必填信息。</blockquote>
+    <form class="layui-form" id="form">
+        <fieldset class="layui-elem-field"><legend>客户信息</legend><div class="layui-field-box">
+            <div class="layui-form-item">
+                <div class="layui-inline customer"><label class="layui-form-label">甲方<i class="app-req">*</i></label><div class="layui-input-inline"><input class="layui-input conitem v_required" id="con-customer-name" maxlength="32"></div></div>
+                <div class="layui-inline customer"><label class="layui-form-label">身份证号<i class="app-req">*</i></label><div class="layui-input-inline"><input class="layui-input conitem v_required" id="con-customer-ident"></div></div>
+                <div class="layui-inline"><label class="layui-form-label">联系电话<i class="app-req">*</i></label><div class="layui-input-inline"><input class="layui-input conitem v_required" id="sin-customer-phone1"></div></div>
+            </div>
+        </div></fieldset>
+        <fieldset class="layui-elem-field agent"><legend>甲方代理人</legend><div class="layui-field-box">
+            <div class="layui-form-item">
+                <div class="layui-inline"><label class="layui-form-label">甲方代理人<i class="app-req">*</i></label><div class="layui-input-inline"><input class="layui-input conitem v_required" id="sin-agent-name" maxlength="32"></div></div>
+                <div class="layui-inline"><label class="layui-form-label">代理人联系电话<i class="app-req">*</i></label><div class="layui-input-inline"><input class="layui-input conitem v_required" id="sin-agent-phone"></div></div>
+                <div class="layui-inline"><label class="layui-form-label">代理人身份证号<i class="app-req">*</i></label><div class="layui-input-inline"><input class="layui-input conitem v_required" id="sin-agent-ident"></div></div>
+            </div>
+        </div></fieldset>
+        <fieldset class="layui-elem-field"><legend>订单信息</legend><div class="layui-field-box">
+            <div class="layui-form-item">
+                <div class="layui-inline"><label class="layui-form-label">订单类型<i class="app-req">*</i></label><div class="layui-input-inline"><select id="con-work-model" class="conitem"></select></div></div>
+            </div>
+        </div></fieldset>
+        <fieldset class="layui-elem-field company"><legend>公司信息</legend><div class="layui-field-box">
+            <div class="layui-form-item">
+                <div class="layui-inline"><label class="layui-form-label">公司名称<i class="app-req">*</i></label><div class="layui-input-inline"><input class="layui-input conitem v_required" id="con-company-name" value="/" maxlength="32"></div></div>
+                <div class="layui-inline"><label class="layui-form-label">统一社会信用代码<i class="app-req">*</i></label><div class="layui-input-inline"><input class="layui-input conitem v_required" id="con-company-no" value="/" maxlength="32"></div></div>
+            </div>
+        </div></fieldset>
+        <fieldset class="layui-elem-field"><legend>施工信息</legend><div class="layui-field-box">
+            <div class="layui-form-item">
+                <div class="layui-inline"><label class="layui-form-label">施工地址</label><div class="layui-input-inline" style="width:560px;">
+                    <input class="layui-input conitem" id="con-province-name" style="width:150px;display:inline-block;"> 省
+                    <input class="layui-input conitem" id="con-city-name" style="width:150px;display:inline-block;"> 市
+                    <input class="layui-input conitem" id="con-proper-name" style="width:150px;display:inline-block;"> 区
+                </div></div>
+                <div class="layui-inline"><label class="layui-form-label"></label><div class="layui-input-inline" style="width:560px;">
+                    <input class="layui-input conitem" id="con-village-name" style="width:220px;display:inline-block;"> 园区
+                    <input class="layui-input conitem" id="con-housenumber" style="width:280px;display:inline-block;"> 楼号
+                </div></div>
+            </div>
+        </div></fieldset>
+        <div class="layui-form-item" style="text-align:center;padding:10px 0;">
+            <button type="button" class="layui-btn" id="preservation"><i class="layui-icon layui-icon-ok"></i>保存合同</button>
+            <button type="button" class="layui-btn layui-btn-primary" id="btnClose">关闭</button>
+        </div>
+    </form>
+</div>
+<script src="../../layui/layui.js"></script><script src="../../js/app/config.js"></script><script src="../../js/app/server.js"></script><script src="../../js/app/utils.js"></script><script src="../../js/app/post.js"></script><script src="../../js/app/api.js"></script><script src="../../js/app/core.js"></script><script src="../../js/app/validate.js"></script><script src="../../js/app/bootstrap.js"></script><script src="../../js/contract/contract-common.js"></script><script src="../../js/contract/C-001-D-8-0001.js"></script>
+</body></html>

@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<!-- app/views/information/phoneCall.html —— 通话记录（分页查询）
+  字段：callbackId(编号) orderId(订单编号) operater(操作人) operateTime caller(主叫) callee(被叫) startTime endTime stopReason(挂断原因) duration(时长) recordType(录音类型) recordUrl -->
+<html lang="zh-CN">
+<head><meta charset="utf-8"><title>通话记录</title>
+<link rel="stylesheet" href="../../layui/css/layui.css"><link rel="stylesheet" href="../../css/app.css"></head>
+<body>
+<div class="app-page">
+    <div class="app-search"><form class="layui-form" id="searchForm"><div class="layui-form-item">
+        <div class="layui-inline"><label class="layui-form-label">用户ID</label><div class="layui-input-inline"><input type="text" name="userId" data-op="eq" placeholder="操作人userId" class="layui-input" autocomplete="off"></div></div>
+        <div class="layui-inline"><button type="button" class="layui-btn" id="btnSearch"><i class="layui-icon layui-icon-search"></i>查询</button><button type="reset" class="layui-btn layui-btn-primary" id="btnReset">重置</button></div>
+    </div></form></div>
+    <div class="app-table"><table id="resultTable" lay-filter="resultTable"></table></div>
+    <div id="pagenation" class="app-pagenation"></div>
+    <script type="text/html" id="rowToolbar"><button class="layui-btn layui-btn-xs layui-btn-normal" lay-event="record">录音地址</button></script>
+</div>
+<script src="../../layui/layui.js"></script><script src="../../js/app/config.js"></script><script src="../../js/app/server.js"></script>
+<script src="../../js/app/utils.js"></script><script src="../../js/app/post.js"></script>
+<script src="../../js/app/api.js"></script><script src="../../js/app/core.js"></script>
+<script src="../../js/app/validate.js"></script><script src="../../js/app/bootstrap.js"></script>
+<script src="../../js/information/phoneCall.js"></script>
+</body></html>

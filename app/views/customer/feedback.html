@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<!-- app/views/customer/feedback.html —— 客户反馈（接收/完成/图片/记录/转投诉/转维修/回访） -->
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8" />
+    <title>客户反馈</title>
+    <link rel="stylesheet" href="../../layui/css/layui.css">
+    <link rel="stylesheet" href="../../css/app.css">
+</head>
+<body>
+<div class="app-page" id="feedbackPage">
+
+    <div class="app-search">
+        <form class="layui-form" lay-filter="searchForm" id="searchForm">
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">装修单号</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="orderId" data-op="eq" placeholder="请输入装修单号" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">电话</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="phone" data-op="cn" placeholder="请输入电话" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">类型</label>
+                    <div class="layui-input-inline">
+                        <select name="type" data-op="eq">
+                            <option value="">全部</option>
+                            <option value="0">反馈</option>
+                            <option value="1">投诉</option>
+                            <option value="2">维修</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">状态</label>
+                    <div class="layui-input-inline">
+                        <select name="status" data-op="eq">
+                            <option value="">全部</option>
+                            <option value="0">初始</option>
+                            <option value="1">接收</option>
+                            <option value="2">处理</option>
+                            <option value="3">完成</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">创建时间</label>
+                    <div class="layui-input-inline" style="width:220px;">
+                        <input type="text" name="createTime" id="createTime" placeholder="创建时间范围" class="layui-input" readonly>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <button type="button" class="layui-btn" id="btnSearch"><i class="layui-icon layui-icon-search"></i>查询</button>
+                    <button type="reset" class="layui-btn layui-btn-primary" id="btnReset">重置</button>
+                    <button type="button" class="layui-btn layui-btn-normal" id="btnAdd"><i class="layui-icon layui-icon-add-1"></i>添加</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div class="app-table">
+        <table id="resultTable" lay-filter="resultTable"></table>
+    </div>
+
+    <div id="pagenation" class="app-pagenation"></div>
+
+    <!-- 添加反馈 -->
+    <div id="editBox" style="display:none; padding:20px;">
+        <form class="layui-form" lay-filter="editForm" id="editForm">
+            <div class="layui-form-item">
+                <label class="layui-form-label">装修单号<span class="app-req">*</span></label>
+                <div class="layui-input-block">
+                    <input type="text" name="orderId" placeholder="请输入装修单号" class="layui-input v_required">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">电话</label>
+                <div class="layui-input-block">
+                    <input type="text" name="phone" placeholder="请输入电话" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">类型<span class="app-req">*</span></label>
+                <div class="layui-input-block">
+                    <select name="feedbackType" lay-verify="required">
+                        <option value="0">反馈</option>
+                        <option value="1">投诉</option>
+                        <option value="2">维修</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item layui-form-text">
+                <label class="layui-form-label">说明<span class="app-req">*</span></label>
+                <div class="layui-input-block">
+                    <textarea name="content" placeholder="请输入反馈内容" class="layui-textarea v_required"></textarea>
+                </div>
+            </div>
+            <div class="layui-form-item app-form-footer">
+                <button type="button" class="layui-btn" id="btnSave">保存</button>
+                <button type="button" class="layui-btn layui-btn-primary" id="btnCancel">取消</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- 反馈图片 -->
+    <div id="drawingBox" style="display:none; padding:15px;">
+        <ul id="feedbackDrawing" class="app-gallery" style="list-style:none;padding:0;margin:0;"></ul>
+    </div>
+
+</div>
+
+<script src="../../layui/layui.js"></script>
+<script src="../../js/app/config.js"></script>
+<script src="../../js/app/server.js"></script>
+<script src="../../js/app/utils.js"></script>
+<script src="../../js/app/post.js"></script>
+<script src="../../js/app/api.js"></script>
+<script src="../../js/app/core.js"></script>
+<script src="../../js/app/validate.js"></script>
+<script src="../../js/app/bootstrap.js"></script>
+<script src="../../js/customer/customer-common.js"></script>
+<script src="../../js/customer/feedback.js"></script>
+</body>
+</html>

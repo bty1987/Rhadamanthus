@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<!-- app/views/system/module.html —— 模块管理（CRUD + 删除 + 上级模块/等级联动）
+  字段：name(名称) alias(别名) code(module代码) icon(图标) url(链接)
+        level(等级) fatherModule(上级模块) order(排序) -->
+<html lang="zh-CN">
+<head><meta charset="utf-8"><title>模块管理</title>
+<link rel="stylesheet" href="../../layui/css/layui.css"><link rel="stylesheet" href="../../css/app.css"></head>
+<body>
+<div class="app-page">
+    <div class="app-search"><form class="layui-form" id="searchForm"><div class="layui-form-item">
+        <div class="layui-inline"><label class="layui-form-label">名称</label><div class="layui-input-inline"><input type="text" name="name" data-op="cn" placeholder="模块名" class="layui-input" autocomplete="off"></div></div>
+        <div class="layui-inline"><label class="layui-form-label">等级</label><div class="layui-input-inline"><select name="level" data-op="eq"><option value="">全部</option><option value="1">一级</option><option value="2">二级</option><option value="3">三级</option></select></div></div>
+        <div class="layui-inline"><button type="button" class="layui-btn" id="btnSearch"><i class="layui-icon layui-icon-search"></i>查询</button><button type="reset" class="layui-btn layui-btn-primary" id="btnReset">重置</button><button type="button" class="layui-btn layui-btn-normal" id="btnAdd"><i class="layui-icon layui-icon-add-1"></i>添加</button></div>
+    </div></form></div>
+    <div class="app-table"><table id="resultTable" lay-filter="resultTable"></table></div>
+    <div id="pagenation" class="app-pagenation"></div>
+    <div id="editBox" style="display:none; padding:20px;"><form class="layui-form" id="editForm">
+        <input type="hidden" name="mid">
+        <div class="layui-form-item"><label class="layui-form-label">名称<span class="app-req">*</span></label><div class="layui-input-block"><input type="text" name="name" placeholder="模块名" class="layui-input v_required" lay-verify="required"></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">别名</label><div class="layui-input-block"><input type="text" name="alias" placeholder="别名（空则同名称）" class="layui-input"></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">代码</label><div class="layui-input-block"><input type="text" name="code" placeholder="模块代码" class="layui-input"></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">图标</label><div class="layui-input-block"><input type="text" name="icon" placeholder="图标类名" class="layui-input"></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">链接</label><div class="layui-input-block"><input type="text" name="url" placeholder="链接（空表示目录节点）" class="layui-input"></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">等级<span class="app-req">*</span></label><div class="layui-input-block"><select name="level" id="levelSel" lay-filter="levelSel"><option value="1">一级</option><option value="2">二级</option><option value="3">三级</option></select></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">上级模块</label><div class="layui-input-block"><select name="fatherModuleMid" id="fatherModuleSel" lay-search=""><option value="">无</option></select></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">排序</label><div class="layui-input-block"><input type="text" name="order" placeholder="排序号" class="layui-input v_number"></div></div>
+        <div class="layui-form-item app-form-footer"><button type="button" class="layui-btn" id="btnSave">保存</button><button type="reset" class="layui-btn layui-btn-primary" id="btnCancel">取消</button></div>
+    </form></div>
+    <script type="text/html" id="rowToolbar"><button class="layui-btn layui-btn-xs" lay-event="edit">编辑</button><button class="layui-btn layui-btn-xs layui-btn-danger" lay-event="del">删除</button></script>
+</div>
+<script src="../../layui/layui.js"></script><script src="../../js/app/config.js"></script><script src="../../js/app/server.js"></script><script src="../../js/app/utils.js"></script><script src="../../js/app/post.js"></script><script src="../../js/app/api.js"></script><script src="../../js/app/core.js"></script><script src="../../js/app/validate.js"></script><script src="../../js/app/bootstrap.js"></script><script src="../../js/system/module.js"></script>
+</body></html>

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<!-- app/views/customer/feedbackComplaintDept.html —— 投诉部门（弹窗页，上下文 app.params.customer.{fcid, deptType}） -->
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8" />
+    <title>投诉部门</title>
+    <link rel="stylesheet" href="../../layui/css/layui.css">
+    <link rel="stylesheet" href="../../css/app.css">
+</head>
+<body>
+<div class="app-page" id="feedbackComplaintDeptPage">
+
+    <div class="app-toolbar" style="padding:10px 15px 0;">
+        <button type="button" class="layui-btn layui-btn-sm" id="btnAdd"><i class="layui-icon layui-icon-add-1"></i>添加</button>
+    </div>
+
+    <div class="app-table">
+        <table id="resultTable" lay-filter="resultTable"></table>
+    </div>
+
+    <div id="editBox" style="display:none; padding:20px;">
+        <form class="layui-form" lay-filter="editForm" id="editForm">
+            <div class="layui-form-item">
+                <label class="layui-form-label">部门类型<span class="app-req">*</span></label>
+                <div class="layui-input-block">
+                    <select name="deptTypeSel" id="deptTypeSel" lay-filter="deptTypeFilter" lay-verify="required"></select>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">部门</label>
+                <div class="layui-input-block">
+                    <select name="dept" id="deptSel"></select>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">职务</label>
+                <div class="layui-input-block">
+                    <select name="duty" id="dutySel"></select>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">责任人<span class="app-req">*</span></label>
+                <div class="layui-input-inline" style="width:190px;">
+                    <input type="text" name="dutyUserName" id="dutyUserName" placeholder="点击选择责任人" class="layui-input v_required" readonly>
+                </div>
+                <div class="layui-input-inline">
+                    <button type="button" class="layui-btn layui-btn-normal" id="btnPickUser">选择</button>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">一级分类<span class="app-req">*</span></label>
+                <div class="layui-input-block">
+                    <select name="firstLevel" id="firstLevelSel" lay-filter="firstLevelFilter" lay-verify="required"></select>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">二级分类</label>
+                <div class="layui-input-block">
+                    <select name="secondary" id="secondarySel" lay-filter="secondaryFilter"></select>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">问题类型</label>
+                <div class="layui-input-block">
+                    <select name="problemType" id="problemTypeSel"></select>
+                </div>
+            </div>
+            <div class="layui-form-item app-form-footer">
+                <button type="button" class="layui-btn" id="btnSave">保存</button>
+                <button type="button" class="layui-btn layui-btn-primary" id="btnCancel">取消</button>
+            </div>
+        </form>
+    </div>
+
+</div>
+
+<script src="../../layui/layui.js"></script>
+<script src="../../js/app/config.js"></script>
+<script src="../../js/app/server.js"></script>
+<script src="../../js/app/utils.js"></script>
+<script src="../../js/app/post.js"></script>
+<script src="../../js/app/api.js"></script>
+<script src="../../js/app/core.js"></script>
+<script src="../../js/app/validate.js"></script>
+<script src="../../js/app/bootstrap.js"></script>
+<script src="../../js/customer/customer-common.js"></script>
+<script src="../../js/customer/feedbackComplaintDept.js"></script>
+</body>
+</html>

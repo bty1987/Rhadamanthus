@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<!--
+  app/views/system/operation.html —— 操作日志配置（第 0 批首实例）
+
+  ★ 这是首个从旧 WebContent 迁移到纯 layui 的真实业务页。
+    验证端到端契约：认证/分页(paging+filters)/CRUD/枚举/自动补全，全部对齐后端。
+
+  字段：oid(编号) name(操作说明) operation(操作) module(模块,typeahead→select) type(类型) logFlag(日志记录)
+  后端契约：pageOperation(paging, filters)；filter 字段 operationName/operation/operationType
+-->
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8" />
+    <title>操作管理</title>
+    <link rel="stylesheet" href="../../layui/css/layui.css">
+    <link rel="stylesheet" href="../../css/app.css">
+</head>
+<body>
+<div class="app-page">
+
+    <!-- ============ 搜索条 ============ -->
+    <div class="app-search">
+        <form class="layui-form" lay-filter="searchForm" id="searchForm">
+            <div class="layui-form-item">
+                <!-- name=后端 filter field，data-op=操作符（cn=模糊，eq=等于） -->
+                <div class="layui-inline">
+                    <label class="layui-form-label">操作说明</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="operationName" data-op="cn" placeholder="操作说明" class="layui-input" autocomplete="off">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">操作</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="operation" data-op="cn" placeholder="操作标识" class="layui-input" autocomplete="off">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">类型</label>
+                    <div class="layui-input-inline">
+                        <select name="operationType" data-op="eq">
+                            <option value="">全部</option>
+                            <option value="0">权限</option>
+                            <option value="1">免检</option>
+                            <option value="2">通用</option>
+                            <option value="3">钉钉</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <button type="button" class="layui-btn" id="btnSearch"><i class="layui-icon layui-icon-search"></i>查询</button>
+                    <button type="reset" class="layui-btn layui-btn-primary" id="btnReset">重置</button>
+                    <button type="button" class="layui-btn layui-btn-normal" id="btnAdd"><i class="layui-icon layui-icon-add-1"></i>添加</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <!-- ============ 数据表格 ============ -->
+    <div class="app-table">
+        <table id="resultTable" lay-filter="resultTable"></table>
+    </div>
+
+    <!-- ============ 分页 ============ -->
+    <div id="pagenation" class="app-pagenation"></div>
+
+    <!-- ============ 新增/编辑表单（layer 弹窗内容） ============ -->
+    <div id="editBox" style="display:none; padding:20px;">
+        <form class="layui-form" lay-filter="editForm" id="editForm">
+            <input type="hidden" name="oid">
+            <div class="layui-form-item">
+                <label class="layui-form-label">操作说明<span class="app-req">*</span></label>
+                <div class="layui-input-block">
+                    <input type="text" name="name" placeholder="请输入操作说明" class="layui-input v_required" lay-verify="required">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">操作<span class="app-req">*</span></label>
+                <div class="layui-input-block">
+                    <input type="text" name="operation" placeholder="请输入操作标识" class="layui-input v_required" lay-verify="required">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">模块<span class="app-req">*</span></label>
+                <div class="layui-input-block">
+                    <!-- 模块用 select（从 queryModule 加载），替代旧 typeahead，避免阻塞 -->
+                    <select name="moduleMid" lay-filter="moduleMid" lay-search="">
+                        <option value="">请选择模块</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">类型</label>
+                <div class="layui-input-block">
+                    <select name="type">
+                        <option value="0">权限</option>
+                        <option value="1">免检</option>
+                        <option value="2">通用</option>
+                        <option value="3">钉钉</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">日志记录</label>
+                <div class="layui-input-block">
+                    <select name="logFlag">
+                        <option value="0">不记录</option>
+                        <option value="1">始终记录</option>
+                        <option value="2" selected>自动</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item app-form-footer">
+                <button type="button" class="layui-btn" id="btnSave">保存</button>
+                <button type="reset" class="layui-btn layui-btn-primary" id="btnCancel">取消</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- 行工具条模板 -->
+    <script type="text/html" id="rowToolbar">
+        <button class="layui-btn layui-btn-xs" lay-event="edit"><i class="layui-icon layui-icon-edit"></i>编辑</button>
+        <button class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del"><i class="layui-icon layui-icon-delete"></i>删除</button>
+    </script>
+</div>
+
+<!--
+  脚本加载顺序：
+    1. layui（含内置 jquery/layer/element/table/laypage/form/laydate）
+    2. 普通脚本（config/server/utils 直接挂 window.app，立即生效）
+    3. bootstrap.js（定义 app.ready，协调 post/api/core/validate 模块加载）
+    4. 业务 JS（内部 app.ready(function(){ layui.use([...UI...]) })）
+  注：post.js/core.js/validate.js/api.js 是 layui.define 模块，由 bootstrap 经 layui.use 触发。
+-->
+<script src="../../layui/layui.js"></script>
+<script src="../../js/app/config.js"></script>
+<script src="../../js/app/server.js"></script>
+<script src="../../js/app/utils.js"></script>
+<script src="../../js/app/post.js"></script>
+<script src="../../js/app/api.js"></script>
+<script src="../../js/app/core.js"></script>
+<script src="../../js/app/validate.js"></script>
+<script src="../../js/app/bootstrap.js"></script>
+<script src="../../js/system/operation.js"></script>
+</body>
+</html>

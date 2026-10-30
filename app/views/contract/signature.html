@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<!-- app/views/contract/signature.html —— 在线签名页（移动端）
+  URL 参数：cid（合同id）、type（1=客户签 customer.cid；2=用户签 user.uid）、name（背景姓名水印）。
+  通知确认后进入 canvas 手写签名，提交：uploadImg.do → signateCustomer.do / signateUser.do。 -->
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>在线签名</title>
+    <style>
+        body { background: #FFF; margin: 0; padding: 0; font-family: Arial, sans-serif; }
+        #signature { border: 2px dotted #333; background: #fff; display: block; margin: 0 auto; max-width: 100%; }
+        #signatureparent { color: #000; background-color: #eee; padding: 8px; }
+        #button { text-align: center; margin-top: 12px; }
+        #uploadBtn, #clearBtn, #confirmNoticeBtn {
+            width: 240px; height: 48px; border-radius: 20px; line-height: 1.5;
+            margin: 0 8px; background-color: #5bc0de; border: none; color: #fff; font-size: 18px; cursor: pointer;
+        }
+        #confirmNoticeBtn { background-color: #5cb85c; }
+        span { color: #FFF; font-size: 20px; }
+        #noticeContainer { display: none; max-width: 800px; margin: 20px auto; padding: 20px; border: 1px solid #ddd; border-radius: 5px; background-color: #f9f9f9; }
+        #noticeContainer h3 { margin-top: 0; color: #333; }
+        #noticePdfFrame { width: 100%; height: 600px; border: 1px solid #ccc; margin-bottom: 15px; }
+        #noticeActions { text-align: center; }
+        #loadingNotice { text-align: center; padding: 20px; font-size: 16px; color: #666; }
+        .hidden { display: none !important; }
+    </style>
+</head>
+<body>
+
+    <!-- 通知确认区域 -->
+    <div id="noticeContainer">
+        <h3>合同通知确认</h3>
+        <p style="color: #666; margin-bottom: 15px;">请仔细阅读以下通知内容，确认后进行签名操作</p>
+        <div id="loadingNotice">正在加载通知内容...</div>
+        <iframe id="noticePdfFrame" class="hidden"></iframe>
+        <div id="noticeActions" class="hidden">
+            <button type="button" id="confirmNoticeBtn"><span>我已阅读并确认</span></button>
+        </div>
+    </div>
+
+    <!-- 签名区域 -->
+    <div class="container" id="signatureContainer">
+        <div id="signatureparent">
+            <canvas id="signature" width="800" height="500"></canvas>
+        </div>
+        <div id="button">
+            <button type="button" id="uploadBtn"><span>提交</span></button>
+            <button type="button" id="clearBtn"><span>清除</span></button>
+        </div>
+    </div>
+
+<script>
+    var AUTH = 'eX3o2SZdrpVOV9HC4UYTRA==';
+    var imgpath = '';
+    var noticeConfirmed = false; // 通知确认状态
+
+    function getQueryString(name) {
+        var reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)', 'i');
+        var r = window.location.search.substr(1).match(reg);
+        if (r != null) return unescape(r[2]); return null;
+    }
+
+    function getQueryParams(url) {
+        var params = new URLSearchParams(new URL(url, window.location.origin).search);
+        var query = {};
+        for (var param of params.entries()) {
+            query[param[0]] = param[1];
+        }
+        return query;
+    }
+
+    function post(url, data, callback, errorCallback, isForm) {
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', url, true);
+        if (!isForm) xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState != 4) return;
+            if (xhr.status == 200) {
+                try { callback(JSON.parse(xhr.responseText)); } catch (e) { errorCallback && errorCallback(); }
+            } else {
+                errorCallback && errorCallback();
+            }
+        };
+        xhr.send(data);
+    }
+
+    var name = getQueryParams(window.location.href)['name'];
+    var cid = getQueryString('cid');
+    var type = getQueryString('type');
+
+    var apiurl = '/signateCustomer.do';
+    var argkey = 'customer.cid';
+    if (type == '2') {
+        apiurl = '/signateUser.do';
+        argkey = 'user.uid';
+    }
+
+    // ==================== canvas 签名板（替代 jSignature） ====================
+    var canvas = document.getElementById('signature');
+    var ctx = canvas.getContext('2d');
+    ctx.lineWidth = 4;
+    ctx.lineJoin = 'round';
+    ctx.lineCap = 'round';
+    ctx.strokeStyle = 'darkblue';
+
+    // 姓名背景水印
+    if (name && name != null && name != 'null' && name != 'undefined') {
+        var tx = name.length == 1 ? 25 : name.length == 2 ? 10 : name.length == 3 ? 5 : 0;
+        var ts = name.length == 1 ? 50 : name.length == 2 ? 40 : name.length == 3 ? 30 : 25;
+        ctx.fillStyle = 'grey';
+        ctx.font = ts + 'vw "宋体", Arial';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(name, (canvas.width * tx) / 100, canvas.height * 0.55);
+        ctx.fillStyle = 'darkblue';
+    }
+
+    var drawing = false;
+    var lastX = 0, lastY = 0;
+
+    function pointAt(e) {
+        var rect = canvas.getBoundingClientRect();
+        var cx = (e.touches && e.touches.length ? e.touches[0].clientX : e.clientX) - rect.left;
+        var cy = (e.touches && e.touches.length ? e.touches[0].clientY : e.clientY) - rect.top;
+        return { x: cx * canvas.width / rect.width, y: cy * canvas.height / rect.height };
+    }
+
+    function startDraw(e) {
+        e.preventDefault();
+        drawing = true;
+        var p = pointAt(e);
+        lastX = p.x; lastY = p.y;
+        ctx.beginPath();
+        ctx.moveTo(lastX, lastY);
+    }
+
+    function moveDraw(e) {
+        if (!drawing) return;
+        e.preventDefault();
+        var p = pointAt(e);
+        ctx.lineTo(p.x, p.y);
+        ctx.stroke();
+        lastX = p.x; lastY = p.y;
+    }
+
+    function endDraw(e) {
+        drawing = false;
+        if (e) e.preventDefault();
+    }
+
+    canvas.addEventListener('mousedown', startDraw);
+    canvas.addEventListener('mousemove', moveDraw);
+    window.addEventListener('mouseup', endDraw);
+    canvas.addEventListener('touchstart', startDraw, { passive: false });
+    canvas.addEventListener('touchmove', moveDraw, { passive: false });
+    canvas.addEventListener('touchend', endDraw, { passive: false });
+
+    function resetSignature() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = 'darkblue';
+        if (name && name != null && name != 'null' && name != 'undefined') {
+            var tx = name.length == 1 ? 25 : name.length == 2 ? 10 : name.length == 3 ? 5 : 0;
+            var ts = name.length == 1 ? 50 : name.length == 2 ? 40 : name.length == 3 ? 30 : 25;
+            ctx.fillStyle = 'grey';
+            ctx.font = ts + 'vw "宋体", Arial';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(name, (canvas.width * tx) / 100, canvas.height * 0.55);
+            ctx.fillStyle = 'darkblue';
+        }
+    }
+
+    // ==================== 通知确认流程 ====================
+    function initNoticeConfirmation() {
+        if (!cid) {
+            showSignatureArea();
+            return;
+        }
+        post('/queryDecorationContract.do', {
+            'decorationContract.dcid': cid,
+            'authentication': AUTH
+        }, function (res) {
+            if (res.errorCode == 0 && res.decorationContract) {
+                var contract = res.decorationContract;
+                if (contract.noticeStatus == 1) {
+                    noticeConfirmed = true;
+                    showSignatureArea();
+                } else {
+                    loadNoticeContent();
+                }
+            } else {
+                showSignatureArea();
+            }
+        }, function () { showSignatureArea(); });
+    }
+
+    function loadNoticeContent() {
+        post('/queryContractByCid.do', {
+            'contract.dcid': cid,
+            'authentication': AUTH
+        }, function (res) {
+            if (res.errorCode == 0 && res.contract) {
+                var contract = res.contract;
+                if (contract.noticePath && contract.noticePath.length > 0) {
+                    showNoticePdf(contract.noticePath);
+                } else {
+                    showSignatureArea();
+                }
+            } else {
+                showSignatureArea();
+            }
+        }, function () { showSignatureArea(); });
+    }
+
+    function showNoticePdf(noticePath) {
+        document.getElementById('loadingNotice').className = 'hidden';
+        document.getElementById('noticePdfFrame').className = '';
+        document.getElementById('noticeActions').className = '';
+        document.getElementById('noticeContainer').style.display = 'block';
+        document.getElementById('noticePdfFrame').src = noticePath;
+    }
+
+    function showSignatureArea() {
+        document.getElementById('noticeContainer').style.display = 'none';
+        document.getElementById('signatureContainer').className = 'container';
+    }
+
+    document.getElementById('confirmNoticeBtn').addEventListener('click', function () {
+        var btn = this;
+        btn.disabled = true;
+        btn.querySelector('span').innerText = '确认中...';
+
+        post('/noticeDecorationContract.do', {
+            'decorationContract.dcid': cid,
+            'authentication': AUTH
+        }, function (res) {
+            if (res.errorCode == 0) {
+                noticeConfirmed = true;
+                alert('通知确认成功');
+                showSignatureArea();
+            } else {
+                alert(res.errorMsg || '确认失败');
+                btn.disabled = false;
+                btn.querySelector('span').innerText = '我已阅读并确认';
+            }
+        }, function () {
+            alert('网络错误，请重试');
+            btn.disabled = false;
+            btn.querySelector('span').innerText = '我已阅读并确认';
+        });
+    });
+
+    // ==================== 签名提交 ====================
+    document.getElementById('uploadBtn').addEventListener('click', function () {
+        var base64 = canvas.toDataURL('image/png');
+        zipimg(base64, 150, uploadimg1);
+    });
+
+    document.getElementById('clearBtn').addEventListener('click', function () {
+        resetSignature();
+    });
+
+    // 压缩图片
+    function zipimg(base64, width, callback) {
+        var newImage = new Image();
+        var quality = 0.5; // 压缩系数0-1之间
+
+        newImage.src = base64;
+        newImage.setAttribute('crossOrigin', 'Anonymous');
+
+        newImage.onload = function () {
+            var imgWidth = this.width, imgHeight = this.height;
+            var canvas2 = document.createElement('canvas');
+            var ctx2 = canvas2.getContext('2d');
+            if (Math.max(imgWidth, imgHeight) > width) {
+                if (imgWidth > imgHeight) {
+                    canvas2.width = width;
+                    canvas2.height = width * imgHeight / imgWidth;
+                } else {
+                    canvas2.height = width;
+                    canvas2.width = width * imgWidth / imgHeight;
+                }
+            } else {
+                canvas2.width = imgWidth;
+                canvas2.height = imgHeight;
+                quality = 0.98;
+            }
+            ctx2.clearRect(0, 0, canvas2.width, canvas2.height);
+            ctx2.drawImage(this, 0, 0, canvas2.width, canvas2.height);
+            callback(canvas2.toDataURL('image/png', quality));
+        };
+    }
+
+    function uploadimg1(base64) {
+        var form = new FormData();
+        form.append('strutsUploads', dataURLtoBlob(base64), 'strutsUploads.png');
+        form.append('authentication', AUTH);
+
+        post('/uploadImg.do', form, function (msg) {
+            if (msg.errorCode == 0) {
+                imgpath = msg.resUrl;
+                handleImg();
+            } else {
+                alert(msg.errorMsg);
+            }
+        }, function () {
+            alert('上传失败，请重试');
+        }, true);
+    }
+
+    function handleImg() {
+        if (!imgpath || imgpath.length == 0) return false;
+
+        var args = 'imgbase=' + encodeURIComponent('http://www.fanglinserver.com/' + imgpath)
+            + '&authentication=' + encodeURIComponent(AUTH)
+            + '&' + encodeURIComponent(argkey) + '=' + encodeURIComponent(cid);
+
+        post(apiurl, args, function (msg) {
+            if (msg.errorCode == 0) {
+                alert('上传成功');
+                resetSignature();
+            } else {
+                alert(msg.errorMsg);
+            }
+        }, function () {
+            alert('上传失败，请重试');
+        });
+    }
+
+    function dataURLtoBlob(dataurl) {
+        var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1];
+        var bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
+        while (n--) {
+            u8arr[n] = bstr.charCodeAt(n);
+        }
+        return new Blob([u8arr], { type: mime });
+    }
+
+    // 页面加载：先隐藏签名区，走通知确认
+    document.getElementById('signatureContainer').className = 'container hidden';
+    initNoticeConfirmation();
+</script>
+</body>
+</html>

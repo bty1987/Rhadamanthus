@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<!-- app/views/approval/process2create.html —— 审批流程新增/编辑（旧引擎 process）
+  上下文：app.params.approvalProcess = {pid}（编辑）或 null（新增）
+  左：控件库（queryProcessRefer 按 type 分组 query/filling/condition/其他）；
+  右：4 类已选列表（项目 field/详细 item/备注 comment/条件 condition），支持上移/下移/更新/删除。
+  保存：addProcess/updateProcess，嵌套 processItems[数组]（带 'sort'/'id'/'form' 等键） -->
+<html lang="zh-CN">
+<head><meta charset="utf-8"><title>审批流程配置</title>
+<link rel="stylesheet" href="../../layui/css/layui.css"><link rel="stylesheet" href="../../css/app.css"></head>
+<body>
+<div class="app-page">
+    <div class="app-designer">
+        <div class="app-designer-col app-designer-lib" style="flex:0 0 30%;">
+            <h5><i class="layui-icon layui-icon-template-1"></i> 控件</h5>
+            <div id="referquery"></div>
+            <div id="referfilling"></div>
+            <div id="refercondition"></div>
+            <div id="referother"></div>
+        </div>
+        <div class="app-designer-col" style="flex:1;">
+            <form class="layui-form" id="processForm">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">审批名称<span class="app-req">*</span></label>
+                    <div class="layui-input-inline"><input type="text" name="name" class="layui-input v_required" lay-verify="required"></div>
+                    <label class="layui-form-label">编号<span class="app-req">*</span></label>
+                    <div class="layui-input-inline"><input type="text" name="no" maxlength="4" class="layui-input v_required" lay-verify="required"></div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">Code<span class="app-req">*</span></label>
+                    <div class="layui-input-block"><input type="text" name="code" class="layui-input v_required" lay-verify="required"></div>
+                </div>
+            </form>
+
+            <fieldset class="layui-elem-field"><legend>项目</legend><div class="layui-field-box">
+                <div id="notfield" class="layui-bg-gray" style="padding:8px;text-align:center;">无项目信息</div>
+                <div id="itemfield"></div>
+            </div></fieldset>
+            <fieldset class="layui-elem-field"><legend>详细</legend><div class="layui-field-box">
+                <div id="notitem" class="layui-bg-gray" style="padding:8px;text-align:center;">无详细信息</div>
+                <div id="itemitem"></div>
+            </div></fieldset>
+            <fieldset class="layui-elem-field"><legend>备注</legend><div class="layui-field-box">
+                <div id="notcomment" class="layui-bg-gray" style="padding:8px;text-align:center;">无备注信息</div>
+                <div id="itemcomment"></div>
+            </div></fieldset>
+            <fieldset class="layui-elem-field"><legend>条件</legend><div class="layui-field-box">
+                <div id="notcondition" class="layui-bg-gray" style="padding:8px;text-align:center;">无条件信息</div>
+                <div id="itemcondition"></div>
+            </div></fieldset>
+
+            <div style="margin:14px 0;text-align:right;"><button type="button" class="layui-btn" id="submitBtn">保存</button></div>
+        </div>
+    </div>
+</div>
+
+<!-- 参数信息弹窗 -->
+<div id="editBox" style="display:none; padding:20px;">
+    <form class="layui-form" id="referForm">
+        <input type="hidden" name="ID">
+        <div class="layui-form-item">
+            <label class="layui-form-label">ID<span class="app-req">*</span></label>
+            <div class="layui-input-inline"><input type="text" name="id" class="layui-input v_required" lay-verify="required"></div>
+            <label class="layui-form-label">标题名称<span class="app-req">*</span></label>
+            <div class="layui-input-inline"><input type="text" name="name" class="layui-input v_required" lay-verify="required"></div>
+        </div>
+        <div class="layui-form-item" id="formGroup">
+            <label class="layui-form-label">项目类型</label>
+            <div class="layui-input-block"><select name="form"><option value="field">项目</option><option value="item">详细</option><option value="comment">备注</option><option value="condition">条件</option></select></div>
+        </div>
+        <div class="layui-form-item" id="argsGroup" style="display:none;">
+            <label class="layui-form-label">条件参数</label>
+            <div class="layui-input-block"><input type="text" name="args" class="layui-input"></div>
+        </div>
+        <div class="layui-form-item" id="dataGroup" style="display:none;">
+            <label class="layui-form-label">下拉框值</label>
+            <div class="layui-input-block"><textarea name="data" rows="5" class="layui-textarea" placeholder="回车作为数值分隔符"></textarea></div>
+        </div>
+        <div class="layui-form-item" id="validateGroup">
+            <label class="layui-form-label">验证规则</label>
+            <div class="layui-input-block" id="validateBox"></div>
+        </div>
+        <div class="layui-form-item"><label class="layui-form-label">备注</label><div class="layui-input-block"><textarea name="comment" rows="3" class="layui-textarea"></textarea></div></div>
+        <div class="layui-form-item app-form-footer"><button type="button" class="layui-btn" id="btnConfirm">确定</button></div>
+    </form>
+</div>
+
+<script src="../../layui/layui.js"></script><script src="../../js/app/config.js"></script><script src="../../js/app/server.js"></script><script src="../../js/app/utils.js"></script><script src="../../js/app/post.js"></script><script src="../../js/app/api.js"></script><script src="../../js/app/core.js"></script><script src="../../js/app/validate.js"></script><script src="../../js/app/bootstrap.js"></script><script src="../../js/approval/process2create.js"></script>
+</body></html>

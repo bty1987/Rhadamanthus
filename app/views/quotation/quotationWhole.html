@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<!-- app/views/quotation/quotationWhole.html —— 整装报价编辑（功能区/项管理 + 材料配比 quotationMaterialItem + 保存/打印）
+  上下文：app.params.quotation = { orderId, quotation, attpages: 'work'|'audi'|null }。 -->
+<html lang="zh-CN"><head><meta charset="utf-8"><title>报价编辑</title>
+<link rel="stylesheet" href="../../layui/css/layui.css"><link rel="stylesheet" href="../../css/app.css"></head>
+<body><div class="app-page">
+    <div class="app-toolbar" style="padding:10px 15px;">
+        <span style="font-size:16px;font-weight:bold;">报价编辑：<span id="quoLabel">-</span></span>
+        <button type="button" class="layui-btn layui-btn-sm" id="btnAddArea"><i class="layui-icon layui-icon-add-1"></i>添加功能区</button>
+        <button type="button" class="layui-btn layui-btn-sm" id="btnAddCommon"><i class="layui-icon layui-icon-template-1"></i>常用功能区</button>
+        <button type="button" class="layui-btn layui-btn-sm" id="btnAddItem"><i class="layui-icon layui-icon-add-1"></i>添加报价项</button>
+        <button type="button" class="layui-btn layui-btn-sm" id="btnAddCustom"><i class="layui-icon layui-icon-edit"></i>自定义项</button>
+        <button type="button" class="layui-btn layui-btn-sm layui-btn-warm" id="btnDiscount"><i class="layui-icon layui-icon-percentage"></i>折扣</button>
+        <button type="button" class="layui-btn layui-btn-sm layui-btn-warm" id="btnPrefer"><i class="layui-icon layui-icon-rmb"></i>优惠</button>
+        <button type="button" class="layui-btn layui-btn-sm layui-btn-normal" id="btnSave"><i class="layui-icon layui-icon-ok"></i>保存</button>
+        <button type="button" class="layui-btn layui-btn-sm" id="btnLock"><i class="layui-icon layui-icon-password"></i>锁定</button>
+        <button type="button" class="layui-btn layui-btn-sm" id="btnUnlock"><i class="layui-icon layui-icon-key"></i>解锁</button>
+        <button type="button" class="layui-btn layui-btn-sm layui-btn-warm" id="btnPrint"><i class="layui-icon layui-icon-print"></i>打印</button>
+        <button type="button" class="layui-btn layui-btn-sm layui-btn-normal" id="btnRecord"><i class="layui-icon layui-icon-list"></i>记录</button>
+        <button type="button" class="layui-btn layui-btn-sm layui-btn-primary" id="btnBack"><i class="layui-icon layui-icon-return"></i>返回</button>
+    </div>
+    <div style="padding:0 15px 10px;">
+        <blockquote class="layui-elem-quote" style="padding:8px 15px;">
+            折扣:<span id="discount">-</span> ｜ 非打折总额:<span id="undisPrice">-</span> ｜ 打折总额:<span id="disPrice">-</span> ｜ 车运费:<span id="trafficPrice">-</span> ｜ 管理费:<span id="managePrice">-</span>
+            ｜ 税金:<span id="taxPrice">-</span> ｜ 工程基数:<span id="basePrice">-</span> ｜ 成本:<span id="costPrice">-</span> ｜ <b style="color:#E2737D;">总价:<span id="totalPrice">-</span></b>
+            ｜ 状态:<span id="statusLabel">-</span>
+        </blockquote>
+    </div>
+    <div id="areaTables" style="padding:0 15px;"></div>
+    <div id="materialBox" style="display:none;padding:10px 15px;"><table id="materialTable" lay-filter="materialTable"></table></div>
+    <script type="text/html" id="rowToolbar">
+        <button class="layui-btn layui-btn-xs" lay-event="editNum">数量</button>
+        <button class="layui-btn layui-btn-xs" lay-event="editPrice">单价</button>
+        <button class="layui-btn layui-btn-xs layui-btn-danger" lay-event="delItem">删除</button>
+    </script>
+
+    <div id="areaBox" style="display:none;padding:20px 30px;">
+        <div class="layui-form-item"><label class="layui-form-label">名称</label><div class="layui-input-inline"><input id="faName" class="layui-input"></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">功能区类型</label><div class="layui-input-inline"><select id="faTypeSel"><option value="1">工程量</option><option value="2">功能区总额</option><option value="3">不计算</option><option value="4">成本</option><option value="5">非业绩</option><option value="6">隐藏</option><option value="7">综合</option></select></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">总价</label><div class="layui-input-inline"><input id="faTotal" class="layui-input" placeholder="功能区总额时填写"></div></div>
+    </div>
+    <div id="paramBox" style="display:none;padding:20px 40px;">
+        <div class="layui-form-item"><label class="layui-form-label">周长</label><div class="layui-input-inline"><input id="girth" class="layui-input"></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">面积</label><div class="layui-input-inline"><input id="area" class="layui-input"></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">举架</label><div class="layui-input-inline"><input id="height" class="layui-input"></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">洞面</label><div class="layui-input-inline"><input id="holeLength" class="layui-input" placeholder="洞长"></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">窗面</label><div class="layui-input-inline"><input id="windowLength" class="layui-input" placeholder="窗长"></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">梁</label><div class="layui-input-inline"><input id="beamLength" class="layui-input" placeholder="梁长"></div></div>
+    </div>
+    <div id="numBox" style="display:none;padding:20px 40px;">
+        <div class="layui-form-item"><label class="layui-form-label">公式/数量</label><div class="layui-input-inline"><input id="numInput" class="layui-input" placeholder="如: 2*3.5 或 周长*2.5"></div></div>
+        <p style="color:#999;padding-left:110px;">变量: 取整 周长 面积 举架 洞面 参数 窗面 变量 梁长 梁高 计价面积 反计价面积</p>
+    </div>
+    <div id="priceBox" style="display:none;padding:20px 40px;">
+        <div class="layui-form-item"><label class="layui-form-label">单价</label><div class="layui-input-inline"><input id="unitPriceInput" class="layui-input"></div></div>
+    </div>
+    <div id="customBox" style="display:none;padding:20px 30px;">
+        <div class="layui-form-item"><label class="layui-form-label">项目名</label><div class="layui-input-inline"><input id="itemName" class="layui-input"></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">单价</label><div class="layui-input-inline"><input id="unitPrice" class="layui-input"></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">数量</label><div class="layui-input-inline"><input id="num" class="layui-input" value="1"></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">单位</label><div class="layui-input-inline"><input id="measurementUnit" class="layui-input"></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">工种</label><div class="layui-input-inline"><input id="workType" class="layui-input"></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">打折</label><div class="layui-input-inline"><select id="discountSel"><option value="0">不打折</option><option value="1">打折</option></select></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">工艺说明</label><div class="layui-input-inline" style="width:320px;"><input id="content" class="layui-input"></div></div>
+    </div>
+    <div id="discountBox" style="display:none;padding:20px 30px;">
+        <div class="layui-form-item"><label class="layui-form-label">折扣</label><div class="layui-input-inline"><input id="discountInput" class="layui-input" placeholder="1-10"></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">工程基数</label><div class="layui-input-inline"><input id="basePriceInput" class="layui-input"></div></div>
+    </div>
+    <div id="preferBox" style="display:none;padding:20px 30px;">
+        <div class="layui-form-item"><label class="layui-form-label">优惠额</label><div class="layui-input-inline"><input id="preferPrice" class="layui-input"></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">管理优惠</label><div class="layui-input-inline"><input id="managePrefer" class="layui-input"></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">特殊优惠</label><div class="layui-input-inline"><input id="advancePrefer" class="layui-input"></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">活动优惠</label><div class="layui-input-inline"><input id="activityProfit" class="layui-input"></div></div>
+    </div>
+    <div id="approveBox" style="display:none;padding:20px 30px;">
+        <div class="layui-form-item"><label class="layui-form-label">变更原因</label><div class="layui-input-inline" style="width:320px;"><input id="changeReason" class="layui-input"></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">审批人</label><div class="layui-input-inline" style="width:320px;text-align:left;padding-top:9px;" id="approveManSel"></div></div>
+    </div>
+    <div id="commonBox" style="display:none;padding:10px 15px;">
+        <table id="commonTable" lay-filter="commonTable"></table>
+        <div style="margin-top:10px;text-align:right;"><button type="button" class="layui-btn" id="btnSaveCommon">保存勾选</button></div>
+    </div>
+    <div id="itemsBox" style="display:none;padding:10px 15px;">
+        <form class="layui-form" id="itemForm"><div class="layui-form-item">
+            <div class="layui-inline"><label class="layui-form-label">名称</label><div class="layui-input-inline"><input name="name" data-op="cn" class="layui-input" placeholder="名称"></div></div>
+            <div class="layui-inline"><button type="button" class="layui-btn" id="btnItemSearch"><i class="layui-icon layui-icon-search"></i>查询</button></div>
+        </div></form>
+        <table id="pickTable" lay-filter="pickTable"></table>
+        <div id="pickPagenation"></div>
+        <div style="margin-top:10px;text-align:right;"><button type="button" class="layui-btn" id="btnSaveItems">保存勾选</button></div>
+    </div>
+</div>
+<script src="../../layui/layui.js"></script><script src="../../js/app/config.js"></script><script src="../../js/app/server.js"></script><script src="../../js/app/utils.js"></script><script src="../../js/app/post.js"></script><script src="../../js/app/api.js"></script><script src="../../js/app/core.js"></script><script src="../../js/app/validate.js"></script><script src="../../js/app/bootstrap.js"></script><script src="../../js/quotation/quotation-common.js"></script><script src="../../js/quotation/quotationPart.js"></script><script src="../../js/quotation/quotationWhole.js"></script>
+</body></html>

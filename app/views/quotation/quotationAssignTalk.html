@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<!-- app/views/quotation/quotationAssignTalk.html —— 分配沟通（弹窗页：按装修单的沟通消息 + 发送） -->
+<html lang="zh-CN"><head><meta charset="utf-8"><title>分配沟通</title>
+<link rel="stylesheet" href="../../layui/css/layui.css"><link rel="stylesheet" href="../../css/app.css"></head>
+<body><div class="app-page">
+    <div class="app-toolbar" style="padding:10px 15px;"><span id="talkOrderIdDisplay" style="font-weight:bold;"></span></div>
+    <div id="talkMessageList" style="margin:0 15px;max-height:55vh;overflow:auto;background:#f5f7fa;padding:10px;border-radius:4px;"></div>
+    <div style="margin:10px 15px;display:flex;gap:8px;">
+        <input id="talkContent" class="layui-input" placeholder="输入消息后回车发送" style="flex:1;">
+        <button type="button" class="layui-btn" id="sendTalkBtn"><i class="layui-icon layui-icon-send"></i>发送</button>
+    </div>
+</div>
+<script src="../../layui/layui.js"></script><script src="../../js/app/config.js"></script><script src="../../js/app/server.js"></script><script src="../../js/app/utils.js"></script><script src="../../js/app/post.js"></script><script src="../../js/app/api.js"></script><script src="../../js/app/core.js"></script><script src="../../js/app/validate.js"></script><script src="../../js/app/bootstrap.js"></script><script src="../../js/quotation/quotation-common.js"></script><script src="../../js/quotation/quotationAssignTalk.js"></script>
+</body></html>

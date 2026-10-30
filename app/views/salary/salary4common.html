@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<!-- app/views/salary/salary4common.html —— 薪资汇总（个人薪资/扣款/装修提成/主材提成/工人工费 5 个子列表 + 按月切换）
+  顶部显示用户信息卡片 + 近 6 个月快捷按钮；底部 5 个独立分页表格 -->
+<html lang="zh-CN">
+<head><meta charset="utf-8"><title>薪资汇总</title>
+<link rel="stylesheet" href="../../layui/css/layui.css"><link rel="stylesheet" href="../../css/app.css"></head>
+<body>
+<div class="app-page">
+    <div class="layui-row layui-col-space10" style="margin-bottom:10px;">
+        <div class="layui-col-md3">
+            <div class="layui-card"><div class="layui-card-header">人员</div><div class="layui-card-body" id="userInfoBox"></div></div>
+        </div>
+        <div class="layui-col-md3">
+            <div class="layui-card"><div class="layui-card-header">薪资</div><div class="layui-card-body">
+                <div>基础总额: <b id="baseTotal">0</b></div>
+                <div>扣款总额: <b id="deductTotal">0</b></div>
+                <div>设计提成: <b id="designTotal">0</b></div>
+                <div>主材提成: <b id="materialTotal">0</b></div>
+            </div></div>
+        </div>
+        <div class="layui-col-md6">
+            <div class="layui-card"><div class="layui-card-header">选择月份</div><div class="layui-card-body" id="dateBtn"></div></div>
+        </div>
+    </div>
+
+    <div class="layui-card"><div class="layui-card-header">薪资记录</div><div class="layui-card-body">
+        <div class="app-table"><table id="resultTable0" lay-filter="resultTable0"></table></div>
+        <div id="pagenation0" class="app-pagenation"></div>
+    </div></div>
+
+    <div class="layui-card"><div class="layui-card-header">扣款记录</div><div class="layui-card-body">
+        <div class="app-table"><table id="resultTable1" lay-filter="resultTable1"></table></div>
+        <div id="pagenation1" class="app-pagenation"></div>
+    </div></div>
+
+    <div class="layui-card"><div class="layui-card-header">装修提成</div><div class="layui-card-body">
+        <div class="layui-inline"><label class="layui-form-label">装修单号</label><div class="layui-input-inline"><input type="text" id="decoOrderId" placeholder="装修单号" class="layui-input"></div></div>
+        <div class="layui-inline"><button type="button" class="layui-btn" id="btnSearch2">查询</button></div>
+        <div class="app-table"><table id="resultTable2" lay-filter="resultTable2"></table></div>
+        <div id="pagenation2" class="app-pagenation"></div>
+    </div></div>
+
+    <div class="layui-card"><div class="layui-card-header">主材提成</div><div class="layui-card-body">
+        <div class="layui-inline"><label class="layui-form-label">装修单号</label><div class="layui-input-inline"><input type="text" id="matOrderId" placeholder="装修单号" class="layui-input"></div></div>
+        <div class="layui-inline"><label class="layui-form-label">销售单号</label><div class="layui-input-inline"><input type="text" id="matSalesNo" placeholder="销售单号" class="layui-input"></div></div>
+        <div class="layui-inline"><button type="button" class="layui-btn" id="btnSearch3">查询</button></div>
+        <div class="app-table"><table id="resultTable3" lay-filter="resultTable3"></table></div>
+        <div id="pagenation3" class="app-pagenation"></div>
+    </div></div>
+
+    <div class="layui-card"><div class="layui-card-header">工人工费</div><div class="layui-card-body">
+        <div class="app-table"><table id="resultTable4" lay-filter="resultTable4"></table></div>
+        <div id="pagenation4" class="app-pagenation"></div>
+    </div></div>
+</div>
+<script src="../../layui/layui.js"></script><script src="../../js/app/config.js"></script><script src="../../js/app/server.js"></script>
+<script src="../../js/app/utils.js"></script><script src="../../js/app/post.js"></script>
+<script src="../../js/app/api.js"></script><script src="../../js/app/core.js"></script>
+<script src="../../js/app/validate.js"></script><script src="../../js/app/bootstrap.js"></script>
+<script src="../../js/salary/salary4common.js"></script>
+</body></html>

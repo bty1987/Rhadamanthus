@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<!-- app/views/construction/supervision4drawing.html —— 返工图纸（图库 + 上传）
+  上下文：app.params.construction = { orderId, rwId }。 -->
+<html lang="zh-CN"><head><meta charset="utf-8"><title>返工图纸</title>
+<link rel="stylesheet" href="../../layui/css/layui.css"><link rel="stylesheet" href="../../css/app.css">
+<style>
+.rw-gallery { margin: 0; padding: 0; list-style: none; }
+.rw-gallery li { position: relative; float: left; margin: 8px; border: 1px solid #e6e6e6; padding: 4px; border-radius: 4px; }
+.rw-gallery li img { width: 130px; height: 130px; object-fit: cover; cursor: pointer; display: block; }
+.rw-gallery li .tools { position: absolute; bottom: 4px; right: 6px; cursor: pointer; color: #fff; background: rgba(0,0,0,.5); border-radius: 2px; padding: 1px 6px; }
+</style></head>
+<body><div class="app-page">
+    <div class="app-toolbar" style="padding:10px 15px 0;">
+        <span style="font-size:16px;font-weight:bold;">监理控制 / 返工图纸</span>
+        <button type="button" class="layui-btn layui-btn-sm" id="pictureUpload"><i class="layui-icon layui-icon-upload-drag"></i>上传图片</button>
+        <button type="button" class="layui-btn layui-btn-sm layui-btn-primary" id="btnBack"><i class="layui-icon layui-icon-return"></i>返回</button>
+    </div>
+    <div style="padding:10px 15px;">
+        <ul class="rw-gallery" id="reworkDrawingGallery"></ul>
+        <div style="clear:both;"></div>
+    </div>
+</div>
+<script src="../../layui/layui.js"></script><script src="../../js/app/upload.js"></script><script src="../../js/app/config.js"></script><script src="../../js/app/server.js"></script><script src="../../js/app/utils.js"></script><script src="../../js/app/post.js"></script><script src="../../js/app/api.js"></script><script src="../../js/app/core.js"></script><script src="../../js/app/validate.js"></script><script src="../../js/app/bootstrap.js"></script><script src="../../js/construction/construction-common.js"></script><script src="../../js/construction/supervision4drawing.js"></script>
+</body></html>

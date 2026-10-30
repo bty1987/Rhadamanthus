@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<!-- app/views/decoration/decorationAuditRecord.html —— 审核扣款记录（审核信息 + 人员扣款）
+  上下文：app.params.decoration = { orderId, designerId, deptId, auditStatusType: admin|select }。 -->
+<html lang="zh-CN"><head><meta charset="utf-8"><title>审核扣款记录</title>
+<link rel="stylesheet" href="../../layui/css/layui.css"><link rel="stylesheet" href="../../css/app.css"></head>
+<body><div class="app-page">
+    <div class="app-toolbar" style="padding:10px 15px 0;">
+        <button type="button" class="layui-btn layui-btn-sm" id="btnAddRecord"><i class="layui-icon layui-icon-add-1"></i>添加审核信息</button>
+        <button type="button" class="layui-btn layui-btn-sm layui-btn-primary" id="btnBack"><i class="layui-icon layui-icon-return"></i>返回</button>
+    </div>
+    <div style="padding:8px 15px;font-weight:bold;">审核信息</div>
+    <div class="app-table" style="padding:0 15px 10px;"><table id="recordTable" lay-filter="recordTable"></table></div>
+    <div style="padding:8px 15px;font-weight:bold;">人员扣款 <button type="button" class="layui-btn layui-btn-xs" id="btnAddScale" style="margin-left:8px;">添加扣款</button></div>
+    <div class="app-table" style="padding:0 15px 15px;"><table id="scaleTable" lay-filter="scaleTable"></table></div>
+
+    <script type="text/html" id="recordToolbar">
+        {{# if(d._admin){ }}}<button class="layui-btn layui-btn-xs" lay-event="change">修改</button>
+        <button class="layui-btn layui-btn-xs layui-btn-normal" lay-event="make">生成扣款</button>{{# } }}
+        <button class="layui-btn layui-btn-xs layui-btn-warm" lay-event="scale">人员扣款</button>
+    </script>
+    <script type="text/html" id="scaleToolbar">
+        {{# if(d._admin){ }}}{{# if(d.status == 0){ }}}<button class="layui-btn layui-btn-xs layui-btn-danger" lay-event="confirm">确认扣款</button>{{# } }}
+        <button class="layui-btn layui-btn-xs" lay-event="del">删除</button>{{# } }}
+    </script>
+
+    <div id="recordBox" style="display:none;padding:20px 30px;">
+        <form class="layui-form" id="recordForm">
+            <div class="layui-form-item"><label class="layui-form-label">说明</label><div class="layui-input-block"><input class="layui-input" id="comment" placeholder="说明"></div></div>
+            <div class="layui-form-item"><label class="layui-form-label">单价</label><div class="layui-input-inline"><input class="layui-input" id="untiPrice" placeholder="单价"></div></div>
+            <div class="layui-form-item"><label class="layui-form-label">数量</label><div class="layui-input-inline"><input class="layui-input" id="num" placeholder="数量"></div></div>
+            <div class="layui-form-item"><label class="layui-form-label">折扣</label><div class="layui-input-inline"><input class="layui-input" id="discount" placeholder="1-10"></div><div class="layui-form-mid layui-word-aux">折扣只能输入1-10的数字</div></div>
+        </form>
+    </div>
+    <div id="scaleBox" style="display:none;padding:20px 30px;">
+        <form class="layui-form" id="scaleForm">
+            <div class="layui-form-item"><label class="layui-form-label">扣款人</label><div class="layui-input-inline"><select id="scaleUser" lay-search=""><option value="">请选择员工</option></select></div></div>
+            <div class="layui-form-item"><label class="layui-form-label">部门</label><div class="layui-input-inline"><input class="layui-input" id="scaleDept" disabled placeholder="按扣款人自动带出"></div></div>
+            <div class="layui-form-item"><label class="layui-form-label">扣款金额</label><div class="layui-input-inline"><input class="layui-input" id="scaleMoney" placeholder="扣款金额"></div></div>
+        </form>
+    </div>
+</div>
+<script src="../../layui/layui.js"></script><script src="../../js/app/config.js"></script><script src="../../js/app/server.js"></script><script src="../../js/app/utils.js"></script><script src="../../js/app/post.js"></script><script src="../../js/app/api.js"></script><script src="../../js/app/core.js"></script><script src="../../js/app/validate.js"></script><script src="../../js/app/bootstrap.js"></script><script src="../../js/decoration/decoration-common.js"></script><script src="../../js/decoration/decorationAuditRecord.js"></script>
+</body></html>

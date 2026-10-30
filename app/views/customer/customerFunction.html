@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<!-- app/views/customer/customerFunction.html —— 客服功能权限配置（页面按钮/条件/列配置 + 跨公司同步） -->
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8" />
+    <title>客服功能配置</title>
+    <link rel="stylesheet" href="../../layui/css/layui.css">
+    <link rel="stylesheet" href="../../css/app.css">
+</head>
+<body>
+<div class="app-page" id="customerFunctionPage">
+
+    <div class="app-table" style="padding-top:10px;">
+        <table id="resultTable" lay-filter="resultTable"></table>
+    </div>
+
+    <!-- 功能配置弹窗 -->
+    <div id="apiBox" style="display:none; padding:20px;">
+        <form class="layui-form" lay-filter="apiForm" id="apiForm">
+            <div class="layui-form-item">
+                <label class="layui-form-label">api</label>
+                <div class="layui-input-block" id="apiData" style="line-height:36px;"></div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">condArr</label>
+                <div class="layui-input-block" id="condArrData" style="line-height:36px;"></div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">propertyArr</label>
+                <div class="layui-input-block" id="fieldData" style="line-height:36px;"></div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">pageBtn</label>
+                <div class="layui-input-block" id="functionData" style="line-height:36px;"></div>
+            </div>
+            <div class="layui-form-item app-form-footer">
+                <button type="button" class="layui-btn" id="btnApiSave">确定</button>
+                <button type="button" class="layui-btn layui-btn-primary" id="btnApiCancel">取消</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- 同步公司弹窗 -->
+    <div id="syncBox" style="display:none; padding:20px;">
+        <div class="layui-form-item">
+            <label class="layui-form-label">功能</label>
+            <div class="layui-input-block" style="line-height:38px;">
+                <span id="syncFunctionName" class="layui-badge layui-bg-blue"></span>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">目标公司</label>
+            <div class="layui-input-block" id="companyList" style="line-height:36px;max-height:260px;overflow:auto;"></div>
+        </div>
+        <div class="layui-form-item app-form-footer">
+            <button type="button" class="layui-btn" id="btnSyncConfirm">同步</button>
+            <button type="button" class="layui-btn layui-btn-primary" id="btnSyncCancel">取消</button>
+        </div>
+    </div>
+
+</div>
+
+<script src="../../layui/layui.js"></script>
+<script src="../../js/app/config.js"></script>
+<script src="../../js/app/server.js"></script>
+<script src="../../js/app/utils.js"></script>
+<script src="../../js/app/post.js"></script>
+<script src="../../js/app/api.js"></script>
+<script src="../../js/app/core.js"></script>
+<script src="../../js/app/validate.js"></script>
+<script src="../../js/app/bootstrap.js"></script>
+<script src="../../js/customer/customer-common.js"></script>
+<script src="../../js/customer/customerFunction.js"></script>
+</body>
+</html>

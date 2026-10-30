@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<!-- app/views/data/color.html —— 颜色管理（CRUD + 状态切换）-->
+<html lang="zh-CN"><head><meta charset="utf-8"><title>颜色管理</title>
+<link rel="stylesheet" href="../../layui/css/layui.css"><link rel="stylesheet" href="../../css/app.css"></head>
+<body><div class="app-page">
+    <div class="app-search"><form class="layui-form" id="searchForm"><div class="layui-form-item">
+        <div class="layui-inline"><button type="button" class="layui-btn layui-btn-normal" id="btnAdd"><i class="layui-icon layui-icon-add-1"></i>添加颜色</button></div>
+    </div></form></div>
+    <div class="app-table"><table id="resultTable" lay-filter="resultTable"></table></div>
+    <div id="editBox" style="display:none; padding:20px;"><form class="layui-form" id="editForm">
+        <input type="hidden" name="cid">
+        <div class="layui-form-item"><label class="layui-form-label">颜色名<span class="app-req">*</span></label><div class="layui-input-block"><input type="text" name="name" placeholder="颜色名" class="layui-input v_required" lay-verify="required"></div></div>
+        <div class="layui-form-item app-form-footer"><button type="button" class="layui-btn" id="btnSave">保存</button><button type="reset" class="layui-btn layui-btn-primary" id="btnCancel">取消</button></div>
+    </form></div>
+    <script type="text/html" id="rowToolbar"><button class="layui-btn layui-btn-xs" lay-event="enable">启用</button><button class="layui-btn layui-btn-xs layui-btn-warm" lay-event="disable">禁用</button></script>
+</div>
+<script src="../../layui/layui.js"></script><script src="../../js/app/config.js"></script><script src="../../js/app/server.js"></script><script src="../../js/app/utils.js"></script><script src="../../js/app/post.js"></script><script src="../../js/app/api.js"></script><script src="../../js/app/core.js"></script><script src="../../js/app/validate.js"></script><script src="../../js/app/bootstrap.js"></script><script src="../../js/data/color.js"></script>
+</body></html>

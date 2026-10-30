@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<!-- app/views/customer/serviceTeam.html —— 客户群（微信群）：编辑/绑定装修单/群成员/解绑 -->
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8" />
+    <title>客户群</title>
+    <link rel="stylesheet" href="../../layui/css/layui.css">
+    <link rel="stylesheet" href="../../css/app.css">
+</head>
+<body>
+<div class="app-page" id="serviceTeamPage">
+
+    <div class="app-search">
+        <form class="layui-form" lay-filter="searchForm" id="searchForm">
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">名称</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="name" data-op="eq" placeholder="请输入群名称" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">装修单号</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="orderId" data-op="eq" placeholder="请输入装修单号" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <button type="button" class="layui-btn" id="btnSearch"><i class="layui-icon layui-icon-search"></i>查询</button>
+                    <button type="reset" class="layui-btn layui-btn-primary" id="btnReset">重置</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div class="app-table">
+        <table id="resultTable" lay-filter="resultTable"></table>
+    </div>
+
+    <div id="pagenation" class="app-pagenation"></div>
+
+    <!-- 编辑群信息 -->
+    <div id="editBox" style="display:none; padding:20px;">
+        <form class="layui-form" lay-filter="editForm" id="editForm">
+            <div class="layui-form-item">
+                <label class="layui-form-label">群名称<span class="app-req">*</span></label>
+                <div class="layui-input-block">
+                    <input type="text" name="name" placeholder="请输入群名称" class="layui-input v_required">
+                </div>
+            </div>
+            <div class="layui-form-item layui-form-text">
+                <label class="layui-form-label">说明</label>
+                <div class="layui-input-block">
+                    <textarea name="content" placeholder="请输入说明" class="layui-textarea"></textarea>
+                </div>
+            </div>
+            <div class="layui-form-item app-form-footer">
+                <button type="button" class="layui-btn" id="btnSave">保存</button>
+                <button type="button" class="layui-btn layui-btn-primary" id="btnCancel">取消</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- 绑定装修单 -->
+    <div id="bindOrderBox" style="display:none; padding:20px;">
+        <form class="layui-form" lay-filter="bindOrderForm" id="bindOrderForm">
+            <div class="layui-form-item">
+                <label class="layui-form-label">装修单号<span class="app-req">*</span></label>
+                <div class="layui-input-block">
+                    <input type="text" name="orderId" placeholder="请输入装修单号" class="layui-input v_required">
+                </div>
+            </div>
+            <div class="layui-form-item app-form-footer">
+                <button type="button" class="layui-btn" id="btnBindSave">保存</button>
+                <button type="button" class="layui-btn layui-btn-primary" id="btnBindCancel">取消</button>
+            </div>
+        </form>
+    </div>
+
+</div>
+
+<script src="../../layui/layui.js"></script>
+<script src="../../js/app/config.js"></script>
+<script src="../../js/app/server.js"></script>
+<script src="../../js/app/utils.js"></script>
+<script src="../../js/app/post.js"></script>
+<script src="../../js/app/api.js"></script>
+<script src="../../js/app/core.js"></script>
+<script src="../../js/app/validate.js"></script>
+<script src="../../js/app/bootstrap.js"></script>
+<script src="../../js/customer/customer-common.js"></script>
+<script src="../../js/customer/serviceTeam.js"></script>
+</body>
+</html>

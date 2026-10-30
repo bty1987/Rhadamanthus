@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<!-- app/views/quotation/quotationTest.html —— 报价模块版本对比测试（公式计算 eval vs 安全求值；layui 重制版） -->
+<html lang="zh-CN"><head><meta charset="utf-8"><title>报价模块版本对比测试</title>
+<link rel="stylesheet" href="../../layui/css/layui.css"><link rel="stylesheet" href="../../css/app.css"></head>
+<body><div class="app-page">
+    <div class="app-toolbar" style="padding:12px 15px;">
+        <span style="font-size:18px;font-weight:bold;">报价模块公式计算版本对比测试</span>
+        <button type="button" class="layui-btn layui-btn-sm layui-btn-normal" id="btnRun"><i class="layui-icon layui-icon-play"></i>运行全部测试</button>
+        <span style="margin-left:12px;" id="summary"></span>
+    </div>
+    <div class="app-table" style="padding:0 15px;"><table id="resultTable" lay-filter="resultTable"></table></div>
+</div>
+<script src="../../layui/layui.js"></script><script src="../../js/app/config.js"></script><script src="../../js/app/server.js"></script><script src="../../js/app/utils.js"></script><script src="../../js/app/post.js"></script><script src="../../js/app/api.js"></script><script src="../../js/app/core.js"></script><script src="../../js/app/validate.js"></script><script src="../../js/app/bootstrap.js"></script><script src="../../js/quotation/quotation-common.js"></script><script src="../../js/quotation/quotationTest.js"></script>
+</body></html>

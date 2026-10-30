@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<!-- app/views/contract/C-003-D-0-0003.html —— 恩林装修工程合同（模板表单页，主材达额）
+  上下文：app.params.decoration = { orderId, contractargs:{cid,company,type}, contract? }。
+  type=2 隐藏二期，type=3 隐藏全部款项组。 -->
+<html lang="zh-CN"><head><meta charset="utf-8"><title>恩林装修工程合同</title>
+<link rel="stylesheet" href="../../layui/css/layui.css"><link rel="stylesheet" href="../../css/app.css"></head>
+<body><div class="app-page" style="max-width:900px;margin:0 auto;">
+    <blockquote class="layui-elem-quote layui-quote-nm" style="margin-bottom:10px;">* 橙色标记为必填信息；"补充条款"类文本域双击可插入话术。</blockquote>
+    <form class="layui-form" id="form">
+        <fieldset class="layui-elem-field"><legend>客户信息</legend><div class="layui-field-box">
+            <div class="layui-form-item">
+                <div class="layui-inline company"><label class="layui-form-label">甲方<i class="app-req">*</i></label><div class="layui-input-inline"><input class="layui-input conitem v_required" id="con-company-name" value="/" maxlength="32"></div></div>
+                <div class="layui-inline customer"><label class="layui-form-label">甲方代理人<i class="app-req">*</i></label><div class="layui-input-inline"><input class="layui-input conitem v_required" id="con-customer-name" maxlength="32"></div></div>
+            </div>
+        </div></fieldset>
+        <fieldset class="layui-elem-field"><legend>金额信息</legend><div class="layui-field-box">
+            <div class="layui-form-item">
+                <div class="layui-inline"><label class="layui-form-label">主材达额总价款<i class="app-req">*</i></label><div class="layui-input-inline"><input class="layui-input conitem v_required" id="con-contract-total"></div></div>
+                <div class="layui-inline"><label class="layui-form-label">主材达额保证金<i class="app-req">*</i></label><div class="layui-input-inline"><input class="layui-input conitem v_required" id="con-bond-price"></div></div>
+            </div>
+            <div class="layui-form-item firstPaymentGroup">
+                <div class="layui-inline"><label class="layui-form-label">主材达额首付款<i class="app-req">*</i></label><div class="layui-input-inline"><input class="layui-input conitem v_required" id="con-payment-first"></div></div>
+                <div class="layui-inline"><label class="layui-form-label">主材达额首付款备注</label><div class="layui-input-inline" style="width:420px;"><textarea class="layui-textarea conitem" id="con-payment-first-comment" maxlength="512"></textarea></div></div>
+            </div>
+            <div class="layui-form-item thirdPaymentGroup">
+                <div class="layui-inline"><label class="layui-form-label">主材达额二期款<i class="app-req">*</i></label><div class="layui-input-inline"><input class="layui-input conitem v_required" id="con-payment-third"></div></div>
+                <div class="layui-inline"><label class="layui-form-label">主材达额二期款备注</label><div class="layui-input-inline" style="width:420px;"><textarea class="layui-textarea conitem" id="con-payment-third-comment" maxlength="512"></textarea></div></div>
+            </div>
+            <div class="layui-form-item finalPaymentGroup">
+                <div class="layui-inline"><label class="layui-form-label">主材达额尾款<i class="app-req">*</i></label><div class="layui-input-inline"><input class="layui-input conitem v_required" id="con-payment-final"></div></div>
+                <div class="layui-inline"><label class="layui-form-label">主材达额尾款备注</label><div class="layui-input-inline" style="width:420px;"><textarea class="layui-textarea conitem" id="con-payment-final-comment" maxlength="512"></textarea></div></div>
+            </div>
+        </div></fieldset>
+        <fieldset class="layui-elem-field"><legend>补充条款</legend><div class="layui-field-box">
+            <textarea class="layui-textarea conitem makeup" id="con-markup-one" rows="5" maxlength="512" placeholder="补充条款 , 请双击获取内容或手动输入"></textarea>
+            <textarea class="layui-textarea conitem makeup" id="con-markup-thr" rows="5" maxlength="512" placeholder="优惠活动备注 , 请双击获取内容或手动输入" style="margin-top:8px;"></textarea>
+        </div></fieldset>
+        <div class="layui-form-item" style="text-align:center;padding:10px 0;">
+            <button type="button" class="layui-btn" id="preservation"><i class="layui-icon layui-icon-ok"></i>保存合同</button>
+            <button type="button" class="layui-btn layui-btn-primary" id="btnClose">关闭</button>
+        </div>
+    </form>
+    <div data-talking-box style="display:none;"><div id="talkingList"></div></div>
+</div>
+<script src="../../layui/layui.js"></script><script src="../../js/app/config.js"></script><script src="../../js/app/server.js"></script><script src="../../js/app/utils.js"></script><script src="../../js/app/post.js"></script><script src="../../js/app/api.js"></script><script src="../../js/app/core.js"></script><script src="../../js/app/validate.js"></script><script src="../../js/app/bootstrap.js"></script><script src="../../js/contract/contract-common.js"></script><script src="../../js/contract/C-003-D-0-0003.js"></script>
+</body></html>

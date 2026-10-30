@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<!-- app/views/information/plan.html —— 计划任务（列表 + 创建 + 取消 + 下载）
+  字段：pid(计划ID) task(任务) args(参数) executeTime(执行时间) schedule(进度) status(状态) info(结果信息) resultFilepath(结果文件) infoFilepath(日志) creater createTime -->
+<html lang="zh-CN">
+<head><meta charset="utf-8"><title>计划任务</title>
+<link rel="stylesheet" href="../../layui/css/layui.css"><link rel="stylesheet" href="../../css/app.css"></head>
+<body>
+<div class="app-page">
+    <div class="app-search"><form class="layui-form" id="searchForm"><div class="layui-form-item">
+        <div class="layui-inline"><label class="layui-form-label">任务ID</label><div class="layui-input-inline"><input type="text" name="taskName" data-op="eq" placeholder="任务tid" class="layui-input" autocomplete="off"></div></div>
+        <div class="layui-inline"><label class="layui-form-label">状态</label><div class="layui-input-inline"><select name="status" data-op="eq"><option value="">全部</option><option value="0">初始化</option><option value="1">成功</option><option value="2">失败</option><option value="3">执行中</option><option value="4">已取消</option></select></div></div>
+        <div class="layui-inline"><button type="button" class="layui-btn" id="btnSearch"><i class="layui-icon layui-icon-search"></i>查询</button><button type="reset" class="layui-btn layui-btn-primary" id="btnReset">重置</button><button type="button" class="layui-btn layui-btn-normal" id="btnAdd"><i class="layui-icon layui-icon-add-1"></i>创建</button></div>
+    </div></form></div>
+    <div class="app-table"><table id="resultTable" lay-filter="resultTable"></table></div>
+    <div id="pagenation" class="app-pagenation"></div>
+    <div id="editBox" style="display:none; padding:20px;"><form class="layui-form" id="editForm">
+        <div class="layui-form-item"><label class="layui-form-label">任务keyWord<span class="app-req">*</span></label><div class="layui-input-block"><input type="text" name="keyWord" placeholder="任务keyWord" class="layui-input v_required" lay-verify="required"></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">参数</label><div class="layui-input-block"><input type="text" name="args" placeholder="执行参数(逗号分隔)" class="layui-input"></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">执行日期</label><div class="layui-input-inline"><input type="text" name="executeDate" id="executeDate" placeholder="yyyy-MM-dd" class="layui-input"></div>
+            <label class="layui-form-label">执行时间</label><div class="layui-input-inline"><input type="text" name="executeTime" id="executeTime" placeholder="HH:mm:ss" class="layui-input"></div></div>
+        <div class="layui-form-item app-form-footer"><button type="button" class="layui-btn" id="btnSave">创建</button><button type="reset" class="layui-btn layui-btn-primary" id="btnCancel">取消</button></div>
+    </form></div>
+    <script type="text/html" id="rowToolbar"><button class="layui-btn layui-btn-xs" lay-event="download">下载</button><button class="layui-btn layui-btn-xs layui-btn-danger" lay-event="log">日志</button><button class="layui-btn layui-btn-xs layui-btn-warm" lay-event="cancel">取消</button></script>
+</div>
+<script src="../../layui/layui.js"></script><script src="../../js/app/config.js"></script><script src="../../js/app/server.js"></script>
+<script src="../../js/app/utils.js"></script><script src="../../js/app/post.js"></script>
+<script src="../../js/app/api.js"></script><script src="../../js/app/core.js"></script>
+<script src="../../js/app/validate.js"></script><script src="../../js/app/bootstrap.js"></script>
+<script src="../../js/information/plan.js"></script>
+</body></html>

@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<!-- app/views/map/index.html —— 地图主页（百度地图）：沈阳中心点地图画布，点击取坐标，浅色主题。 -->
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+<title>地图主页</title>
+<link rel="stylesheet" href="../../layui/css/layui.css"><link rel="stylesheet" href="../../css/app.css">
+<style>
+#allmap { width: 100%; height: 560px; overflow: hidden; margin: 0; font-family: 'Microsoft YaHei', sans-serif; }
+.map-note { padding: 8px 15px; color: #999; }
+</style>
+<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=49YYCNGougjjYuqAZKqzkBEx"></script>
+</head>
+<body><div class="app-page">
+    <div class="app-search"><form class="layui-form" onsubmit="return false;"><div class="layui-form-item">
+        <div class="layui-inline"><label class="layui-form-label">中心经度</label><div class="layui-input-inline" style="width:150px;"><input type="text" id="centerLng" class="layui-input" value="123.38497" autocomplete="off"></div></div>
+        <div class="layui-inline"><label class="layui-form-label">中心纬度</label><div class="layui-input-inline" style="width:150px;"><input type="text" id="centerLat" class="layui-input" value="41.810947" autocomplete="off"></div></div>
+        <div class="layui-inline"><button type="button" class="layui-btn" id="btnLocate"><i class="layui-icon layui-icon-location"></i>定位</button></div>
+        <div class="layui-inline"><label class="layui-form-label" style="width:80px;">点击坐标</label><div class="layui-input-inline" style="width:220px;"><input type="text" id="clickPoint" class="layui-input layui-disabled" placeholder="点击地图获取" disabled></div></div>
+    </div></form></div>
+    <blockquote class="layui-elem-quote layui-quote-nm map-note">百度地图画布：滚轮缩放 / 键盘方向键平移 / 点击地图获取坐标。原 Ace 页仅为地图演示容器（无业务数据接口），此处保留同等能力。<\/blockquote>
+    <div id="allmap"><div class="map-note" style="padding-top:240px;text-align:center;">百度地图 SDK（api.map.baidu.com）未加载或 AK 失效，地图画布不可用。请检查网络与 AK 配置。<\/div></div>
+</div>
+<script src="../../layui/layui.js"></script><script src="../../js/app/config.js"></script><script src="../../js/app/server.js"></script><script src="../../js/app/utils.js"></script><script src="../../js/app/post.js"></script><script src="../../js/app/api.js"></script><script src="../../js/app/core.js"></script><script src="../../js/app/validate.js"></script><script src="../../js/app/bootstrap.js"></script><script src="../../js/map/index.js"></script>
+</body></html>

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<!-- app/views/material/materialPreBalance.html —— 主材预结（列表 + 复选框 + 预结/完结 + 子项/抹零操作）-->
+<html lang="zh-CN"><head><meta charset="utf-8"><title>主材预结</title>
+<link rel="stylesheet" href="../../layui/css/layui.css"><link rel="stylesheet" href="../../css/app.css"></head>
+<body><div class="app-page">
+    <div class="app-search"><form class="layui-form" id="searchForm"><div class="layui-form-item">
+        <div class="layui-inline"><label class="layui-form-label">主材单号</label><div class="layui-input-inline"><input type="text" name="no" data-op="cn" placeholder="主材单号" class="layui-input" autocomplete="off"></div></div>
+        <div class="layui-inline"><label class="layui-form-label">客户</label><div class="layui-input-inline"><input type="text" name="customer.name" data-op="cn" placeholder="客户" class="layui-input" autocomplete="off"></div></div>
+        <div class="layui-inline"><label class="layui-form-label">业务员</label><div class="layui-input-inline"><input type="text" name="salesman.currentName" data-op="cn" placeholder="业务员" class="layui-input" autocomplete="off"></div></div>
+        <div class="layui-inline"><button type="button" class="layui-btn" id="btnSearch"><i class="layui-icon layui-icon-search"></i>查询</button><button type="reset" class="layui-btn layui-btn-primary" id="btnReset">重置</button><button type="button" class="layui-btn layui-btn-normal" id="btnPreBalance">预结</button><button type="button" class="layui-btn layui-btn-danger" id="btnPassBalance">完结</button></div>
+    </div></form></div>
+    <div class="app-table"><table id="resultTable" lay-filter="resultTable"></table></div>
+    <div id="pagenation" class="app-pagenation"></div>
+    <div id="malingBox" style="display:none; padding:20px;"><form class="layui-form" id="malingForm">
+        <input type="hidden" name="mid">
+        <div class="layui-form-item"><label class="layui-form-label">抹零总数</label><div class="layui-input-inline"><input type="text" name="malingTotal" class="layui-input" disabled></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">原抹零</label><div class="layui-input-inline"><input type="text" name="oldMaling" class="layui-input" disabled></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">原厂商抹零</label><div class="layui-input-inline"><input type="text" name="oldVenderMaling" class="layui-input" disabled></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">修改厂商抹零<span class="app-req">*</span></label><div class="layui-input-inline"><input type="text" name="venderMaling" class="layui-input v_float"></div></div>
+        <div class="layui-form-item app-form-footer"><button type="button" class="layui-btn" id="btnMalingSave">保存</button><button type="reset" class="layui-btn layui-btn-primary" id="btnMalingCancel">取消</button></div>
+    </form></div>
+    <script type="text/html" id="rowToolbar"><button class="layui-btn layui-btn-xs" lay-event="item">子项</button><button class="layui-btn layui-btn-xs layui-btn-warm" lay-event="maling">抹零</button></script>
+</div>
+<script src="../../layui/layui.js"></script><script src="../../js/app/config.js"></script><script src="../../js/app/server.js"></script><script src="../../js/app/utils.js"></script><script src="../../js/app/post.js"></script><script src="../../js/app/api.js"></script><script src="../../js/app/core.js"></script><script src="../../js/app/validate.js"></script><script src="../../js/app/bootstrap.js"></script><script src="../../js/material/materialPreBalance.js"></script>
+</body></html>

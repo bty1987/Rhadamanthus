@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<!-- app/views/quotation/protationIndex.html —— 预签报价列表
+  订单模式（默认，从装修单进入）：queryProtationByOrderId 卡片化表格 + 创建/修改/查看/删除/默认/锁定/解锁/优惠（含审批流）；
+  页面模式（?type=page&depage=xxx）：queryQuotationFunctionRight 配置驱动列/按钮，分页搜索。 -->
+<html lang="zh-CN"><head><meta charset="utf-8"><title>预签报价</title>
+<link rel="stylesheet" href="../../layui/css/layui.css"><link rel="stylesheet" href="../../css/app.css"></head>
+<body><div class="app-page">
+    <div class="app-toolbar" style="padding:10px 15px;">
+        <span style="font-size:16px;font-weight:bold;">预签报价<span id="orderIdLabel"></span></span>
+        <button type="button" class="layui-btn layui-btn-sm" id="btnCreate"><i class="layui-icon layui-icon-add-1"></i>创建预签</button>
+        <button type="button" class="layui-btn layui-btn-sm layui-btn-primary" id="btnBack"><i class="layui-icon layui-icon-return"></i>返回</button>
+    </div>
+    <div id="decorationInfo" style="padding:0 15px 10px;">
+        <blockquote class="layui-elem-quote" style="padding:8px 15px;">
+            装修单：<span id="decoOrderId">-</span> ｜ 楼盘地址：<span id="decoAddress">-</span> ｜ 报价版本：<span id="decoVersion">-</span>
+            ｜ 预签可用数量：<span id="limitNum">-</span> ｜ 已用：<span id="usedNum">0</span> ｜ 剩余：<span id="subNum">0</span>
+        </blockquote>
+    </div>
+    <div class="app-search" id="searchArea" style="display:none;"><form class="layui-form" id="searchForm"><div class="layui-form-item">
+        <div class="layui-inline"><label class="layui-form-label">装修单号</label><div class="layui-input-inline"><input name="decoration.orderId" data-op="eq" class="layui-input" placeholder="装修单号"></div></div>
+        <div class="layui-inline"><label class="layui-form-label">楼盘</label><div class="layui-input-inline"><input name="decoration.village.no" data-op="eq" class="layui-input" placeholder="楼盘编号"></div></div>
+        <div class="layui-inline"><label class="layui-form-label">设计师</label><div class="layui-input-inline"><input name="decoration.designer.userId" data-op="eq" class="layui-input" placeholder="设计师编号"></div></div>
+        <div class="layui-inline"><label class="layui-form-label">业务员</label><div class="layui-input-inline"><input name="decoration.salesman.userId" data-op="eq" class="layui-input" placeholder="业务员编号"></div></div>
+        <div class="layui-inline"><label class="layui-form-label">创建时间</label><div class="layui-input-inline"><input name="createTime.range" data-op="between" id="createTime" class="layui-input" placeholder="起始 - 结束" readonly></div></div>
+        <div class="layui-inline"><button type="button" class="layui-btn" id="btnSearch"><i class="layui-icon layui-icon-search"></i>查询</button><button type="button" class="layui-btn layui-btn-primary" id="btnReset">重置</button></div>
+    </div></form></div>
+    <div class="app-table" style="padding:0 15px;"><table id="resultTable" lay-filter="resultTable"></table></div>
+    <div id="pagenation" class="app-pagenation"></div>
+    <script type="text/html" id="rowToolbar"></script>
+
+    <div id="editBox" style="display:none;padding:20px 30px;">
+        <div class="layui-form-item"><label class="layui-form-label">名称</label><div class="layui-input-inline"><input id="name" class="layui-input"></div></div>
+        <div class="layui-form-item" id="versionGroup"><label class="layui-form-label">版本</label><div class="layui-input-inline"><select id="version"></select></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">产品</label><div class="layui-input-inline"><select id="produce"></select></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">计价面积</label><div class="layui-input-inline"><input id="quoteArea" class="layui-input"></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">优惠价</label><div class="layui-input-inline"><input id="preferPrice" class="layui-input"></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">备注</label><div class="layui-input-inline" style="width:320px;"><input id="comment" class="layui-input"></div></div>
+    </div>
+
+    <div id="preferBox" style="display:none;padding:20px 30px;">
+        <div class="layui-form-item"><label class="layui-form-label">优惠额</label><div class="layui-input-inline"><input id="preferPrices" class="layui-input"></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">管理优惠</label><div class="layui-input-inline"><input id="preferManage" class="layui-input"></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">特殊优惠</label><div class="layui-input-inline"><input id="preferAdvance" class="layui-input"></div></div>
+    </div>
+
+    <div id="approveBox" style="display:none;padding:20px 30px;">
+        <div class="layui-form-item"><label class="layui-form-label">变更原因</label><div class="layui-input-inline" style="width:320px;"><input id="changeReason" class="layui-input"></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">审批人</label><div class="layui-input-inline" style="width:320px;text-align:left;padding-top:9px;" id="approveManSel"></div></div>
+    </div>
+</div>
+<script src="../../layui/layui.js"></script><script src="../../js/app/config.js"></script><script src="../../js/app/server.js"></script><script src="../../js/app/utils.js"></script><script src="../../js/app/post.js"></script><script src="../../js/app/api.js"></script><script src="../../js/app/core.js"></script><script src="../../js/app/validate.js"></script><script src="../../js/app/bootstrap.js"></script><script src="../../js/quotation/quotation-common.js"></script><script src="../../js/quotation/protationIndex.js"></script>
+</body></html>

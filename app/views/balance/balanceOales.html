@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<!-- app/views/balance/balanceOales.html —— 结算外销单（列表 + 创建/更新/锁定/解锁/汇总/结算/删除）
+  balanceOales.status 复用 balanceSales.status：0初始/1锁定/3结算；grade: A/B/C。 -->
+<html lang="zh-CN"><head><meta charset="utf-8"><title>结算外销单</title>
+<link rel="stylesheet" href="../../layui/css/layui.css"><link rel="stylesheet" href="../../css/app.css"></head>
+<body><div class="app-page">
+    <div class="app-search"><form class="layui-form" id="searchForm"><div class="layui-form-item">
+        <div class="layui-inline"><label class="layui-form-label">名称</label><div class="layui-input-inline"><input type="text" name="name" data-op="cn" placeholder="名称" class="layui-input" autocomplete="off"></div></div>
+        <div class="layui-inline"><label class="layui-form-label">状态</label><div class="layui-input-inline"><select name="status"><option value="">全部</option><option value="0">初始</option><option value="1">锁定</option><option value="3">结算</option></select></div></div>
+        <div class="layui-inline"><label class="layui-form-label">等级</label><div class="layui-input-inline"><select name="grade"><option value="">全部</option><option value="A">A</option><option value="B">B</option><option value="C">C</option></select></div></div>
+        <div class="layui-inline"><button type="button" class="layui-btn" id="btnSearch"><i class="layui-icon layui-icon-search"></i>查询</button><button type="reset" class="layui-btn layui-btn-primary" id="btnReset">重置</button></div>
+    </div></form></div>
+    <div class="app-toolbar" style="margin:10px 0;">
+        <button type="button" class="layui-btn" id="btnCreate"><i class="layui-icon layui-icon-add-1"></i>创建</button>
+    </div>
+    <div class="app-table"><table id="resultTable" lay-filter="resultTable"></table></div>
+    <div id="pagenation" class="app-pagenation"></div>
+
+    <div id="createBox" style="display:none; padding:20px;"><form class="layui-form" id="createForm">
+        <div class="layui-form-item"><label class="layui-form-label">名称<span class="app-req">*</span></label><div class="layui-input-block"><input type="text" name="name" class="layui-input" lay-verify="required"></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">等级<span class="app-req">*</span></label><div class="layui-input-block"><input type="radio" name="grade" value="A" title="A"><input type="radio" name="grade" value="B" title="B"><input type="radio" name="grade" value="C" title="C"></div></div>
+        <div class="layui-form-item app-form-footer"><button type="button" class="layui-btn" id="btnCreateConfirm">确定</button><button type="button" class="layui-btn layui-btn-primary" id="btnCreateCancel">取消</button></div>
+    </form></div>
+
+    <div id="updateBox" style="display:none; padding:20px;"><form class="layui-form" id="updateForm">
+        <input type="hidden" name="boid">
+        <div class="layui-form-item"><label class="layui-form-label">名称<span class="app-req">*</span></label><div class="layui-input-block"><input type="text" name="name" class="layui-input" lay-verify="required"></div></div>
+        <div class="layui-form-item app-form-footer"><button type="button" class="layui-btn" id="btnUpdateConfirm">确定</button><button type="button" class="layui-btn layui-btn-primary" id="btnUpdateCancel">取消</button></div>
+    </form></div>
+
+    <script type="text/html" id="rowToolbar">
+        <button class="layui-btn layui-btn-xs layui-btn-normal" lay-event="amount">汇总</button>
+        <button class="layui-btn layui-btn-xs" lay-event="detail">明细</button>
+        <button class="layui-btn layui-btn-xs layui-btn-warm" lay-event="update">更新</button>
+        <button class="layui-btn layui-btn-xs layui-btn-danger" lay-event="balance">结算</button>
+        <button class="layui-btn layui-btn-xs layui-btn-danger" lay-event="delete">删除</button>
+        <button class="layui-btn layui-btn-xs layui-btn-success" lay-event="lock">锁定</button>
+        <button class="layui-btn layui-btn-xs" lay-event="unlock">解锁</button>
+    </script>
+</div>
+<script src="../../layui/layui.js"></script><script src="../../js/app/config.js"></script><script src="../../js/app/server.js"></script><script src="../../js/app/utils.js"></script><script src="../../js/app/post.js"></script><script src="../../js/app/api.js"></script><script src="../../js/app/core.js"></script><script src="../../js/app/validate.js"></script><script src="../../js/app/bootstrap.js"></script><script src="../../js/balance/balanceOales.js"></script>
+</body></html>

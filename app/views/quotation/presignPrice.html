@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<!-- app/views/quotation/presignPrice.html —— 预签价格（弹窗页：按产品 ppid 管理面积区间价格，金额 tranargs） -->
+<html lang="zh-CN"><head><meta charset="utf-8"><title>预签价格</title>
+<link rel="stylesheet" href="../../layui/css/layui.css"><link rel="stylesheet" href="../../css/app.css"></head>
+<body><div class="app-page">
+    <div class="app-toolbar" style="padding:10px 15px;">
+        <button type="button" class="layui-btn layui-btn-sm" id="btnAdd"><i class="layui-icon layui-icon-add-1"></i>创建</button>
+        <button type="button" class="layui-btn layui-btn-sm layui-btn-normal" id="btnImport"><i class="layui-icon layui-icon-upload"></i>导入</button>
+    </div>
+    <div class="app-table" style="padding:0 15px;"><table id="resultTable" lay-filter="resultTable"></table></div>
+    <div id="pagenation"></div>
+    <script type="text/html" id="rowToolbar">
+        <button class="layui-btn layui-btn-xs" lay-event="edit">编辑</button>
+        <button class="layui-btn layui-btn-xs layui-btn-danger" lay-event="del">删除</button>
+        <button class="layui-btn layui-btn-xs {{ d.status == 0 ? '' : 'layui-btn-primary' }}" lay-event="status">{{ d.status == 0 ? '启用' : '禁用' }}</button>
+    </script>
+    <div id="editBox" style="display:none;padding:20px 30px;">
+        <div class="layui-form-item"><label class="layui-form-label">名称</label><div class="layui-input-inline"><input id="name" class="layui-input"></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">起始面积</label><div class="layui-input-inline"><input id="upperArea" class="layui-input"></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">终止面积</label><div class="layui-input-inline"><input id="lowerArea" class="layui-input"></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">价格</label><div class="layui-input-inline"><input id="price" class="layui-input"></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">工程成本</label><div class="layui-input-inline"><input id="costPrice" class="layui-input"></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">主材成本</label><div class="layui-input-inline"><input id="mostPrice" class="layui-input"></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">浮动额</label><div class="layui-input-inline"><input id="activityPrice" class="layui-input"></div></div>
+    </div>
+    <div id="importBox" style="display:none;padding:20px 30px;">
+        <div class="layui-form-item"><label class="layui-form-label">执行日期</label><div class="layui-input-inline"><input id="executeDates" class="layui-input" placeholder="yyyy-MM-dd" readonly></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">执行时间</label><div class="layui-input-inline"><input id="executeTimes" class="layui-input" placeholder="HH:mm" readonly></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">文件路径</label><div class="layui-input-inline" style="width:320px;"><input id="filePath" class="layui-input" placeholder="通过 系统上传(uploadType=3) 后粘贴文件路径"></div></div>
+    </div>
+</div>
+<script src="../../layui/layui.js"></script><script src="../../js/app/config.js"></script><script src="../../js/app/server.js"></script><script src="../../js/app/utils.js"></script><script src="../../js/app/post.js"></script><script src="../../js/app/api.js"></script><script src="../../js/app/core.js"></script><script src="../../js/app/validate.js"></script><script src="../../js/app/bootstrap.js"></script><script src="../../js/quotation/quotation-common.js"></script><script src="../../js/quotation/presignPrice.js"></script>
+</body></html>

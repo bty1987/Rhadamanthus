@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<!-- app/views/payment/payment4common.html —— 客户款项汇总（按装修单号查客户/装修单信息 + 预付款/装修款/销售款/服务款四张明细表，可配置打印）
+  上下文：app.params.orderId（可选，外部直接带入）或页面输入。打印跳转 payment2print。 -->
+<html lang="zh-CN"><head><meta charset="utf-8"><title>客户款项汇总</title>
+<link rel="stylesheet" href="../../layui/css/layui.css"><link rel="stylesheet" href="../../css/app.css"></head>
+<body><div class="app-page">
+    <div class="app-search"><form class="layui-form" id="searchForm"><div class="layui-form-item">
+        <div class="layui-inline" id="orderIdDiv"><label class="layui-form-label">装修单号</label><div class="layui-input-inline"><input class="layui-input" name="orderId" id="orderId" data-rule="required"></div></div>
+        <div class="layui-inline"><button type="button" class="layui-btn" id="btnSearch"><i class="layui-icon layui-icon-search"></i>查询</button><button type="button" class="layui-btn" id="btnPrint"><i class="layui-icon layui-icon-print"></i>打印配置</button><button type="button" class="layui-btn layui-btn-primary" id="btnBack"><i class="layui-icon layui-icon-return"></i>返回</button></div>
+    </div></form></div>
+    <div id="infolist"></div>
+    <fieldset class="layui-elem-field"><legend>预付款</legend><div class="app-table"><table id="advanceTable" lay-filter="advanceTable"></table></div></fieldset>
+    <fieldset class="layui-elem-field"><legend>装修款</legend><div class="app-table"><table id="decorationTable" lay-filter="decorationTable"></table></div></fieldset>
+    <fieldset class="layui-elem-field"><legend>销售款</legend><div class="app-table"><table id="salesTable" lay-filter="salesTable"></table></div></fieldset>
+    <fieldset class="layui-elem-field"><legend>服务款</legend><div class="app-table"><table id="serviceTable" lay-filter="serviceTable"></table></div></fieldset>
+</div>
+<script src="../../layui/layui.js"></script><script src="../../js/app/config.js"></script><script src="../../js/app/server.js"></script><script src="../../js/app/utils.js"></script><script src="../../js/app/post.js"></script><script src="../../js/app/api.js"></script><script src="../../js/app/core.js"></script><script src="../../js/app/validate.js"></script><script src="../../js/app/bootstrap.js"></script><script src="../../js/payment/payment4common.js"></script>
+</body></html>

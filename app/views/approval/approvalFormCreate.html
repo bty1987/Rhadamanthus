@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<!-- app/views/approval/approvalFormCreate.html —— 审批表单设计器（P2-P3 新引擎）
+  上下文：app.params.approvalForm = {formId}（编辑）或 null（新增）
+  左：控件库（基础8类 + 业务控件 queryProcessRefer）；中：表单预览；右：字段属性
+  保存：addApprovalForm/updateApprovalForm，嵌套 formFields[i].xxx -->
+<html lang="zh-CN">
+<head><meta charset="utf-8"><title>表单设计器</title>
+<link rel="stylesheet" href="../../layui/css/layui.css"><link rel="stylesheet" href="../../css/app.css"></head>
+<body>
+<div class="app-page">
+    <div class="app-form-card">
+        <form class="layui-form" id="formForm">
+            <div class="layui-form-item">
+                <label class="layui-form-label">表单编码<span class="app-req">*</span></label>
+                <div class="layui-input-inline"><input type="text" name="code" maxlength="64" placeholder="如 DECORATION_CONTRACT_FORM" class="layui-input v_required" lay-verify="required"></div>
+                <label class="layui-form-label">表单名称<span class="app-req">*</span></label>
+                <div class="layui-input-inline"><input type="text" name="name" maxlength="100" class="layui-input v_required" lay-verify="required"></div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">关联流程</label>
+                <div class="layui-input-inline"><select name="flowId"><option value="">不关联</option></select></div>
+                <label class="layui-form-label">说明</label>
+                <div class="layui-input-inline"><input type="text" name="comment" maxlength="255" class="layui-input"></div>
+            </div>
+        </form>
+    </div>
+
+    <div class="app-designer">
+        <div class="app-designer-col app-designer-lib">
+            <h5><i class="layui-icon layui-icon-template-1"></i> 基础控件</h5>
+            <div id="basicLib"></div>
+            <h5 style="margin-top:14px;"><i class="layui-icon layui-icon-component"></i> 业务控件</h5>
+            <div style="font-size:12px;color:#999;">字段键自动绑定业务字段</div>
+            <div id="bizLib"></div>
+        </div>
+        <div class="app-designer-col app-designer-preview">
+            <h5><i class="layui-icon layui-icon-face-smile"></i> 表单预览</h5>
+            <div style="font-size:12px;color:#999;">点击字段可编辑属性</div>
+            <div id="formPreview"></div>
+            <div id="notfield" class="layui-bg-gray" style="padding:30px;text-align:center;display:none;">从左侧控件库添加字段</div>
+        </div>
+        <div class="app-designer-col app-designer-prop">
+            <h5><i class="layui-icon layui-icon-set"></i> 字段属性</h5>
+            <div id="propEmpty" class="layui-bg-gray" style="padding:30px;text-align:center;">请先在中间区域选择一个字段</div>
+            <form class="layui-form" id="propForm" style="display:none;">
+                <input type="hidden" name="fieldIndex">
+                <div class="layui-form-item"><label class="layui-form-label">字段键<span class="app-req">*</span></label><div class="layui-input-block"><input type="text" name="fieldKey" maxlength="50" placeholder="英文标识,如 discountRate" class="layui-input"></div></div>
+                <div class="layui-form-item"><label class="layui-form-label">字段标签<span class="app-req">*</span></label><div class="layui-input-block"><input type="text" name="fieldLabel" maxlength="100" placeholder="中文显示,如 降点比例" class="layui-input"></div></div>
+                <div class="layui-form-item"><label class="layui-form-label">必填</label><div class="layui-input-block"><input type="checkbox" name="required" value="1" lay-skin="switch" lay-text="是|否"></div></div>
+                <div class="layui-form-item"><label class="layui-form-label">默认值</label><div class="layui-input-block"><input type="text" name="defaultValue" class="layui-input"></div></div>
+                <div class="layui-form-item"><label class="layui-form-label">下拉数据源</label><div class="layui-input-block"><input type="text" name="dataSource" placeholder="逗号分隔 或 beanClass#method" class="layui-input"></div></div>
+                <div class="layui-form-item"><label class="layui-form-label">验证规则</label><div class="layui-input-block"><input type="text" name="validateRule" placeholder="require,integer,float,phone" class="layui-input"></div></div>
+                <div class="layui-form-item app-form-footer"><button type="button" class="layui-btn" id="applyPropBtn">应用</button><button type="button" class="layui-btn layui-btn-danger" id="deleteFieldBtn">删除字段</button></div>
+            </form>
+        </div>
+    </div>
+
+    <div style="margin:14px 0;text-align:right;">
+        <button type="button" class="layui-btn" id="submitBtn"><i class="layui-icon layui-icon-ok"></i>保存表单</button>
+    </div>
+</div>
+
+<script src="../../layui/layui.js"></script><script src="../../js/app/config.js"></script><script src="../../js/app/server.js"></script><script src="../../js/app/utils.js"></script><script src="../../js/app/post.js"></script><script src="../../js/app/api.js"></script><script src="../../js/app/core.js"></script><script src="../../js/app/validate.js"></script><script src="../../js/app/bootstrap.js"></script><script src="../../js/approval/approvalFormCreate.js"></script>
+</body></html>

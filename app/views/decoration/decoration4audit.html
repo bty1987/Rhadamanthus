@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<!-- app/views/decoration/decoration4audit.html —— 装修单审核（pageDecorationAudit；操作：查看/扣款/信息轴/申请审核） -->
+<html lang="zh-CN"><head><meta charset="utf-8"><title>装修单审核</title>
+<link rel="stylesheet" href="../../layui/css/layui.css"><link rel="stylesheet" href="../../css/app.css"></head>
+<body><div class="app-page">
+    <div class="app-search"><form class="layui-form" id="searchForm"><div class="layui-form-item">
+        <div class="layui-inline"><label class="layui-form-label">装修单号</label><div class="layui-input-inline"><input name="decoration.orderId" data-op="eq" class="layui-input" placeholder="装修单号"></div></div>
+        <div class="layui-inline"><label class="layui-form-label">设计师</label><div class="layui-input-inline"><input name="decoration.designer.userId" data-op="eq" class="layui-input" placeholder="设计师编号"></div></div>
+        <div class="layui-inline"><label class="layui-form-label">订单状态</label><div class="layui-input-inline"><select name="decoration.status" data-op="eq"><option value="">全部</option><option value="0">初始</option><option value="1">定金</option><option value="2">预签</option><option value="3">签约</option><option value="4">重签</option><option value="5">废单</option><option value="6">终止</option><option value="7">决算</option><option value="8">完工</option></select></div></div>
+        <div class="layui-inline"><label class="layui-form-label">审核状态</label><div class="layui-input-inline"><select name="auditStatus" data-op="eq"><option value="">全部</option><option value="已审批">已审批</option><option value="未审批">未审批</option></select></div></div>
+        <div class="layui-inline"><label class="layui-form-label">审核时间</label><div class="layui-input-inline"><input name="auditTime" data-op="between" id="auditTime" class="layui-input" placeholder="起始 - 结束" readonly></div></div>
+        <div class="layui-inline"><button type="button" class="layui-btn" id="btnSearch"><i class="layui-icon layui-icon-search"></i>查询</button></div>
+    </div></form></div>
+    <div class="app-table"><table id="resultTable" lay-filter="resultTable"></table></div>
+    <div id="pagenation" class="app-pagenation"></div>
+    <script type="text/html" id="rowToolbar">
+        <button class="layui-btn layui-btn-xs" lay-event="view">查看</button>
+        <button class="layui-btn layui-btn-xs layui-btn-normal" lay-event="price">扣款</button>
+        <button class="layui-btn layui-btn-xs layui-btn-warm" lay-event="timeline">信息轴</button>
+        {{# if(!d.auditer){ }}}<button class="layui-btn layui-btn-xs layui-btn-danger" lay-event="apply">申请审核</button>{{# } }}
+    </script>
+</div>
+<script src="../../layui/layui.js"></script><script src="../../js/app/config.js"></script><script src="../../js/app/server.js"></script><script src="../../js/app/utils.js"></script><script src="../../js/app/post.js"></script><script src="../../js/app/api.js"></script><script src="../../js/app/core.js"></script><script src="../../js/app/validate.js"></script><script src="../../js/app/bootstrap.js"></script><script src="../../js/decoration/decoration-common.js"></script><script src="../../js/decoration/decoration4audit.js"></script>
+</body></html>

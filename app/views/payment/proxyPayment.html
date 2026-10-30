@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<!-- app/views/payment/proxyPayment.html —— 代收款（按名称/电话/状态筛选，创建代付款并收款/退款）
+  列：标题/名称/电话/地址/类型/应收/实收/状态。操作：创建代付款、收款、退款、批量确认。 -->
+<html lang="zh-CN"><head><meta charset="utf-8"><title>代收款</title>
+<link rel="stylesheet" href="../../layui/css/layui.css"><link rel="stylesheet" href="../../css/app.css"></head>
+<body><div class="app-page">
+    <div class="app-search"><form class="layui-form" id="searchForm"><div class="layui-form-item">
+        <div class="layui-inline"><label class="layui-form-label">名称</label><div class="layui-input-inline"><input class="layui-input" name="name" data-op="cn"></div></div>
+        <div class="layui-inline"><label class="layui-form-label">电话</label><div class="layui-input-inline"><input class="layui-input" name="phone" data-op="cn"></div></div>
+        <div class="layui-inline"><label class="layui-form-label">状态</label><div class="layui-input-inline"><select name="status"><option value="">全部</option><option value="0">初始</option><option value="1">已收款</option><option value="2">已退款</option><option value="3">已确认</option></select></div></div>
+        <div class="layui-inline"><button type="button" class="layui-btn" id="btnSearch"><i class="layui-icon layui-icon-search"></i>查询</button><button type="button" class="layui-btn" id="btnCreate"><i class="layui-icon layui-icon-add-1"></i>创建代付款</button><button type="button" class="layui-btn layui-btn-warm" id="btnConfirm"><i class="layui-icon layui-icon-ok"></i>批量确认</button><button type="button" class="layui-btn layui-btn-primary" id="btnBack"><i class="layui-icon layui-icon-return"></i>返回</button></div>
+    </div></form></div>
+    <div class="app-table"><table id="resultTable" lay-filter="resultTable"></table></div>
+    <div id="pagenation" class="app-pagenation"></div>
+    <script type="text/html" id="rowToolbar">
+        <button class="layui-btn layui-btn-xs" lay-event="collect">收款</button>
+        <button class="layui-btn layui-btn-xs layui-btn-danger" lay-event="refund">退款</button>
+    </script>
+</div>
+<script src="../../layui/layui.js"></script><script src="../../js/app/config.js"></script><script src="../../js/app/server.js"></script><script src="../../js/app/utils.js"></script><script src="../../js/app/post.js"></script><script src="../../js/app/api.js"></script><script src="../../js/app/core.js"></script><script src="../../js/app/validate.js"></script><script src="../../js/app/bootstrap.js"></script><script src="../../js/payment/proxyPayment.js"></script>
+</body></html>

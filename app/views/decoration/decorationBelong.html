@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<!-- app/views/decoration/decorationBelong.html —— 装修单归属变更（弹窗子页：设计/业务归属，加人/改比例/提审批）
+  上下文：app.params.decoration = { orderId, orderBelongType: 0设计|1业务 }。 -->
+<html lang="zh-CN"><head><meta charset="utf-8"><title>装修单归属变更</title>
+<link rel="stylesheet" href="../../layui/css/layui.css"><link rel="stylesheet" href="../../css/app.css"></head>
+<body><div class="app-page">
+    <div class="app-toolbar" style="padding:10px 15px 0;">
+        <span style="font-size:16px;font-weight:bold;">订单归属：<span id="orderIdLabel">-</span>（<span id="belongTypeLabel">设计归属</span>）</span>
+        <button type="button" class="layui-btn layui-btn-sm" id="btnAddUser" style="margin-left:15px;"><i class="layui-icon layui-icon-add-1"></i>添加归属人</button>
+        <button type="button" class="layui-btn layui-btn-sm layui-btn-normal" id="btnApply"><i class="layui-icon layui-icon-survey"></i>提交审批</button>
+    </div>
+    <div class="app-table" style="padding:10px 15px;"><table id="belongTable" lay-filter="belongTable"></table></div>
+    <script type="text/html" id="rowToolbar">
+        <button class="layui-btn layui-btn-xs" lay-event="edit">修改</button>
+        <button class="layui-btn layui-btn-xs layui-btn-danger" lay-event="del">删除</button>
+    </script>
+
+    <div id="addUserBox" style="display:none;padding:20px 25px;">
+        <form class="layui-form" id="addUserForm">
+            <div class="layui-form-item"><label class="layui-form-label">归属人</label><div class="layui-input-inline"><select name="userId" id="userId" lay-search=""><option value="">请选择员工</option></select></div></div>
+            <div class="layui-form-item"><label class="layui-form-label">部门</label><div class="layui-input-inline"><input class="layui-input" id="deptName" disabled placeholder="按归属人自动带出"></div></div>
+            <div class="layui-form-item"><label class="layui-form-label">大区</label><div class="layui-input-inline"><input class="layui-input" id="regionName" disabled placeholder="按归属人自动带出"></div></div>
+            <div class="layui-form-item"><label class="layui-form-label">分配比例</label><div class="layui-input-inline"><input class="layui-input" id="belongRate" placeholder="0-1 之间的小数"></div></div>
+            <div class="layui-form-item"><label class="layui-form-label">默认归属</label><div class="layui-input-inline"><input type="checkbox" id="defaultFlag" lay-skin="switch" lay-text="是|否"></div></div>
+        </form>
+    </div>
+
+    <div id="approveBox" style="display:none;padding:20px 25px;">
+        <form class="layui-form" id="approveForm">
+            <div class="layui-form-item"><label class="layui-form-label">变更原因</label><div class="layui-input-inline" style="width:320px;"><textarea id="changeReason" maxlength="128" class="layui-textarea" placeholder="请输入变更原因"></textarea></div></div>
+            <div class="layui-form-item"><label class="layui-form-label">审批人</label><div class="layui-input-inline"><select id="approveMan" lay-search=""><option value="">请选择审批人</option></select></div></div>
+        </form>
+    </div>
+</div>
+<script src="../../layui/layui.js"></script><script src="../../js/app/config.js"></script><script src="../../js/app/server.js"></script><script src="../../js/app/utils.js"></script><script src="../../js/app/post.js"></script><script src="../../js/app/api.js"></script><script src="../../js/app/core.js"></script><script src="../../js/app/validate.js"></script><script src="../../js/app/bootstrap.js"></script><script src="../../js/decoration/decoration-common.js"></script><script src="../../js/decoration/decorationBelong.js"></script>
+</body></html>

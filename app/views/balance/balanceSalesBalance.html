@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<!-- app/views/balance/balanceSalesBalance.html —— 结算销售明细（弹窗子页：销售单明细 + 全选/解绑/打印/导出）
+  上下文：app.params.balance.bsid
+  balanceSales.status 判定是否允许解绑（仅 status=0初始）。 -->
+<html lang="zh-CN"><head><meta charset="utf-8"><title>结算销售明细</title>
+<link rel="stylesheet" href="../../layui/css/layui.css"><link rel="stylesheet" href="../../css/app.css"></head>
+<body><div class="app-page">
+    <div class="app-toolbar" style="margin:10px 0;">
+        <button type="button" class="layui-btn" id="btnDetailPrint"><i class="layui-icon layui-icon-print"></i>明细打印</button>
+        <button type="button" class="layui-btn layui-btn-normal" id="btnProfitPrint"><i class="layui-icon layui-icon-print"></i>利润打印</button>
+        <button type="button" class="layui-btn layui-btn-warm" id="btnExport"><i class="layui-icon layui-icon-export"></i>导出</button>
+        <button type="button" class="layui-btn" id="btnCheckAll"><i class="layui-icon layui-icon-table"></i>全选</button>
+        <button type="button" class="layui-btn layui-btn-danger" id="btnUnbind"><i class="layui-icon layui-icon-delete"></i>解绑</button>
+    </div>
+    <div class="app-table"><table id="resultTable" lay-filter="resultTable"></table></div>
+    <div id="pagenation" class="app-pagenation"></div>
+</div>
+<script src="../../layui/layui.js"></script><script src="../../js/app/config.js"></script><script src="../../js/app/server.js"></script><script src="../../js/app/utils.js"></script><script src="../../js/app/post.js"></script><script src="../../js/app/api.js"></script><script src="../../js/app/core.js"></script><script src="../../js/app/<script src="../../js/app/exporter.js"></script>bootstrap.js"></script><script src="../../js/balance/balanceSalesBalance.js"></script>
+</body></html>

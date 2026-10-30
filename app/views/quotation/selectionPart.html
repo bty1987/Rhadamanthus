@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<!-- app/views/quotation/selectionPart.html —— 选材单编辑（头信息+锁定/解锁/重置/发送/保存；项列表 数量编辑/删除/添加选材项）
+  上下文：app.params.quotation = { orderId, selection }。 -->
+<html lang="zh-CN"><head><meta charset="utf-8"><title>选材单编辑</title>
+<link rel="stylesheet" href="../../layui/css/layui.css"><link rel="stylesheet" href="../../css/app.css"></head>
+<body><div class="app-page">
+    <div class="app-toolbar" style="padding:10px 15px;">
+        <span style="font-size:16px;font-weight:bold;">选材单编辑<span id="orderIdLabel"></span></span>
+        <button type="button" class="layui-btn layui-btn-sm" id="btnAddItem"><i class="layui-icon layui-icon-add-1"></i>添加选材项</button>
+        <button type="button" class="layui-btn layui-btn-sm layui-btn-normal" id="btnSave"><i class="layui-icon layui-icon-ok"></i>保存</button>
+        <button type="button" class="layui-btn layui-btn-sm layui-btn-warm" id="btnSend"><i class="layui-icon layui-icon-send"></i>发送</button>
+        <button type="button" class="layui-btn layui-btn-sm layui-btn-warm" id="btnLock"><i class="layui-icon layui-icon-password"></i>锁定</button>
+        <button type="button" class="layui-btn layui-btn-sm layui-btn-normal" id="btnUnlock"><i class="layui-icon layui-icon-key"></i>解锁</button>
+        <button type="button" class="layui-btn layui-btn-sm layui-btn-danger" id="btnReset"><i class="layui-icon layui-icon-refresh"></i>重置</button>
+        <button type="button" class="layui-btn layui-btn-sm layui-btn-primary" id="btnBack"><i class="layui-icon layui-icon-return"></i>返回</button>
+    </div>
+    <div style="padding:0 15px 10px;">
+        <blockquote class="layui-elem-quote" style="padding:8px 15px;">
+            总额:<span id="total">-</span> ｜ 报价总额:<span id="quotationTotal">-</span> ｜ 拓展增总额:<span id="extensionAddTotal">-</span> ｜ 拓展减总额:<span id="extensionReduceTotal">-</span>
+            ｜ 增减增总额:<span id="addReduceAddTotal">-</span> ｜ 增减减总额:<span id="addReduceMinusTotal">-</span> ｜ 状态:<span id="statusLabel">-</span>
+        </blockquote>
+    </div>
+    <div class="app-table" style="padding:0 15px;"><table id="resultTable" lay-filter="resultTable"></table></div>
+    <script type="text/html" id="rowToolbar">
+        <button class="layui-btn layui-btn-xs" lay-event="editNum">数量</button>
+        <button class="layui-btn layui-btn-xs layui-btn-danger" lay-event="del">删除</button>
+    </script>
+    <div id="numBox" style="display:none;padding:20px 40px;">
+        <div class="layui-form-item"><label class="layui-form-label">数量</label><div class="layui-input-inline"><input id="numInput" class="layui-input" placeholder="数量"></div></div>
+    </div>
+    <div id="addItemBox" style="display:none;padding:20px 30px;">
+        <div class="layui-form-item"><label class="layui-form-label">货品编号</label><div class="layui-input-inline"><input id="gid" class="layui-input" placeholder="goods gid"></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">结算价</label><div class="layui-input-inline"><input id="postprice" class="layui-input" placeholder="结算价"></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">数量</label><div class="layui-input-inline"><input id="num" class="layui-input" value="1"></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">类型</label><div class="layui-input-inline"><select id="selType"><option value="5">选材项</option><option value="0">报价项</option></select></div></div>
+    </div>
+</div>
+<script src="../../layui/layui.js"></script><script src="../../js/app/config.js"></script><script src="../../js/app/server.js"></script><script src="../../js/app/utils.js"></script><script src="../../js/app/post.js"></script><script src="../../js/app/api.js"></script><script src="../../js/app/core.js"></script><script src="../../js/app/validate.js"></script><script src="../../js/app/bootstrap.js"></script><script src="../../js/quotation/quotation-common.js"></script><script src="../../js/quotation/selectionPart.js"></script>
+</body></html>

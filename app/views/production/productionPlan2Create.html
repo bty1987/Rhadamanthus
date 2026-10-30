@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<!-- app/views/production/productionPlan2Create.html —— 生产单下的生产计划（创建/子项/进度/完结）
+  上下文：app.params.productionPlanCreate = {pid, status} -->
+<html lang="zh-CN"><head><meta charset="utf-8"><title>生产计划管理</title>
+<link rel="stylesheet" href="../../layui/css/layui.css"><link rel="stylesheet" href="../../css/app.css"></head>
+<body><div class="app-page">
+    <div style="padding:10px 15px;"><button type="button" class="layui-btn layui-btn-normal" id="btnAdd"><i class="layui-icon layui-icon-add-1"></i>创建生产计划</button> <button type="button" class="layui-btn layui-btn-primary" id="btnBack">返回</button></div>
+    <div class="app-table"><table id="resultTable" lay-filter="resultTable"></table></div>
+    <script type="text/html" id="rowToolbar">
+        <button class="layui-btn layui-btn-xs" lay-event="item">子项</button>
+        <button class="layui-btn layui-btn-xs" lay-event="progress">生产进度</button>
+        <button class="layui-btn layui-btn-xs" lay-event="finish">完结</button>
+    </script>
+
+    <div id="createBox" style="display:none; padding:20px;"><form class="layui-form" id="createForm">
+        <div class="layui-form-item"><label class="layui-form-label">工期<span class="app-req">*</span></label><div class="layui-input-inline"><input type="text" name="timeLimit" placeholder="工期(天)" class="layui-input v_number" lay-verify="required"></div></div>
+        <div class="layui-form-item app-form-footer"><button type="button" class="layui-btn" id="btnCreateOk">保存</button><button type="reset" class="layui-btn layui-btn-primary" id="btnCreateCancel">取消</button></div>
+    </form></div>
+
+    <div id="finishBox" style="display:none; padding:20px;"><form class="layui-form" id="finishForm">
+        <input type="hidden" name="ppid">
+        <div class="layui-form-item"><label class="layui-form-label">数量<span class="app-req">*</span></label><div class="layui-input-inline"><input type="text" name="num" placeholder="数量" class="layui-input v_number" lay-verify="required"></div></div>
+        <div class="layui-form-item app-form-footer"><button type="button" class="layui-btn" id="btnFinishOk">确定</button><button type="reset" class="layui-btn layui-btn-primary" id="btnFinishCancel">取消</button></div>
+    </form></div>
+</div>
+<script src="../../layui/layui.js"></script><script src="../../js/app/config.js"></script><script src="../../js/app/server.js"></script><script src="../../js/app/utils.js"></script><script src="../../js/app/post.js"></script><script src="../../js/app/api.js"></script><script src="../../js/app/core.js"></script><script src="../../js/app/validate.js"></script><script src="../../js/app/bootstrap.js"></script><script src="../../js/production/productionPlan2Create.js"></script>
+</body></html>

@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<!-- app/views/contract/C-001-F-0-0001.html —— 厂商基装合同（模板表单页，personel 上下文）
+  上下文：app.params.personel = { contractargs:{scid,cid,type}, uid, supplier? }，app.params.ucid。
+  type: 1=非配送 2=配送 3=其他（insure 段隐藏）。 -->
+<html lang="zh-CN"><head><meta charset="utf-8"><title>厂商基装合同</title>
+<link rel="stylesheet" href="../../layui/css/layui.css"><link rel="stylesheet" href="../../css/app.css"></head>
+<body><div class="app-page" style="max-width:1020px;margin:0 auto;">
+    <blockquote class="layui-elem-quote layui-quote-nm" style="margin-bottom:10px;">* 橙色标记为必填信息。</blockquote>
+    <form class="layui-form" id="form">
+        <fieldset class="layui-elem-field"><legend>甲方信息</legend><div class="layui-field-box">
+            <div class="layui-form-item" style="display:none;">
+                <div class="layui-inline"><label class="layui-form-label">协议编号</label><div class="layui-input-inline"><input class="layui-input conitem" id="cov-company-no" value="111"></div></div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-inline customer"><label class="layui-form-label">甲方<i class="app-req">*</i></label><div class="layui-input-inline"><input class="layui-input conitem v_required" id="con-company-name" maxlength="32" value="111"></div></div>
+                <div class="layui-inline"><label class="layui-form-label">住所地<i class="app-req">*</i></label><div class="layui-input-inline"><input class="layui-input conitem v_required" id="con-company-addr" value="111"></div></div>
+                <div class="layui-inline"><label class="layui-form-label">法定代表人<i class="app-req">*</i></label><div class="layui-input-inline"><input class="layui-input conitem v_required" id="con-company-legal" value="111"></div></div>
+                <div class="layui-inline"><label class="layui-form-label">联系电话<i class="app-req">*</i></label><div class="layui-input-inline"><input class="layui-input conitem v_required" id="con-company-phone" value="111"></div></div>
+                <div class="layui-inline"><label class="layui-form-label">邮箱<i class="app-req">*</i></label><div class="layui-input-inline"><input class="layui-input conitem v_required" id="con-company-email" value="111"></div></div>
+            </div>
+        </div></fieldset>
+
+        <fieldset class="layui-elem-field company"><legend>乙方信息</legend><div class="layui-field-box">
+            <div class="layui-form-item">
+                <div class="layui-inline customer"><label class="layui-form-label">乙方<i class="app-req">*</i></label><div class="layui-input-inline"><input class="layui-input conitem v_required" id="con-supplier-name" maxlength="32" value="111"></div></div>
+                <div class="layui-inline"><label class="layui-form-label">住所地<i class="app-req">*</i></label><div class="layui-input-inline"><input class="layui-input conitem v_required" id="con-supplier-addr" value="111"></div></div>
+                <div class="layui-inline"><label class="layui-form-label">法定代表人<i class="app-req">*</i></label><div class="layui-input-inline"><input class="layui-input conitem v_required" id="con-supplier-legal" value="111"></div></div>
+                <div class="layui-inline"><label class="layui-form-label">联系电话<i class="app-req">*</i></label><div class="layui-input-inline"><input class="layui-input conitem v_required" id="con-supplier-phone" value="111"></div></div>
+                <div class="layui-inline"><label class="layui-form-label">邮箱<i class="app-req">*</i></label><div class="layui-input-inline"><input class="layui-input conitem v_required" id="con-supplier-email" value="111"></div></div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-inline"><label class="layui-form-label">合作起始时间</label><div class="layui-input-inline"><input class="layui-input" id="con-term-start-date" readonly></div></div>
+                <div class="layui-inline"><label class="layui-form-label">合作结束时间</label><div class="layui-input-inline"><input class="layui-input" id="con-term-end-date" readonly></div></div>
+                <div class="layui-inline"><label class="layui-form-label">合作费<i class="app-req">*</i></label><div class="layui-input-inline"><input class="layui-input conitem v_required" id="con-cooperation-amount-undis" value="111"></div></div>
+                <div class="layui-inline"><label class="layui-form-label">生效所需时间<i class="app-req">*</i></label><div class="layui-input-inline"><input class="layui-input conitem v_required" id="con-work-number" value="111"></div></div>
+            </div>
+        </div></fieldset>
+
+        <fieldset class="layui-elem-field company"><legend>商场与服务费</legend><div class="layui-field-box">
+            <div class="layui-form-item">
+                <div class="layui-inline"><label class="layui-form-label">商场编号<i class="app-req">*</i></label><div class="layui-input-inline"><input class="layui-input conitem v_required" id="con-mall-no" value="111"></div></div>
+                <div class="layui-inline"><label class="layui-form-label">商场位置<i class="app-req">*</i></label><div class="layui-input-inline"><input class="layui-input conitem v_required" id="con-mall-addr" value="111"></div></div>
+                <div class="layui-inline"><label class="layui-form-label">商场面积<i class="app-req">*</i></label><div class="layui-input-inline"><input class="layui-input conitem v_required" id="con-mall-area" value="111"></div></div>
+                <div class="layui-inline"><label class="layui-form-label">场地租赁费<i class="app-req">*</i></label><div class="layui-input-inline"><input class="layui-input conitem v_required" id="con-venue-rental-fee" value="111"></div></div>
+                <div class="layui-inline"><label class="layui-form-label">商业支持费(%)<i class="app-req">*</i></label><div class="layui-input-inline"><input class="layui-input conitem v_required" id="con-commercial-support-fee" value="111"></div></div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-inline firstPaymentGroup"><label class="layui-form-label">超额服务费支付方式<i class="app-req">*</i></label><div class="layui-input-inline"><input class="layui-input conitem v_required" id="con-brand-liquidated-damages" value="111"></div></div>
+                <div class="layui-inline thridPaymentGroup"><label class="layui-form-label">年度正价产品总结款额<i class="app-req">*</i></label><div class="layui-input-inline"><input class="layui-input conitem v_required" id="con-regular-settlement-amount" value="111"></div></div>
+                <div class="layui-inline thridPaymentGroup"><label class="layui-form-label">收取总结款额<i class="app-req">*</i></label><div class="layui-input-inline"><input class="layui-input conitem v_required" id="con-settlement-amount" value="111"></div></div>
+                <div class="layui-inline finalPaymentGroup"><label class="layui-form-label">正价服务费<i class="app-req">*</i></label><div class="layui-input-inline"><input class="layui-input conitem v_required" id="con-regular-product-service-fee2" value="111"></div></div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-inline"><label class="layui-form-label">年度销售额低于<i class="app-req">*</i></label><div class="layui-input-inline"><input class="layui-input conitem v_required" id="con-annual-sales-below" value="111"></div></div>
+                <div class="layui-inline"><label class="layui-form-label">超额服务费<i class="app-req">*</i></label><div class="layui-input-inline"><input class="layui-input conitem v_required" id="con-excess-service-fee" value="111"></div></div>
+                <div class="layui-inline"><label class="layui-form-label">未完成超额部分<i class="app-req">*</i></label><div class="layui-input-inline"><input class="layui-input conitem v_required" id="con-unfinished-excess-portion" value="111"></div></div>
+                <div class="layui-inline"><label class="layui-form-label">正价占比<i class="app-req">*</i></label><div class="layui-input-inline"><input class="layui-input conitem v_required" id="con-regular-price-proportion" value="111"></div></div>
+                <div class="layui-inline"><label class="layui-form-label">特价占比<i class="app-req">*</i></label><div class="layui-input-inline"><input class="layui-input conitem v_required" id="con-special-proportion" value="111"></div></div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-inline"><label class="layui-form-label">商家一<i class="app-req">*</i></label><div class="layui-input-inline"><input class="layui-input conitem v_required" id="con-experience-hall-1" value="111"></div></div>
+                <div class="layui-inline"><label class="layui-form-label">商家二<i class="app-req">*</i></label><div class="layui-input-inline"><input class="layui-input conitem v_required" id="con-experience-hall-2" value="111"></div></div>
+                <div class="layui-inline"><label class="layui-form-label">商家三<i class="app-req">*</i></label><div class="layui-input-inline"><input class="layui-input conitem v_required" id="con-experience-hall-3" value="111"></div></div>
+                <div class="layui-inline"><label class="layui-form-label">几家体验馆<i class="app-req">*</i></label><div class="layui-input-inline"><input class="layui-input conitem v_required" id="con-experience-hall-sum" value="111"></div></div>
+                <div class="layui-inline hide"><label class="layui-form-label">违约金</label><div class="layui-input-inline"><input class="layui-input conitem" id="con-experience-hall-breakpay" value="111"></div></div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-inline"><label class="layui-form-label">常规产品服务费备注</label><div class="layui-input-inline" style="width:420px;"><textarea class="layui-textarea conitem" id="con-experience-hall-notes" maxlength="128"></textarea></div></div>
+                <div class="layui-inline"><label class="layui-form-label">特价产品服务费备注</label><div class="layui-input-inline" style="width:420px;"><textarea class="layui-textarea conitem" id="con-experience-special-notes" maxlength="128"></textarea></div></div>
+                <div class="layui-inline"><label class="layui-form-label">专供产品服务费备注</label><div class="layui-input-inline" style="width:420px;"><textarea class="layui-textarea conitem" id="con-experience-oem-notes" maxlength="128"></textarea></div></div>
+            </div>
+        </div></fieldset>
+
+        <fieldset class="layui-elem-field company"><legend>保证金</legend><div class="layui-field-box">
+            <div class="layui-form-item">
+                <div class="layui-inline"><label class="layui-form-label">保证金品类</label><div class="layui-input-inline"><input class="layui-input conitem" id="con-bond-price-category" value="111"></div></div>
+                <div class="layui-inline"><label class="layui-form-label">保证金</label><div class="layui-input-inline"><input class="layui-input conitem" id="con-bond-price" value="111"></div></div>
+                <div class="layui-inline"><label class="layui-form-label">销售额乘以5%大于</label><div class="layui-input-inline"><input class="layui-input conitem" id="con-sales-volume" value="111"></div></div>
+                <div class="layui-inline"><label class="layui-form-label">销售额乘以5%小于</label><div class="layui-input-inline"><input class="layui-input conitem" id="con-sales-volume1" value="111"></div></div>
+                <div class="layui-inline"><label class="layui-form-label">扣除</label><div class="layui-input-inline"><input class="layui-input conitem" id="con-sales-volume2" value="111"></div></div>
+            </div>
+        </div></fieldset>
+
+        <fieldset class="layui-elem-field company"><legend>结算条件</legend><div class="layui-field-box">
+            <div class="layui-form-item">
+                <div class="layui-inline"><label class="layui-form-label">乙方提交结算申请前提条件</label><div class="layui-input-inline" style="width:420px;"><input class="layui-input conitem" id="con-settlement-conditions" value="111"></div></div>
+            </div>
+        </div></fieldset>
+
+        <fieldset class="layui-elem-field company"><legend>甲方收款账户</legend><div class="layui-field-box">
+            <div class="layui-form-item">
+                <div class="layui-inline"><label class="layui-form-label">账户名称<i class="app-req">*</i></label><div class="layui-input-inline"><input class="layui-input conitem v_required" id="con-company-bank-name" value="111"></div></div>
+                <div class="layui-inline"><label class="layui-form-label">开户名称<i class="app-req">*</i></label><div class="layui-input-inline"><input class="layui-input conitem v_required" id="con-company-bank" value="111"></div></div>
+                <div class="layui-inline"><label class="layui-form-label">开户行账号<i class="app-req">*</i></label><div class="layui-input-inline"><input class="layui-input conitem v_required" id="con-company-bank-no" value="111"></div></div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-inline"><label class="layui-form-label">账户名称<i class="app-req">*</i></label><div class="layui-input-inline"><input class="layui-input conitem v_required" id="con-company-abank-name" value="111"></div></div>
+                <div class="layui-inline"><label class="layui-form-label">开户名称<i class="app-req">*</i></label><div class="layui-input-inline"><input class="layui-input conitem v_required" id="con-company-abank" value="111"></div></div>
+                <div class="layui-inline"><label class="layui-form-label">开户行账号<i class="app-req">*</i></label><div class="layui-input-inline"><input class="layui-input conitem v_required" id="con-company-abank-no" value="111"></div></div>
+            </div>
+        </div></fieldset>
+
+        <fieldset class="layui-elem-field company"><legend>乙方收款账户信息</legend><div class="layui-field-box">
+            <div class="layui-form-item">
+                <div class="layui-inline"><label class="layui-form-label">账户名称<i class="app-req">*</i></label><div class="layui-input-inline"><input class="layui-input conitem v_required" id="con-supplier-bank-name" value="111"></div></div>
+                <div class="layui-inline"><label class="layui-form-label">纳税人识别号<i class="app-req">*</i></label><div class="layui-input-inline"><input class="layui-input conitem v_required" id="con-supplier-bank-ident" value="111"></div></div>
+                <div class="layui-inline"><label class="layui-form-label">开户行<i class="app-req">*</i></label><div class="layui-input-inline"><input class="layui-input conitem v_required" id="con-supplier-bank" value="111"></div></div>
+                <div class="layui-inline"><label class="layui-form-label">账号<i class="app-req">*</i></label><div class="layui-input-inline"><input class="layui-input conitem v_required" id="con-supplier-bank-no" value="111"></div></div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-inline"><label class="layui-form-label">服务费备注</label><div class="layui-input-inline" style="width:560px;"><textarea class="layui-textarea conitem" id="con-service-price-comment" maxlength="512"></textarea></div></div>
+            </div>
+        </div></fieldset>
+
+        <fieldset class="layui-elem-field company"><legend>备注</legend><div class="layui-field-box">
+            <div class="layui-form-item">
+                <div class="layui-inline"><label class="layui-form-label">附加条款</label><div class="layui-input-inline" style="width:560px;"><textarea class="layui-textarea conitem" id="con-addtion-content" maxlength="512"></textarea></div></div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-inline"><label class="layui-form-label">服务费备注</label><div class="layui-input-inline" style="width:560px;"><textarea class="layui-textarea conitem" id="con-service-price-comment-2" maxlength="512"></textarea></div></div>
+            </div>
+        </div></fieldset>
+
+        <div class="layui-form-item" style="text-align:center;padding:10px 0;">
+            <button type="button" class="layui-btn" id="preservation"><i class="layui-icon layui-icon-ok"></i>保存合同</button>
+            <button type="button" class="layui-btn layui-btn-primary" id="btnClose">关闭</button>
+        </div>
+    </form>
+</div>
+<script src="../../layui/layui.js"></script><script src="../../js/app/config.js"></script><script src="../../js/app/server.js"></script><script src="../../js/app/utils.js"></script><script src="../../js/app/post.js"></script><script src="../../js/app/api.js"></script><script src="../../js/app/core.js"></script><script src="../../js/app/validate.js"></script><script src="../../js/app/bootstrap.js"></script><script src="../../js/contract/contract-common.js"></script><script src="../../js/contract/C-001-F-0-0001.js"></script>
+</body></html>

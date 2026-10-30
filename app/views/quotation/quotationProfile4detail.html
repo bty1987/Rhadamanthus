@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<!-- app/views/quotation/quotationProfile4detail.html —— 报价画像详情（弹窗页：表单项 文本/输入框/单选/多选/日期；handleQuotationProfile 保存；
+  标签(4)/增减项(5)独立模板，其他复用交接模板）
+  上下文：app.params.quotation = { qpid 或 (orderId+qid+type) }。 -->
+<html lang="zh-CN"><head><meta charset="utf-8"><title>报价画像详情</title>
+<link rel="stylesheet" href="../../layui/css/layui.css"><link rel="stylesheet" href="../../css/app.css"></head>
+<body><div class="app-page">
+    <div class="app-toolbar" style="padding:10px 15px;">
+        <span style="font-size:16px;font-weight:bold;">画像：<span id="profileName">-</span></span>
+        <button type="button" class="layui-btn layui-btn-sm layui-btn-normal" id="btnExecute"><i class="layui-icon layui-icon-ok"></i>保存</button>
+        <button type="button" class="layui-btn layui-btn-sm layui-btn-primary" id="btnBack"><i class="layui-icon layui-icon-return"></i>返回</button>
+    </div>
+    <div class="layui-form" lay-filter="profileForm" id="itemlist" style="padding:10px 25px;max-height:70vh;overflow:auto;"></div>
+    <div style="padding:5px 25px;color:#999;" id="profileTitle"></div>
+</div>
+<script src="../../layui/layui.js"></script><script src="../../js/app/config.js"></script><script src="../../js/app/server.js"></script><script src="../../js/app/utils.js"></script><script src="../../js/app/post.js"></script><script src="../../js/app/api.js"></script><script src="../../js/app/core.js"></script><script src="../../js/app/validate.js"></script><script src="../../js/app/bootstrap.js"></script><script src="../../js/quotation/quotation-common.js"></script><script src="../../js/quotation/quotationProfile4detail.js"></script>
+</body></html>

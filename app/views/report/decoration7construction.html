@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<!-- app/views/report/decoration7construction.html —— 装修施工报表（公司维度：历年签单/百分比/各工种节点/设计节点/定金/合计）含更新与导出 -->
+<html lang="zh-CN"><head><meta charset="utf-8"><title>装修施工报表</title>
+<link rel="stylesheet" href="../../layui/css/layui.css"><link rel="stylesheet" href="../../css/app.css"></head>
+<body><div class="app-page">
+    <div class="app-toolbar" style="margin:10px 0;">
+        <button type="button" class="layui-btn layui-btn-normal" id="btnUpdate"><i class="layui-icon layui-icon-refresh"></i>更新</button>
+        <button type="button" class="layui-btn layui-btn-warm" id="btnExport"><i class="layui-icon layui-icon-export"></i>导出</button>
+        <button type="button" class="layui-btn" id="btnSearch"><i class="layui-icon layui-icon-search"></i>查询</button>
+    </div>
+    <div class="app-table"><table id="resultTable" lay-filter="resultTable"></table></div>
+    <div id="pagenation" class="app-pagenation"></div>
+</div>
+<script src="../../layui/layui.js"></script><script src="../../js/app/config.js"></script><script src="../../js/app/server.js"></script><script src="../../js/app/utils.js"></script><script src="../../js/app/post.js"></script><script src="../../js/app/api.js"></script><script src="../../js/app/core.js"></script><script src="../../js/app/validate.js"></script><script src="../../js/app/bootstrap.js"></script><script src="../../js/report/decoration7construction.js"></script>
+</body></html>

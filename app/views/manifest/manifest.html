@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<!-- app/views/manifest/manifest.html —— 货单管理（列表 + 查看/修改/确认/进退/出返/导出/打印）
+  字段：code creater createTime manifestTime status type comment -->
+<html lang="zh-CN">
+<head><meta charset="utf-8"><title>货单管理</title>
+<link rel="stylesheet" href="../../layui/css/layui.css"><link rel="stylesheet" href="../../css/app.css"></head>
+<body>
+<div class="app-page">
+    <div class="app-search"><form class="layui-form" id="searchForm"><div class="layui-form-item">
+        <div class="layui-inline"><label class="layui-form-label">货单号</label><div class="layui-input-inline"><input type="text" name="code" data-op="cn" placeholder="货单编号" class="layui-input" autocomplete="off"></div></div>
+        <div class="layui-inline"><label class="layui-form-label">类型</label><div class="layui-input-inline"><select name="type" data-op="eq"><option value="">全部</option><option value="1">进货</option><option value="2">进退</option><option value="3">出货</option><option value="4">出返</option><option value="5">调拨</option><option value="6">采购</option><option value="7">辅料</option><option value="8">辅退</option></select></div></div>
+        <div class="layui-inline"><label class="layui-form-label">状态</label><div class="layui-input-inline"><select name="status" data-op="eq"><option value="">全部</option><option value="0">初始</option><option value="1">已确认</option></select></div></div>
+        <div class="layui-inline"><button type="button" class="layui-btn" id="btnSearch"><i class="layui-icon layui-icon-search"></i>查询</button><button type="reset" class="layui-btn layui-btn-primary" id="btnReset">重置</button></div>
+    </div></form></div>
+    <div class="app-table"><table id="resultTable" lay-filter="resultTable"></table></div>
+    <div id="pagenation" class="app-pagenation"></div>
+    <script type="text/html" id="rowToolbar">
+        <button class="layui-btn layui-btn-xs" lay-event="view">查看</button>
+        <button class="layui-btn layui-btn-xs layui-btn-normal" lay-event="edit">修改</button>
+        <button class="layui-btn layui-btn-xs layui-btn-success" lay-event="confirm">确认</button>
+        <button class="layui-btn layui-btn-xs layui-btn-warm" lay-event="cr">进退</button>
+        <button class="layui-btn layui-btn-xs layui-btn-warm" lay-event="xb">出返</button>
+        <button class="layui-btn layui-btn-xs layui-btn-danger" lay-event="print">打印</button>
+    </script>
+</div>
+<script src="../../layui/layui.js"></script><script src="../../js/app/config.js"></script><script src="../../js/app/server.js"></script><script src="../../js/app/utils.js"></script><script src="../../js/app/post.js"></script><script src="../../js/app/api.js"></script><script src="../../js/app/core.js"></script><script src="../../js/app/validate.js"></script><script src="../../js/app/bootstrap.js"></script><script src="../../js/manifest/manifest.js"></script>
+</body></html>

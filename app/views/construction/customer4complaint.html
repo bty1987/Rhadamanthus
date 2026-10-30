@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<!-- app/views/construction/customer4complaint.html —— 客服投诉（订单维度 CRUD + 处理）
+  上下文：app.params.construction = { orderId, customerName }。 -->
+<html lang="zh-CN"><head><meta charset="utf-8"><title>客服投诉</title>
+<link rel="stylesheet" href="../../layui/css/layui.css"><link rel="stylesheet" href="../../css/app.css"></head>
+<body><div class="app-page">
+    <div class="app-toolbar" style="padding:10px 15px 0;">
+        <span style="font-size:16px;font-weight:bold;">客服控制 / 投诉</span>
+        <button type="button" class="layui-btn layui-btn-sm" id="btnAdd"><i class="layui-icon layui-icon-add-1"></i>添加</button>
+    </div>
+    <div class="app-table" style="margin-top:10px;"><table id="resultTable" lay-filter="resultTable"></table></div>
+    <div id="pagenation" class="app-pagenation"></div>
+    <script type="text/html" id="rowToolbar"></script>
+
+    <div id="complaintBox" style="display:none;padding:20px 30px;">
+        <form class="layui-form" id="complaintForm">
+            <div class="layui-form-item"><label class="layui-form-label">装修单号</label><div class="layui-input-inline"><input class="layui-input" id="orderId" disabled></div></div>
+            <div class="layui-form-item"><label class="layui-form-label">客户名</label><div class="layui-input-inline"><input class="layui-input" id="customerName" disabled></div></div>
+            <div class="layui-form-item"><label class="layui-form-label">等级</label><div class="layui-input-inline"><select id="complaintLevel"><option value="0">标准</option><option value="1">重要</option></select></div></div>
+            <div class="layui-form-item"><label class="layui-form-label">时间</label><div class="layui-input-inline"><input class="layui-input" id="complaintTime" placeholder="yyyy-MM-dd"></div></div>
+            <div class="layui-form-item"><label class="layui-form-label">类型</label><div class="layui-input-inline"><select id="complaintType"><option value="0">装修</option><option value="1">主材</option></select></div></div>
+            <div class="layui-form-item layui-form-text"><label class="layui-form-label">备注</label><div class="layui-input-block"><textarea id="complaintDes" class="layui-textarea" placeholder="备注"></textarea></div></div>
+        </form>
+    </div>
+    <div id="complaintHandleBox" style="display:none;padding:20px 30px;">
+        <form class="layui-form" id="complaintHandleForm">
+            <div class="layui-form-item"><label class="layui-form-label">装修单号</label><div class="layui-input-inline"><input class="layui-input" id="handleOrderId" disabled></div></div>
+            <div class="layui-form-item"><label class="layui-form-label">客户名</label><div class="layui-input-inline"><input class="layui-input" id="handleCustomerName" disabled></div></div>
+            <div class="layui-form-item"><label class="layui-form-label">等级</label><div class="layui-input-inline"><input class="layui-input" id="handleComplaintLevel" disabled></div></div>
+            <div class="layui-form-item"><label class="layui-form-label">类型</label><div class="layui-input-inline"><input class="layui-input" id="handleComplaintType" disabled></div></div>
+            <div class="layui-form-item layui-form-text"><label class="layui-form-label">处理信息</label><div class="layui-input-block"><textarea id="complaintHandleDes" class="layui-textarea" placeholder="处理信息"></textarea></div></div>
+        </form>
+    </div>
+</div>
+<script src="../../layui/layui.js"></script><script src="../../js/app/config.js"></script><script src="../../js/app/server.js"></script><script src="../../js/app/utils.js"></script><script src="../../js/app/post.js"></script><script src="../../js/app/api.js"></script><script src="../../js/app/core.js"></script><script src="../../js/app/validate.js"></script><script src="../../js/app/bootstrap.js"></script><script src="../../js/construction/construction-common.js"></script><script src="../../js/construction/customer4complaint.js"></script>
+</body></html>

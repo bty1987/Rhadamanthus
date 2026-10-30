@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<!--
+  app/index.html —— 纯 layui 主框架外壳
+
+  资源引用（仅 layui + 本应用）：
+    layui/css/layui.css + layui/layui.js + js/app/* + js/index.js
+  不依赖 jQuery 2.0.3 / ace / bootstrap。
+
+  布局：layui-layout-admin 三段式
+    - 顶栏：logo / 用户名 / 退出
+    - 左侧：layui-nav（动态渲染后端菜单树 queryModuleForLogin）
+    - 右侧：layui-tab（iframe 模式，每个菜单页一个 iframe）
+
+  认证：从 Cookie 读 authentication；queryUserForSelfByUserId 拉用户信息，失败跳 login.html。
+-->
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>方林信息平台</title>
+    <link rel="shortcut icon" href="fanglin.ico" type="image/x-icon">
+    <link rel="stylesheet" href="layui/css/layui.css">
+    <link rel="stylesheet" href="css/app.css">
+</head>
+<body class="layui-layout-body">
+<div class="layui-layout layui-layout-admin">
+
+    <!-- ============ 顶栏 ============ -->
+    <div class="layui-header app-header">
+        <div class="app-logo"><img src="images/icon_fanglin.png" onerror="this.style.display='none'"><span>方林信息平台</span></div>
+        <ul class="layui-nav layui-layout-right">
+            <li class="layui-nav-item">
+                <a href="javascript:;"><i class="layui-icon layui-icon-user"></i> <cite id="userName">用户</cite></a>
+                <dl class="layui-nav-child">
+                    <dd><a href="javascript:;" id="btnProfile">个人资料</a></dd>
+                    <dd><a href="javascript:;" id="btnRefresh">刷新菜单</a></dd>
+                </dl>
+            </li>
+            <li class="layui-nav-item"><a href="javascript:;" id="btnLogout"><i class="layui-icon layui-icon-logout"></i> 退出</a></li>
+        </ul>
+    </div>
+
+    <!-- ============ 左侧菜单 ============ -->
+    <div class="layui-side app-side">
+        <div class="layui-nav app-nav" lay-filter="appMenu">
+            <ul class="layui-nav-tree" id="menuTree"><!-- 菜单动态注入 --></ul>
+        </div>
+    </div>
+
+    <!-- ============ 右侧内容区 ============ -->
+    <div class="layui-body app-body">
+        <!-- 标签页 -->
+        <div class="layui-tab layui-tab-brief app-tabs" lay-filter="appTabs" lay-allowClose="true">
+            <ul class="layui-tab-title"></ul>
+            <div class="layui-tab-content"></div>
+        </div>
+    </div>
+</div>
+
+<!-- 顺序：layui → 配置 → 核心运行时（config/server/utils 是普通脚本，最早可用）→ 业务 -->
+<script src="layui/layui.js"></script>
+<script src="js/app/config.js"></script>
+<script src="js/app/server.js"></script>
+<script src="js/app/utils.js"></script>
+<script src="js/app/post.js"></script>
+<script src="js/app/api.js"></script>
+<script src="js/app/core.js"></script>
+<script src="js/app/validate.js"></script>
+<script src="js/app/bootstrap.js"></script>
+<script src="js/index.js"></script>
+</body>
+</html>

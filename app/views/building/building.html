@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<!-- app/views/building/building.html —— 楼盘管理（列表 + 绑定 + 结算状态）
+  字段：bid(楼盘ID) buildingHouse(房源数) payType(付款类型) balanceStatus(结算状态) value -->
+<html lang="zh-CN">
+<head><meta charset="utf-8"><title>楼盘管理</title>
+<link rel="stylesheet" href="../../layui/css/layui.css"><link rel="stylesheet" href="../../css/app.css"></head>
+<body>
+<div class="app-page">
+    <div class="app-search"><form class="layui-form" id="searchForm"><div class="layui-form-item">
+        <div class="layui-inline"><button type="button" class="layui-btn" id="btnSearch"><i class="layui-icon layui-icon-search"></i>查询</button></div>
+    </div></form></div>
+    <div class="app-table"><table id="resultTable" lay-filter="resultTable"></table></div>
+    <div id="pagenation" class="app-pagenation"></div>
+    <script type="text/html" id="rowToolbar"><button class="layui-btn layui-btn-xs" lay-event="balance">结算</button><button class="layui-btn layui-btn-xs" lay-event="unbalance">取消结算</button></script>
+</div>
+<script src="../../layui/layui.js"></script><script src="../../js/app/config.js"></script><script src="../../js/app/server.js"></script><script src="../../js/app/utils.js"></script><script src="../../js/app/post.js"></script><script src="../../js/app/api.js"></script><script src="../../js/app/core.js"></script><script src="../../js/app/validate.js"></script><script src="../../js/app/bootstrap.js"></script><script src="../../js/building/building.js"></script>
+</body></html>

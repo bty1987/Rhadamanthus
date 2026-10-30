@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<!-- app/views/customer/customerProfile.html —— 客户画像（列表 + 创建画像 + 详情弹窗） -->
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8" />
+    <title>客户画像</title>
+    <link rel="stylesheet" href="../../layui/css/layui.css">
+    <link rel="stylesheet" href="../../css/app.css">
+</head>
+<body>
+<div class="app-page" id="customerProfilePage">
+
+    <div class="app-search">
+        <form class="layui-form" lay-filter="searchForm" id="searchForm">
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">调研名称</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="name" data-op="cn" placeholder="请输入调研名称" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">状态</label>
+                    <div class="layui-input-inline">
+                        <select name="status" data-op="eq">
+                            <option value="">全部</option>
+                            <option value="0">初始</option>
+                            <option value="1">推送</option>
+                            <option value="2">处理</option>
+                            <option value="3">完成</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <button type="button" class="layui-btn" id="btnSearch"><i class="layui-icon layui-icon-search"></i>查询</button>
+                    <button type="reset" class="layui-btn layui-btn-primary" id="btnReset">重置</button>
+                    <button type="button" class="layui-btn layui-btn-normal" id="btnMake"><i class="layui-icon layui-icon-add-1"></i>创建</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div class="app-table">
+        <table id="resultTable" lay-filter="resultTable"></table>
+    </div>
+
+    <div id="pagenation" class="app-pagenation"></div>
+
+    <!-- 创建画像 -->
+    <div id="makeBox" style="display:none; padding:20px;">
+        <form class="layui-form" lay-filter="makeForm" id="makeForm">
+            <div class="layui-form-item">
+                <label class="layui-form-label">装修单号<span class="app-req">*</span></label>
+                <div class="layui-input-block">
+                    <input type="text" name="orderId" placeholder="请输入装修单号" class="layui-input v_required">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">调研模板<span class="app-req">*</span></label>
+                <div class="layui-input-inline" style="width:220px;">
+                    <input type="text" name="surveyTemplateName" id="surveyTemplateName" placeholder="输入模板名检索并选择" class="layui-input v_required">
+                </div>
+                <div class="layui-input-inline">
+                    <button type="button" class="layui-btn layui-btn-normal" id="btnPickTemplate">选择</button>
+                </div>
+            </div>
+            <div class="layui-form-item app-form-footer">
+                <button type="button" class="layui-btn" id="btnMakeSave">保存</button>
+                <button type="button" class="layui-btn layui-btn-primary" id="btnMakeCancel">取消</button>
+            </div>
+        </form>
+    </div>
+
+</div>
+
+<script src="../../layui/layui.js"></script>
+<script src="../../js/app/config.js"></script>
+<script src="../../js/app/server.js"></script>
+<script src="../../js/app/utils.js"></script>
+<script src="../../js/app/post.js"></script>
+<script src="../../js/app/api.js"></script>
+<script src="../../js/app/core.js"></script>
+<script src="../../js/app/validate.js"></script>
+<script src="../../js/app/bootstrap.js"></script>
+<script src="../../js/customer/customer-common.js"></script>
+<script src="../../js/customer/customerProfile.js"></script>
+</body>
+</html>

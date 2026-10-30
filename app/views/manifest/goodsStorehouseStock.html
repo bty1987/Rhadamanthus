@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<!-- app/views/manifest/goodsStorehouseStock.html —— 商品库存（列表 + 盘盈/盘亏/拆分/合并 + 添加库存）
+  字段：storehouse.name goods.no goods.name barcode category brand color.name format.info measurementUnit type pieceNum num -->
+<html lang="zh-CN">
+<head><meta charset="utf-8"><title>商品库存</title>
+<link rel="stylesheet" href="../../layui/css/layui.css"><link rel="stylesheet" href="../../css/app.css"></head>
+<body>
+<div class="app-page">
+    <div class="app-search"><form class="layui-form" id="searchForm"><div class="layui-form-item">
+        <div class="layui-inline"><label class="layui-form-label">仓库</label><div class="layui-input-inline"><input type="text" name="storehouse.name" data-op="cn" placeholder="仓库名称" class="layui-input" autocomplete="off"></div></div>
+        <div class="layui-inline"><label class="layui-form-label">商品</label><div class="layui-input-inline"><input type="text" name="goods.name" data-op="cn" placeholder="商品名称" class="layui-input" autocomplete="off"></div></div>
+        <div class="layui-inline"><button type="button" class="layui-btn" id="btnSearch"><i class="layui-icon layui-icon-search"></i>查询</button><button type="reset" class="layui-btn layui-btn-primary" id="btnReset">重置</button><button type="button" class="layui-btn layui-btn-normal" id="btnAdd"><i class="layui-icon layui-icon-add-1"></i>添加</button></div>
+    </div></form></div>
+    <div class="app-table"><table id="resultTable" lay-filter="resultTable"></table></div>
+    <div id="pagenation" class="app-pagenation"></div>
+
+    <div id="stockBox" style="display:none; padding:20px;"><form class="layui-form" id="stockForm" lay-filter="stockForm">
+        <div class="layui-form-item"><label class="layui-form-label">新数量<span class="app-req">*</span></label><div class="layui-input-block"><input type="text" name="newNum" class="layui-input v_required v_float"></div></div>
+        <div class="layui-form-item app-form-footer"><button type="button" class="layui-btn" id="btnStockSave">保存</button><button type="reset" class="layui-btn layui-btn-primary" id="btnStockCancel">取消</button></div>
+    </form></div>
+
+    <div id="addStockBox" style="display:none; padding:20px;"><form class="layui-form" id="addStockForm" lay-filter="addStockForm">
+        <div class="layui-form-item"><label class="layui-form-label">商品gid<span class="app-req">*</span></label><div class="layui-input-block"><input type="text" name="gid" class="layui-input v_required"></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">颜色cid<span class="app-req">*</span></label><div class="layui-input-block"><input type="text" name="cid" class="layui-input v_required"></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">规格fid<span class="app-req">*</span></label><div class="layui-input-block"><input type="text" name="fid" class="layui-input v_required"></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">仓库shid<span class="app-req">*</span></label><div class="layui-input-block"><select name="shid" id="addShid"></select></div></div>
+        <div class="layui-form-item app-form-footer"><button type="button" class="layui-btn" id="btnAddStockSave">保存</button><button type="reset" class="layui-btn layui-btn-primary" id="btnAddStockCancel">取消</button></div>
+    </form></div>
+
+    <script type="text/html" id="rowToolbar">
+        <button class="layui-btn layui-btn-xs" lay-event="plus">盘盈</button>
+        <button class="layui-btn layui-btn-xs layui-btn-warm" lay-event="lose">盘亏</button>
+        <button class="layui-btn layui-btn-xs layui-btn-normal" lay-event="split">拆分</button>
+        <button class="layui-btn layui-btn-xs layui-btn-success" lay-event="merge">合并</button>
+    </script>
+</div>
+<script src="../../layui/layui.js"></script><script src="../../js/app/config.js"></script><script src="../../js/app/server.js"></script><script src="../../js/app/utils.js"></script><script src="../../js/app/post.js"></script><script src="../../js/app/api.js"></script><script src="../../js/app/core.js"></script><script src="../../js/app/validate.js"></script><script src="../../js/app/bootstrap.js"></script><script src="../../js/manifest/goodsStorehouseStock.js"></script>
+</body></html>

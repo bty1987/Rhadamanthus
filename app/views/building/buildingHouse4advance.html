@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<!-- app/views/building/buildingHouse4advance.html —— 房源高级管理（列表 + 绑定客源 + 转移房源 + 收钥匙 + 状态/通过/驳回）
+  字段：no(编号) house(楼盘) type(类型) discussType decorateDegree rentType totalPrice housingGrade status
+  接口：api.building.pageBuildingHouseForAdvance / updateBuildingHouseForStatus / bindBuilding
+        updateBuildingHouseForBelong / updateBuildingHouseForKeyer / queryBuildingCustomerByNo -->
+<html lang="zh-CN">
+<head><meta charset="utf-8"><title>房源管理</title>
+<link rel="stylesheet" href="../../layui/css/layui.css"><link rel="stylesheet" href="../../css/app.css"></head>
+<body>
+<div class="app-page">
+    <div class="app-search"><form class="layui-form" id="searchForm"><div class="layui-form-item">
+        <div class="layui-inline"><label class="layui-form-label">房源编号</label><div class="layui-input-inline"><input type="text" name="no" data-op="cn" placeholder="房源编号" class="layui-input" autocomplete="off"></div></div>
+        <div class="layui-inline"><label class="layui-form-label">户型</label><div class="layui-input-inline"><input type="text" name="houseType" data-op="cn" placeholder="户型" class="layui-input" autocomplete="off"></div></div>
+        <div class="layui-inline"><label class="layui-form-label">状态</label><div class="layui-input-inline"><select name="status" data-op="eq"><option value="">全部</option><option value="0">待审核</option><option value="1">签约</option><option value="2">失效</option><option value="3">通过</option><option value="4">驳回</option></select></div></div>
+        <div class="layui-inline"><button type="button" class="layui-btn" id="btnSearch"><i class="layui-icon layui-icon-search"></i>查询</button><button type="reset" class="layui-btn layui-btn-primary" id="btnReset">重置</button></div>
+    </div></form></div>
+    <div class="app-table"><table id="resultTable" lay-filter="resultTable"></table></div>
+    <div id="pagenation" class="app-pagenation"></div>
+
+    <div id="bindBox" style="display:none; padding:20px;"><form class="layui-form" id="bindForm" lay-filter="bindForm">
+        <div class="layui-form-item"><label class="layui-form-label">房源编号</label><div class="layui-input-block"><input type="text" name="hsNo" readonly class="layui-input"></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">客源编号<span class="app-req">*</span></label><div class="layui-input-block"><input type="text" name="csNo" placeholder="客源编号" class="layui-input v_required"></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">房源代理人</label><div class="layui-input-block"><input type="text" name="hsAUser" placeholder="客户cid" class="layui-input"></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">客源代理人</label><div class="layui-input-block"><input type="text" name="csAUser" placeholder="客户cid" class="layui-input"></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">签约时间<span class="app-req">*</span></label><div class="layui-input-block"><input type="text" name="signingTime" id="signingTime" placeholder="yyyy-MM-dd" class="layui-input v_required"></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">成交价格<span class="app-req">*</span></label><div class="layui-input-block"><input type="text" name="tradePrice" maxlength="18" class="layui-input v_required v_float_3"></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">首付款</label><div class="layui-input-block"><input type="text" name="downpayment" maxlength="18" class="layui-input v_float_3"></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">贷款金额</label><div class="layui-input-block"><input type="text" name="loanPrice" maxlength="18" class="layui-input v_float_3"></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">支付方式</label><div class="layui-input-block"><select name="payType"><option value="0">全款</option><option value="1">按揭</option><option value="2">分期</option></select></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">结算状态</label><div class="layui-input-block"><select name="balanceStatus"><option value="0">未结算</option><option value="1">已结算</option></select></div></div>
+        <div class="layui-form-item app-form-footer"><button type="button" class="layui-btn" id="btnBindSave">保存</button><button type="button" class="layui-btn layui-btn-primary" id="btnBindCancel">取消</button></div>
+    </form></div>
+
+    <div id="belongBox" style="display:none; padding:20px;"><form class="layui-form" id="belongForm" lay-filter="belongForm">
+        <div class="layui-form-item"><label class="layui-form-label">跟进人<span class="app-req">*</span></label><div class="layui-input-block"><input type="text" name="belongUser" placeholder="跟进人userId" class="layui-input v_required"></div></div>
+        <div class="layui-form-item app-form-footer"><button type="button" class="layui-btn" id="btnBelongSave">保存</button><button type="button" class="layui-btn layui-btn-primary" id="btnBelongCancel">取消</button></div>
+    </form></div>
+
+    <div id="keyerBox" style="display:none; padding:20px;"><form class="layui-form" id="keyerForm" lay-filter="keyerForm">
+        <div class="layui-form-item"><label class="layui-form-label">收钥匙人<span class="app-req">*</span></label><div class="layui-input-block"><input type="text" name="keyer" placeholder="收钥匙人userId" class="layui-input v_required"></div></div>
+        <div class="layui-form-item app-form-footer"><button type="button" class="layui-btn" id="btnKeyerSave">保存</button><button type="button" class="layui-btn layui-btn-primary" id="btnKeyerCancel">取消</button></div>
+    </form></div>
+    <script type="text/html" id="rowToolbar">
+        <button class="layui-btn layui-btn-xs" lay-event="pass">通过</button>
+        <button class="layui-btn layui-btn-xs layui-btn-warm" lay-event="reject">驳回</button>
+        <button class="layui-btn layui-btn-xs layui-btn-normal" lay-event="bind">绑定客源</button>
+        <button class="layui-btn layui-btn-xs layui-btn-success" lay-event="follow">转移房源</button>
+        <button class="layui-btn layui-btn-xs" lay-event="key">收钥匙人</button>
+    </script>
+</div>
+<script src="../../layui/layui.js"></script><script src="../../js/app/config.js"></script><script src="../../js/app/server.js"></script><script src="../../js/app/utils.js"></script><script src="../../js/app/post.js"></script><script src="../../js/app/api.js"></script><script src="../../js/app/core.js"></script><script src="../../js/app/validate.js"></script><script src="../../js/app/bootstrap.js"></script><script src="../../js/building/buildingHouse4advance.js"></script>
+</body></html>

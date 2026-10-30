@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<!-- app/views/construction/supervision4detail.html —— 施工节点详情（旧 ace_wizard 向导 → layui tab）
+  上下文：app.params.construction = { orderId, cid? , type? }（type 有值=只读）。
+  每个施工节点一个 tab：开工/完工/进场/离场时间 + 节点状态 + 进场状态 + 进场/离场按钮（状态机）
+  + 工人信息（工人工费入口）+ 施工图片（上传/删除）。 -->
+<html lang="zh-CN"><head><meta charset="utf-8"><title>施工节点详情</title>
+<link rel="stylesheet" href="../../layui/css/layui.css"><link rel="stylesheet" href="../../css/app.css">
+<style>
+.node-gallery { margin: 0; padding: 0; list-style: none; }
+.node-gallery li { position: relative; float: left; margin: 8px; border: 1px solid #e6e6e6; padding: 4px; border-radius: 4px; }
+.node-gallery li img { width: 130px; height: 130px; object-fit: cover; cursor: pointer; display: block; }
+.node-gallery li .tools { position: absolute; bottom: 4px; right: 6px; cursor: pointer; color: #fff; background: rgba(0,0,0,.5); border-radius: 2px; padding: 1px 6px; }
+.node-worker { float: left; width: 150px; margin: 8px; text-align: center; border: 1px solid #eee; border-radius: 4px; padding: 8px; }
+.node-worker img { width: 80px; height: 80px; border-radius: 50%; object-fit: cover; }
+.node-info-row { margin: 8px 0; }
+.node-info-row label { display: inline-block; width: 90px; color: #666; }
+.node-info-row input { width: 200px; display: inline-block; }
+.node-btns { margin: 12px 0; }
+</style></head>
+<body><div class="app-page">
+    <div class="app-toolbar" style="padding:10px 15px 0;">
+        <span style="font-size:16px;font-weight:bold;">施工节点：<span id="orderIdLabel">-</span></span>
+        <button type="button" class="layui-btn layui-btn-sm layui-btn-primary" id="btnBack" style="margin-left:15px;"><i class="layui-icon layui-icon-return"></i>返回</button>
+    </div>
+    <div class="layui-tab layui-tab-brief" style="margin:10px 15px;" lay-filter="nodeTab" lay-allowclose="false">
+        <ul class="layui-tab-title" id="tabTitles"></ul>
+        <div class="layui-tab-content" id="tabContent"></div>
+    </div>
+</div>
+<script src="../../layui/layui.js"></script><script src="../../js/app/upload.js"></script><script src="../../js/app/config.js"></script><script src="../../js/app/server.js"></script><script src="../../js/app/utils.js"></script><script src="../../js/app/post.js"></script><script src="../../js/app/api.js"></script><script src="../../js/app/core.js"></script><script src="../../js/app/validate.js"></script><script src="../../js/app/bootstrap.js"></script><script src="../../js/construction/construction-common.js"></script><script src="../../js/construction/supervision4detail.js"></script>
+</body></html>

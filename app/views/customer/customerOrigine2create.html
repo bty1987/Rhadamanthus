@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<!-- app/views/customer/customerOrigine2create.html —— 客源创建（含推荐客户回填与三方来源标识） -->
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8" />
+    <title>创建客源</title>
+    <link rel="stylesheet" href="../../layui/css/layui.css">
+    <link rel="stylesheet" href="../../css/app.css">
+</head>
+<body>
+<div class="app-page" id="customerOrigine2createPage">
+
+    <div style="padding:15px;">
+        <form class="layui-form" lay-filter="createForm" id="createForm">
+            <div class="layui-form-item">
+                <label class="layui-form-label">姓名<span class="app-req">*</span></label>
+                <div class="layui-input-inline" style="width:130px;">
+                    <input type="text" name="name" placeholder="姓名" class="layui-input v_required">
+                </div>
+                <label class="layui-form-label">性别</label>
+                <div class="layui-input-inline" style="width:80px;">
+                    <select name="gender">
+                        <option value="男">男</option>
+                        <option value="女">女</option>
+                    </select>
+                </div>
+                <label class="layui-form-label">电话</label>
+                <div class="layui-input-inline" style="width:140px;">
+                    <input type="text" name="phone" placeholder="电话" class="layui-input">
+                </div>
+                <label class="layui-form-label">意向</label>
+                <div class="layui-input-inline" style="width:100px;">
+                    <select name="intention">
+                        <option value="0">到店</option>
+                        <option value="1">量房</option>
+                        <option value="2">守园</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">楼盘<span class="app-req">*</span></label>
+                <div class="layui-input-inline" style="width:190px;">
+                    <input type="text" name="villageName" id="villageName" placeholder="输入拼音检索楼盘" class="layui-input v_required">
+                </div>
+                <div class="layui-input-inline" id="villageList" style="line-height:38px;"></div>
+                <div class="layui-input-inline" id="rule" style="line-height:38px;color:#999;"></div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">楼号</label>
+                <div class="layui-input-inline" style="width:120px;">
+                    <input type="text" name="houseNumber" placeholder="楼号" class="layui-input">
+                </div>
+                <label class="layui-form-label">建筑面积<span class="app-req">*</span></label>
+                <div class="layui-input-inline" style="width:100px;">
+                    <input type="text" name="buildArea" placeholder="建筑面积" class="layui-input v_required v_float_3">
+                </div>
+                <label class="layui-form-label">需求价格</label>
+                <div class="layui-input-inline" style="width:110px;">
+                    <input type="text" name="price" placeholder="需求价格" class="layui-input v_float_3">
+                </div>
+                <label class="layui-form-label">等级</label>
+                <div class="layui-input-inline" style="width:80px;">
+                    <select name="grade">
+                        <option value="A">A</option>
+                        <option value="B">B</option>
+                        <option value="C">C</option>
+                        <option value="D">D</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">设计师</label>
+                <div class="layui-input-inline" style="width:150px;">
+                    <input type="text" name="designerName" id="designerName" placeholder="点击选择设计师" class="layui-input" readonly>
+                </div>
+                <div class="layui-input-inline">
+                    <button type="button" class="layui-btn layui-btn-normal" id="btnPickDesigner">选择</button>
+                </div>
+                <label class="layui-form-label">业务员<span class="app-req">*</span></label>
+                <div class="layui-input-inline" style="width:150px;">
+                    <input type="text" name="salesmanName" id="salesmanName" placeholder="点击选择业务员" class="layui-input v_required" readonly>
+                </div>
+                <div class="layui-input-inline">
+                    <button type="button" class="layui-btn layui-btn-normal" id="btnPickSalesman">选择</button>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">业务类型<span class="app-req">*</span></label>
+                <div class="layui-input-inline" style="width:160px;">
+                    <select name="decorationBusitype" id="busitypeSel" lay-filter="busitypeFilter" lay-verify="required"></select>
+                </div>
+                <div class="layui-input-inline source-group" style="display:none;">
+                    <label class="layui-form-label">来源方</label>
+                    <div class="layui-input-inline" style="width:110px;">
+                        <input type="text" name="source" placeholder="来源方" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-input-inline contact-group" style="display:none;">
+                    <label class="layui-form-label">对接人</label>
+                    <div class="layui-input-inline" style="width:110px;">
+                        <input type="text" name="contact" placeholder="对接人" class="layui-input">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item referCustomerInfo">
+                <label class="layui-form-label">推荐客户</label>
+                <div class="layui-input-block" style="line-height:38px;">
+                    <input type="checkbox" id="referCustomer" lay-skin="switch" lay-text="开|关" lay-filter="referFilter">
+                </div>
+            </div>
+            <div class="layui-form-item refer-customer-info" style="display:none;">
+                <label class="layui-form-label">推荐单号</label>
+                <div class="layui-input-inline" style="width:130px;">
+                    <input type="text" name="referOrderId" id="referOrderId" placeholder="推荐单号" class="layui-input">
+                </div>
+                <label class="layui-form-label">推荐电话</label>
+                <div class="layui-input-inline" style="width:140px;">
+                    <input type="text" name="referPhone" id="referPhone" placeholder="推荐电话" class="layui-input">
+                </div>
+                <label class="layui-form-label">推荐楼盘</label>
+                <div class="layui-input-inline" style="width:150px;">
+                    <input type="text" name="referVillageName" id="referVillageName" placeholder="输入拼音检索楼盘" class="layui-input">
+                </div>
+                <div class="layui-input-inline" id="referVillageList" style="line-height:38px;"></div>
+                <label class="layui-form-label">推荐楼号</label>
+                <div class="layui-input-inline" style="width:110px;">
+                    <input type="text" name="referHouseNumber" id="referHouseNumber" placeholder="推荐楼号" class="layui-input">
+                </div>
+                <label class="layui-form-label">签约时间</label>
+                <div class="layui-input-inline" style="width:140px;">
+                    <input type="text" name="referContractTime" id="referContractTime" placeholder="签约时间" class="layui-input" readonly>
+                </div>
+            </div>
+            <div class="layui-form-item layui-form-text">
+                <label class="layui-form-label">备注</label>
+                <div class="layui-input-block">
+                    <textarea name="comment" placeholder="请输入备注" class="layui-textarea"></textarea>
+                </div>
+            </div>
+            <div class="layui-form-item app-form-footer">
+                <button type="button" class="layui-btn" id="btnSave">保存</button>
+                <button type="button" class="layui-btn layui-btn-primary" id="btnReset">重置</button>
+            </div>
+        </form>
+    </div>
+
+</div>
+
+<script src="../../layui/layui.js"></script>
+<script src="../../js/app/config.js"></script>
+<script src="../../js/app/server.js"></script>
+<script src="../../js/app/utils.js"></script>
+<script src="../../js/app/post.js"></script>
+<script src="../../js/app/api.js"></script>
+<script src="../../js/app/core.js"></script>
+<script src="../../js/app/validate.js"></script>
+<script src="../../js/app/bootstrap.js"></script>
+<script src="../../js/customer/customer-common.js"></script>
+<script src="../../js/customer/customerOrigine2create.js"></script>
+</body>
+</html>

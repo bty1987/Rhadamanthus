@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<!-- app/views/customer/pointAccount.html —— 积分账户（创建/操作积分/积分记录） -->
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8" />
+    <title>积分账户</title>
+    <link rel="stylesheet" href="../../layui/css/layui.css">
+    <link rel="stylesheet" href="../../css/app.css">
+</head>
+<body>
+<div class="app-page" id="pointAccountPage">
+
+    <div class="app-search">
+        <form class="layui-form" lay-filter="searchForm" id="searchForm">
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">客户名称</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="name" data-op="eq" placeholder="请输入客户名称" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <button type="button" class="layui-btn" id="btnSearch"><i class="layui-icon layui-icon-search"></i>查询</button>
+                    <button type="reset" class="layui-btn layui-btn-primary" id="btnReset">重置</button>
+                    <button type="button" class="layui-btn layui-btn-normal" id="btnCreate"><i class="layui-icon layui-icon-add-1"></i>创建</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div class="app-table">
+        <table id="resultTable" lay-filter="resultTable"></table>
+    </div>
+
+    <div id="pagenation" class="app-pagenation"></div>
+
+    <!-- 创建积分账户 -->
+    <div id="createBox" style="display:none; padding:20px;">
+        <form class="layui-form" lay-filter="createForm" id="createForm">
+            <div class="layui-form-item">
+                <label class="layui-form-label">装修单号<span class="app-req">*</span></label>
+                <div class="layui-input-block">
+                    <input type="text" name="orderId" placeholder="请输入装修单号" class="layui-input v_required">
+                </div>
+            </div>
+            <div class="layui-form-item app-form-footer">
+                <button type="button" class="layui-btn" id="btnCreateSave">保存</button>
+                <button type="button" class="layui-btn layui-btn-primary" id="btnCreateCancel">取消</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- 操作积分 -->
+    <div id="handleBox" style="display:none; padding:20px;">
+        <form class="layui-form" lay-filter="handleForm" id="handleForm">
+            <div class="layui-form-item">
+                <label class="layui-form-label">积分类型<span class="app-req">*</span></label>
+                <div class="layui-input-block">
+                    <select name="type" lay-verify="required">
+                        <option value="0">装修</option>
+                        <option value="1">销售</option>
+                        <option value="2">运营</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">操作类型<span class="app-req">*</span></label>
+                <div class="layui-input-block">
+                    <select name="pointType" lay-verify="required">
+                        <option value="0">积累</option>
+                        <option value="1">消耗</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">积分<span class="app-req">*</span></label>
+                <div class="layui-input-block">
+                    <input type="text" name="point" value="0" placeholder="请输入积分" class="layui-input v_required v_number">
+                </div>
+            </div>
+            <div class="layui-form-item app-form-footer">
+                <button type="button" class="layui-btn" id="btnHandleSave">保存</button>
+                <button type="button" class="layui-btn layui-btn-primary" id="btnHandleCancel">取消</button>
+            </div>
+        </form>
+    </div>
+
+</div>
+
+<script src="../../layui/layui.js"></script>
+<script src="../../js/app/config.js"></script>
+<script src="../../js/app/server.js"></script>
+<script src="../../js/app/utils.js"></script>
+<script src="../../js/app/post.js"></script>
+<script src="../../js/app/api.js"></script>
+<script src="../../js/app/core.js"></script>
+<script src="../../js/app/validate.js"></script>
+<script src="../../js/app/bootstrap.js"></script>
+<script src="../../js/customer/customer-common.js"></script>
+<script src="../../js/customer/pointAccount.js"></script>
+</body>
+</html>

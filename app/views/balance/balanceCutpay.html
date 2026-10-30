@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<!-- app/views/balance/balanceCutpay.html —— 结算扣款（弹窗子页，双模式）
+  url ?depage=cutpay: 扣款账户管理（创建/抵扣/图片）
+  url ?depage=balance: 当前结算单的扣款列表（选已有扣款关联/抵扣/解绑/打印）
+  balanceCutpay.type: 0扣款/1抵扣；balanceCutpay.status: 0初始/1绑定/2抵扣 -->
+<html lang="zh-CN"><head><meta charset="utf-8"><title>结算扣款</title>
+<link rel="stylesheet" href="../../layui/css/layui.css"><link rel="stylesheet" href="../../css/app.css"></head>
+<body><div class="app-page">
+    <div class="app-search"><form class="layui-form" id="searchForm"><div class="layui-form-item">
+        <div class="layui-inline app-only-cutpay"><label class="layui-form-label">名称</label><div class="layui-input-inline"><input type="text" name="cutpay.name" data-op="cn" placeholder="扣款名" class="layui-input" autocomplete="off"></div></div>
+        <div class="layui-inline app-only-cutpay"><label class="layui-form-label">操作人</label><div class="layui-input-inline"><input type="text" name="operater.userName" data-op="cn" placeholder="操作人" class="layui-input" autocomplete="off"></div></div>
+        <div class="layui-inline"><button type="button" class="layui-btn" id="btnSearch"><i class="layui-icon layui-icon-search"></i>查询</button><button type="reset" class="layui-btn layui-btn-primary" id="btnReset">重置</button></div>
+    </div></form></div>
+    <div class="app-toolbar" style="margin:10px 0;">
+        <button type="button" class="layui-btn app-only-balance" id="btnBindCutpay"><i class="layui-icon layui-icon-add-1"></i>添加扣款</button>
+        <button type="button" class="layui-btn layui-btn-normal app-only-cutpay" id="btnCreate"><i class="layui-icon layui-icon-add-1"></i>创建</button>
+        <button type="button" class="layui-btn layui-btn-warm app-only-balance" id="btnPrint"><i class="layui-icon layui-icon-print"></i>打印</button>
+    </div>
+    <div class="app-table"><table id="resultTable" lay-filter="resultTable"></table></div>
+    <div id="pagenation" class="app-pagenation app-only-cutpay"></div>
+
+    <div id="bindBox" style="display:none; padding:20px;"><form class="layui-form" id="bindForm">
+        <div class="layui-form-item"><label class="layui-form-label">扣款<span class="app-req">*</span></label><div class="layui-input-block"><select name="bcid" lay-verify="required"></select></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">说明</label><div class="layui-input-block"><textarea name="comment" class="layui-textarea"></textarea></div></div>
+        <div class="layui-form-item app-form-footer"><button type="button" class="layui-btn" id="btnBindConfirm">确定</button><button type="button" class="layui-btn layui-btn-primary" id="btnBindCancel">取消</button></div>
+    </form></div>
+
+    <div id="deductBox" style="display:none; padding:20px;"><form class="layui-form" id="deductForm">
+        <input type="hidden" name="bcid">
+        <div class="layui-form-item"><label class="layui-form-label">抵扣额<span class="app-req">*</span></label><div class="layui-input-block"><input type="number" step="0.01" name="money" class="layui-input" lay-verify="required"></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">说明</label><div class="layui-input-block"><textarea name="comment" class="layui-textarea"></textarea></div></div>
+        <div class="layui-form-item app-form-footer"><button type="button" class="layui-btn" id="btnDeductConfirm">确定</button><button type="button" class="layui-btn layui-btn-primary" id="btnDeductCancel">取消</button></div>
+    </form></div>
+
+    <div id="createBox" style="display:none; padding:20px;"><form class="layui-form" id="createForm">
+        <div class="layui-form-item"><label class="layui-form-label">名称<span class="app-req">*</span></label><div class="layui-input-block"><input type="text" name="name" class="layui-input" lay-verify="required"></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">归属人</label><div class="layui-input-block"><input type="text" name="belonger.userId" placeholder="用户ID" class="layui-input"></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">金额<span class="app-req">*</span></label><div class="layui-input-block"><input type="number" step="0.01" name="money" class="layui-input" lay-verify="required"></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">说明</label><div class="layui-input-block"><textarea name="comment" class="layui-textarea"></textarea></div></div>
+        <div class="layui-form-item app-form-footer"><button type="button" class="layui-btn" id="btnCreateConfirm">确定</button><button type="button" class="layui-btn layui-btn-primary" id="btnCreateCancel">取消</button></div>
+    </form></div>
+
+    <script type="text/html" id="rowToolbar">
+        <button class="layui-btn layui-btn-xs layui-btn-warm app-only-balance" lay-event="deduct">抵扣</button>
+        <button class="layui-btn layui-btn-xs layui-btn-danger app-only-balance" lay-event="unbind">解绑</button>
+        <button class="layui-btn layui-btn-xs app-only-cutpay" lay-event="pic">图片</button>
+    </script>
+</div>
+<script src="../../layui/layui.js"></script><script src="../../js/app/config.js"></script><script src="../../js/app/server.js"></script><script src="../../js/app/utils.js"></script><script src="../../js/app/post.js"></script><script src="../../js/app/api.js"></script><script src="../../js/app/core.js"></script><script src="../../js/app/validate.js"></script><script src="../../js/app/upload.js"></script><script src="../../js/app/bootstrap.js"></script><script src="../../js/balance/balanceCutpay.js"></script>
+</body></html>

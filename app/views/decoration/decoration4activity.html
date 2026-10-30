@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<!-- app/views/decoration/decoration4activity.html —— 装修单活动（参加活动/活动物品/申领审批/操作）
+  上下文：app.params.decoration = { orderId }。 -->
+<html lang="zh-CN"><head><meta charset="utf-8"><title>装修单活动</title>
+<link rel="stylesheet" href="../../layui/css/layui.css"><link rel="stylesheet" href="../../css/app.css"></head>
+<body><div class="app-page">
+    <div class="app-toolbar" style="padding:10px 15px 0;">
+        <button type="button" class="layui-btn layui-btn-sm" id="btnJoin"><i class="layui-icon layui-icon-add-1"></i>参加活动</button>
+        <button type="button" class="layui-btn layui-btn-sm layui-btn-normal" id="btnApplyItem"><i class="layui-icon layui-icon-survey"></i>申领活动物品</button>
+        <button type="button" class="layui-btn layui-btn-sm layui-btn-warm" id="btnAddItem"><i class="layui-icon layui-icon-add-circle"></i>添加活动物品</button>
+        <button type="button" class="layui-btn layui-btn-sm layui-btn-primary" id="btnBack"><i class="layui-icon layui-icon-return"></i>返回</button>
+    </div>
+    <div style="padding:8px 15px;font-weight:bold;">参与活动</div>
+    <div class="app-table" style="padding:0 15px 10px;"><table id="activityTable" lay-filter="activityTable"></table></div>
+    <div style="padding:8px 15px;font-weight:bold;">活动物品</div>
+    <div class="app-table" style="padding:0 15px 15px;"><table id="itemTable" lay-filter="itemTable"></table></div>
+
+    <script type="text/html" id="activityToolbar">
+        {{# if(d.status == 0){ }}}<button class="layui-btn layui-btn-xs layui-btn-danger" lay-event="del">删除</button>{{# } }}
+        {{# if(d.status == 0){ }}}<button class="layui-btn layui-btn-xs layui-btn-warm" lay-event="lock">锁定</button>{{# } }}
+        {{# if(d.status == 1){ }}}<button class="layui-btn layui-btn-xs layui-btn-normal" lay-event="unlock">解锁</button>{{# } }}
+    </script>
+    <script type="text/html" id="itemToolbar">
+        <button class="layui-btn layui-btn-xs" lay-event="record">记录</button>
+        <button class="layui-btn layui-btn-xs layui-btn-warm" lay-event="receive">领取</button>
+        <button class="layui-btn layui-btn-xs layui-btn-danger" lay-event="abate">失效</button>
+        <button class="layui-btn layui-btn-xs layui-btn-normal" lay-event="refund">退货</button>
+        <button class="layui-btn layui-btn-xs layui-btn-normal" lay-event="delive">配送</button>
+        <button class="layui-btn layui-btn-xs layui-btn-disabled" lay-event="unrefund">未退</button>
+        <button class="layui-btn layui-btn-xs" lay-event="expend">抵现</button>
+        <button class="layui-btn layui-btn-xs" lay-event="discount">折扣</button>
+        <button class="layui-btn layui-btn-xs layui-btn-primary" lay-event="send">发送</button>
+        <button class="layui-btn layui-btn-xs layui-btn-primary" lay-event="affirm">确认</button>
+    </script>
+
+    <div id="joinBox" style="display:none;padding:20px 30px;">
+        <form class="layui-form" id="joinForm">
+            <div class="layui-form-item"><label class="layui-form-label">活动</label><div class="layui-input-inline" style="width:320px;"><select id="activityInfo" lay-search=""><option value="">请选择活动</option></select></div></div>
+        </form>
+    </div>
+    <div id="itemBox" style="display:none;padding:20px 30px;">
+        <form class="layui-form" id="itemForm">
+            <div class="layui-form-item"><label class="layui-form-label">活动</label><div class="layui-input-inline" style="width:300px;"><select id="activities" lay-search=""><option value="">请选择活动</option></select></div></div>
+            <div class="layui-form-item"><label class="layui-form-label">活动物品</label><div class="layui-input-inline" style="width:300px;"><select id="itemObj" lay-search=""><option value="">请选择活动物品</option></select></div></div>
+            <div class="layui-form-item"><label class="layui-form-label">物品类型</label><div class="layui-input-inline"><select id="itemType"><option value="0">物品</option><option value="1">券</option><option value="2">奖券</option></select></div></div>
+            <div class="layui-form-item"><label class="layui-form-label">数量</label><div class="layui-input-inline"><input class="layui-input" id="itemNum" placeholder="数量"></div></div>
+            <div class="layui-form-item"><label class="layui-form-label">领取类型</label><div class="layui-input-inline"><select id="receiveType1"><option value="0">到店</option><option value="1">定金</option><option value="2">签单</option><option value="3">签单抽奖</option><option value="4">签单特批</option><option value="5">购买</option><option value="6">其他</option><option value="7">升级</option><option value="8">设计</option><option value="9">节点活动抽奖</option><option value="10">节点活动抽奖特批</option><option value="11">老带新</option><option value="12">赔偿</option></select></div></div>
+        </form>
+    </div>
+    <div id="applyBox" style="display:none;padding:20px 30px;">
+        <form class="layui-form" id="applyForm">
+            <div class="layui-form-item"><label class="layui-form-label">活动</label><div class="layui-input-inline" style="width:300px;"><select id="activity" lay-search=""><option value="">请选择活动</option></select></div></div>
+            <div class="layui-form-item"><label class="layui-form-label">审批人</label><div class="layui-input-inline" style="width:300px;"><select id="approveActivityItemMan" lay-search=""><option value="">请选择审批人</option></select></div></div>
+            <div class="layui-form-item"><label class="layui-form-label">领取类型</label><div class="layui-input-inline"><select id="applyStateType"><option value="0">到店</option><option value="1">定金</option><option value="2">签单</option><option value="3">签单抽奖</option><option value="4">签单特批</option><option value="5">购买</option><option value="6">其他</option><option value="7">升级</option><option value="8">设计</option><option value="9">节点活动抽奖</option><option value="10">节点活动抽奖特批</option><option value="11">老带新</option><option value="12">赔偿</option></select></div></div>
+            <blockquote class="layui-elem-quote">申领明细：从"活动物品"列表中勾选后，点击下方按钮加入申领清单。</blockquote>
+            <div style="text-align:center;"><button type="button" class="layui-btn layui-btn-sm" id="btnAddToApply">将勾选物品加入申领</button></div>
+            <table id="applyTable" lay-filter="applyTable"></table>
+        </form>
+    </div>
+</div>
+<script src="../../layui/layui.js"></script><script src="../../js/app/config.js"></script><script src="../../js/app/server.js"></script><script src="../../js/app/utils.js"></script><script src="../../js/app/post.js"></script><script src="../../js/app/api.js"></script><script src="../../js/app/core.js"></script><script src="../../js/app/validate.js"></script><script src="../../js/app/bootstrap.js"></script><script src="../../js/decoration/decoration-common.js"></script><script src="../../js/decoration/decoration4activity.js"></script>
+</body></html>

@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<!-- app/views/system/module4role.html —— 模块下角色列表（弹窗子页）
+  父页 module4advance 通过 popup 打开，传递 app.params.system.module
+  接口：pageRoleByMid(module.mid) -->
+<html lang="zh-CN">
+<head><meta charset="utf-8"><title>模块角色</title>
+<link rel="stylesheet" href="../../layui/css/layui.css"><link rel="stylesheet" href="../../css/app.css"></head>
+<body>
+<div class="app-page">
+    <div class="app-search"><form class="layui-form" id="searchForm"><div class="layui-form-item">
+        <div class="layui-inline"><label class="layui-form-label">编号</label><div class="layui-input-inline"><input type="text" name="no" data-op="cn" placeholder="角色编号" class="layui-input" autocomplete="off"></div></div>
+        <div class="layui-inline"><label class="layui-form-label">名称</label><div class="layui-input-inline"><input type="text" name="name" data-op="cn" placeholder="角色名称" class="layui-input" autocomplete="off"></div></div>
+        <div class="layui-inline"><button type="button" class="layui-btn" id="btnSearch"><i class="layui-icon layui-icon-search"></i>查询</button></div>
+    </div></form></div>
+    <div class="app-table"><table id="resultTable" lay-filter="resultTable"></table></div>
+    <div id="pagenation" class="app-pagenation"></div>
+</div>
+<script src="../../layui/layui.js"></script><script src="../../js/app/config.js"></script><script src="../../js/app/server.js"></script><script src="../../js/app/utils.js"></script><script src="../../js/app/post.js"></script><script src="../../js/app/api.js"></script><script src="../../js/app/core.js"></script><script src="../../js/app/validate.js"></script><script src="../../js/app/bootstrap.js"></script><script src="../../js/system/module4role.js"></script>
+</body></html>

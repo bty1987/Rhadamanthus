@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<!-- app/views/payment/walletres.html —— 钱包资源（弹窗子页，按 wid 上传/查看/删除资源图片）
+  上下文：app.params.payment = { wid }。需要 upload.js，故 head 引入。 -->
+<html lang="zh-CN"><head><meta charset="utf-8"><title>钱包资源</title>
+<link rel="stylesheet" href="../../layui/css/layui.css"><link rel="stylesheet" href="../../css/app.css"></head>
+<body><div class="app-page">
+    <div class="app-search"><form class="layui-form"><div class="layui-form-item">
+        <div class="layui-inline"><label class="layui-form-label">类型</label><div class="layui-input-inline"><select id="resType"><option value="0">身份证</option><option value="1">银行卡</option><option value="2">其他</option></select></div></div>
+        <div class="layui-inline"><button type="button" class="layui-btn" id="btnUpload"><i class="layui-icon layui-icon-upload"></i>上传图片</button></div>
+    </div></form></div>
+    <div id="resList" style="padding:12px;"></div>
+</div>
+<script src="../../layui/layui.js"></script><script src="../../js/app/upload.js"></script><script src="../../js/app/config.js"></script><script src="../../js/app/server.js"></script><script src="../../js/app/utils.js"></script><script src="../../js/app/post.js"></script><script src="../../js/app/api.js"></script><script src="../../js/app/core.js"></script><script src="../../js/app/validate.js"></script><script src="../../js/app/bootstrap.js"></script><script src="../../js/payment/walletres.js"></script>
+</body></html>

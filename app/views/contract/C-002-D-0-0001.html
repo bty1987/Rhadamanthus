@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<!-- app/views/contract/C-002-D-0-0001.html —— 1918装修工程合同（模板表单页）
+  上下文：app.params.decoration = { orderId, contractargs:{cid,agent,type}, contract? }。 -->
+<html lang="zh-CN"><head><meta charset="utf-8"><title>1918装修工程合同</title>
+<link rel="stylesheet" href="../../layui/css/layui.css"><link rel="stylesheet" href="../../css/app.css"></head>
+<body><div class="app-page" style="max-width:1020px;margin:0 auto;">
+    <blockquote class="layui-elem-quote layui-quote-nm" style="margin-bottom:10px;">* 橙色标记为必填信息；"补充条款"类文本域双击可插入话术。</blockquote>
+    <form class="layui-form" id="form">
+        <fieldset class="layui-elem-field"><legend>客户信息</legend><div class="layui-field-box">
+            <div class="layui-form-item">
+                <div class="layui-inline"><label class="layui-form-label">甲方<i class="app-req">*</i></label><div class="layui-input-inline"><input class="layui-input conitem v_required" id="con-customer-name" maxlength="32"></div></div>
+                <div class="layui-inline"><label class="layui-form-label">身份证号<i class="app-req">*</i></label><div class="layui-input-inline"><input class="layui-input conitem v_required" id="con-customer-ident"></div></div>
+                <div class="layui-inline"><label class="layui-form-label">联系电话<i class="app-req">*</i></label><div class="layui-input-inline"><input class="layui-input conitem v_required" id="sin-customer-phone" value="/"></div></div>
+                <div class="layui-inline"><label class="layui-form-label">联系电话1<i class="app-req">*</i></label><div class="layui-input-inline"><input class="layui-input conitem v_required" id="sin-customer-phone1" value="/"></div></div>
+                <div class="layui-inline"><label class="layui-form-label">邮箱<i class="app-req">*</i></label><div class="layui-input-inline"><input class="layui-input conitem v_required" id="con-customer-email" value="/"></div></div>
+                <div class="layui-inline"><label class="layui-form-label">微信<i class="app-req">*</i></label><div class="layui-input-inline"><input class="layui-input conitem v_required" id="con-customer-wechat" value="/"></div></div>
+            </div>
+        </div></fieldset>
+        <fieldset class="layui-elem-field agent"><legend>甲方代理人</legend><div class="layui-field-box">
+            <div class="layui-form-item">
+                <div class="layui-inline"><label class="layui-form-label">甲方代理人<i class="app-req">*</i></label><div class="layui-input-inline"><input class="layui-input conitem v_required" id="sin-agent-name" value="/" maxlength="32"></div></div>
+                <div class="layui-inline"><label class="layui-form-label">联系电话<i class="app-req">*</i></label><div class="layui-input-inline"><input class="layui-input conitem v_required" id="sin-agent-phone" value="/"></div></div>
+                <div class="layui-inline"><label class="layui-form-label">身份证号<i class="app-req">*</i></label><div class="layui-input-inline"><input class="layui-input conitem v_required" id="sin-agent-ident" value="/"></div></div>
+                <div class="layui-inline" style="display:none;"><label class="layui-form-label">乙方<i class="app-req">*</i></label><div class="layui-input-inline"><input class="layui-input conitem v_required" id="con-partyb-name"></div></div>
+            </div>
+        </div></fieldset>
+        <fieldset class="layui-elem-field"><legend>施工信息</legend><div class="layui-field-box">
+            <div class="layui-form-item">
+                <div class="layui-inline"><label class="layui-form-label">施工地址</label><div class="layui-input-inline" style="width:560px;">
+                    <input class="layui-input conitem" id="con-province-name" style="width:150px;display:inline-block;"> 省
+                    <input class="layui-input conitem" id="con-city-name" style="width:150px;display:inline-block;"> 市
+                    <input class="layui-input conitem" id="con-proper-name" style="width:150px;display:inline-block;"> 区
+                </div></div>
+                <div class="layui-inline"><label class="layui-form-label"></label><div class="layui-input-inline" style="width:560px;">
+                    <input class="layui-input conitem" id="con-village-name" style="width:220px;display:inline-block;"> 园区
+                    <input class="layui-input conitem" id="con-housenumber" style="width:280px;display:inline-block;"> 楼号
+                </div></div>
+                <div class="layui-inline"><label class="layui-form-label">面积<i class="app-req">*</i></label><div class="layui-input-inline"><input class="layui-input conitem" id="con-buildarea"></div></div>
+                <div class="layui-inline"><label class="layui-form-label">房屋类型<i class="app-req">*</i></label><div class="layui-input-inline"><select id="con-housetype" class="conitem"></select></div></div>
+                <div class="layui-inline"><label class="layui-form-label">承揽形式<i class="app-req">*</i></label><div class="layui-input-inline"><input class="layui-input conitem" id="con-work-type"></div></div>
+                <div class="layui-inline"><label class="layui-form-label">承揽模式<i class="app-req">*</i></label><div class="layui-input-inline"><input class="layui-input conitem" id="con-work-model"></div></div>
+            </div>
+        </div></fieldset>
+        <fieldset class="layui-elem-field"><legend>金额信息</legend><div class="layui-field-box">
+            <div class="layui-form-item">
+                <div class="layui-inline"><label class="layui-form-label">合同总额<i class="app-req">*</i></label><div class="layui-input-inline"><input class="layui-input conitem" id="con-contract-total"></div></div>
+                <div class="layui-inline"><label class="layui-form-label">基础工程应付额<i class="app-req">*</i></label><div class="layui-input-inline"><input class="layui-input conitem" id="con-contract-stotal"></div></div>
+                <div class="layui-inline"><label class="layui-form-label">基础工程实付额<i class="app-req">*</i></label><div class="layui-input-inline"><input class="layui-input conitem" id="con-contract-rtotal"></div></div>
+                <div class="layui-inline"><label class="layui-form-label">优惠活动<i class="app-req">*</i></label><div class="layui-input-inline"><input class="layui-input conitem" id="con-activity-name"></div></div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-inline"><label class="layui-form-label">设计费<i class="app-req">*</i></label><div class="layui-input-inline"><input class="layui-input conitem" id="con-design-money"></div></div>
+                <div class="layui-inline"><label class="layui-form-label">设计费备注</label><div class="layui-input-inline" style="width:420px;"><textarea class="layui-textarea conitem" id="con-design-money-comment" maxlength="512"></textarea></div></div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-inline"><label class="layui-form-label">首付款<i class="app-req">*</i></label><div class="layui-input-inline"><input class="layui-input conitem" id="con-payment-first"></div></div>
+                <div class="layui-inline"><label class="layui-form-label">首付款备注</label><div class="layui-input-inline" style="width:420px;"><textarea class="layui-textarea conitem" id="con-payment-first-comment" maxlength="512"></textarea></div></div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-inline"><label class="layui-form-label">首付二期款<i class="app-req">*</i></label><div class="layui-input-inline"><input class="layui-input conitem" id="con-payment-second"></div></div>
+                <div class="layui-inline"><label class="layui-form-label">首付二期款备注</label><div class="layui-input-inline" style="width:420px;"><span style="color:#999;">甲方支付价款达到合同总价款的65%时，乙方方能开始施工</span></div></div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-inline"><label class="layui-form-label">二期款<i class="app-req">*</i></label><div class="layui-input-inline"><input class="layui-input conitem" id="con-payment-third"></div></div>
+                <div class="layui-inline"><label class="layui-form-label">二期款备注</label><div class="layui-input-inline" style="width:420px;"><textarea class="layui-textarea conitem" id="con-payment-third-comment" maxlength="512"></textarea></div></div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-inline"><label class="layui-form-label">尾款<i class="app-req">*</i></label><div class="layui-input-inline"><input class="layui-input conitem" id="con-payment-final"></div></div>
+                <div class="layui-inline"><label class="layui-form-label">尾款备注</label><div class="layui-input-inline" style="width:420px;"><textarea class="layui-textarea conitem" id="con-payment-final-comment" maxlength="512"></textarea></div></div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-inline"><label class="layui-form-label">工期</label><div class="layui-input-inline"><input class="layui-input conitem" id="con-work-number"></div></div>
+                <div class="layui-inline"><label class="layui-form-label">开工时间</label><div class="layui-input-inline" style="width:420px;">
+                    <input class="layui-input conitem" id="con-work-year" style="width:100px;display:inline-block;"> 年
+                    <input class="layui-input conitem" id="con-work-month" style="width:80px;display:inline-block;"> 月
+                    <input class="layui-input conitem" id="con-work-day" style="width:80px;display:inline-block;"> 日
+                </div></div>
+            </div>
+        </div></fieldset>
+        <fieldset class="layui-elem-field"><legend>收款账户</legend><div class="layui-field-box">
+            <div class="layui-form-item">
+                <div class="layui-inline"><label class="layui-form-label">卡号<i class="app-req">*</i></label><div class="layui-input-inline"><input class="layui-input conitem" id="con-bank-no" maxlength="512"></div></div>
+                <div class="layui-inline"><label class="layui-form-label">开户行<i class="app-req">*</i></label><div class="layui-input-inline"><input class="layui-input conitem" id="con-bank-name" maxlength="512"></div></div>
+                <div class="layui-inline"><label class="layui-form-label">姓名<i class="app-req">*</i></label><div class="layui-input-inline"><input class="layui-input conitem" id="con-bank-man" maxlength="512"></div></div>
+                <div class="layui-inline"><label class="layui-form-label">电话</label><div class="layui-input-inline"><input class="layui-input conitem" id="con-bank-phone" maxlength="512"></div></div>
+            </div>
+        </div></fieldset>
+        <fieldset class="layui-elem-field"><legend>补充条款</legend><div class="layui-field-box">
+            <textarea class="layui-textarea conitem makeup" id="con-markup-one" rows="4" maxlength="512" placeholder="补充条款 , 请双击获取内容或手动输入"></textarea>
+            <textarea class="layui-textarea conitem makeup" id="con-markup-two" rows="4" maxlength="512" placeholder="条款补充追加项 , 请双击获取内容或手动输入" style="margin-top:8px;"></textarea>
+            <textarea class="layui-textarea conitem makeup" id="con-markup-thr" rows="4" maxlength="512" placeholder="优惠活动备注 , 请双击获取内容或手动输入" style="margin-top:8px;"></textarea>
+        </div></fieldset>
+        <div class="layui-form-item" style="text-align:center;padding:10px 0;">
+            <button type="button" class="layui-btn" id="preservation"><i class="layui-icon layui-icon-ok"></i>保存合同</button>
+            <button type="button" class="layui-btn layui-btn-primary" id="btnClose">关闭</button>
+        </div>
+    </form>
+    <div data-talking-box style="display:none;"><div id="talkingList"></div></div>
+</div>
+<script src="../../layui/layui.js"></script><script src="../../js/app/config.js"></script><script src="../../js/app/server.js"></script><script src="../../js/app/utils.js"></script><script src="../../js/app/post.js"></script><script src="../../js/app/api.js"></script><script src="../../js/app/core.js"></script><script src="../../js/app/validate.js"></script><script src="../../js/app/bootstrap.js"></script><script src="../../js/contract/contract-common.js"></script><script src="../../js/contract/C-002-D-0-0001.js"></script>
+</body></html>

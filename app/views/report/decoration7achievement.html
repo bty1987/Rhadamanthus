@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<!-- app/views/report/decoration7achievement.html —— 装修业绩报表（分区/类型 分组：签单/设计/合同额/工程净业绩/设计费/服务费）含手动更新 -->
+<html lang="zh-CN"><head><meta charset="utf-8"><title>装修业绩报表</title>
+<link rel="stylesheet" href="../../layui/css/layui.css"><link rel="stylesheet" href="../../css/app.css"></head>
+<body><div class="app-page">
+    <div class="app-search"><form class="layui-form" id="searchForm" onsubmit="return false;"><div class="layui-form-item">
+        <div class="layui-inline"><label class="layui-form-label">年份</label><div class="layui-input-inline"><input type="text" name="year" id="year" placeholder="年份" class="layui-input" autocomplete="off"></div></div>
+        <div class="layui-inline"><label class="layui-form-label">月份</label><div class="layui-input-inline"><input type="text" name="month" id="month" placeholder="月份" class="layui-input" autocomplete="off"></div></div>
+        <div class="layui-inline"><label class="layui-form-label">类型</label><div class="layui-input-inline"><select name="typeness"><option value="">全部</option></select></div></div>
+        <div class="layui-inline"><button type="button" class="layui-btn" id="btnSearch"><i class="layui-icon layui-icon-search"></i>查询</button><button type="reset" class="layui-btn layui-btn-primary" id="btnReset">重置</button></div>
+    </div></form></div>
+    <div class="app-toolbar" style="margin:10px 0;">
+        <button type="button" class="layui-btn layui-btn-normal" id="btnUpdate"><i class="layui-icon layui-icon-refresh"></i>更新</button>
+    </div>
+    <div class="app-table"><table id="resultTable" lay-filter="resultTable"></table></div>
+    <div id="pagenation" class="app-pagenation"></div>
+
+    <div id="updateBox" style="display:none; padding:20px;"><form class="layui-form" id="updateForm">
+        <div class="layui-form-item"><label class="layui-form-label">年份<span class="app-req">*</span></label><div class="layui-input-block"><input type="text" name="year" id="updYear" placeholder="年份" class="layui-input" lay-verify="required" autocomplete="off"></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">月份<span class="app-req">*</span></label><div class="layui-input-block"><input type="text" name="month" id="updMonth" placeholder="月份" class="layui-input" lay-verify="required" autocomplete="off"></div></div>
+        <div class="layui-form-item app-form-footer"><button type="button" class="layui-btn" id="btnUpdateConfirm">确定</button><button type="button" class="layui-btn layui-btn-primary" id="btnUpdateCancel">取消</button></div>
+    </form></div>
+</div>
+<script src="../../layui/layui.js"></script><script src="../../js/app/config.js"></script><script src="../../js/app/server.js"></script><script src="../../js/app/utils.js"></script><script src="../../js/app/post.js"></script><script src="../../js/app/api.js"></script><script src="../../js/app/core.js"></script><script src="../../js/app/validate.js"></script><script src="../../js/app/bootstrap.js"></script><script src="../../js/report/decoration7achievement.js"></script>
+</body></html>

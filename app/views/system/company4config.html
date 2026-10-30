@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<!-- app/views/system/company4config.html —— 公司配置（多分区：放线小组/收据类型/款项比例/施工节点/系统配置）
+  旧版为 wizard 形式，这里改为 layui 卡片分区只读 + 关键配置编辑。
+  字段：drawlineGroup(放线小组) receiptType(收据类型) paymentScale(款项比例)
+        constructionNode(施工节点) systemConfig(系统配置) -->
+<html lang="zh-CN">
+<head><meta charset="utf-8"><title>公司配置</title>
+<link rel="stylesheet" href="../../layui/css/layui.css"><link rel="stylesheet" href="../../css/app.css"></head>
+<body>
+<div class="app-page">
+    <div class="layui-card">
+        <div class="layui-card-header"><b>当前公司：</b><span id="companyName">-</span></div>
+        <div class="layui-card-body">
+            <div class="layui-tab layui-tab-brief" lay-filter="configTab">
+                <ul class="layui-tab-title">
+                    <li class="layui-this">系统配置</li>
+                    <li>放线小组</li>
+                    <li>收据类型</li>
+                    <li>款项比例</li>
+                    <li>施工节点</li>
+                </ul>
+                <div class="layui-tab-content" style="padding:16px;">
+                    <div class="layui-tab-item layui-show">
+                        <div class="app-table"><table id="systemConfigTable"></table></div>
+                        <div id="configEditBox" style="display:none;padding:16px;"><form class="layui-form" id="configForm">
+                            <input type="hidden" name="scid">
+                            <div class="layui-form-item"><label class="layui-form-label">分组</label><div class="layui-input-block"><input type="text" name="group" placeholder="分组" class="layui-input"></div></div>
+                            <div class="layui-form-item"><label class="layui-form-label">键<span class="app-req">*</span></label><div class="layui-input-block"><input type="text" name="key" placeholder="配置键" class="layui-input v_required" lay-verify="required"></div></div>
+                            <div class="layui-form-item"><label class="layui-form-label">值<span class="app-req">*</span></label><div class="layui-input-block"><input type="text" name="value" placeholder="配置值" class="layui-input v_required" lay-verify="required"></div></div>
+                            <div class="layui-form-item"><label class="layui-form-label">说明</label><div class="layui-input-block"><textarea name="comment" placeholder="说明" class="layui-textarea"></textarea></div></div>
+                            <div class="layui-form-item app-form-footer"><button type="button" class="layui-btn" id="btnConfigSave">保存</button><button type="button" class="layui-btn layui-btn-primary" id="btnConfigCancel">取消</button></div>
+                        </form></div>
+                    </div>
+                    <div class="layui-tab-item"><div class="app-table"><table id="drawlineTable"></table></div></div>
+                    <div class="layui-tab-item"><div class="app-table"><table id="receiptTypeTable"></table></div></div>
+                    <div class="layui-tab-item"><div class="app-table"><table id="paymentScaleTable"></table></div></div>
+                    <div class="layui-tab-item"><div class="app-table"><table id="constructionNodeTable"></table></div></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/html" id="configToolbar"><button class="layui-btn layui-btn-xs" lay-event="edit">编辑</button><button class="layui-btn layui-btn-xs layui-btn-danger" lay-event="del">删除</button></script>
+    <script type="text/html" id="configHead"><button type="button" class="layui-btn layui-btn-sm" id="btnAddConfig"><i class="layui-icon layui-icon-add-1"></i>添加配置</button></script>
+</div>
+<script src="../../layui/layui.js"></script><script src="../../js/app/config.js"></script><script src="../../js/app/server.js"></script><script src="../../js/app/utils.js"></script><script src="../../js/app/post.js"></script><script src="../../js/app/api.js"></script><script src="../../js/app/core.js"></script><script src="../../js/app/validate.js"></script><script src="../../js/app/bootstrap.js"></script><script src="../../js/system/company4config.js"></script>
+</body></html>

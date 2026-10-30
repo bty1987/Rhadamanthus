@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<!-- app/views/payment/activityPayment.html —— 活动收款（按会员号/订单号/状态/创建时间筛选）
+  列：会员号/订单号/类型/品牌/金额/状态/备注/创建时间。操作：收款（现金/刷卡/券）、打印、添加活动款。 -->
+<html lang="zh-CN"><head><meta charset="utf-8"><title>活动收款</title>
+<link rel="stylesheet" href="../../layui/css/layui.css"><link rel="stylesheet" href="../../css/app.css"></head>
+<body><div class="app-page">
+    <div class="app-search"><form class="layui-form" id="searchForm"><div class="layui-form-item">
+        <div class="layui-inline"><label class="layui-form-label">会员号</label><div class="layui-input-inline"><input class="layui-input" name="mno" data-op="cn"></div></div>
+        <div class="layui-inline"><label class="layui-form-label">订单号</label><div class="layui-input-inline"><input class="layui-input" name="orderId" data-op="cn"></div></div>
+        <div class="layui-inline"><label class="layui-form-label">状态</label><div class="layui-input-inline"><select name="status"><option value="">全部</option><option value="0">初始</option><option value="1">已付款</option></select></div></div>
+        <div class="layui-inline"><label class="layui-form-label">创建时间</label><div class="layui-input-inline"><input class="layui-input" name="createTime" id="createTime" placeholder="YYYY-MM-DD" data-op="eq"></div></div>
+        <div class="layui-inline"><button type="button" class="layui-btn" id="btnSearch"><i class="layui-icon layui-icon-search"></i>查询</button><button type="button" class="layui-btn" id="btnAdd"><i class="layui-icon layui-icon-add-1"></i>添加</button><button type="button" class="layui-btn layui-btn-primary" id="btnBack"><i class="layui-icon layui-icon-return"></i>返回</button></div>
+    </div></form></div>
+    <div class="app-table"><table id="resultTable" lay-filter="resultTable"></table></div>
+    <div id="pagenation" class="app-pagenation"></div>
+    <script type="text/html" id="rowToolbar">
+        <button class="layui-btn layui-btn-xs" lay-event="collect">收款</button>
+        <button class="layui-btn layui-btn-xs layui-btn-normal" lay-event="print">打印</button>
+    </script>
+</div>
+<script src="../../layui/layui.js"></script><script src="../../js/app/config.js"></script><script src="../../js/app/server.js"></script><script src="../../js/app/utils.js"></script><script src="../../js/app/post.js"></script><script src="../../js/app/api.js"></script><script src="../../js/app/core.js"></script><script src="../../js/app/validate.js"></script><script src="../../js/app/bootstrap.js"></script><script src="../../js/payment/activityPayment.js"></script>
+</body></html>

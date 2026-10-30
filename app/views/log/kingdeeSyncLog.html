@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<!-- app/views/log/kingdeeSyncLog.html —— 金蝶同步日志（只读）
+  条件：订单号(orderId,eq) 同步时间(createTime,between) 款项类型(type,cn) -->
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8" />
+    <title>金蝶同步日志</title>
+    <link rel="stylesheet" href="../../layui/css/layui.css">
+    <link rel="stylesheet" href="../../css/app.css">
+</head>
+<body>
+<div class="app-page">
+    <div class="app-search">
+        <form class="layui-form" id="searchForm">
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">订单号</label>
+                    <div class="layui-input-inline"><input type="text" name="orderId" data-op="eq" placeholder="订单号" class="layui-input" autocomplete="off"></div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">款项类型</label>
+                    <div class="layui-input-inline"><input type="text" name="type" data-op="cn" placeholder="款项类型" class="layui-input" autocomplete="off"></div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">同步时间</label>
+                    <div class="layui-input-inline" style="width:260px;"><input type="text" name="createTime" id="createTime" data-op="between" placeholder="开始 - 结束" class="layui-input" readonly></div>
+                </div>
+                <div class="layui-inline">
+                    <button type="button" class="layui-btn" id="btnSearch"><i class="layui-icon layui-icon-search"></i>查询</button>
+                    <button type="reset" class="layui-btn layui-btn-primary" id="btnReset">重置</button>
+                    <button type="button" class="layui-btn layui-btn-normal" id="btnExport"><i class="layui-icon layui-icon-export"></i>导出</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="app-table"><table id="resultTable" lay-filter="resultTable"></table></div>
+    <div id="pagenation" class="app-pagenation"></div>
+</div>
+<script src="../../layui/layui.js"></script>
+<script src="../../js/app/config.js"></script>
+<script src="../../js/app/server.js"></script>
+<script src="../../js/app/utils.js"></script>
+<script src="../../js/app/post.js"></script>
+<script src="../../js/app/api.js"></script>
+<script src="../../js/app/core.js"></script>
+<script src="../../js/app/validate.js"></script>
+<script src="../../js/app/bootstrap.js"></script>
+<script src="../../js/log/log-common.js"></script>
+<script src="../../js/log/kingdeeSyncLog.js"></script>
+</body>
+</html>

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<!-- app/views/construction/acceptance4detail.html —— 验收详情（客户验收评分）
+  上下文：app.params.construction = { orderId }。
+  评分（旧 raty → layui rate）：水路/电路/瓦工/木工/油工/监理工程质量 + 工程质量等级（1-5 星）；
+  隐藏项（服务态度/形象卫生/主材/内部评价）与旧页保持一致。保存走 updateAcceptance。 -->
+<html lang="zh-CN"><head><meta charset="utf-8"><title>验收详情</title>
+<link rel="stylesheet" href="../../layui/css/layui.css"><link rel="stylesheet" href="../../css/app.css">
+<style>
+.accept-card { background: #fff; border-radius: 4px; box-shadow: 0 1px 3px rgba(0,0,0,.04); padding: 16px 20px; margin-bottom: 12px; }
+.accept-card h4 { font-size: 15px; margin-bottom: 12px; color: #333; }
+.accept-grid { overflow: hidden; }
+.accept-col { float: left; width: 33.33%; box-sizing: border-box; padding: 0 10px; }
+.worker-item { display: inline-block; margin: 6px 10px 6px 0; }
+.worker-item img { width: 50px; height: 50px; border-radius: 4px; vertical-align: middle; margin-right: 8px; object-fit: cover; }
+</style></head>
+<body><div class="app-page">
+    <div class="app-toolbar" style="padding:10px 15px 0;">
+        <span style="font-size:16px;font-weight:bold;">验收详情：<span id="orderIdLabel">-</span></span>
+        <button type="button" class="layui-btn layui-btn-sm" id="saveBtn"><i class="layui-icon layui-icon-ok"></i>保存</button>
+        <button type="button" class="layui-btn layui-btn-sm layui-btn-primary" id="backBtn"><i class="layui-icon layui-icon-return"></i>返回</button>
+    </div>
+
+    <div class="accept-card" style="margin-top:10px;">
+        <h4>装修单</h4>
+        <form class="layui-form">
+            <div class="layui-form-item">
+                <div class="layui-inline"><label class="layui-form-label">装修单号</label><div class="layui-input-inline"><input class="layui-input" id="orderId" readonly></div></div>
+                <div class="layui-inline"><label class="layui-form-label">客户姓名</label><div class="layui-input-inline"><input class="layui-input" id="customer" readonly></div></div>
+                <div class="layui-inline" style="width:560px;"><label class="layui-form-label">楼盘地址</label><div class="layui-input-inline" style="width:430px;"><input class="layui-input" id="orderAddr" readonly></div></div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-inline"><label class="layui-form-label">设计师</label><div class="layui-input-inline"><input class="layui-input" id="designer" readonly></div></div>
+                <div class="layui-inline"><label class="layui-form-label">施工监理</label><div class="layui-input-inline"><input class="layui-input" id="supervisName" readonly></div></div>
+                <div class="layui-inline"><label class="layui-form-label">合同编号</label><div class="layui-input-inline"><input class="layui-input" id="contractCode" readonly></div></div>
+                <div class="layui-inline"><label class="layui-form-label">验收日期</label><div class="layui-input-inline"><input class="layui-input" id="acceptanceTime" placeholder="yyyy-MM-dd"></div></div>
+            </div>
+        </form>
+    </div>
+
+    <div class="accept-card">
+        <h4>施工人员信息</h4>
+        <div id="constructerDiv"></div>
+    </div>
+
+    <div class="accept-grid">
+        <div class="accept-col"><div class="accept-card"><h4>水路工程</h4>
+            <div class="layui-form-item"><label class="layui-form-label">工程质量</label><div class="layui-input-block" id="raty1"></div></div>
+            <div style="display:none;"><div id="raty2"></div><div id="raty3"></div></div>
+        </div></div>
+        <div class="accept-col"><div class="accept-card"><h4>电路工程</h4>
+            <div class="layui-form-item"><label class="layui-form-label">工程质量</label><div class="layui-input-block" id="raty4"></div></div>
+            <div style="display:none;"><div id="raty5"></div><div id="raty6"></div></div>
+        </div></div>
+        <div class="accept-col"><div class="accept-card"><h4>瓦工工程</h4>
+            <div class="layui-form-item"><label class="layui-form-label">工程质量</label><div class="layui-input-block" id="raty7"></div></div>
+            <div style="display:none;"><div id="raty8"></div><div id="raty9"></div></div>
+        </div></div>
+        <div class="accept-col"><div class="accept-card"><h4>木工工程</h4>
+            <div class="layui-form-item"><label class="layui-form-label">工程质量</label><div class="layui-input-block" id="raty10"></div></div>
+            <div style="display:none;"><div id="raty11"></div><div id="raty12"></div></div>
+        </div></div>
+        <div class="accept-col"><div class="accept-card"><h4>油工工程</h4>
+            <div class="layui-form-item"><label class="layui-form-label">工程质量</label><div class="layui-input-block" id="raty13"></div></div>
+            <div style="display:none;"><div id="raty14"></div><div id="raty15"></div></div>
+        </div></div>
+        <div class="accept-col"><div class="accept-card"><h4>监理</h4>
+            <div class="layui-form-item"><label class="layui-form-label">工程质量</label><div class="layui-input-block" id="raty16"></div></div>
+            <div style="display:none;"><div id="raty17"></div><div id="raty18"></div></div>
+        </div></div>
+    </div>
+
+    <div class="accept-card" style="clear:both;">
+        <h4>其他</h4>
+        <div class="layui-form-item"><label class="layui-form-label">工程质量等级</label><div class="layui-input-block" id="raty21"></div></div>
+        <div style="display:none;"><div id="raty22"></div></div>
+        <div class="layui-form-item layui-form-text"><label class="layui-form-label">建议</label><div class="layui-input-block"><textarea id="propose" maxlength="256" class="layui-textarea" placeholder="建议"></textarea></div></div>
+    </div>
+</div>
+<script src="../../layui/layui.js"></script><script src="../../js/app/config.js"></script><script src="../../js/app/server.js"></script><script src="../../js/app/utils.js"></script><script src="../../js/app/post.js"></script><script src="../../js/app/api.js"></script><script src="../../js/app/core.js"></script><script src="../../js/app/validate.js"></script><script src="../../js/app/bootstrap.js"></script><script src="../../js/construction/construction-common.js"></script><script src="../../js/construction/acceptance4detail.js"></script>
+</body></html>

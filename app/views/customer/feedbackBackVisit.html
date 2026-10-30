@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<!-- app/views/customer/feedbackBackVisit.html —— 反馈回访（上下文 app.params.fid + app.params.decoration.orderId）
+     回访列表 + 添加回访 + 反馈记录 + 图片管理 -->
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8" />
+    <title>反馈回访</title>
+    <link rel="stylesheet" href="../../layui/css/layui.css">
+    <link rel="stylesheet" href="../../css/app.css">
+</head>
+<body>
+<div class="app-page" id="feedbackBackVisitPage">
+
+    <div class="app-toolbar" style="padding:10px 15px 0;">
+        <button type="button" class="layui-btn layui-btn-sm" id="btnBack"><i class="layui-icon layui-icon-return"></i>返回</button>
+        <button type="button" class="layui-btn layui-btn-sm layui-btn-normal" id="btnAdd"><i class="layui-icon layui-icon-add-1"></i>添加回访</button>
+    </div>
+
+    <h4 class="layui-elip" style="margin:12px 15px 6px;">回访列表</h4>
+    <div class="app-table">
+        <table id="backVisitTable" lay-filter="backVisitTable"></table>
+    </div>
+
+    <h4 class="layui-elip" style="margin:12px 15px 6px;">反馈记录</h4>
+    <div class="app-table">
+        <table id="recordTable" lay-filter="recordTable"></table>
+    </div>
+
+    <!-- 添加回访 -->
+    <div id="editBox" style="display:none; padding:20px;">
+        <form class="layui-form" lay-filter="editForm" id="editForm">
+            <div class="layui-form-item">
+                <label class="layui-form-label">开头语</label>
+                <div class="layui-input-block">
+                    <select name="openWords">
+                        <option value="0">方便</option><option value="1">不方便/拒绝评价</option>
+                        <option value="2">未接一①次</option><option value="3">未接一②次</option>
+                        <option value="4">未接一③次</option><option value="5">超期放弃回访</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">维修满意度</label>
+                <div class="layui-input-block">
+                    <select name="pleased">
+                        <option value="0">非常满意</option><option value="1">满意</option>
+                        <option value="2">一般</option><option value="3">不满意</option>
+                        <option value="4">非常不满意</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">24h内有无人员联系您</label>
+                <div class="layui-input-block">
+                    <select name="contactSoonFlag">
+                        <option value="0">是</option><option value="1">否</option><option value="2">不记得</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">师傅是否按时上的门</label>
+                <div class="layui-input-block">
+                    <select name="perforFlag">
+                        <option value="0">是</option><option value="1">否</option><option value="2">不记得</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">报修是否解决</label>
+                <div class="layui-input-block">
+                    <select name="resultFlag">
+                        <option value="0">是</option><option value="1">否</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">事后有无人员联系您</label>
+                <div class="layui-input-block">
+                    <select name="contactFlag">
+                        <option value="0">已解决</option><option value="1">解决过程中</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">维修结果</label>
+                <div class="layui-input-block">
+                    <select name="result">
+                        <option value="0">整体待修</option><option value="1">整体完工</option>
+                        <option value="2">确认撤销</option><option value="3">部分完工</option>
+                        <option value="4">来电表扬</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">受表扬工人</label>
+                <div class="layui-input-inline" style="width:190px;">
+                    <input type="text" name="praiserName" id="praiserName" placeholder="点击选择工人" class="layui-input" readonly>
+                </div>
+                <div class="layui-input-inline">
+                    <button type="button" class="layui-btn layui-btn-normal" id="btnPickPraiser">选择</button>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">表扬形式</label>
+                <div class="layui-input-block">
+                    <select name="praiseType">
+                        <option value="0">表扬形式①</option>
+                        <option value="1">表扬形式②</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">维修周期(天)</label>
+                <div class="layui-input-block">
+                    <input type="text" name="workDays" placeholder="请输入维修周期" class="layui-input v_number">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">表扬日期</label>
+                <div class="layui-input-block">
+                    <input type="text" name="praiseTime" id="praiseTime" placeholder="表扬日期" class="layui-input" readonly>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">整体完工日期</label>
+                <div class="layui-input-block">
+                    <input type="text" name="finishTime" id="finishTime" placeholder="整体完工日期" class="layui-input" readonly>
+                </div>
+            </div>
+            <div class="layui-form-item layui-form-text">
+                <label class="layui-form-label">回访内容</label>
+                <div class="layui-input-block">
+                    <textarea name="complaint" placeholder="请输入回访内容" class="layui-textarea"></textarea>
+                </div>
+            </div>
+            <div class="layui-form-item layui-form-text">
+                <label class="layui-form-label">表扬内容</label>
+                <div class="layui-input-block">
+                    <textarea name="praise" placeholder="请输入表扬内容" class="layui-textarea"></textarea>
+                </div>
+            </div>
+            <div class="layui-form-item layui-form-text">
+                <label class="layui-form-label">拒绝评价原因</label>
+                <div class="layui-input-block">
+                    <textarea name="refuseComment" placeholder="请输入拒绝评价原因" class="layui-textarea"></textarea>
+                </div>
+            </div>
+            <div class="layui-form-item layui-form-text">
+                <label class="layui-form-label">未解决问题记录</label>
+                <div class="layui-input-block">
+                    <textarea name="resultComment" placeholder="请输入未解决问题的记录" class="layui-textarea"></textarea>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">图片</label>
+                <div class="layui-input-inline">
+                    <button type="button" class="layui-btn layui-btn-normal" id="btnUpload"><i class="layui-icon layui-icon-upload-drag"></i>上传图片</button>
+                </div>
+                <div class="layui-input-inline" style="line-height:36px;">
+                    <img id="showImg" style="display:none;width:60px;height:60px;object-fit:cover;">
+                </div>
+            </div>
+            <div class="layui-form-item app-form-footer">
+                <button type="button" class="layui-btn" id="btnSave">保存</button>
+                <button type="button" class="layui-btn layui-btn-primary" id="btnCancel">取消</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- 图片管理 -->
+    <div id="drawingBox" style="display:none; padding:15px;">
+        <button type="button" class="layui-btn layui-btn-normal layui-btn-sm" id="btnDrawingUpload"><i class="layui-icon layui-icon-upload-drag"></i>上传图片</button>
+        <ul id="feedbackDrawing" style="list-style:none;padding:0;margin:10px 0 0;"></ul>
+    </div>
+
+</div>
+
+<script src="../../layui/layui.js"></script>
+<script src="../../js/app/upload.js"></script>
+<script src="../../js/app/config.js"></script>
+<script src="../../js/app/server.js"></script>
+<script src="../../js/app/utils.js"></script>
+<script src="../../js/app/post.js"></script>
+<script src="../../js/app/api.js"></script>
+<script src="../../js/app/core.js"></script>
+<script src="../../js/app/validate.js"></script>
+<script src="../../js/app/bootstrap.js"></script>
+<script src="../../js/customer/customer-common.js"></script>
+<script src="../../js/customer/feedbackBackVisit.js"></script>
+</body>
+</html>

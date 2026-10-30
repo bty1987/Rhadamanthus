@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<!-- app/views/material/materialActivity.html —— 主材活动（活动信息 + 活动物品列表 + 领取/失效/退货/配送操作）
+  上下文：app.params.materialActivity = { orderId, mid, no, activityId }。 -->
+<html lang="zh-CN"><head><meta charset="utf-8"><title>主材活动</title>
+<link rel="stylesheet" href="../../layui/css/layui.css"><link rel="stylesheet" href="../../css/app.css"></head>
+<body><div class="app-page">
+    <fieldset class="layui-elem-field"><legend>活动信息</legend><div style="padding:15px;">
+        <div id="activityInfoBox"></div>
+        <button type="button" class="layui-btn" id="btnAddItem"><i class="layui-icon layui-icon-add-1"></i>领取活动物品</button>
+        <button type="button" class="layui-btn layui-btn-warm" id="btnChangeActivity">修改活动</button>
+    </div></fieldset>
+    <fieldset class="layui-elem-field"><legend>活动物品</legend><div style="padding:15px;">
+        <div class="app-table"><table id="resultTable" lay-filter="resultTable"></table></div>
+    </div></fieldset>
+    <div style="margin-top:10px;"><button type="button" class="layui-btn layui-btn-primary" id="btnBack">返回</button></div>
+    <div id="editBox" style="display:none; padding:20px;"><form class="layui-form" id="editForm">
+        <input type="hidden" name="maiid">
+        <input type="hidden" name="opType">
+        <div class="layui-form-item"><label class="layui-form-label">说明</label><div class="layui-input-block"><textarea name="content" class="layui-textarea" placeholder="说明" style="height:80px;"></textarea></div></div>
+        <div class="layui-form-item app-form-footer"><button type="button" class="layui-btn" id="btnSave">保存</button><button type="reset" class="layui-btn layui-btn-primary" id="btnCancel">取消</button></div>
+    </form></div>
+    <div id="changeBox" style="display:none; padding:20px;"><form class="layui-form" id="changeForm">
+        <div class="layui-form-item"><label class="layui-form-label">活动<span class="app-req">*</span></label><div class="layui-input-block"><select name="aid" id="selActivity"></select></div></div>
+        <div class="layui-form-item app-form-footer"><button type="button" class="layui-btn" id="btnChangeSave">保存</button><button type="reset" class="layui-btn layui-btn-primary" id="btnChangeCancel">取消</button></div>
+    </form></div>
+    <script type="text/html" id="rowToolbar">
+        <button class="layui-btn layui-btn-xs" lay-event="receive">领取</button>
+        <button class="layui-btn layui-btn-xs layui-btn-warm" lay-event="delive">配送</button>
+        <button class="layui-btn layui-btn-xs layui-btn-danger" lay-event="refund">退货</button>
+        <button class="layui-btn layui-btn-xs layui-btn-disabled" lay-event="abate">失效</button>
+        <button class="layui-btn layui-btn-xs layui-btn-normal" lay-event="unrefund">未退</button>
+        <button class="layui-btn layui-btn-xs" lay-event="expend">补款</button>
+    </script>
+</div>
+<script src="../../layui/layui.js"></script><script src="../../js/app/config.js"></script><script src="../../js/app/server.js"></script><script src="../../js/app/utils.js"></script><script src="../../js/app/post.js"></script><script src="../../js/app/api.js"></script><script src="../../js/app/core.js"></script><script src="../../js/app/validate.js"></script><script src="../../js/app/bootstrap.js"></script><script src="../../js/material/materialActivity.js"></script>
+</body></html>

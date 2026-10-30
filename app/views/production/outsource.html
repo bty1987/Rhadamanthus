@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<!-- app/views/production/outsource.html —— 外协单（分页列表 + 状态流转：审核/确认/完结/废除 + 编辑/外协项/图表）
+  字段：no(编号) production.pno(生产单号) supplier.userName(厂商) status(0初始/1审核/2确认/3完结/4废除) -->
+<html lang="zh-CN"><head><meta charset="utf-8"><title>外协单</title>
+<link rel="stylesheet" href="../../layui/css/layui.css"><link rel="stylesheet" href="../../css/app.css"></head>
+<body><div class="app-page">
+    <div class="app-search"><form class="layui-form" id="searchForm"><div class="layui-form-item">
+        <div class="layui-inline"><label class="layui-form-label">编号</label><div class="layui-input-inline"><input type="text" name="no" data-op="cn" placeholder="编号" class="layui-input" autocomplete="off"></div></div>
+        <div class="layui-inline"><button type="button" class="layui-btn" id="btnSearch"><i class="layui-icon layui-icon-search"></i>查询</button><button type="reset" class="layui-btn layui-btn-primary" id="btnReset">重置</button></div>
+    </div></form></div>
+    <div class="app-table"><table id="resultTable" lay-filter="resultTable"></table></div>
+    <div id="pagenation" class="app-pagenation"></div>
+    <script type="text/html" id="rowToolbar">
+        <button class="layui-btn layui-btn-xs" lay-event="item">外协项</button>
+        <button class="layui-btn layui-btn-xs" lay-event="receipt">审核</button>
+        <button class="layui-btn layui-btn-xs" lay-event="confirm">确认</button>
+        <button class="layui-btn layui-btn-xs layui-btn-danger" lay-event="end">完结</button>
+        <button class="layui-btn layui-btn-xs layui-btn-warm" lay-event="edit">编辑</button>
+        <button class="layui-btn layui-btn-xs" lay-event="abolition">废除</button>
+    </script>
+
+    <div id="editBox" style="display:none; padding:20px;"><form class="layui-form" id="editForm">
+        <input type="hidden" name="oid">
+        <div class="layui-form-item"><label class="layui-form-label">厂商</label><div class="layui-input-block"><input type="text" name="supplier" class="layui-input" readonly></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">工期<span class="app-req">*</span></label><div class="layui-input-inline"><input type="text" name="timeLimit" placeholder="工期(天)" class="layui-input v_number" lay-verify="required"></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">备注</label><div class="layui-input-block"><input type="text" name="comment" class="layui-input"></div></div>
+        <div class="layui-form-item app-form-footer"><button type="button" class="layui-btn" id="btnSave">保存</button><button type="reset" class="layui-btn layui-btn-primary" id="btnCancel">取消</button></div>
+    </form></div>
+
+    <div id="endBox" style="display:none; padding:20px;"><form class="layui-form" id="endForm">
+        <input type="hidden" name="oid">
+        <div class="layui-form-item"><label class="layui-form-label">数量<span class="app-req">*</span></label><div class="layui-input-inline"><input type="text" name="num" placeholder="数量" class="layui-input v_number" lay-verify="required"></div></div>
+        <div class="layui-form-item app-form-footer"><button type="button" class="layui-btn" id="btnEndOk">确定</button><button type="reset" class="layui-btn layui-btn-primary" id="btnEndCancel">取消</button></div>
+    </form></div>
+</div>
+<script src="../../layui/layui.js"></script><script src="../../js/app/config.js"></script><script src="../../js/app/server.js"></script><script src="../../js/app/utils.js"></script><script src="../../js/app/post.js"></script><script src="../../js/app/api.js"></script><script src="../../js/app/core.js"></script><script src="../../js/app/validate.js"></script><script src="../../js/app/bootstrap.js"></script><script src="../../js/production/outsource.js"></script>
+</body></html>

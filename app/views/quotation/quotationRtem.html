@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<!-- app/views/quotation/quotationRtem.html —— 关联报价项（弹窗页：source.qiid 的关联项管理，公式 {w}工程量 等变量） -->
+<html lang="zh-CN"><head><meta charset="utf-8"><title>关联报价项</title>
+<link rel="stylesheet" href="../../layui/css/layui.css"><link rel="stylesheet" href="../../css/app.css"></head>
+<body><div class="app-page">
+    <div class="app-toolbar" style="padding:10px 15px;">
+        <button type="button" class="layui-btn layui-btn-sm" id="btnAdd"><i class="layui-icon layui-icon-add-1"></i>添加关联</button>
+        <button type="button" class="layui-btn layui-btn-sm layui-btn-normal" id="btnPick"><i class="layui-icon layui-icon-list"></i>选择报价项</button>
+    </div>
+    <div class="app-table" style="padding:0 15px;"><table id="resultTable" lay-filter="resultTable"></table></div>
+    <script type="text/html" id="rowToolbar">
+        <button class="layui-btn layui-btn-xs layui-btn-danger" lay-event="del">删除</button>
+    </script>
+    <script type="text/html" id="itemToolbar">
+        <button class="layui-btn layui-btn-xs" lay-event="pick">选择</button>
+    </script>
+    <div id="editBox" style="display:none;padding:20px 30px;">
+        <div class="layui-form-item"><label class="layui-form-label">关联报价项</label><div class="layui-input-inline"><input id="targetItem" class="layui-input" readonly placeholder="点击 选择报价项"></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">类型</label><div class="layui-input-inline"><select id="type"></select></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">公式</label><div class="layui-input-inline" style="width:320px;"><input id="formula" class="layui-input" placeholder="如: 取整(周长*2.5)+面积"></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">说明</label><div class="layui-input-inline"><input id="comment" class="layui-input" placeholder="说明"></div></div>
+    </div>
+    <div id="itemsBox" style="display:none;padding:10px 15px;">
+        <form class="layui-form" id="itemForm"><div class="layui-form-item">
+            <div class="layui-inline"><label class="layui-form-label">名称</label><div class="layui-input-inline"><input name="name" data-op="cn" class="layui-input" placeholder="名称"></div></div>
+            <div class="layui-inline"><button type="button" class="layui-btn" id="btnItemSearch"><i class="layui-icon layui-icon-search"></i>查询</button></div>
+        </div></form>
+        <table id="itemTable" lay-filter="itemTable"></table>
+        <div id="itemPagenation"></div>
+    </div>
+</div>
+<script src="../../layui/layui.js"></script><script src="../../js/app/config.js"></script><script src="../../js/app/server.js"></script><script src="../../js/app/utils.js"></script><script src="../../js/app/post.js"></script><script src="../../js/app/api.js"></script><script src="../../js/app/core.js"></script><script src="../../js/app/validate.js"></script><script src="../../js/app/bootstrap.js"></script><script src="../../js/quotation/quotation-common.js"></script><script src="../../js/quotation/quotationRtem.js"></script>
+</body></html>

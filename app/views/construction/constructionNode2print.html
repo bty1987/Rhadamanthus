@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<!-- app/views/construction/constructionNode2print.html —— 工程节点表（打印）
+  上下文：app.params.construction（工程单行数据，含 decoration）。 -->
+<html lang="zh-CN"><head><meta charset="utf-8"><title>工程节点表</title>
+<link rel="stylesheet" href="../../layui/css/layui.css"><link rel="stylesheet" href="../../css/app.css">
+<style>
+.print-table { border-collapse: collapse; width: 100%; background: #fff; }
+.print-table caption { line-height: 65px; font-size: 20px; font-weight: bold; }
+.print-table th, .print-table td { border: 1px solid #333; height: 28px; padding: 4px 8px; font-size: 13px; text-align: center; }
+@media print { .no-print { display: none; } }
+</style></head>
+<body><div class="app-page">
+    <div class="app-toolbar no-print" style="padding:10px 15px 0;">
+        <button type="button" class="layui-btn layui-btn-sm" onclick="window.print();"><i class="layui-icon layui-icon-print"></i>打印</button>
+    </div>
+    <div id="reslist" style="padding:10px 15px;"></div>
+</div>
+<script src="../../layui/layui.js"></script><script src="../../js/app/config.js"></script><script src="../../js/app/server.js"></script><script src="../../js/app/utils.js"></script><script src="../../js/app/post.js"></script><script src="../../js/app/api.js"></script><script src="../../js/app/core.js"></script><script src="../../js/app/validate.js"></script><script src="../../js/app/bootstrap.js"></script><script src="../../js/construction/construction-common.js"></script><script src="../../js/construction/constructionNode2print.js"></script>
+</body></html>

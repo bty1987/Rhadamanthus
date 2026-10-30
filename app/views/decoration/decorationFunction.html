@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<!-- app/views/decoration/decorationFunction.html —— 装修单功能配置（按页面配置 api/条件/按钮/节点 + 同步公司） -->
+<html lang="zh-CN"><head><meta charset="utf-8"><title>装修单功能配置</title>
+<link rel="stylesheet" href="../../layui/css/layui.css"><link rel="stylesheet" href="../../css/app.css"></head>
+<body><div class="app-page">
+    <div class="app-table" style="padding:10px 15px;"><table id="resultTable" lay-filter="resultTable"></table></div>
+    <script type="text/html" id="rowToolbar">
+        <button class="layui-btn layui-btn-xs" lay-event="config">配置</button>
+        <button class="layui-btn layui-btn-xs layui-btn-normal" lay-event="sync">同步</button>
+    </script>
+    <div id="configBox" style="display:none;padding:15px 20px;">
+        <form class="layui-form">
+            <div class="layui-form-item"><label class="layui-form-label">接口(api)</label><div class="layui-input-block" id="apiData"></div></div>
+            <div class="layui-form-item"><label class="layui-form-label">条件(condArr)</label><div class="layui-input-block" id="condArrData"></div></div>
+            <div class="layui-form-item"><label class="layui-form-label">字段(field)</label><div class="layui-input-block" id="fieldData"></div></div>
+            <div class="layui-form-item"><label class="layui-form-label">功能(function)</label><div class="layui-input-block" id="functionData"></div></div>
+            <div class="layui-form-item"><label class="layui-form-label">节点(node)</label><div class="layui-input-block" id="nodeData"></div></div>
+            <div class="layui-form-item"><label class="layui-form-label">状态(status)</label><div class="layui-input-block" id="statusData"></div></div>
+            <div class="layui-form-item"><label class="layui-form-label">公司(company)</label><div class="layui-input-block" id="companyData"></div></div>
+        </form>
+    </div>
+    <div id="syncBox" style="display:none;padding:15px 20px;">
+        <p style="margin-bottom:10px;">将 <b id="syncFunctionName"></b> 的功能配置同步到以下公司：</p>
+        <div id="companyList"></div>
+    </div>
+</div>
+<script src="../../layui/layui.js"></script><script src="../../js/app/config.js"></script><script src="../../js/app/server.js"></script><script src="../../js/app/utils.js"></script><script src="../../js/app/post.js"></script><script src="../../js/app/api.js"></script><script src="../../js/app/core.js"></script><script src="../../js/app/validate.js"></script><script src="../../js/app/bootstrap.js"></script><script src="../../js/decoration/decoration-common.js"></script><script src="../../js/decoration/decorationFunction.js"></script>
+</body></html>

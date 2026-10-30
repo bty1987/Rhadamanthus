@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>招聘管理</title>
+<link rel="stylesheet" href="../../layui/css/layui.css">
+<link rel="stylesheet" href="../../css/app.css">
+</head>
+<body>
+<div class="app-page">
+<div class="app-search">
+<form class="layui-form" id="searchForm" lay-filter="searchForm"><div class="layui-form-item">
+<div class="layui-inline"><label class="layui-form-label">姓名</label><div class="layui-input-inline"><input type="text" name="name" data-op="cn" placeholder="姓名" class="layui-input" autocomplete="off"></div></div>
+<div class="layui-inline"><label class="layui-form-label">身份证号</label><div class="layui-input-inline"><input type="text" name="identity" data-op="cn" placeholder="身份证号" class="layui-input" autocomplete="off"></div></div>
+<div class="layui-inline"><label class="layui-form-label">电话</label><div class="layui-input-inline"><input type="text" name="phone" data-op="cn" placeholder="电话" class="layui-input" autocomplete="off"></div></div>
+<div class="layui-inline"><label class="layui-form-label">状态</label><div class="layui-input-inline"><select name="status" data-op="eq"><option value="">全部</option><option value="0">初始</option><option value="1">入职</option><option value="2">作废</option></select></div></div>
+<div class="layui-inline"><button type="button" class="layui-btn" id="btnSearch"><i class="layui-icon layui-icon-search"></i>查询</button><button type="reset" class="layui-btn layui-btn-primary" id="btnReset">重置</button><button type="button" class="layui-btn layui-btn-normal" id="btnAdd"><i class="layui-icon layui-icon-add-1"></i>添加</button></div>
+</div></form>
+</div>
+<div class="app-table"><table id="resultTable" lay-filter="resultTable"></table></div>
+<div id="pagenation" class="app-pagenation"></div><div id="editBox" style="display:none; padding:20px;"><form class="layui-form" id="editForm"><div class="layui-form-item"><label class="layui-form-label">姓名<span class="app-req">*</span></label><div class="layui-input-block"><input type="text" name="name" placeholder="" class="layui-input v_required" lay-verify="required"></div></div>
+<div class="layui-form-item"><label class="layui-form-label">身份证号</label><div class="layui-input-block"><input type="text" name="identity" placeholder="" class="layui-input"></div></div>
+<div class="layui-form-item"><label class="layui-form-label">地址</label><div class="layui-input-block"><input type="text" name="place" placeholder="" class="layui-input"></div></div>
+<div class="layui-form-item"><label class="layui-form-label">电话</label><div class="layui-input-block"><input type="text" name="phone" placeholder="" class="layui-input"></div></div>
+<div class="layui-form-item"><label class="layui-form-label">应聘方式</label><div class="layui-input-block"><select name="employWay"></select></div></div><div class="layui-form-item"><label class="layui-form-label">学历</label><div class="layui-input-block"><select name="education"></select></div></div><div class="layui-form-item app-form-footer"><button type="button" class="layui-btn" id="btnSave">保存</button><button type="button" class="layui-btn layui-btn-primary" id="btnCancel">取消</button></div></form></div><div id="enterBox" style="display:none; padding:20px;"><form class="layui-form" id="enterForm"><div class="layui-form-item"><label class="layui-form-label">用户名<span class="app-req">*</span></label><div class="layui-input-block"><input type="text" name="loginId" class="layui-input v_required v_name_en" lay-verify="required"></div></div><div class="layui-form-item"><label class="layui-form-label">部门类型</label><div class="layui-input-block"><select name="dtid"></select></div></div><div class="layui-form-item"><label class="layui-form-label">部门</label><div class="layui-input-block"><select name="dept.did"></select></div></div><div class="layui-form-item"><label class="layui-form-label">职位</label><div class="layui-input-block"><select name="duty.did"></select></div></div><div class="layui-form-item app-form-footer"><button type="button" class="layui-btn" id="btnEnterSave">入职</button><button type="button" class="layui-btn layui-btn-primary" id="btnEnterCancel">取消</button></div></form></div><div id="pictureBox" style="display:none; padding:20px;"><div class="layui-form-item"><label class="layui-form-label">头像</label><div class="layui-input-block"><input type="file" id="photoFile" accept="image/*"></div></div><div class="layui-form-item"><label class="layui-form-label">身份证正面</label><div class="layui-input-block"><input type="file" id="idFrontFile" accept="image/*"></div></div><div class="layui-form-item"><label class="layui-form-label">身份证反面</label><div class="layui-input-block"><input type="file" id="idBackFile" accept="image/*"></div></div><div class="layui-form-item app-form-footer"><button type="button" class="layui-btn" id="btnPictureSave">保存</button><button type="button" class="layui-btn layui-btn-primary" id="btnPictureCancel">取消</button></div></div><script type="text/html" id="rowToolbar"><button class="layui-btn layui-btn-primary layui-btn-xs" lay-event="view">查看</button><button class="layui-btn layui-btn-normal layui-btn-xs" lay-event="enter">入职</button><button class="layui-btn layui-btn-normal layui-btn-xs" lay-event="edit"><i class="layui-icon layui-icon-edit"></i>编辑</button><button class="layui-btn layui-btn-warm layui-btn-xs" lay-event="education">教育信息</button><button class="layui-btn layui-btn-warm layui-btn-xs" lay-event="operation">工作信息</button><button class="layui-btn layui-btn-danger layui-btn-xs" lay-event="cancel">作废</button><button class="layui-btn layui-btn-warm layui-btn-xs" lay-event="picture">图片</button></script>
+</div>
+<script src="../../layui/layui.js"></script>
+<script src="../../js/app/config.js"></script>
+<script src="../../js/app/server.js"></script>
+<script src="../../js/app/utils.js"></script>
+<script src="../../js/app/post.js"></script>
+<script src="../../js/app/api.js"></script>
+<script src="../../js/app/core.js"></script>
+<script src="../../js/app/validate.js"></script>
+<script src="../../js/app/upload.js"></script>
+<script src="../../js/app/bootstrap.js"></script>
+<script src="../../js/personnel/recruitment.js"></script>
+</body>
+</html>

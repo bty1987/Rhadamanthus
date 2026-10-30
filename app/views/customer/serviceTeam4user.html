@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<!-- app/views/customer/serviceTeam4user.html —— 群成员（弹窗页，上下文 app.params.customer.orderId，跨模块 api.decoration） -->
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8" />
+    <title>群成员</title>
+    <link rel="stylesheet" href="../../layui/css/layui.css">
+    <link rel="stylesheet" href="../../css/app.css">
+</head>
+<body>
+<div class="app-page" id="serviceTeam4userPage">
+
+    <div class="app-toolbar" style="padding:10px 15px 0;">
+        <button type="button" class="layui-btn layui-btn-sm" id="btnAdd"><i class="layui-icon layui-icon-add-1"></i>添加</button>
+    </div>
+
+    <div class="app-table">
+        <table id="resultTable" lay-filter="resultTable"></table>
+    </div>
+
+    <div id="pagenation" class="app-pagenation"></div>
+
+    <div id="editBox" style="display:none; padding:20px;">
+        <form class="layui-form" lay-filter="editForm" id="editForm">
+            <div class="layui-form-item">
+                <label class="layui-form-label">人员<span class="app-req">*</span></label>
+                <div class="layui-input-inline" style="width:200px;">
+                    <input type="text" name="userName" id="userName" placeholder="点击选择人员" class="layui-input v_required" readonly>
+                </div>
+                <div class="layui-input-inline">
+                    <button type="button" class="layui-btn layui-btn-normal" id="btnPickUser">选择</button>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">类型</label>
+                <div class="layui-input-inline" style="width:200px;">
+                    <select name="type" id="uType">
+                        <option value="0">业务</option>
+                        <option value="1">装饰</option>
+                        <option value="2">服务</option>
+                        <option value="3">合同</option>
+                        <option value="4">销售</option>
+                        <option value="99" selected>其他</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">角色/说明</label>
+                <div class="layui-input-block">
+                    <input type="text" name="content" id="contentInput" placeholder="角色或说明, 下拉为常用角色" maxlength="128" class="layui-input" list="contentOptions">
+                    <datalist id="contentOptions"></datalist>
+                </div>
+            </div>
+            <div class="layui-form-item app-form-footer">
+                <button type="button" class="layui-btn" id="btnSave">保存</button>
+                <button type="button" class="layui-btn layui-btn-primary" id="btnCancel">取消</button>
+            </div>
+        </form>
+    </div>
+
+</div>
+
+<script src="../../layui/layui.js"></script>
+<script src="../../js/app/config.js"></script>
+<script src="../../js/app/server.js"></script>
+<script src="../../js/app/utils.js"></script>
+<script src="../../js/app/post.js"></script>
+<script src="../../js/app/api.js"></script>
+<script src="../../js/app/core.js"></script>
+<script src="../../js/app/validate.js"></script>
+<script src="../../js/app/bootstrap.js"></script>
+<script src="../../js/customer/customer-common.js"></script>
+<script src="../../js/customer/serviceTeam4user.js"></script>
+</body>
+</html>

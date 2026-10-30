@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<!-- app/views/customer/feedbackGuarantee.html —— 反馈维修（上下文 app.params.{fid, customer.vid, decoration.orderId}）
+     添加维修 + 维修列表 + 反馈记录 + 图片管理 + 编辑弹窗（feedbackGuarantee2edit） -->
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8" />
+    <title>反馈维修</title>
+    <link rel="stylesheet" href="../../layui/css/layui.css">
+    <link rel="stylesheet" href="../../css/app.css">
+</head>
+<body>
+<div class="app-page" id="feedbackGuaranteePage">
+
+    <div class="app-toolbar" style="padding:10px 15px 0;">
+        <button type="button" class="layui-btn layui-btn-sm" id="btnBack"><i class="layui-icon layui-icon-return"></i>返回</button>
+    </div>
+
+    <h4 class="layui-elip" style="margin:12px 15px 6px;">添加维修</h4>
+    <div style="padding:0 15px;">
+        <form class="layui-form" lay-filter="addForm" id="addForm">
+            <div class="layui-form-item">
+                <label class="layui-form-label">装修单号<span class="app-req">*</span></label>
+                <div class="layui-input-inline" style="width:160px;">
+                    <input type="text" name="orderId" id="g_orderId" placeholder="装修单号" class="layui-input v_required" readonly>
+                </div>
+                <label class="layui-form-label">电话</label>
+                <div class="layui-input-inline" style="width:130px;">
+                    <input type="text" name="phone" placeholder="电话" class="layui-input">
+                </div>
+                <label class="layui-form-label">渠道<span class="app-req">*</span></label>
+                <div class="layui-input-inline" style="width:160px;">
+                    <select name="source" lay-filter="sourceFilter" lay-verify="required">
+                        <option value="0">400电话</option><option value="1">媒体平台</option>
+                        <option value="2">到店来访</option><option value="3">监理上报</option>
+                        <option value="4">员工上报</option><option value="5">客户回访</option>
+                        <option value="6">ERP小程序</option><option value="7">工商</option>
+                        <option value="8">消协</option><option value="9">上门拜访</option>
+                        <option value="10">315</option><option value="11">平台私聊</option>
+                        <option value="12">第三方平台</option>
+                    </select>
+                </div>
+                <div class="layui-input-inline" id="upgradeSourceGroup" style="display:none;width:150px;">
+                    <select name="upgradeSource">
+                        <option value="0">无</option><option value="1">315公众平台</option>
+                        <option value="2">抖音</option><option value="3">小红书</option>
+                        <option value="4">黑猫</option><option value="5">大众点评</option>
+                        <option value="6">上门</option><option value="7">超时</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">客户类型</label>
+                <div class="layui-input-inline" style="width:150px;">
+                    <select name="cutomerType">
+                        <option value="0">终身保修客户</option><option value="1">过保客户</option>
+                        <option value="2">收费客户</option><option value="3">关系客户</option>
+                        <option value="4">核查确认</option><option value="5">二手房主</option>
+                        <option value="6">保修2年</option><option value="7">保修5年</option>
+                    </select>
+                </div>
+                <label class="layui-form-label">部门类型</label>
+                <div class="layui-input-inline" style="width:300px;line-height:38px;" id="choiceDeptType"></div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">工种</label>
+                <div class="layui-input-block" id="workTypeChecks" style="line-height:36px;"></div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">品牌</label>
+                <div class="layui-input-inline" style="width:160px;">
+                    <input type="text" name="brandName" id="brandName" placeholder="输入拼音检索品牌" class="layui-input">
+                </div>
+                <div class="layui-input-inline" id="brandList" style="line-height:38px;"></div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">报修日期</label>
+                <div class="layui-input-inline" style="width:140px;">
+                    <input type="text" name="reportedDate" id="reportedDate" placeholder="报修日期" class="layui-input" readonly>
+                </div>
+                <label class="layui-form-label">装修年份</label>
+                <div class="layui-input-inline" style="width:110px;">
+                    <input type="text" name="renovationYear" placeholder="如 2023" class="layui-input">
+                </div>
+                <label class="layui-form-label">维修结果</label>
+                <div class="layui-input-inline" style="width:120px;">
+                    <select name="repairResult">
+                        <option value="0">待修</option><option value="1">完工</option>
+                        <option value="2">撤销</option><option value="3">无</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">监理</label>
+                <div class="layui-input-inline" style="width:160px;">
+                    <input type="text" name="svName" id="svName" placeholder="点击选择监理" class="layui-input" readonly>
+                </div>
+                <div class="layui-input-inline">
+                    <button type="button" class="layui-btn layui-btn-normal" id="btnPickSv">选择</button>
+                </div>
+                <label class="layui-form-label">监理在职</label>
+                <div class="layui-input-inline" style="width:100px;">
+                    <select name="svUserStatus">
+                        <option value="0">是</option><option value="1">否</option><option value="2">调至</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item layui-form-text">
+                <label class="layui-form-label">内容<span class="app-req">*</span></label>
+                <div class="layui-input-block">
+                    <textarea name="content" placeholder="请输入维修内容" class="layui-textarea v_required"></textarea>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">图片</label>
+                <div class="layui-input-inline">
+                    <button type="button" class="layui-btn layui-btn-normal" id="btnUpload"><i class="layui-icon layui-icon-upload-drag"></i>上传图片</button>
+                </div>
+                <div class="layui-input-inline" style="line-height:36px;">
+                    <img id="showImg" style="display:none;width:60px;height:60px;object-fit:cover;">
+                </div>
+                <div class="layui-input-inline" style="float:right;">
+                    <button type="button" class="layui-btn" id="btnAdd">添加维修</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <h4 class="layui-elip" style="margin:12px 15px 6px;">维修列表</h4>
+    <div class="app-table">
+        <table id="guaranteeTable" lay-filter="guaranteeTable"></table>
+    </div>
+
+    <h4 class="layui-elip" style="margin:12px 15px 6px;">反馈记录</h4>
+    <div class="app-table">
+        <table id="recordTable" lay-filter="recordTable"></table>
+    </div>
+
+    <!-- 图片管理 -->
+    <div id="drawingBox" style="display:none; padding:15px;">
+        <button type="button" class="layui-btn layui-btn-normal layui-btn-sm" id="btnDrawingUpload"><i class="layui-icon layui-icon-upload-drag"></i>上传图片</button>
+        <ul id="feedbackDrawing" style="list-style:none;padding:0;margin:10px 0 0;"></ul>
+    </div>
+
+</div>
+
+<script src="../../layui/layui.js"></script>
+<script src="../../js/app/upload.js"></script>
+<script src="../../js/app/config.js"></script>
+<script src="../../js/app/server.js"></script>
+<script src="../../js/app/utils.js"></script>
+<script src="../../js/app/post.js"></script>
+<script src="../../js/app/api.js"></script>
+<script src="../../js/app/core.js"></script>
+<script src="../../js/app/validate.js"></script>
+<script src="../../js/app/bootstrap.js"></script>
+<script src="../../js/customer/customer-common.js"></script>
+<script src="../../js/customer/feedbackGuarantee.js"></script>
+</body>
+</html>

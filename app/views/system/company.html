@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<!-- app/views/system/company.html —— 公司管理（CRUD + 状态切换 + 组织关联）
+  字段：no(编号) code(代码) name(名称) shortname(短名) fullname(全名)
+        address(地址) corporation(法人) phone(电话) atttype(业务类型) block(板块)
+        drganization(装修组织) srganization(销售组织) status(状态) -->
+<html lang="zh-CN">
+<head><meta charset="utf-8"><title>公司管理</title>
+<link rel="stylesheet" href="../../layui/css/layui.css"><link rel="stylesheet" href="../../css/app.css"></head>
+<body>
+<div class="app-page">
+    <div class="app-search"><form class="layui-form" id="searchForm"><div class="layui-form-item">
+        <div class="layui-inline"><label class="layui-form-label">名称</label><div class="layui-input-inline"><input type="text" name="name" data-op="cn" placeholder="公司名" class="layui-input" autocomplete="off"></div></div>
+        <div class="layui-inline"><label class="layui-form-label">状态</label><div class="layui-input-inline"><select name="status" data-op="eq"><option value="">全部</option><option value="0">启用</option><option value="1">禁用</option></select></div></div>
+        <div class="layui-inline"><button type="button" class="layui-btn" id="btnSearch"><i class="layui-icon layui-icon-search"></i>查询</button><button type="reset" class="layui-btn layui-btn-primary" id="btnReset">重置</button><button type="button" class="layui-btn layui-btn-normal" id="btnAdd"><i class="layui-icon layui-icon-add-1"></i>添加</button></div>
+    </div></form></div>
+    <div class="app-table"><table id="resultTable" lay-filter="resultTable"></table></div>
+    <div id="pagenation" class="app-pagenation"></div>
+    <div id="editBox" style="display:none; padding:20px;"><form class="layui-form" id="editForm">
+        <input type="hidden" name="cid">
+        <div class="layui-form-item"><label class="layui-form-label">编号<span class="app-req">*</span></label><div class="layui-input-block"><input type="text" name="no" placeholder="编号" class="layui-input v_required" lay-verify="required"></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">代码</label><div class="layui-input-block"><input type="text" name="code" placeholder="代码" class="layui-input"></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">名称<span class="app-req">*</span></label><div class="layui-input-block"><input type="text" name="name" placeholder="公司名" class="layui-input v_required" lay-verify="required"></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">短名</label><div class="layui-input-block"><input type="text" name="shortname" placeholder="短名" class="layui-input"></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">全名</label><div class="layui-input-block"><input type="text" name="fullname" placeholder="全名" class="layui-input"></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">地址</label><div class="layui-input-block"><input type="text" name="address" placeholder="地址" class="layui-input"></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">法人</label><div class="layui-input-block"><input type="text" name="corporation" placeholder="法人" class="layui-input"></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">电话</label><div class="layui-input-block"><input type="text" name="phone" placeholder="电话" class="layui-input v_phone"></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">业务类型</label><div class="layui-input-block"><select name="atttype" id="atttypeSel"><option value="">请选择</option></select></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">板块</label><div class="layui-input-block"><select name="block" id="blockSel"><option value="0">装修</option><option value="1">销售</option></select></div></div>
+        <div class="layui-form-item app-form-footer"><button type="button" class="layui-btn" id="btnSave">保存</button><button type="reset" class="layui-btn layui-btn-primary" id="btnCancel">取消</button></div>
+    </form></div>
+    <div id="orgBox" style="display:none; padding:20px;"><form class="layui-form" id="orgForm">
+        <div class="layui-form-item"><label class="layui-form-label">装修组织</label><div class="layui-input-block"><select name="drganization" id="drganizationSel" lay-search=""><option value="">无</option></select></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">销售组织</label><div class="layui-input-block"><select name="srganization" id="srganizationSel" lay-search=""><option value="">无</option></select></div></div>
+        <div class="layui-form-item app-form-footer"><button type="button" class="layui-btn" id="btnOrgSave">保存</button><button type="button" class="layui-btn layui-btn-primary" id="btnOrgCancel">取消</button></div>
+    </form></div>
+    <script type="text/html" id="rowToolbar">
+        <button class="layui-btn layui-btn-xs" lay-event="edit">编辑</button>
+        <button class="layui-btn layui-btn-xs layui-btn-normal" lay-event="org">组织</button>
+        {{# if (d.status == 0) { }}<button class="layui-btn layui-btn-xs layui-btn-warm" lay-event="disable">禁用</button>{{# } else { }}<button class="layui-btn layui-btn-xs" lay-event="enable">启用</button>{{# } }}
+    </script>
+</div>
+<script src="../../layui/layui.js"></script><script src="../../js/app/config.js"></script><script src="../../js/app/server.js"></script><script src="../../js/app/utils.js"></script><script src="../../js/app/post.js"></script><script src="../../js/app/api.js"></script><script src="../../js/app/core.js"></script><script src="../../js/app/validate.js"></script><script src="../../js/app/bootstrap.js"></script><script src="../../js/system/company.js"></script>
+</body></html>

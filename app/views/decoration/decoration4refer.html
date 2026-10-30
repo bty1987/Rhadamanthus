@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<!-- app/views/decoration/decoration4refer.html —— 装修单推荐（推荐单列表 + 补录推荐） -->
+<html lang="zh-CN"><head><meta charset="utf-8"><title>装修单推荐</title>
+<link rel="stylesheet" href="../../layui/css/layui.css"><link rel="stylesheet" href="../../css/app.css"></head>
+<body><div class="app-page">
+    <div class="app-toolbar" style="padding:10px 15px 0;">
+        <button type="button" class="layui-btn layui-btn-sm" id="btnSupplement"><i class="layui-icon layui-icon-add-1"></i>补录</button>
+        <button type="button" class="layui-btn layui-btn-sm layui-btn-primary" id="btnBack"><i class="layui-icon layui-icon-return"></i>返回</button>
+    </div>
+    <div class="app-table" style="padding:10px 15px;"><table id="resultTable" lay-filter="resultTable"></table></div>
+    <script type="text/html" id="rowToolbar"><button class="layui-btn layui-btn-xs layui-btn-danger" lay-event="del">删除</button></script>
+    <div id="editBox" style="display:none;padding:20px 30px;">
+        <form class="layui-form" id="editForm">
+            <div class="layui-form-item"><label class="layui-form-label">装修单号</label><div class="layui-input-inline"><input class="layui-input" id="referOrderId" placeholder="输入推荐装修单号"></div></div>
+            <div class="layui-form-item"><label class="layui-form-label">客户电话</label><div class="layui-input-inline"><input class="layui-input" id="referPhone" placeholder="输入推荐客户电话"></div></div>
+            <div class="layui-form-item"><label class="layui-form-label">楼盘</label><div class="layui-input-inline"><input class="layui-input" id="referVillage" placeholder="楼盘编号或名称"></div></div>
+            <div class="layui-form-item"><label class="layui-form-label">楼号</label><div class="layui-input-inline"><input class="layui-input" id="referHouseNumber" placeholder="楼号"></div></div>
+            <div class="layui-form-item"><label class="layui-form-label">签约时间</label><div class="layui-input-inline"><input class="layui-input" id="referContractTime" disabled placeholder="自动带出"></div></div>
+        </form>
+    </div>
+</div>
+<script src="../../layui/layui.js"></script><script src="../../js/app/config.js"></script><script src="../../js/app/server.js"></script><script src="../../js/app/utils.js"></script><script src="../../js/app/post.js"></script><script src="../../js/app/api.js"></script><script src="../../js/app/core.js"></script><script src="../../js/app/validate.js"></script><script src="../../js/app/bootstrap.js"></script><script src="../../js/decoration/decoration-common.js"></script><script src="../../js/decoration/decoration4refer.js"></script>
+</body></html>

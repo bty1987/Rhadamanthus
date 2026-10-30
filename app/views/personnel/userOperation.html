@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>员工工作</title>
+<link rel="stylesheet" href="../../layui/css/layui.css">
+<link rel="stylesheet" href="../../css/app.css">
+</head>
+<body>
+<div class="app-page">
+<div style="padding:10px 20px;"><button type="button" class="layui-btn layui-btn-normal" id="btnAdd"><i class="layui-icon layui-icon-add-1"></i>添加</button></div><div class="app-table"><table id="resultTable" lay-filter="resultTable"></table></div>
+<div id="pagenation" class="app-pagenation"></div><div id="editBox" style="display:none; padding:20px;"><form class="layui-form" id="editForm"><input type="hidden" name="uoid"><div class="layui-form-item"><label class="layui-form-label">公司<span class="app-req">*</span></label><div class="layui-input-block"><input type="text" name="company" placeholder="" class="layui-input v_required" lay-verify="required"></div></div>
+<div class="layui-form-item"><label class="layui-form-label">行业</label><div class="layui-input-block"><input type="text" name="trade" placeholder="" class="layui-input"></div></div>
+<div class="layui-form-item"><label class="layui-form-label">职位</label><div class="layui-input-block"><input type="text" name="duty" placeholder="" class="layui-input"></div></div>
+<div class="layui-form-item"><label class="layui-form-label">开始时间</label><div class="layui-input-block"><input type="text" name="beginTime" class="layui-input" placeholder="yyyy-MM-dd"></div></div><div class="layui-form-item"><label class="layui-form-label">结束时间</label><div class="layui-input-block"><input type="text" name="endTime" class="layui-input" placeholder="yyyy-MM-dd"></div></div><div class="layui-form-item"><label class="layui-form-label">薪资</label><div class="layui-input-block"><input type="text" name="salary" placeholder="" class="layui-input"></div></div>
+<div class="layui-form-item"><label class="layui-form-label">描述</label><div class="layui-input-block"><textarea name="comment" placeholder="" class="layui-textarea"></textarea></div></div>
+<div class="layui-form-item app-form-footer"><button type="button" class="layui-btn" id="btnSave">保存</button><button type="button" class="layui-btn layui-btn-primary" id="btnCancel">取消</button></div></form></div><script type="text/html" id="rowToolbar"><button class="layui-btn layui-btn-normal layui-btn-xs" lay-event="edit"><i class="layui-icon layui-icon-edit"></i>修改</button><button class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del"><i class="layui-icon layui-icon-delete"></i>删除</button></script>
+</div>
+<script src="../../layui/layui.js"></script>
+<script src="../../js/app/config.js"></script>
+<script src="../../js/app/server.js"></script>
+<script src="../../js/app/utils.js"></script>
+<script src="../../js/app/post.js"></script>
+<script src="../../js/app/api.js"></script>
+<script src="../../js/app/core.js"></script>
+<script src="../../js/app/validate.js"></script>
+<script src="../../js/app/bootstrap.js"></script>
+<script src="../../js/personnel/userOperation.js"></script>
+</body>
+</html>

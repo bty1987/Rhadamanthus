@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<!-- app/views/material/materialBrandRight.html —— 主材品牌权限（按用户分配可访问的品牌）
+  查询：用户筛选；操作：编辑弹窗，输入品牌名称（多个用逗号分隔）。 -->
+<html lang="zh-CN"><head><meta charset="utf-8"><title>主材品牌权限</title>
+<link rel="stylesheet" href="../../layui/css/layui.css"><link rel="stylesheet" href="../../css/app.css"></head>
+<body><div class="app-page">
+    <div class="app-search"><form class="layui-form" id="searchForm"><div class="layui-form-item">
+        <div class="layui-inline"><label class="layui-form-label">用户ID</label><div class="layui-input-inline"><input type="number" name="userId" data-op="eq" placeholder="用户ID" class="layui-input" autocomplete="off"></div></div>
+        <div class="layui-inline"><label class="layui-form-label">用户名</label><div class="layui-input-inline"><input type="text" name="userName" data-op="cn" placeholder="用户名" class="layui-input" autocomplete="off"></div></div>
+        <div class="layui-inline"><button type="button" class="layui-btn" id="btnSearch"><i class="layui-icon layui-icon-search"></i>查询</button><button type="reset" class="layui-btn layui-btn-primary" id="btnReset">重置</button></div>
+    </div></form></div>
+    <div class="app-table"><table id="resultTable" lay-filter="resultTable"></table></div>
+    <div id="pagenation" class="app-pagenation"></div>
+    <div id="editBox" style="display:none; padding:20px;"><form class="layui-form" id="editForm">
+        <input type="hidden" name="userId">
+        <div class="layui-form-item"><label class="layui-form-label">用户</label><div class="layui-input-block"><input type="text" name="userNameShow" class="layui-input" disabled></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">品牌<span class="app-req">*</span></label><div class="layui-input-block"><input type="text" name="brandright" placeholder="请输入品牌名（多个用逗号分隔）" class="layui-input" autocomplete="off"></div></div>
+        <div class="layui-form-item app-form-footer"><button type="button" class="layui-btn" id="btnSave">保存</button><button type="reset" class="layui-btn layui-btn-primary" id="btnCancel">取消</button></div>
+    </form></div>
+    <script type="text/html" id="rowToolbar"><button class="layui-btn layui-btn-xs" lay-event="edit">编辑</button></script>
+</div>
+<script src="../../layui/layui.js"></script><script src="../../js/app/config.js"></script><script src="../../js/app/server.js"></script><script src="../../js/app/utils.js"></script><script src="../../js/app/post.js"></script><script src="../../js/app/api.js"></script><script src="../../js/app/core.js"></script><script src="../../js/app/validate.js"></script><script src="../../js/app/bootstrap.js"></script><script src="../../js/material/materialBrandRight.js"></script>
+</body></html>

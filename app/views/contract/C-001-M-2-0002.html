@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<!-- app/views/contract/C-001-M-2-0002.html —— 方林半包主材代购合同（模板表单页，简版）
+  上下文：app.params.decoration = { orderId, contractargs:{cid,company}, contract? }。 -->
+<html lang="zh-CN"><head><meta charset="utf-8"><title>方林半包主材代购合同</title>
+<link rel="stylesheet" href="../../layui/css/layui.css"><link rel="stylesheet" href="../../css/app.css"></head>
+<body><div class="app-page" style="max-width:900px;margin:0 auto;">
+    <blockquote class="layui-elem-quote layui-quote-nm" style="margin-bottom:10px;">* 橙色标记为必填信息。</blockquote>
+    <form class="layui-form" id="form">
+        <fieldset class="layui-elem-field"><legend>客户信息</legend><div class="layui-field-box">
+            <div class="layui-form-item">
+                <div class="layui-inline customer"><label class="layui-form-label">甲方<i class="app-req">*</i></label><div class="layui-input-inline"><input class="layui-input conitem v_required" id="con-customer-name" maxlength="32"></div></div>
+                <div class="layui-inline customer"><label class="layui-form-label">联系电话<i class="app-req">*</i></label><div class="layui-input-inline"><input class="layui-input conitem v_required" id="sin-customer-phone"></div></div>
+                <div class="layui-inline customer"><label class="layui-form-label">身份证号<i class="app-req">*</i></label><div class="layui-input-inline"><input class="layui-input conitem v_required" id="sin-customer-ident"></div></div>
+            </div>
+        </div></fieldset>
+        <fieldset class="layui-elem-field company"><legend>公司信息</legend><div class="layui-field-box">
+            <div class="layui-form-item">
+                <div class="layui-inline"><label class="layui-form-label">公司名称<i class="app-req">*</i></label><div class="layui-input-inline"><input class="layui-input conitem v_required" id="con-company-name" value="/" maxlength="32"></div></div>
+                <div class="layui-inline"><label class="layui-form-label">公司电话<i class="app-req">*</i></label><div class="layui-input-inline"><input class="layui-input conitem v_required" id="con-company-phone" value="/" maxlength="32"></div></div>
+            </div>
+        </div></fieldset>
+        <div class="layui-form-item" style="text-align:center;padding:10px 0;">
+            <button type="button" class="layui-btn" id="preservation"><i class="layui-icon layui-icon-ok"></i>保存合同</button>
+            <button type="button" class="layui-btn layui-btn-primary" id="btnClose">关闭</button>
+        </div>
+    </form>
+</div>
+<script src="../../layui/layui.js"></script><script src="../../js/app/config.js"></script><script src="../../js/app/server.js"></script><script src="../../js/app/utils.js"></script><script src="../../js/app/post.js"></script><script src="../../js/app/api.js"></script><script src="../../js/app/core.js"></script><script src="../../js/app/validate.js"></script><script src="../../js/app/bootstrap.js"></script><script src="../../js/contract/contract-common.js"></script><script src="../../js/contract/C-001-M-2-0002.js"></script>
+</body></html>

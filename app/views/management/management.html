@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<!-- app/views/management/management.html —— 运维管理工具集（原 Ace 页 21 个 Bootstrap modal → layui 卡片分组的按钮 + layer 弹窗表单）。
+     原 HTML 中隐藏的"导出/更新FR"区块（class=row hide）与已注释的"装修款退款"未迁移。 -->
+<html lang="zh-CN"><head><meta charset="utf-8"><title>运维管理</title>
+<link rel="stylesheet" href="../../layui/css/layui.css"><link rel="stylesheet" href="../../css/app.css">
+<style>
+.mgmt-section { margin-bottom: 15px; }
+.mgmt-section h4 { margin: 10px 0; font-weight: bold; }
+.mgmt-btns .layui-btn { margin: 3px 6px 3px 0; }
+.mgmt-box { display: none; padding: 15px 25px; }
+.mgmt-box .help-block { color: #999; line-height: 20px; padding: 9px 0; }
+</style>
+</head>
+<body><div class="app-page">
+
+    <!-- ==================== 装修 ==================== -->
+    <div class="mgmt-section layui-card"><div class="layui-card-body">
+        <h4>装修</h4><hr>
+        <div class="mgmt-btns">
+            <button type="button" class="layui-btn" id="changeDecorationForOrderId"><i class="layui-icon layui-icon-edit"></i>装修单号修改</button>
+            <button type="button" class="layui-btn" id="changeDecorationForTime"><i class="layui-icon layui-icon-edit"></i>装修单相关时间修改</button>
+            <button type="button" class="layui-btn" id="changeDecorationForVersionId"><i class="layui-icon layui-icon-edit"></i>装修单报价版本修改</button>
+            <button type="button" class="layui-btn" id="changeDecorationForStatus"><i class="layui-icon layui-icon-edit"></i>装修单状态修改</button>
+            <button type="button" class="layui-btn" id="changeDecorationForGrade"><i class="layui-icon layui-icon-edit"></i>装修单等级修改</button>
+            <button type="button" class="layui-btn" id="subDecorationForQuotationTime"><i class="layui-icon layui-icon-edit"></i>装修单报价复制次数</button>
+            <button type="button" class="layui-btn" id="amountDecorationActivityItem"><i class="layui-icon layui-icon-edit"></i>装修活动项汇总</button>
+            <button type="button" class="layui-btn" id="updateDecorationMidpack"><i class="layui-icon layui-icon-edit"></i>装修半包信息更新</button>
+            <button type="button" class="layui-btn" id="updateDecorationHolonomy"><i class="layui-icon layui-icon-edit"></i>装修满减信息更新</button>
+            <button type="button" class="layui-btn" id="changeDecorationForPayScale"><i class="layui-icon layui-icon-edit"></i>装修单销售配比忽略验证</button>
+            <button type="button" class="layui-btn" id="hiddenDecoration"><i class="layui-icon layui-icon-eye-invisible"></i>隐藏装修单</button>
+            <button type="button" class="layui-btn" id="resetDecorationFordesignStatus"><i class="layui-icon layui-icon-refresh"></i>重置设计状态</button>
+        </div>
+    </div></div>
+
+    <!-- ==================== 报价 ==================== -->
+    <div class="mgmt-section layui-card"><div class="layui-card-body">
+        <h4>报价</h4><hr>
+        <div class="mgmt-btns">
+            <button type="button" class="layui-btn layui-btn-danger" id="updateQuotationFunctionItemForManageRate"><i class="layui-icon layui-icon-edit"></i>报价管理费比例修改</button>
+            <button type="button" class="layui-btn layui-btn-danger" id="updateQuotationForStatus"><i class="layui-icon layui-icon-edit"></i>报价状态修改</button>
+            <button type="button" class="layui-btn layui-btn-danger" id="addQuotationFunctionArea"><i class="layui-icon layui-icon-edit"></i>报价添加功能区</button>
+        </div>
+    </div></div>
+
+    <!-- ==================== 主材 ==================== -->
+    <div class="mgmt-section layui-card"><div class="layui-card-body">
+        <h4>主材</h4><hr>
+        <div class="mgmt-btns">
+            <button type="button" class="layui-btn layui-btn-normal" id="changeMaterialForOrderId"><i class="layui-icon layui-icon-edit"></i>主材单归属装修单号修改</button>
+        </div>
+    </div></div>
+
+    <!-- ==================== 销售 ==================== -->
+    <div class="mgmt-section layui-card"><div class="layui-card-body">
+        <h4>销售</h4><hr>
+        <div class="mgmt-btns">
+            <button type="button" class="layui-btn layui-btn-warm" id="changeSalesForGrade"><i class="layui-icon layui-icon-edit"></i>销售单等级修改</button>
+            <button type="button" class="layui-btn layui-btn-warm" id="changeSalesForStatus"><i class="layui-icon layui-icon-edit"></i>销售单状态修改</button>
+        </div>
+    </div></div>
+
+    <!-- ==================== 款项 ==================== -->
+    <div class="mgmt-section layui-card"><div class="layui-card-body">
+        <h4>款项</h4><hr>
+        <div class="mgmt-btns">
+            <button type="button" class="layui-btn layui-btn-primary" id="changeDecorationPyamentForTime"><i class="layui-icon layui-icon-edit"></i>装修款收款时间修改</button>
+            <button type="button" class="layui-btn layui-btn-primary" id="changeMaterialPyamentForTime"><i class="layui-icon layui-icon-edit"></i>主材款收款时间修改</button>
+        </div>
+    </div></div>
+
+    <!-- ==================== 工程 ==================== -->
+    <div class="mgmt-section layui-card"><div class="layui-card-body">
+        <h4>工程</h4><hr>
+        <div class="mgmt-btns">
+            <button type="button" class="layui-btn" id="checkoutConstructionSchedule"><i class="layui-icon layui-icon-ok-circle"></i>工程款项验证</button>
+        </div>
+    </div></div>
+
+    <!-- ==================== 弹窗表单（原 Bootstrap modal → 隐藏表单 + layer.open） ==================== -->
+
+    <!-- 装修单号更换 -->
+    <div class="mgmt-box" id="decorationForOrderIdBox"><form class="layui-form" onsubmit="return false;">
+        <div class="layui-form-item"><label class="layui-form-label">装修单号</label><div class="layui-input-block"><input type="text" id="oldOrderId" class="layui-input v_required" maxlength="15" placeholder="原装修单号" autocomplete="off"></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">修改装修单号</label><div class="layui-input-block"><input type="text" id="newOrderId" class="layui-input v_required" maxlength="15" placeholder="新装修单号" autocomplete="off"></div></div>
+        <div class="layui-form-item" style="text-align:right;"><button type="button" class="layui-btn layui-btn-primary" data-save="decorationForOrderId">保存</button></div>
+    </form></div>
+
+    <!-- 装修单时间修改 -->
+    <div class="mgmt-box" id="decorationForTimeBox"><form class="layui-form" onsubmit="return false;">
+        <div class="layui-form-item"><label class="layui-form-label">装修单号</label><div class="layui-input-block"><input type="text" id="orderIdForTime" class="layui-input v_required" maxlength="15" placeholder="装修单号" autocomplete="off"></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">类型</label><div class="layui-input-block"><select id="timeType" class="v_required"><option value="">请选择</option><option value="1">录入时间</option><option value="2">签单时间</option><option value="3">预签时间</option></select></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">日期</label><div class="layui-input-block"><input type="text" id="orderDate" class="layui-input v_required" placeholder="yyyy-MM-dd" autocomplete="off" readonly></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">时间</label><div class="layui-input-block"><input type="text" id="orderTime" class="layui-input v_required" placeholder="HH:mm:ss" autocomplete="off" readonly></div></div>
+        <div class="layui-form-item" style="text-align:right;"><button type="button" class="layui-btn layui-btn-primary" data-save="decorationForTime">保存</button></div>
+    </form></div>
+
+    <!-- 报价版本修改 -->
+    <div class="mgmt-box" id="decorationForVersionIdBox"><form class="layui-form" onsubmit="return false;">
+        <div class="layui-form-item"><label class="layui-form-label">装修单号</label><div class="layui-input-block"><input type="text" id="orderIdForVersionId" class="layui-input v_required" maxlength="15" placeholder="装修单号" autocomplete="off"></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">报价版本</label><div class="layui-input-block"><select id="versionId" class="v_required"></select></div></div>
+        <div class="layui-form-item" style="text-align:right;"><button type="button" class="layui-btn layui-btn-primary" data-save="decorationForVersionId">保存</button></div>
+    </form></div>
+
+    <!-- 装修单状态修改 -->
+    <div class="mgmt-box" id="decorationForStatusBox"><form class="layui-form" onsubmit="return false;">
+        <div class="layui-form-item"><label class="layui-form-label">装修单号</label><div class="layui-input-block"><input type="text" id="orderIdForStatus" class="layui-input v_required" maxlength="15" placeholder="装修单号" autocomplete="off"></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">状态</label><div class="layui-input-block"><select id="orderStatus" class="v_required"></select></div></div>
+        <div class="layui-form-item" style="text-align:right;"><button type="button" class="layui-btn layui-btn-primary" data-save="decorationForStatus">保存</button></div>
+    </form></div>
+
+    <!-- 装修单等级修改 -->
+    <div class="mgmt-box" id="changeDecorationForGradeBox"><form class="layui-form" onsubmit="return false;">
+        <div class="layui-form-item"><label class="layui-form-label">装修单号</label><div class="layui-input-block"><input type="text" id="orderIdOfDecorationGrade" class="layui-input v_required" maxlength="15" placeholder="装修单号" autocomplete="off"></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">等级</label><div class="layui-input-block"><select id="decorationGrade" class="v_required"><option value="">无</option><option value="A">A</option><option value="B">B</option><option value="C">C</option></select></div></div>
+        <div class="layui-form-item" style="text-align:right;"><button type="button" class="layui-btn layui-btn-primary" data-save="changeDecorationForGrade">保存</button></div>
+    </form></div>
+
+    <!-- 报价复制次数增加 -->
+    <div class="mgmt-box" id="subDecorationForQuotationTimeBox"><form class="layui-form" onsubmit="return false;">
+        <div class="layui-form-item"><label class="layui-form-label">装修单号</label><div class="layui-input-block"><input type="text" id="orderIdForQuotationTime" class="layui-input v_required" maxlength="15" placeholder="装修单号" autocomplete="off"></div></div>
+        <div class="layui-form-item" style="text-align:right;"><button type="button" class="layui-btn layui-btn-primary" data-save="subDecorationForQuotationTime">保存</button></div>
+    </form></div>
+
+    <!-- 装修活动项统计 -->
+    <div class="mgmt-box" id="amountDecorationActivityItemBox"><form class="layui-form" onsubmit="return false;">
+        <div class="layui-form-item"><label class="layui-form-label">装修单号</label><div class="layui-input-block"><input type="text" id="orderId4decorationActivityItem" class="layui-input v_required" maxlength="15" placeholder="装修单号" autocomplete="off"></div></div>
+        <div class="layui-form-item" style="text-align:right;"><button type="button" class="layui-btn layui-btn-primary" data-save="amountDecorationActivityItem">保存</button></div>
+    </form></div>
+
+    <!-- 装修半包信息更新 -->
+    <div class="mgmt-box" id="updateDecorationMidpackBox"><form class="layui-form" onsubmit="return false;">
+        <div class="layui-form-item"><label class="layui-form-label">装修单号</label><div class="layui-input-block"><input type="text" id="orderId4decorationMidpack" class="layui-input v_required" maxlength="15" placeholder="装修单号" autocomplete="off"></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">主材配额</label><div class="layui-input-block"><input type="text" id="materialPriceMidpack" class="layui-input v_float_3" maxlength="15" placeholder="主材配额金额" autocomplete="off"></div></div>
+        <div class="layui-form-item" style="text-align:right;"><button type="button" class="layui-btn layui-btn-primary" data-save="updateDecorationMidpack">保存</button></div>
+    </form></div>
+
+    <!-- 装修满减信息更新 -->
+    <div class="mgmt-box" id="updateDecorationHolonomyBox"><form class="layui-form" onsubmit="return false;">
+        <div class="layui-form-item"><label class="layui-form-label">装修单号</label><div class="layui-input-block"><input type="text" id="orderId4decorationHolonomy" class="layui-input v_required" maxlength="15" placeholder="装修单号" autocomplete="off"></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">主材配额</label><div class="layui-input-block"><input type="text" id="materialPriceHolonomy" class="layui-input v_float_3" maxlength="15" placeholder="主材配额金额" autocomplete="off"></div></div>
+        <div class="layui-form-item" style="text-align:right;"><button type="button" class="layui-btn layui-btn-primary" data-save="updateDecorationHolonomy">保存</button></div>
+    </form></div>
+
+    <!-- 装修单销售配比忽略验证 -->
+    <div class="mgmt-box" id="changeDecorationForPayScaleBox"><form class="layui-form" onsubmit="return false;">
+        <div class="layui-form-item"><label class="layui-form-label">装修单号</label><div class="layui-input-block"><input type="text" id="orderIdForPayScale" class="layui-input v_required" maxlength="15" placeholder="装修单号" autocomplete="off"></div></div>
+        <div class="layui-form-item" style="text-align:right;"><button type="button" class="layui-btn layui-btn-primary" data-save="changeDecorationForPayScale">保存</button></div>
+    </form></div>
+
+    <!-- 隐藏/显示装修单 -->
+    <div class="mgmt-box" id="hiddenDecorationBox"><form class="layui-form" onsubmit="return false;">
+        <div class="layui-form-item"><label class="layui-form-label">装修单号</label><div class="layui-input-block"><input type="text" id="orderIdForHidden" class="layui-input v_required" maxlength="15" placeholder="装修单号" autocomplete="off"></div></div>
+        <div class="layui-form-item"><div class="layui-input-block help-block">切换装修单的隐藏/显示状态（0=显示，3=隐藏）</div></div>
+        <div class="layui-form-item" style="text-align:right;"><button type="button" class="layui-btn layui-btn-primary" data-save="hiddenDecoration">确定</button></div>
+    </form></div>
+
+    <!-- 重置设计状态 -->
+    <div class="mgmt-box" id="resetDesignStatusBox"><form class="layui-form" onsubmit="return false;">
+        <div class="layui-form-item"><label class="layui-form-label">装修单号</label><div class="layui-input-block"><input type="text" id="orderIdForResetDesign" class="layui-input v_required" maxlength="15" placeholder="装修单号" autocomplete="off"></div></div>
+        <div class="layui-form-item"><div class="layui-input-block help-block">重置装修单的设计状态和确认状态为初始值，清空设计起止时间</div></div>
+        <div class="layui-form-item" style="text-align:right;"><button type="button" class="layui-btn layui-btn-primary" data-save="resetDesignStatus">确定</button></div>
+    </form></div>
+
+    <!-- 报价管理费比例更新 -->
+    <div class="mgmt-box" id="updateQuotationFunctionItemForManageRateBox"><form class="layui-form" onsubmit="return false;">
+        <div class="layui-form-item"><label class="layui-form-label">装修单号</label><div class="layui-input-block"><input type="text" id="quotationFunctionItemForManageRate" class="layui-input v_required" maxlength="15" placeholder="装修单号（失焦加载报价）" autocomplete="off"></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">报价名称</label><div class="layui-input-block"><select id="quotationNames" class="v_required"></select></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">管理费比例</label><div class="layui-input-block"><input type="text" id="manageRate" class="layui-input v_required" maxlength="15" placeholder="管理费比例" autocomplete="off"></div></div>
+        <div class="layui-form-item" style="text-align:right;"><button type="button" class="layui-btn layui-btn-primary" data-save="updateQuotationFunctionItemForManageRate">保存</button></div>
+    </form></div>
+
+    <!-- 报价状态修改 -->
+    <div class="mgmt-box" id="updateQuotationForStatusBox"><form class="layui-form" onsubmit="return false;">
+        <div class="layui-form-item"><label class="layui-form-label">装修单号</label><div class="layui-input-block"><input type="text" id="quotationForOrderId" class="layui-input v_required" maxlength="15" placeholder="装修单号（失焦加载报价）" autocomplete="off"></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">报价名称</label><div class="layui-input-block"><select id="quotationData" class="v_required"></select></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">状态</label><div class="layui-input-block"><select id="quotationStatus" class="v_required"><option value="">请选择</option><option value="0">启用</option><option value="1">禁用</option></select></div></div>
+        <div class="layui-form-item" style="text-align:right;"><button type="button" class="layui-btn layui-btn-primary" data-save="updateQuotationForStatus">保存</button></div>
+    </form></div>
+
+    <!-- 报价添加功能区 -->
+    <div class="mgmt-box" id="addQuotationFunctionAreaBox"><form class="layui-form" onsubmit="return false;">
+        <div class="layui-form-item"><label class="layui-form-label">装修单号</label><div class="layui-input-block"><input type="text" id="quotationOfOrderId" class="layui-input v_required" maxlength="15" placeholder="装修单号（失焦加载功能区）" autocomplete="off"></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">功能区</label><div class="layui-input-block"><select id="quotationFunctionArea" class="v_required"></select></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">名称</label><div class="layui-input-block"><input type="text" id="quotationFunctionAreaName" class="layui-input v_required" placeholder="功能区名称" autocomplete="off"></div></div>
+        <div class="layui-form-item" style="text-align:right;"><button type="button" class="layui-btn layui-btn-primary" data-save="addQuotationFunctionArea">保存</button></div>
+    </form></div>
+
+    <!-- 主材单归属装修单修改 -->
+    <div class="mgmt-box" id="MaterialForOrderIdBox"><form class="layui-form" onsubmit="return false;">
+        <div class="layui-form-item"><label class="layui-form-label">主材单号</label><div class="layui-input-block"><input type="text" id="msoNo" class="layui-input v_required" maxlength="15" placeholder="主材单号" autocomplete="off"></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">装修单号</label><div class="layui-input-block"><input type="text" id="orderIdForOrderId" class="layui-input v_required" maxlength="15" placeholder="装修单号" autocomplete="off"></div></div>
+        <div class="layui-form-item" style="text-align:right;"><button type="button" class="layui-btn layui-btn-primary" data-save="MaterialForOrderId">保存</button></div>
+    </form></div>
+
+    <!-- 销售单等级修改 -->
+    <div class="mgmt-box" id="changeSalesForGradeBox"><form class="layui-form" onsubmit="return false;">
+        <div class="layui-form-item"><label class="layui-form-label">销售单号</label><div class="layui-input-block"><input type="text" id="changeSalesNo" class="layui-input v_required" maxlength="15" placeholder="销售单号" autocomplete="off"></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">等级</label><div class="layui-input-block"><select id="salesGrade" class="v_required"><option value="">无</option><option value="B">B</option></select></div></div>
+        <div class="layui-form-item" style="text-align:right;"><button type="button" class="layui-btn layui-btn-primary" data-save="changeSalesForGrade">保存</button></div>
+    </form></div>
+
+    <!-- 销售单状态修改 -->
+    <div class="mgmt-box" id="changeSalesForStatusBox"><form class="layui-form" onsubmit="return false;">
+        <div class="layui-form-item"><label class="layui-form-label">销售单号</label><div class="layui-input-block"><input type="text" id="salesNo" class="layui-input v_required" maxlength="15" placeholder="销售单号" autocomplete="off"></div></div>
+        <div class="layui-form-item" style="text-align:right;"><button type="button" class="layui-btn layui-btn-primary" data-save="changeSalesForStatus">保存</button></div>
+    </form></div>
+
+    <!-- 装修款收款时间修改 -->
+    <div class="mgmt-box" id="decorationPaymentForTimeBox"><form class="layui-form" onsubmit="return false;">
+        <div class="layui-form-item"><label class="layui-form-label">装修单号</label><div class="layui-input-block"><input type="text" id="orderIdPaymentForTime" class="layui-input v_required" maxlength="15" placeholder="装修单号" autocomplete="off"></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">类型</label><div class="layui-input-block"><select id="orderPaymentType" class="v_required"><option value="">请选择</option><option value="首付款">首付款</option><option value="首付二期款">首付二期款</option><option value="二期款">二期款</option><option value="尾款">尾款</option></select></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">日期</label><div class="layui-input-block"><input type="text" id="orderPaymentDate" class="layui-input v_required" placeholder="yyyy-MM-dd" autocomplete="off" readonly></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">时间</label><div class="layui-input-block"><input type="text" id="orderPaymentTime" class="layui-input v_required" placeholder="HH:mm:ss" autocomplete="off" readonly></div></div>
+        <div class="layui-form-item" style="text-align:right;"><button type="button" class="layui-btn layui-btn-primary" data-save="decorationPaymentForTime">保存</button></div>
+    </form></div>
+
+    <!-- 主材款收款时间修改 -->
+    <div class="mgmt-box" id="materialPaymentForTimeBox"><form class="layui-form" onsubmit="return false;">
+        <div class="layui-form-item"><label class="layui-form-label">主材单号</label><div class="layui-input-block"><input type="text" id="msoNoForTime" class="layui-input v_required" maxlength="15" placeholder="主材单号" autocomplete="off"></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">类型</label><div class="layui-input-block"><select id="materialPaymentType" class="v_required"><option value="">请选择</option><option value="2">定金</option><option value="3">补款</option><option value="4">退款</option><option value="5">补款退款</option><option value="6">券退款</option></select></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">日期</label><div class="layui-input-block"><input type="text" id="materialPaymentDate" class="layui-input v_required" placeholder="yyyy-MM-dd" autocomplete="off" readonly></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">时间</label><div class="layui-input-block"><input type="text" id="materialPaymentTime" class="layui-input v_required" placeholder="HH:mm:ss" autocomplete="off" readonly></div></div>
+        <div class="layui-form-item" style="text-align:right;"><button type="button" class="layui-btn layui-btn-primary" data-save="materialPaymentForTime">保存</button></div>
+    </form></div>
+
+    <!-- 工程款项验证 -->
+    <div class="mgmt-box" id="checkoutConstructionScheduleBox"><form class="layui-form" onsubmit="return false;">
+        <div class="layui-form-item"><label class="layui-form-label">装修单号</label><div class="layui-input-block"><input type="text" id="orderId4constructionschedule" class="layui-input v_required" maxlength="15" placeholder="装修单号（失焦加载工程环节）" autocomplete="off"></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">工程环节</label><div class="layui-input-block"><select id="csid4constructionschedule" class="v_required"></select></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">款项验证</label><div class="layui-input-block"><select id="check4constructionschedule" class="v_required"><option value="0">验证</option><option value="1">通过</option></select></div></div>
+        <div class="layui-form-item" style="text-align:right;"><button type="button" class="layui-btn layui-btn-primary" data-save="checkoutConstructionSchedule">保存</button></div>
+    </form></div>
+
+</div>
+<script src="../../layui/layui.js"></script><script src="../../js/app/config.js"></script><script src="../../js/app/server.js"></script><script src="../../js/app/utils.js"></script><script src="../../js/app/post.js"></script><script src="../../js/app/api.js"></script><script src="../../js/app/core.js"></script><script src="../../js/app/validate.js"></script><script src="../../js/app/bootstrap.js"></script><script src="../../js/management/management.js"></script>
+</body></html>

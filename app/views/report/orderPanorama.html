@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<!-- app/views/report/orderPanorama.html —— 订单全景穿透（一户穿透）：输入订单号，聚合展示 订单/报价/施工/收款/主材 5 域全生命周期数据卡片。纯数据卡片展示，无图表。 -->
+<html lang="zh-CN"><head><meta charset="utf-8"><title>订单全景穿透</title>
+<link rel="stylesheet" href="../../layui/css/layui.css"><link rel="stylesheet" href="../../css/app.css"><style>
+.panorama-empty { padding: 40px 0; text-align: center; color: #999; }
+.pano-row { padding: 6px 4px; border-bottom: 1px dashed #eee; overflow: hidden; line-height: 24px; }
+.pano-row .pano-name { float: left; color: #666; }
+.pano-row .pano-value { float: right; color: #333; }
+.pano-row .pano-highlight { font-weight: bold; color: #d9534f; }
+</style></head>
+<body><div class="app-page">
+    <div class="app-search"><form class="layui-form" id="searchForm" onsubmit="return false;"><div class="layui-form-item">
+        <div class="layui-inline"><label class="layui-form-label">订单编号</label><div class="layui-input-inline" style="width:240px;"><input type="text" id="orderIdSearch" placeholder="输入装修单编号" class="layui-input" autocomplete="off"></div></div>
+        <div class="layui-inline"><button type="button" class="layui-btn" id="btnSearch"><i class="layui-icon layui-icon-search"></i>查询</button></div>
+    </div></form></div>
+    <div id="panoramaWrap"><div class="panorama-empty">输入装修单编号后查询，展示订单 / 报价 / 施工 / 收款 / 主材 全生命周期数据<\/div></div>
+</div>
+<script src="../../layui/layui.js"></script><script src="../../js/app/config.js"></script><script src="../../js/app/server.js"></script><script src="../../js/app/utils.js"></script><script src="../../js/app/post.js"></script><script src="../../js/app/api.js"></script><script src="../../js/app/core.js"></script><script src="../../js/app/validate.js"></script><script src="../../js/app/bootstrap.js"></script><script src="../../js/report/orderPanorama.js"></script>
+</body></html>

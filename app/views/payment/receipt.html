@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<!-- app/views/payment/receipt.html —— 收据流水（按款项类型/收据类型/收款时间筛选）
+  列：装修单号/款项类型/款项名称/收据类型/名称/金额/收款时间/类型(收/退)。操作：导出（计划任务）。 -->
+<html lang="zh-CN"><head><meta charset="utf-8"><title>收据流水</title>
+<link rel="stylesheet" href="../../layui/css/layui.css"><link rel="stylesheet" href="../../css/app.css"></head>
+<body><div class="app-page">
+    <div class="app-search"><form class="layui-form" id="searchForm"><div class="layui-form-item">
+        <div class="layui-inline"><label class="layui-form-label">款项类型</label><div class="layui-input-inline"><select name="paymentType"><option value="">全部</option><option value="0">合同预付款</option><option value="1">主材预付款</option><option value="2">装修款</option><option value="3">销售款</option><option value="4">服务款</option></select></div></div>
+        <div class="layui-inline"><label class="layui-form-label">收据类型</label><div class="layui-input-inline"><select name="receiptType"><option value="">全部</option><option value="0">现金</option><option value="1">刷卡</option><option value="2">银行</option><option value="3">分期</option><option value="4">对公</option><option value="5">预付款</option><option value="6">券</option></select></div></div>
+        <div class="layui-inline"><label class="layui-form-label">收款时间</label><div class="layui-input-inline"><input class="layui-input" name="collectTime" id="collectTime" placeholder="YYYY-MM-DD" data-op="eq"></div></div>
+        <div class="layui-inline"><button type="button" class="layui-btn" id="btnSearch"><i class="layui-icon layui-icon-search"></i>查询</button><button type="button" class="layui-btn layui-btn-primary" id="btnBack"><i class="layui-icon layui-icon-return"></i>返回</button></div>
+    </div></form></div>
+    <div class="app-table"><table id="resultTable" lay-filter="resultTable"></table></div>
+    <div id="pagenation" class="app-pagenation"></div>
+</div>
+<script src="../../layui/layui.js"></script><script src="../../js/app/config.js"></script><script src="../../js/app/server.js"></script><script src="../../js/app/utils.js"></script><script src="../../js/app/post.js"></script><script src="../../js/app/api.js"></script><script src="../../js/app/core.js"></script><script src="../../js/app/validate.js"></script><script src="../../js/app/bootstrap.js"></script><script src="../../js/payment/receipt.js"></script>
+</body></html>

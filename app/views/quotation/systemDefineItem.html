@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<!-- app/views/quotation/systemDefineItem.html —— 系统定义项（SI_00001 编号；增补价/原单价/退减价；状态/打折开关） -->
+<html lang="zh-CN"><head><meta charset="utf-8"><title>系统定义项</title>
+<link rel="stylesheet" href="../../layui/css/layui.css"><link rel="stylesheet" href="../../css/app.css"></head>
+<body><div class="app-page">
+    <div class="app-search"><form class="layui-form" id="searchForm"><div class="layui-form-item">
+        <div class="layui-inline"><label class="layui-form-label">名称</label><div class="layui-input-inline"><input name="name" data-op="cn" class="layui-input" placeholder="名称"></div></div>
+        <div class="layui-inline"><label class="layui-form-label">大类</label><div class="layui-input-inline"><select name="bigCategory.id" data-op="eq" id="sBigCategory"><option value="">全部</option></select></div></div>
+        <div class="layui-inline"><label class="layui-form-label">工种</label><div class="layui-input-inline"><select name="workType.id" data-op="eq" id="sWorkType"><option value="">全部</option></select></div></div>
+        <div class="layui-inline"><button type="button" class="layui-btn" id="btnSearch"><i class="layui-icon layui-icon-search"></i>查询</button><button type="button" class="layui-btn layui-btn-primary" id="btnReset">重置</button></div>
+    </div></form></div>
+    <div class="app-toolbar" style="padding:0 15px 10px;">
+        <button type="button" class="layui-btn layui-btn-sm" id="btnAdd"><i class="layui-icon layui-icon-add-1"></i>添加</button>
+    </div>
+    <div class="app-table"><table id="resultTable" lay-filter="resultTable"></table></div>
+    <div id="pagenation" class="app-pagenation"></div>
+    <script type="text/html" id="rowToolbar">
+        <button class="layui-btn layui-btn-xs" lay-event="edit">编辑</button>
+        <button class="layui-btn layui-btn-xs layui-btn-danger" lay-event="del">删除</button>
+        <button class="layui-btn layui-btn-xs {{ d.status == 1 ? '' : 'layui-btn-primary' }}" lay-event="status">{{ d.status == 1 ? '启用' : '禁用' }}</button>
+        <button class="layui-btn layui-btn-xs {{ d.discount == 1 ? '' : 'layui-btn-primary' }}" lay-event="discount">{{ d.discount == 1 ? '打折' : '不打折' }}</button>
+    </script>
+    <div id="editBox" style="display:none;padding:20px 30px;">
+        <form class="layui-form" lay-filter="editForm">
+            <div class="layui-form-item"><label class="layui-form-label">编号</label><div class="layui-input-inline"><input id="no" class="layui-input" placeholder="格式: (SI_00001)"></div></div>
+            <div class="layui-form-item"><label class="layui-form-label">名称</label><div class="layui-input-inline"><input id="name" class="layui-input" placeholder="名称"></div></div>
+            <div class="layui-form-item"><label class="layui-form-label">大类</label><div class="layui-input-inline"><select id="quotationBigCategory"></select></div></div>
+            <div class="layui-form-item"><label class="layui-form-label">单位</label><div class="layui-input-inline"><select id="measurementUnit"></select></div></div>
+            <div class="layui-form-item"><label class="layui-form-label">工种</label><div class="layui-input-inline"><select id="workType"></select></div></div>
+            <div class="layui-form-item"><label class="layui-form-label">增补价</label><div class="layui-input-inline"><input id="addPrice" class="layui-input" placeholder="增补价"></div></div>
+            <div class="layui-form-item"><label class="layui-form-label">原单价</label><div class="layui-input-inline"><input id="unitPrice" class="layui-input" placeholder="原单价"></div></div>
+            <div class="layui-form-item"><label class="layui-form-label">退减价</label><div class="layui-input-inline"><input id="subPrice" class="layui-input" placeholder="退减价"></div></div>
+            <div class="layui-form-item"><label class="layui-form-label">说明</label><div class="layui-input-inline"><input id="comment" class="layui-input" placeholder="说明"></div></div>
+        </form>
+    </div>
+</div>
+<script src="../../layui/layui.js"></script><script src="../../js/app/config.js"></script><script src="../../js/app/server.js"></script><script src="../../js/app/utils.js"></script><script src="../../js/app/post.js"></script><script src="../../js/app/api.js"></script><script src="../../js/app/core.js"></script><script src="../../js/app/validate.js"></script><script src="../../js/app/bootstrap.js"></script><script src="../../js/quotation/quotation-common.js"></script><script src="../../js/quotation/systemDefineItem.js"></script>
+</body></html>

@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<!-- app/views/customer/customerDeptRule.html —— 部门规则（客源归属部门规则） -->
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8" />
+    <title>部门规则</title>
+    <link rel="stylesheet" href="../../layui/css/layui.css">
+    <link rel="stylesheet" href="../../css/app.css">
+</head>
+<body>
+<div class="app-page" id="customerDeptRulePage">
+
+    <div class="app-search">
+        <form class="layui-form" lay-filter="searchForm" id="searchForm">
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">名称</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="name" data-op="cn" placeholder="请输入名称" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">类型</label>
+                    <div class="layui-input-inline">
+                        <select name="cusType" data-op="eq">
+                            <option value="">全部</option>
+                            <option value="0">公司</option>
+                            <option value="1">分区</option>
+                            <option value="2">部门</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">归属类型</label>
+                    <div class="layui-input-inline">
+                        <select name="cusAtttype" data-op="eq">
+                            <option value="">全部</option>
+                            <option value="0">自动</option>
+                            <option value="1">人员</option>
+                            <option value="2">部门</option>
+                            <option value="3">分区</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <button type="button" class="layui-btn" id="btnSearch"><i class="layui-icon layui-icon-search"></i>查询</button>
+                    <button type="reset" class="layui-btn layui-btn-primary" id="btnReset">重置</button>
+                    <button type="button" class="layui-btn layui-btn-normal" id="btnAdd"><i class="layui-icon layui-icon-add-1"></i>创建</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div class="app-table">
+        <table id="resultTable" lay-filter="resultTable"></table>
+    </div>
+
+    <div id="pagenation" class="app-pagenation"></div>
+
+    <div id="editBox" style="display:none; padding:20px;">
+        <form class="layui-form" lay-filter="editForm" id="editForm">
+            <div class="layui-form-item">
+                <label class="layui-form-label">归属类型<span class="app-req">*</span></label>
+                <div class="layui-input-block">
+                    <select name="atttype" lay-verify="required">
+                        <option value="0">自动</option>
+                        <option value="1">人员</option>
+                        <option value="2">部门</option>
+                        <option value="3">分区</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">部门类型</label>
+                <div class="layui-input-inline" style="width:190px;">
+                    <select name="deptType" id="deptTypeSel" lay-filter="deptTypeFilter"></select>
+                </div>
+                <div class="layui-input-inline" style="width:190px;">
+                    <select name="dept" id="deptSel"></select>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">业务类型</label>
+                <div class="layui-input-block">
+                    <select name="busitype" id="busitypeSel"></select>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">聚焦</label>
+                <div class="layui-input-block">
+                    <select name="focus">
+                        <option value="0">通用</option>
+                        <option value="1">面积</option>
+                        <option value="2">部门</option>
+                        <option value="3">部门类型</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item app-form-footer">
+                <button type="button" class="layui-btn" id="btnSave">保存</button>
+                <button type="button" class="layui-btn layui-btn-primary" id="btnCancel">取消</button>
+            </div>
+        </form>
+    </div>
+
+</div>
+
+<script src="../../layui/layui.js"></script>
+<script src="../../js/app/config.js"></script>
+<script src="../../js/app/server.js"></script>
+<script src="../../js/app/utils.js"></script>
+<script src="../../js/app/post.js"></script>
+<script src="../../js/app/api.js"></script>
+<script src="../../js/app/core.js"></script>
+<script src="../../js/app/validate.js"></script>
+<script src="../../js/app/bootstrap.js"></script>
+<script src="../../js/customer/customer-common.js"></script>
+<script src="../../js/customer/customerDeptRule.js"></script>
+</body>
+</html>

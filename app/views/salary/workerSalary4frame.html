@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<!-- app/views/salary/workerSalary4frame.html —— 工费查询（输入姓名+月份 → 弹窗展示该月工费列表）
+  对齐旧 WebContent/js/salary/workerSalary4frame.js。
+  旧页面带触屏软键盘（xfjp），纯 layui 版本用原生 input + typeahead 用户选择，结果弹窗调 workerSalary4query -->
+<html lang="zh-CN">
+<head><meta charset="utf-8"><title>工费查询</title>
+<link rel="stylesheet" href="../../layui/css/layui.css"><link rel="stylesheet" href="../../css/app.css"></head>
+<body>
+<div class="app-page">
+    <div class="layui-row layui-col-space10" style="margin-top:40px;">
+        <div class="layui-col-md4 layui-col-md-offset4">
+            <div class="layui-card"><div class="layui-card-header">工费查询</div><div class="layui-card-body">
+                <form class="layui-form" id="queryForm">
+                    <input type="hidden" name="userId">
+                    <div class="layui-form-item"><label class="layui-form-label">姓名<span class="app-req">*</span></label><div class="layui-input-block"><input type="text" id="usernames" placeholder="姓名/工号" class="layui-input" autocomplete="off"></div></div>
+                    <div class="layui-form-item"><label class="layui-form-label">月份<span class="app-req">*</span></label><div class="layui-input-block"><input type="text" id="riqi" name="riqi" placeholder="yyyy-MM" class="layui-input" autocomplete="off"></div></div>
+                    <div class="layui-form-item"><button type="button" class="layui-btn layui-btn-fluid" id="querybtn"><i class="layui-icon layui-icon-search"></i>查询</button></div>
+                </form>
+            </div></div>
+        </div>
+    </div>
+</div>
+<script src="../../layui/layui.js"></script><script src="../../js/app/config.js"></script><script src="../../js/app/server.js"></script>
+<script src="../../js/app/utils.js"></script><script src="../../js/app/post.js"></script>
+<script src="../../js/app/api.js"></script><script src="../../js/app/core.js"></script>
+<script src="../../js/app/validate.js"></script><script src="../../js/app/bootstrap.js"></script>
+<script src="../../js/salary/workerSalary4frame.js"></script>
+</body></html>

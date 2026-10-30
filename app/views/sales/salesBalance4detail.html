@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<!-- app/views/sales/salesBalance4detail.html —— 销售单结算项明细（按 sid 列项，dompany=true 时可预结/改结算）
+  上下文：app.params.sales.sid, app.params.sales.dompany = true|false -->
+<html lang="zh-CN"><head><meta charset="utf-8"><title>销售单结算项明细</title>
+<link rel="stylesheet" href="../../layui/css/layui.css"><link rel="stylesheet" href="../../css/app.css"></head>
+<body><div class="app-page">
+    <div id="salesSummary"></div>
+    <h3 style="font-size:14px;font-weight:bold;padding:8px 0;color:#333;margin-top:10px;">销售项明细</h3>
+    <div class="app-table"><table id="resultTable" lay-filter="resultTable"></table></div>
+    <div id="editBox" style="display:none; padding:20px;"><form class="layui-form" id="editForm">
+        <input type="hidden" name="siid">
+        <div class="layui-form-item"><label class="layui-form-label">结算方式</label><div class="layui-input-block"><select name="ctype"><option value="0">底价</option><option value="1">点位</option></select></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">结算值<span class="app-req">*</span></label><div class="layui-input-block"><input type="text" name="cvalue" placeholder="结算值" class="layui-input" lay-verify="required"></div></div>
+        <div class="layui-form-item app-form-footer"><button type="button" class="layui-btn" id="btnSave">确定</button><button type="button" class="layui-btn layui-btn-primary" id="btnCancel">取消</button></div>
+    </form></div>
+    <script type="text/html" id="rowToolbar"><button class="layui-btn layui-btn-xs" lay-event="ctype">改结算</button></script>
+</div>
+<script src="../../layui/layui.js"></script><script src="../../js/app/config.js"></script><script src="../../js/app/server.js"></script><script src="../../js/app/utils.js"></script><script src="../../js/app/post.js"></script><script src="../../js/app/api.js"></script><script src="../../js/app/core.js"></script><script src="../../js/app/validate.js"></script><script src="../../js/app/bootstrap.js"></script><script src="../../js/sales/salesBalance4detail.js"></script>
+</body></html>

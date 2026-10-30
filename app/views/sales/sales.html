@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<!-- app/views/sales/sales.html —— 销售单主页（列表 + 多操作入口）
+  url ?type=sales|dompany|pompany|supplier|advance|activity。type=activity 自动切换到 salesActivity。 -->
+<html lang="zh-CN"><head><meta charset="utf-8"><title>销售单</title>
+<link rel="stylesheet" href="../../layui/css/layui.css"><link rel="stylesheet" href="../../css/app.css"></head>
+<body><div class="app-page">
+    <div class="app-search"><form class="layui-form" id="searchForm"><div class="layui-form-item">
+        <div class="layui-inline"><label class="layui-form-label">销售单号</label><div class="layui-input-inline"><input type="text" name="no" data-op="cn" placeholder="销售单号" class="layui-input" autocomplete="off"></div></div>
+        <div class="layui-inline"><label class="layui-form-label">订单号</label><div class="layui-input-inline"><input type="text" name="orderId" data-op="cn" placeholder="装修单号" class="layui-input" autocomplete="off"></div></div>
+        <div class="layui-inline"><label class="layui-form-label">品牌</label><div class="layui-input-inline"><input type="text" name="brand.name" data-op="cn" placeholder="品牌" class="layui-input" autocomplete="off"></div></div>
+        <div class="layui-inline"><label class="layui-form-label">客户</label><div class="layui-input-inline"><input type="text" name="customer.name" data-op="cn" placeholder="客户" class="layui-input" autocomplete="off"></div></div>
+        <div class="layui-inline"><button type="button" class="layui-btn" id="btnSearch"><i class="layui-icon layui-icon-search"></i>查询</button><button type="reset" class="layui-btn layui-btn-primary" id="btnReset">重置</button></div>
+        <div class="layui-inline"><button type="button" class="layui-btn" id="btnCreate"><i class="layui-icon layui-icon-add-1"></i>新建</button></div>
+    </div></form></div>
+    <div class="app-table"><table id="resultTable" lay-filter="resultTable"></table></div>
+    <div id="pagenation" class="app-pagenation"></div>
+    <!-- 款项弹窗 -->
+    <div id="moneyBox" style="display:none; padding:20px;">
+        <form class="layui-form" id="moneyForm">
+            <input type="hidden" name="sid">
+            <div class="layui-form-item"><label class="layui-form-label">总价</label><div class="layui-input-inline"><input type="text" id="mTotal" class="layui-input" readonly></div></div>
+            <div class="layui-form-item"><label class="layui-form-label">定金</label><div class="layui-input-inline"><input type="text" id="mDeposit" class="layui-input" readonly></div><div class="layui-input-inline"><button type="button" class="layui-btn" id="mBtnDeposit">交款</button></div><div class="layui-input-inline"><button type="button" class="layui-btn layui-btn-warm" id="mBtnDepositCancel">撤销</button></div></div>
+            <div class="layui-form-item"><label class="layui-form-label">补款</label><div class="layui-input-inline"><input type="text" id="mFull" class="layui-input" readonly></div><div class="layui-input-inline"><button type="button" class="layui-btn" id="mBtnFull">交款</button></div><div class="layui-input-inline"><button type="button" class="layui-btn layui-btn-warm" id="mBtnFullCancel">撤销</button></div></div>
+            <div class="layui-form-item"><label class="layui-form-label">券额</label><div class="layui-input-inline"><input type="text" id="mCoupon" class="layui-input" readonly></div></div>
+            <div class="layui-form-item"><label class="layui-form-label">抹零</label><div class="layui-input-inline"><input type="text" id="mMaling" class="layui-input" readonly></div></div>
+        </form>
+    </div>
+    <!-- 改归属 -->
+    <div id="ascBox" style="display:none; padding:20px;"><form class="layui-form" id="ascForm">
+        <input type="hidden" name="sid">
+        <div class="layui-form-item"><label class="layui-form-label">渠道 userId</label><div class="layui-input-block"><input type="text" name="salesman.userId" class="layui-input"></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">驻店 userId</label><div class="layui-input-block"><input type="text" name="instorer.userId" class="layui-input"></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">导购 userId</label><div class="layui-input-block"><input type="text" name="guider.userId" class="layui-input"></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">厂商 userId</label><div class="layui-input-block"><input type="text" name="supplier.userId" class="layui-input"></div></div>
+        <div class="layui-form-item app-form-footer"><button type="button" class="layui-btn" id="btnAscSave">保存</button><button type="button" class="layui-btn layui-btn-primary" id="btnAscCancel">取消</button></div>
+    </form></div>
+    <script type="text/html" id="rowToolbar">
+        <button class="layui-btn layui-btn-xs" lay-event="add">添项</button>
+        <button class="layui-btn layui-btn-xs" lay-event="item">项目</button>
+        <button class="layui-btn layui-btn-xs layui-btn-warm" lay-event="money">款项</button>
+        <button class="layui-btn layui-btn-xs" lay-event="supple">补单</button>
+        <button class="layui-btn layui-btn-xs layui-btn-normal" lay-event="collect">收款</button>
+        <button class="layui-btn layui-btn-xs" lay-event="activity">活动</button>
+        <button class="layui-btn layui-btn-xs layui-btn-danger" lay-event="refund">退货</button>
+        <button class="layui-btn layui-btn-xs" lay-event="send">推送</button>
+        <button class="layui-btn layui-btn-xs" lay-event="asc">归属</button>
+        <button class="layui-btn layui-btn-xs" lay-event="profile">满意度</button>
+        <button class="layui-btn layui-btn-xs" lay-event="unpay">未付款</button>
+        <button class="layui-btn layui-btn-xs" lay-event="finish">完结</button>
+        <button class="layui-btn layui-btn-xs" lay-event="terminal">废单</button>
+        <button class="layui-btn layui-btn-xs" lay-event="print">打印</button>
+    </script>
+</div>
+<script src="../../layui/layui.js"></script><script src="../../js/app/config.js"></script><script src="../../js/app/server.js"></script><script src="../../js/app/utils.js"></script><script src="../../js/app/post.js"></script><script src="../../js/app/api.js"></script><script src="../../js/app/core.js"></script><script src="../../js/app/bootstrap.js"></script><script src="../../js/sales/sales.js"></script>
+</body></html>

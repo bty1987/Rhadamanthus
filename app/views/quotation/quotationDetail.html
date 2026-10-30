@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<!-- app/views/quotation/quotationDetail.html —— 报价详情（只读：汇总头 + 按功能区/工种分组明细 + 总额计算）
+  上下文：app.params.quotation = { orderId, orderType }（默认报价）。 -->
+<html lang="zh-CN"><head><meta charset="utf-8"><title>报价详情</title>
+<link rel="stylesheet" href="../../layui/css/layui.css"><link rel="stylesheet" href="../../css/app.css"></head>
+<body><div class="app-page">
+    <div class="app-toolbar" style="padding:10px 15px;">
+        <span style="font-size:16px;font-weight:bold;">报价详情<span id="orderIdLabel"></span></span>
+        <button type="button" class="layui-btn layui-btn-sm layui-btn-primary" id="btnBack"><i class="layui-icon layui-icon-return"></i>返回</button>
+    </div>
+    <div style="padding:0 15px 10px;">
+        <blockquote class="layui-elem-quote" style="padding:8px 15px;">
+            起报价:<span id="quotePrice">-</span> ｜ 计价面积:<span id="quoteArea">-</span> ｜ 优惠价:<span id="preferPrice">-</span> ｜ 折扣:<span id="discount">-</span>
+            ｜ 管理费:<span id="managePrice">-</span> ｜ 管理优惠:<span id="managePrefer">-</span> ｜ 特殊优惠:<span id="advancePrefer">-</span>
+            ｜ 活动优惠:<span id="activityProfit">-</span> ｜ 税金:<span id="taxPrice">-</span> ｜ <b style="color:#E2737D;">总价:<span id="totalPrice">-</span></b>
+        </blockquote>
+    </div>
+    <div class="layui-tab layui-tab-brief" style="margin:0 15px;" lay-filter="detailTab">
+        <ul class="layui-tab-title">
+            <li class="layui-this">按功能区</li><li>按工种</li>
+        </ul>
+        <div class="layui-tab-content">
+            <div class="layui-tab-item layui-show" id="byArea"></div>
+            <div class="layui-tab-item" id="byWorkType"></div>
+        </div>
+    </div>
+</div>
+<script src="../../layui/layui.js"></script><script src="../../js/app/config.js"></script><script src="../../js/app/server.js"></script><script src="../../js/app/utils.js"></script><script src="../../js/app/post.js"></script><script src="../../js/app/api.js"></script><script src="../../js/app/core.js"></script><script src="../../js/app/validate.js"></script><script src="../../js/app/bootstrap.js"></script><script src="../../js/quotation/quotation-common.js"></script><script src="../../js/quotation/quotationDetail.js"></script>
+</body></html>

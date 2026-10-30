@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<!-- app/views/system/userProfile.html —— 个人资料（当前用户信息编辑 + 头像上传）
+  接口：queryUserForSelfByUserId（取当前用户信息）+ updateUserForBaseInfo（保存）
+  字段：userPhoto(头像) age(年龄) phone(电话) qq wechat email emergencyMan emergencyPhone -->
+<html lang="zh-CN">
+<head><meta charset="utf-8"><title>个人资料</title>
+<link rel="stylesheet" href="../../layui/css/layui.css"><link rel="stylesheet" href="../../css/app.css"></head>
+<body>
+<div class="app-page">
+    <div class="app-form-card" style="max-width:640px; margin:20px auto;">
+        <h2 style="margin-top:0;color:#1E88E5;">个人资料</h2>
+        <form class="layui-form" id="editForm">
+            <input type="hidden" name="userId">
+            <input type="hidden" name="picture">
+            <div class="layui-form-item">
+                <label class="layui-form-label">头像</label>
+                <div class="layui-input-block">
+                    <div style="display:inline-block;vertical-align:middle;">
+                        <img id="showImg" src="" style="width:100px;height:100px;border:1px solid #eee;border-radius:4px;display:none;" alt="头像">
+                    </div>
+                    <div style="display:inline-block;vertical-align:middle;margin-left:12px;">
+                        <button type="button" class="layui-btn" id="btnUpload"><i class="layui-icon layui-icon-upload"></i>上传头像</button>
+                        <button type="button" class="layui-btn layui-btn-danger" id="btnRemoveImg">移除</button>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item"><label class="layui-form-label">年龄</label><div class="layui-input-block"><input type="text" name="age" placeholder="年龄" class="layui-input v_number"></div></div>
+            <div class="layui-form-item"><label class="layui-form-label">电话</label><div class="layui-input-block"><input type="text" name="phone" id="telephone" placeholder="电话" class="layui-input v_phone"></div></div>
+            <div class="layui-form-item"><label class="layui-form-label">QQ</label><div class="layui-input-block"><input type="text" name="qq" placeholder="QQ" class="layui-input"></div></div>
+            <div class="layui-form-item"><label class="layui-form-label">微信</label><div class="layui-input-block"><input type="text" name="wechat" placeholder="微信" class="layui-input"></div></div>
+            <div class="layui-form-item"><label class="layui-form-label">邮箱</label><div class="layui-input-block"><input type="text" name="email" placeholder="邮箱" class="layui-input v_email"></div></div>
+            <div class="layui-form-item"><label class="layui-form-label">紧急联系人</label><div class="layui-input-block"><input type="text" name="emergencyMan" placeholder="紧急联系人" class="layui-input"></div></div>
+            <div class="layui-form-item"><label class="layui-form-label">紧急联系电话</label><div class="layui-input-block"><input type="text" name="emergencyPhone" placeholder="紧急联系电话" class="layui-input v_phone"></div></div>
+            <div class="layui-form-item app-form-footer"><button type="button" class="layui-btn" id="btnSave">保存</button><button type="reset" class="layui-btn layui-btn-primary" id="btnReset">重置</button></div>
+        </form>
+    </div>
+</div>
+<script src="../../layui/layui.js"></script><script src="../../js/app/config.js"></script><script src="../../js/app/server.js"></script><script src="../../js/app/utils.js"></script><script src="../../js/app/post.js"></script><script src="../../js/app/api.js"></script><script src="../../js/app/core.js"></script><script src="../../js/app/validate.js"></script><script src="../../js/app/upload.js"></script><script src="../../js/app/bootstrap.js"></script><script src="../../js/system/userProfile.js"></script>
+</body></html>

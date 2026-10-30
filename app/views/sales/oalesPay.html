@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<!-- app/views/sales/oalesPay.html —— 外销付款（payment 视图：列表 + 编辑/删除；
+  oales 子页视图：按外销单列付款项）
+  url 参数 ?pagetype=payment|空 -->
+<html lang="zh-CN"><head><meta charset="utf-8"><title>外销付款</title>
+<link rel="stylesheet" href="../../layui/css/layui.css"><link rel="stylesheet" href="../../css/app.css"></head>
+<body><div class="app-page">
+    <div id="searchBlock" class="app-search"><form class="layui-form" id="searchForm"><div class="layui-form-item">
+        <div class="layui-inline"><label class="layui-form-label">外销单号</label><div class="layui-input-inline"><input type="text" name="oales.no" data-op="cn" placeholder="外销单号" class="layui-input" autocomplete="off"></div></div>
+        <div class="layui-inline"><label class="layui-form-label">名称</label><div class="layui-input-inline"><input type="text" name="name" data-op="cn" placeholder="付款名称" class="layui-input" autocomplete="off"></div></div>
+        <div class="layui-inline"><button type="button" class="layui-btn" id="btnSearch"><i class="layui-icon layui-icon-search"></i>查询</button><button type="reset" class="layui-btn layui-btn-primary" id="btnReset">重置</button></div>
+        <div class="layui-inline"><button type="button" class="layui-btn" id="btnAdd"><i class="layui-icon layui-icon-add-1"></i>新增付款</button><button type="button" class="layui-btn layui-btn-warm" id="btnExport"><i class="layui-icon layui-icon-export"></i>导出</button></div>
+    </div></form></div>
+    <div class="app-table"><table id="resultTable" lay-filter="resultTable"></table></div>
+    <div id="pagenation" class="app-pagenation"></div>
+    <div id="editBox" style="display:none; padding:20px;"><form class="layui-form" id="editForm">
+        <input type="hidden" name="opid">
+        <div class="layui-form-item"><label class="layui-form-label">名称<span class="app-req">*</span></label><div class="layui-input-block"><input type="text" name="name" placeholder="名称" class="layui-input" lay-verify="required"></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">金额<span class="app-req">*</span></label><div class="layui-input-block"><input type="text" name="money" placeholder="金额" class="layui-input" lay-verify="required|number"></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">类型</label><div class="layui-input-block"><select name="type"><option value="0">付款</option><option value="1">退款</option><option value="2">奖励</option></select></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">付款时间</label><div class="layui-input-block"><input type="text" name="payTime" id="payTime" placeholder="yyyy-MM-dd HH:mm:ss" class="layui-input"></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">备注</label><div class="layui-input-block"><input type="text" name="comment" class="layui-input"></div></div>
+        <div class="layui-form-item app-form-footer"><button type="button" class="layui-btn" id="btnSave">保存</button><button type="button" class="layui-btn layui-btn-primary" id="btnCancel">取消</button></div>
+    </form></div>
+    <div id="timeBox" style="display:none; padding:20px;"><form class="layui-form" id="timeForm">
+        <input type="hidden" name="opid2">
+        <div class="layui-form-item"><label class="layui-form-label">创建时间<span class="app-req">*</span></label><div class="layui-input-block"><input type="text" name="createTime" id="createTime2" placeholder="yyyy-MM-dd HH:mm:ss" class="layui-input" lay-verify="required"></div></div>
+        <div class="layui-form-item app-form-footer"><button type="button" class="layui-btn" id="btnTimeSave">保存</button></div>
+    </form></div>
+    <script type="text/html" id="rowToolbar">
+        <button class="layui-btn layui-btn-xs" lay-event="edit">编辑</button>
+        <button class="layui-btn layui-btn-xs layui-btn-warm" lay-event="time">改时间</button>
+        <button class="layui-btn layui-btn-xs layui-btn-danger" lay-event="del">删除</button>
+    </script>
+</div>
+<script src="../../layui/layui.js"></script><script src="../../js/app/config.js"></script><script src="../../js/app/server.js"></script><script src="../../js/app/utils.js"></script><script src="../../js/app/post.js"></script><script src="../../js/app/api.js"></script><script src="../../js/app/core.js"></script><script src="../../js/app/validate.js"></script><script src="../../js/app/<script src="../../js/app/exporter.js"></script>bootstrap.js"></script><script src="../../js/sales/oalesPay.js"></script>
+</body></html>

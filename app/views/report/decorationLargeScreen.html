@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<!-- app/views/report/decorationLargeScreen.html —— 装修大屏（Elasticsearch 聚合 → echarts）：
+  公司量尺/签单天级走势、量尺/签单总额、公司量尺/签单占比、设计师/业务员签单TOP10。全屏切换，5 分钟刷新。 -->
+<html lang="zh-CN"><head><meta charset="utf-8"><title>装修数据大屏</title>
+<link rel="stylesheet" href="../../layui/css/layui.css"><link rel="stylesheet" href="../../css/app.css"></head>
+<body><div class="app-page" id="dlsPage">
+    <div class="app-toolbar" style="margin:0 0 10px;"><button type="button" class="layui-btn layui-btn-normal" id="fullScreen"><i class="layui-icon layui-icon-screen-full"></i>全屏</button></div>
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md3"><div class="layui-card"><div class="layui-card-body" style="text-align:center;padding:60px 0;"><div style="font-size:40px;font-weight:bold;color:#01AAED;" id="TheTotalNumberOfRuler">-</div><h5>量尺总数</h5></div></div></div>
+        <div class="layui-col-md3"><div class="layui-card"><div class="layui-card-body" style="text-align:center;padding:60px 0;"><div style="font-size:40px;font-weight:bold;color:#01AAED;" id="TheTotalNumberOfSignings">-</div><h5>签单总额</h5></div></div></div>
+        <div class="layui-col-md6"><div id="CompanyDaysLevelScaleRuleTrend" style="height:220px;"></div></div>
+        <div class="layui-col-md12"><div id="CompanyDaysToSignASingleNumberOfTrends" style="height:240px;"></div></div>
+        <div class="layui-col-md6"><div id="TheTotalNumberOfCompanyScale" style="height:260px;"></div></div>
+        <div class="layui-col-md6"><div id="TheTotalNumberOfCompanySignings" style="height:260px;"></div></div>
+        <div class="layui-col-md6"><div id="DesignerSignNumberTOP10" style="height:420px;"></div></div>
+        <div class="layui-col-md6"><div id="SalesmanSignedNumberTOP10" style="height:420px;"></div></div>
+    </div>
+</div>
+<script src="../../layui/layui.js"></script><script src="../../lib/echarts.min.js"></script><script src="../../js/app/config.js"></script><script src="../../js/app/server.js"></script><script src="../../js/app/utils.js"></script><script src="../../js/app/post.js"></script><script src="../../js/app/api.js"></script><script src="../../js/app/core.js"></script><script src="../../js/app/validate.js"></script><script src="../../js/app/bootstrap.js"></script><script src="../../js/report/decorationLargeScreen.js"></script>
+</body></html>

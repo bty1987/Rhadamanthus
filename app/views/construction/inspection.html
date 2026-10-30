@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<!-- app/views/construction/inspection.html —— 巡检工程列表
+  行按钮：记录（跳转巡检记录页）。 -->
+<html lang="zh-CN"><head><meta charset="utf-8"><title>巡检</title>
+<link rel="stylesheet" href="../../layui/css/layui.css"><link rel="stylesheet" href="../../css/app.css"></head>
+<body><div class="app-page">
+    <div class="app-search"><form class="layui-form" id="searchForm"><div class="layui-form-item">
+        <div class="layui-inline"><label class="layui-form-label">装修单号</label><div class="layui-input-inline"><input name="decoration.orderId" data-op="eq" class="layui-input" placeholder="装修单号"></div></div>
+        <div class="layui-inline"><label class="layui-form-label">楼盘</label><div class="layui-input-inline"><input name="decoration.house.village.no" data-op="eq" class="layui-input" placeholder="楼盘编号"></div></div>
+        <div class="layui-inline"><label class="layui-form-label">楼号</label><div class="layui-input-inline"><input name="decoration.house.houseNumber" data-op="cn" class="layui-input" placeholder="楼号"></div></div>
+        <div class="layui-inline"><label class="layui-form-label">设计师</label><div class="layui-input-inline"><input name="decoration.designer.userId" data-op="eq" class="layui-input" placeholder="设计师编号"></div></div>
+        <div class="layui-inline"><label class="layui-form-label">监理</label><div class="layui-input-inline"><input name="construction.supervisor.userId" data-op="eq" class="layui-input" placeholder="监理编号"></div></div>
+        <div class="layui-inline"><label class="layui-form-label">工程状态</label><div class="layui-input-inline"><select name="decoration.projectStatus" data-op="eq"><option value="">全部</option><option value="0">初始</option><option value="1">开工</option><option value="2">完工</option></select></div></div>
+        <div class="layui-inline"><button type="button" class="layui-btn" id="btnSearch"><i class="layui-icon layui-icon-search"></i>查询</button><button type="button" class="layui-btn layui-btn-primary" id="btnReset">重置</button></div>
+    </div></form></div>
+    <div class="app-table"><table id="resultTable" lay-filter="resultTable"></table></div>
+    <div id="pagenation" class="app-pagenation"></div>
+    <script type="text/html" id="rowToolbar">
+        <button class="layui-btn layui-btn-xs layui-btn-warm" lay-event="view">记录</button>
+    </script>
+</div>
+<script src="../../layui/layui.js"></script><script src="../../js/app/config.js"></script><script src="../../js/app/server.js"></script><script src="../../js/app/utils.js"></script><script src="../../js/app/post.js"></script><script src="../../js/app/api.js"></script><script src="../../js/app/core.js"></script><script src="../../js/app/validate.js"></script><script src="../../js/app/bootstrap.js"></script><script src="../../js/construction/construction-common.js"></script><script src="../../js/construction/inspection.js"></script>
+</body></html>

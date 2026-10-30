@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<!-- app/views/information/vticket.html —— 活动票（列表 + 添加/编辑 + 跳转奖品页）
+  字段：vtid(票ID) tno(票号) belonger(归属人) orderId name phone address vaid(活动) department region creater createTime isregist iscome -->
+<html lang="zh-CN">
+<head><meta charset="utf-8"><title>活动票</title>
+<link rel="stylesheet" href="../../layui/css/layui.css"><link rel="stylesheet" href="../../css/app.css"></head>
+<body>
+<div class="app-page">
+    <div class="app-search"><form class="layui-form" id="searchForm"><div class="layui-form-item">
+        <div class="layui-inline"><label class="layui-form-label">票号</label><div class="layui-input-inline"><input type="text" name="tno" data-op="eq" placeholder="票号" class="layui-input" autocomplete="off"></div></div>
+        <div class="layui-inline"><label class="layui-form-label">装修单号</label><div class="layui-input-inline"><input type="text" name="orderId" data-op="eq" placeholder="装修单号" class="layui-input" autocomplete="off"></div></div>
+        <div class="layui-inline"><label class="layui-form-label">姓名</label><div class="layui-input-inline"><input type="text" name="name" data-op="eq" placeholder="姓名" class="layui-input" autocomplete="off"></div></div>
+        <div class="layui-inline"><button type="button" class="layui-btn" id="btnSearch"><i class="layui-icon layui-icon-search"></i>查询</button><button type="reset" class="layui-btn layui-btn-primary" id="btnReset">重置</button><button type="button" class="layui-btn layui-btn-normal" id="btnAdd"><i class="layui-icon layui-icon-add-1"></i>添加</button></div>
+    </div></form></div>
+    <div class="app-table"><table id="resultTable" lay-filter="resultTable"></table></div>
+    <div id="pagenation" class="app-pagenation"></div>
+    <div id="editBox" style="display:none; padding:20px;"><form class="layui-form" id="editForm">
+        <input type="hidden" name="vtid">
+        <div class="layui-form-item"><label class="layui-form-label">票号<span class="app-req">*</span></label><div class="layui-input-inline"><input type="text" name="tno" placeholder="票号" class="layui-input v_required" lay-verify="required"></div>
+            <label class="layui-form-label">归属人userId</label><div class="layui-input-inline"><input type="text" name="belongerUserId" placeholder="归属人userId" class="layui-input"></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">装修单号</label><div class="layui-input-inline"><input type="text" name="orderId" placeholder="装修单号" class="layui-input"></div>
+            <label class="layui-form-label">活动</label><div class="layui-input-inline"><select name="vaid" id="vaid"><option value="">请选择活动</option></select></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">姓名</label><div class="layui-input-inline"><input type="text" name="name" placeholder="姓名" class="layui-input"></div>
+            <label class="layui-form-label">电话</label><div class="layui-input-inline"><input type="text" name="phone" placeholder="电话" class="layui-input"></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">地址</label><div class="layui-input-block"><input type="text" name="address" placeholder="地址" class="layui-input"></div></div>
+        <div class="layui-form-item app-form-footer"><button type="button" class="layui-btn" id="btnSave">保存</button><button type="reset" class="layui-btn layui-btn-primary" id="btnCancel">取消</button></div>
+    </form></div>
+    <script type="text/html" id="rowToolbar"><button class="layui-btn layui-btn-xs" lay-event="edit">编辑</button></script>
+</div>
+<script src="../../layui/layui.js"></script><script src="../../js/app/config.js"></script><script src="../../js/app/server.js"></script>
+<script src="../../js/app/utils.js"></script><script src="../../js/app/post.js"></script>
+<script src="../../js/app/api.js"></script><script src="../../js/app/core.js"></script>
+<script src="../../js/app/validate.js"></script><script src="../../js/app/bootstrap.js"></script>
+<script src="../../js/information/vticket.js"></script>
+</body></html>

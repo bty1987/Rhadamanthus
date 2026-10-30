@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<!-- app/views/quotation/quotationAssignUserRule.html —— 预算员规则（预算员/状态/当前任务；编辑/删除/启停/项目(明细)/查看任务） -->
+<html lang="zh-CN"><head><meta charset="utf-8"><title>预算员规则</title>
+<link rel="stylesheet" href="../../layui/css/layui.css"><link rel="stylesheet" href="../../css/app.css"></head>
+<body><div class="app-page">
+    <div class="app-search"><form class="layui-form" id="searchForm"><div class="layui-form-item">
+        <div class="layui-inline"><label class="layui-form-label">预算员</label><div class="layui-input-inline"><input name="user.userId" data-op="eq" class="layui-input" placeholder="预算员编号"></div></div>
+        <div class="layui-inline"><label class="layui-form-label">状态</label><div class="layui-input-inline"><select name="status" data-op="eq"><option value="">全部</option><option value="1">待分配</option><option value="2">制作中</option><option value="3">已交付</option><option value="4">已完成</option></select></div></div>
+        <div class="layui-inline"><button type="button" class="layui-btn" id="btnSearch"><i class="layui-icon layui-icon-search"></i>查询</button><button type="button" class="layui-btn layui-btn-primary" id="btnReset">重置</button></div>
+    </div></form></div>
+    <div class="app-toolbar" style="padding:0 15px 10px;">
+        <button type="button" class="layui-btn layui-btn-sm" id="btnAdd"><i class="layui-icon layui-icon-add-1"></i>新增规则</button>
+    </div>
+    <div class="app-table"><table id="resultTable" lay-filter="resultTable"></table></div>
+    <div id="pagenation" class="app-pagenation"></div>
+    <script type="text/html" id="rowToolbar">
+        <button class="layui-btn layui-btn-xs" lay-event="edit">编辑</button>
+        <button class="layui-btn layui-btn-xs layui-btn-normal" lay-event="item">项目</button>
+        <button class="layui-btn layui-btn-xs layui-btn-warm" lay-event="tasks">查看任务</button>
+        <button class="layui-btn layui-btn-xs" lay-event="enable">{{ d.status == 1 ? '启用' : '禁用' }}</button>
+        <button class="layui-btn layui-btn-xs layui-btn-danger" lay-event="del">删除</button>
+    </script>
+    <div id="editBox" style="display:none;padding:20px 30px;">
+        <div class="layui-form-item"><label class="layui-form-label">预算员</label><div class="layui-input-inline" style="width:280px;"><select id="userSel"></select></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">公司</label><div class="layui-input-inline" style="width:280px;"><select id="companySel"></select></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">支持类型</label><div class="layui-input-inline"><select id="supportedType"><option value="-1">通用</option><option value="0">半包</option><option value="1">整装</option><option value="2">全包</option></select></div></div>
+    </div>
+    <div id="tasksBox" style="display:none;padding:10px 15px;">
+        <table id="tasksTable" lay-filter="tasksTable"></table>
+    </div>
+</div>
+<script src="../../layui/layui.js"></script><script src="../../js/app/config.js"></script><script src="../../js/app/server.js"></script><script src="../../js/app/utils.js"></script><script src="../../js/app/post.js"></script><script src="../../js/app/api.js"></script><script src="../../js/app/core.js"></script><script src="../../js/app/validate.js"></script><script src="../../js/app/bootstrap.js"></script><script src="../../js/quotation/quotation-common.js"></script><script src="../../js/quotation/quotationAssignUserRule.js"></script>
+</body></html>

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<!-- app/views/building/buildingCustomer4create.html —— 创建客源（表单页 + 创建客户弹窗）
+  客源字段：customer.cid type purpose intention price(low,high) area(low,high) familyType
+           orientation conditions grade comment
+  接口：api.building.addBuildingCustomer / api.data.addCustomer / api.data.checkCustomerForPhone -->
+<html lang="zh-CN">
+<head><meta charset="utf-8"><title>创建客源</title>
+<link rel="stylesheet" href="../../layui/css/layui.css"><link rel="stylesheet" href="../../css/app.css"></head>
+<body>
+<div class="app-page">
+    <div id="breadcrumb"></div>
+    <form class="layui-form" id="customerSourceForm" lay-filter="customerSourceForm">
+        <div class="layui-form-item"><label class="layui-form-label">客源类型</label><div class="layui-input-inline"><select name="type"><option value="0">求购</option><option value="1">求租</option></select></div>
+            <label class="layui-form-label">客户姓名<span class="app-req">*</span></label><div class="layui-input-inline"><input type="text" name="customerId" id="customerId" placeholder="客户cid" class="layui-input v_required"></div>
+            <button type="button" class="layui-btn layui-btn-normal layui-btn-sm" id="btnCreateCustomer">创建客户</button></div>
+        <div class="layui-form-item"><label class="layui-form-label">目的<span class="app-req">*</span></label><div class="layui-input-block"><input type="text" name="purpose" maxlength="256" class="layui-input v_required"></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">意向<span class="app-req">*</span></label><div class="layui-input-block"><input type="text" name="intention" maxlength="256" class="layui-input v_required"></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">需求总价<span class="app-req">*</span></label><div class="layui-input-inline"><input type="text" name="priceLow" maxlength="10" class="layui-input v_required v_float_3" style="width:120px;"></div><div class="layui-form-mid">-</div><div class="layui-input-inline"><input type="text" name="priceHigh" id="priceHigh" maxlength="10" class="layui-input v_required v_float_3" style="width:120px;"></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">需求面积<span class="app-req">*</span></label><div class="layui-input-inline"><input type="text" name="areaLow" maxlength="10" class="layui-input v_required v_float" style="width:120px;"></div><div class="layui-form-mid">-</div><div class="layui-input-inline"><input type="text" name="areaHigh" id="areaHigh" maxlength="10" class="layui-input v_required v_float" style="width:120px;"></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">需求户型<span class="app-req">*</span></label><div class="layui-input-inline"><input type="text" name="familyType" maxlength="2" class="layui-input v_required v_number" style="width:120px;"></div><div class="layui-form-mid">室</div></div>
+        <div class="layui-form-item"><label class="layui-form-label">朝向</label><div class="layui-input-block"><select name="orientation"><option value="0">东</option><option value="1">南</option><option value="2">西</option><option value="3">北</option><option value="4">南北</option><option value="5">东西</option></select></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">意向备注</label><div class="layui-input-block"><input type="text" name="conditions" maxlength="256" placeholder="如:三楼,不把山" class="layui-input"></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">客户等级</label><div class="layui-input-block"><select name="grade"><option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option></select></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">备注</label><div class="layui-input-block"><textarea name="comment" maxlength="50" class="layui-textarea"></textarea></div></div>
+        <div class="layui-form-item app-form-footer"><button type="button" class="layui-btn" id="btnSave">保存</button><button type="reset" class="layui-btn layui-btn-primary" id="btnReset">重置</button></div>
+    </form>
+
+    <div id="customerBox" style="display:none; padding:20px;"><form class="layui-form" id="customerForm" lay-filter="customerForm">
+        <div class="layui-form-item"><label class="layui-form-label">姓名<span class="app-req">*</span></label><div class="layui-input-block"><input type="text" name="name" maxlength="32" class="layui-input v_required v_name"></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">性别</label><div class="layui-input-block"><select name="gender"><option value="男">男</option><option value="女">女</option></select></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">联系方式<span class="app-req">*</span></label><div class="layui-input-block"><input type="text" name="phone" id="custPhone" maxlength="64" class="layui-input v_required"></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">证件类型</label><div class="layui-input-block"><select name="cardType"><option value="身份证">身份证</option><option value="军官证">军官证</option><option value="护照">护照</option><option value="其他">其他</option></select></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">证件号</label><div class="layui-input-block"><input type="text" name="cardNum" maxlength="18" class="layui-input"></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">QQ</label><div class="layui-input-block"><input type="text" name="qq" maxlength="15" class="layui-input v_number"></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">微信</label><div class="layui-input-block"><input type="text" name="wechat" maxlength="15" class="layui-input v_name_en"></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">邮箱</label><div class="layui-input-block"><input type="text" name="email" maxlength="32" class="layui-input v_email"></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">客户类型</label><div class="layui-input-block"><select name="relationshipType"><option value="0">本人</option><option value="1">亲属</option><option value="2">朋友</option></select></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">通讯地址</label><div class="layui-input-block"><textarea name="address" maxlength="128" class="layui-textarea"></textarea></div></div>
+        <div class="layui-form-item app-form-footer"><button type="button" class="layui-btn" id="btnCustSave">保存</button><button type="button" class="layui-btn layui-btn-primary" id="btnCustCancel">取消</button></div>
+    </form></div>
+</div>
+<script src="../../layui/layui.js"></script><script src="../../js/app/config.js"></script><script src="../../js/app/server.js"></script><script src="../../js/app/utils.js"></script><script src="../../js/app/post.js"></script><script src="../../js/app/api.js"></script><script src="../../js/app/core.js"></script><script src="../../js/app/validate.js"></script><script src="../../js/app/bootstrap.js"></script><script src="../../js/building/buildingCustomer4create.js"></script>
+</body></html>

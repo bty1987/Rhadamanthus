@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>编辑招聘</title>
+<link rel="stylesheet" href="../../layui/css/layui.css">
+<link rel="stylesheet" href="../../css/app.css">
+</head>
+<body>
+<div class="app-page">
+<div style="padding:20px;"><form class="layui-form" id="recruitmentForm"><div class="layui-form-item"><label class="layui-form-label">姓名<span class="app-req">*</span></label><div class="layui-input-block"><input type="text" name="name" placeholder="" class="layui-input v_required" lay-verify="required"></div></div>
+<div class="layui-form-item"><label class="layui-form-label">身份证号</label><div class="layui-input-block"><input type="text" name="identity" placeholder="" class="layui-input"></div></div>
+<div class="layui-form-item"><label class="layui-form-label">民族</label><div class="layui-input-block"><input type="text" name="nation" placeholder="" class="layui-input"></div></div>
+<div class="layui-form-item"><label class="layui-form-label">籍贯</label><div class="layui-input-block"><input type="text" name="place" placeholder="" class="layui-input"></div></div>
+<div class="layui-form-item"><label class="layui-form-label">现住址</label><div class="layui-input-block"><input type="text" name="address" placeholder="" class="layui-input"></div></div>
+<div class="layui-form-item"><label class="layui-form-label">户籍所在地</label><div class="layui-input-block"><input type="text" name="hometownPlace" placeholder="" class="layui-input"></div></div>
+<div class="layui-form-item"><label class="layui-form-label">身高</label><div class="layui-input-block"><input type="text" name="height" placeholder="" class="layui-input"></div></div>
+<div class="layui-form-item"><label class="layui-form-label">体重</label><div class="layui-input-block"><input type="text" name="weight" placeholder="" class="layui-input"></div></div>
+<div class="layui-form-item"><label class="layui-form-label">应聘方式</label><div class="layui-input-block"><select name="employWay"></select></div></div><div class="layui-form-item"><label class="layui-form-label">户口类型</label><div class="layui-input-block"><select name="householdType"></select></div></div><div class="layui-form-item"><label class="layui-form-label">政治面貌</label><div class="layui-input-block"><select name="political"></select></div></div><div class="layui-form-item"><label class="layui-form-label">学历</label><div class="layui-input-block"><select name="education"></select></div></div><div class="layui-form-item"><label class="layui-form-label">电话</label><div class="layui-input-block"><input type="text" name="phone" placeholder="" class="layui-input"></div></div>
+<div class="layui-form-item"><label class="layui-form-label">微信</label><div class="layui-input-block"><input type="text" name="wechat" placeholder="" class="layui-input"></div></div>
+<div class="layui-form-item"><label class="layui-form-label">QQ</label><div class="layui-input-block"><input type="text" name="qq" placeholder="" class="layui-input"></div></div>
+<div class="layui-form-item"><label class="layui-form-label">籍贯2</label><div class="layui-input-block"><input type="text" name="nativePlace" placeholder="" class="layui-input"></div></div>
+<div class="layui-form-item"><label class="layui-form-label">专业</label><div class="layui-input-block"><input type="text" name="specialty" placeholder="" class="layui-input"></div></div>
+<div class="layui-form-item"><label class="layui-form-label">紧急联系人</label><div class="layui-input-block"><input type="text" name="emergencyMan" placeholder="" class="layui-input"></div></div>
+<div class="layui-form-item"><label class="layui-form-label">紧急联系电话</label><div class="layui-input-block"><input type="text" name="emergencyPhone" placeholder="" class="layui-input"></div></div>
+<fieldset class="layui-elem-field"><legend>状态勾选（勾选=是/有）</legend><div class="layui-field-box"><div class="layui-form-item"><label class="layui-form-label">婚姻</label><div class="layui-input-inline"><input type="checkbox" name="isMarried" lay-skin="switch"></div><label class="layui-form-label">育</label><div class="layui-input-inline"><input type="checkbox" name="isBirth" lay-skin="switch"></div><label class="layui-form-label">房</label><div class="layui-input-inline"><input type="checkbox" name="isHouse" lay-skin="switch"></div><label class="layui-form-label">车</label><div class="layui-input-inline"><input type="checkbox" name="isCar" lay-skin="switch"></div></div><div class="layui-form-item"><label class="layui-form-label">房贷</label><div class="layui-input-inline"><input type="checkbox" name="isHouseLoan" lay-skin="switch"></div><label class="layui-form-label">车贷</label><div class="layui-input-inline"><input type="checkbox" name="isCarLoan" lay-skin="switch"></div><label class="layui-form-label">驾照</label><div class="layui-input-inline"><input type="checkbox" name="isCarID" lay-skin="switch"></div><label class="layui-form-label">护照</label><div class="layui-input-inline"><input type="checkbox" name="isPassID" lay-skin="switch"></div></div><div class="layui-form-item"><label class="layui-form-label">港澳</label><div class="layui-input-inline"><input type="checkbox" name="isHMID" lay-skin="switch"></div><label class="layui-form-label">台湾</label><div class="layui-input-inline"><input type="checkbox" name="isTWID" lay-skin="switch"></div><label class="layui-form-label">合同</label><div class="layui-input-inline"><input type="checkbox" name="isContract" lay-skin="switch"></div><label class="layui-form-label">社保</label><div class="layui-input-inline"><input type="checkbox" name="isSnsurance" lay-skin="switch"></div></div><div class="layui-form-item"><label class="layui-form-label">消防</label><div class="layui-input-inline"><input type="checkbox" name="isFire" lay-skin="switch"></div><label class="layui-form-label">商保</label><div class="layui-input-inline"><input type="checkbox" name="isCnsurance" lay-skin="switch"></div><label class="layui-form-label">竞业</label><div class="layui-input-inline"><input type="checkbox" name="isCompete" lay-skin="switch"></div><label class="layui-form-label">培训</label><div class="layui-input-inline"><input type="checkbox" name="isTrain" lay-skin="switch"></div></div><div class="layui-form-item"><label class="layui-form-label">前科</label><div class="layui-input-inline"><input type="checkbox" name="isCriminal" lay-skin="switch"></div><label class="layui-form-label">疾病</label><div class="layui-input-inline"><input type="checkbox" name="isDisease" lay-skin="switch"></div></div></div></fieldset><div class="layui-form-item app-form-footer"><button type="button" class="layui-btn" id="btnSave">保存</button><button type="button" class="layui-btn layui-btn-primary" id="btnCancel">取消</button></div></form></div>
+</div>
+<script src="../../layui/layui.js"></script>
+<script src="../../js/app/config.js"></script>
+<script src="../../js/app/server.js"></script>
+<script src="../../js/app/utils.js"></script>
+<script src="../../js/app/post.js"></script>
+<script src="../../js/app/api.js"></script>
+<script src="../../js/app/core.js"></script>
+<script src="../../js/app/validate.js"></script>
+<script src="../../js/app/bootstrap.js"></script>
+<script src="../../js/personnel/recruitment2update.js"></script>
+</body>
+</html>

@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<!-- app/views/decoration/decorationSales2print.html —— 主材消费明细打印（弹窗子页）
+  上下文：app.params.decoration = { orderId }。汇总销售款按品牌分组打印。 -->
+<html lang="zh-CN"><head><meta charset="utf-8"><title>主材消费明细</title>
+<link rel="stylesheet" href="../../layui/css/layui.css"><link rel="stylesheet" href="../../css/app.css">
+<style>.print-table{width:100%;border-collapse:collapse;table-layout:fixed;}.print-table td{border:1px solid #333;padding:4px 8px;font-size:13px;}</style></head>
+<body><div class="app-page" style="padding:15px;">
+    <div style="text-align:right;padding-bottom:10px;"><button type="button" class="layui-btn layui-btn-sm" id="btnPrint"><i class="layui-icon layui-icon-print"></i>打印</button></div>
+    <div id="printArea">
+        <div align="center" style="font-size:22px;font-weight:bold;line-height:50px;">主材销售明细</div>
+        <table class="print-table" id="mainTable"></table>
+        <div style="margin-top:50px;font-size:12px;color:#555;" id="suffix"></div>
+    </div>
+</div>
+<script src="../../layui/layui.js"></script><script src="../../js/app/config.js"></script><script src="../../js/app/server.js"></script><script src="../../js/app/utils.js"></script><script src="../../js/app/post.js"></script><script src="../../js/app/api.js"></script><script src="../../js/app/core.js"></script><script src="../../js/app/validate.js"></script><script src="../../js/app/bootstrap.js"></script><script src="../../js/decoration/decoration-common.js"></script><script src="../../js/decoration/decorationSales2print.js"></script>
+</body></html>

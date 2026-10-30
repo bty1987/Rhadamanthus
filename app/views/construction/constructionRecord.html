@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<!-- app/views/construction/constructionRecord.html —— 工程操作记录（只读）
+  上下文：app.params.orderId。queryConstructionRecordByOrderId。 -->
+<html lang="zh-CN"><head><meta charset="utf-8"><title>工程操作记录</title>
+<link rel="stylesheet" href="../../layui/css/layui.css"><link rel="stylesheet" href="../../css/app.css"></head>
+<body><div class="app-page">
+    <div class="app-toolbar" style="padding:10px 15px 0;">
+        <span style="font-size:16px;font-weight:bold;">工程操作记录</span>
+    </div>
+    <div class="app-table" style="margin-top:10px;"><table id="resultTable" lay-filter="resultTable"></table></div>
+    <div id="pagenation" class="app-pagenation"></div>
+</div>
+<script src="../../layui/layui.js"></script><script src="../../js/app/config.js"></script><script src="../../js/app/server.js"></script><script src="../../js/app/utils.js"></script><script src="../../js/app/post.js"></script><script src="../../js/app/api.js"></script><script src="../../js/app/core.js"></script><script src="../../js/app/validate.js"></script><script src="../../js/app/bootstrap.js"></script><script src="../../js/construction/construction-common.js"></script><script src="../../js/construction/constructionRecord.js"></script>
+</body></html>

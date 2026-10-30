@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<!-- app/views/salary/workerSalary4detail.html —— 工费明细（弹窗页：工费列表 + 新增/删除）
+  上下文：params.workerSalary = { csid, userId } 来自父页面 supervision4detail
+  字段：wsid user(姓名) createTime money(薪资) twotype(类型) status -->
+<html lang="zh-CN">
+<head><meta charset="utf-8"><title>工费明细</title>
+<link rel="stylesheet" href="../../layui/css/layui.css"><link rel="stylesheet" href="../../css/app.css"></head>
+<body>
+<div class="app-page">
+    <div class="app-search"><form class="layui-form" id="editForm"><div class="layui-form-item">
+        <input type="hidden" name="csid">
+        <input type="hidden" name="userId">
+        <div class="layui-inline"><label class="layui-form-label">薪资<span class="app-req">*</span></label><div class="layui-input-inline"><input type="text" name="salary" id="ws4dSalary" placeholder="薪资" class="layui-input v_float" lay-verify="required"></div></div>
+        <div class="layui-inline"><label class="layui-form-label">类型</label><div class="layui-input-inline"><select name="type" id="ws4dSalaryType"><option value="">请选择</option></select></div></div>
+        <div class="layui-inline"><label class="layui-form-label">备注</label><div class="layui-input-inline"><input type="text" name="comment" id="ws4dComment" placeholder="备注" class="layui-input"></div></div>
+        <div class="layui-inline"><button type="button" class="layui-btn" id="ws4dSaveBtn">添加</button></div>
+    </div></form></div>
+    <div class="app-table"><table id="resultTable" lay-filter="resultTable"></table></div>
+    <script type="text/html" id="rowToolbar"><button class="layui-btn layui-btn-xs layui-btn-danger" lay-event="del">删除</button></script>
+</div>
+<script src="../../layui/layui.js"></script><script src="../../js/app/config.js"></script><script src="../../js/app/server.js"></script>
+<script src="../../js/app/utils.js"></script><script src="../../js/app/post.js"></script>
+<script src="../../js/app/api.js"></script><script src="../../js/app/core.js"></script>
+<script src="../../js/app/validate.js"></script><script src="../../js/app/bootstrap.js"></script>
+<script src="../../js/salary/workerSalary4detail.js"></script>
+</body></html>

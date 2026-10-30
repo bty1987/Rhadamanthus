@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<!-- app/views/quotation/quotationAssignUserRuleItem.html —— 规则明细（弹窗页：按规则的部门/装修类型明细项 CRUD）
+  上下文：app.params.quotation.assignUserRule。 -->
+<html lang="zh-CN"><head><meta charset="utf-8"><title>规则明细</title>
+<link rel="stylesheet" href="../../layui/css/layui.css"><link rel="stylesheet" href="../../css/app.css"></head>
+<body><div class="app-page">
+    <div class="app-toolbar" style="padding:10px 15px;">
+        <span style="font-weight:bold;" id="ruleLabel">规则明细</span>
+        <button type="button" class="layui-btn layui-btn-sm" id="btnAdd"><i class="layui-icon layui-icon-add-1"></i>新增明细</button>
+        <button type="button" class="layui-btn layui-btn-sm layui-btn-primary" id="btnBack"><i class="layui-icon layui-icon-return"></i>返回</button>
+    </div>
+    <div class="app-table" style="padding:0 15px;"><table id="resultTable" lay-filter="resultTable"></table></div>
+    <script type="text/html" id="rowToolbar">
+        <button class="layui-btn layui-btn-xs" lay-event="del">删除</button>
+    </script>
+    <div id="editBox" style="display:none;padding:20px 30px;">
+        <div class="layui-form-item"><label class="layui-form-label">部门</label><div class="layui-input-inline" style="width:280px;"><select id="departmentSel"><option value="">所有部门</option></select></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">装修类型</label><div class="layui-input-inline"><select id="decorationType"><option value="-1">通用</option><option value="0">半包</option><option value="1">整装</option><option value="2">全包</option></select></div></div>
+    </div>
+</div>
+<script src="../../layui/layui.js"></script><script src="../../js/app/config.js"></script><script src="../../js/app/server.js"></script><script src="../../js/app/utils.js"></script><script src="../../js/app/post.js"></script><script src="../../js/app/api.js"></script><script src="../../js/app/core.js"></script><script src="../../js/app/validate.js"></script><script src="../../js/app/bootstrap.js"></script><script src="../../js/quotation/quotation-common.js"></script><script src="../../js/quotation/quotationAssignUserRuleItem.js"></script>
+</body></html>

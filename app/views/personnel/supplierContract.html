@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>厂商合同</title>
+<link rel="stylesheet" href="../../layui/css/layui.css">
+<link rel="stylesheet" href="../../css/app.css">
+</head>
+<body>
+<div class="app-page">
+<div style="padding:10px 20px;"><button type="button" class="layui-btn layui-btn-primary" id="btnBack"><i class="layui-icon layui-icon-return"></i>返回</button> <button type="button" class="layui-btn layui-btn-normal" id="btnAdd"><i class="layui-icon layui-icon-add-1"></i>添加</button> <button type="button" class="layui-btn" id="btnSignUser">签章</button></div><div id="userInfo" class="layui-card"><div class="layui-card-body"></div></div>
+<div class="app-table"><table id="resultTable" lay-filter="resultTable"></table></div>
+<div id="pagenation" class="app-pagenation"></div><div id="editBox" style="display:none; padding:20px;"><form class="layui-form" id="editForm"><input type="hidden" name="scid"><div class="layui-form-item"><label class="layui-form-label">合同模板<span class="app-req">*</span></label><div class="layui-input-block"><select name="cid" lay-search=""></select></div></div><div class="layui-form-item"><label class="layui-form-label">合同名称<span class="app-req">*</span></label><div class="layui-input-block"><input type="text" name="name" placeholder="" class="layui-input v_required" lay-verify="required"></div></div>
+<div class="layui-form-item"><label class="layui-form-label">说明</label><div class="layui-input-block"><textarea name="comment" placeholder="" class="layui-textarea"></textarea></div></div>
+<div class="layui-form-item app-form-footer"><button type="button" class="layui-btn" id="btnSave">保存</button><button type="button" class="layui-btn layui-btn-primary" id="btnCancel">取消</button></div></form></div><div id="signetBox" style="display:none; padding:20px;"><form class="layui-form"><div class="layui-form-item"><label class="layui-form-label">公司签章</label><div class="layui-input-block"><select id="signet"></select></div></div><div class="layui-form-item app-form-footer"><button type="button" class="layui-btn" id="btnSignet">提交</button><button type="button" class="layui-btn layui-btn-primary" id="btnSignetCancel">取消</button></div></form></div><div id="supplierSignetBox" style="display:none; padding:20px;"><form class="layui-form"><div class="layui-form-item"><label class="layui-form-label">厂商签章</label><div class="layui-input-block"><select id="supplierSignet"></select></div></div><div class="layui-form-item app-form-footer"><button type="button" class="layui-btn" id="btnSupplierSignet">提交</button><button type="button" class="layui-btn layui-btn-primary" id="btnSupplierSignetCancel">取消</button></div></form></div><script type="text/html" id="rowToolbar"><button class="layui-btn layui-btn-normal layui-btn-xs" lay-event="edit"><i class="layui-icon layui-icon-edit"></i>修改</button><button class="layui-btn layui-btn-primary layui-btn-xs" lay-event="view">查看</button><button class="layui-btn layui-btn-warm layui-btn-xs" lay-event="generate">生成合同</button><button class="layui-btn layui-btn-danger layui-btn-xs" lay-event="sign">已签</button><button class="layui-btn layui-btn-warm layui-btn-xs" lay-event="expire">失效</button><button class="layui-btn layui-btn-normal layui-btn-xs" lay-event="companySign">公司签</button><button class="layui-btn layui-btn-normal layui-btn-xs" lay-event="supplierSign">厂商签</button><button class="layui-btn layui-btn-normal layui-btn-xs" lay-event="filing">归档</button><button class="layui-btn layui-btn-normal layui-btn-xs" lay-event="brand">品牌</button><button class="layui-btn layui-btn-normal layui-btn-xs" lay-event="goods">商品</button><button class="layui-btn layui-btn-normal layui-btn-xs" lay-event="warranty">质保</button></script>
+</div>
+<script src="../../layui/layui.js"></script>
+<script src="../../js/app/config.js"></script>
+<script src="../../js/app/server.js"></script>
+<script src="../../js/app/utils.js"></script>
+<script src="../../js/app/post.js"></script>
+<script src="../../js/app/api.js"></script>
+<script src="../../js/app/core.js"></script>
+<script src="../../js/app/validate.js"></script>
+<script src="../../js/app/bootstrap.js"></script>
+<script src="../../js/personnel/supplierContract.js"></script>
+</body>
+</html>

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<!-- app/views/store/mcategory.html —— 商城品类（纯 CRUD + 显示状态切换）
+  列：name(品类) isShow(0首页显示/1首页不显示)
+  操作：编辑 显示/不显示
+  查询：按品类名搜索 -->
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8" />
+    <title>商城品类</title>
+    <link rel="stylesheet" href="../../layui/css/layui.css">
+    <link rel="stylesheet" href="../../css/app.css">
+</head>
+<body>
+<div class="app-page">
+    <div class="app-search">
+        <form class="layui-form" id="searchForm">
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">品类名</label>
+                    <div class="layui-input-inline"><input type="text" name="name" data-op="cn" placeholder="品类名" class="layui-input" autocomplete="off"></div>
+                </div>
+                <div class="layui-inline">
+                    <button type="button" class="layui-btn" id="btnSearch"><i class="layui-icon layui-icon-search"></i>查询</button>
+                    <button type="reset" class="layui-btn layui-btn-primary" id="btnReset">重置</button>
+                    <button type="button" class="layui-btn layui-btn-normal" id="btnAdd"><i class="layui-icon layui-icon-add-1"></i>添加</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div class="app-table"><table id="resultTable" lay-filter="resultTable"></table></div>
+    <div id="pagenation" class="app-pagenation"></div>
+
+    <div id="editBox" style="display:none; padding:20px;">
+        <form class="layui-form" id="editForm">
+            <input type="hidden" name="cid">
+            <div class="layui-form-item">
+                <label class="layui-form-label">品类名<span class="app-req">*</span></label>
+                <div class="layui-input-block"><input type="text" name="name" placeholder="请输入品类名" class="layui-input v_required" lay-verify="required"></div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">图标</label>
+                <div class="layui-input-block"><input type="text" name="icon" placeholder="图标类名或URL" class="layui-input"></div>
+            </div>
+            <div class="layui-form-item app-form-footer">
+                <button type="button" class="layui-btn" id="btnSave">保存</button>
+                <button type="reset" class="layui-btn layui-btn-primary" id="btnCancel">取消</button>
+            </div>
+        </form>
+    </div>
+
+    <script type="text/html" id="rowToolbar">
+        <button class="layui-btn layui-btn-xs" lay-event="edit"><i class="layui-icon layui-icon-edit"></i>编辑</button>
+        <button class="layui-btn layui-btn-xs" lay-event="show">显示</button>
+        <button class="layui-btn layui-btn-xs layui-btn-warm" lay-event="hide">不显示</button>
+    </script>
+</div>
+
+<script src="../../layui/layui.js"></script>
+<script src="../../js/app/config.js"></script>
+<script src="../../js/app/server.js"></script>
+<script src="../../js/app/utils.js"></script>
+<script src="../../js/app/post.js"></script>
+<script src="../../js/app/api.js"></script>
+<script src="../../js/app/core.js"></script>
+<script src="../../js/app/validate.js"></script>
+<script src="../../js/app/bootstrap.js"></script>
+<script src="../../js/store/mcategory.js"></script>
+</body>
+</html>

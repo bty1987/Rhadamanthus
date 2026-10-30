@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<!-- app/views/sales/sales4activity.html —— 销售活动项（按销售单列活动项 + 添加物品/券/卡 + 操作）
+  上下文：app.params.sales.sales = {sid,orderId,...}, app.params.sales.type -->
+<html lang="zh-CN"><head><meta charset="utf-8"><title>销售活动项</title>
+<link rel="stylesheet" href="../../layui/css/layui.css"><link rel="stylesheet" href="../../css/app.css"></head>
+<body><div class="app-page">
+    <div style="margin-bottom:10px;border:1px solid #e6e6e6;padding:10px;">
+        <div class="layui-form-item"><label class="layui-form-label">订单号</label><div class="layui-input-inline"><input type="text" id="orderId" class="layui-input" readonly></div>
+            <label class="layui-form-label">活动</label><div class="layui-input-inline"><select id="activity"></select></div>
+            <label class="layui-form-label">活动金额</label><div class="layui-input-inline"><input type="text" id="activityAmount" class="layui-input" readonly></div>
+        </div>
+        <div class="layui-form-item">
+            <button type="button" class="layui-btn" id="btnAddItem"><i class="layui-icon layui-icon-add-1"></i>添加活动项</button>
+            <button type="button" class="layui-btn layui-btn-primary" id="btnBack">返回</button>
+        </div>
+    </div>
+    <div class="app-table"><table id="resultTable" lay-filter="resultTable"></table></div>
+    <!-- 添加活动项 -->
+    <div id="editBox" style="display:none; padding:20px;">
+        <div class="layui-tab layui-tab-brief" lay-filter="activityTab">
+            <ul class="layui-tab-title"><li class="layui-this">物品</li><li>券</li><li>卡纸</li></ul>
+            <div class="layui-tab-content">
+                <div class="layui-tab-item layui-show"><form class="layui-form" id="thingsForm">
+                    <div class="layui-form-item"><label class="layui-form-label">物品名</label><div class="layui-input-block"><input type="text" id="thingsName" placeholder="物品名" class="layui-input"></div></div>
+                    <div class="layui-form-item"><label class="layui-form-label">数量</label><div class="layui-input-block"><input type="number" step="0.01" id="thingsNum" class="layui-input" value="1"></div></div>
+                    <div class="layui-form-item"><label class="layui-form-label">金额</label><div class="layui-input-block"><input type="number" step="0.01" id="thingsMoney" class="layui-input" value="0"></div></div>
+                    <div class="layui-form-item"><label class="layui-form-label">积分</label><div class="layui-input-block"><input type="number" step="0.01" id="thingsIntegral" class="layui-input" value="0"></div></div>
+                    <div class="layui-form-item app-form-footer"><button type="button" class="layui-btn" id="btnAddThing">添加</button></div>
+                </form></div>
+                <div class="layui-tab-item"><form class="layui-form" id="couponsForm">
+                    <div class="layui-form-item"><label class="layui-form-label">券名</label><div class="layui-input-block"><input type="text" id="couponsName" placeholder="券名" class="layui-input"></div></div>
+                    <div class="layui-form-item"><label class="layui-form-label">数量</label><div class="layui-input-block"><input type="number" step="0.01" id="couponsNum" class="layui-input" value="1"></div></div>
+                    <div class="layui-form-item"><label class="layui-form-label">金额</label><div class="layui-input-block"><input type="number" step="0.01" id="couponsMoney" class="layui-input" value="0"></div></div>
+                    <div class="layui-form-item app-form-footer"><button type="button" class="layui-btn" id="btnAddCoupon">添加</button></div>
+                </form></div>
+                <div class="layui-tab-item"><form class="layui-form" id="paperForm">
+                    <div class="layui-form-item"><label class="layui-form-label">卡纸名</label><div class="layui-input-block"><input type="text" id="paperName" placeholder="卡纸名" class="layui-input"></div></div>
+                    <div class="layui-form-item"><label class="layui-form-label">数量</label><div class="layui-input-block"><input type="number" step="0.01" id="paperNum" class="layui-input" value="1"></div></div>
+                    <div class="layui-form-item"><label class="layui-form-label">金额</label><div class="layui-input-block"><input type="number" step="0.01" id="paperMoney" class="layui-input" value="0"></div></div>
+                    <div class="layui-form-item"><label class="layui-form-label">积分</label><div class="layui-input-block"><input type="number" step="0.01" id="paperIntegral" class="layui-input" value="0"></div></div>
+                    <div class="layui-form-item app-form-footer"><button type="button" class="layui-btn" id="btnAddPaper">添加</button></div>
+                </form></div>
+            </div>
+        </div>
+        <h3 style="font-size:14px;font-weight:bold;padding:8px 0;color:#333;margin-top:10px;">待添加列表</h3>
+        <div class="app-table"><table id="newItemTable" lay-filter="newItemTable"></table></div>
+        <div style="margin-top:10px;text-align:right;"><button type="button" class="layui-btn" id="btnSubmitItems">提交</button></div>
+    </div>
+    <!-- 操作备注 -->
+    <div id="commentBox" style="display:none; padding:20px;"><form class="layui-form" id="commentForm">
+        <input type="hidden" name="saiid">
+        <input type="hidden" name="actionUrl">
+        <div class="layui-form-item"><label class="layui-form-label">金额</label><div class="layui-input-block"><input type="number" step="0.01" id="price" class="layui-input"></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">备注</label><div class="layui-input-block"><textarea id="salesActivityComment" class="layui-textarea"></textarea></div></div>
+        <div class="layui-form-item app-form-footer"><button type="button" class="layui-btn" id="btnCommentSubmit">提交</button><button type="button" class="layui-btn layui-btn-primary" id="btnCommentCancel">取消</button></div>
+    </form></div>
+    <script type="text/html" id="rowToolbar">
+        <button class="layui-btn layui-btn-xs" lay-event="receive">领取</button>
+        <button class="layui-btn layui-btn-xs layui-btn-warm" lay-event="delive">发放</button>
+        <button class="layui-btn layui-btn-xs layui-btn-normal" lay-event="expend">消耗</button>
+        <button class="layui-btn layui-btn-xs" lay-event="discount">折扣</button>
+        <button class="layui-btn layui-btn-xs layui-btn-danger" lay-event="refund">退款</button>
+        <button class="layui-btn layui-btn-xs" lay-event="record">记录</button>
+    </script>
+    <script type="text/html" id="newItemToolbar"><button class="layui-btn layui-btn-xs layui-btn-danger" lay-event="del">删除</button></script>
+</div>
+<script src="../../layui/layui.js"></script><script src="../../js/app/config.js"></script><script src="../../js/app/server.js"></script><script src="../../js/app/utils.js"></script><script src="../../js/app/post.js"></script><script src="../../js/app/api.js"></script><script src="../../js/app/core.js"></script><script src="../../js/app/validate.js"></script><script src="../../js/app/bootstrap.js"></script><script src="../../js/sales/sales4activity.js"></script>
+</body></html>

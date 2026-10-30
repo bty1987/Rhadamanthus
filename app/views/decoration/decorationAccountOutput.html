@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<!-- app/views/decoration/decorationAccountOutput.html —— 决算单打印（弹窗子页，分整装/半包两套版式）
+  上下文：app.params.decoration = { decoration, accountBasic, orderTypeness }。 -->
+<html lang="zh-CN"><head><meta charset="utf-8"><title>决算单打印</title>
+<link rel="stylesheet" href="../../layui/css/layui.css"><link rel="stylesheet" href="../../css/app.css">
+<style>.print-table{width:100%;border-collapse:collapse;table-layout:fixed;}.print-table td{border:1px solid #333;padding:4px 8px;font-size:12px;}.tdHead{background:#f2f2f2;font-weight:bold;text-align:center;}</style></head>
+<body><div class="app-page" style="padding:15px;">
+    <div style="text-align:right;padding-bottom:10px;"><button type="button" class="layui-btn layui-btn-sm" id="btnPrint"><i class="layui-icon layui-icon-print"></i>打印</button></div>
+    <div align="center" id="titleArea" style="font-size:18px;font-weight:bold;line-height:40px;"></div>
+    <div id="manifestPrint"></div>
+    <table class="print-table" id="talk" style="margin-top:10px;"></table>
+</div>
+<script src="../../layui/layui.js"></script><script src="../../js/app/config.js"></script><script src="../../js/app/server.js"></script><script src="../../js/app/utils.js"></script><script src="../../js/app/post.js"></script><script src="../../js/app/api.js"></script><script src="../../js/app/core.js"></script><script src="../../js/app/validate.js"></script><script src="../../js/app/bootstrap.js"></script><script src="../../js/decoration/decoration-common.js"></script><script src="../../js/decoration/decorationAccountOutput.js"></script>
+</body></html>

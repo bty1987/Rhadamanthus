@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<!-- app/views/decoration/decorationMeasure4setup.html —— 量尺设置（pageDecorationMeasure；编辑排期/重置） -->
+<html lang="zh-CN"><head><meta charset="utf-8"><title>量尺设置</title>
+<link rel="stylesheet" href="../../layui/css/layui.css"><link rel="stylesheet" href="../../css/app.css"></head>
+<body><div class="app-page">
+    <div class="app-search"><form class="layui-form" id="searchForm"><div class="layui-form-item">
+        <div class="layui-inline"><label class="layui-form-label">装修单号</label><div class="layui-input-inline"><input name="decoration.orderId" data-op="eq" class="layui-input" placeholder="装修单号"></div></div>
+        <div class="layui-inline"><label class="layui-form-label">楼盘</label><div class="layui-input-inline"><input name="decoration.village.no" data-op="eq" class="layui-input" placeholder="楼盘编号"></div></div>
+        <div class="layui-inline"><label class="layui-form-label">楼号</label><div class="layui-input-inline"><input name="decoration.house.houseNumber" data-op="cn" class="layui-input" placeholder="楼号"></div></div>
+        <div class="layui-inline"><label class="layui-form-label">状态</label><div class="layui-input-inline"><select name="status" data-op="eq"><option value="">全部</option><option value="0">排队</option><option value="1">申请量尺</option><option value="2">量尺成功</option><option value="3">量尺失败</option></select></div></div>
+        <div class="layui-inline"><label class="layui-form-label">申请时间</label><div class="layui-input-inline"><input name="applayTime" data-op="between" id="applayTime" class="layui-input" placeholder="起始 - 结束" readonly></div></div>
+        <div class="layui-inline"><button type="button" class="layui-btn" id="btnSearch"><i class="layui-icon layui-icon-search"></i>查询</button></div>
+    </div></form></div>
+    <div class="app-table"><table id="resultTable" lay-filter="resultTable"></table></div>
+    <div id="pagenation" class="app-pagenation"></div>
+    <script type="text/html" id="rowToolbar">
+        <button class="layui-btn layui-btn-xs layui-btn-normal" lay-event="draw">编辑</button>
+        <button class="layui-btn layui-btn-xs layui-btn-danger" lay-event="reset">重置</button>
+    </script>
+    <div id="editBox" style="display:none;padding:20px 30px;">
+        <form class="layui-form" id="editForm">
+            <div class="layui-form-item"><label class="layui-form-label">量尺日期</label><div class="layui-input-block"><input class="layui-input" id="actualDate" placeholder="请选择量尺日期"></div></div>
+            <div class="layui-form-item"><label class="layui-form-label">开始时间</label><div class="layui-input-inline"><input class="layui-input" id="startTime" placeholder="HH:mm:ss"></div></div>
+            <div class="layui-form-item"><label class="layui-form-label">结束时间</label><div class="layui-input-inline"><input class="layui-input" id="endTime" placeholder="HH:mm:ss"></div></div>
+        </form>
+    </div>
+</div>
+<script src="../../layui/layui.js"></script><script src="../../js/app/config.js"></script><script src="../../js/app/server.js"></script><script src="../../js/app/utils.js"></script><script src="../../js/app/post.js"></script><script src="../../js/app/api.js"></script><script src="../../js/app/core.js"></script><script src="../../js/app/validate.js"></script><script src="../../js/app/bootstrap.js"></script><script src="../../js/decoration/decoration-common.js"></script><script src="../../js/decoration/decorationMeasure4setup.js"></script>
+</body></html>

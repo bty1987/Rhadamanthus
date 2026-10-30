@@ -1,0 +1,700 @@
+<!-- app/views/contract/decorationContractEHome.html —— 装饰装修工程交易合同（静态合同正文渲染页）
+  上下文：app.params.decoration = { orderId }；正文按合同记录/装修单数据填充后显示。 -->
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf8">
+
+                        
+    <title>装饰装修工程交易合同</title>
+    <style>
+        <!--
+         /* Font Definitions */
+         @font-face
+            {font-family:宋体;
+            panose-1:2 1 6 0 3 1 1 1 1 1;}
+        @font-face
+            {font-family:宋体;
+            panose-1:2 1 6 9 6 1 1 1 1 1;}
+        @font-face
+            {font-family:宋体;
+            panose-1:2 1 6 9 6 1 1 1 1 1;}
+        @font-face
+            {font-family:"\@宋体";
+            panose-1:2 1 6 0 3 1 1 1 1 1;}
+        @font-face
+            {font-family:"\@宋体";
+            panose-1:2 1 6 9 6 1 1 1 1 1;}
+         /* Style Definitions */
+         p.MsoNormal, li.MsoNormal, div.MsoNormal
+            {margin:0cm;
+            margin-bottom:.0001pt;
+            text-align:justify;
+            text-justify:inter-ideograph;
+            font-size:10.5pt;
+            font-family:"宋体", "Times New Roman","serif";}
+         /* Page Definitions */
+         @page WordSection1
+            {size:595.3pt 841.9pt;
+            margin:42.55pt 42.55pt 42.55pt 70.9pt;
+            layout-grid:15.6pt;}
+        div.WordSection1
+            {page:WordSection1;}
+         /* List Definitions */
+         ol
+            {margin-bottom:0cm;}
+        ul
+            {margin-bottom:0cm;}
+        -->
+    </style>
+</head>
+<body lang="ZH-CN" style='text-justify-trim:punctuation'>
+    <div class="WordSection1" style='display:none; layout-grid:15.6pt'>
+        <p class="MsoNormal" align="center" style='margin-left:61.9pt;text-align:center; text-indent:-61.9pt;line-height:26.0pt'>
+            <b><span lang="EN-US" style='font-size: 24.0pt;font-family:宋体'>&nbsp;</span></b>
+        </p>
+        <p class="MsoNormal" align="center" style='margin-left:61.9pt;text-align:center; text-indent:-61.9pt;line-height:26.0pt'>
+            <b><span style='font-size:24.0pt; font-family:宋体'>装饰装修工程合同</span></b>
+        </p>
+        <p class="MsoNormal" style='margin-left:36.0pt;text-indent:-36.0pt;line-height:26.0pt'>
+            <span style='font-size:14.0pt;font-family:宋体'>甲方（发包方）：</span>
+            <span lang="EN-US">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+            <span style='font-size:14.0pt;font-family:宋体'>身份证号：</span>
+        </p>
+        <p class="MsoNormal" style='margin-left:36.0pt;text-indent:-36.0pt;line-height: 26.0pt'>
+            <span style='font-size:14.0pt;font-family:宋体'>乙方（承包方）：<span class="companyFullName"></span></span>
+        </p>
+        <p class="MsoNormal" style='text-indent:28.0pt;line-height:26.0pt'>
+            <span style='font-size:14.0pt;font-family:宋体'>依据《中华人民共和国合同法》和《辽宁省合同监督条例》以及其他有关法律的规定，并结合本工程具体情况，甲乙双方在平等自愿的基础上，经双方协商一致，签订本合同。</span>
+        </p>
+        <p class="MsoNormal" style='margin-left:21.0pt;text-indent:-21.0pt;line-height: 26.0pt'>
+            <span style='font-size:14.0pt;font-family:宋体'>一、合同主要内容：</span>
+        </p>
+        <p class="MsoNormal" style='margin-left:21.0pt;text-indent:-21.0pt;line-height: 26.0pt'>
+            <span lang="EN-US" style='font-size:14.0pt;font-family:宋体'>1、甲方将位于</span>
+            <span lang="EN-US">&nbsp;&nbsp;</span>
+            <span lang="EN-US" id="houseAddr">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+            <span lang="EN-US">&nbsp;&nbsp;</span>
+            <span lang="EN-US">房屋的装饰装修工程以</span>
+            <span lang="EN-US">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+            <span lang="EN-US">形式交给乙方承做。（其中不包括</span>
+            <span lang="EN-US">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;）</span>
+        </p>
+        <p class="MsoNormal" style='margin-left:21.0pt;text-indent:-21.0pt;line-height: 26.0pt'>
+            <span lang="EN-US" style='font-size:14.0pt;font-family:宋体'>2 </span>
+            <span style='font-size:14.0pt;font-family:宋体'>﹑房屋总面积：</span>
+            <span lang="EN-US">&nbsp;&nbsp;</span>
+            <span id="totalArea" lang="EN-US">&nbsp;&nbsp;&nbsp;&nbsp;</span>
+            <span lang="EN-US">&nbsp;&nbsp;</span>
+            <span lang="EN-US">平方米（□阁楼 □地下室 □别墅 □复式 □跃层）</span>
+        </p>
+        <p class="MsoNormal" style='text-indent:28.0pt;line-height:26.0pt'>
+            <span style='font-size:14.0pt;font-family:宋体'>工程总造价：（大写）：</span>
+            <span lang="EN-US">&nbsp;&nbsp;</span>
+            <span id="orderTotalPriceCN" lang="EN-US">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+            <span lang="EN-US">&nbsp;&nbsp;</span>
+            <span lang="EN-US">&nbsp;</span>
+        </p>
+        <p class="MsoNormal" style='text-indent:110.0pt;line-height:26.0pt'>
+            <span style='font-size:14.0pt;font-family:宋体'>（小写）：￥</span>
+            <span lang="EN-US">&nbsp;&nbsp;&nbsp;</span>
+            <span lang="EN-US" id="orderTotalPrice">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+            <span lang="EN-US">&nbsp;&nbsp;&nbsp;</span>
+            <span lang="EN-US">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+        </p>
+        <p class="MsoNormal" style='line-height:26.0pt'>
+            <span lang="EN-US" style='font-size:14.0pt;font-family:宋体'>3</span>
+            <span style='font-size:14.0pt; font-family:宋体'>﹑ 工程付款方式如下表：</span>
+        </p>
+        <div id="fourPayment" style='display: none;'>
+            <table class="MsoNormalTable" border="1" cellspacing="0" cellpadding="0" width="647" style="width:485.0pt;margin-left:14.4pt;border-collapse:collapse;border:none">
+            <tbody>
+            <tr style="page-break-inside:avoid;height:13.0pt">
+                <td width="101" valign="top" style="width:90pt;border:solid windowtext 1.0pt; border-bottom:solid black 1.0pt;padding:0cm 5.4pt 0cm 5.4pt;height:13.0pt">
+                    <p class="MsoNormal" align="center" style="text-align:center;line-height:17.0pt">
+                        <span style='font-size:14.0pt;font-family:宋体' id="paymentNumber">四次付款</span>
+                    </p>
+                </td>
+                <td width="151" valign="top" style="width:6.0cm;border-top:solid windowtext 1.0pt; border-left:none;border-bottom:solid black 1.0pt;border-right:solid windowtext 1.0pt; padding:0cm 5.4pt 0cm 5.4pt;height:13.0pt">
+                    <p class="MsoNormal" align="center" style="text-align:center;line-height:17.0pt">
+                        <span style='font-size:14.0pt;font-family:宋体'>付款时间</span>
+                    </p>
+                </td>
+                <td width="161" valign="top" style="width:120.5pt;border-top:solid windowtext 1.0pt; border-left:none;border-bottom:solid black 1.0pt;border-right:solid windowtext 1.0pt; padding:0cm 5.4pt 0cm 5.4pt;height:13.0pt">
+                    <p class="MsoNormal" align="center" style="text-align:center;line-height:17.0pt">
+                        <span style='font-size:14.0pt;font-family:宋体'>付款百分比</span>
+                    </p>
+                </td>
+                <td width="113" valign="top" style="width:3.0cm;border-top:solid windowtext 1.0pt; border-left:none;border-bottom:solid black 1.0pt;border-right:solid windowtext 1.0pt; padding:0cm 5.4pt 0cm 5.4pt;height:13.0pt">
+                    <p class="MsoNormal" align="center" style="text-align:center;line-height:17.0pt">
+                        <span style='font-size:14.0pt;font-family:宋体'>金额（元）</span>
+                    </p>
+                </td>
+                <td width="120" valign="top" style="width:90.0pt;border-top:solid windowtext 1.0pt; border-left:none;border-bottom:solid black 1.0pt;border-right:solid windowtext 1.0pt; padding:0cm 5.4pt 0cm 5.4pt;height:13.0pt">
+                    <p class="MsoNormal" align="center" style="text-align:center;line-height:17.0pt">
+                        <span style='font-size:14.0pt;font-family:宋体'>备注</span>
+                    </p>
+                </td>
+            </tr>
+            <tr style="page-break-inside:avoid;height:12.7pt">
+                <td width="101" valign="top" style="width:90pt;border-top:none;border-left: solid windowtext 1.0pt;border-bottom:solid black 1.0pt;border-right:solid windowtext 1.0pt; padding:0cm 5.4pt 0cm 5.4pt;height:12.7pt">
+                    <p class="MsoNormal" align="center" style="text-align:center;line-height:17.0pt">
+                        <span style='font-size:14.0pt;font-family:宋体'>第一次</span>
+                    </p>
+                </td>
+                <td width="151" valign="top" style="width:6.0cm;border-top:none;border-left:none; border-bottom:solid black 1.0pt;border-right:solid windowtext 1.0pt; padding:0cm 5.4pt 0cm 5.4pt;height:12.7pt">
+                    <p class="MsoNormal" align="center" style="text-align:center;line-height:17.0pt">
+                        <span style='font-size:14.0pt;font-family:宋体'>签合同之日</span>
+                    </p>
+                </td>
+                <td width="161" valign="top" style="width:120.5pt;border-top:none;border-left: none;border-bottom:solid black 1.0pt;border-right:solid windowtext 1.0pt; padding:0cm 5.4pt 0cm 5.4pt;height:12.7pt">
+                    <p class="MsoNormal" align="center" style="text-align:center;line-height:17.0pt">
+                        <span style='font-size:14.0pt;font-family:宋体' data-i18n="page.contract.label.totalPercent">总价款的<span lang="EN-US" id="firstRate">30</span>％</span>
+                    </p>
+                </td>
+                <td width="113" valign="top" style="width:3.0cm;border-top:none;border-left:none; border-bottom:solid black 1.0pt;border-right:solid windowtext 1.0pt; padding:0cm 5.4pt 0cm 5.4pt;height:12.7pt">
+                    <p class="MsoNormal" align="center" style="margin-right:28.0pt;text-align:center; line-height:17.0pt">
+                        <span style='font-size:14.0pt;font-family:宋体'>￥<span id='firstPayment'></span></span>
+                    </p>
+                </td>
+                <td width="120" valign="top" style="width:90.0pt;border-top:none;border-left: none;border-bottom:solid black 1.0pt;border-right:solid windowtext 1.0pt; padding:0cm 5.4pt 0cm 5.4pt;height:12.7pt">
+                    <p class="MsoNormal" align="center" style="text-align:center;line-height:17.0pt">
+                        <span lang="EN-US" style='font-size:14.0pt;font-family:宋体'>&nbsp;</span>
+                    </p>
+                </td>
+            </tr>
+            <tr style="page-break-inside:avoid;height:12.7pt">
+                <td width="101" valign="top" style="width:90pt;border-top:none;border-left: solid windowtext 1.0pt;border-bottom:solid black 1.0pt;border-right:solid windowtext 1.0pt; padding:0cm 5.4pt 0cm 5.4pt;height:12.7pt">
+                    <p class="MsoNormal" align="center" style="text-align:center;line-height:17.0pt">
+                        <span style='font-size:14.0pt;font-family:宋体'>第二次</span>
+                    </p>
+                </td>
+                <td width="151" valign="top" style="width:6.0cm;border-top:none;border-left:none; border-bottom:solid black 1.0pt;border-right:solid windowtext 1.0pt; padding:0cm 5.4pt 0cm 5.4pt;height:12.7pt">
+                    <p class="MsoNormal" align="center" style="text-align:center;line-height:17.0pt">
+                        <span style='font-size:14.0pt;font-family:宋体'>工程开始之前</span>
+                    </p>
+                </td>
+                <td width="161" valign="top" style="width:120.5pt;border-top:none;border-left: none;border-bottom:solid black 1.0pt;border-right:solid windowtext 1.0pt; padding:0cm 5.4pt 0cm 5.4pt;height:12.7pt">
+                    <p class="MsoNormal" align="center" style="text-align:center;line-height:17.0pt">
+                        <span style='font-size:14.0pt;font-family:宋体' data-i18n="page.contract.label.totalPercent">总价款的<span lang="EN-US" id="firstSecondRate">35</span>％</span>
+                    </p>
+                </td>
+                <td width="113" valign="top" style="width:3.0cm;border-top:none;border-left:none; border-bottom:solid black 1.0pt;border-right:solid windowtext 1.0pt; padding:0cm 5.4pt 0cm 5.4pt;height:12.7pt">
+                    <p class="MsoNormal" align="center" style="margin-right:28.0pt;text-align:center; line-height:17.0pt">
+                        <span style='font-size:14.0pt;font-family:宋体'>￥<span id='firstSecondPayment'></span></span>
+                    </p>
+                </td>
+                <td width="120" valign="top" style="width:90.0pt;border-top:none;border-left: none;border-bottom:solid black 1.0pt;border-right:solid windowtext 1.0pt; padding:0cm 5.4pt 0cm 5.4pt;height:12.7pt">
+                    <p class="MsoNormal" align="center" style="text-align:center;line-height:17.0pt">
+                        <span lang="EN-US" style='font-size:14.0pt;font-family:宋体'>&nbsp;</span>
+                    </p>
+                </td>
+            </tr>
+            <tr style="page-break-inside:avoid;height:3.25pt">
+                <td width="101" valign="top" style="width:90pt;border-top:none;border-left: solid windowtext 1.0pt;border-bottom:solid black 1.0pt;border-right:solid windowtext 1.0pt; padding:0cm 5.4pt 0cm 5.4pt;height:3.25pt">
+                    <p class="MsoNormal" align="center" style="text-align:center;line-height:17.0pt">
+                        <span style='font-size:14.0pt;font-family:宋体'>第三次</span>
+                    </p>
+                </td>
+                <td width="151" valign="top" style="width:6.0cm;border-top:none;border-left:none; border-bottom:solid black 1.0pt;border-right:solid windowtext 1.0pt; padding:0cm 5.4pt 0cm 5.4pt;height:3.25pt">
+                    <p class="MsoNormal" align="center" style="text-align:center;line-height:17.0pt">
+                        <span style='font-size:14.0pt;font-family:宋体'>木工进场前</span>
+                    </p>
+                </td>
+                <td width="161" valign="top" style="width:120.5pt;border-top:none;border-left: none;border-bottom:solid black 1.0pt;border-right:solid windowtext 1.0pt; padding:0cm 5.4pt 0cm 5.4pt;height:3.25pt">
+                    <p class="MsoNormal" align="center" style="text-align:center;line-height:17.0pt">
+                        <span style='font-size:14.0pt;font-family:宋体' data-i18n="page.contract.label.totalPercent">总价款的<span lang="EN-US" id="secondRate">32</span>％</span>
+                    </p>
+                </td>
+                <td width="113" valign="top" style="width:3.0cm;border-top:none;border-left:none; border-bottom:solid black 1.0pt;border-right:solid windowtext 1.0pt; padding:0cm 5.4pt 0cm 5.4pt;height:3.25pt">
+                    <p class="MsoNormal" align="center" style="margin-right:28.0pt;text-align:center; line-height:17.0pt">
+                        <span style='font-size:14.0pt;font-family:宋体'>￥<span id='secondPayment'></span></span>
+                    </p>
+                </td>
+                <td width="120" valign="top" style="width:90.0pt;border-top:none;border-left: none;border-bottom:solid black 1.0pt;border-right:solid windowtext 1.0pt; padding:0cm 5.4pt 0cm 5.4pt;height:3.25pt">
+                    <p class="MsoNormal" align="center" style="text-align:center;line-height:17.0pt">
+                        <span lang="EN-US" style='font-size:14.0pt;font-family:宋体'>&nbsp;</span>
+                    </p>
+                </td>
+            </tr>
+            <tr style="page-break-inside:avoid;height:20.45pt">
+                <td width="101" valign="top" style="width:90pt;border:solid windowtext 1.0pt; border-top:none;padding:0cm 5.4pt 0cm 5.4pt;height:20.45pt">
+                    <p class="MsoNormal" align="center" style="text-align:center;line-height:17.0pt">
+                        <span style='font-size:14.0pt;font-family:宋体'>第四次</span>
+                    </p>
+                </td>
+                <td width="151" valign="top" style="width:6.0cm;border-top:none;border-left:none; border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt; padding:0cm 5.4pt 0cm 5.4pt;height:20.45pt">
+                    <p class="MsoNormal" align="center" style="text-align:center;line-height:17.0pt">
+                        <span style='font-size:14.0pt;font-family:宋体'>灯、洁具安装前</span>
+                    </p>
+                </td>
+                <td width="161" valign="top" style="width:120.5pt;border-top:none;border-left: none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt; padding:0cm 5.4pt 0cm 5.4pt;height:20.45pt">
+                    <p class="MsoNormal" align="center" style="text-align:center;line-height:17.0pt">
+                        <span style='font-size:14.0pt;font-family:宋体' data-i18n="page.contract.label.totalPercent">总价款的<span lang="EN-US" id="lastRate">3</span>％</span>
+                    </p>
+                </td>
+                <td width="113" valign="top" style="width:3.0cm;border-top:none;border-left:none; border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt; padding:0cm 5.4pt 0cm 5.4pt;height:20.45pt">
+                    <p class="MsoNormal" align="center" style="margin-right:28.0pt;text-align:center; line-height:17.0pt">
+                        <span style='font-size:14.0pt;font-family:宋体'>￥<span id='lastPayment'></span></span>
+                    </p>
+                </td>
+                <td width="120" valign="top" style="width:90.0pt;border-top:none;border-left: none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt; padding:0cm 5.4pt 0cm 5.4pt;height:20.45pt">
+                    <p class="MsoNormal" align="center" style="text-align:center;line-height:17.0pt">
+                        <span lang="EN-US" style='font-size:14.0pt;font-family:宋体'>&nbsp;</span>
+                    </p>
+                </td>
+            </tr>
+            </tbody>
+            </table>
+        </div>
+        <div id="threePayment">
+            <table class="MsoNormalTable" border="1" cellspacing="0" cellpadding="0" width="647" style="width:485.0pt;margin-left:14.4pt;border-collapse:collapse;border:none">
+            <tbody>
+            <tr style="page-break-inside:avoid;height:13.0pt">
+                <td width="101" valign="top" style="width:90pt;border:solid windowtext 1.0pt; border-bottom:solid black 1.0pt;padding:0cm 5.4pt 0cm 5.4pt;height:13.0pt">
+                    <p class="MsoNormal" align="center" style="text-align:center;line-height:17.0pt">
+                        <span style='font-size:14.0pt;font-family:宋体' id="paymentNumber">三次付款</span>
+                    </p>
+                </td>
+                <td width="151" valign="top" style="width:6.0cm;border-top:solid windowtext 1.0pt; border-left:none;border-bottom:solid black 1.0pt;border-right:solid windowtext 1.0pt; padding:0cm 5.4pt 0cm 5.4pt;height:13.0pt">
+                    <p class="MsoNormal" align="center" style="text-align:center;line-height:17.0pt">
+                        <span style='font-size:14.0pt;font-family:宋体'>付款时间</span>
+                    </p>
+                </td>
+                <td width="161" valign="top" style="width:120.5pt;border-top:solid windowtext 1.0pt; border-left:none;border-bottom:solid black 1.0pt;border-right:solid windowtext 1.0pt; padding:0cm 5.4pt 0cm 5.4pt;height:13.0pt">
+                    <p class="MsoNormal" align="center" style="text-align:center;line-height:17.0pt">
+                        <span style='font-size:14.0pt;font-family:宋体'>付款百分比</span>
+                    </p>
+                </td>
+                <td width="113" valign="top" style="width:3.0cm;border-top:solid windowtext 1.0pt; border-left:none;border-bottom:solid black 1.0pt;border-right:solid windowtext 1.0pt; padding:0cm 5.4pt 0cm 5.4pt;height:13.0pt">
+                    <p class="MsoNormal" align="center" style="text-align:center;line-height:17.0pt">
+                        <span style='font-size:14.0pt;font-family:宋体'>金额（元）</span>
+                    </p>
+                </td>
+                <td width="120" valign="top" style="width:90.0pt;border-top:solid windowtext 1.0pt; border-left:none;border-bottom:solid black 1.0pt;border-right:solid windowtext 1.0pt; padding:0cm 5.4pt 0cm 5.4pt;height:13.0pt">
+                    <p class="MsoNormal" align="center" style="text-align:center;line-height:17.0pt">
+                        <span style='font-size:14.0pt;font-family:宋体'>备注</span>
+                    </p>
+                </td>
+            </tr>
+            <tr style="page-break-inside:avoid;height:12.7pt">
+                <td width="101" valign="top" style="width:90pt;border-top:none;border-left: solid windowtext 1.0pt;border-bottom:solid black 1.0pt;border-right:solid windowtext 1.0pt; padding:0cm 5.4pt 0cm 5.4pt;height:12.7pt">
+                    <p class="MsoNormal" align="center" style="text-align:center;line-height:17.0pt">
+                        <span style='font-size:14.0pt;font-family:宋体'>第一次</span>
+                    </p>
+                </td>
+                <td width="151" valign="top" style="width:6.0cm;border-top:none;border-left:none; border-bottom:solid black 1.0pt;border-right:solid windowtext 1.0pt; padding:0cm 5.4pt 0cm 5.4pt;height:12.7pt">
+                    <p class="MsoNormal" align="center" style="text-align:center;line-height:17.0pt">
+                        <span style='font-size:14.0pt;font-family:宋体'>签合同之日</span>
+                    </p>
+                </td>
+                <td width="161" valign="top" style="width:120.5pt;border-top:none;border-left: none;border-bottom:solid black 1.0pt;border-right:solid windowtext 1.0pt; padding:0cm 5.4pt 0cm 5.4pt;height:12.7pt">
+                    <p class="MsoNormal" align="center" style="text-align:center;line-height:17.0pt">
+                        <span style='font-size:14.0pt;font-family:宋体' data-i18n="page.contract.label.totalPercent">总价款的<span lang="EN-US" id="firstRate1">65</span>％</span>
+                    </p>
+                </td>
+                <td width="113" valign="top" style="width:3.0cm;border-top:none;border-left:none; border-bottom:solid black 1.0pt;border-right:solid windowtext 1.0pt; padding:0cm 5.4pt 0cm 5.4pt;height:12.7pt">
+                    <p class="MsoNormal" align="center" style="margin-right:28.0pt;text-align:center; line-height:17.0pt">
+                        <span style='font-size:14.0pt;font-family:宋体'>￥<span id='firstPayment1'></span></span>
+                    </p>
+                </td>
+                <td width="120" valign="top" style="width:90.0pt;border-top:none;border-left: none;border-bottom:solid black 1.0pt;border-right:solid windowtext 1.0pt; padding:0cm 5.4pt 0cm 5.4pt;height:12.7pt">
+                    <p class="MsoNormal" align="center" style="text-align:center;line-height:17.0pt">
+                        <span lang="EN-US" style='font-size:14.0pt;font-family:宋体'>&nbsp;</span>
+                    </p>
+                </td>
+            </tr>
+            <tr style="page-break-inside:avoid;height:3.25pt">
+                <td width="101" valign="top" style="width:90pt;border-top:none;border-left: solid windowtext 1.0pt;border-bottom:solid black 1.0pt;border-right:solid windowtext 1.0pt; padding:0cm 5.4pt 0cm 5.4pt;height:3.25pt">
+                    <p class="MsoNormal" align="center" style="text-align:center;line-height:17.0pt">
+                        <span style='font-size:14.0pt;font-family:宋体'>第二次</span>
+                    </p>
+                </td>
+                <td width="151" valign="top" style="width:6.0cm;border-top:none;border-left:none; border-bottom:solid black 1.0pt;border-right:solid windowtext 1.0pt; padding:0cm 5.4pt 0cm 5.4pt;height:3.25pt">
+                    <p class="MsoNormal" align="center" style="text-align:center;line-height:17.0pt">
+                        <span style='font-size:14.0pt;font-family:宋体'>木工进场前</span>
+                    </p>
+                </td>
+                <td width="161" valign="top" style="width:120.5pt;border-top:none;border-left: none;border-bottom:solid black 1.0pt;border-right:solid windowtext 1.0pt; padding:0cm 5.4pt 0cm 5.4pt;height:3.25pt">
+                    <p class="MsoNormal" align="center" style="text-align:center;line-height:17.0pt">
+                        <span style='font-size:14.0pt;font-family:宋体' data-i18n="page.contract.label.totalPercent">总价款的<span lang="EN-US" id='secondRate1'>32</span>％</span>
+                    </p>
+                </td>
+                <td width="113" valign="top" style="width:3.0cm;border-top:none;border-left:none; border-bottom:solid black 1.0pt;border-right:solid windowtext 1.0pt; padding:0cm 5.4pt 0cm 5.4pt;height:3.25pt">
+                    <p class="MsoNormal" align="center" style="margin-right:28.0pt;text-align:center; line-height:17.0pt">
+                        <span style='font-size:14.0pt;font-family:宋体'>￥<span id='secondPayment1'></span></span>
+                    </p>
+                </td>
+                <td width="120" valign="top" style="width:90.0pt;border-top:none;border-left: none;border-bottom:solid black 1.0pt;border-right:solid windowtext 1.0pt; padding:0cm 5.4pt 0cm 5.4pt;height:3.25pt">
+                    <p class="MsoNormal" align="center" style="text-align:center;line-height:17.0pt">
+                        <span lang="EN-US" style='font-size:14.0pt;font-family:宋体'>&nbsp;</span>
+                    </p>
+                </td>
+            </tr>
+            <tr style="page-break-inside:avoid;height:20.45pt">
+                <td width="101" valign="top" style="width:90pt;border:solid windowtext 1.0pt; border-top:none;padding:0cm 5.4pt 0cm 5.4pt;height:20.45pt">
+                    <p class="MsoNormal" align="center" style="text-align:center;line-height:17.0pt">
+                        <span style='font-size:14.0pt;font-family:宋体'>第三次</span>
+                    </p>
+                </td>
+                <td width="151" valign="top" style="width:6.0cm;border-top:none;border-left:none; border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt; padding:0cm 5.4pt 0cm 5.4pt;height:20.45pt">
+                    <p class="MsoNormal" align="center" style="text-align:center;line-height:17.0pt">
+                        <span style='font-size:14.0pt;font-family:宋体'>灯、洁具安装前</span>
+                    </p>
+                </td>
+                <td width="161" valign="top" style="width:120.5pt;border-top:none;border-left: none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt; padding:0cm 5.4pt 0cm 5.4pt;height:20.45pt">
+                    <p class="MsoNormal" align="center" style="text-align:center;line-height:17.0pt">
+                        <span style='font-size:14.0pt;font-family:宋体' data-i18n="page.contract.label.totalPercent">总价款的<span lang="EN-US" id='lastRate1'>3</span>％</span>
+                    </p>
+                </td>
+                <td width="113" valign="top" style="width:3.0cm;border-top:none;border-left:none; border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt; padding:0cm 5.4pt 0cm 5.4pt;height:20.45pt">
+                    <p class="MsoNormal" align="center" style="margin-right:28.0pt;text-align:center; line-height:17.0pt">
+                        <span style='font-size:14.0pt;font-family:宋体'>￥<span id='lastPayment1'></span></span>
+                    </p>
+                </td>
+                <td width="120" valign="top" style="width:90.0pt;border-top:none;border-left: none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt; padding:0cm 5.4pt 0cm 5.4pt;height:20.45pt">
+                    <p class="MsoNormal" align="center" style="text-align:center;line-height:17.0pt">
+                        <span lang="EN-US" style='font-size:14.0pt;font-family:宋体'>&nbsp;</span>
+                    </p>
+                </td>
+            </tr>
+            </tbody>
+            </table>
+        </div>
+        <p class="MsoNormal" style='line-height:26.0pt'>
+            <span style='font-size:14.0pt; font-family:宋体'>提示：合同价款（包括变更增加的价款）、主材代购等款项，甲方应直接支付给乙方（乙方指定收银窗口或指定银行账号）。未经乙方书面授权，乙方工作人员无权代表乙方收取甲方支付的任何款项或承诺合同外的权利义务。因甲方未将相关价款支付给乙方或私自与乙方工作人员达成协议造成的损失，乙方不承担任何责任。</span>
+        </p>
+        <p class="MsoNormal" style='line-height:26.0pt'>
+            <span style='font-size:14.0pt; font-family:宋体'>二、甲方工作</span>
+        </p>
+        <p class="MsoNormal" style='margin-left:21.0pt;text-indent:-21.0pt;line-height: 26.0pt'>
+            <span lang="EN-US" style='font-size:14.0pt;font-family:宋体'>1、施工前，负责办理消防、城管、物业管理部门审批登记及园区出入证件，如有收取施工相关费用，全部由甲方负责。</span>
+        </p>
+        <p class="MsoNormal" style='margin-left:21.0pt;text-indent:-21.0pt;line-height: 26.0pt'>
+            <span lang="EN-US" style='font-size:14.0pt'>2、施工前，协同乙方进行现场交底，负责协调邻里关系，保证乙方工作时间。</span>
+        </p>
+        <p class="MsoNormal" style='margin-left:21.0pt;text-indent:-21.0pt;line-height: 26.0pt'>
+            <span lang="EN-US" style='font-size:14.0pt;font-family:宋体'>3、向乙方无偿提供施工期间的水源、电源、供暖等必备条件。</span>
+        </p>
+        <p class="MsoNormal" style='margin-left:21.0pt;text-indent:-21.0pt;line-height: 26.0pt'>
+            <span lang="EN-US" style='font-size:14.0pt;font-family:宋体'>4、应在开工前三日内全部或部分腾空房屋。部分腾空的房屋中所滞留的家具、陈设等应当采取保护措施。</span>
+        </p>
+        <p class="MsoNormal" style='margin-left:21.0pt;text-indent:-21.0pt;line-height: 26.0pt'>
+            <span lang="EN-US" style='font-size:14.0pt'>5、对工程质量﹑进度进行监督检查，配合乙方工程分段分项、竣工验收及变更登记手续。</span>
+        </p>
+        <p class="MsoNormal" style='margin-left:21.0pt;text-indent:-21.0pt;line-height: 26.0pt'>
+            <span lang="EN-US" style='font-size:14.0pt'>6、如甲方要求拆改原建筑结构或设备管线，应负责到有关部门办理审批手续并承担相关费用及责任。</span>
+        </p>
+        <p class="MsoNormal" style='margin-left:21.0pt;text-indent:-21.0pt;line-height: 26.0pt'>
+            <span lang="EN-US" style='font-size:14.0pt'>7、如甲方自行提供图纸，需符合乙方施工标准及施工要求。</span>
+        </p>
+        <p class="MsoNormal" style='margin-left:21.0pt;text-indent:-21.0pt;line-height: 26.0pt'>
+            <span lang="EN-US" style='font-size:14.0pt'>8、甲方对所提供现场存放的材料物品（数量、质量）检验后，未经乙方签字确认，丢失及损坏由甲方负责。</span>
+        </p>
+        <p class="MsoNormal" style='margin-left:21.0pt;text-indent:-21.0pt;line-height:26.0pt'>
+            <span lang="EN-US" style='font-size:14.0pt'>9、按施工进度及乙方通知时间提供甲方供应的材料及主材，因甲方原因造成的工期迟延乙方不承担任何责任。</span>
+        </p>
+        <p class="MsoNormal" style='line-height:26.0pt'>
+            <span style='font-size:14.0pt;font-family:宋体'>三</span><span style='font-size:14.0pt; font-family:宋体'>、</span><span style='font-size:14.0pt;font-family:宋体'>乙方工作</span>
+        </p>
+        <p class="MsoNormal" style='margin-left:21.0pt;text-indent:-21.0pt;line-height:26.0pt'>
+            <span lang="EN-US" style='font-size:14.0pt'>1、同甲方拟定施工方案和进度计划。</span>
+        </p>
+        <p class="MsoNormal" style='margin-left:21.0pt;text-indent:-21.0pt;line-height:26.0pt'>
+            <span lang="EN-US" style='font-size:14.0pt'>2、施工中严格执行安全施工操作规范、防火规定、施工规范及质量标准。</span>
+        </p>
+        <p class="MsoNormal" style='margin-left:21.0pt;text-indent:-21.0pt;line-height:26.0pt'>
+            <span lang="EN-US" style='font-size:14.0pt'>3、严格按照双方拟定方案说明进行施工，做好各项质量检查记录，参加竣工验收。</span>
+        </p>
+        <p class="MsoNormal" style='margin-left:21.0pt;text-indent:-21.0pt;line-height:26.0pt'>
+            <span lang="EN-US" style='font-size:14.0pt'>4、工程竣工未移交甲方之前，负责对现场一切设施及工程成品进行保护。</span>
+        </p>
+        <p class="MsoNormal" style='margin-left:21.0pt;text-indent:-21.0pt;line-height: 26.0pt'>
+            <span lang="EN-US" style='font-size:14.0pt'>5、施工过程中，由乙方施工不当，造成损失引发的所需费用，由乙方负责。</span>
+        </p>
+        <p class="MsoNormal" style='margin-left:21.0pt;text-indent:-21.0pt;line-height: 26.0pt'>
+            <span lang="EN-US" style='font-size:14.0pt'>6、因乙方施工原因造成人员伤亡，一切责任由乙方负责。</span>
+        </p>
+        <p class="MsoNormal" style='line-height:26.0pt'>
+            <span style='font-size:14.0pt;font-family:宋体'>四</span>
+            <span style='font-size:14.0pt; font-family:宋体'>、</span>
+            <span style='font-size:14.0pt;font-family:宋体' data-i18n="page.contract.label.workDay">工期</span>
+        </p>
+        <p class="MsoNormal" style='line-height:26.0pt'>
+            <span lang="EN-US" style='font-size:14.0pt'>1</span>
+            <span style='font-size:14.0pt; font-family:宋体'>﹑</span>
+            <span style='font-size:14.0pt'></span>
+            <span style='font-size:14.0pt;font-family:宋体'>工期：</span>
+            <span lang="EN-US">&nbsp; &nbsp;</span>
+            <span lang="EN-US" id="workingDuration">&nbsp;&nbsp;&nbsp; </span>
+            <span lang="EN-US">天（竣工日期以油工工程结束之日计）</span>
+        </p>
+        <p class="MsoNormal" style='text-indent:7.0pt;line-height: 26.0pt'>
+            <span lang="EN-US" style="font-size:14.0pt">&nbsp;&nbsp; </span>
+            <span style='font-size:14.0pt;font-family:宋体'>开工日期：</span>
+            <span lang="EN-US" id='startYear'>&nbsp;</span>
+            <span lang="EN-US">&nbsp; &nbsp;</span>
+            <span lang="EN-US">年</span>
+            <span lang="EN-US">&nbsp; &nbsp;</span>
+            <span lang="EN-US" id="startMonth">&nbsp;</span>
+            <span lang="EN-US">&nbsp; &nbsp;</span>
+            <span lang="EN-US">月</span>
+            <span lang="EN-US">&nbsp; &nbsp;</span>
+            <span lang="EN-US" id='startDay'>&nbsp;</span>
+            <span lang="EN-US">&nbsp; &nbsp;</span>
+            <span lang="EN-US">日（以力工进场之日开始计算工期）</span>
+        </p>
+        <p class="MsoNormal" style='text-indent:7.0pt;line-height: 26.0pt'>
+            <span lang="EN-US" style="font-size:14.0pt">&nbsp;&nbsp; </span>
+            <span style='font-size:14.0pt;font-family:宋体'>竣工日期：</span>
+            <span lang="EN-US">&nbsp; &nbsp;</span>
+            <span lang="EN-US" id='endYear'>&nbsp;</span>
+            <span lang="EN-US">&nbsp; &nbsp;</span>
+            <span lang="EN-US">年</span>
+            <span lang="EN-US">&nbsp; &nbsp;</span>
+            <span lang="EN-US" id='endMonth'>&nbsp;</span>
+            <span lang="EN-US">&nbsp; &nbsp;</span>
+            <span lang="EN-US">月</span>
+            <span lang="EN-US">&nbsp; &nbsp;</span>
+            <span lang="EN-US" id='endDay'>&nbsp;</span>
+            <span lang="EN-US">&nbsp; &nbsp;</span>
+            <span lang="EN-US">日（竣工日期以油工工程结束之日为准）</span>
+        </p>
+        <p class="MsoNormal" style='line-height:26.0pt'>
+            <span lang="EN-US" style='font-size:14.0pt'>2</span>
+            <span style='font-size:14.0pt; font-family:宋体'>、</span>
+            <span style='font-size:14.0pt'></span><span style='font-size:14.0pt;font-family:宋体'>工期顺延</span>
+        </p>
+        <p class="MsoNormal" style='text-indent:7.0pt;line-height: 26.0pt'>
+            <span lang="EN-US" style='font-size:14.0pt'>&nbsp;&nbsp; </span>
+            <span style='font-size:14.0pt;font-family:宋体'>对以下原因造成竣工日期延误，工期相应顺延</span>
+            <span lang="EN-US" style='font-size:14.0pt'>;</span>
+        </p>
+        <p class="MsoNormal" style='text-indent:7.0pt;line-height:26.0pt'>
+            <span lang="EN-US" style='font-size:14.0pt'>&nbsp; </span>
+            <span style='font-size:14.0pt;font-family:宋体'>（</span>
+            <span lang="EN-US" style='font-size:14.0pt'>1</span>
+            <span style='font-size:14.0pt;font-family:宋体'>）工程量增加或设计变更。</span>
+        </p>
+        <p class="MsoNormal" style='text-indent:7.0pt;line-height:26.0pt'>
+            <span lang="EN-US" style='font-size:14.0pt'>&nbsp; </span>
+            <span style='font-size:14.0pt;font-family:宋体'>（</span>
+            <span lang="EN-US" style='font-size:14.0pt'>2</span>
+            <span style='font-size:14.0pt;font-family:宋体'>）停水、停电及不可抗力因素。</span>
+        </p>
+        <p class="MsoNormal" style='text-indent:7.0pt;line-height:26.0pt'>
+            <span lang="EN-US" style='font-size:14.0pt'>&nbsp; </span>
+            <span style='font-size:14.0pt;font-family:宋体'>（</span>
+            <span lang="EN-US" style='font-size:14.0pt'>3</span>
+            <span style='font-size:14.0pt;font-family:宋体'>）甲方自行施工项目及本合同项目外延误的工期。</span>
+            <span lang="EN-US" style='font-size:14.0pt'>&nbsp;</span>
+        </p>
+        <p class="MsoNormal" style='text-indent:7.0pt;line-height:26.0pt'>
+            <span lang="EN-US" style='font-size:14.0pt'>&nbsp; </span>
+            <span style='font-size:14.0pt;font-family:宋体'>（</span>
+            <span lang="EN-US" style='font-size:14.0pt'>4</span>
+            <span style='font-size:14.0pt;font-family:宋体'>）因其他因素，双方协商同意工期顺延的其它情况。</span>
+            <span lang="EN-US" style='font-size:14.0pt'>&nbsp;</span>
+        </p>
+        <p class="MsoNormal" style='line-height:26.0pt'>
+            <span lang="EN-US" style='font-size:14.0pt'>3、责任违约</span>
+        </p>
+        <p class="MsoNormal" style='text-indent:7.0pt;line-height:26.0pt'>
+            <span lang="EN-US" style='font-size:14.0pt'>&nbsp; </span>
+            <span style='font-size:14.0pt;font-family:宋体'>（</span>
+            <span lang="EN-US" style='font-size:14.0pt'>1</span>
+            <span style='font-size:14.0pt;font-family:宋体'>）由于甲方原因造成延期开工或中途停工，甲方应向乙方按合同总造价1‰支付违约金，工期顺延。</span>
+        </p>
+        <p class="MsoNormal" style='text-indent:7.0pt;line-height:26.0pt'>
+            <span lang="EN-US" style='font-size:14.0pt'>&nbsp; </span>
+            <span style='font-size:14.0pt;font-family:宋体'>（</span>
+            <span lang="EN-US" style='font-size:14.0pt'>2</span>
+            <span style='font-size:14.0pt;font-family:宋体'>）甲方未按合同约定时间付款的，每逾期一天，甲方应向乙方按合同总造价1‰支付违约金，工期顺延。</span>
+        </p>
+        <p class="MsoNormal" style='text-indent:7.0pt;line-height:26.0pt'>
+            <span lang="EN-US" style='font-size:14.0pt'>&nbsp; </span>
+            <span style='font-size:14.0pt;font-family:宋体'>（</span>
+            <span lang="EN-US" style='font-size:14.0pt'>3</span>
+            <span style='font-size:14.0pt;font-family:宋体'>）因乙方原因影响竣工日期，每逾期一天，乙方应向甲方按合同总造价1‰支付违约金，工期顺延。</span>
+        </p>
+        <p class="MsoNormal" style='text-indent:7.0pt;line-height:26.0pt'>
+            <span lang="EN-US" style='font-size:14.0pt'>&nbsp; </span>
+            <span style='font-size:14.0pt;font-family:宋体'>（</span>
+            <span lang="EN-US" style='font-size:14.0pt'>4</span>
+            <span style='font-size:14.0pt;font-family:宋体'>）甲方未按期支付工程尾款，视为自动终止解除合同，乙方不予提供保修维修服务。乙方有权追究相关法律责任。</span>
+        </p>
+        <p class="MsoNormal" style='line-height:26.0pt'>
+            <span style='font-size:14.0pt;font-family:宋体'>五、工程质量验收：</span>
+        </p>
+        <p class="MsoNormal" style='line-height:26.0pt'>
+            <span lang="EN-US" style='font-size:14.0pt'>1、工程质量以《装饰装修工程质量核验标准》为质量评定合格标准。</span>
+        </p>
+        <p class="MsoNormal" style='line-height:26.0pt'>
+            <span lang="EN-US" style='font-size:14.0pt'>2、施工过程中进行分段分项验收。</span>
+        </p>
+        <p class="MsoNormal" style='line-height:26.0pt'>
+            <span lang="EN-US" style='font-size:14.0pt'>3、竣工验收。</span>
+        </p>
+        <p class="MsoNormal" style='line-height:26.0pt'>
+            <span lang="EN-US" style='font-size:14.0pt'>4、以下情况视为甲方验收合格：</span>
+        </p>
+        <p class="MsoNormal" style='text-indent:7.0pt;line-height:26.0pt'>
+            <span lang="EN-US" style='font-size:14.0pt'>&nbsp; </span>
+            <span style='font-size:14.0pt;font-family:宋体'>（</span>
+            <span lang="EN-US" style='font-size:14.0pt'>1</span>
+            <span style='font-size:14.0pt;font-family:宋体'>）工程完工后，乙方应通知甲方验收，甲方自接到竣工验收通知后两日内到场验收。逾期视为甲方自动放弃权利，如有问题，甲方自行负相关责任。</span>
+        </p>
+        <p class="MsoNormal" style='text-indent:7.0pt;line-height:26.0pt'>
+            <span lang="EN-US" style='font-size:14.0pt'>&nbsp; </span>
+            <span style='font-size:14.0pt;font-family:宋体'>（</span>
+            <span lang="EN-US" style='font-size:14.0pt'>2</span>
+            <span style='font-size:14.0pt;font-family:宋体'>）双方未办理验收手续，甲方安装乙方承包外的物品。</span>
+        </p>
+        <p class="MsoNormal" style='text-indent:7.0pt;line-height:26.0pt'>
+            <span lang="EN-US" style='font-size:14.0pt'>&nbsp; </span>
+            <span style='font-size:14.0pt;font-family:宋体'>（</span>
+            <span lang="EN-US" style='font-size:14.0pt'>3</span>
+            <span style='font-size:14.0pt;font-family:宋体'>）双方未办理验收手续，甲方入住。</span>
+        </p>
+        <p class="MsoNormal" style='margin-left:21.0pt;text-indent:-21.0pt;line-height: 26.0pt'>
+            <span lang="EN-US" style='font-size:14.0pt'>5、甲方未支付工程尾款，视为甲方自动终止合同，乙方不予提供保修维修服务及承担相关法律责任。</span>
+        </p>
+        <p class="MsoNormal" style='line-height:26.0pt'>
+            <span style='font-size:14.0pt; font-family:宋体'>六、材料供应<span lang="EN-US"></span></span>
+        </p>
+        <p class="MsoNormal" style='margin-left:21.0pt;text-indent:-21.0pt;line-height: 26.0pt'>
+            <span lang="EN-US" style='font-size:14.0pt'>1、施工过程中凡由甲方自行购买的材料所引发质量问题，所需返工、运输、退换货等费用，均由甲方承担。凡由乙方提供的材料，发生上述问题均由乙方承担。</span>
+        </p>
+        <p class="MsoNormal" style='margin-left:21.0pt;text-indent:-21.0pt;line-height: 26.0pt'>
+            <span lang="EN-US" style='font-size:14.0pt'>2、乙方提供的材料必须符合国家要求的合格产品标准。</span>
+        </p>
+        <p class="MsoNormal" style='line-height:26.0pt'>
+            <span style='font-size:14.0pt; font-family:宋体'>七、合同变更和解除</span>
+        </p>
+        <p class="MsoNormal" style='margin-left:21.0pt;text-indent:-21.0pt;line-height: 26.0pt'>
+            <span lang="EN-US" style='font-size:14.0pt'>
+    1、因甲方单方原因要求合同变更减项，且额度超过工程款总额的5%须向乙方支付其减项金额30%违约金。其金额甲方在付乙方下一期工程款中扣除。
+            </span>
+        </p>
+        <p class="MsoNormal" style='margin-left:21.0pt;text-indent:-21.0pt;line-height: 26.0pt'>
+            <span lang="EN-US" style='font-size:14.0pt'>2、工程变更导致工程费用增加，甲方须现行支付工程款后，乙方再进行施工。</span>
+        </p>
+        <p class="MsoNormal" style='margin-left:21.0pt;text-indent:-21.0pt;line-height: 26.0pt'>
+            <span lang="EN-US" style='font-size:14.0pt'>3、合同签订后施工前，任何一方提出终止合同，须向对方以书面形式提出，并按合同总价款20%支付违约金，办理终止合同手续。</span>
+        </p>
+        <p class="MsoNormal" style='margin-left:21.0pt;text-indent:-21.0pt;line-height: 26.0pt'>
+            <span lang="EN-US" style='font-size:14.0pt'>4、凡私自与工人商定更改工程内容所引起的一切后果，甲方负责，并赔偿乙方损失。</span>
+        </p>
+        <p class="MsoNormal" style='margin-left:21.0pt;text-indent:-21.0pt;line-height: 26.0pt'>
+            <span lang="EN-US" style='font-size:14.0pt'>5、施工过程中，任何一方提出终止合同，须向对方以书面形式提出，经双方同意办理清算手续，订立终止合同协议，并按合同总价款</span><span lang="EN-US" style='font-size:14.0pt'>30%</span><span style='font-size:14.0pt; font-family:宋体'>支付违约金。</span>
+        </p>
+        <p class="MsoNormal" style='line-height:26.0pt'>
+            <span style='font-size:14.0pt; font-family:宋体'>八、工程结算</span>
+        </p>
+        <p class="MsoNormal" style='text-indent:28.0pt;line-height:26.0pt'>
+            <span style='font-size:14.0pt;font-family:宋体'>工程进行至灯、洁具安装前三天内，甲方应向乙方结清尾款。</span>
+        </p>
+        <p class="MsoNormal" style='line-height:26.0pt'>
+            <span style='font-size:14.0pt; font-family:宋体'>九、工程保修</span>
+        </p>
+        <p class="MsoNormal" style='margin-left:21.0pt;text-indent:-21.0pt;line-height: 26.0pt'>
+            <span lang="EN-US" style='font-size:14.0pt'>1、从竣工验收之日计算，工程终身保修。</span>
+        </p>
+        <p class="MsoNormal" style='margin-left:21.0pt;text-indent:-21.0pt;line-height: 26.0pt'>
+            <span lang="EN-US" style='font-size:14.0pt'>2、保修期内由于乙方施工不当造成的质量问题，乙方负责无条件进行维修，不负责相关赔偿。</span>
+        </p>
+        <p class="MsoNormal" style='margin-left:21.0pt;text-indent:-21.0pt;line-height: 26.0pt'>
+            <span lang="EN-US" style='font-size:14.0pt'>3、保修期内如属甲方使用不当造成装饰面等施工项目损坏或不能正常使用，乙方酌情收取维修费。</span>
+        </p>
+        <p class="MsoNormal" style='margin-left:21.0pt;text-indent:-21.0pt;line-height: 26.0pt'>
+            <span lang="EN-US" style='font-size:14.0pt'>4、甲方交清尾款后，赠送室内保洁一次。</span>
+        </p>
+        <p class="MsoNormal" style='line-height:26.0pt'>
+            <span style='font-size:14.0pt; font-family:宋体'>十</span><span style='font-size:14.0pt;font-family:宋体'>、</span><span style='font-size:14.0pt;font-family:宋体'>附则</span>
+        </p>
+        <p class="MsoNormal" style='margin-left:21.0pt;text-indent:-21.0pt;line-height: 26.0pt'>
+            <span lang="EN-US" style='font-size:14.0pt'>1、本合同甲乙双方各执一份，本合同履行完成后自动终止。</span>
+        </p>
+        <p class="MsoNormal" style='margin-left:21.0pt;text-indent:-21.0pt;line-height: 26.0pt'>
+            <span lang="EN-US" style='font-size:14.0pt'>2、乙方对甲方所做工程享有拍摄权、录像权、播放权。</span>
+        </p>
+        <p class="MsoNormal" style='line-height:26.0pt'>
+            <span lang="EN-US" style='font-size:14.0pt'>3、本合同签订后，乙方不得转包。</span>
+        </p>
+        <p class="MsoNormal" style='line-height:26.0pt'>
+            <span style='font-size:14.0pt; font-family:宋体'>十一</span><span style='font-size:14.0pt;font-family:宋体'>、</span><span style='font-size:14.0pt;font-family:宋体'>附件</span>
+        </p>
+        <p class="MsoNormal" style='line-height:26.0pt'>
+            <span lang="EN-US" style='font-size:14.0pt'>1、施工工程<span style='color:#333333'>项目</span>表一份。</span>
+        </p>
+        <p class="MsoNormal" style='line-height:26.0pt'>
+            <span lang="EN-US" style='font-size:14.0pt'>2、乙供材料明细单一份。</span>
+        </p>
+        <p class="MsoNormal" style='line-height:26.0pt'>
+            <span lang="EN-US" style='font-size:14.0pt'>3、甲供材料明细单一份。</span>
+        </p>
+        <p class="MsoNormal" style='line-height:26.0pt'>
+            <span lang="EN-US" style='font-size:14.0pt'>（以下无正文）</span>
+        </p>
+        <p class="MsoNormal" style='line-height:26.0pt'>
+            <span lang="EN-US" style='font-size:14.0pt'>&nbsp;</span>
+        </p>
+        <p class="MsoNormal" style='line-height:26.0pt'>
+            <span lang="EN-US" style='font-size:14.0pt'>双方签字盖章</span>
+        </p>
+        <div>
+            <table class="MsoNormalTable" style='font-size:14.0pt;font-family:宋体'>
+            <tr>
+                <td><span>甲方（签字）：</span></td>
+                <td style="width: 200px;"></td>
+                <td><span>乙方：</span></td>
+                <td><span class="companyFullName"></span></td>
+            </tr>
+            <tr>
+                <td><span>身份证地址：</span></td>
+                <td></td>
+                <td><span>法定代表人：</span></td>
+                <td><span class="legalPerson">谢娜</span></td>
+            </tr>
+            <tr>
+                <td><span>现住址：</span></td>
+                <td></td>
+                <td><span>地址：</span></td>
+                <td><span class="companyAddr"></span></td>
+            </tr>
+            <tr>
+                <td><span>联系电话：</span></td>
+                <td></td>
+                <td><span>联系电话：</span></td>
+                <td><span>400-078-1918</span></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <td><span>签订日期：</span></td>
+                <td>
+                    <span style='font-size:14.0pt;font-family:宋体'></span>
+                    <span lang="EN-US">&nbsp; &nbsp;</span>
+                    <span lang="EN-US">年</span>
+                    <span lang="EN-US">&nbsp; &nbsp;</span>
+                    <span lang="EN-US">&nbsp; &nbsp;</span>
+                    <span lang="EN-US">月</span>
+                    <span lang="EN-US">&nbsp; &nbsp;</span>
+                    <span lang="EN-US">&nbsp; &nbsp;</span>
+                    <span lang="EN-US">日</span>
+                    <span lang="EN-US">&nbsp; &nbsp;</span>
+                </td>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            </table>
+        </div>
+        <div class="PageNext"></div>
+    </div>
+    
+    <script src="../../layui/layui.js"></script><script src="../../js/app/config.js"></script><script src="../../js/app/server.js"></script><script src="../../js/app/utils.js"></script><script src="../../js/app/post.js"></script><script src="../../js/app/api.js"></script><script src="../../js/app/core.js"></script><script src="../../js/app/validate.js"></script><script src="../../js/app/bootstrap.js"></script><script src="../../js/contract/contract-common.js"></script><script src="../../js/contract/decorationContractEHome.js"></script>
+</body>
+</html>

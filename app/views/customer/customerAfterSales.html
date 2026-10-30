@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<!-- app/views/customer/customerAfterSales.html —— 售后工单（完整生命周期：接收/派工/处理/转交/挂起/升级/完成/关闭/取消/重开 + 记录/关联/详情） -->
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8" />
+    <title>售后工单</title>
+    <link rel="stylesheet" href="../../layui/css/layui.css">
+    <link rel="stylesheet" href="../../css/app.css">
+</head>
+<body>
+<div class="app-page" id="customerAfterSalesPage">
+
+    <div class="app-search">
+        <form class="layui-form" lay-filter="searchForm" id="searchForm">
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">售后编号</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="asNo" data-op="eq" placeholder="售后编号" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">装修单号</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="orderId" data-op="eq" placeholder="装修单号" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">类型</label>
+                    <div class="layui-input-inline">
+                        <select name="type" data-op="eq">
+                            <option value="">全部</option>
+                            <option value="0">反馈</option><option value="1">投诉</option>
+                            <option value="2">报修</option><option value="3">维修</option>
+                            <option value="4">建议</option><option value="5">表扬</option>
+                            <option value="6">退款</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">优先级</label>
+                    <div class="layui-input-inline">
+                        <select name="priority" data-op="eq">
+                            <option value="">全部</option>
+                            <option value="0">普通</option>
+                            <option value="1">重要</option>
+                            <option value="2">紧急</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">状态</label>
+                    <div class="layui-input-inline">
+                        <select name="status" data-op="eq">
+                            <option value="">全部</option>
+                            <option value="0">初始</option><option value="1">已接收</option>
+                            <option value="2">已派工</option><option value="3">处理中</option>
+                            <option value="4">待确认</option><option value="5">已完成</option>
+                            <option value="6">已关闭</option><option value="7">已取消</option>
+                            <option value="8">已挂起</option><option value="9">已升级</option>
+                            <option value="10">已重开</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <button type="button" class="layui-btn" id="btnSearch"><i class="layui-icon layui-icon-search"></i>查询</button>
+                    <button type="reset" class="layui-btn layui-btn-primary" id="btnReset">重置</button>
+                    <button type="button" class="layui-btn layui-btn-normal" id="btnCreate"><i class="layui-icon layui-icon-add-1"></i>创建</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div class="app-table">
+        <table id="resultTable" lay-filter="resultTable"></table>
+    </div>
+
+    <div id="pagenation" class="app-pagenation"></div>
+
+    <!-- 创建售后 -->
+    <div id="editBox" style="display:none; padding:20px;">
+        <form class="layui-form" lay-filter="editForm" id="editForm">
+            <div class="layui-form-item">
+                <label class="layui-form-label">类型<span class="app-req">*</span></label>
+                <div class="layui-input-inline" style="width:130px;">
+                    <select name="type" lay-verify="required">
+                        <option value="0">反馈</option><option value="1">投诉</option>
+                        <option value="2">报修</option><option value="3">维修</option>
+                        <option value="4">建议</option><option value="5">表扬</option>
+                        <option value="6">退款</option>
+                    </select>
+                </div>
+                <label class="layui-form-label">优先级<span class="app-req">*</span></label>
+                <div class="layui-input-inline" style="width:110px;">
+                    <select name="priority" lay-verify="required">
+                        <option value="0">普通</option>
+                        <option value="1">重要</option>
+                        <option value="2">紧急</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">装修单号</label>
+                <div class="layui-input-inline" style="width:140px;">
+                    <input type="text" name="orderId" placeholder="装修单号" class="layui-input">
+                </div>
+                <label class="layui-form-label">客源ID</label>
+                <div class="layui-input-inline" style="width:100px;">
+                    <input type="text" name="csid" placeholder="客源ID" class="layui-input v_number">
+                </div>
+                <label class="layui-form-label">客户ID</label>
+                <div class="layui-input-inline" style="width:100px;">
+                    <input type="text" name="cid" placeholder="客户ID" class="layui-input v_number">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">联系人</label>
+                <div class="layui-input-inline" style="width:130px;">
+                    <input type="text" name="contactName" placeholder="联系人" class="layui-input">
+                </div>
+                <label class="layui-form-label">电话</label>
+                <div class="layui-input-inline" style="width:140px;">
+                    <input type="text" name="phone" placeholder="电话" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">负责人</label>
+                <div class="layui-input-inline" style="width:170px;">
+                    <input type="text" name="ownerName" id="ownerName" placeholder="点击选择负责人" class="layui-input" readonly>
+                </div>
+                <div class="layui-input-inline">
+                    <button type="button" class="layui-btn layui-btn-normal" id="btnPickOwner">选择</button>
+                </div>
+                <div class="layui-input-inline" style="width:100px;">
+                    <input type="text" name="did" placeholder="部门ID" class="layui-input v_number">
+                </div>
+            </div>
+            <div class="layui-form-item layui-form-text">
+                <label class="layui-form-label">问题描述<span class="app-req">*</span></label>
+                <div class="layui-input-block">
+                    <textarea name="content" placeholder="请输入问题描述" class="layui-textarea v_required"></textarea>
+                </div>
+            </div>
+            <div class="layui-form-item layui-form-text">
+                <label class="layui-form-label">备注</label>
+                <div class="layui-input-block">
+                    <textarea name="comment" placeholder="请输入备注" class="layui-textarea"></textarea>
+                </div>
+            </div>
+            <div class="layui-form-item app-form-footer">
+                <button type="button" class="layui-btn" id="btnSave">保存</button>
+                <button type="button" class="layui-btn layui-btn-primary" id="btnCancel">取消</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- 生命周期操作 -->
+    <div id="operationBox" style="display:none; padding:20px;">
+        <form class="layui-form" lay-filter="operationForm" id="operationForm">
+            <div class="layui-form-item" id="operationOwnerGroup">
+                <label class="layui-form-label">负责人<span class="app-req" id="ownerReq" style="display:none;">*</span></label>
+                <div class="layui-input-inline" style="width:180px;">
+                    <input type="text" name="operationOwnerName" id="operationOwnerName" placeholder="点击选择负责人" class="layui-input" readonly>
+                </div>
+                <div class="layui-input-inline">
+                    <button type="button" class="layui-btn layui-btn-normal" id="btnPickOpOwner">选择</button>
+                </div>
+            </div>
+            <div class="layui-form-item layui-form-text">
+                <label class="layui-form-label">说明</label>
+                <div class="layui-input-block">
+                    <textarea name="operationComment" placeholder="请输入说明" class="layui-textarea"></textarea>
+                </div>
+            </div>
+            <div class="layui-form-item app-form-footer">
+                <button type="button" class="layui-btn" id="btnOperationSave">提交</button>
+                <button type="button" class="layui-btn layui-btn-primary" id="btnOperationCancel">取消</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- 关联 -->
+    <div id="refBox" style="display:none; padding:20px;">
+        <form class="layui-form" lay-filter="refForm" id="refForm">
+            <div class="layui-form-item">
+                <label class="layui-form-label">类型<span class="app-req">*</span></label>
+                <div class="layui-input-block">
+                    <select name="refType" lay-verify="required">
+                        <option value="0">反馈</option><option value="1">反馈投诉</option>
+                        <option value="2">反馈维修</option><option value="3">老维修</option>
+                        <option value="4">维修</option><option value="5">投诉</option>
+                        <option value="6">投诉明细</option><option value="7">回访</option>
+                        <option value="8">调研</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">引用ID<span class="app-req">*</span></label>
+                <div class="layui-input-block">
+                    <input type="text" name="refId" placeholder="请输入引用ID" class="layui-input v_required v_number">
+                </div>
+            </div>
+            <div class="layui-form-item app-form-footer">
+                <button type="button" class="layui-btn" id="btnRefSave">保存</button>
+                <button type="button" class="layui-btn layui-btn-primary" id="btnRefCancel">取消</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- 详情 -->
+    <div id="detailBox" style="display:none; padding:20px;">
+        <h4 style="margin:0 0 8px;">售后详情</h4>
+        <ul id="detailInfo" style="list-style:none;padding:0;margin:0;"></ul>
+        <h4 style="margin:14px 0 8px;">操作记录</h4>
+        <ul id="recordList" style="list-style:none;padding:0;margin:0;"></ul>
+        <h4 style="margin:14px 0 8px;">关联单据</h4>
+        <ul id="refList" style="list-style:none;padding:0;margin:0;"></ul>
+    </div>
+
+</div>
+
+<script src="../../layui/layui.js"></script>
+<script src="../../js/app/config.js"></script>
+<script src="../../js/app/server.js"></script>
+<script src="../../js/app/utils.js"></script>
+<script src="../../js/app/post.js"></script>
+<script src="../../js/app/api.js"></script>
+<script src="../../js/app/core.js"></script>
+<script src="../../js/app/validate.js"></script>
+<script src="../../js/app/bootstrap.js"></script>
+<script src="../../js/customer/customer-common.js"></script>
+<script src="../../js/customer/customerAfterSales.js"></script>
+</body>
+</html>

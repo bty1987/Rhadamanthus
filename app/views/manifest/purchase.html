@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<!-- app/views/manifest/purchase.html —— 采购单管理（列表 + 查看/修改/入库/批量入库）
+  字段：no user.userName createTime balanceTime deliveryTime status balanceStatus comment
+  status: 0初始 1部分入库 2全部入库；balanceStatus: 0初始 1已结算 -->
+<html lang="zh-CN">
+<head><meta charset="utf-8"><title>采购单管理</title>
+<link rel="stylesheet" href="../../layui/css/layui.css"><link rel="stylesheet" href="../../css/app.css"></head>
+<body>
+<div class="app-page">
+    <div class="app-search"><form class="layui-form" id="searchForm"><div class="layui-form-item">
+        <div class="layui-inline"><label class="layui-form-label">采购单号</label><div class="layui-input-inline"><input type="text" name="no" data-op="cn" placeholder="采购单号" class="layui-input" autocomplete="off"></div></div>
+        <div class="layui-inline"><label class="layui-form-label">状态</label><div class="layui-input-inline"><select name="status" data-op="eq"><option value="">全部</option><option value="0">初始</option><option value="1">部分入库</option><option value="2">全部入库</option></select></div></div>
+        <div class="layui-inline"><button type="button" class="layui-btn" id="btnSearch"><i class="layui-icon layui-icon-search"></i>查询</button><button type="reset" class="layui-btn layui-btn-primary" id="btnReset">重置</button><button type="button" class="layui-btn layui-btn-normal" id="btnBatchin"><i class="layui-icon layui-icon-add-1"></i>批量入库</button></div>
+    </div></form></div>
+    <div class="app-table"><table id="resultTable" lay-filter="resultTable"></table></div>
+    <div id="pagenation" class="app-pagenation"></div>
+    <script type="text/html" id="rowToolbar">
+        <button class="layui-btn layui-btn-xs" lay-event="view">查看</button>
+        <button class="layui-btn layui-btn-xs layui-btn-normal" lay-event="edit">修改</button>
+        <button class="layui-btn layui-btn-xs layui-btn-success" lay-event="in">入库</button>
+    </script>
+</div>
+<script src="../../layui/layui.js"></script><script src="../../js/app/config.js"></script><script src="../../js/app/server.js"></script><script src="../../js/app/utils.js"></script><script src="../../js/app/post.js"></script><script src="../../js/app/api.js"></script><script src="../../js/app/core.js"></script><script src="../../js/app/validate.js"></script><script src="../../js/app/bootstrap.js"></script><script src="../../js/manifest/purchase.js"></script>
+</body></html>

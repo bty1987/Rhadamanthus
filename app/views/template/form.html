@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<!--
+  app/views/template/form.html —— 表单/详情页模板（纯 LayUI）
+
+  ★ 适用场景：独立的新增页 / 编辑页 / 详情页（通过菜单或 com.switchPage 打开）。
+    与 list.html 的"弹窗表单"区别：本页是整页表单，适合字段较多的场景。
+
+  用法：
+    - 新增：菜单直接打开本页
+    - 编辑/详情：URL 带参数 ?id=123，页面自动 query 回填
+    - 保存：app.validate → add/update → 成功后 app.switchPage 返回列表
+
+  资源：仅引 layui + 本页逻辑。
+-->
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8" />
+    <title>模板表单</title>
+    <link rel="stylesheet" href="../../layui/css/layui.css">
+    <link rel="stylesheet" href="../../css/app.css">
+</head>
+<body>
+<div class="app-page app-form-page">
+
+    <!-- 面包屑 -->
+    <div class="app-crumb-bar" id="breadcrumb"></div>
+
+    <div class="app-form-card">
+        <form class="layui-form" lay-filter="templateForm" id="templateForm">
+            <input type="hidden" name="id">
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">名称<span class="app-req">*</span></label>
+                <div class="layui-input-block">
+                    <input type="text" name="name" placeholder="请输入名称" class="layui-input v_required" lay-verify="required">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">金额<span class="app-req">*</span></label>
+                <div class="layui-input-inline">
+                    <input type="text" name="price" placeholder="请输入金额" class="layui-input v_required v_float_3" lay-verify="required">
+                </div>
+                <div class="layui-form-mid layui-word-aux">元</div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">状态</label>
+                <div class="layui-input-block">
+                    <input type="radio" name="status" value="0" title="启用" checked>
+                    <input type="radio" name="status" value="1" title="禁用">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">备注</label>
+                <div class="layui-input-block">
+                    <textarea name="comment" placeholder="请输入备注" class="layui-textarea"></textarea>
+                </div>
+            </div>
+
+            <div class="layui-form-item app-form-footer">
+                <button type="button" class="layui-btn" id="btnSave"><i class="layui-icon layui-icon-ok"></i>保存</button>
+                <button type="button" class="layui-btn layui-btn-primary" id="btnBack"><i class="layui-icon layui-icon-return"></i>返回</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="../../layui/layui.js"></script>
+<script src="../../js/app/config.js"></script>
+<script src="../../js/app/server.js"></script>
+<script src="../../js/app/utils.js"></script>
+<script src="../../js/app/post.js"></script>
+<script src="../../js/app/api.js"></script>
+<script src="../../js/app/core.js"></script>
+<script src="../../js/app/validate.js"></script>
+<script src="../../js/app/bootstrap.js"></script>
+<script src="../../js/template/form.js"></script>
+</body>
+</html>

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<!-- app/views/quotation/functionAreaItem.html —— 功能区-报价项分配（弹窗页：已分配项排序/公式/删除 + 同版本报价项勾选添加） -->
+<html lang="zh-CN"><head><meta charset="utf-8"><title>功能区-报价项</title>
+<link rel="stylesheet" href="../../layui/css/layui.css"><link rel="stylesheet" href="../../css/app.css"></head>
+<body><div class="app-page">
+    <div class="app-toolbar" style="padding:10px 15px;">
+        <button type="button" class="layui-btn layui-btn-sm" id="btnAdd"><i class="layui-icon layui-icon-add-1"></i>添加报价项</button>
+        <button type="button" class="layui-btn layui-btn-sm layui-btn-danger" id="btnDel"><i class="layui-icon layui-icon-delete"></i>删除勾选</button>
+    </div>
+    <div class="app-table" style="padding:0 15px;"><table id="resultTable" lay-filter="resultTable"></table></div>
+    <script type="text/html" id="rowToolbar">
+        <button class="layui-btn layui-btn-xs" lay-event="update">更新</button>
+        <button class="layui-btn layui-btn-xs layui-btn-primary" lay-event="up">上移</button>
+        <button class="layui-btn layui-btn-xs layui-btn-primary" lay-event="down">下移</button>
+    </script>
+    <div id="formulaBox" style="display:none;padding:20px 30px;">
+        <div class="layui-form-item"><label class="layui-form-label">公式</label><div class="layui-input-inline" style="width:320px;"><input id="formula" class="layui-input" placeholder="如: 取整(周长*2.5)+面积"></div></div>
+        <p style="color:#999;padding-left:110px;">变量: 周长 面积 举架 洞面 参数 窗面 变量 梁长 梁高</p>
+    </div>
+    <div id="itemsBox" style="display:none;padding:10px 15px;">
+        <form class="layui-form" id="itemForm"><div class="layui-form-item">
+            <div class="layui-inline"><label class="layui-form-label">名称</label><div class="layui-input-inline"><input name="name" data-op="cn" class="layui-input" placeholder="名称"></div></div>
+            <div class="layui-inline"><button type="button" class="layui-btn" id="btnItemSearch"><i class="layui-icon layui-icon-search"></i>查询</button></div>
+        </div></form>
+        <table id="itemTable" lay-filter="itemTable"></table>
+        <div id="itemPagenation"></div>
+        <div style="margin-top:10px;text-align:right;"><button type="button" class="layui-btn" id="btnSaveItems">保存勾选</button></div>
+    </div>
+</div>
+<script src="../../layui/layui.js"></script><script src="../../js/app/config.js"></script><script src="../../js/app/server.js"></script><script src="../../js/app/utils.js"></script><script src="../../js/app/post.js"></script><script src="../../js/app/api.js"></script><script src="../../js/app/core.js"></script><script src="../../js/app/validate.js"></script><script src="../../js/app/bootstrap.js"></script><script src="../../js/quotation/quotation-common.js"></script><script src="../../js/quotation/functionAreaItem.js"></script>
+</body></html>

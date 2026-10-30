@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<!-- app/views/data/contract.html —— 合同管理（CRUD + 状态）
+  字段：no(编号) name(名称) title(标题) page(页面) path(模版路径) videopath(视频) noticePath(客户须知) atttype(业务类型) -->
+<html lang="zh-CN"><head><meta charset="utf-8"><title>合同管理</title>
+<link rel="stylesheet" href="../../layui/css/layui.css"><link rel="stylesheet" href="../../css/app.css"></head>
+<body><div class="app-page">
+    <div class="app-search"><form class="layui-form" id="searchForm"><div class="layui-form-item">
+        <div class="layui-inline"><label class="layui-form-label">名称</label><div class="layui-input-inline"><input type="text" name="name" data-op="cn" placeholder="名称" class="layui-input" autocomplete="off"></div></div>
+        <div class="layui-inline"><button type="button" class="layui-btn" id="btnSearch"><i class="layui-icon layui-icon-search"></i>查询</button><button type="reset" class="layui-btn layui-btn-primary" id="btnReset">重置</button><button type="button" class="layui-btn layui-btn-normal" id="btnAdd"><i class="layui-icon layui-icon-add-1"></i>添加</button></div>
+    </div></form></div>
+    <div class="app-table"><table id="resultTable" lay-filter="resultTable"></table></div>
+    <div id="pagenation" class="app-pagenation"></div>
+    <div id="editBox" style="display:none; padding:20px;"><form class="layui-form" id="editForm">
+        <input type="hidden" name="cid">
+        <div class="layui-form-item"><label class="layui-form-label">编号<span class="app-req">*</span></label><div class="layui-input-block"><input type="text" name="no" placeholder="编号" class="layui-input v_required" lay-verify="required"></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">名称<span class="app-req">*</span></label><div class="layui-input-block"><input type="text" name="name" placeholder="名称" class="layui-input v_required" lay-verify="required"></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">标题</label><div class="layui-input-block"><input type="text" name="title" placeholder="标题" class="layui-input"></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">页面</label><div class="layui-input-inline"><input type="text" name="page" placeholder="页面" class="layui-input"></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">模版路径</label><div class="layui-input-block"><input type="text" name="path" id="path" placeholder="模版路径" class="layui-input"><button type="button" class="layui-btn layui-btn-primary" id="btnUpload">上传PDF</button></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">视频路径</label><div class="layui-input-block"><input type="text" name="videopath" id="videopath" placeholder="视频路径" class="layui-input"></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">客户须知</label><div class="layui-input-block"><input type="text" name="noticePath" id="noticePath" placeholder="客户须知路径" class="layui-input"></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">业务类型</label><div class="layui-input-inline"><select name="atttype"><option value="0">类型0</option><option value="1">类型1</option></select></div></div>
+        <div class="layui-form-item app-form-footer"><button type="button" class="layui-btn" id="btnSave">保存</button><button type="reset" class="layui-btn layui-btn-primary" id="btnCancel">取消</button></div>
+    </form></div>
+    <script type="text/html" id="rowToolbar"><button class="layui-btn layui-btn-xs" lay-event="edit">编辑</button><button class="layui-btn layui-btn-xs" lay-event="enable">启用</button><button class="layui-btn layui-btn-xs layui-btn-warm" lay-event="disable">禁用</button></script>
+</div>
+<script src="../../layui/layui.js"></script><script src="../../js/app/config.js"></script><script src="../../js/app/server.js"></script><script src="../../js/app/utils.js"></script><script src="../../js/app/post.js"></script><script src="../../js/app/api.js"></script><script src="../../js/app/core.js"></script><script src="../../js/app/validate.js"></script><script src="../../js/app/upload.js"></script><script src="../../js/app/bootstrap.js"></script><script src="../../js/data/contract.js"></script>
+</body></html>

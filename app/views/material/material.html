@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<!-- app/views/material/material.html —— 主材子订单（按装修单列出主材子订单，操作：添项/子项/款项/收款/退货/打印/活动）
+  上下文：通过 app.params.materialOrder 取 orderId/customerId/customerName/designerId/designerName。 -->
+<html lang="zh-CN"><head><meta charset="utf-8"><title>主材子订单</title>
+<link rel="stylesheet" href="../../layui/css/layui.css"><link rel="stylesheet" href="../../css/app.css"></head>
+<body><div class="app-page">
+    <div class="app-search"><form class="layui-form" id="searchForm"><div class="layui-form-item">
+        <div class="layui-inline"><label class="layui-form-label">类型</label><div class="layui-input-inline"><select name="type"><option value="">全部</option><option value="1">标准</option><option value="2">员工自购</option><option value="3">老总关系</option></select></div></div>
+        <div class="layui-inline"><button type="button" class="layui-btn" id="btnSearch"><i class="layui-icon layui-icon-search"></i>查询</button><button type="button" class="layui-btn layui-btn-primary" id="btnBack"><i class="layui-icon layui-icon-return"></i>返回</button></div>
+    </div></form></div>
+    <div class="app-table"><table id="resultTable" lay-filter="resultTable"></table></div>
+    <div id="pagenation" class="app-pagenation"></div>
+    <script type="text/html" id="rowToolbar">
+        <button class="layui-btn layui-btn-xs" lay-event="add">添项</button>
+        <button class="layui-btn layui-btn-xs layui-btn-normal" lay-event="sub">子项</button>
+        <button class="layui-btn layui-btn-xs layui-btn-warm" lay-event="money">款项</button>
+        <button class="layui-btn layui-btn-xs layui-btn-disabled" lay-event="collect">收款</button>
+        <button class="layui-btn layui-btn-xs" lay-event="refund">退货</button>
+        <button class="layui-btn layui-btn-xs" lay-event="print">打印</button>
+        <button class="layui-btn layui-btn-xs" lay-event="activity">活动</button>
+    </script>
+</div>
+<script src="../../layui/layui.js"></script><script src="../../js/app/config.js"></script><script src="../../js/app/server.js"></script><script src="../../js/app/utils.js"></script><script src="../../js/app/post.js"></script><script src="../../js/app/api.js"></script><script src="../../js/app/core.js"></script><script src="../../js/app/validate.js"></script><script src="../../js/app/bootstrap.js"></script><script src="../../js/material/material.js"></script>
+</body></html>

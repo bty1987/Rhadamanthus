@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<!--
+  app/views/log/loginLog.html —— 登录日志查询（第 1 批，只读）
+  条件：账号(loginId,eq) IP(sourceIp,eq) 登录时间(loginTime,between) 状态(successFlag,eq) 登录方式(operateType,eq) 结果(resultState,eq)
+-->
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8" />
+    <title>登录日志</title>
+    <link rel="stylesheet" href="../../layui/css/layui.css">
+    <link rel="stylesheet" href="../../css/app.css">
+</head>
+<body>
+<div class="app-page">
+    <div class="app-search">
+        <form class="layui-form" lay-filter="searchForm" id="searchForm">
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">账号</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="loginId" data-op="eq" placeholder="登录账号" class="layui-input" autocomplete="off">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">IP</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="sourceIp" data-op="eq" placeholder="来源 IP" class="layui-input" autocomplete="off">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">登录方式</label>
+                    <div class="layui-input-inline">
+                        <select name="operateType" data-op="eq">
+                            <option value="">全部</option>
+                            <option value="PASSWORD">密码</option>
+                            <option value="AUTHCODE">验证码</option>
+                            <option value="PHONE">手机验证码</option>
+                            <option value="CHANGE">切换公司</option>
+                            <option value="UPDATE">刷新令牌</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">状态</label>
+                    <div class="layui-input-inline">
+                        <select name="successFlag" data-op="eq">
+                            <option value="">全部</option>
+                            <option value="1">成功</option>
+                            <option value="0">失败</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">结果</label>
+                    <div class="layui-input-inline">
+                        <select name="resultState" data-op="eq">
+                            <option value="">全部</option>
+                            <option value="0">成功</option>
+                            <option value="1">失败</option>
+                            <option value="2">异常</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">登录时间</label>
+                    <div class="layui-input-inline" style="width:260px;">
+                        <!-- 日期范围：op=between，后端 timeranges 按 "-" 拆分 -->
+                        <input type="text" name="loginTime" id="loginTime" data-op="between" placeholder="开始 - 结束" class="layui-input" readonly>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <button type="button" class="layui-btn" id="btnSearch"><i class="layui-icon layui-icon-search"></i>查询</button>
+                    <button type="reset" class="layui-btn layui-btn-primary" id="btnReset">重置</button>
+                    <button type="button" class="layui-btn layui-btn-normal" id="btnExport"><i class="layui-icon layui-icon-export"></i>导出</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div class="app-table">
+        <table id="resultTable" lay-filter="resultTable"></table>
+    </div>
+    <div id="pagenation" class="app-pagenation"></div>
+</div>
+
+<script src="../../layui/layui.js"></script>
+<script src="../../js/app/config.js"></script>
+<script src="../../js/app/server.js"></script>
+<script src="../../js/app/utils.js"></script>
+<script src="../../js/app/post.js"></script>
+<script src="../../js/app/api.js"></script>
+<script src="../../js/app/core.js"></script>
+<script src="../../js/app/validate.js"></script>
+<script src="../../js/app/bootstrap.js"></script>
+<script src="../../js/log/log-common.js"></script>
+<script src="../../js/log/loginLog.js"></script>
+</body>
+</html>

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<!-- app/views/construction/supervision4rework.html —— 返工信息（订单维度 CRUD + 图纸入口）
+  上下文：app.params.construction = { orderId }。行按钮：图纸/编辑/删除。 -->
+<html lang="zh-CN"><head><meta charset="utf-8"><title>返工信息</title>
+<link rel="stylesheet" href="../../layui/css/layui.css"><link rel="stylesheet" href="../../css/app.css"></head>
+<body><div class="app-page">
+    <div class="app-toolbar" style="padding:10px 15px 0;">
+        <span style="font-size:16px;font-weight:bold;">监理控制 / 返工信息列表</span>
+        <button type="button" class="layui-btn layui-btn-sm" id="btnAdd"><i class="layui-icon layui-icon-add-1"></i>添加</button>
+    </div>
+    <div class="app-table" style="margin-top:10px;"><table id="resultTable" lay-filter="resultTable"></table></div>
+    <div id="pagenation" class="app-pagenation"></div>
+    <script type="text/html" id="rowToolbar">
+        <button class="layui-btn layui-btn-xs layui-btn-warm" lay-event="view">图纸</button>
+        <button class="layui-btn layui-btn-xs" lay-event="edit">编辑</button>
+        <button class="layui-btn layui-btn-xs layui-btn-danger" lay-event="del">删除</button>
+    </script>
+
+    <div id="reworkBox" style="display:none;padding:20px 30px;">
+        <form class="layui-form" id="reworkForm">
+            <div class="layui-form-item"><label class="layui-form-label">返工时间</label><div class="layui-input-inline"><input class="layui-input" id="createTime" placeholder="yyyy-MM-dd"></div></div>
+            <div class="layui-form-item layui-form-text"><label class="layui-form-label">返工说明</label><div class="layui-input-block"><textarea id="reworkDes" class="layui-textarea" placeholder="返工说明"></textarea></div></div>
+        </form>
+    </div>
+</div>
+<script src="../../layui/layui.js"></script><script src="../../js/app/config.js"></script><script src="../../js/app/server.js"></script><script src="../../js/app/utils.js"></script><script src="../../js/app/post.js"></script><script src="../../js/app/api.js"></script><script src="../../js/app/core.js"></script><script src="../../js/app/validate.js"></script><script src="../../js/app/bootstrap.js"></script><script src="../../js/construction/construction-common.js"></script><script src="../../js/construction/supervision4rework.js"></script>
+</body></html>

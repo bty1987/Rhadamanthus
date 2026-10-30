@@ -1,0 +1,108 @@
+{
+    "manifestType": [
+        {"key":"1","value":"进货"},
+        {"key":"2","value":"进退"},
+        {"key":"3","value":"出货"},
+        {"key":"4","value":"出返"},
+        {"key":"5","value":"调拨"},
+        {"key":"6","value":"采购"},
+        {"key":"7","value":"辅料"},
+        {"key":"8","value":"辅退"},
+        {"key":"9","value":"套合"},
+        {"key":"10","value":"套拆"},
+        {"key":"11","value":"盘盈"},
+        {"key":"12","value":"盘亏"}
+    ],
+    "manifestStatus": [
+        {"key":"0","value":"初始"},
+        {"key":"1","value":"已确认"}
+    ],
+    "createManifestTypes": [
+        {"key":"1","value":"进货"},
+        {"key":"3","value":"出货"}
+    ],
+    "accessoriesStatus": [
+        {"key":"0","value":"初始"},
+        {"key":"1","value":"预出"},
+        {"key":"2","value":"出货"},
+        {"key":"3","value":"撤销"},
+        {"key":"4","value":"拒绝"},
+        {"key":"5","value":"退回"},
+        {"key":"6","value":"到货"},
+        {"key":"7","value":"审核"}
+    ],
+    "purchaseStatus": [
+        {"key":"0","value":"初始"},
+        {"key":"1","value":"部分入库"},
+        {"key":"2","value":"全部入库"}
+    ],
+    "purchaseBalanceStatus": [
+        {"key":"0","value":"初始"},
+        {"key":"1","value":"结算"},
+        {"key":"2","value":"完结"}
+    ],
+    "priceTypes": [
+        {"key":"0","value":"底价"},
+        {"key":"1","value":"点位"}
+     ],
+    "statusType": [
+        {"key":"0","value":"启用"},
+        {"key":"1","value":"禁用"}
+    ],
+    "type": [
+        {"key":"0","value":"正价"},
+        {"key":"1","value":"特价"}
+    ],
+    "salesActivityItemType": [
+        {"key":"0","value":"初始"},
+        {"key":"1","value":"失效"},
+        {"key":"2","value":"已领"},
+        {"key":"3","value":"退货"},
+        {"key":"4","value":"配送"},
+        {"key":"5","value":"未退"},
+        {"key":"6","value":"升级"},
+        {"key":"7","value":"补款"},
+        {"key":"8","value":"抵现"}
+    ],
+    "occessoriesStatus": [
+        {"key":"0","value":"初始"},
+        {"key":"1","value":"分配"},
+        {"key":"2","value":"送货"},
+        {"key":"3","value":"到货"},
+        {"key":"4","value":"结算"},
+        {"key":"6","value":"作废"}
+    ],
+    "occessoriesisEnter": [
+        {"key":"0","value":"是"},
+        {"key":"1","value":"否"}
+    ],
+    "occessoriesisLift": [
+        {"key":"0","value":"有"},
+        {"key":"1","value":"无"}
+    ],
+    "occessoriesisExceed": [
+        {"key":"0","value":"有"},
+        {"key":"1","value":"无"}
+    ],
+    "occessoriesisAttic": [
+        {"key":"0","value":"有"},
+        {"key":"1","value":"无"}
+    ],
+    "occessoriesloadFloor": [
+        {"key":"0","value":"一层"},
+        {"key":"1","value":"二层"},
+        {"key":"-2","value":"负二"},
+        {"key":"-1","value":"负一"}
+    ],
+    "occessoriesisCostType": [
+        {"key": "0", "value": "车运费"},
+        {"key": "1", "value": "搬运费"},
+        {"key": "2", "value": "上楼费"}
+    ],
+    "accessoriesType": [
+        {"key": "0", "value": "普通"},
+        {"key": "1", "value": "售后"}
+    ],
+    "errorCode": 0,
+    "errorMsg": null
+}

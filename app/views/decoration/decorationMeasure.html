@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<!-- app/views/decoration/decorationMeasure.html —— 放线排期（pageDecorationMeasure，排队状态；量房单查看） -->
+<html lang="zh-CN"><head><meta charset="utf-8"><title>放线排期</title>
+<link rel="stylesheet" href="../../layui/css/layui.css"><link rel="stylesheet" href="../../css/app.css"></head>
+<body><div class="app-page">
+    <div class="app-search"><form class="layui-form" id="searchForm"><div class="layui-form-item">
+        <div class="layui-inline"><label class="layui-form-label">装修单号</label><div class="layui-input-inline"><input name="decoration.orderId" data-op="eq" class="layui-input" placeholder="装修单号"></div></div>
+        <div class="layui-inline"><label class="layui-form-label">状态</label><div class="layui-input-inline"><select name="status" data-op="eq"><option value="">全部</option><option value="0">排队</option><option value="1">申请量尺</option><option value="2">量尺成功</option><option value="3">量尺失败</option></select></div></div>
+        <div class="layui-inline"><label class="layui-form-label">量尺时间</label><div class="layui-input-inline"><input name="actualDate" data-op="between" id="actualDate" class="layui-input" placeholder="起始 - 结束" readonly></div></div>
+        <div class="layui-inline"><button type="button" class="layui-btn" id="btnSearch"><i class="layui-icon layui-icon-search"></i>查询</button></div>
+    </div></form></div>
+    <div class="app-table"><table id="resultTable" lay-filter="resultTable"></table></div>
+    <div id="pagenation" class="app-pagenation"></div>
+    <script type="text/html" id="rowToolbar"><button class="layui-btn layui-btn-xs layui-btn-warm" lay-event="qeasure">量房单</button></script>
+</div>
+<script src="../../layui/layui.js"></script><script src="../../js/app/config.js"></script><script src="../../js/app/server.js"></script><script src="../../js/app/utils.js"></script><script src="../../js/app/post.js"></script><script src="../../js/app/api.js"></script><script src="../../js/app/core.js"></script><script src="../../js/app/validate.js"></script><script src="../../js/app/bootstrap.js"></script><script src="../../js/decoration/decoration-common.js"></script><script src="../../js/decoration/decorationMeasure.js"></script>
+</body></html>

@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<!-- app/views/payment/payment.html —— 预付款（合同/主材预付款账户的收款/提款/更新/确认）
+  上下文：app.params.paymentPage = { paytype, depage?, profit? }（paytype 决定页面按钮配置）。
+  列：装修单号/客户/收款类型/预付款类型/操作金额/余额/实收额/状态/备注/各通道。
+  操作：创建账户/生成预付款/全选/批量确认/收款/提款/打印/更新/微信推送/验证/合同额提现/主材额提现。 -->
+<html lang="zh-CN"><head><meta charset="utf-8"><title>预付款</title>
+<link rel="stylesheet" href="../../layui/css/layui.css"><link rel="stylesheet" href="../../css/app.css"></head>
+<body><div class="app-page">
+    <div class="app-search"><form class="layui-form" id="searchForm"><div class="layui-form-item">
+        <div class="layui-inline"><label class="layui-form-label">装修单号</label><div class="layui-input-inline"><input class="layui-input" name="decoration.orderId" data-op="cn"></div></div>
+        <div class="layui-inline"><label class="layui-form-label">客户</label><div class="layui-input-inline"><input class="layui-input" name="decoration.customer.name" data-op="cn"></div></div>
+        <div class="layui-inline"><label class="layui-form-label">状态</label><div class="layui-input-inline"><select name="status"><option value="">全部</option><option value="0">初始</option><option value="1">已付款</option><option value="2">已确认</option></select></div></div>
+        <div class="layui-inline"><button type="button" class="layui-btn" id="btnSearch"><i class="layui-icon layui-icon-search"></i>查询</button><button type="button" class="layui-btn" id="btnCreate"><i class="layui-icon layui-icon-add-1"></i>创建账户</button><button type="button" class="layui-btn layui-btn-warm" id="btnGen"><i class="layui-icon layui-icon-add-circle"></i>生成预付款</button><button type="button" class="layui-btn layui-btn-normal" id="btnConfirm"><i class="layui-icon layui-icon-ok"></i>批量确认</button><button type="button" class="layui-btn layui-btn-primary" id="btnBack"><i class="layui-icon layui-icon-return"></i>返回</button></div>
+    </div></form></div>
+    <div class="app-table"><table id="resultTable" lay-filter="resultTable"></table></div>
+    <div id="pagenation" class="app-pagenation"></div>
+    <script type="text/html" id="rowToolbar">
+        <button class="layui-btn layui-btn-xs" lay-event="collect">收款</button>
+        <button class="layui-btn layui-btn-xs layui-btn-warm" lay-event="withdraw">提款</button>
+        <button class="layui-btn layui-btn-xs layui-btn-normal" lay-event="update">更新</button>
+        <button class="layui-btn layui-btn-xs" lay-event="print">打印</button>
+        <button class="layui-btn layui-btn-xs layui-btn-disabled" lay-event="wechat">微信推送</button>
+    </script>
+</div>
+<script src="../../layui/layui.js"></script><script src="../../js/app/config.js"></script><script src="../../js/app/server.js"></script><script src="../../js/app/utils.js"></script><script src="../../js/app/post.js"></script><script src="../../js/app/api.js"></script><script src="../../js/app/core.js"></script><script src="../../js/app/validate.js"></script><script src="../../js/app/bootstrap.js"></script><script src="../../js/payment/payment.js"></script>
+</body></html>

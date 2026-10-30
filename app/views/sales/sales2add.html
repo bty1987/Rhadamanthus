@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<!-- app/views/sales/sales2add.html —— 销售单添项（向已存在销售单追加商品）
+  上下文：app.params.sales.sales = {sid,...} -->
+<html lang="zh-CN"><head><meta charset="utf-8"><title>销售单添项</title>
+<link rel="stylesheet" href="../../layui/css/layui.css"><link rel="stylesheet" href="../../css/app.css"></head>
+<body><div class="app-page">
+    <div class="layui-row layui-col-space10">
+        <!-- 左：商品 -->
+        <div class="layui-col-md5">
+            <div style="border:1px solid #e6e6e6;padding:10px;">
+                <h3 style="margin:0 0 8px 0;font-size:14px;">商品选择</h3>
+                <form class="layui-form" id="goodsForm">
+                    <div class="layui-form-item"><label class="layui-form-label">商品名</label><div class="layui-input-block"><input type="text" id="goods" placeholder="商品名" class="layui-input" autocomplete="off"></div></div>
+                    <div class="layui-form-item"><label class="layui-form-label">编号</label><div class="layui-input-inline"><input type="text" id="goodsNo" class="layui-input" readonly></div><label class="layui-form-label">单位</label><div class="layui-input-inline"><input type="text" id="measurementUnit" class="layui-input" readonly></div></div>
+                    <div class="layui-form-item"><label class="layui-form-label">售价</label><div class="layui-input-inline"><input type="text" id="purchase" class="layui-input" readonly></div><label class="layui-form-label">折扣</label><div class="layui-input-inline"><input type="number" id="discount" class="layui-input" step="0.01" value="1"></div></div>
+                    <div class="layui-form-item"><label class="layui-form-label">折扣价</label><div class="layui-input-inline"><input type="text" id="disPrice" class="layui-input" readonly></div><label class="layui-form-label">折让</label><div class="layui-input-inline"><input type="number" id="postDis" class="layui-input" step="0.01" value="1"></div></div>
+                    <div class="layui-form-item"><label class="layui-form-label">折让价</label><div class="layui-input-inline"><input type="text" id="selling" class="layui-input" readonly></div><label class="layui-form-label">数量</label><div class="layui-input-inline"><input type="number" id="num" class="layui-input" step="0.01" value="1"></div></div>
+                    <div class="layui-form-item"><label class="layui-form-label">总价</label><div class="layui-input-inline"><input type="text" id="total" class="layui-input" readonly></div></div>
+                    <div class="layui-form-item"><label class="layui-form-label">颜色</label><div class="layui-input-block"><select id="color"></select></div></div>
+                    <div class="layui-form-item"><label class="layui-form-label">规格</label><div class="layui-input-block"><select id="format"></select></div></div>
+                    <div class="layui-form-item"><label class="layui-form-label">备注</label><div class="layui-input-block"><input type="text" id="remark" class="layui-input"></div></div>
+                    <div class="layui-form-item"><div class="layui-input-block"><button type="button" class="layui-btn" id="btnAddItem">添加</button></div></div>
+                </form>
+            </div>
+        </div>
+        <!-- 右：销售单信息 -->
+        <div class="layui-col-md7">
+            <div style="border:1px solid #e6e6e6;padding:10px;">
+                <h3 style="margin:0 0 8px 0;font-size:14px;">销售单信息</h3>
+                <form class="layui-form" id="orderForm">
+                    <div class="layui-form-item"><label class="layui-form-label">订单号</label><div class="layui-input-inline"><input type="text" id="orderId" class="layui-input" readonly></div><label class="layui-form-label">客户</label><div class="layui-input-inline"><input type="text" id="customer" class="layui-input" readonly></div></div>
+                    <div class="layui-form-item"><label class="layui-form-label">渠道</label><div class="layui-input-inline"><input type="text" id="salesman" class="layui-input" readonly></div><label class="layui-form-label">驻店</label><div class="layui-input-inline"><input type="text" id="instorer" class="layui-input" readonly></div></div>
+                    <div class="layui-form-item"><label class="layui-form-label">导购</label><div class="layui-input-inline"><input type="text" id="guider" class="layui-input" readonly></div><label class="layui-form-label">品牌</label><div class="layui-input-inline"><input type="text" id="brands" class="layui-input" readonly></div></div>
+                    <div class="layui-form-item"><label class="layui-form-label">地址</label><div class="layui-input-block"><input type="text" id="orderAddr" class="layui-input" readonly></div></div>
+                    <div class="layui-form-item"><label class="layui-form-label">券信息</label><div class="layui-input-inline"><input type="text" id="couponInfo" class="layui-input"></div><label class="layui-form-label">券值</label><div class="layui-input-inline"><input type="text" id="coupon" class="layui-input"></div></div>
+                    <div class="layui-form-item"><label class="layui-form-label">原总额</label><div class="layui-input-inline"><input type="text" id="pretotals" class="layui-input" readonly></div><label class="layui-form-label">新总额</label><div class="layui-input-inline"><input type="text" id="totals" class="layui-input" readonly></div></div>
+                    <div class="layui-form-item"><label class="layui-form-label">备注</label><div class="layui-input-block"><input type="text" id="comment" class="layui-input"></div></div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <h3 style="font-size:14px;font-weight:bold;padding:8px 0;color:#333;margin-top:10px;">新增项列表</h3>
+    <div class="app-table"><table id="itemTable" lay-filter="itemTable"></table></div>
+    <div style="margin-top:10px;"><button type="button" class="layui-btn" id="submit">提交添项</button></div>
+    <script type="text/html" id="itemToolbar"><button class="layui-btn layui-btn-xs layui-btn-danger" lay-event="del">删除</button></script>
+</div>
+<script src="../../layui/layui.js"></script><script src="../../js/app/config.js"></script><script src="../../js/app/server.js"></script><script src="../../js/app/utils.js"></script><script src="../../js/app/post.js"></script><script src="../../js/app/api.js"></script><script src="../../js/app/core.js"></script><script src="../../js/app/validate.js"></script><script src="../../js/app/bootstrap.js"></script><script src="../../js/sales/sales2add.js"></script>
+</body></html>

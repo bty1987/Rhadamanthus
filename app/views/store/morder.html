@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<!-- app/views/store/morder.html —— 商城订单（列表 + 状态切换 + 查看明细）
+  字段：oid(订单号) status address；点"明细"弹出 morderitem -->
+<html lang="zh-CN">
+<head><meta charset="utf-8"><title>商城订单</title>
+<link rel="stylesheet" href="../../layui/css/layui.css"><link rel="stylesheet" href="../../css/app.css"></head>
+<body>
+<div class="app-page">
+    <div class="app-search"><form class="layui-form" id="searchForm"><div class="layui-form-item">
+        <div class="layui-inline"><label class="layui-form-label">订单号</label><div class="layui-input-inline"><input type="text" name="oid" data-op="eq" placeholder="订单号" class="layui-input" autocomplete="off"></div></div>
+        <div class="layui-inline"><button type="button" class="layui-btn" id="btnSearch"><i class="layui-icon layui-icon-search"></i>查询</button><button type="reset" class="layui-btn layui-btn-primary" id="btnReset">重置</button></div>
+    </div></form></div>
+    <div class="app-table"><table id="resultTable" lay-filter="resultTable"></table></div>
+    <div id="pagenation" class="app-pagenation"></div>
+    <script type="text/html" id="rowToolbar"><button class="layui-btn layui-btn-xs" lay-event="items">明细</button><button class="layui-btn layui-btn-xs" lay-event="confirm">确认</button><button class="layui-btn layui-btn-xs layui-btn-warm" lay-event="cancel">取消</button></script>
+</div>
+<script src="../../layui/layui.js"></script><script src="../../js/app/config.js"></script><script src="../../js/app/server.js"></script><script src="../../js/app/utils.js"></script><script src="../../js/app/post.js"></script><script src="../../js/app/api.js"></script><script src="../../js/app/core.js"></script><script src="../../js/app/validate.js"></script><script src="../../js/app/bootstrap.js"></script><script src="../../js/store/morder.js"></script>
+</body></html>

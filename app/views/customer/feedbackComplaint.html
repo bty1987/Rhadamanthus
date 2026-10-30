@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<!-- app/views/customer/feedbackComplaint.html —— 反馈投诉（上下文 app.params.customer.vid = fid + app.params.decoration.orderId）
+     记录列表 + 投诉列表 + 添加/编辑 + 投诉部门弹窗 + 图片管理（上传/删除） -->
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8" />
+    <title>反馈投诉</title>
+    <link rel="stylesheet" href="../../layui/css/layui.css">
+    <link rel="stylesheet" href="../../css/app.css">
+</head>
+<body>
+<div class="app-page" id="feedbackComplaintPage">
+
+    <div class="app-toolbar" style="padding:10px 15px 0;">
+        <button type="button" class="layui-btn layui-btn-sm" id="btnBack"><i class="layui-icon layui-icon-return"></i>返回</button>
+        <button type="button" class="layui-btn layui-btn-sm layui-btn-normal" id="btnAdd"><i class="layui-icon layui-icon-add-1"></i>添加投诉</button>
+    </div>
+
+    <h4 class="layui-elip" style="margin:12px 15px 6px;">投诉列表</h4>
+    <div class="app-table">
+        <table id="complaintTable" lay-filter="complaintTable"></table>
+    </div>
+
+    <h4 class="layui-elip" style="margin:12px 15px 6px;">反馈记录</h4>
+    <div class="app-table">
+        <table id="recordTable" lay-filter="recordTable"></table>
+    </div>
+
+    <!-- 添加/编辑投诉 -->
+    <div id="editBox" style="display:none; padding:20px;">
+        <form class="layui-form" lay-filter="editForm" id="editForm">
+            <div class="layui-form-item">
+                <label class="layui-form-label">装修单号<span class="app-req">*</span></label>
+                <div class="layui-input-block">
+                    <input type="text" name="orderId" placeholder="请输入装修单号" class="layui-input v_required">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">电话</label>
+                <div class="layui-input-block">
+                    <input type="text" name="phone" placeholder="请输入电话" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">渠道<span class="app-req">*</span></label>
+                <div class="layui-input-block">
+                    <select name="source" lay-filter="sourceFilter" lay-verify="required">
+                        <option value="0">平台私聊</option><option value="1">400电话</option>
+                        <option value="2">到店投诉</option><option value="3">内部反馈</option>
+                        <option value="4">消协/工商</option><option value="5">ERP小程序</option>
+                        <option value="6">VIP服务群</option><option value="7">调研回访</option>
+                        <option value="8">电视/电台曝光</option><option value="9">第三方平台</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item" id="upgradeSourceGroup" style="display:none;">
+                <label class="layui-form-label">升级渠道</label>
+                <div class="layui-input-block">
+                    <select name="upgradeSource">
+                        <option value="0">无</option><option value="1">315公众平台</option>
+                        <option value="2">抖音</option><option value="3">小红书</option>
+                        <option value="4">黑猫</option><option value="5">大众点评</option>
+                        <option value="6">上门</option><option value="7">超时</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">是否升级</label>
+                <div class="layui-input-block">
+                    <select name="upgrade">
+                        <option value="2">否</option>
+                        <option value="0">是（超时）</option>
+                        <option value="1">是（平台）</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">紧急程度</label>
+                <div class="layui-input-block">
+                    <select name="urgency">
+                        <option value="0">预警</option><option value="1">一级</option>
+                        <option value="2">二级</option><option value="3">三级</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">部门类型<span class="app-req">*</span></label>
+                <div class="layui-input-block" id="choiceDeptType" style="line-height:36px;"></div>
+            </div>
+            <div class="layui-form-item layui-form-text">
+                <label class="layui-form-label">问题总述<span class="app-req">*</span></label>
+                <div class="layui-input-block">
+                    <textarea name="content" placeholder="请输入问题总述" class="layui-textarea v_required"></textarea>
+                </div>
+            </div>
+            <div class="layui-form-item layui-form-text">
+                <label class="layui-form-label">客户诉求</label>
+                <div class="layui-input-block">
+                    <textarea name="appeal" placeholder="请输入客户诉求" class="layui-textarea"></textarea>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">处理结果</label>
+                <div class="layui-input-block">
+                    <select name="results">
+                        <option value="0">结案-完成</option><option value="1">结案-撤销</option>
+                        <option value="2">协商中-方案未确定</option><option value="3">执行中-确定方案(问题闭环)</option>
+                        <option value="4">升级-法务介入处理</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">图片</label>
+                <div class="layui-input-inline">
+                    <button type="button" class="layui-btn layui-btn-normal" id="btnUpload"><i class="layui-icon layui-icon-upload-drag"></i>上传图片</button>
+                </div>
+                <div class="layui-input-inline" style="line-height:36px;">
+                    <img id="showImg" style="display:none;width:60px;height:60px;object-fit:cover;">
+                </div>
+            </div>
+            <div class="layui-form-item app-form-footer">
+                <button type="button" class="layui-btn" id="btnSave">保存</button>
+                <button type="button" class="layui-btn layui-btn-primary" id="btnCancel">取消</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- 图片管理 -->
+    <div id="drawingBox" style="display:none; padding:15px;">
+        <button type="button" class="layui-btn layui-btn-normal layui-btn-sm" id="btnDrawingUpload"><i class="layui-icon layui-icon-upload-drag"></i>上传图片</button>
+        <ul id="feedbackDrawing" style="list-style:none;padding:0;margin:10px 0 0;"></ul>
+    </div>
+
+</div>
+
+<script src="../../layui/layui.js"></script>
+<script src="../../js/app/upload.js"></script>
+<script src="../../js/app/config.js"></script>
+<script src="../../js/app/server.js"></script>
+<script src="../../js/app/utils.js"></script>
+<script src="../../js/app/post.js"></script>
+<script src="../../js/app/api.js"></script>
+<script src="../../js/app/core.js"></script>
+<script src="../../js/app/validate.js"></script>
+<script src="../../js/app/bootstrap.js"></script>
+<script src="../../js/customer/customer-common.js"></script>
+<script src="../../js/customer/feedbackComplaint.js"></script>
+</body>
+</html>

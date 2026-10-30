@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<!-- app/views/customer/complain.html —— 投诉（装修单维度）：投诉内容/完结/关闭 -->
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8" />
+    <title>投诉</title>
+    <link rel="stylesheet" href="../../layui/css/layui.css">
+    <link rel="stylesheet" href="../../css/app.css">
+</head>
+<body>
+<div class="app-page" id="complainPage">
+
+    <div class="app-search">
+        <form class="layui-form" lay-filter="searchForm" id="searchForm">
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">装修单号</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="decoration.orderId" data-op="eq" placeholder="请输入装修单号" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">状态</label>
+                    <div class="layui-input-inline">
+                        <select name="status" data-op="eq">
+                            <option value="">全部</option>
+                            <option value="0">初始</option>
+                            <option value="1">处理</option>
+                            <option value="2">完结</option>
+                            <option value="3">关闭</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">等级</label>
+                    <div class="layui-input-inline">
+                        <select name="level" data-op="eq">
+                            <option value="">全部</option>
+                            <option value="0">标准</option>
+                            <option value="1">重大</option>
+                            <option value="2">危机</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <button type="button" class="layui-btn" id="btnSearch"><i class="layui-icon layui-icon-search"></i>查询</button>
+                    <button type="reset" class="layui-btn layui-btn-primary" id="btnReset">重置</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div class="app-table">
+        <table id="resultTable" lay-filter="resultTable"></table>
+    </div>
+
+    <div id="pagenation" class="app-pagenation"></div>
+
+</div>
+
+<script src="../../layui/layui.js"></script>
+<script src="../../js/app/config.js"></script>
+<script src="../../js/app/server.js"></script>
+<script src="../../js/app/utils.js"></script>
+<script src="../../js/app/post.js"></script>
+<script src="../../js/app/api.js"></script>
+<script src="../../js/app/core.js"></script>
+<script src="../../js/app/validate.js"></script>
+<script src="../../js/app/bootstrap.js"></script>
+<script src="../../js/customer/customer-common.js"></script>
+<script src="../../js/customer/complain.js"></script>
+</body>
+</html>

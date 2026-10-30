@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<!-- app/views/manifest/purchaseBalance2balance.html —— 采购结算（结算记录列表 + 添加/编辑/状态）
+  URL: ?pid=xxx&balanceStatus=xxx
+  字段：createTime creater.userName balance status comment -->
+<html lang="zh-CN">
+<head><meta charset="utf-8"><title>采购结算</title>
+<link rel="stylesheet" href="../../layui/css/layui.css"><link rel="stylesheet" href="../../css/app.css"></head>
+<body>
+<div class="app-page">
+    <div id="breadcrumb"></div>
+    <div class="app-search"><form class="layui-form"><div class="layui-form-item">
+        <div class="layui-inline"><button type="button" class="layui-btn layui-btn-normal" id="btnAdd"><i class="layui-icon layui-icon-add-1"></i>添加</button></div>
+        <div class="layui-inline"><button type="button" class="layui-btn layui-btn-primary" id="btnBack">返回</button></div>
+    </div></form></div>
+    <div class="app-table"><table id="resultTable" lay-filter="resultTable"></table></div>
+    <div id="editBox" style="display:none; padding:20px;"><form class="layui-form" id="editForm" lay-filter="editForm">
+        <input type="hidden" name="pbid">
+        <div class="layui-form-item"><label class="layui-form-label">结算值<span class="app-req">*</span></label><div class="layui-input-block"><input type="text" name="balance" class="layui-input v_required v_float_3"></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">说明</label><div class="layui-input-block"><textarea name="comment" class="layui-textarea"></textarea></div></div>
+        <div class="layui-form-item app-form-footer"><button type="button" class="layui-btn" id="btnSave">保存</button><button type="reset" class="layui-btn layui-btn-primary" id="btnCancel">取消</button></div>
+    </form></div>
+    <script type="text/html" id="rowToolbar">
+        <button class="layui-btn layui-btn-xs" lay-event="edit">编辑</button>
+        <button class="layui-btn layui-btn-xs layui-btn-normal" lay-event="pay">修改结算状态</button>
+    </script>
+</div>
+<script src="../../layui/layui.js"></script><script src="../../js/app/config.js"></script><script src="../../js/app/server.js"></script><script src="../../js/app/utils.js"></script><script src="../../js/app/post.js"></script><script src="../../js/app/api.js"></script><script src="../../js/app/core.js"></script><script src="../../js/app/validate.js"></script><script src="../../js/app/bootstrap.js"></script><script src="../../js/manifest/purchaseBalance2balance.js"></script>
+</body></html>

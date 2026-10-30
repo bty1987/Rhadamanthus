@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<!-- app/views/manifest/manifest4view.html —— 货单查看（只读，按 mid 查看明细）
+  字段：goods(商品) instorehouse(入库) outstorehouse(出库) inprice outprice format color comment
+  用法：URL 带 mid 参数 → 查询该货单明细 -->
+<html lang="zh-CN">
+<head><meta charset="utf-8"><title>货单查看</title>
+<link rel="stylesheet" href="../../layui/css/layui.css"><link rel="stylesheet" href="../../css/app.css"></head>
+<body>
+<div class="app-page">
+    <div class="app-search"><form class="layui-form" id="searchForm"><div class="layui-form-item">
+        <div class="layui-inline"><label class="layui-form-label">货单ID</label><div class="layui-input-inline"><input type="number" name="mid" id="searchMid" placeholder="货单ID" class="layui-input" value="0"></div></div>
+        <div class="layui-inline"><button type="button" class="layui-btn" id="btnSearch"><i class="layui-icon layui-icon-search"></i>查询</button></div>
+    </div></form></div>
+    <div class="app-table"><table id="resultTable" lay-filter="resultTable"></table></div>
+</div>
+<script src="../../layui/layui.js"></script><script src="../../js/app/config.js"></script><script src="../../js/app/server.js"></script><script src="../../js/app/utils.js"></script><script src="../../js/app/post.js"></script><script src="../../js/app/api.js"></script><script src="../../js/app/core.js"></script><script src="../../js/app/validate.js"></script><script src="../../js/app/bootstrap.js"></script><script src="../../js/manifest/manifest4view.js"></script>
+</body></html>

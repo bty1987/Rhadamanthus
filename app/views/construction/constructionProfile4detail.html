@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<!-- app/views/construction/constructionProfile4detail.html —— 工程单画像（动态问卷表单）
+  上下文：app.params.constructionProfile = { cpid?|cid?|orderId?, type?, profile: { type } }。
+  模板 key：CONSTRUCTION_TAG_PROFILE_TEMPLATE(标签 type=4)/CONSTRUCTION_PROFILE_TEMPLATE(其他)。
+  保存：handleConstructionProfile。 -->
+<html lang="zh-CN"><head><meta charset="utf-8"><title>工程画像</title>
+<link rel="stylesheet" href="../../layui/css/layui.css"><link rel="stylesheet" href="../../css/app.css">
+<style>
+.pf-item { margin: 8px 0; padding: 4px 0; }
+.pf-item > label { display: inline-block; width: 160px; text-align: right; color: #555; vertical-align: top; }
+.pf-item .pf-body { display: inline-block; width: 70%; vertical-align: top; }
+.pf-item .orange { color: #ff5722; }
+.pf-item textarea { width: 90%; min-height: 60px; }
+.pf-opt { display: inline-block; margin: 2px 12px 2px 0; }
+</style></head>
+<body><div class="app-page">
+    <div class="app-toolbar" style="padding:10px 15px 0;">
+        <span style="font-size:16px;font-weight:bold;">工程画像：<span id="pfName">-</span></span>
+        <button type="button" class="layui-btn layui-btn-sm layui-btn-primary" id="btnBack"><i class="layui-icon layui-icon-return"></i>返回</button>
+    </div>
+    <div class="app-card" style="background:#fff;border-radius:4px;box-shadow:0 1px 3px rgba(0,0,0,.04);padding:16px 20px;margin-top:10px;">
+        <h4 id="pfTitle" style="font-size:15px;"></h4>
+        <div id="itemlist"></div>
+        <div style="text-align:right;margin-top:10px;">
+            <button type="button" class="layui-btn layui-btn-sm" id="execute"><i class="layui-icon layui-icon-ok"></i>保存</button>
+        </div>
+    </div>
+</div>
+<script src="../../layui/layui.js"></script><script src="../../js/app/config.js"></script><script src="../../js/app/server.js"></script><script src="../../js/app/utils.js"></script><script src="../../js/app/post.js"></script><script src="../../js/app/api.js"></script><script src="../../js/app/core.js"></script><script src="../../js/app/validate.js"></script><script src="../../js/app/bootstrap.js"></script><script src="../../js/construction/construction-common.js"></script><script src="../../js/construction/constructionProfile4detail.js"></script>
+</body></html>

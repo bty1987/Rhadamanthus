@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<!-- app/views/quotation/presignItem.html —— 预签项（弹窗页：按产品 ppid 管理预签项；?pageType=presignItem 切换带产品信息的列表） -->
+<html lang="zh-CN"><head><meta charset="utf-8"><title>预签项</title>
+<link rel="stylesheet" href="../../layui/css/layui.css"><link rel="stylesheet" href="../../css/app.css"></head>
+<body><div class="app-page">
+    <div class="app-search"><form class="layui-form" id="searchForm"><div class="layui-form-item">
+        <div class="layui-inline"><label class="layui-form-label">名称</label><div class="layui-input-inline"><input name="name" data-op="cn" class="layui-input" placeholder="名称"></div></div>
+        <div class="layui-inline"><label class="layui-form-label">状态</label><div class="layui-input-inline"><select name="status" data-op="eq"><option value="">全部</option><option value="0">启用</option><option value="1">禁用</option></select></div></div>
+        <div class="layui-inline"><label class="layui-form-label">类型</label><div class="layui-input-inline"><select name="type" data-op="eq"><option value="">全部</option><option value="0">基础</option><option value="1">可选配</option><option value="2">个性</option><option value="3">赋能</option></select></div></div>
+        <div class="layui-inline"><button type="button" class="layui-btn" id="btnSearch"><i class="layui-icon layui-icon-search"></i>查询</button><button type="button" class="layui-btn layui-btn-primary" id="btnReset">重置</button></div>
+    </div></form></div>
+    <div class="app-toolbar" style="padding:0 15px 10px;" id="addArea">
+        <button type="button" class="layui-btn layui-btn-sm" id="btnAdd"><i class="layui-icon layui-icon-add-1"></i>创建</button>
+    </div>
+    <div class="app-table"><table id="resultTable" lay-filter="resultTable"></table></div>
+    <div id="pagenation" class="app-pagenation"></div>
+    <script type="text/html" id="rowToolbar">
+        <button class="layui-btn layui-btn-xs" lay-event="edit">编辑</button>
+        <button class="layui-btn layui-btn-xs {{ d.status == 0 ? '' : 'layui-btn-primary' }}" lay-event="status">{{ d.status == 0 ? '启用' : '禁用' }}</button>
+    </script>
+    <div id="editBox" style="display:none;padding:15px 25px;max-height:80%;overflow:auto;">
+        <form class="layui-form" lay-filter="editForm">
+            <div class="layui-form-item"><label class="layui-form-label">名称</label><div class="layui-input-inline"><input id="name" class="layui-input"></div></div>
+            <div class="layui-form-item"><label class="layui-form-label">基础量</label><div class="layui-input-inline"><input id="basicNum" class="layui-input"></div></div>
+            <div class="layui-form-item"><label class="layui-form-label">成本</label><div class="layui-input-inline"><input id="cost" class="layui-input"></div></div>
+            <div class="layui-form-item"><label class="layui-form-label">价格</label><div class="layui-input-inline"><input id="price" class="layui-input"></div></div>
+            <div class="layui-form-item"><label class="layui-form-label">增补价</label><div class="layui-input-inline"><input id="addPrice" class="layui-input"></div></div>
+            <div class="layui-form-item"><label class="layui-form-label">退减价</label><div class="layui-input-inline"><input id="subPrice" class="layui-input"></div></div>
+            <div class="layui-form-item"><label class="layui-form-label">类型</label><div class="layui-input-inline"><select id="type"><option value="0">基础</option><option value="1">可选配</option><option value="2">个性</option><option value="3">赋能</option></select></div></div>
+            <div class="layui-form-item"><label class="layui-form-label">一类</label><div class="layui-input-inline"><select id="onetype"><option value="0">标准</option><option value="1">标配</option><option value="2">配减</option></select></div></div>
+            <div class="layui-form-item"><label class="layui-form-label">业务类型</label><div class="layui-input-inline"><select id="atttype"><option value="0">通用</option><option value="1">工程</option><option value="2">主材</option></select></div></div>
+            <div class="layui-form-item"><label class="layui-form-label">面积规则</label><div class="layui-input-inline" style="text-align:left;padding-top:9px;">
+                <input type="radio" name="areaCale" value="0" title="数量"><input type="radio" name="areaCale" value="1" title="面积">
+            </div></div>
+            <div class="layui-form-item"><label class="layui-form-label">说明</label><div class="layui-input-inline" style="width:340px;"><input id="content" class="layui-input"></div></div>
+        </form>
+    </div>
+</div>
+<script src="../../layui/layui.js"></script><script src="../../js/app/config.js"></script><script src="../../js/app/server.js"></script><script src="../../js/app/utils.js"></script><script src="../../js/app/post.js"></script><script src="../../js/app/api.js"></script><script src="../../js/app/core.js"></script><script src="../../js/app/validate.js"></script><script src="../../js/app/bootstrap.js"></script><script src="../../js/quotation/quotation-common.js"></script><script src="../../js/quotation/presignItem.js"></script>
+</body></html>

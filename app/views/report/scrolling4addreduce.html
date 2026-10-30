@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<!-- app/views/report/scrolling4addreduce.html —— 增减项滚动大屏：增减项明细滚动(×2，源自 quotation.pageAddReduce) + 增减项排名滚动(rankAddReduce)。支持全屏/停止。 -->
+<html lang="zh-CN"><head><meta charset="utf-8"><title>增减项滚动</title>
+<link rel="stylesheet" href="../../layui/css/layui.css"><link rel="stylesheet" href="../../css/app.css"></head>
+<body><div class="app-page" id="scrolling4addreduce">
+    <div class="app-toolbar" style="margin:0 0 10px;">
+        <button type="button" class="layui-btn layui-btn-normal" id="fullscreen">全屏</button>
+        <button type="button" class="layui-btn layui-btn-danger" id="stopscreen">停止</button>
+    </div>
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md4"><h3 class="app-rpt-title">增减项明细(一)</h3><ul id="scrolling4addreduce1" class="app-rpt-list"></ul></div>
+        <div class="layui-col-md4"><h3 class="app-rpt-title">增减项明细(二)</h3><ul id="scrolling4addreduce2" class="app-rpt-list"></ul></div>
+        <div class="layui-col-md4"><h3 class="app-rpt-title">增减项排名</h3><ul id="scrolling4addreduce3" class="app-rpt-list"></ul></div>
+    </div>
+</div>
+<script src="../../layui/layui.js"></script><script src="../../js/app/config.js"></script><script src="../../js/app/server.js"></script><script src="../../js/app/utils.js"></script><script src="../../js/app/post.js"></script><script src="../../js/app/api.js"></script><script src="../../js/app/core.js"></script><script src="../../js/app/validate.js"></script><script src="../../js/app/bootstrap.js"></script><script src="../../js/report/scrolling4addreduce.js"></script>
+</body></html>

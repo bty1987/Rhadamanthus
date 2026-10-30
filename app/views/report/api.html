@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<!-- app/views/report/api.html —— 接口日志大屏（library 代理 → echarts）：天级请求走势/服务器分布/人员TOP/API TOP/学历/公司/温度 + 请求总数/当日数。 -->
+<html lang="zh-CN"><head><meta charset="utf-8"><title>接口日志大屏</title>
+<link rel="stylesheet" href="../../layui/css/layui.css"><link rel="stylesheet" href="../../css/app.css"></head>
+<body><div class="app-page" id="apiPage">
+    <div class="app-toolbar" style="margin:0 0 10px;"><button type="button" class="layui-btn layui-btn-normal" id="fullScreen"><i class="layui-icon layui-icon-screen-full"></i>全屏</button></div>
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md3"><div class="layui-card"><div class="layui-card-body" style="text-align:center;padding:40px 0;"><div style="font-size:40px;font-weight:bold;color:#01AAED;" id="InterfaceRequestsForAll">-</div><h5>请求总数</h5></div></div></div>
+        <div class="layui-col-md3"><div class="layui-card"><div class="layui-card-body" style="text-align:center;padding:40px 0;"><div style="font-size:40px;font-weight:bold;color:#01AAED;" id="InterfaceRequestsDay">-</div><h5>当日请求</h5></div></div></div>
+        <div class="layui-col-md6"><div id="InterfaceRequestsForMouth" style="height:160px;"></div></div>
+        <div class="layui-col-md6"><div id="InterfaceRequestsForDayAll" style="height:250px;"></div></div>
+        <div class="layui-col-md6"><div id="InterfaceRequestsForDayByUserId" style="height:420px;"></div></div>
+        <div class="layui-col-md6"><div id="ApiInterfaceRequestsForDay" style="height:420px;"></div></div>
+        <div class="layui-col-md6"><div id="education" style="height:380px;"></div></div>
+        <div class="layui-col-md6"><div id="company" style="height:380px;"></div></div>
+        <div class="layui-col-md12"><div id="TemperatureTrend" style="height:380px;"></div></div>
+    </div>
+</div>
+<script src="../../layui/layui.js"></script><script src="../../lib/echarts.min.js"></script><script src="../../js/app/config.js"></script><script src="../../js/app/server.js"></script><script src="../../js/app/utils.js"></script><script src="../../js/app/post.js"></script><script src="../../js/app/api.js"></script><script src="../../js/app/core.js"></script><script src="../../js/app/validate.js"></script><script src="../../js/app/bootstrap.js"></script><script src="../../js/report/api.js"></script>
+</body></html>

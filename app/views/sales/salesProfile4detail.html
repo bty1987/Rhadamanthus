@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<!-- app/views/sales/salesProfile4detail.html —— 销售单品牌满意度（编辑/打印）
+  上下文：app.params.sales = {sid, orderId} -->
+<html lang="zh-CN"><head><meta charset="utf-8"><title>销售单品牌满意度</title>
+<link rel="stylesheet" href="../../layui/css/layui.css"><link rel="stylesheet" href="../../css/app.css"></head>
+<body><div class="app-page">
+    <div style="margin-bottom:10px;">
+        <button type="button" class="layui-btn" id="saveSurvey"><i class="layui-icon layui-icon-ok"></i>保存</button>
+        <button type="button" class="layui-btn layui-btn-normal" id="btnHandle">处理</button>
+        <button type="button" class="layui-btn layui-btn-primary" id="btnBack">返回</button>
+    </div>
+    <form class="layui-form" id="profileForm" style="border:1px solid #e6e6e6;padding:10px;">
+        <div class="layui-form-item">
+            <div class="layui-inline"><label class="layui-form-label">订单号</label><div class="layui-input-inline"><input type="text" id="orderId" class="layui-input" readonly></div></div>
+            <div class="layui-inline"><label class="layui-form-label">名称</label><div class="layui-input-inline"><input type="text" id="name" class="layui-input" readonly></div></div>
+        </div>
+        <div class="layui-form-item"><label class="layui-form-label">标题</label><div class="layui-input-block"><input type="text" id="title" class="layui-input"></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">内容</label><div class="layui-input-block"><textarea id="content" class="layui-textarea"></textarea></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">详情</label><div class="layui-input-block"><textarea id="particulars" class="layui-textarea"></textarea></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">品牌项</label><div class="layui-input-block" id="itemlist"></div></div>
+        <div class="layui-form-item app-form-footer">
+            <button type="button" class="layui-btn layui-btn-warm" id="btnAddBrand">添加品牌</button>
+            <button type="button" class="layui-btn layui-btn-normal" id="btnMakeProfile">生成满意度</button>
+        </div>
+    </form>
+    <div id="addBrandBox" style="display:none; padding:20px;">
+        <form class="layui-form" id="addBrandForm">
+            <div class="layui-form-item"><label class="layui-form-label">品牌名<span class="app-req">*</span></label><div class="layui-input-block"><input type="text" id="brandName" placeholder="品牌名" class="layui-input" lay-verify="required"></div></div>
+            <div class="layui-form-item app-form-footer"><button type="button" class="layui-btn" id="btnBrandSave">添加</button></div>
+        </form>
+    </div>
+    <div id="makeProfileBox" style="display:none; padding:20px;">
+        <form class="layui-form" id="makeForm">
+            <div class="layui-form-item"><label class="layui-form-label">订单号</label><div class="layui-input-block"><input type="text" id="orderId2" class="layui-input" readonly></div></div>
+            <div class="layui-form-item"><label class="layui-form-label">调查模板</label><div class="layui-input-block"><select id="surveyTemplate"><option value="">请选择</option></select></div></div>
+            <div class="layui-form-item app-form-footer"><button type="button" class="layui-btn" id="btnMakeSave">生成</button></div>
+        </form>
+    </div>
+</div>
+<script src="../../layui/layui.js"></script><script src="../../js/app/config.js"></script><script src="../../js/app/server.js"></script><script src="../../js/app/utils.js"></script><script src="../../js/app/post.js"></script><script src="../../js/app/api.js"></script><script src="../../js/app/core.js"></script><script src="../../js/app/validate.js"></script><script src="../../js/app/bootstrap.js"></script><script src="../../js/sales/salesProfile4detail.js"></script>
+</body></html>

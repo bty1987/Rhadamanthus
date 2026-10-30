@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<!-- app/views/customer/customerUserRuleItem.html —— 人员规则项目（弹窗页，上下文 app.params.customer.curid） -->
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8" />
+    <title>人员规则项目</title>
+    <link rel="stylesheet" href="../../layui/css/layui.css">
+    <link rel="stylesheet" href="../../css/app.css">
+</head>
+<body>
+<div class="app-page" id="customerUserRuleItemPage">
+
+    <div class="app-toolbar" style="padding:10px 15px 0;">
+        <button type="button" class="layui-btn layui-btn-sm" id="btnAdd"><i class="layui-icon layui-icon-add-1"></i>添加</button>
+    </div>
+
+    <div class="app-table">
+        <table id="resultTable" lay-filter="resultTable"></table>
+    </div>
+
+    <div id="pagenation" class="app-pagenation"></div>
+
+    <div id="editBox" style="display:none; padding:20px;">
+        <form class="layui-form" lay-filter="editForm" id="editForm">
+            <div class="layui-form-item">
+                <label class="layui-form-label">名称<span class="app-req">*</span></label>
+                <div class="layui-input-block">
+                    <input type="text" name="name" placeholder="请输入名称" class="layui-input v_required">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">类型<span class="app-req">*</span></label>
+                <div class="layui-input-block">
+                    <select name="type" lay-filter="typeFilter" lay-verify="required">
+                        <option value="0">面积</option>
+                        <option value="1">特殊</option>
+                        <option value="2">部门</option>
+                        <option value="3">部门类型</option>
+                        <option value="4">城区</option>
+                        <option value="5">人员</option>
+                        <option value="6">面积轮训</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item group-company" style="display:none;">
+                <label class="layui-form-label">公司</label>
+                <div class="layui-input-block">
+                    <select name="company" id="companySel"></select>
+                </div>
+            </div>
+            <div class="layui-form-item group-deptype" style="display:none;">
+                <label class="layui-form-label">部门类型</label>
+                <div class="layui-input-block">
+                    <select name="deptype" id="deptypeSel" lay-filter="deptypeFilter"></select>
+                </div>
+            </div>
+            <div class="layui-form-item group-dept" style="display:none;">
+                <label class="layui-form-label">部门</label>
+                <div class="layui-input-block">
+                    <select name="dept" id="deptSel"></select>
+                </div>
+            </div>
+            <div class="layui-form-item group-city" style="display:none;">
+                <label class="layui-form-label">城市</label>
+                <div class="layui-input-inline" style="width:190px;">
+                    <select name="city" id="citySel" lay-filter="cityFilter"></select>
+                </div>
+                <div class="layui-input-inline" style="width:190px;">
+                    <select name="cityProper" id="cityProperSel"></select>
+                </div>
+            </div>
+            <div class="layui-form-item group-range" style="display:none;">
+                <label class="layui-form-label">起始值</label>
+                <div class="layui-input-inline"><input type="text" name="uppval" placeholder="起始值" class="layui-input v_float_3"></div>
+                <label class="layui-form-label" style="width:70px;">终止值</label>
+                <div class="layui-input-inline"><input type="text" name="lowval" placeholder="终止值" class="layui-input v_float_3"></div>
+            </div>
+            <div class="layui-form-item group-chance" style="display:none;">
+                <label class="layui-form-label">机会数</label>
+                <div class="layui-input-block">
+                    <input type="text" name="chance" placeholder="机会数" class="layui-input v_number">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">优先级</label>
+                <div class="layui-input-block">
+                    <select name="priority">
+                        <option value="0">1</option><option value="1">2</option><option value="2">3</option>
+                        <option value="3">4</option><option value="4">5</option><option value="5">6</option>
+                        <option value="6">7</option><option value="7">8</option><option value="8">9</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">状态</label>
+                <div class="layui-input-block">
+                    <select name="status">
+                        <option value="0">有效</option>
+                        <option value="1">无效</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">操作时间</label>
+                <div class="layui-input-block">
+                    <input type="text" name="handleTime" id="handleTime" placeholder="操作时间" class="layui-input" readonly>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">减剩余数</label>
+                <div class="layui-input-block" style="line-height:38px;">
+                    <input type="checkbox" name="isSurplus" id="isSurplus" lay-skin="switch" lay-text="减|不减">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">删除</label>
+                <div class="layui-input-block" style="line-height:38px;">
+                    <input type="checkbox" name="isDelete" id="isDelete" lay-skin="switch" lay-text="删除|不删除">
+                </div>
+            </div>
+            <div class="layui-form-item app-form-footer">
+                <button type="button" class="layui-btn" id="btnSave">保存</button>
+                <button type="button" class="layui-btn layui-btn-primary" id="btnCancel">取消</button>
+            </div>
+        </form>
+    </div>
+
+</div>
+
+<script src="../../layui/layui.js"></script>
+<script src="../../js/app/config.js"></script>
+<script src="../../js/app/server.js"></script>
+<script src="../../js/app/utils.js"></script>
+<script src="../../js/app/post.js"></script>
+<script src="../../js/app/api.js"></script>
+<script src="../../js/app/core.js"></script>
+<script src="../../js/app/validate.js"></script>
+<script src="../../js/app/bootstrap.js"></script>
+<script src="../../js/customer/customer-common.js"></script>
+<script src="../../js/customer/customerUserRuleItem.js"></script>
+</body>
+</html>

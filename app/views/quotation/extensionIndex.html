@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<!-- app/views/quotation/extensionIndex.html —— 扩展项列表
+  订单模式（默认，装修单进入）：extension.orderId + atttype=-1，创建扩展（类型/业务类型/说明）；定额 makeNormtionForExtension；查看/删除。
+  页面模式（?type=page&depage=xxx）：配置驱动 pageExtension。 -->
+<html lang="zh-CN"><head><meta charset="utf-8"><title>扩展项</title>
+<link rel="stylesheet" href="../../layui/css/layui.css"><link rel="stylesheet" href="../../css/app.css"></head>
+<body><div class="app-page">
+    <div class="app-toolbar" style="padding:10px 15px;">
+        <span style="font-size:16px;font-weight:bold;">扩展项<span id="orderIdLabel"></span></span>
+        <button type="button" class="layui-btn layui-btn-sm" id="btnAdd"><i class="layui-icon layui-icon-add-1"></i>创建扩展</button>
+        <button type="button" class="layui-btn layui-btn-sm layui-btn-primary" id="btnBack"><i class="layui-icon layui-icon-return"></i>返回</button>
+    </div>
+    <div id="decorationInfo" style="padding:0 15px 10px;">
+        <blockquote class="layui-elem-quote" style="padding:8px 15px;">
+            装修单:<span id="decoOrderId">-</span> ｜ 地址:<span id="decoAddress">-</span> ｜ 报价版本:<span id="decoVersion">-</span>
+            ｜ 报价折扣:<span id="quoDiscount">-</span> ｜ 管理费:<span id="quoManage">-</span> ｜ 税金:<span id="quoTax">-</span> ｜ 报价总额:<span id="quoTotal">-</span>
+        </blockquote>
+    </div>
+    <div class="app-search" id="searchArea" style="display:none;"><form class="layui-form" id="searchForm"><div class="layui-form-item">
+        <div class="layui-inline"><label class="layui-form-label">装修单号</label><div class="layui-input-inline"><input name="decoration.orderId" data-op="eq" class="layui-input" placeholder="装修单号"></div></div>
+        <div class="layui-inline"><label class="layui-form-label">楼盘</label><div class="layui-input-inline"><input name="decoration.village.no" data-op="eq" class="layui-input" placeholder="楼盘编号"></div></div>
+        <div class="layui-inline"><label class="layui-form-label">设计师</label><div class="layui-input-inline"><input name="decoration.designer.userId" data-op="eq" class="layui-input" placeholder="设计师编号"></div></div>
+        <div class="layui-inline"><label class="layui-form-label">类型</label><div class="layui-input-inline"><select name="type" data-op="eq"><option value="">全部</option><option value="0">增项</option><option value="1">减项</option></select></div></div>
+        <div class="layui-inline"><button type="button" class="layui-btn" id="btnSearch"><i class="layui-icon layui-icon-search"></i>查询</button><button type="button" class="layui-btn layui-btn-primary" id="btnReset">重置</button></div>
+    </div></form></div>
+    <div class="app-table" style="padding:0 15px;"><table id="resultTable" lay-filter="resultTable"></table></div>
+    <div id="pagenation" class="app-pagenation"></div>
+    <script type="text/html" id="rowToolbar">
+        <button class="layui-btn layui-btn-xs layui-btn-warm" lay-event="make">定额</button>
+        <button class="layui-btn layui-btn-xs" lay-event="view">查看</button>
+        <button class="layui-btn layui-btn-xs layui-btn-danger" lay-event="del">删除</button>
+    </script>
+    <div id="editBox" style="display:none;padding:20px 30px;">
+        <div class="layui-form-item"><label class="layui-form-label">类型</label><div class="layui-input-inline"><select id="extensionType"><option value="0">增项</option><option value="1">减项</option></select></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">业务类型</label><div class="layui-input-inline"><select id="extensionAtttype"><option value="0">通用</option><option value="1">置换</option><option value="2">赋能</option><option value="3">报价</option><option value="4">活动</option></select></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">说明</label><div class="layui-input-inline" style="width:320px;"><input id="extensionDes" class="layui-input"></div></div>
+    </div>
+</div>
+<script src="../../layui/layui.js"></script><script src="../../js/app/config.js"></script><script src="../../js/app/server.js"></script><script src="../../js/app/utils.js"></script><script src="../../js/app/post.js"></script><script src="../../js/app/api.js"></script><script src="../../js/app/core.js"></script><script src="../../js/app/validate.js"></script><script src="../../js/app/bootstrap.js"></script><script src="../../js/quotation/quotation-common.js"></script><script src="../../js/quotation/extensionIndex.js"></script>
+</body></html>

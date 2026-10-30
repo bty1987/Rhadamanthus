@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<!-- app/views/production/production2bind.html —— 生产单绑定销售单/主材单
+  上下文：app.params.productionBind = {pid, status, orderId} -->
+<html lang="zh-CN"><head><meta charset="utf-8"><title>生产单绑定</title>
+<link rel="stylesheet" href="../../layui/css/layui.css"><link rel="stylesheet" href="../../css/app.css"></head>
+<body><div class="app-page">
+    <div style="padding:10px 15px;"><button type="button" class="layui-btn layui-btn-normal" id="btnBind"><i class="layui-icon layui-icon-add-1"></i>绑定</button> <button type="button" class="layui-btn layui-btn-primary" id="btnBack">返回</button></div>
+    <div class="app-table"><table id="resultTable" lay-filter="resultTable"></table></div>
+
+    <div id="bindBox" style="display:none; padding:20px;"><form class="layui-form" id="bindForm">
+        <div class="layui-form-item"><label class="layui-form-label">订单类型<span class="app-req">*</span></label><div class="layui-input-block"><select name="type" id="selType" lay-filter="type"><option value="1">销售单</option><option value="0">主材单</option></select></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">单号<span class="app-req">*</span></label><div class="layui-input-inline"><input type="text" name="saleNo" placeholder="单号" class="layui-input v_required" lay-verify="required"></div><div class="layui-input-inline" style="width:auto;"><button type="button" class="layui-btn layui-btn-primary" id="btnLoadSale">读取</button></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">品类-品牌</label><div class="layui-input-block"><input type="text" name="brand" class="layui-input" readonly></div></div>
+        <div class="layui-form-item app-form-footer"><button type="button" class="layui-btn" id="btnSave">保存</button><button type="reset" class="layui-btn layui-btn-primary" id="btnCancel">取消</button></div>
+    </form></div>
+</div>
+<script src="../../layui/layui.js"></script><script src="../../js/app/config.js"></script><script src="../../js/app/server.js"></script><script src="../../js/app/utils.js"></script><script src="../../js/app/post.js"></script><script src="../../js/app/api.js"></script><script src="../../js/app/core.js"></script><script src="../../js/app/validate.js"></script><script src="../../js/app/bootstrap.js"></script><script src="../../js/production/production2bind.js"></script>
+</body></html>

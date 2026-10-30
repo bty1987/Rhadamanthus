@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<!-- app/views/data/paymentType.html —— 款项类型（CRUD + 状态）
+  字段：name(名称) type/paytype/bustype/atttype/code(类型属性) payScale(付款比) saleScale(销售比) taxrate(税率) kino/kiname(金蝶) kibalance(费用项目) billType(单据名称) -->
+<html lang="zh-CN"><head><meta charset="utf-8"><title>款项类型</title>
+<link rel="stylesheet" href="../../layui/css/layui.css"><link rel="stylesheet" href="../../css/app.css"></head>
+<body><div class="app-page">
+    <div class="app-search"><form class="layui-form" id="searchForm"><div class="layui-form-item">
+        <div class="layui-inline"><label class="layui-form-label">名称</label><div class="layui-input-inline"><input type="text" name="name" data-op="cn" placeholder="名称" class="layui-input" autocomplete="off"></div></div>
+        <div class="layui-inline"><button type="button" class="layui-btn" id="btnSearch"><i class="layui-icon layui-icon-search"></i>查询</button><button type="reset" class="layui-btn layui-btn-primary" id="btnReset">重置</button><button type="button" class="layui-btn layui-btn-normal" id="btnAdd"><i class="layui-icon layui-icon-add-1"></i>添加</button></div>
+    </div></form></div>
+    <div class="app-table"><table id="resultTable" lay-filter="resultTable"></table></div>
+    <div id="pagenation" class="app-pagenation"></div>
+    <div id="editBox" style="display:none; padding:20px;"><form class="layui-form" id="editForm">
+        <input type="hidden" name="ptid">
+        <div class="layui-form-item"><label class="layui-form-label">名称<span class="app-req">*</span></label><div class="layui-input-block"><input type="text" name="name" placeholder="名称" class="layui-input v_required" lay-verify="required"></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">类型</label><div class="layui-input-inline"><input type="text" name="type" placeholder="类型" class="layui-input v_int"></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">付款类型</label><div class="layui-input-inline"><input type="text" name="paytype" placeholder="付款类型" class="layui-input v_int"></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">业务类型</label><div class="layui-input-inline"><input type="text" name="bustype" placeholder="业务类型" class="layui-input v_int"></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">属性类型</label><div class="layui-input-inline"><input type="text" name="atttype" placeholder="属性类型" class="layui-input v_int"></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">付款比</label><div class="layui-input-inline"><input type="text" name="payScale" placeholder="付款比" class="layui-input v_float"></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">销售比</label><div class="layui-input-inline"><input type="text" name="saleScale" placeholder="销售比" class="layui-input v_float"></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">税率</label><div class="layui-input-inline"><input type="text" name="taxrate" placeholder="税率" class="layui-input v_int"></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">金蝶编号</label><div class="layui-input-inline"><input type="text" name="kino" placeholder="金蝶编号" class="layui-input"></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">金蝶名称</label><div class="layui-input-inline"><input type="text" name="kiname" placeholder="金蝶名称" class="layui-input"></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">费用项目</label><div class="layui-input-inline"><input type="text" name="kibalance" placeholder="费用项目编码" class="layui-input"></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">单据名称</label><div class="layui-input-inline"><input type="text" name="billType" placeholder="单据名称" class="layui-input"></div></div>
+        <div class="layui-form-item app-form-footer"><button type="button" class="layui-btn" id="btnSave">保存</button><button type="reset" class="layui-btn layui-btn-primary" id="btnCancel">取消</button></div>
+    </form></div>
+    <script type="text/html" id="rowToolbar"><button class="layui-btn layui-btn-xs" lay-event="edit">编辑</button><button class="layui-btn layui-btn-xs" lay-event="enable">启用</button><button class="layui-btn layui-btn-xs layui-btn-warm" lay-event="disable">禁用</button></script>
+</div>
+<script src="../../layui/layui.js"></script><script src="../../js/app/config.js"></script><script src="../../js/app/server.js"></script><script src="../../js/app/utils.js"></script><script src="../../js/app/post.js"></script><script src="../../js/app/api.js"></script><script src="../../js/app/core.js"></script><script src="../../js/app/validate.js"></script><script src="../../js/app/bootstrap.js"></script><script src="../../js/data/paymentType.js"></script>
+</body></html>

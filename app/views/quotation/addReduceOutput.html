@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<!-- app/views/quotation/addReduceOutput.html —— 打印增减项（勾选 arids；管理费/税金行 + 明细项，打折计算） -->
+<html lang="zh-CN"><head><meta charset="utf-8"><title>打印增减项</title>
+<link rel="stylesheet" href="../../layui/css/layui.css"><link rel="stylesheet" href="../../css/app.css"></head>
+<body><div class="app-page" style="background:#fff;padding:15px;">
+    <div style="text-align:right;padding-bottom:10px;"><button type="button" class="layui-btn layui-btn-sm" id="btnPrint"><i class="layui-icon layui-icon-print"></i>打印</button></div>
+    <div style="font-size:14px;">
+        <span id="orderId"></span> ｜ <span id="orderAddr"></span> ｜ <span id="supervisor"></span> ｜ <span id="designer"></span>
+        <hr>
+    </div>
+    <div id="content"></div>
+    <div style="font-size:14px;font-weight:bold;padding-top:10px;"><span id="labSumMoney"></span></div>
+</div>
+<script src="../../layui/layui.js"></script><script src="../../js/app/config.js"></script><script src="../../js/app/server.js"></script><script src="../../js/app/utils.js"></script><script src="../../js/app/post.js"></script><script src="../../js/app/api.js"></script><script src="../../js/app/core.js"></script><script src="../../js/app/validate.js"></script><script src="../../js/app/bootstrap.js"></script><script src="../../js/quotation/quotation-common.js"></script><script src="../../js/quotation/addReduceOutput.js"></script>
+</body></html>

@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<!-- app/views/customer/customerChance.html —— 商机（线索分配/初审/审批/转换全流程）
+     urlLoadParams: depage=null管理/user|designer人员/source来源/service客服/manage管理；detype 派单类型 -->
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8" />
+    <title>商机</title>
+    <link rel="stylesheet" href="../../layui/css/layui.css">
+    <link rel="stylesheet" href="../../css/app.css">
+</head>
+<body>
+<div class="app-page" id="customerChancePage">
+
+    <div class="app-search">
+        <form class="layui-form" lay-filter="searchForm" id="searchForm">
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">名称</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="source.name" data-op="cn" placeholder="客户名称" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">电话</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="customer.phone" data-op="eq" placeholder="客户电话" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">预派单号</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="orderId" data-op="eq" placeholder="预派单号" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">类型</label>
+                    <div class="layui-input-inline">
+                        <select name="type" data-op="eq">
+                            <option value="">全部</option>
+                            <option value="0">自动</option>
+                            <option value="1">人员</option>
+                            <option value="2">部门</option>
+                            <option value="3">分区</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">状态</label>
+                    <div class="layui-input-inline">
+                        <select name="status" data-op="eq">
+                            <option value="">全部</option>
+                            <option value="0">初始</option>
+                            <option value="1">失效</option>
+                            <option value="2">已审</option>
+                            <option value="3">确认</option>
+                            <option value="4">完成</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">分配时间</label>
+                    <div class="layui-input-inline" style="width:220px;">
+                        <input type="text" name="createTime" id="createTime" placeholder="分配时间范围" class="layui-input" readonly>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">归属人</label>
+                    <div class="layui-input-inline" style="width:150px;">
+                        <input type="text" name="belongerName" id="belongerName" placeholder="点击选择归属人" class="layui-input" readonly>
+                    </div>
+                    <div class="layui-input-inline">
+                        <button type="button" class="layui-btn layui-btn-sm layui-btn-normal" id="btnPickBelonger">选择</button>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <button type="button" class="layui-btn" id="btnSearch"><i class="layui-icon layui-icon-search"></i>查询</button>
+                    <button type="reset" class="layui-btn layui-btn-primary" id="btnReset">重置</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div class="app-table">
+        <table id="resultTable" lay-filter="resultTable"></table>
+    </div>
+
+    <div id="pagenation" class="app-pagenation"></div>
+
+    <!-- 分配 -->
+    <div id="issueBox" style="display:none; padding:20px;">
+        <form class="layui-form" lay-filter="issueForm" id="issueForm">
+            <div class="layui-form-item">
+                <label class="layui-form-label">分区</label>
+                <div class="layui-input-block">
+                    <select name="region" id="regionSel"></select>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">部门</label>
+                <div class="layui-input-block">
+                    <select name="department" id="departmentSel"></select>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">归属人<span class="app-req">*</span></label>
+                <div class="layui-input-inline" style="width:180px;">
+                    <input type="text" name="belongerName" id="issueBelongerName" placeholder="点击选择归属人" class="layui-input v_required" readonly>
+                </div>
+                <div class="layui-input-inline">
+                    <button type="button" class="layui-btn layui-btn-normal" id="btnIssuePickBelonger">选择</button>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">业务类型<span class="app-req">*</span></label>
+                <div class="layui-input-block">
+                    <select name="busitype" id="busitypeSel" lay-verify="required"></select>
+                </div>
+            </div>
+            <div class="layui-form-item app-form-footer">
+                <button type="button" class="layui-btn" id="btnIssueSave">保存</button>
+                <button type="button" class="layui-btn layui-btn-primary" id="btnIssueCancel">取消</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- 是否类配置（建群/电话交接/见面/真实地址） -->
+    <div id="configBox" style="display:none; padding:20px;">
+        <form class="layui-form" lay-filter="configForm" id="configForm">
+            <div class="layui-form-item">
+                <label class="layui-form-label" id="configTitle">是否</label>
+                <div class="layui-input-block">
+                    <select name="configEvent" lay-verify="required">
+                        <option value="2">是</option>
+                        <option value="1">否</option>
+                        <option value="0">无状态</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item app-form-footer">
+                <button type="button" class="layui-btn" id="btnConfigSave">保存</button>
+                <button type="button" class="layui-btn layui-btn-primary" id="btnConfigCancel">取消</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- 房产/客户信息（编辑 / 直接初审 共用） -->
+    <div id="houseBox" style="display:none; padding:20px;">
+        <form class="layui-form" lay-filter="houseForm" id="houseForm">
+            <div class="layui-form-item">
+                <label class="layui-form-label">楼盘<span class="app-req">*</span></label>
+                <div class="layui-input-inline" style="width:200px;">
+                    <input type="text" name="villageName" id="villageName" placeholder="输入拼音检索楼盘" class="layui-input v_required">
+                </div>
+                <div class="layui-input-inline" id="villageList" style="line-height:38px;"></div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">楼号<span class="app-req">*</span></label>
+                <div class="layui-input-inline" style="width:70px;"><input type="text" name="built" placeholder="楼" class="layui-input"></div>
+                <div class="layui-input-inline" style="width:80px;"><select name="builtrule"></select></div>
+                <div class="layui-input-inline" style="width:70px;"><input type="text" name="unit" placeholder="单元" class="layui-input"></div>
+                <div class="layui-input-inline" style="width:80px;"><select name="unitrule"></select></div>
+                <div class="layui-input-inline" style="width:70px;"><input type="text" name="floor" placeholder="层" class="layui-input"></div>
+                <div class="layui-input-inline" style="width:80px;"><select name="floorrule"></select></div>
+                <div class="layui-input-inline" style="width:70px;"><input type="text" name="door" placeholder="门" class="layui-input"></div>
+                <div class="layui-input-inline" style="width:80px;"><select name="doorrule"></select></div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">建筑面积</label>
+                <div class="layui-input-inline" style="width:110px;">
+                    <input type="text" name="buildArea" placeholder="建筑面积" class="layui-input v_float_3">
+                </div>
+                <label class="layui-form-label">电话</label>
+                <div class="layui-input-inline" style="width:140px;">
+                    <input type="text" name="phone" placeholder="客户电话" class="layui-input">
+                </div>
+                <label class="layui-form-label">业务类型<span class="app-req">*</span></label>
+                <div class="layui-input-inline" style="width:150px;">
+                    <select name="busitype" lay-verify="required"></select>
+                </div>
+            </div>
+            <div class="layui-form-item app-form-footer">
+                <button type="button" class="layui-btn" id="btnHouseSave">提交</button>
+                <button type="button" class="layui-btn layui-btn-primary" id="btnHouseCancel">取消</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- 转换（生成装修单） -->
+    <div id="changeBox" style="display:none; padding:20px;">
+        <form class="layui-form" lay-filter="changeForm" id="changeForm">
+            <div class="layui-form-item">
+                <label class="layui-form-label">订单类型<span class="app-req">*</span></label>
+                <div class="layui-input-block">
+                    <select name="orderType" lay-verify="required">
+                        <option value="0">半包</option><option value="1">整装</option><option value="2">半价</option>
+                        <option value="3">满减</option><option value="4">减上捡</option><option value="5">达额减</option>
+                        <option value="6">新满减</option><option value="7">局改</option><option value="8">全翻</option>
+                        <option value="9">全案</option><option value="10">新达额减</option><option value="11">满额减</option>
+                        <option value="12">新配减</option><option value="13">精装房</option><option value="14">新满减</option>
+                        <option value="15">新惠减</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">房屋类型</label>
+                <div class="layui-input-inline" style="width:130px;">
+                    <select name="houseType">
+                        <option value="期房">期房</option>
+                        <option value="现房">现房</option>
+                    </select>
+                </div>
+                <label class="layui-form-label">房型</label>
+                <div class="layui-input-inline" style="width:130px;">
+                    <select name="houseClass">
+                        <option value="平层">平层</option><option value="阁楼">阁楼</option>
+                        <option value="地下室">地下室</option><option value="复式">复式</option>
+                        <option value="别墅">别墅</option><option value="叠拼">叠拼</option>
+                    </select>
+                </div>
+                <label class="layui-form-label">来源类型</label>
+                <div class="layui-input-inline" style="width:110px;">
+                    <select name="resourceType">
+                        <option value="0">咨询</option>
+                        <option value="1">量房</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item app-form-footer">
+                <button type="button" class="layui-btn" id="btnChangeSave">转换</button>
+                <button type="button" class="layui-btn layui-btn-primary" id="btnChangeCancel">取消</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- 不匹配（提交失效审批） -->
+    <div id="disableBox" style="display:none; padding:20px;">
+        <form class="layui-form" lay-filter="disableForm" id="disableForm">
+            <div class="layui-form-item layui-form-text">
+                <label class="layui-form-label">说明<span class="app-req">*</span></label>
+                <div class="layui-input-block">
+                    <textarea name="annotate" placeholder="请输入不匹配说明" class="layui-textarea v_required"></textarea>
+                </div>
+            </div>
+            <div class="layui-form-item app-form-footer">
+                <button type="button" class="layui-btn" id="btnDisableSave">提交</button>
+                <button type="button" class="layui-btn layui-btn-primary" id="btnDisableCancel">取消</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- 审批（提交装修单创建审批） -->
+    <div id="approveBox" style="display:none; padding:20px;">
+        <form class="layui-form" lay-filter="approveForm" id="approveForm">
+            <div class="layui-form-item">
+                <label class="layui-form-label">订单类型<span class="app-req">*</span></label>
+                <div class="layui-input-block">
+                    <select name="orderType" lay-verify="required">
+                        <option value="0">半包</option><option value="1">整装</option><option value="2">半价</option>
+                        <option value="3">满减</option><option value="4">减上捡</option><option value="5">达额减</option>
+                        <option value="6">新满减</option><option value="7">局改</option><option value="8">全翻</option>
+                        <option value="9">全案</option><option value="10">新达额减</option><option value="11">满额减</option>
+                        <option value="12">新配减</option><option value="13">精装房</option><option value="14">新满减</option>
+                        <option value="15">新惠减</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">业务类型</label>
+                <div class="layui-input-inline" style="width:150px;">
+                    <select name="busitype"></select>
+                </div>
+                <label class="layui-form-label">房屋类型</label>
+                <div class="layui-input-inline" style="width:110px;">
+                    <select name="houseType">
+                        <option value="期房">期房</option>
+                        <option value="现房">现房</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">房型</label>
+                <div class="layui-input-inline" style="width:120px;">
+                    <select name="houseClass">
+                        <option value="平层">平层</option><option value="阁楼">阁楼</option>
+                        <option value="地下室">地下室</option><option value="复式">复式</option>
+                        <option value="别墅">别墅</option><option value="叠拼">叠拼</option>
+                    </select>
+                </div>
+                <label class="layui-form-label">来源类型</label>
+                <div class="layui-input-inline" style="width:100px;">
+                    <select name="resourceType">
+                        <option value="0">咨询</option>
+                        <option value="1">量房</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">审批人<span class="app-req">*</span></label>
+                <div class="layui-input-inline" style="width:180px;">
+                    <input type="text" name="approveManName" id="approveManName" placeholder="点击选择审批人" class="layui-input v_required" readonly>
+                </div>
+                <div class="layui-input-inline">
+                    <button type="button" class="layui-btn layui-btn-normal" id="btnPickApproveMan">选择</button>
+                </div>
+            </div>
+            <div class="layui-form-item layui-form-text">
+                <label class="layui-form-label">审批说明</label>
+                <div class="layui-input-block">
+                    <textarea name="approveComment" placeholder="请输入审批说明" class="layui-textarea"></textarea>
+                </div>
+            </div>
+            <div class="layui-form-item app-form-footer">
+                <button type="button" class="layui-btn" id="btnApproveSave">提交审批</button>
+                <button type="button" class="layui-btn layui-btn-primary" id="btnApproveCancel">取消</button>
+            </div>
+        </form>
+    </div>
+
+</div>
+
+<script src="../../layui/layui.js"></script>
+<script src="../../js/app/config.js"></script>
+<script src="../../js/app/server.js"></script>
+<script src="../../js/app/utils.js"></script>
+<script src="../../js/app/post.js"></script>
+<script src="../../js/app/api.js"></script>
+<script src="../../js/app/core.js"></script>
+<script src="../../js/app/validate.js"></script>
+<script src="../../js/app/bootstrap.js"></script>
+<script src="../../js/customer/customer-common.js"></script>
+<script src="../../js/customer/customerChance.js"></script>
+</body>
+</html>

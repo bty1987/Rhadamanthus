@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<!-- app/views/balance/balanceSelection4balance.html —— 结算选材单→结算/付款工作台
+  查 status=3 的结算选材单。批量付款、单独结算/付款、跳转选材明细/扣款。 -->
+<html lang="zh-CN"><head><meta charset="utf-8"><title>结算选材单-结算工作台</title>
+<link rel="stylesheet" href="../../layui/css/layui.css"><link rel="stylesheet" href="../../css/app.css"></head>
+<body><div class="app-page">
+    <div class="app-search"><form class="layui-form" id="searchForm"><div class="layui-form-item">
+        <div class="layui-inline"><label class="layui-form-label">结算单号</label><div class="layui-input-inline"><input type="text" name="balance.no" data-op="cn" placeholder="结算单号" class="layui-input" autocomplete="off"></div></div>
+        <div class="layui-inline"><label class="layui-form-label">类型</label><div class="layui-input-inline"><select name="balance.type"><option value="">全部</option><option value="1">应付款</option><option value="2">应收款</option></select></div></div>
+        <div class="layui-inline"><label class="layui-form-label">状态</label><div class="layui-input-inline"><select name="balance.status"><option value="">全部</option><option value="0">初始</option><option value="1">结算</option><option value="2">付款</option></select></div></div>
+        <div class="layui-inline"><label class="layui-form-label">品牌</label><div class="layui-input-inline"><input type="text" name="brand.name" data-op="cn" placeholder="品牌" class="layui-input" autocomplete="off"></div></div>
+        <div class="layui-inline"><button type="button" class="layui-btn" id="btnSearch"><i class="layui-icon layui-icon-search"></i>查询</button><button type="reset" class="layui-btn layui-btn-primary" id="btnReset">重置</button></div>
+    </div></form></div>
+    <div class="app-toolbar" style="margin:10px 0;">
+        <button type="button" class="layui-btn" id="btnCheckAll"><i class="layui-icon layui-icon-table"></i>全选</button>
+        <button type="button" class="layui-btn layui-btn-warm" id="btnPayed"><i class="layui-icon layui-icon-template-1"></i>批量付款</button>
+    </div>
+    <div class="app-table"><table id="resultTable" lay-filter="resultTable"></table></div>
+    <div id="pagenation" class="app-pagenation"></div>
+
+    <div id="balanceBox" style="display:none; padding:20px;"><form class="layui-form" id="balanceForm">
+        <div class="layui-form-item"><label class="layui-form-label">结算账户<span class="app-req">*</span></label><div class="layui-input-block"><select name="bccount" lay-verify="required"></select></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">出纳账户<span class="app-req">*</span></label><div class="layui-input-block"><select name="cccount" lay-verify="required"></select></div></div>
+        <div class="layui-form-item app-form-footer"><button type="button" class="layui-btn" id="btnBalanceConfirm">结算</button><button type="button" class="layui-btn layui-btn-primary" id="btnBalanceCancel">取消</button></div>
+    </form></div>
+
+    <script type="text/html" id="rowToolbar">
+        <button class="layui-btn layui-btn-xs layui-btn-success" lay-event="balance">结算</button>
+        <button class="layui-btn layui-btn-xs layui-btn-warm" lay-event="payed">付款</button>
+        <button class="layui-btn layui-btn-xs" lay-event="selection">结算选材</button>
+        <button class="layui-btn layui-btn-xs layui-btn-warm" lay-event="cutpay">结算扣款</button>
+    </script>
+</div>
+<script src="../../layui/layui.js"></script><script src="../../js/app/config.js"></script><script src="../../js/app/server.js"></script><script src="../../js/app/utils.js"></script><script src="../../js/app/post.js"></script><script src="../../js/app/api.js"></script><script src="../../js/app/core.js"></script><script src="../../js/app/validate.js"></script><script src="../../js/app/bootstrap.js"></script><script src="../../js/balance/balanceSelection4balance.js"></script>
+</body></html>

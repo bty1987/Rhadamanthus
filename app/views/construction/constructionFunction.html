@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<!-- app/views/construction/constructionFunction.html —— 施工功能权限配置（按页面分组配置 + 跨公司同步）
+  每个页面分组（type=0）：配置（api/条件/字段/功能四类勾选）+ 同步（公司多选 → syncConstructionFunctionRight）。 -->
+<html lang="zh-CN"><head><meta charset="utf-8"><title>施工功能配置</title>
+<link rel="stylesheet" href="../../layui/css/layui.css"><link rel="stylesheet" href="../../css/app.css"></head>
+<body><div class="app-page">
+    <div id="resultList" style="padding:0 2px;"></div>
+
+    <div id="apiBox" style="display:none;padding:20px 30px;max-height:520px;overflow:auto;">
+        <form class="layui-form">
+            <h4 style="margin-bottom:8px;">查询接口（单选）</h4>
+            <div id="apiData" class="layui-form-item"></div>
+            <h4 style="margin:12px 0 8px;">条件</h4>
+            <div id="condArrData" class="layui-form-item"></div>
+            <h4 style="margin:12px 0 8px;">字段</h4>
+            <div id="fieldData" class="layui-form-item"></div>
+            <h4 style="margin:12px 0 8px;">功能</h4>
+            <div id="functionData" class="layui-form-item"></div>
+        </form>
+    </div>
+    <div id="syncBox" style="display:none;padding:20px 30px;">
+        <p style="margin-bottom:10px;">将页面 <b id="syncFunctionName"></b> 的功能配置同步到以下公司：</p>
+        <div id="companyList" style="max-height:300px;overflow:auto;"></div>
+    </div>
+</div>
+<script src="../../layui/layui.js"></script><script src="../../js/app/config.js"></script><script src="../../js/app/server.js"></script><script src="../../js/app/utils.js"></script><script src="../../js/app/post.js"></script><script src="../../js/app/api.js"></script><script src="../../js/app/core.js"></script><script src="../../js/app/validate.js"></script><script src="../../js/app/bootstrap.js"></script><script src="../../js/construction/construction-common.js"></script><script src="../../js/construction/constructionFunction.js"></script>
+</body></html>

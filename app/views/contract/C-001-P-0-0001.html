@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<!-- app/views/contract/C-001-P-0-0001.html —— 方林人事合同（模板表单页，personel 上下文）
+  上下文：app.params.personel = { contractargs:{cid,no,name,title,type}, uid, userId }。
+  type: 1=非派遣（隐藏 undispatch/householdtype）2=派遣（隐藏 insure）其他=隐藏 dispatch。 -->
+<html lang="zh-CN"><head><meta charset="utf-8"><title>方林人事合同</title>
+<link rel="stylesheet" href="../../layui/css/layui.css"><link rel="stylesheet" href="../../css/app.css"></head>
+<body><div class="app-page" style="max-width:1020px;margin:0 auto;">
+    <blockquote class="layui-elem-quote layui-quote-nm" style="margin-bottom:10px;">* 橙色标记为必填信息；选择"有试用期"后显示试用期时间段。</blockquote>
+    <form class="layui-form" id="form">
+        <fieldset class="layui-elem-field"><legend>签订信息</legend><div class="layui-field-box">
+            <div class="layui-form-item">
+                <div class="layui-inline"><label class="layui-form-label">签订日期</label><div class="layui-input-inline"><input class="layui-input" id="cov-sign-data" readonly></div></div>
+            </div>
+        </div></fieldset>
+
+        <fieldset class="layui-elem-field"><legend>乙方信息</legend><div class="layui-field-box">
+            <div class="layui-form-item">
+                <div class="layui-inline user"><label class="layui-form-label">乙方<i class="app-req">*</i></label><div class="layui-input-inline"><input class="layui-input conitem v_required" id="con-user-name" maxlength="32"></div></div>
+                <div class="layui-inline insure"><label class="layui-form-label">性别<i class="app-req">*</i></label><div class="layui-input-inline"><input class="layui-input conitem v_required" id="con-user-gender"></div></div>
+                <div class="layui-inline"><label class="layui-form-label">身份证号<i class="app-req">*</i></label><div class="layui-input-inline"><input class="layui-input conitem v_required" id="con-user-ident"></div></div>
+                <div class="layui-inline"><label class="layui-form-label">联系电话<i class="app-req">*</i></label><div class="layui-input-inline"><input class="layui-input conitem v_required" id="con-user-phone"></div></div>
+                <div class="layui-inline"><label class="layui-form-label">微信号<i class="app-req">*</i></label><div class="layui-input-inline"><input class="layui-input conitem v_required" id="con-user-wechat"></div></div>
+                <div class="layui-inline insure"><label class="layui-form-label">工作开始时间</label><div class="layui-input-inline"><input class="layui-input" id="con-work-start-date" readonly></div></div>
+                <div class="layui-inline"><label class="layui-form-label">居住地址<i class="app-req">*</i></label><div class="layui-input-inline"><input class="layui-input conitem v_required" id="con-user-addr"></div></div>
+                <div class="layui-inline insure"><label class="layui-form-label">邮政编码<i class="app-req">*</i></label><div class="layui-input-inline"><input class="layui-input conitem v_required" id="con-user-email"></div></div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-inline"><label class="layui-form-label">户口所在地</label><div class="layui-input-inline" style="width:560px;">
+                    <input class="layui-input conitem" id="con-city-name" style="width:150px;display:inline-block;"> 省(市)
+                    <input class="layui-input conitem" id="con-county-name" style="width:150px;display:inline-block;"> 区(县)
+                    <input class="layui-input conitem" id="con-town-name" style="width:150px;display:inline-block;"> 街道(乡镇)
+                </div></div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-inline"><label class="layui-form-label">乙方签字日期</label><div class="layui-input-inline"><input class="layui-input" id="con-sign-data" readonly></div></div>
+                <div class="layui-inline householdtype"><label class="layui-form-label">户口类型</label><div class="layui-input-inline"><select id="con-user-householdType"></select></div></div>
+                <div class="layui-inline"><label class="layui-form-label">工作职位<i class="app-req">*</i></label><div class="layui-input-inline"><input class="layui-input conitem v_required" id="con-duty"></div></div>
+            </div>
+        </div></fieldset>
+
+        <fieldset class="layui-elem-field"><legend>合同期限</legend><div class="layui-field-box">
+            <div class="layui-form-item">
+                <div class="layui-inline"><label class="layui-form-label">期限开始时间</label><div class="layui-input-inline"><input class="layui-input" id="con-term-start-date" readonly></div></div>
+                <div class="layui-inline"><label class="layui-form-label">期限结束时间</label><div class="layui-input-inline"><input class="layui-input" id="con-term-end-date" readonly></div></div>
+                <div class="layui-inline"><label class="layui-form-label">是否有试用期</label><div class="layui-input-inline"><select id="con-probation" lay-filter="con-probation"><option value="0">否</option><option value="1">是</option></select></div></div>
+            </div>
+            <div class="layui-form-item probation" style="display:none;">
+                <div class="layui-inline"><label class="layui-form-label">试用期开始时间</label><div class="layui-input-inline"><input class="layui-input" id="con-probation-start-date" readonly></div></div>
+                <div class="layui-inline"><label class="layui-form-label">试用期结束时间</label><div class="layui-input-inline"><input class="layui-input" id="con-probation-end-date" readonly></div></div>
+            </div>
+        </div></fieldset>
+
+        <fieldset class="layui-elem-field"><legend>薪酬信息</legend><div class="layui-field-box">
+            <div class="layui-form-item">
+                <div class="layui-inline insure undispatch"><label class="layui-form-label">乙方劳动定额<i class="app-req">*</i></label><div class="layui-input-inline"><input class="layui-input conitem v_required" id="con-labour-total"></div></div>
+                <div class="layui-inline insure undispatch"><label class="layui-form-label">乙方劳动定额计件单价<i class="app-req">*</i></label><div class="layui-input-inline"><input class="layui-input conitem v_required" id="con-labour-price"></div></div>
+                <div class="layui-inline"><label class="layui-form-label">乙方工资标准<i class="app-req">*</i></label><div class="layui-input-inline"><input class="layui-input conitem v_required" id="con-user-salary"></div></div>
+                <div class="layui-inline insure"><label class="layui-form-label">乙方试用期工资标准<i class="app-req">*</i></label><div class="layui-input-inline"><input class="layui-input conitem v_required" id="con-user-palary"></div></div>
+                <div class="layui-inline insure"><label class="layui-form-label">发工资日期<i class="app-req">*</i></label><div class="layui-input-inline"><input class="layui-input conitem v_required" id="con-salary-date"> 号</div></div>
+            </div>
+        </div></fieldset>
+
+        <fieldset class="layui-elem-field"><legend>用工单位</legend><div class="layui-field-box">
+            <div class="layui-form-item">
+                <div class="layui-inline insure dispatch"><label class="layui-form-label">用工单位公司名称<i class="app-req">*</i></label><div class="layui-input-inline"><input class="layui-input conitem v_required" id="con-company-name"></div></div>
+                <div class="layui-inline"><label class="layui-form-label">工作地点<i class="app-req">*</i></label><div class="layui-input-inline"><input class="layui-input conitem v_required" id="con-company-addr"></div></div>
+                <div class="layui-inline"><label class="layui-form-label">甲方签章日期</label><div class="layui-input-inline"><input class="layui-input" id="sign-sign-data" readonly></div></div>
+                <div class="layui-inline"><label class="layui-form-label">乙方签章日期</label><div class="layui-input-inline"><input class="layui-input" id="sign-sign-data1" readonly></div></div>
+            </div>
+        </div></fieldset>
+
+        <div class="layui-form-item" style="text-align:center;padding:10px 0;">
+            <button type="button" class="layui-btn" id="preservation"><i class="layui-icon layui-icon-ok"></i>保存合同</button>
+            <button type="button" class="layui-btn layui-btn-primary" id="btnClose">关闭</button>
+        </div>
+    </form>
+</div>
+<script src="../../layui/layui.js"></script><script src="../../js/app/config.js"></script><script src="../../js/app/server.js"></script><script src="../../js/app/utils.js"></script><script src="../../js/app/post.js"></script><script src="../../js/app/api.js"></script><script src="../../js/app/core.js"></script><script src="../../js/app/validate.js"></script><script src="../../js/app/bootstrap.js"></script><script src="../../js/contract/contract-common.js"></script><script src="../../js/contract/C-001-P-0-0001.js"></script>
+</body></html>

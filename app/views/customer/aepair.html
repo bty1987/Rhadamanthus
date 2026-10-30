@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<!-- app/views/customer/aepair.html —— 维修工单（发送/查看/维修款/更新/领取/分配/转交/完工/关闭） -->
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8" />
+    <title>维修工单</title>
+    <link rel="stylesheet" href="../../layui/css/layui.css">
+    <link rel="stylesheet" href="../../css/app.css">
+</head>
+<body>
+<div class="app-page" id="aepairPage">
+
+    <div class="app-search">
+        <form class="layui-form" lay-filter="searchForm" id="searchForm">
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">状态</label>
+                    <div class="layui-input-inline">
+                        <select name="status" data-op="eq">
+                            <option value="">全部</option>
+                            <option value="0">初始</option>
+                            <option value="1">维修</option>
+                            <option value="2">完工</option>
+                            <option value="3">关闭</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <button type="button" class="layui-btn" id="btnSearch"><i class="layui-icon layui-icon-search"></i>查询</button>
+                    <button type="reset" class="layui-btn layui-btn-primary" id="btnReset">重置</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div class="app-table">
+        <table id="resultTable" lay-filter="resultTable"></table>
+    </div>
+
+    <div id="pagenation" class="app-pagenation"></div>
+
+    <!-- 更新维修支出 -->
+    <div id="updateBox" style="display:none; padding:20px;">
+        <form class="layui-form" lay-filter="updateForm" id="updateForm">
+            <div class="layui-form-item">
+                <label class="layui-form-label">支出<span class="app-req">*</span></label>
+                <div class="layui-input-block">
+                    <input type="text" name="outlay" placeholder="请输入支出金额" class="layui-input v_required v_float_3">
+                </div>
+            </div>
+            <div class="layui-form-item app-form-footer">
+                <button type="button" class="layui-btn" id="btnUpdateSave">保存</button>
+                <button type="button" class="layui-btn layui-btn-primary" id="btnUpdateCancel">取消</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- 分配/转交 -->
+    <div id="tranBox" style="display:none; padding:20px;">
+        <form class="layui-form" lay-filter="tranForm" id="tranForm">
+            <div class="layui-form-item">
+                <label class="layui-form-label">维修人<span class="app-req">*</span></label>
+                <div class="layui-input-inline" style="width:190px;">
+                    <input type="text" name="userName" id="userName" placeholder="点击选择维修人" class="layui-input v_required" readonly>
+                </div>
+                <div class="layui-input-inline">
+                    <button type="button" class="layui-btn layui-btn-normal" id="btnPickUser">选择</button>
+                </div>
+            </div>
+            <div class="layui-form-item app-form-footer">
+                <button type="button" class="layui-btn" id="btnTranSave">保存</button>
+                <button type="button" class="layui-btn layui-btn-primary" id="btnTranCancel">取消</button>
+            </div>
+        </form>
+    </div>
+
+</div>
+
+<script src="../../layui/layui.js"></script>
+<script src="../../js/app/config.js"></script>
+<script src="../../js/app/server.js"></script>
+<script src="../../js/app/utils.js"></script>
+<script src="../../js/app/post.js"></script>
+<script src="../../js/app/api.js"></script>
+<script src="../../js/app/core.js"></script>
+<script src="../../js/app/validate.js"></script>
+<script src="../../js/app/bootstrap.js"></script>
+<script src="../../js/customer/customer-common.js"></script>
+<script src="../../js/customer/aepair.js"></script>
+</body>
+</html>

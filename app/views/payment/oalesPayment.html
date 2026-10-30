@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<!-- app/views/payment/oalesPayment.html —— 外销款（外销单款项的收款/退款/确认/打印）
+  上下文：app.params.oalesPayment = { paytype }。
+  列：外销单号/装修单号/客户/类型/应收/实收/抹零/券/状态/备注。
+  操作：收款(collectOalesPayment)、退款(refundOalesPayment)、更新(updateOalesPayment)、确认(confirmOalesPayment)、取消(cancelOalesPayment)、打印。 -->
+<html lang="zh-CN"><head><meta charset="utf-8"><title>外销款</title>
+<link rel="stylesheet" href="../../layui/css/layui.css"><link rel="stylesheet" href="../../css/app.css"></head>
+<body><div class="app-page">
+    <div class="app-search"><form class="layui-form" id="searchForm"><div class="layui-form-item">
+        <div class="layui-inline"><label class="layui-form-label">外销单号</label><div class="layui-input-inline"><input class="layui-input" name="oales.no" data-op="cn"></div></div>
+        <div class="layui-inline"><label class="layui-form-label">装修单号</label><div class="layui-input-inline"><input class="layui-input" name="orderId" data-op="cn"></div></div>
+        <div class="layui-inline"><label class="layui-form-label">状态</label><div class="layui-input-inline"><select name="status"><option value="">全部</option><option value="0">初始</option><option value="1">已付款</option><option value="3">已确认</option></select></div></div>
+        <div class="layui-inline"><button type="button" class="layui-btn" id="btnSearch"><i class="layui-icon layui-icon-search"></i>查询</button><button type="button" class="layui-btn" id="btnAdd"><i class="layui-icon layui-icon-add-1"></i>添加</button><button type="button" class="layui-btn layui-btn-primary" id="btnBack"><i class="layui-icon layui-icon-return"></i>返回</button></div>
+    </div></form></div>
+    <div class="app-table"><table id="resultTable" lay-filter="resultTable"></table></div>
+    <div id="pagenation" class="app-pagenation"></div>
+    <script type="text/html" id="rowToolbar">
+        <button class="layui-btn layui-btn-xs" lay-event="collect">收款</button>
+        <button class="layui-btn layui-btn-xs layui-btn-danger" lay-event="refund">退款</button>
+        <button class="layui-btn layui-btn-xs" lay-event="update">更新</button>
+        <button class="layui-btn layui-btn-xs layui-btn-normal" lay-event="print">打印</button>
+    </script>
+</div>
+<script src="../../layui/layui.js"></script><script src="../../js/app/config.js"></script><script src="../../js/app/server.js"></script><script src="../../js/app/utils.js"></script><script src="../../js/app/post.js"></script><script src="../../js/app/api.js"></script><script src="../../js/app/core.js"></script><script src="../../js/app/validate.js"></script><script src="../../js/app/bootstrap.js"></script><script src="../../js/payment/oalesPayment.js"></script>
+</body></html>

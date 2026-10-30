@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<!-- app/views/decoration/decorationPicture.html —— 巡检图纸（按巡检项上传合同方案图 + 批量状态操作） -->
+<html lang="zh-CN"><head><meta charset="utf-8"><title>巡检图纸</title>
+<link rel="stylesheet" href="../../layui/css/layui.css"><link rel="stylesheet" href="../../css/app.css"></head>
+<body><div class="app-page">
+    <div class="app-toolbar" style="padding:10px 15px 0;">
+        <button type="button" class="layui-btn layui-btn-sm" id="batchShow"><i class="layui-icon layui-icon-ok"></i>批量显示</button>
+        <button type="button" class="layui-btn layui-btn-sm layui-btn-warm" id="batchConfirm"><i class="layui-icon layui-icon-star"></i>批量确认展示</button>
+        <button type="button" class="layui-btn layui-btn-sm layui-btn-danger" id="batchHide"><i class="layui-icon layui-icon-about"></i>批量隐藏</button>
+    </div>
+    <div class="app-table" style="padding:10px 15px;">
+        <table id="resultTable" lay-filter="resultTable"></table>
+        <div id="picArea" style="margin-top:10px;"></div>
+    </div>
+    <div id="pagenation" class="app-pagenation"></div>
+    <script type="text/html" id="rowToolbar">
+        <button class="layui-btn layui-btn-xs layui-btn-normal" lay-event="upload">上传合同方案</button>
+    </script>
+    <input type="file" id="fileInput" multiple accept="image/*" style="display:none">
+</div>
+<script src="../../layui/layui.js"></script><script src="../../js/app/upload.js"></script><script src="../../js/app/config.js"></script><script src="../../js/app/server.js"></script><script src="../../js/app/utils.js"></script><script src="../../js/app/post.js"></script><script src="../../js/app/api.js"></script><script src="../../js/app/core.js"></script><script src="../../js/app/validate.js"></script><script src="../../js/app/bootstrap.js"></script><script src="../../js/decoration/decoration-common.js"></script><script src="../../js/decoration/decorationPicture.js"></script>
+</body></html>

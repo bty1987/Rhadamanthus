@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<!-- app/views/market/eperson.html —— 优秀员工（CRUD + 头像上传）
+  字段：name(姓名) imgUrl(头像) phone type(类型) experience(经验) info(简介) cityId -->
+<html lang="zh-CN">
+<head><meta charset="utf-8"><title>优秀员工</title>
+<link rel="stylesheet" href="../../layui/css/layui.css"><link rel="stylesheet" href="../../css/app.css"></head>
+<body>
+<div class="app-page">
+    <div class="app-search"><form class="layui-form" id="searchForm"><div class="layui-form-item">
+        <div class="layui-inline"><label class="layui-form-label">姓名</label><div class="layui-input-inline"><input type="text" name="name" data-op="cn" placeholder="姓名" class="layui-input" autocomplete="off"></div></div>
+        <div class="layui-inline"><button type="button" class="layui-btn" id="btnSearch"><i class="layui-icon layui-icon-search"></i>查询</button><button type="reset" class="layui-btn layui-btn-primary" id="btnReset">重置</button><button type="button" class="layui-btn layui-btn-normal" id="btnAdd"><i class="layui-icon layui-icon-add-1"></i>添加</button></div>
+    </div></form></div>
+    <div class="app-table"><table id="resultTable" lay-filter="resultTable"></table></div>
+    <div id="pagenation" class="app-pagenation"></div>
+    <div id="editBox" style="display:none; padding:20px;"><form class="layui-form" id="editForm">
+        <input type="hidden" name="euid">
+        <input type="hidden" name="imgUrl">
+        <div class="layui-form-item"><label class="layui-form-label">姓名<span class="app-req">*</span></label><div class="layui-input-block"><input type="text" name="name" placeholder="姓名" class="layui-input v_required" lay-verify="required"></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">头像</label><div class="layui-input-block"><div style="margin-bottom:10px;"><img id="personImg" src="" style="width:80px;height:80px;object-fit:cover;border-radius:50%;border:1px solid #e8e8e8;display:none;"></div><button type="button" class="layui-btn" id="imgUpload"><i class="layui-icon layui-icon-upload"></i>上传头像</button></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">电话</label><div class="layui-input-block"><input type="text" name="phone" placeholder="电话" class="layui-input v_phone"></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">类型</label><div class="layui-input-block"><input type="text" name="type" placeholder="类型（如设计师）" class="layui-input"></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">经验</label><div class="layui-input-block"><input type="text" name="experience" placeholder="从业经验" class="layui-input"></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">简介</label><div class="layui-input-block"><textarea name="info" placeholder="简介" class="layui-textarea"></textarea></div></div>
+        <div class="layui-form-item app-form-footer"><button type="button" class="layui-btn" id="btnSave">保存</button><button type="reset" class="layui-btn layui-btn-primary" id="btnCancel">取消</button></div>
+    </form></div>
+    <script type="text/html" id="rowToolbar"><button class="layui-btn layui-btn-xs" lay-event="edit">编辑</button></script>
+</div>
+<script src="../../layui/layui.js"></script><script src="../../js/app/config.js"></script><script src="../../js/app/server.js"></script><script src="../../js/app/utils.js"></script><script src="../../js/app/post.js"></script><script src="../../js/app/api.js"></script><script src="../../js/app/core.js"></script><script src="../../js/app/validate.js"></script><script src="../../js/app/upload.js"></script><script src="../../js/app/bootstrap.js"></script><script src="../../js/market/eperson.js"></script>
+</body></html>

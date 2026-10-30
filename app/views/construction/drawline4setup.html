@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<!-- app/views/construction/drawline4setup.html —— 放线排期（申请放线单按组排期，卡片视图）
+  url ?type=open 只读。查询：装修单/状态/放线时间。
+  卡片按钮：信息/编辑/人员部署(设监理)/重置/放线(成功放线→施工节点工期)。 -->
+<html lang="zh-CN"><head><meta charset="utf-8"><title>放线排期</title>
+<link rel="stylesheet" href="../../layui/css/layui.css"><link rel="stylesheet" href="../../css/app.css">
+<style>
+.dl-card { background: #fff; border-radius: 4px; box-shadow: 0 1px 3px rgba(0,0,0,.05); padding: 14px 18px; margin-bottom: 12px; }
+.dl-card h3 { font-size: 15px; margin-bottom: 8px; }
+.dl-card .dl-props { overflow: hidden; }
+.dl-card .dl-prop { float: left; width: 20%; box-sizing: border-box; padding: 3px 8px; font-size: 13px; }
+.dl-card .dl-prop b { color: #999; font-weight: normal; }
+.dl-group-title { font-size: 16px; font-weight: bold; margin: 14px 0 8px; border-left: 4px solid #1E9FFF; padding-left: 8px; }
+.dl-calendar { border-collapse: collapse; width: 100%; }
+.dl-calendar th, .dl-calendar td { border: 1px solid #e6e6e6; height: 60px; width: 14.28%; text-align: left; vertical-align: top; padding: 4px; }
+.dl-calendar th { height: 32px; background: #f8f8f8; text-align: center; }
+.dl-cal-daynum { font-size: 12px; color: #999; }
+.dl-cal-count { display: inline-block; margin-top: 4px; background: #1E9FFF; color: #fff; border-radius: 8px; padding: 1px 8px; font-size: 12px; }
+</style></head>
+<body><div class="app-page">
+    <div class="app-search"><form class="layui-form" id="searchForm"><div class="layui-form-item">
+        <div class="layui-inline"><label class="layui-form-label">装修单号</label><div class="layui-input-inline"><input name="decoration.orderId" data-op="eq" class="layui-input" placeholder="装修单号"></div></div>
+        <div class="layui-inline"><label class="layui-form-label">放线状态</label><div class="layui-input-inline"><select name="drawLine.status" data-op="eq"><option value="">全部</option><option value="0">排队</option><option value="1">申请放线</option><option value="2">成功放线</option><option value="3">失败放线</option></select></div></div>
+        <div class="layui-inline"><label class="layui-form-label">放线时间</label><div class="layui-input-inline"><input name="drawLine.actualDate.range" data-op="between" id="actualDate" class="layui-input" placeholder="起始 - 结束" readonly></div></div>
+        <div class="layui-inline"><button type="button" class="layui-btn" id="btnSearch"><i class="layui-icon layui-icon-search"></i>查询</button><button type="button" class="layui-btn layui-btn-primary" id="btnReset">重置</button></div>
+    </div></form></div>
+    <div class="app-toolbar" style="padding:0 15px 10px;">
+        <button type="button" class="layui-btn layui-btn-sm layui-btn-warm" id="showDrawLineApplyInfos"><i class="layui-icon layui-icon-date"></i>申请信息</button>
+    </div>
+    <div id="resultList" style="padding:0 15px;"></div>
+    <div id="pagenation" class="app-pagenation"></div>
+
+    <div id="applyBox" style="display:none;padding:15px 20px;">
+        <div style="text-align:center;">
+            <button type="button" class="layui-btn layui-btn-sm layui-btn-primary" id="calPrev"><i class="layui-icon layui-icon-left"></i></button>
+            <span id="calTitle" style="font-size:16px;font-weight:bold;margin:0 12px;"></span>
+            <button type="button" class="layui-btn layui-btn-sm layui-btn-primary" id="calNext"><i class="layui-icon layui-icon-right"></i></button>
+        </div>
+        <table class="dl-calendar" id="calendarTable"></table>
+    </div>
+    <div id="setupBox" style="display:none;padding:20px 30px;">
+        <form class="layui-form" id="setupForm">
+            <div class="layui-form-item"><label class="layui-form-label">装修单</label><div class="layui-input-inline"><span id="orderInfos" style="line-height:38px;"></span></div></div>
+            <div class="layui-form-item"><label class="layui-form-label">监理</label><div class="layui-input-inline" style="width:240px;"><select id="supervisor" lay-search=""><option value="">请选择监理(工程部)</option></select></div></div>
+        </form>
+    </div>
+    <div id="editBox" style="display:none;padding:20px 30px;">
+        <form class="layui-form" id="editForm">
+            <div class="layui-form-item"><label class="layui-form-label">放线单号</label><div class="layui-input-inline"><input class="layui-input" id="dlid" disabled></div></div>
+            <div class="layui-form-item"><label class="layui-form-label">实际日期</label><div class="layui-input-inline"><input class="layui-input" id="actualDateInput" placeholder="yyyy-MM-dd"></div></div>
+            <div class="layui-form-item"><label class="layui-form-label">开始时间</label><div class="layui-input-inline" style="width:120px;"><input class="layui-input" id="startTime" placeholder="hh:mm"></div></div>
+            <div class="layui-form-item"><label class="layui-form-label">结束时间</label><div class="layui-input-inline" style="width:120px;"><input class="layui-input" id="endTime" placeholder="hh:mm"></div></div>
+            <div class="layui-form-item"><label class="layui-form-label">放线组</label><div class="layui-input-inline"><select id="drawLineGroup"></select></div></div>
+        </form>
+    </div>
+    <div id="constructionNodeBox" style="display:none;padding:15px 25px;max-height:500px;overflow:auto;">
+        <div id="constructionNodes"></div>
+    </div>
+    <div id="constructionInfoBox" style="display:none;padding:20px 30px;">
+        <form class="layui-form" id="constructionInfoForm">
+            <div class="layui-form-item"><label class="layui-form-label">铲墙</label><div class="layui-input-inline"><select id="ishovel"><option value="0">公司</option><option value="1">客户</option></select></div></div>
+            <div class="layui-form-item"><label class="layui-form-label">交付钥匙</label><div class="layui-input-inline"><select id="iskey"><option value="0">工程中心</option><option value="1">客户</option></select></div></div>
+            <div class="layui-form-item"><label class="layui-form-label">开工仪式</label><div class="layui-input-inline"><select id="isCeremony"><option value="0">有</option><option value="1">无</option></select></div></div>
+            <div class="layui-form-item"><label class="layui-form-label">工期</label><div class="layui-input-inline"><input class="layui-input" id="timeLimit" placeholder="工期(天)"></div></div>
+            <div class="layui-form-item"><label class="layui-form-label">验收时间</label><div class="layui-input-inline"><input class="layui-input" id="finishTime" readonly placeholder="yyyy-MM-dd"></div></div>
+            <div class="layui-form-item"><label class="layui-form-label">交钥匙时间</label><div class="layui-input-inline"><input class="layui-input" id="keyTime" readonly placeholder="yyyy-MM-dd"></div></div>
+            <div class="layui-form-item"><label class="layui-form-label">放线时间</label><div class="layui-input-inline"><input class="layui-input" id="drawlineTime" readonly placeholder="yyyy-MM-dd"></div></div>
+            <div class="layui-form-item"><label class="layui-form-label">设计时间</label><div class="layui-input-inline"><input class="layui-input" id="designTime" readonly placeholder="yyyy-MM-dd"></div></div>
+            <div class="layui-form-item layui-form-text"><label class="layui-form-label">备注</label><div class="layui-input-block"><textarea id="comment" class="layui-textarea" placeholder="备注"></textarea></div></div>
+        </form>
+    </div>
+</div>
+<script src="../../layui/layui.js"></script><script src="../../js/app/config.js"></script><script src="../../js/app/server.js"></script><script src="../../js/app/utils.js"></script><script src="../../js/app/post.js"></script><script src="../../js/app/api.js"></script><script src="../../js/app/core.js"></script><script src="../../js/app/validate.js"></script><script src="../../js/app/bootstrap.js"></script><script src="../../js/construction/construction-common.js"></script><script src="../../js/construction/drawline4setup.js"></script>
+</body></html>

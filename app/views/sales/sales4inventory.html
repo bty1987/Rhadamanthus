@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<!-- app/views/sales/sales4inventory.html —— 销售单库存详情（出库/采购/入库货单）
+  上下文：app.params.sales.sales = {sid}。数据源：api.inventory.* -->
+<html lang="zh-CN"><head><meta charset="utf-8"><title>销售单库存详情</title>
+<link rel="stylesheet" href="../../layui/css/layui.css"><link rel="stylesheet" href="../../css/app.css"></head>
+<body><div class="app-page">
+    <h3 style="font-size:14px;font-weight:bold;padding:8px 0;color:#333;">出库货单</h3>
+    <div class="app-table"><table id="exitTable" lay-filter="exitTable"></table></div>
+    <h3 style="font-size:14px;font-weight:bold;padding:8px 0;color:#333;" style="margin-top:14px;">采购单</h3>
+    <div class="app-table"><table id="purchaseTable" lay-filter="purchaseTable"></table></div>
+    <h3 style="font-size:14px;font-weight:bold;padding:8px 0;color:#333;" style="margin-top:14px;">入库货单</h3>
+    <div class="app-table"><table id="enterTable" lay-filter="enterTable"></table></div>
+    <h3 style="font-size:14px;font-weight:bold;padding:8px 0;color:#333;" style="margin-top:14px;">明细</h3>
+    <div class="app-table"><table id="itemTable" lay-filter="itemTable"></table></div>
+    <script type="text/html" id="exitBar"><button class="layui-btn layui-btn-xs" lay-event="item">明细</button></script>
+    <script type="text/html" id="purchaseBar"><button class="layui-btn layui-btn-xs" lay-event="item">明细</button></script>
+    <script type="text/html" id="enterBar"><button class="layui-btn layui-btn-xs" lay-event="item">明细</button></script>
+</div>
+<script src="../../layui/layui.js"></script><script src="../../js/app/config.js"></script><script src="../../js/app/server.js"></script><script src="../../js/app/utils.js"></script><script src="../../js/app/post.js"></script><script src="../../js/app/api.js"></script><script src="../../js/app/core.js"></script><script src="../../js/app/bootstrap.js"></script><script src="../../js/sales/sales4inventory.js"></script>
+</body></html>

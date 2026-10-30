@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<!-- app/views/customer/feedbackGuarantee2edit.html —— 编辑维修（弹窗页，上下文 app.params.{fid, fgid}） -->
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8" />
+    <title>编辑维修</title>
+    <link rel="stylesheet" href="../../layui/css/layui.css">
+    <link rel="stylesheet" href="../../css/app.css">
+</head>
+<body>
+<div class="app-page" id="feedbackGuarantee2editPage">
+
+    <div style="padding:15px;">
+        <form class="layui-form" lay-filter="editForm" id="editForm">
+            <div class="layui-form-item">
+                <label class="layui-form-label">装修单号</label>
+                <div class="layui-input-inline" style="width:160px;">
+                    <input type="text" name="orderId" id="e_orderId" placeholder="装修单号" class="layui-input">
+                </div>
+                <label class="layui-form-label">电话</label>
+                <div class="layui-input-inline" style="width:130px;">
+                    <input type="text" name="phone" id="e_phone" placeholder="电话" class="layui-input">
+                </div>
+                <label class="layui-form-label">渠道</label>
+                <div class="layui-input-inline" style="width:150px;">
+                    <select name="source" id="e_source" lay-filter="sourceFilter">
+                        <option value="0">400电话</option><option value="1">媒体平台</option>
+                        <option value="2">到店来访</option><option value="3">监理上报</option>
+                        <option value="4">员工上报</option><option value="5">客户回访</option>
+                        <option value="6">ERP小程序</option><option value="7">工商</option>
+                        <option value="8">消协</option><option value="9">上门拜访</option>
+                        <option value="10">315</option><option value="11">平台私聊</option>
+                        <option value="12">第三方平台</option>
+                    </select>
+                </div>
+                <div class="layui-input-inline" id="es_upgradeSource" style="display:none;width:140px;">
+                    <select name="upgradeSource">
+                        <option value="0">无</option><option value="1">315公众平台</option>
+                        <option value="2">抖音</option><option value="3">小红书</option>
+                        <option value="4">黑猫</option><option value="5">大众点评</option>
+                        <option value="6">上门</option><option value="7">超时</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">客户类型</label>
+                <div class="layui-input-inline" style="width:150px;">
+                    <select name="cutomerType">
+                        <option value="0">终身保修客户</option><option value="1">过保客户</option>
+                        <option value="2">收费客户</option><option value="3">关系客户</option>
+                        <option value="4">核查确认</option><option value="5">二手房主</option>
+                        <option value="6">保修2年</option><option value="7">保修5年</option>
+                    </select>
+                </div>
+                <label class="layui-form-label">报修日期</label>
+                <div class="layui-input-inline" style="width:130px;">
+                    <input type="text" name="reportedDate" id="e_reportedDate" placeholder="报修日期" class="layui-input" readonly>
+                </div>
+                <label class="layui-form-label">装修年份</label>
+                <div class="layui-input-inline" style="width:100px;">
+                    <input type="text" name="renovationYear" id="e_renovationYear" placeholder="如 2023" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">部门类型</label>
+                <div class="layui-input-block" id="e_choiceDeptType" style="line-height:36px;"></div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">工种</label>
+                <div class="layui-input-block" id="checkboxs" style="line-height:36px;"></div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">品牌</label>
+                <div class="layui-input-inline" style="width:160px;">
+                    <input type="text" name="brandName" id="e_brandName" placeholder="输入拼音检索品牌" class="layui-input">
+                </div>
+                <div class="layui-input-inline" id="brandList" style="line-height:38px;"></div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">维修结果</label>
+                <div class="layui-input-inline" style="width:110px;">
+                    <select name="repairResult">
+                        <option value="0">待修</option><option value="1">完工</option>
+                        <option value="2">撤销</option><option value="3">无</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item layui-form-text">
+                <label class="layui-form-label">内容</label>
+                <div class="layui-input-block">
+                    <textarea name="content" id="e_content" placeholder="维修内容" class="layui-textarea"></textarea>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">图片</label>
+                <div class="layui-input-inline">
+                    <button type="button" class="layui-btn layui-btn-normal" id="btnUpload"><i class="layui-icon layui-icon-upload-drag"></i>上传图片</button>
+                </div>
+                <div class="layui-input-inline" style="line-height:36px;">
+                    <img id="showImg" style="display:none;width:60px;height:60px;object-fit:cover;">
+                </div>
+            </div>
+            <div class="layui-form-item app-form-footer">
+                <button type="button" class="layui-btn" id="btnSave">保存</button>
+                <button type="button" class="layui-btn layui-btn-primary" id="btnCancel">取消</button>
+            </div>
+        </form>
+    </div>
+
+</div>
+
+<script src="../../layui/layui.js"></script>
+<script src="../../js/app/upload.js"></script>
+<script src="../../js/app/config.js"></script>
+<script src="../../js/app/server.js"></script>
+<script src="../../js/app/utils.js"></script>
+<script src="../../js/app/post.js"></script>
+<script src="../../js/app/api.js"></script>
+<script src="../../js/app/core.js"></script>
+<script src="../../js/app/validate.js"></script>
+<script src="../../js/app/bootstrap.js"></script>
+<script src="../../js/customer/customer-common.js"></script>
+<script src="../../js/customer/feedbackGuarantee2edit.js"></script>
+</body>
+</html>

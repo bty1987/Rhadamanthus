@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<!-- app/views/map/track.html —— 人员轨迹回放（百度地图）：按人员ID+日期查询轨迹点，表格展示并在地图画布连线。 -->
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+<title>人员轨迹</title>
+<link rel="stylesheet" href="../../layui/css/layui.css"><link rel="stylesheet" href="../../css/app.css">
+<style>
+#allmap { width: 100%; height: 480px; overflow: hidden; margin: 0; font-family: 'Microsoft YaHei', sans-serif; }
+.map-note { padding: 8px 15px; color: #999; }
+</style>
+<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=49YYCNGougjjYuqAZKqzkBEx"></script>
+</head>
+<body><div class="app-page">
+    <div class="app-search"><form class="layui-form" id="searchForm" onsubmit="return false;"><div class="layui-form-item">
+        <div class="layui-inline"><label class="layui-form-label">人员ID</label><div class="layui-input-inline" style="width:160px;"><input type="text" id="userId" class="layui-input" value="FL-02030" autocomplete="off"></div></div>
+        <div class="layui-inline"><label class="layui-form-label">日期</label><div class="layui-input-inline" style="width:160px;"><input type="text" id="trackDate" class="layui-input" placeholder="yyyy-MM-dd" autocomplete="off"></div></div>
+        <div class="layui-inline"><button type="button" class="layui-btn" id="btnSearch"><i class="layui-icon layui-icon-search"></i>查询</button></div>
+    </div></form></div>
+    <blockquote class="layui-elem-quote layui-quote-nm map-note">轨迹点以折线串联并标注起止点；数据源为原 trackPoint 接口（queryTrackPointByUserIdATime.do），该接口在后端已不再随主业务发布，查询失败时仅表格为空，画布保留占位。<\/blockquote>
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md12"><div id="allmap"><div class="map-note" style="padding-top:200px;text-align:center;">百度地图 SDK（api.map.baidu.com）未加载或 AK 失效，轨迹画布不可用。<\/div></div></div>
+        <div class="layui-col-md12"><table class="layui-hide" id="trackTable" lay-filter="trackTable"></table></div>
+    </div>
+</div>
+<script src="../../layui/layui.js"></script><script src="../../js/app/config.js"></script><script src="../../js/app/server.js"></script><script src="../../js/app/utils.js"></script><script src="../../js/app/post.js"></script><script src="../../js/app/api.js"></script><script src="../../js/app/core.js"></script><script src="../../js/app/validate.js"></script><script src="../../js/app/bootstrap.js"></script><script src="../../js/map/track.js"></script>
+</body></html>

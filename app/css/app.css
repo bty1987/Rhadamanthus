@@ -1,0 +1,442 @@
+/*!
+ * app/css/app.css —— 应用补丁样式
+ *
+ * 配色方案：明亮蓝白（白底侧边栏 + 明亮蓝头部 + 蓝色强调）
+ * 颜色集中在 :root 变量，便于整体调整。
+ * 不依赖 ace/bootstrap 的任何类。
+ */
+
+/* ===================== 颜色变量（改这里即可全局换色）===================== */
+:root {
+    --app-primary:        #1E88E5;  /* 主色：强调、选中 */
+    --app-primary-dark:   #1565C0;  /* 主色深：hover、激活态 */
+    --app-primary-light:  #E3F2FD;  /* 主色浅：选中行底色、侧边选中左条 */
+    --app-header-bg:      #ffffff;  /* 头部背景（白底） */
+    --app-header-text:    #4a4a4a;  /* 头部文字（深灰，白底下清晰） */
+    --app-header-accent:  #1E88E5;  /* 头部点缀色（logo、底部线） */
+    --app-side-bg:        #fdfdfe;  /* 侧边栏背景（近白微灰，与内容区分层） */
+    --app-side-text:      #4a4a4a;  /* 侧边栏文字 */
+    --app-side-hover-bg:  #f0f7ff;  /* 侧边栏 hover 底色 */
+    --app-body-bg:        #f5f7fa;  /* 内容区背景 */
+    --app-text:           #333333;  /* 正文文字 */
+    --app-text-secondary: #666666;  /* 次要文字 */
+    --app-border:         #e8e8e8;  /* 分割线/边框 */
+}
+
+/* ===================== 主框架布局 ===================== */
+/* 用 .layui-header.app-header 双类提升特异性，覆盖 layui 默认的 #23292e 深色背景 */
+.layui-header.app-header {
+    display: flex; align-items: center;
+    /* 极浅蓝底：与纯白 tab 栏/侧边栏形成层次，头部不再"平" */
+    background: #fbfdff !important;
+    /* 底部蓝色细线：白底头部的唯一彩色点缀 */
+    border-bottom: 2px solid var(--app-header-accent);
+    box-shadow: none;
+}
+.app-logo {
+    display: flex; align-items: center; padding-left: 20px;
+    /* logo 文字用主色（蓝色点缀），区别于右侧深灰操作区 */
+    color: var(--app-header-accent);
+    font-size: 17px; font-weight: 500;
+}
+/* logo 图标是透明底白色图形：白底上隐形，必须给品牌蓝圆角方块衬底 */
+.app-logo img {
+    width: 28px; height: 28px; margin-right: 10px;
+    background: var(--app-primary);
+    border-radius: 6px; padding: 4px; box-sizing: border-box;
+}
+.app-logo span { line-height: 60px; }
+
+/* 顶栏导航（用户/退出）——深灰字，hover 转主色；下拉为白底 */
+.app-header .layui-nav {
+    background: transparent;
+}
+.app-header .layui-nav .layui-nav-item a {
+    color: var(--app-header-text);
+}
+.app-header .layui-nav .layui-nav-item a:hover,
+.app-header .layui-nav .layui-nav-item.layui-this a {
+    color: var(--app-header-accent);
+    background: #f5f7fa;
+}
+.app-header .layui-nav .layui-nav-item .layui-nav-child {
+    background: #fff;
+}
+.app-header .layui-nav .layui-nav-item .layui-nav-child a {
+    color: var(--app-side-text);
+}
+.app-header .layui-nav .layui-nav-item .layui-nav-child a:hover {
+    background: var(--app-side-hover-bg);
+    color: var(--app-primary);
+}
+
+/* 侧边栏：白底深灰字（#fdfdfe 微底色与内容区形成空间感） */
+.app-side {
+    background: var(--app-side-bg);
+    /* 右侧固定分页线条 */
+    border-right: 1px solid var(--app-border);
+    box-shadow: none;
+    /* 菜单独立滚动：限定高度，滚动条靠右 */
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+/* 滚动条样式（靠右、细、浅色） */
+.app-side::-webkit-scrollbar { width: 6px; }
+.app-side::-webkit-scrollbar-thumb { background: #d4d4d4; border-radius: 3px; }
+.app-side::-webkit-scrollbar-thumb:hover { background: #b0b0b0; }
+.app-side::-webkit-scrollbar-track { background: transparent; }
+
+.app-nav {
+    background: var(--app-side-bg);
+    width: 200px;
+    /* 紧贴左侧：清除 layui-nav 默认 padding:0 15px */
+    margin: 0;
+    padding: 0;
+}
+.app-nav .layui-nav-tree {
+    width: 200px;
+    background: var(--app-side-bg);
+    padding: 8px 0;
+    margin: 0;
+}
+
+/* ===== 一级菜单项：行高、分割线、间距、紧贴左侧 ===== */
+.app-nav .layui-nav-item {
+    position: relative;
+    border-bottom: 1px solid #f0f0f0;
+}
+.app-nav .layui-nav-item:last-child {
+    border-bottom: none;
+}
+.app-nav .layui-nav-item a {
+    color: var(--app-side-text);
+    height: 46px;
+    line-height: 46px;
+    padding: 0 16px 0 14px;   /* 左 14px：图标紧靠左侧，去掉多余空隙 */
+    transition: background .15s, color .15s;
+}
+.app-nav .layui-nav-item a:hover {
+    background: var(--app-side-hover-bg);
+    color: var(--app-primary);
+}
+
+/* ===== 菜单图标（无底色，图标色跟随文字；hover/选中转为主色）===== */
+.app-menu-icon {
+    display: inline-block;
+    width: 20px;
+    text-align: center;
+    margin-right: 8px;
+    vertical-align: middle;
+    background: transparent;   /* 去掉彩色背景 */
+}
+.app-menu-icon .layui-icon {
+    font-size: 16px;
+    color: var(--app-text-secondary);
+    transition: color .15s;
+}
+/* hover/选中时图标随文字一起变主色 */
+.app-nav .layui-nav-item a:hover .app-menu-icon .layui-icon,
+.app-nav .layui-nav-item.layui-this .app-menu-icon .layui-icon {
+    color: var(--app-primary);
+}
+.app-nav .layui-nav-item cite {
+    vertical-align: middle;
+}
+
+/* 选中项：浅蓝底 + 左侧蓝色条 + 蓝字 */
+.app-nav .layui-nav-item.layui-this a,
+.app-nav .layui-nav-item.layui-this a:hover {
+    background: var(--app-primary-light);
+    color: var(--app-primary);
+    font-weight: 500;
+}
+.app-nav .layui-nav-item.layui-this::after {
+    content: '';
+    position: absolute; left: 0; top: 4px; bottom: 4px;
+    width: 3px; background: var(--app-primary);
+    border-radius: 0 2px 2px 0;
+}
+
+/* ===== 二级菜单：缩进 + 小圆点标记 + 浅底 ===== */
+.app-nav .layui-nav-child {
+    background: #fafbfc;
+    box-shadow: none;
+    padding: 4px 0 6px;
+    border-top: 1px dashed #e8e8e8;
+}
+.app-nav .layui-nav-child dd a {
+    color: var(--app-side-text);
+    height: 38px;
+    line-height: 38px;
+    padding-left: 48px;
+}
+.app-nav .layui-nav-child a:hover {
+    color: var(--app-primary);
+    background: var(--app-side-hover-bg);
+}
+.app-nav .layui-nav-child dd.layui-this a {
+    color: var(--app-primary);
+    background: var(--app-primary-light);
+}
+/* 二级菜单前的小圆点（替代图标，层级清晰） */
+.app-menu-dot {
+    display: inline-block;
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: #c5c5c5;
+    margin-right: 8px;
+    vertical-align: middle;
+    transition: background .15s, transform .15s;
+}
+.app-nav .layui-nav-child a:hover .app-menu-dot {
+    background: var(--app-primary);
+    transform: scale(1.3);
+}
+.app-nav .layui-nav-child dd.layui-this .app-menu-dot {
+    background: var(--app-primary);
+}
+
+/* ===== 三级菜单（嵌套在二级 dd 里的 .layui-nav-child）：更大缩进 + 更浅底 ===== */
+.app-nav .layui-nav-child dd .layui-nav-child {
+    background: #f5f5f5;
+    padding: 2px 0 4px;
+}
+.app-nav .layui-nav-child dd .layui-nav-child dd a {
+    padding-left: 72px;   /* 三级比二级(48px)更深，层级清晰 */
+    height: 34px;
+    line-height: 34px;
+    font-size: 13px;
+}
+
+/* 展开箭头颜色（白底下用主色） */
+.app-nav .layui-nav-more {
+    border-top-color: var(--app-text-secondary);
+}
+.app-nav .layui-nav-itemed > a > .layui-nav-more {
+    border-top-color: transparent;
+    border-bottom-color: var(--app-primary);
+}
+.app-nav .layui-nav-itemed > a {
+    color: var(--app-primary) !important;
+}
+
+/* 内容区 */
+.app-body {
+    background: var(--app-body-bg);
+}
+.app-tabs {
+    margin: 0; background: #fff;
+    box-shadow: 0 1px 2px rgba(0,0,0,.05);
+    /* 与侧边栏同样的底部线，栏体边界清晰 */
+    border-bottom: 1px solid var(--app-border);
+}
+/* tab 选中态用主色下划线 */
+.app-tabs .layui-tab-title .layui-this {
+    color: var(--app-primary);
+}
+.app-tabs .layui-tab-title .layui-this::after {
+    border-bottom-color: var(--app-primary);
+}
+.app-tabs .layui-tab-title li:hover {
+    color: var(--app-primary);
+}
+.app-tabs .layui-tab-content { padding: 0; }
+.app-iframe { width: 100%; height: calc(100vh - 100px); border: 0; }
+
+/* ===================== 通用页面容器 ===================== */
+.app-page { padding: 16px; }
+.app-search {
+    background: #fff; padding: 14px 16px 0;
+    border-radius: 4px; margin-bottom: 12px;
+    box-shadow: 0 1px 3px rgba(0,0,0,.04);
+}
+.app-search .layui-form-item:last-child { margin-bottom: 14px; }
+.app-table {
+    background: #fff; padding: 10px;
+    border-radius: 4px;
+    box-shadow: 0 1px 3px rgba(0,0,0,.04);
+}
+.app-pagenation { padding: 16px; text-align: right; }
+
+/* ===================== 表单 ===================== */
+.app-form-page { padding: 16px; }
+.app-crumb-bar { padding: 6px 0 14px; color: var(--app-text-secondary); font-size: 13px; }
+.app-crumb { margin-right: 4px; }
+.app-crumb-sep { margin: 0 6px; color: #bbb; }
+.app-form-card {
+    background: #fff; padding: 24px;
+    border-radius: 4px; max-width: 760px;
+    box-shadow: 0 1px 3px rgba(0,0,0,.04);
+}
+.app-form-footer { padding-top: 8px; }
+.app-req { color: #ff5722; margin-left: 2px; }
+
+/* 校验错误边框（app.validate 使用） */
+.layui-border-red { border-color: #fd6b6b !important; }
+
+/* 表格操作列：相邻按钮留出呼吸间距（layui 按钮组以外的散排按钮） */
+.layui-table .layui-btn + .layui-btn { margin-left: 6px; }
+
+/* ===================== 首页 ===================== */
+.app-home { padding: 40px 24px; }
+.app-home-hero { text-align: center; padding: 40px 0 50px; }
+.app-home-hero h1 { font-size: 28px; color: var(--app-text); font-weight: 400; }
+.app-home-hero p { color: var(--app-text-secondary); }
+.app-home-cards { max-width: 1100px; margin: 0 auto; }
+.app-card {
+    background: #fff; border-radius: 6px; padding: 30px; text-align: center;
+    box-shadow: 0 1px 4px rgba(0,0,0,.06);
+    transition: box-shadow .2s, transform .2s;
+    cursor: pointer;
+}
+.app-card:hover { box-shadow: 0 4px 14px rgba(0,0,0,.12); transform: translateY(-2px); }
+.app-card .layui-icon { font-size: 42px; color: var(--app-primary); }
+.app-card-text { margin-top: 12px; color: var(--app-text-secondary); }
+
+/* ===================== 审批流程节点卡片（纵向流程图）===================== */
+.app-flow-node {
+    position: relative; background: #fff; border: 1px solid #d4d4d4; border-radius: 6px;
+    padding: 12px 16px; margin: 0 auto 32px auto; max-width: 560px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+}
+.app-flow-node::after { content: ''; position: absolute; left: 50%; bottom: -28px; width: 2px; height: 24px; background: #bbb; transform: translateX(-50%); }
+.app-flow-node::before { content: ''; position: absolute; left: 50%; bottom: -34px; width: 0; height: 0; border-left: 6px solid transparent; border-right: 6px solid transparent; border-top: 8px solid #bbb; transform: translateX(-50%); }
+.app-flow-node:last-of-type::after, .app-flow-node:last-of-type::before { display: none; }
+.app-flow-node-head { display: flex; align-items: center; margin-bottom: 6px; padding-right: 130px; }
+.app-flow-seq { display: inline-block; background: #1e9fff; color: #fff; border-radius: 50%; width: 22px; height: 22px; line-height: 22px; text-align: center; font-size: 12px; font-weight: bold; margin-right: 8px; }
+.app-flow-node-head b { font-weight: bold; font-size: 14px; color: #333; flex: 1; }
+.app-flow-body { font-size: 12px; color: #666; line-height: 1.8; }
+.app-flow-muted { color: #999; }
+.app-flow-actions { position: absolute; top: 8px; right: 10px; }
+
+/* ===================== 表单设计器（三栏布局）===================== */
+.app-designer { display: flex; min-height: 460px; border: 1px solid #e0e0e0; border-radius: 4px; overflow: hidden; }
+.app-designer-col { padding: 12px; }
+.app-designer-col + .app-designer-col { border-left: 1px solid #e0e0e0; }
+.app-designer-lib { flex: 0 0 22%; }
+.app-designer-preview { flex: 0 0 42%; }
+.app-designer-prop { flex: 1; }
+.app-designer h5 { color: var(--app-primary); }
+.app-designer-lib .app-ctrl-btn { display: block; width: 100%; margin: 2px 0; text-align: left; }
+.app-designer-preview-row { padding: 8px 12px; margin: 4px 0; border: 1px solid #eee; border-radius: 4px; background: #fff; cursor: pointer; }
+.app-designer-preview-row.active { border-color: var(--app-primary); background: #f0f7ff; }
+
+/* =====================================================================
+   LayUI 主题统一层 —— 全站色彩一致性
+   ---------------------------------------------------------------------
+   问题：框架壳是品牌蓝 #1E88E5，但 layui 组件（按钮/复选框/开关/分页/
+   tab/弹窗按钮）是 layui 默认绿 #16baaa/#16b777 或另一种蓝 #1e9fff，
+   每一屏都出现两三种主色打架。
+   方案：把 layui 全部强调色统一到品牌蓝，一处修改全站 650 页生效。
+   ===================================================================== */
+
+/* ---------- 1. 按钮：绿 → 品牌蓝，圆角与卡片统一为 4px ---------- */
+.layui-btn {
+    background-color: var(--app-primary);
+    border-radius: 4px;
+    transition: background-color .15s, box-shadow .15s;
+}
+.layui-btn:hover {
+    background-color: var(--app-primary-dark);
+    opacity: 1; /* 接管 layui 默认的 opacity 淡化，用色深表达 hover */
+}
+/* 语义按钮保留原色（白/红/黄），不被上面的主色覆盖——app.css 后加载会压掉 layui 的同名规则，这里显式还原 */
+.layui-btn-primary { border-color: #d2d2d2; background: #fff; color: #5f5f5f; }
+.layui-btn-primary:hover { background-color: #f6f6f6; color: #333; }
+.layui-btn-danger { background-color: #ff5722; }
+.layui-btn-danger:hover { background-color: #e64a19; }
+.layui-btn-warm { background-color: #ffb800; }
+.layui-btn-warm:hover { background-color: #e0a200; }
+/* 按钮组内边线随主色 */
+.layui-btn-group .layui-btn:first-child { border-top-left-radius: 4px; border-bottom-left-radius: 4px; }
+.layui-btn-group .layui-btn:last-child { border-top-right-radius: 4px; border-bottom-right-radius: 4px; }
+
+/* ---------- 2. 表单：复选框/单选/开关选中 绿 → 蓝 ---------- */
+.layui-form-checked[lay-skin=primary]>i {
+    border-color: var(--app-primary) !important;   /* 对冲 layui 自带 !important */
+    background-color: var(--app-primary) !important;
+}
+.layui-form-onswitch {
+    border-color: var(--app-primary);
+    background-color: var(--app-primary);
+}
+/* 单选选中：容器文字与图标都染主色（layui 同时染 .layui-form-radioed 和 >i，需一并覆盖） */
+.layui-form-radioed, .layui-form-radioed>i {
+    color: var(--app-primary);
+}
+.layui-form-radio>i:hover {
+    color: var(--app-primary);
+}
+/* 输入框 focus：主色边框 + 浅蓝光晕 */
+.layui-input:focus, .layui-textarea:focus, .layui-select:focus {
+    border-color: var(--app-primary) !important;
+    box-shadow: 0 0 0 3px rgba(30,136,229,.12);
+}
+/* 下拉面板选中项 */
+.layui-form-select dl dd.layui-this {
+    background-color: var(--app-primary-light);
+    color: var(--app-primary);
+}
+
+/* ---------- 3. 分页器：当前页 绿 → 蓝，圆角统一 ----------
+   注意：layui 2.13 的当前页绿底在 .layui-laypage-em（curr 内的绝对定位层），不是 curr 本身 */
+.layui-laypage .layui-laypage-em {
+    background-color: var(--app-primary) !important;
+}
+.layui-laypage .layui-laypage-curr { border-radius: 4px; }
+.layui-laypage a, .layui-laypage span, .layui-laypage button { border-radius: 4px; }
+.layui-laypage a:hover { color: var(--app-primary); }
+
+/* ---------- 4. tab：brief 选中条 绿 → 蓝 ---------- */
+.layui-tab-brief > .layui-tab-title .layui-this { color: var(--app-primary); }
+.layui-tab-brief > .layui-tab-title .layui-this:after { border-bottom: 2px solid var(--app-primary) !important; }
+
+/* ---------- 5. 弹窗 layer：第三种蓝 #1e9fff → 品牌蓝，标题加主色左缀 ---------- */
+.layui-layer-btn0 {
+    background-color: var(--app-primary) !important;
+    border-color: var(--app-primary) !important;
+}
+.layui-layer-btn0:hover { background-color: var(--app-primary-dark) !important; }
+.layui-layer-title {
+    border-bottom: 1px solid var(--app-border);
+    background: #fafbfc;
+}
+.layui-layer-dialog .layui-layer-content { color: var(--app-text); }
+/* 弹窗圆角与内容区一致 */
+.layui-layer { border-radius: 6px !important; overflow: hidden; }
+.layui-layer-title { border-radius: 6px 6px 0 0; }
+
+/* ---------- 6. 表格质感：表头/悬浮/圆角（ERP 主角，120% 细节）---------- */
+.layui-table thead tr, .layui-table-header {
+    background: #fafbfc;
+}
+.layui-table thead th, .layui-table-header div {
+    color: var(--app-text);
+    font-weight: 600;
+}
+/* 行悬浮：浅蓝底（品牌关联），替代 layui 默认灰 */
+.layui-table tbody tr:hover, .layui-table-hover {
+    background-color: #f5faff;
+}
+.layui-table { border-radius: 4px; }
+
+/* ---------- 7. 链接与徽章：统一色值 ---------- */
+a { color: var(--app-primary); }
+a:hover { color: var(--app-primary-dark); }
+/* layui 默认蓝徽章 #1E9FFF → 品牌蓝（页面上大量 layui-badge layui-bg-blue） */
+.layui-bg-blue { background-color: var(--app-primary) !important; }
+
+/* ---------- 8. 进度条/滑块等强调组件 ---------- */
+.layui-progress-bar { background-color: var(--app-primary); }
+.layui-slider-bar { background-color: var(--app-primary); }
+.layui-slider-wrap-btn { border-color: var(--app-primary); }
+
+/* ---------- 9. 全局细滚动条（iframe 内容区与侧边栏统一）---------- */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-thumb { background: #d4d4d4; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #b0b0b0; }
+::-webkit-scrollbar-track { background: transparent; }
+
+/* ---------- 10. 时间线/日历组件 hover 主色 ---------- */
+.layui-laydate td.layui-this { background-color: var(--app-primary) !important; }
+.layui-laydate-footer span:hover { color: var(--app-primary) !important; }

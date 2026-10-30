@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<!-- app/views/balance/balanceSelectionItem.html —— 结算选材明细（弹窗子页：选材项 + 全选/解绑/导出）
+  上下文：app.params.balance.{bsid,balance}。balance.status=0 初始时允许解绑/挂起。 -->
+<html lang="zh-CN"><head><meta charset="utf-8"><title>结算选材明细</title>
+<link rel="stylesheet" href="../../layui/css/layui.css"><link rel="stylesheet" href="../../css/app.css"></head>
+<body><div class="app-page">
+    <div class="app-toolbar" style="margin:10px 0;">
+        <button type="button" class="layui-btn" id="btnCheckAll"><i class="layui-icon layui-icon-table"></i>全选</button>
+        <button type="button" class="layui-btn layui-btn-danger" id="btnUnbind"><i class="layui-icon layui-icon-delete"></i>解绑</button>
+        <button type="button" class="layui-btn layui-btn-warm" id="btnExport"><i class="layui-icon layui-icon-export"></i>业务导出</button>
+        <button type="button" class="layui-btn layui-btn-warm" id="btnExport1"><i class="layui-icon layui-icon-export"></i>财务导出</button>
+    </div>
+    <div class="app-table"><table id="resultTable" lay-filter="resultTable"></table></div>
+    <div id="pagenation" class="app-pagenation"></div>
+    <script type="text/html" id="rowToolbar">
+        <button class="layui-btn layui-btn-xs layui-btn-success" lay-event="unbind">解绑</button>
+        <button class="layui-btn layui-btn-xs" lay-event="pending">挂起</button>
+    </script>
+</div>
+<script src="../../layui/layui.js"></script><script src="../../js/app/config.js"></script><script src="../../js/app/server.js"></script><script src="../../js/app/utils.js"></script><script src="../../js/app/post.js"></script><script src="../../js/app/api.js"></script><script src="../../js/app/core.js"></script><script src="../../js/app/<script src="../../js/app/exporter.js"></script>bootstrap.js"></script><script src="../../js/balance/balanceSelectionItem.js"></script>
+</body></html>

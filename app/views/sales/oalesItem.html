@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<!-- app/views/sales/oalesItem.html —— 外销项明细（列表 + 新增 + 删除）
+  上下文：app.params.sales.oales = {oid} -->
+<html lang="zh-CN"><head><meta charset="utf-8"><title>外销项明细</title>
+<link rel="stylesheet" href="../../layui/css/layui.css"><link rel="stylesheet" href="../../css/app.css"></head>
+<body><div class="app-page">
+    <div style="margin-bottom:10px;"><button type="button" class="layui-btn" id="btnAdd"><i class="layui-icon layui-icon-add-1"></i>创建外销项</button></div>
+    <div class="app-table"><table id="resultTable" lay-filter="resultTable"></table></div>
+    <div id="pagenation" class="app-pagenation"></div>
+    <div id="editBox" style="display:none; padding:20px;"><form class="layui-form" id="editForm">
+        <div class="layui-form-item"><label class="layui-form-label">商品名称<span class="app-req">*</span></label><div class="layui-input-block"><input type="text" name="name" placeholder="商品名称" class="layui-input v_required" lay-verify="required"></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">规格</label><div class="layui-input-block"><input type="text" name="format" placeholder="规格" class="layui-input"></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">颜色</label><div class="layui-input-block"><input type="text" name="color" placeholder="颜色" class="layui-input"></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">型号</label><div class="layui-input-block"><input type="text" name="model" placeholder="型号" class="layui-input"></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">价格<span class="app-req">*</span></label><div class="layui-input-block"><input type="text" name="price" placeholder="价格" class="layui-input v_required v_number" lay-verify="required|number"></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">数量<span class="app-req">*</span></label><div class="layui-input-block"><input type="text" name="num" placeholder="数量" class="layui-input v_required v_number" lay-verify="required|number"></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">备注</label><div class="layui-input-block"><textarea name="comment" placeholder="备注" class="layui-textarea"></textarea></div></div>
+        <div class="layui-form-item app-form-footer"><button type="button" class="layui-btn" id="btnSave">保存</button><button type="reset" class="layui-btn layui-btn-primary" id="btnCancel">取消</button></div>
+    </form></div>
+    <script type="text/html" id="rowToolbar"><button class="layui-btn layui-btn-xs layui-btn-danger" lay-event="del">删除</button></script>
+</div>
+<script src="../../layui/layui.js"></script><script src="../../js/app/config.js"></script><script src="../../js/app/server.js"></script><script src="../../js/app/utils.js"></script><script src="../../js/app/post.js"></script><script src="../../js/app/api.js"></script><script src="../../js/app/core.js"></script><script src="../../js/app/validate.js"></script><script src="../../js/app/bootstrap.js"></script><script src="../../js/sales/oalesItem.js"></script>
+</body></html>

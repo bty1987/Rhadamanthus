@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<!-- app/views/report/fundsReport.html —— 资金闭环报表（echarts）：资金三段趋势(报价/签约/实收+退款) / 回款率趋势(双Y轴柱线)。数据源 metric_funds_monthly。 -->
+<html lang="zh-CN"><head><meta charset="utf-8"><title>资金闭环报表</title>
+<link rel="stylesheet" href="../../layui/css/layui.css"><link rel="stylesheet" href="../../css/app.css"></head>
+<body><div class="app-page">
+    <div class="app-search"><form class="layui-form" id="searchForm" onsubmit="return false;"><div class="layui-form-item">
+        <div class="layui-inline"><label class="layui-form-label">统计区间</label><div class="layui-input-inline" style="width:240px;"><input type="text" name="dateRange" id="dateRange" placeholder="开始 - 结束" class="layui-input" autocomplete="off"></div></div>
+        <div class="layui-inline"><button type="button" class="layui-btn" id="btnSearch"><i class="layui-icon layui-icon-search"></i>查询</button><button type="button" class="layui-btn layui-btn-warm" id="btnRefresh"><i class="layui-icon layui-icon-refresh"></i>刷新数据</button><button type="button" class="layui-btn layui-btn-normal" id="btnExport"><i class="layui-icon layui-icon-export"></i>导出Excel</button></div>
+    </div></form></div>
+    <blockquote class="layui-elem-quote layui-quote-nm">口径说明：报价额 / 签约额按<b>签约月</b>统计，收款 / 退款按<b>收款月</b>统计，两条时间轴并行对比资金流转。</blockquote>
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md12"><div id="fundsTrendChart" style="height:400px;"></div></div>
+        <div class="layui-col-md12"><div id="rateChart" style="height:350px;"></div></div>
+    </div>
+</div>
+<script src="../../layui/layui.js"></script><script src="../../lib/echarts.min.js"></script><script src="../../js/app/config.js"></script><script src="../../js/app/server.js"></script><script src="../../js/app/utils.js"></script><script src="../../js/app/post.js"></script><script src="../../js/app/api.js"></script><script src="../../js/app/core.js"></script><script src="../../js/app/validate.js"></script><script src="../../js/app/bootstrap.js"></script><script src="../../js/report/fundsReport.js"></script>
+</body></html>

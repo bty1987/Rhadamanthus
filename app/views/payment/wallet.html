@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<!-- app/views/payment/wallet.html —— 钱包账户（按归属人/电话/状态筛选）
+  列：编号/电话/身份证/余额/类型/状态。操作：绑定/更新/冻结/解冻/提现/转账/银行卡/交易记录/资源。 -->
+<html lang="zh-CN"><head><meta charset="utf-8"><title>钱包账户</title>
+<link rel="stylesheet" href="../../layui/css/layui.css"><link rel="stylesheet" href="../../css/app.css"></head>
+<body><div class="app-page">
+    <div class="app-search"><form class="layui-form" id="searchForm"><div class="layui-form-item">
+        <div class="layui-inline"><label class="layui-form-label">归属人</label><div class="layui-input-inline"><input class="layui-input" name="belonger.userName" data-op="cn"></div></div>
+        <div class="layui-inline"><label class="layui-form-label">状态</label><div class="layui-input-inline"><select name="status"><option value="">全部</option><option value="0">初始</option><option value="1">已绑定</option><option value="2">已冻结</option></select></div></div>
+        <div class="layui-inline"><button type="button" class="layui-btn" id="btnSearch"><i class="layui-icon layui-icon-search"></i>查询</button><button type="button" class="layui-btn layui-btn-primary" id="btnBack"><i class="layui-icon layui-icon-return"></i>返回</button></div>
+    </div></form></div>
+    <div class="app-table"><table id="resultTable" lay-filter="resultTable"></table></div>
+    <div id="pagenation" class="app-pagenation"></div>
+    <script type="text/html" id="rowToolbar">
+        <button class="layui-btn layui-btn-xs" lay-event="bind">绑定</button>
+        <button class="layui-btn layui-btn-xs layui-btn-normal" lay-event="update">更新</button>
+        <button class="layui-btn layui-btn-xs layui-btn-warm" lay-event="freeze">冻结</button>
+        <button class="layui-btn layui-btn-xs layui-btn-danger" lay-event="unfreeze">解冻</button>
+        <button class="layui-btn layui-btn-xs" lay-event="withdraw">提现</button>
+        <button class="layui-btn layui-btn-xs layui-btn-normal" lay-event="transfer">转账</button>
+        <button class="layui-btn layui-btn-xs layui-btn-disabled" lay-event="cards">银行卡</button>
+        <button class="layui-btn layui-btn-xs" lay-event="walletran">交易记录</button>
+        <button class="layui-btn layui-btn-xs" lay-event="walletres">资源</button>
+    </script>
+</div>
+<script src="../../layui/layui.js"></script><script src="../../js/app/config.js"></script><script src="../../js/app/server.js"></script><script src="../../js/app/utils.js"></script><script src="../../js/app/post.js"></script><script src="../../js/app/api.js"></script><script src="../../js/app/core.js"></script><script src="../../js/app/validate.js"></script><script src="../../js/app/bootstrap.js"></script><script src="../../js/payment/wallet.js"></script>
+</body></html>

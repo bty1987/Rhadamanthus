@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<!-- app/views/salary/workerBalance.html —— 工人质保金（列表 + 转款/添加 + 扣款/发放/收取/提现/更新上限）
+  字段：wbid user(工人) salary(工费) deposit(质保金) toplimit(质保金上限) status
+  操作：扣款/发放/收取质保金/提现质保金/更新上限 + 顶部转款/添加按钮 -->
+<html lang="zh-CN">
+<head><meta charset="utf-8"><title>工人质保金</title>
+<link rel="stylesheet" href="../../layui/css/layui.css"><link rel="stylesheet" href="../../css/app.css"></head>
+<body>
+<div class="app-page">
+    <div class="app-search"><form class="layui-form" id="searchForm"><div class="layui-form-item">
+        <div class="layui-inline"><label class="layui-form-label">工人</label><div class="layui-input-inline"><input type="text" name="userId" data-op="eq" placeholder="userId" class="layui-input" autocomplete="off"></div></div>
+        <div class="layui-inline"><label class="layui-form-label">工种</label><div class="layui-input-inline"><input type="text" name="duty" data-op="eq" placeholder="工种" class="layui-input" autocomplete="off"></div></div>
+        <div class="layui-inline"><button type="button" class="layui-btn" id="btnSearch"><i class="layui-icon layui-icon-search"></i>查询</button><button type="reset" class="layui-btn layui-btn-primary" id="btnReset">重置</button><button type="button" class="layui-btn layui-btn-warm" id="btnTran"><i class="layui-icon layui-icon-transfer"></i>转款</button><button type="button" class="layui-btn layui-btn-normal" id="btnAddBalance"><i class="layui-icon layui-icon-add-1"></i>添加</button></div>
+    </div></form></div>
+    <div class="app-table"><table id="resultTable" lay-filter="resultTable"></table></div>
+    <div id="pagenation" class="app-pagenation"></div>
+
+    <!-- 转款 -->
+    <div id="transferBox" style="display:none; padding:20px;"><form class="layui-form" id="transferForm">
+        <input type="hidden" name="sourceId">
+        <input type="hidden" name="targetId">
+        <div class="layui-form-item"><label class="layui-form-label">转出人<span class="app-req">*</span></label><div class="layui-input-block"><input type="text" id="workertransferuser" placeholder="姓名/工号" class="layui-input" autocomplete="off"></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">转入人<span class="app-req">*</span></label><div class="layui-input-block"><input type="text" id="workercollectuser" placeholder="姓名/工号" class="layui-input" autocomplete="off"></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">金额<span class="app-req">*</span></label><div class="layui-input-inline"><input type="text" name="money" placeholder="金额" class="layui-input v_float" lay-verify="required"></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">备注</label><div class="layui-input-block"><input type="text" name="comment" placeholder="备注" class="layui-input"></div></div>
+        <div class="layui-form-item app-form-footer"><button type="button" class="layui-btn" id="btnTransferSave">保存</button><button type="reset" class="layui-btn layui-btn-primary" id="btnTransferCancel">取消</button></div>
+    </form></div>
+
+    <!-- 添加质保金 -->
+    <div id="addBalanceBox" style="display:none; padding:20px;"><form class="layui-form" id="addBalanceForm">
+        <input type="hidden" name="userId">
+        <div class="layui-form-item"><label class="layui-form-label">工人<span class="app-req">*</span></label><div class="layui-input-block"><input type="text" id="workerUserName" placeholder="姓名/工号" class="layui-input" autocomplete="off"></div></div>
+        <div class="layui-form-item app-form-footer"><button type="button" class="layui-btn" id="btnAddBalanceSave">保存</button><button type="reset" class="layui-btn layui-btn-primary" id="btnAddBalanceCancel">取消</button></div>
+    </form></div>
+
+    <!-- 通用金额弹窗：收取/提现/扣款/发放 -->
+    <div id="moneyBox" style="display:none; padding:20px;"><form class="layui-form" id="moneyForm">
+        <input type="hidden" name="userId">
+        <input type="hidden" name="action">
+        <div class="layui-form-item"><label class="layui-form-label">工人</label><div class="layui-input-block"><input type="text" name="userShow" readonly class="layui-input"></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">金额<span class="app-req">*</span></label><div class="layui-input-inline"><input type="text" name="money" placeholder="金额" class="layui-input v_float" lay-verify="required"></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">备注</label><div class="layui-input-block"><input type="text" name="comment" placeholder="备注" class="layui-input"></div></div>
+        <div class="layui-form-item app-form-footer"><button type="button" class="layui-btn" id="btnMoneySave">保存</button><button type="reset" class="layui-btn layui-btn-primary" id="btnMoneyCancel">取消</button></div>
+    </form></div>
+
+    <!-- 更新上限 -->
+    <div id="toplimitBox" style="display:none; padding:20px;"><form class="layui-form" id="toplimitForm">
+        <input type="hidden" name="wbid">
+        <div class="layui-form-item"><label class="layui-form-label">质保金上限<span class="app-req">*</span></label><div class="layui-input-inline"><input type="text" name="toplimit" placeholder="上限" class="layui-input v_float" lay-verify="required"></div></div>
+        <div class="layui-form-item app-form-footer"><button type="button" class="layui-btn" id="btnToplimitSave">保存</button><button type="reset" class="layui-btn layui-btn-primary" id="btnToplimitCancel">取消</button></div>
+    </form></div>
+
+    <script type="text/html" id="rowToolbar">
+        <button class="layui-btn layui-btn-xs layui-btn-warm" lay-event="cut">扣款</button>
+        <button class="layui-btn layui-btn-xs" lay-event="push">发放</button>
+        <button class="layui-btn layui-btn-xs layui-btn-normal" lay-event="collect">收取质保金</button>
+        <button class="layui-btn layui-btn-xs layui-btn-danger" lay-event="draw">提现质保金</button>
+        <button class="layui-btn layui-btn-xs layui-btn-disabled" lay-event="update">更新上限</button>
+    </script>
+</div>
+<script src="../../layui/layui.js"></script><script src="../../js/app/config.js"></script><script src="../../js/app/server.js"></script>
+<script src="../../js/app/utils.js"></script><script src="../../js/app/post.js"></script>
+<script src="../../js/app/api.js"></script><script src="../../js/app/core.js"></script>
+<script src="../../js/app/validate.js"></script><script src="../../js/app/bootstrap.js"></script>
+<script src="../../js/salary/workerBalance.js"></script>
+</body></html>

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<!-- app/views/material/materialPreBalanceDetail.html —— 主材预结明细（item 列表 + 编辑结算值 + 计算方式切换 + 预结）
+  上下文：app.params.materialPreBalance.msoId。 -->
+<html lang="zh-CN"><head><meta charset="utf-8"><title>主材预结明细</title>
+<link rel="stylesheet" href="../../layui/css/layui.css"><link rel="stylesheet" href="../../css/app.css"></head>
+<body><div class="app-page">
+    <div class="app-table"><table id="resultTable" lay-filter="resultTable"></table></div>
+    <div style="margin-top:10px;">
+        <button type="button" class="layui-btn" id="btnPreBalance"><i class="layui-icon layui-icon-ok"></i>预结</button>
+        <button type="button" class="layui-btn layui-btn-warm" id="btnExport"><i class="layui-icon layui-icon-export"></i>导出</button>
+        <button type="button" class="layui-btn layui-btn-primary" id="btnBack">返回</button>
+    </div>
+    <div id="editBox" style="display:none; padding:20px;"><form class="layui-form" id="editForm">
+        <input type="hidden" name="miid">
+        <input type="hidden" name="mid">
+        <input type="hidden" name="isLeaf">
+        <input type="hidden" name="packageName">
+        <div class="layui-form-item"><label class="layui-form-label">计算方式</label><div class="layui-input-block"><input type="text" name="calcType" class="layui-input" disabled></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">值<span class="app-req">*</span></label><div class="layui-input-inline"><input type="text" name="value" class="layui-input v_float"></div></div>
+        <div class="layui-form-item app-form-footer"><button type="button" class="layui-btn" id="btnSave">保存</button><button type="reset" class="layui-btn layui-btn-primary" id="btnCancel">取消</button></div>
+    </form></div>
+    <script type="text/html" id="rowToolbar">
+        <button class="layui-btn layui-btn-xs" lay-event="value">结算值</button>
+        <button class="layui-btn layui-btn-xs layui-btn-warm" lay-event="cal">计算方式</button>
+    </script>
+</div>
+<script src="../../layui/layui.js"></script><script src="../../js/app/config.js"></script><script src="../../js/app/server.js"></script><script src="../../js/app/utils.js"></script><script src="../../js/app/post.js"></script><script src="../../js/app/api.js"></script><script src="../../js/app/core.js"></script><script src="../../js/app/validate.js"></script><script src="../../js/app/<script src="../../js/app/exporter.js"></script>bootstrap.js"></script><script src="../../js/material/materialPreBalanceDetail.js"></script>
+</body></html>

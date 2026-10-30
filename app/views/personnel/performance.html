@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>绩效管理</title>
+<link rel="stylesheet" href="../../layui/css/layui.css">
+<link rel="stylesheet" href="../../css/app.css">
+</head>
+<body>
+<div class="app-page">
+<div class="app-search">
+<form class="layui-form" id="searchForm" lay-filter="searchForm"><div class="layui-form-item">
+<div class="layui-inline"><label class="layui-form-label">员工</label><div class="layui-input-inline"><input type="text" name="userName" data-op="cn" placeholder="员工" class="layui-input" autocomplete="off"></div></div>
+<div class="layui-inline"><label class="layui-form-label">类型</label><div class="layui-input-inline"><select name="type" data-op="eq"><option value="">全部</option></select></div></div>
+<div class="layui-inline"><label class="layui-form-label">开始时间</label><div class="layui-input-inline"><input type="text" name="startTime" data-op="eq" placeholder="开始时间" class="layui-input" autocomplete="off"></div></div>
+<div class="layui-inline"><label class="layui-form-label">结束时间</label><div class="layui-input-inline"><input type="text" name="endTime" data-op="eq" placeholder="结束时间" class="layui-input" autocomplete="off"></div></div>
+<div class="layui-inline"><button type="button" class="layui-btn" id="btnSearch"><i class="layui-icon layui-icon-search"></i>查询</button><button type="reset" class="layui-btn layui-btn-primary" id="btnReset">重置</button><button type="button" class="layui-btn layui-btn-normal" id="btnAdd"><i class="layui-icon layui-icon-add-1"></i>添加</button></div>
+</div></form>
+</div>
+<div class="app-table"><table id="resultTable" lay-filter="resultTable"></table></div>
+<div id="pagenation" class="app-pagenation"></div><div id="editBox" style="display:none; padding:20px;"><form class="layui-form" id="editForm"><div class="layui-form-item"><label class="layui-form-label">员工<span class="app-req">*</span></label><div class="layui-input-block"><input type="text" id="users" class="layui-input v_required" lay-verify="required" placeholder="拼音搜索"><input type="hidden" name="user.userId"></div></div><div class="layui-form-item"><label class="layui-form-label">类型</label><div class="layui-input-block"><select name="type"></select></div></div><div class="layui-form-item"><label class="layui-form-label">得分</label><div class="layui-input-block"><input type="text" name="value" placeholder="" class="layui-input"></div></div>
+<div class="layui-form-item"><label class="layui-form-label">等级</label><div class="layui-input-block"><select name="level"></select></div></div><div class="layui-form-item"><label class="layui-form-label">开始时间</label><div class="layui-input-block"><input type="text" name="startTime" class="layui-input" placeholder="yyyy-MM-dd"></div></div><div class="layui-form-item"><label class="layui-form-label">结束时间</label><div class="layui-input-block"><input type="text" name="endTime" class="layui-input" placeholder="yyyy-MM-dd"></div></div><div class="layui-form-item"><label class="layui-form-label">工作</label><div class="layui-input-block"><input type="text" name="work" placeholder="" class="layui-input"></div></div>
+<div class="layui-form-item"><label class="layui-form-label">说明</label><div class="layui-input-block"><textarea name="content" placeholder="" class="layui-textarea"></textarea></div></div>
+<div class="layui-form-item app-form-footer"><button type="button" class="layui-btn" id="btnSave">保存</button><button type="button" class="layui-btn layui-btn-primary" id="btnCancel">取消</button></div></form></div>
+</div>
+<script src="../../layui/layui.js"></script>
+<script src="../../js/app/config.js"></script>
+<script src="../../js/app/server.js"></script>
+<script src="../../js/app/utils.js"></script>
+<script src="../../js/app/post.js"></script>
+<script src="../../js/app/api.js"></script>
+<script src="../../js/app/core.js"></script>
+<script src="../../js/app/validate.js"></script>
+<script src="../../js/app/bootstrap.js"></script>
+<script src="../../js/personnel/performance.js"></script>
+</body>
+</html>

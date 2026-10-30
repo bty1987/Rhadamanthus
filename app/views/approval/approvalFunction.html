@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<!-- app/views/approval/approvalFunction.html —— 审批功能配置（按审批功能 key 配置 api/条件/字段/功能勾选）
+  type=0 为分类节点（点击进入配置）；type=1/2/3/4 分别为 api/条件/字段/功能 项，勾选后保存到 approvalFunctionRight -->
+<html lang="zh-CN">
+<head><meta charset="utf-8"><title>审批功能配置</title>
+<link rel="stylesheet" href="../../layui/css/layui.css"><link rel="stylesheet" href="../../css/app.css"></head>
+<body>
+<div class="app-page">
+    <div class="app-table"><table id="resultTable" lay-filter="resultTable"></table></div>
+
+    <div id="editBox" style="display:none; padding:20px;">
+        <h4 style="margin-bottom:10px;">api 配置</h4>
+        <div id="apiData"></div>
+        <h4 style="margin:14px 0 10px;">条件配置</h4>
+        <div id="condArrData"></div>
+        <h4 style="margin:14px 0 10px;">字段配置</h4>
+        <div id="fieldData"></div>
+        <h4 style="margin:14px 0 10px;">功能配置</h4>
+        <div id="functionData"></div>
+        <div style="margin-top:18px;text-align:center;">
+            <button type="button" class="layui-btn" id="saveBtn">保存</button>
+            <button type="button" class="layui-btn layui-btn-primary" id="cancelBtn">取消</button>
+        </div>
+    </div>
+</div>
+<script src="../../layui/layui.js"></script><script src="../../js/app/config.js"></script><script src="../../js/app/server.js"></script><script src="../../js/app/utils.js"></script><script src="../../js/app/post.js"></script><script src="../../js/app/api.js"></script><script src="../../js/app/core.js"></script><script src="../../js/app/validate.js"></script><script src="../../js/app/bootstrap.js"></script><script src="../../js/approval/approvalFunction.js"></script>
+</body></html>

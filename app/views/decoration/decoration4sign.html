@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<!-- app/views/decoration/decoration4sign.html —— 签约准备（订单维度：前置条件检查+轻操作）
+  上下文：(parent.app.params.signPrepare) || (app.params.signPrepare) = { orderId, mode(sign/presign), cid }。
+  确认签约/预签与页面跳转通过 parent 的 decoration:signprepare 事件桥回宿主页既有链路。 -->
+<html lang="zh-CN"><head><meta charset="utf-8"><title>签约准备</title>
+<link rel="stylesheet" href="../../layui/css/layui.css"><link rel="stylesheet" href="../../css/app.css"></head>
+<body><div class="app-page">
+    <div class="app-toolbar" style="padding:10px 15px 0;">
+        <span style="font-size:16px;font-weight:bold;" id="pageTitle">签约准备</span>
+        <span id="readyBadge" style="margin-left:10px;"></span>
+    </div>
+    <div style="margin:10px 15px;padding:10px 15px;background:#f8f8f8;border-radius:4px;" id="summaryInfo"></div>
+    <div id="checkList" style="margin:0 15px 10px;"></div>
+    <div id="actionRow" style="margin:0 15px 15px;padding:12px 15px;background:#fff3e0;border:1px solid #ffd5a3;border-radius:4px;"></div>
+
+    <div id="drawlineTimeBox" style="display:none;padding:20px 30px;">
+        <form class="layui-form" id="drawlineTimeForm">
+            <div class="layui-form-item">
+                <label class="layui-form-label"><span style="color:red;">*</span> 预计放线时间</label>
+                <div class="layui-input-inline"><input class="layui-input" id="drawlineTime" readonly="readonly" placeholder="选择日期"></div>
+            </div>
+        </form>
+    </div>
+
+    <div id="applayDrawLineBox" style="display:none;padding:20px 30px;">
+        <form class="layui-form" id="applayDrawLineForm">
+            <div class="layui-form-item">
+                <label class="layui-form-label"><span style="color:red;">*</span> 申请说明</label>
+                <div class="layui-input-inline" style="width:300px;"><input class="layui-input" id="applayDes" maxlength="128" placeholder="填写放线申请说明"></div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label"><span style="color:red;">*</span> 申请时间</label>
+                <div class="layui-input-inline"><input class="layui-input" id="applayTime" readonly="readonly" placeholder="选择日期"></div>
+            </div>
+        </form>
+    </div>
+
+    <div id="companySignBox" style="display:none;padding:20px 30px;">
+        <form class="layui-form" id="companySignForm">
+            <div class="layui-form-item">
+                <label class="layui-form-label"><span style="color:red;">*</span> 签章</label>
+                <div class="layui-input-inline" style="width:300px;"><select id="signetSel"></select></div>
+            </div>
+        </form>
+    </div>
+
+    <div id="joinActivityBox" style="display:none;padding:20px 30px;">
+        <form class="layui-form" id="joinActivityForm">
+            <div class="layui-form-item">
+                <label class="layui-form-label"><span style="color:red;">*</span> 选择活动</label>
+                <div class="layui-input-inline" style="width:300px;"><select id="activityInfo"></select></div>
+            </div>
+        </form>
+    </div>
+</div>
+<script src="../../layui/layui.js"></script><script src="../../js/app/config.js"></script><script src="../../js/app/server.js"></script><script src="../../js/app/utils.js"></script><script src="../../js/app/post.js"></script><script src="../../js/app/api.js"></script><script src="../../js/app/core.js"></script><script src="../../js/app/validate.js"></script><script src="../../js/app/bootstrap.js"></script><script src="../../js/decoration/decoration4sign.js"></script>
+</body></html>

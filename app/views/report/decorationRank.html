@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<!-- app/views/report/decorationRank.html —— 装修业绩排名（按 paytype/type 参数展示 分区/部门/人员 多组排名）。
+  urlLoadParams.type: 0设计/1业务/2主材/3总；paytype: region/depte/designer/(空=高级)。 -->
+<html lang="zh-CN"><head><meta charset="utf-8"><title>装修业绩排名</title>
+<link rel="stylesheet" href="../../layui/css/layui.css"><link rel="stylesheet" href="../../css/app.css"></head>
+<body><div class="app-page">
+    <div class="app-search"><form class="layui-form" id="searchForm" onsubmit="return false;"><div class="layui-form-item">
+        <div class="layui-inline"><label class="layui-form-label">年份<span class="app-req">*</span></label><div class="layui-input-inline"><input type="text" name="year" id="year" placeholder="年份" class="layui-input" autocomplete="off"></div></div>
+        <div class="layui-inline"><label class="layui-form-label">月份<span class="app-req">*</span></label><div class="layui-input-inline"><input type="text" name="month" id="month" placeholder="月份" class="layui-input" autocomplete="off"></div></div>
+        <div class="layui-inline"><label class="layui-form-label">人员ID</label><div class="layui-input-inline"><input type="text" name="designer" placeholder="人员 userId" class="layui-input" autocomplete="off"></div></div>
+        <div class="layui-inline"><label class="layui-form-label">部门ID</label><div class="layui-input-inline"><input type="text" name="depte" placeholder="部门 did" class="layui-input" autocomplete="off"></div></div>
+        <div class="layui-inline"><label class="layui-form-label">分区ID</label><div class="layui-input-inline"><input type="text" name="region" placeholder="分区 did" class="layui-input" autocomplete="off"></div></div>
+        <div class="layui-inline"><button type="button" class="layui-btn" id="btnSearch"><i class="layui-icon layui-icon-search"></i>查询</button><button type="reset" class="layui-btn layui-btn-primary" id="btnReset">重置</button></div>
+    </div></form></div>
+    <div id="rankList" class="layui-row layui-col-space15" style="margin-top:10px;"></div>
+</div>
+<script src="../../layui/layui.js"></script><script src="../../js/app/config.js"></script><script src="../../js/app/server.js"></script><script src="../../js/app/utils.js"></script><script src="../../js/app/post.js"></script><script src="../../js/app/api.js"></script><script src="../../js/app/core.js"></script><script src="../../js/app/validate.js"></script><script src="../../js/app/bootstrap.js"></script><script src="../../js/report/decorationRank.js"></script>
+</body></html>

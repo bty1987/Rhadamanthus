@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<!-- app/views/manifest/alloting.html —— 调拨（header + 多行明细 + 审批人 → submitApprovalForManifestDB）
+  header: manifestTime comment approver
+  明细: goods.gid color.cid format.fid instorehouse.shid outstorehouse.shid num comment -->
+<html lang="zh-CN">
+<head><meta charset="utf-8"><title>调拨</title>
+<link rel="stylesheet" href="../../layui/css/layui.css"><link rel="stylesheet" href="../../css/app.css"></head>
+<body>
+<div class="app-page">
+    <div id="breadcrumb"></div>
+    <form class="layui-form" id="headForm" lay-filter="headForm">
+        <div class="layui-form-item">
+            <div class="layui-inline"><label class="layui-form-label">货单时间<span class="app-req">*</span></label><div class="layui-input-inline"><input type="text" name="manifestTime" id="manifestTime" placeholder="yyyy-MM-dd" class="layui-input v_required"></div></div>
+            <div class="layui-inline"><label class="layui-form-label">审批人<span class="app-req">*</span></label><div class="layui-input-inline"><input type="text" name="approver" id="approver" placeholder="审批人userId" class="layui-input v_required"></div></div>
+        </div>
+        <div class="layui-form-item"><label class="layui-form-label">备注</label><div class="layui-input-block"><input type="text" name="comment" maxlength="128" class="layui-input"></div></div>
+    </form>
+    <div class="app-table"><div id="itemTableWrap"></div></div>
+    <div class="layui-form-item app-form-footer"><button type="button" class="layui-btn" id="btnAdd">添加明细</button><button type="button" class="layui-btn layui-btn-normal" id="btnSubmit">提交</button><button type="button" class="layui-btn layui-btn-primary" id="btnReset">重置</button></div>
+</div>
+<script src="../../layui/layui.js"></script><script src="../../js/app/config.js"></script><script src="../../js/app/server.js"></script><script src="../../js/app/utils.js"></script><script src="../../js/app/post.js"></script><script src="../../js/app/api.js"></script><script src="../../js/app/core.js"></script><script src="../../js/app/validate.js"></script><script src="../../js/app/bootstrap.js"></script><script src="../../js/manifest/alloting.js"></script>
+</body></html>

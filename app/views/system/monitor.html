@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<!-- app/views/system/monitor.html —— 服务监控（只读概览）
+  旧版为移动端 MSUI 监控页（占位表格，无 JS 逻辑）。
+  这里改为 layui 桌面版只读监控页：展示服务状态/时间戳等基础信息。
+  数据源：queryServer（communion 服务返回的服务节点信息） -->
+<html lang="zh-CN">
+<head><meta charset="utf-8"><title>服务监控</title>
+<link rel="stylesheet" href="../../layui/css/layui.css"><link rel="stylesheet" href="../../css/app.css"></head>
+<body>
+<div class="app-page">
+    <div class="app-search"><form class="layui-form" id="searchForm"><div class="layui-form-item">
+        <div class="layui-inline"><button type="button" class="layui-btn" id="btnRefresh"><i class="layui-icon layui-icon-refresh"></i>刷新</button></div>
+        <div class="layui-inline" style="color:#999;line-height:38px;">监控只读：展示当前可查询的服务节点信息</div>
+    </div></form></div>
+    <div class="app-table"><table id="resultTable" lay-filter="resultTable"></table></div>
+</div>
+<script src="../../layui/layui.js"></script><script src="../../js/app/config.js"></script><script src="../../js/app/server.js"></script><script src="../../js/app/utils.js"></script><script src="../../js/app/post.js"></script><script src="../../js/app/api.js"></script><script src="../../js/app/core.js"></script><script src="../../js/app/validate.js"></script><script src="../../js/app/bootstrap.js"></script><script src="../../js/system/monitor.js"></script>
+</body></html>

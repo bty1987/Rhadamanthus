@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<!-- app/views/customer/customerCityProperRule.html —— 城区规则（城区→公司/部门/设计师） -->
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8" />
+    <title>城区规则</title>
+    <link rel="stylesheet" href="../../layui/css/layui.css">
+    <link rel="stylesheet" href="../../css/app.css">
+</head>
+<body>
+<div class="app-page" id="customerCityProperRulePage">
+
+    <div class="app-search">
+        <form class="layui-form" lay-filter="searchForm" id="searchForm">
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">规则类型</label>
+                    <div class="layui-input-inline">
+                        <select name="type" data-op="eq">
+                            <option value="">全部</option>
+                            <option value="0">城区→公司</option>
+                            <option value="1">城区→部门</option>
+                            <option value="2">城区→设计师</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">状态</label>
+                    <div class="layui-input-inline">
+                        <select name="status" data-op="eq">
+                            <option value="">全部</option>
+                            <option value="0">启用</option>
+                            <option value="1">禁用</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <button type="button" class="layui-btn" id="btnSearch"><i class="layui-icon layui-icon-search"></i>查询</button>
+                    <button type="reset" class="layui-btn layui-btn-primary" id="btnReset">重置</button>
+                    <button type="button" class="layui-btn layui-btn-normal" id="btnAdd"><i class="layui-icon layui-icon-add-1"></i>添加</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div class="app-table">
+        <table id="resultTable" lay-filter="resultTable"></table>
+    </div>
+
+    <div id="pagenation" class="app-pagenation"></div>
+
+    <div id="editBox" style="display:none; padding:20px;">
+        <form class="layui-form" lay-filter="editForm" id="editForm">
+            <div class="layui-form-item">
+                <label class="layui-form-label">规则类型<span class="app-req">*</span></label>
+                <div class="layui-input-block">
+                    <select name="type" lay-filter="typeFilter" lay-verify="required">
+                        <option value="0">城区→公司</option>
+                        <option value="1">城区→部门</option>
+                        <option value="2">城区→设计师</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">公司<span class="app-req">*</span></label>
+                <div class="layui-input-block">
+                    <select name="company" id="companySel"></select>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">城市<span class="app-req">*</span></label>
+                <div class="layui-input-inline" style="width:190px;">
+                    <select name="city" id="citySel" lay-filter="cityFilter"></select>
+                </div>
+                <div class="layui-input-inline" style="width:190px;">
+                    <select name="cityProper" id="cityProperSel"></select>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">业务类型</label>
+                <div class="layui-input-block">
+                    <select name="busitype" id="busitypeSel"></select>
+                </div>
+            </div>
+            <div class="layui-form-item targetCompanyGroup">
+                <label class="layui-form-label">目标公司<span class="app-req">*</span></label>
+                <div class="layui-input-block">
+                    <select name="targetCompany" id="targetCompanySel"></select>
+                </div>
+            </div>
+            <div class="layui-form-item deptGroup" style="display:none;">
+                <label class="layui-form-label">部门<span class="app-req">*</span></label>
+                <div class="layui-input-block">
+                    <select name="dept" id="deptSel"></select>
+                </div>
+            </div>
+            <div class="layui-form-item userGroup" style="display:none;">
+                <label class="layui-form-label">设计师<span class="app-req">*</span></label>
+                <div class="layui-input-inline" style="width:200px;">
+                    <input type="text" name="userName" id="userName" placeholder="点击选择设计师" class="layui-input v_required" readonly>
+                </div>
+                <div class="layui-input-inline">
+                    <button type="button" class="layui-btn layui-btn-normal" id="btnPickUser">选择</button>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">优先级<span class="app-req">*</span></label>
+                <div class="layui-input-block">
+                    <input type="text" name="priority" value="0" placeholder="请输入优先级" class="layui-input v_required v_number">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">状态</label>
+                <div class="layui-input-block">
+                    <select name="status">
+                        <option value="0">启用</option>
+                        <option value="1">禁用</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item layui-form-text">
+                <label class="layui-form-label">备注</label>
+                <div class="layui-input-block">
+                    <textarea name="comment" placeholder="请输入备注" class="layui-textarea"></textarea>
+                </div>
+            </div>
+            <div class="layui-form-item app-form-footer">
+                <button type="button" class="layui-btn" id="btnSave">保存</button>
+                <button type="button" class="layui-btn layui-btn-primary" id="btnCancel">取消</button>
+            </div>
+        </form>
+    </div>
+
+</div>
+
+<script src="../../layui/layui.js"></script>
+<script src="../../js/app/config.js"></script>
+<script src="../../js/app/server.js"></script>
+<script src="../../js/app/utils.js"></script>
+<script src="../../js/app/post.js"></script>
+<script src="../../js/app/api.js"></script>
+<script src="../../js/app/core.js"></script>
+<script src="../../js/app/validate.js"></script>
+<script src="../../js/app/bootstrap.js"></script>
+<script src="../../js/customer/customer-common.js"></script>
+<script src="../../js/customer/customerCityProperRule.js"></script>
+</body>
+</html>

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<!-- app/views/quotation/protationPart.html —— 预签报价编辑（功能区/可选/个性/减项/赋能 分组项编辑 + 优惠 + 打印）
+  上下文：app.params.quotation = { protation, orderId }。 -->
+<html lang="zh-CN"><head><meta charset="utf-8"><title>预签报价编辑</title>
+<link rel="stylesheet" href="../../layui/css/layui.css"><link rel="stylesheet" href="../../css/app.css"></head>
+<body><div class="app-page">
+    <div class="app-toolbar" style="padding:10px 15px;">
+        <span style="font-size:16px;font-weight:bold;">预签编辑：<span id="proName">-</span></span>
+        <button type="button" class="layui-btn layui-btn-sm" id="btnAddItem"><i class="layui-icon layui-icon-add-1"></i>添加预签项</button>
+        <button type="button" class="layui-btn layui-btn-sm layui-btn-normal" id="btnSave"><i class="layui-icon layui-icon-ok"></i>保存优惠</button>
+        <button type="button" class="layui-btn layui-btn-sm layui-btn-warm" id="btnPrint"><i class="layui-icon layui-icon-print"></i>打印</button>
+        <button type="button" class="layui-btn layui-btn-sm layui-btn-primary" id="btnBack"><i class="layui-icon layui-icon-return"></i>返回</button>
+    </div>
+    <div style="padding:0 15px 10px;">
+        <blockquote class="layui-elem-quote" style="padding:8px 15px;">
+            起报价:<span id="quotePrice">-</span> ｜ 计价面积:<span id="quoteArea">-</span> ｜ 优惠价:<span id="preferPrice">-</span> ｜ 折扣:<span id="discount">-</span>
+            ｜ 管理费:<span id="managePrice">-</span> ｜ 管理优惠:<span id="manageProfit">-</span> ｜ 特殊优惠:<span id="advanceProfit">-</span>
+            ｜ 活动优惠:<span id="activityProfit">-</span> ｜ 税金:<span id="taxPrice">-</span> ｜ <b style="color:#E2737D;">总价:<span id="totalPrice">-</span></b>
+        </blockquote>
+    </div>
+    <div class="layui-tab layui-tab-brief" style="margin:0 15px;" lay-filter="areaTab">
+        <ul class="layui-tab-title">
+            <li class="layui-this">功能区</li><li>可选</li><li>个性</li><li>减项</li><li>赋能</li>
+        </ul>
+        <div class="layui-tab-content">
+            <div class="layui-tab-item layui-show"><table id="table0" lay-filter="table0"></table></div>
+            <div class="layui-tab-item"><table id="table1" lay-filter="table1"></table></div>
+            <div class="layui-tab-item"><table id="table2" lay-filter="table2"></table></div>
+            <div class="layui-tab-item"><table id="table3" lay-filter="table3"></table></div>
+            <div class="layui-tab-item"><table id="table4" lay-filter="table4"></table></div>
+        </div>
+    </div>
+    <script type="text/html" id="rowToolbar">
+        <button class="layui-btn layui-btn-xs" lay-event="editNum">数量</button>
+        <button class="layui-btn layui-btn-xs layui-btn-danger" lay-event="del">删除</button>
+    </script>
+    <div id="numBox" style="display:none;padding:20px 40px;">
+        <div class="layui-form-item"><label class="layui-form-label">公式/数量</label><div class="layui-input-inline"><input id="numInput" class="layui-input" placeholder="如: 2*3.5 或 7"></div></div>
+    </div>
+    <div id="preferBox" style="display:none;padding:20px 30px;">
+        <div class="layui-form-item"><label class="layui-form-label">优惠额</label><div class="layui-input-inline"><input id="preferPrices" class="layui-input"></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">管理优惠</label><div class="layui-input-inline"><input id="preferManage" class="layui-input"></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">特殊优惠</label><div class="layui-input-inline"><input id="preferAdvance" class="layui-input"></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">活动优惠</label><div class="layui-input-inline"><input id="activityProfit" class="layui-input"></div></div>
+    </div>
+    <div id="approveBox" style="display:none;padding:20px 30px;">
+        <div class="layui-form-item"><label class="layui-form-label">变更原因</label><div class="layui-input-inline" style="width:320px;"><input id="changeReason" class="layui-input"></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">审批人</label><div class="layui-input-inline" style="width:320px;text-align:left;padding-top:9px;" id="approveManSel"></div></div>
+    </div>
+    <div id="itemsBox" style="display:none;padding:10px 15px;">
+        <table id="pickTable" lay-filter="pickTable"></table>
+        <div id="pickPagenation"></div>
+        <div style="margin-top:10px;text-align:right;"><button type="button" class="layui-btn" id="btnSaveItems">保存勾选</button></div>
+    </div>
+</div>
+<script src="../../layui/layui.js"></script><script src="../../js/app/config.js"></script><script src="../../js/app/server.js"></script><script src="../../js/app/utils.js"></script><script src="../../js/app/post.js"></script><script src="../../js/app/api.js"></script><script src="../../js/app/core.js"></script><script src="../../js/app/validate.js"></script><script src="../../js/app/bootstrap.js"></script><script src="../../js/quotation/quotation-common.js"></script><script src="../../js/quotation/protationPart.js"></script>
+</body></html>

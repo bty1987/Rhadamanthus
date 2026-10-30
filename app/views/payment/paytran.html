@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<!-- app/views/payment/paytran.html —— 转换款/POS推送（按订单号/收据名称/状态/创建时间筛选）
+  列：装修单号/业务类型/收据名称/机器编号/状态/金额/创建人/创建时间/推送时间。
+  操作：创建转换款、撤销/验证/删除/收款码/微信推送/POS推送（status=0初始时）。 -->
+<html lang="zh-CN"><head><meta charset="utf-8"><title>转换款</title>
+<link rel="stylesheet" href="../../layui/css/layui.css"><link rel="stylesheet" href="../../css/app.css"></head>
+<body><div class="app-page">
+    <div class="app-search"><form class="layui-form" id="searchForm"><div class="layui-form-item">
+        <div class="layui-inline"><label class="layui-form-label">订单号</label><div class="layui-input-inline"><input class="layui-input" name="orderId" data-op="cn"></div></div>
+        <div class="layui-inline"><label class="layui-form-label">收据名称</label><div class="layui-input-inline"><input class="layui-input" name="no" data-op="cn"></div></div>
+        <div class="layui-inline"><label class="layui-form-label">状态</label><div class="layui-input-inline"><select name="status"><option value="">全部</option><option value="0">初始</option><option value="1">已推送</option><option value="2">成功</option><option value="3">失败</option></select></div></div>
+        <div class="layui-inline"><label class="layui-form-label">创建时间</label><div class="layui-input-inline"><input class="layui-input" name="createTime" id="createTime" placeholder="YYYY-MM-DD" data-op="eq"></div></div>
+        <div class="layui-inline"><button type="button" class="layui-btn" id="btnSearch"><i class="layui-icon layui-icon-search"></i>查询</button><button type="button" class="layui-btn layui-btn-primary" id="btnBack"><i class="layui-icon layui-icon-return"></i>返回</button></div>
+    </div></form></div>
+    <div class="app-table"><table id="resultTable" lay-filter="resultTable"></table></div>
+    <div id="pagenation" class="app-pagenation"></div>
+    <script type="text/html" id="rowToolbar">
+        <button class="layui-btn layui-btn-xs" lay-event="cancel">撤销</button>
+        <button class="layui-btn layui-btn-xs layui-btn-warm" lay-event="check">验证</button>
+        <button class="layui-btn layui-btn-xs layui-btn-danger" lay-event="delete">删除</button>
+        <button class="layui-btn layui-btn-xs layui-btn-normal" lay-event="wechat">微信推送</button>
+        <button class="layui-btn layui-btn-xs layui-btn-disabled" lay-event="pos">POS推送</button>
+    </script>
+</div>
+<script src="../../layui/layui.js"></script><script src="../../js/app/config.js"></script><script src="../../js/app/server.js"></script><script src="../../js/app/utils.js"></script><script src="../../js/app/post.js"></script><script src="../../js/app/api.js"></script><script src="../../js/app/core.js"></script><script src="../../js/app/validate.js"></script><script src="../../js/app/bootstrap.js"></script><script src="../../js/payment/paytran.js"></script>
+</body></html>

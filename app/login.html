@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<!--
+  app/login.html —— 纯 layui 登录页
+
+  资源引用（仅 layui + 本应用）：
+    layui/css/layui.css + layui/layui.js + js/app/md5.js + js/app/config.js + js/app/server.js + js/login.js
+  不依赖 jQuery 2.0.3 / ace / bootstrap。
+
+  登录方式：
+    1. 账号密码：挑战-响应（requestLoginChallenge.do → doLogin.do），对齐旧 login.js:343-429
+    2. 扫码登录：钉钉二维码（QRCode.do → queryLoginInfoByLoginFlag.do 轮询），对齐旧 login.js:189-261
+
+  成功后写 Cookie authentication + loginTime，跳 index.html。
+-->
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>方林信息平台 - 登录</title>
+    <link rel="shortcut icon" href="fanglin.ico" type="image/x-icon">
+    <link rel="stylesheet" href="layui/css/layui.css">
+    <link rel="stylesheet" href="css/app.css">
+    <style>
+        /* 登录页局部样式（明亮蓝主题，不污染全局） */
+        body { margin: 0; height: 100vh; display: flex; align-items: center; justify-content: center;
+               background: linear-gradient(135deg, #1E88E5 0%, #42A5F5 50%, #64B5F6 100%); }
+        .login-box { width: 380px; background: #fff; border-radius: 8px; box-shadow: 0 12px 40px rgba(0,0,0,.2);
+                     padding: 40px 36px 30px; box-sizing: border-box; }
+        .login-box .logo { text-align: center; margin-bottom: 26px; }
+        /* logo 图标是透明底白色图形，白卡上隐形：给品牌蓝圆角方块衬底 */
+        .login-box .logo img { width: 72px; height: 72px; background: #1E88E5;
+                               border-radius: 16px; padding: 10px; box-sizing: border-box; }
+        .login-box .logo h2 { margin: 12px 0 0; font-size: 20px; color: #1E88E5; font-weight: 500; }
+        .login-box .layui-form-item { margin-bottom: 20px; }
+        .login-box .layui-input { height: 44px; padding-left: 44px; }
+        .login-box .input-wrap { position: relative; }
+        .login-box .input-wrap .layui-icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%);
+                                              color: #999; font-size: 20px; }
+        .login-box .input-wrap .layui-input:focus { border-color: #1E88E5; }
+        .login-box .verify-row { display: flex; gap: 10px; }
+        .login-box .verify-row .layui-input { flex: 1; }
+        .login-box .verify-row img { height: 44px; width: 110px; cursor: pointer; border-radius: 2px;
+                                     background: #f5f7fa; }
+        /* 登录按钮用主色蓝，替代 layui 默认墨绿 */
+        .login-box .login-btn { width: 100%; height: 46px; font-size: 16px;
+                                 background-color: #1E88E5; border-color: #1E88E5; }
+        .login-box .login-btn:hover { background-color: #1976D2; border-color: #1976D2; }
+        .login-box .err { min-height: 20px; color: #e6443e; font-size: 13px; text-align: center; margin: -8px 0 12px; }
+        .login-box .footer { text-align: center; color: #999; font-size: 12px; margin-top: 18px; }
+        /* 登录方式切换 tab */
+        .login-tabs { display: flex; margin-bottom: 22px; border-bottom: 1px solid #eee; }
+        .login-tab { flex: 1; text-align: center; padding: 0 0 12px; cursor: pointer; color: #999; font-size: 15px;
+                     border-bottom: 2px solid transparent; transition: color .15s, border-color .15s; }
+        .login-tab.active { color: #1E88E5; border-bottom-color: #1E88E5; font-weight: 500; }
+        .login-panel { display: none; }
+        .login-panel.active { display: block; }
+        /* 扫码登录面板 */
+        .qrcode-box { text-align: center; padding: 6px 0 10px; }
+        .qrcode-box .qr-img-wrap { position: relative; width: 190px; height: 190px; margin: 0 auto 14px;
+                                    border: 1px solid #eee; border-radius: 6px; background: #fafbfc; }
+        .qrcode-box .qr-img-wrap img { width: 100%; height: 100%; object-fit: contain; }
+        .qrcode-box .qr-mask { position: absolute; inset: 0; display: none; align-items: center; justify-content: center;
+                               background: rgba(255,255,255,.92); border-radius: 6px; color: #666; font-size: 13px;
+                               cursor: pointer; line-height: 1.8; }
+        .qrcode-box .qr-mask.show { display: flex; }
+        .qrcode-box .qr-mask span { color: #1E88E5; }
+        .qrcode-box .qr-tip { color: #666; font-size: 13px; }
+        .qrcode-box .qr-tip b { color: #1E88E5; }
+    </style>
+</head>
+<body>
+    <div class="login-box">
+        <div class="logo">
+            <img src="images/icon_fanglin.png" alt="logo" onerror="this.style.display='none'">
+            <h2>方林信息平台</h2>
+        </div>
+
+        <!-- 登录方式切换 -->
+        <div class="login-tabs">
+            <div class="login-tab active" data-tab="password">账号密码登录</div>
+            <div class="login-tab" data-tab="qrcode">扫码登录</div>
+        </div>
+
+        <!-- 面板一：账号密码 -->
+        <div class="login-panel active" id="passwordPanel">
+            <form class="layui-form" id="loginForm" lay-filter="loginForm">
+                <div class="layui-form-item">
+                    <div class="input-wrap">
+                        <i class="layui-icon layui-icon-username"></i>
+                        <input type="text" name="userId" id="userId" lay-verify="required"
+                               placeholder="请输入登录账号" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <div class="input-wrap">
+                        <i class="layui-icon layui-icon-password"></i>
+                        <input type="password" name="password" id="password" lay-verify="required"
+                               placeholder="请输入密码" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <div class="verify-row">
+                        <div class="input-wrap" style="flex:1;">
+                            <i class="layui-icon layui-icon-vercode"></i>
+                            <input type="text" name="verifyCode" id="nowCode" lay-verify="required"
+                                   placeholder="请输入验证码" autocomplete="off" maxlength="6" class="layui-input">
+                        </div>
+                        <img id="Verify" title="点击刷新验证码" alt="验证码">
+                    </div>
+                </div>
+
+                <div class="err" id="errorMsg"></div>
+
+                <div class="layui-form-item">
+                    <button type="submit" class="layui-btn layui-btn-normal login-btn" lay-submit lay-filter="doLogin">
+                        登 录
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- 面板二：扫码登录（钉钉二维码） -->
+        <div class="login-panel" id="qrcodePanel">
+            <div class="qrcode-box">
+                <div class="qr-img-wrap">
+                    <img id="qrImg" alt="登录二维码" style="display:none;">
+                    <div class="qr-mask" id="qrMask">
+                        <div id="qrMaskText">二维码加载中...</div>
+                    </div>
+                </div>
+                <div class="qr-tip">请使用 <b>钉钉</b> 扫码登录</div>
+            </div>
+        </div>
+
+        <div class="footer">© 方林信息平台</div>
+    </div>
+
+    <!-- 顺序：layui → 配置（config/server 用普通 <script>，最早可用）→ md5 → 业务 -->
+    <script src="layui/layui.js"></script>
+    <script src="js/app/config.js"></script>
+    <script src="js/app/server.js"></script>
+    <script src="js/app/md5.js"></script>
+    <script src="js/login.js"></script>
+</body>
+</html>

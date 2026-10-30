@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<!-- app/views/customer/consultion2create.html —— 咨询转单（选择装修单 → 转咨询单/报修单/投诉单）
+     urlLoadParams.depage 决定查询配置（decoration 功能权限） -->
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8" />
+    <title>咨询转单</title>
+    <link rel="stylesheet" href="../../layui/css/layui.css">
+    <link rel="stylesheet" href="../../css/app.css">
+</head>
+<body>
+<div class="app-page" id="consultion2createPage">
+
+    <div class="app-search">
+        <form class="layui-form" lay-filter="searchForm" id="searchForm">
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">装修单号</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="orderId" data-op="eq" placeholder="请输入装修单号" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">楼盘</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="house.village.no" data-op="eq" placeholder="楼盘编号" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <button type="button" class="layui-btn" id="btnSearch"><i class="layui-icon layui-icon-search"></i>查询</button>
+                    <button type="reset" class="layui-btn layui-btn-primary" id="btnReset">重置</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div class="app-table">
+        <table id="resultTable" lay-filter="resultTable"></table>
+    </div>
+
+    <div id="pagenation" class="app-pagenation"></div>
+
+    <!-- 绑定的装修单信息 + 转单操作 -->
+    <div id="queryView" style="padding:10px 15px;">
+        <fieldset class="layui-elem-field">
+            <legend id="notTitle">转单操作（先在列表中"绑定"装修单）</legend>
+            <div class="layui-field-box">
+                <ul id="decorationInfo" style="padding:0;margin:0;list-style:none;"></ul>
+                <div class="layui-form-item layui-form-text" style="margin-top:10px;">
+                    <label class="layui-form-label">备注<span class="app-req">*</span></label>
+                    <div class="layui-input-inline" style="width:420px;">
+                        <textarea name="comment" id="comment" placeholder="请输入备注（转单必填）" class="layui-textarea v_required" form="leftBottom"></textarea>
+                    </div>
+                </div>
+                <div style="margin-top:10px;">
+                    <button type="button" class="layui-btn" id="consultionBtn">转咨询单</button>
+                    <button type="button" class="layui-btn layui-btn-warm" id="aepairBtn">转报修单</button>
+                    <button type="button" class="layui-btn layui-btn-danger" id="complainBtn">转投诉单</button>
+                    <button type="button" class="layui-btn layui-btn-primary" id="resetBtn">重置</button>
+                </div>
+            </div>
+        </fieldset>
+    </div>
+
+    <div id="right" class="layui-row" style="padding:0 15px 15px;"></div>
+
+    <!-- 转报修单 -->
+    <div id="aepairBox" style="display:none; padding:20px;">
+        <form class="layui-form" lay-filter="aepairForm" id="aepairForm">
+            <div class="layui-form-item">
+                <label class="layui-form-label">预计完成时间<span class="app-req">*</span></label>
+                <div class="layui-input-block">
+                    <input type="text" name="aepairTargetTime" id="aepairTargetTime" placeholder="预计完成时间" class="layui-input v_required" readonly>
+                </div>
+            </div>
+            <div class="layui-form-item layui-form-text">
+                <label class="layui-form-label">说明<span class="app-req">*</span></label>
+                <div class="layui-input-block">
+                    <textarea name="aepairComment" placeholder="请输入说明" class="layui-textarea v_required"></textarea>
+                </div>
+            </div>
+            <div class="layui-form-item app-form-footer">
+                <button type="button" class="layui-btn" id="btnAepairSave">保存</button>
+                <button type="button" class="layui-btn layui-btn-primary" id="btnAepairCancel">取消</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- 转投诉单 -->
+    <div id="complainBox" style="display:none; padding:20px;">
+        <form class="layui-form" lay-filter="complainForm" id="complainForm">
+            <div class="layui-form-item">
+                <label class="layui-form-label">等级<span class="app-req">*</span></label>
+                <div class="layui-input-block">
+                    <select name="complainLevel" lay-verify="required">
+                        <option value="0">标准</option>
+                        <option value="1">重大</option>
+                        <option value="2">危机</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item app-form-footer">
+                <button type="button" class="layui-btn" id="btnComplainSave">保存</button>
+                <button type="button" class="layui-btn layui-btn-primary" id="btnComplainCancel">取消</button>
+            </div>
+        </form>
+    </div>
+
+</div>
+
+<script src="../../layui/layui.js"></script>
+<script src="../../js/app/config.js"></script>
+<script src="../../js/app/server.js"></script>
+<script src="../../js/app/utils.js"></script>
+<script src="../../js/app/post.js"></script>
+<script src="../../js/app/api.js"></script>
+<script src="../../js/app/core.js"></script>
+<script src="../../js/app/validate.js"></script>
+<script src="../../js/app/bootstrap.js"></script>
+<script src="../../js/customer/customer-common.js"></script>
+<script src="../../js/decoration/decoration-common.js"></script>
+<script src="../../js/customer/consultion2create.js"></script>
+</body>
+</html>

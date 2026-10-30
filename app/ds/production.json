@@ -1,0 +1,67 @@
+{
+	"productionStatus":[
+		{"key": "0", "value": "初始"},
+		{"key": "1", "value": "设计"},
+		{"key": "2", "value": "生产"},
+		{"key": "3", "value": "仓库"},
+		{"key": "4", "value": "物流"},
+		{"key": "5", "value": "运输"},
+		{"key": "6", "value": "安装"},
+		{"key": "7", "value": "完成"},
+		{"key": "8", "value": "售后"},
+		{"key": "9", "value": "完结"},
+		{"key": "10", "value": "废单"}
+	],
+	"hardwareStatus": [
+		{"key": "0", "value": "初始"},
+		{"key": "1", "value": "采购"},
+		{"key": "2", "value": "入库"},
+		{"key": "3", "value": "完结"},
+		{"key": "4", "value": "废单"}
+	],
+	"diliveryStatus":[
+		{"key": "0", "value": "未送货"},
+		{"key": "1", "value": "已送货"}
+	],
+	"productionType":[
+		{"key": "0", "value": "生产单"},
+		{"key": "1", "value": "售后单"}
+	],
+	"salesType": [
+		{"key": "0", "value": "主材单"},
+		{"key": "1", "value": "销售单"}
+	],
+	"productionPlanStatus": [
+		{"key": "0", "value": "初始"},
+		{"key": "1", "value": "完结"}
+	],
+	"hrStatus": [
+		{"key": "1", "value": "采购"},
+		{"key": "2", "value": "入库"}
+	],
+	"outsourceStatus": [
+		{"key": "0", "value": "初始"},
+		{"key": "1", "value": "审核"},
+		{"key": "2", "value": "确认"},
+		{"key": "3", "value": "完结"},
+		{"key": "4", "value": "废除"}
+	],
+	"tranpackStatus": [
+		{"key": "0", "value": "初始"},
+		{"key": "1", "value": "仓库"},
+		{"key": "2", "value": "物流"},
+		{"key": "3", "value": "运输"},
+		{"key": "4", "value": "安装"},
+		{"key": "5", "value": "完成"},
+		{"key": "6", "value": "丢失"},
+		{"key": "7", "value": "失效"}
+	],
+	"tranpackType": [
+		{"key": "0", "value": "外协"},
+		{"key": "1", "value": "五金"},
+		{"key": "2", "value": "计划"}
+	],
+
+    "errorCode": 0,
+    "errorMsg": null
+}

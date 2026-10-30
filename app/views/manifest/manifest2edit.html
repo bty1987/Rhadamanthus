@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<!-- app/views/manifest/manifest2edit.html —— 编辑货单明细（按 mid/type 加载，逐行 保存/删除/新增）
+  URL: ?mid=xxx&type=xxx
+  接口：queryManifestItemByMid / addManifestItem / updateManifestItem / deleteManifestItem -->
+<html lang="zh-CN">
+<head><meta charset="utf-8"><title>编辑货单</title>
+<link rel="stylesheet" href="../../layui/css/layui.css"><link rel="stylesheet" href="../../css/app.css"></head>
+<body>
+<div class="app-page">
+    <div id="breadcrumb"></div>
+    <div class="app-table"><div id="itemTableWrap"></div></div>
+    <div class="layui-form-item app-form-footer"><button type="button" class="layui-btn" id="btnAdd">添加明细</button><button type="button" class="layui-btn layui-btn-primary" id="btnBack">返回</button></div>
+</div>
+<script src="../../layui/layui.js"></script><script src="../../js/app/config.js"></script><script src="../../js/app/server.js"></script><script src="../../js/app/utils.js"></script><script src="../../js/app/post.js"></script><script src="../../js/app/api.js"></script><script src="../../js/app/core.js"></script><script src="../../js/app/validate.js"></script><script src="../../js/app/bootstrap.js"></script><script src="../../js/manifest/manifest2edit.js"></script>
+</body></html>

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<!-- app/views/information/notice.html —— 公告管理（列表 + 添加/编辑 + 删除 + 附件上传）
+  字段：nid theme(主题) type(类型) priority(优先级) startTime endTime isPublic exPublic contents filePath fileName creater -->
+<html lang="zh-CN">
+<head><meta charset="utf-8"><title>公告管理</title>
+<link rel="stylesheet" href="../../layui/css/layui.css"><link rel="stylesheet" href="../../css/app.css"></head>
+<body>
+<div class="app-page">
+    <div class="app-search"><form class="layui-form" id="searchForm"><div class="layui-form-item">
+        <div class="layui-inline"><label class="layui-form-label">主题</label><div class="layui-input-inline"><input type="text" name="theme" data-op="cn" placeholder="主题" class="layui-input" autocomplete="off"></div></div>
+        <div class="layui-inline"><label class="layui-form-label">发布人</label><div class="layui-input-inline"><input type="text" name="creater" data-op="eq" placeholder="发布人userId" class="layui-input" autocomplete="off"></div></div>
+        <div class="layui-inline"><button type="button" class="layui-btn" id="btnSearch"><i class="layui-icon layui-icon-search"></i>查询</button><button type="reset" class="layui-btn layui-btn-primary" id="btnReset">重置</button><button type="button" class="layui-btn layui-btn-normal" id="btnAdd"><i class="layui-icon layui-icon-add-1"></i>添加</button></div>
+    </div></form></div>
+    <div class="app-table"><table id="resultTable" lay-filter="resultTable"></table></div>
+    <div id="pagenation" class="app-pagenation"></div>
+    <div id="editBox" style="display:none; padding:20px;"><form class="layui-form" id="editForm">
+        <input type="hidden" name="nid">
+        <input type="hidden" name="noticeId">
+        <input type="hidden" name="userId">
+        <input type="hidden" name="filePath">
+        <input type="hidden" name="fileName">
+        <div class="layui-form-item"><label class="layui-form-label">主题<span class="app-req">*</span></label><div class="layui-input-block"><input type="text" name="theme" placeholder="公告主题" class="layui-input v_required" lay-verify="required"></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">类型</label><div class="layui-input-inline"><select name="type"><option value="1">公告</option><option value="2">活动</option></select></div>
+            <label class="layui-form-label">优先级</label><div class="layui-input-inline"><select name="priority"><option value="0">普通</option><option value="1">紧急</option></select></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">开始时间</label><div class="layui-input-inline"><input type="text" name="startTime" id="startTime" placeholder="yyyy-MM-dd" class="layui-input"></div>
+            <label class="layui-form-label">结束时间</label><div class="layui-input-inline"><input type="text" name="endTime" id="endTime" placeholder="yyyy-MM-dd" class="layui-input"></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">公开</label><div class="layui-input-inline"><select name="isPublic"><option value="0">公开</option><option value="1">不公开</option><option value="2">部门</option></select></div>
+            <label class="layui-form-label">过期公开</label><div class="layui-input-inline"><select name="exPublic"><option value="0">公开</option><option value="1">不公开</option></select></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">内容</label><div class="layui-input-block"><textarea name="contents" placeholder="公告内容" class="layui-textarea"></textarea></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">附件</label><div class="layui-input-inline"><button type="button" class="layui-btn" id="btnUpload"><i class="layui-icon layui-icon-upload"></i>上传PDF</button></div><div class="layui-input-inline"><input type="text" name="fileNameShow" readonly class="layui-input" placeholder="未上传"></div></div>
+        <div class="layui-form-item app-form-footer"><button type="button" class="layui-btn" id="btnSave">保存</button><button type="reset" class="layui-btn layui-btn-primary" id="btnCancel">取消</button></div>
+    </form></div>
+    <script type="text/html" id="rowToolbar"><button class="layui-btn layui-btn-xs" lay-event="edit">编辑</button><button class="layui-btn layui-btn-xs layui-btn-danger" lay-event="del">删除</button></script>
+</div>
+<script src="../../layui/layui.js"></script><script src="../../js/app/config.js"></script><script src="../../js/app/server.js"></script>
+<script src="../../js/app/utils.js"></script><script src="../../js/app/post.js"></script>
+<script src="../../js/app/api.js"></script><script src="../../js/app/core.js"></script>
+<script src="../../js/app/validate.js"></script><script src="../../js/app/upload.js"></script>
+<script src="../../js/app/bootstrap.js"></script>
+<script src="../../js/information/notice.js"></script>
+</body></html>

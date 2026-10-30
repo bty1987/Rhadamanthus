@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<!-- app/views/report/materialDepartmentReport.html —— 主材部门业绩统计（echarts 折线，按日期范围 × 各主材部门）。 -->
+<html lang="zh-CN"><head><meta charset="utf-8"><title>主材部门业绩统计</title>
+<link rel="stylesheet" href="../../layui/css/layui.css"><link rel="stylesheet" href="../../css/app.css"></head>
+<body><div class="app-page">
+    <div class="app-search"><form class="layui-form" id="searchForm" onsubmit="return false;"><div class="layui-form-item">
+        <div class="layui-inline"><label class="layui-form-label">日期范围<span class="app-req">*</span></label><div class="layui-input-inline" style="width:240px;"><input type="text" name="dateRange" id="dateRange" placeholder="开始 - 结束" class="layui-input" autocomplete="off"></div></div>
+        <div class="layui-inline"><button type="button" class="layui-btn" id="btnSearch"><i class="layui-icon layui-icon-search"></i>查询</button></div>
+    </div></form></div>
+    <div id="materialDepartmentReport" style="height:460px;"></div>
+</div>
+<script src="../../layui/layui.js"></script><script src="../../lib/echarts.min.js"></script><script src="../../js/app/config.js"></script><script src="../../js/app/server.js"></script><script src="../../js/app/utils.js"></script><script src="../../js/app/post.js"></script><script src="../../js/app/api.js"></script><script src="../../js/app/core.js"></script><script src="../../js/app/validate.js"></script><script src="../../js/app/bootstrap.js"></script><script src="../../js/report/materialDepartmentReport.js"></script>
+</body></html>

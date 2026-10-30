@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<!-- app/views/sales/salesBalance4check.html —— 销售结算单审核（列表 + 批量提交到结算单）
+  url ?type=xxx 切换视图。数据源：api.sales.pageSalesBalance*。 -->
+<html lang="zh-CN"><head><meta charset="utf-8"><title>销售结算单审核</title>
+<link rel="stylesheet" href="../../layui/css/layui.css"><link rel="stylesheet" href="../../css/app.css"></head>
+<body><div class="app-page">
+    <div class="app-search"><form class="layui-form" id="searchForm"><div class="layui-form-item">
+        <div class="layui-inline"><label class="layui-form-label">销售单号</label><div class="layui-input-inline"><input type="text" name="sales.no" data-op="cn" placeholder="销售单号" class="layui-input" autocomplete="off"></div></div>
+        <div class="layui-inline"><label class="layui-form-label">订单号</label><div class="layui-input-inline"><input type="text" name="sales.orderId" data-op="cn" placeholder="装修单号" class="layui-input" autocomplete="off"></div></div>
+        <div class="layui-inline"><button type="button" class="layui-btn" id="btnSearch"><i class="layui-icon layui-icon-search"></i>查询</button><button type="reset" class="layui-btn layui-btn-primary" id="btnReset">重置</button></div>
+        <div class="layui-inline"><button type="button" class="layui-btn" id="btnSelectAll">全选</button></div>
+    </div></form></div>
+    <div class="app-table"><table id="resultTable" lay-filter="resultTable"></table></div>
+    <div id="pagenation" class="app-pagenation"></div>
+    <div id="balanceBox" style="display:none; padding:20px;"><form class="layui-form" id="balanceForm">
+        <div class="layui-form-item"><label class="layui-form-label">结算单<span class="app-req">*</span></label><div class="layui-input-block"><input type="text" id="balanceSales" placeholder="结算单编号 bsid" class="layui-input" lay-verify="required"></div></div>
+        <div class="layui-form-item app-form-footer"><button type="button" class="layui-btn" id="btnBalance">提交</button><button type="button" class="layui-btn layui-btn-primary" id="btnBalanceCancel">取消</button></div>
+    </form></div>
+    <script type="text/html" id="rowToolbar"><button class="layui-btn layui-btn-xs" lay-event="detail">明细</button></script>
+</div>
+<script src="../../layui/layui.js"></script><script src="../../js/app/config.js"></script><script src="../../js/app/server.js"></script><script src="../../js/app/utils.js"></script><script src="../../js/app/post.js"></script><script src="../../js/app/api.js"></script><script src="../../js/app/core.js"></script><script src="../../js/app/validate.js"></script><script src="../../js/app/bootstrap.js"></script><script src="../../js/sales/salesBalance4check.js"></script>
+</body></html>

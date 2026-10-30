@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<!-- app/views/manifest/occessories.html —— 外辅单管理（列表 + 查看/绑定/送货/到货/结算/完结/评分/备注/删除）
+  URL: ?type=xxx (默认/supplier/delive/receive/balance/bind)
+  字段：no decoration.orderId village houseNumber creater supervisor supplier createTime
+        deliveTime receiveTime balanceTime total charge rcharge rbalance vbalance status rate comment -->
+<html lang="zh-CN">
+<head><meta charset="utf-8"><title>外辅单管理</title>
+<link rel="stylesheet" href="../../layui/css/layui.css"><link rel="stylesheet" href="../../css/app.css"></head>
+<body>
+<div class="app-page">
+    <div class="app-search"><form class="layui-form" id="searchForm"><div class="layui-form-item">
+        <div class="layui-inline"><label class="layui-form-label">外辅单号</label><div class="layui-input-inline"><input type="text" name="no" data-op="cn" placeholder="外辅单号" class="layui-input" autocomplete="off"></div></div>
+        <div class="layui-inline"><label class="layui-form-label">装修单号</label><div class="layui-input-inline"><input type="text" name="decoration.orderId" data-op="cn" placeholder="装修单号" class="layui-input" autocomplete="off"></div></div>
+        <div class="layui-inline"><label class="layui-form-label">状态</label><div class="layui-input-inline"><select name="status" data-op="eq"><option value="">全部</option><option value="0">初始</option><option value="1">已绑定</option><option value="2">已送货</option><option value="3">已到货</option><option value="4">已结算</option><option value="5">已完结</option></select></div></div>
+        <div class="layui-inline"><button type="button" class="layui-btn" id="btnSearch"><i class="layui-icon layui-icon-search"></i>查询</button><button type="reset" class="layui-btn layui-btn-primary" id="btnReset">重置</button></div>
+    </div></form></div>
+    <div class="app-table"><table id="resultTable" lay-filter="resultTable"></table></div>
+    <div id="pagenation" class="app-pagenation"></div>
+    <script type="text/html" id="rowToolbar">
+        <button class="layui-btn layui-btn-xs" lay-event="view">查看</button>
+        <button class="layui-btn layui-btn-xs layui-btn-normal" lay-event="bind">绑定</button>
+        <button class="layui-btn layui-btn-xs layui-btn-warm" lay-event="delive">送货</button>
+        <button class="layui-btn layui-btn-xs layui-btn-success" lay-event="receive">到货</button>
+        <button class="layui-btn layui-btn-xs" lay-event="balance">结算</button>
+        <button class="layui-btn layui-btn-xs layui-btn-warm" lay-event="finish">完结</button>
+        <button class="layui-btn layui-btn-xs layui-btn-danger" lay-event="cancel">作废</button>
+        <button class="layui-btn layui-btn-xs layui-btn-danger" lay-event="delete">删除</button>
+    </script>
+</div>
+<script src="../../layui/layui.js"></script><script src="../../js/app/config.js"></script><script src="../../js/app/server.js"></script><script src="../../js/app/utils.js"></script><script src="../../js/app/post.js"></script><script src="../../js/app/api.js"></script><script src="../../js/app/core.js"></script><script src="../../js/app/validate.js"></script><script src="../../js/app/bootstrap.js"></script><script src="../../js/manifest/occessories.js"></script>
+</body></html>

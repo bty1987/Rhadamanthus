@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<!-- app/views/decoration/decoration4service.html —— 装修单服务（服务记录列表 + 完成服务） -->
+<html lang="zh-CN"><head><meta charset="utf-8"><title>装修单服务</title>
+<link rel="stylesheet" href="../../layui/css/layui.css"><link rel="stylesheet" href="../../css/app.css"></head>
+<body><div class="app-page">
+    <div class="app-toolbar" style="padding:10px 15px 0;">
+        <button type="button" class="layui-btn layui-btn-sm layui-btn-primary" id="btnBack"><i class="layui-icon layui-icon-return"></i>返回</button>
+    </div>
+    <div class="app-table" style="padding:10px 15px;"><table id="resultTable" lay-filter="resultTable"></table></div>
+    <script type="text/html" id="rowToolbar">
+        {{# if(d.status == 0){ }}}<button class="layui-btn layui-btn-xs layui-btn-warm" lay-event="done">完成</button>{{# } }}
+    </script>
+    <div id="editBox" style="display:none;padding:20px 30px;">
+        <form class="layui-form" id="editForm">
+            <div class="layui-form-item layui-form-text"><label class="layui-form-label">备注信息</label><div class="layui-input-block"><textarea id="comment" maxlength="40" class="layui-textarea" placeholder="请输入备注信息"></textarea></div></div>
+            <div class="layui-form-item"><label class="layui-form-label">计划时间</label><div class="layui-input-block"><input class="layui-input" id="planTime" placeholder="请选择计划时间"></div></div>
+            <div class="layui-form-item"><label class="layui-form-label">完成人</label><div class="layui-input-block"><select id="finisher" lay-search=""><option value="">请选择完成人</option></select></div></div>
+        </form>
+    </div>
+</div>
+<script src="../../layui/layui.js"></script><script src="../../js/app/config.js"></script><script src="../../js/app/server.js"></script><script src="../../js/app/utils.js"></script><script src="../../js/app/post.js"></script><script src="../../js/app/api.js"></script><script src="../../js/app/core.js"></script><script src="../../js/app/validate.js"></script><script src="../../js/app/bootstrap.js"></script><script src="../../js/decoration/decoration-common.js"></script><script src="../../js/decoration/decoration4service.js"></script>
+</body></html>

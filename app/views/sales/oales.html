@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<!-- app/views/sales/oales.html —— 外销单（列表 + 新增/编辑 + 状态流转 + 操作记录 + 结算）
+  url ?pagetype=material|finance|account|其他 -->
+<html lang="zh-CN"><head><meta charset="utf-8"><title>外销单</title>
+<link rel="stylesheet" href="../../layui/css/layui.css"><link rel="stylesheet" href="../../css/app.css"></head>
+<body><div class="app-page">
+    <div class="app-search"><form class="layui-form" id="searchForm"><div class="layui-form-item">
+        <div class="layui-inline"><label class="layui-form-label">外销单号</label><div class="layui-input-inline"><input type="text" name="no" data-op="cn" placeholder="外销单号" class="layui-input" autocomplete="off"></div></div>
+        <div class="layui-inline"><label class="layui-form-label">订单号</label><div class="layui-input-inline"><input type="text" name="orderId" data-op="cn" placeholder="装修单号" class="layui-input" autocomplete="off"></div></div>
+        <div class="layui-inline"><label class="layui-form-label">品牌</label><div class="layui-input-inline"><input type="text" name="brand" data-op="cn" placeholder="品牌" class="layui-input" autocomplete="off"></div></div>
+        <div class="layui-inline"><button type="button" class="layui-btn" id="btnSearch"><i class="layui-icon layui-icon-search"></i>查询</button><button type="reset" class="layui-btn layui-btn-primary" id="btnReset">重置</button></div>
+        <div class="layui-inline" id="btnAddWrap"><button type="button" class="layui-btn" id="btnAdd"><i class="layui-icon layui-icon-add-1"></i>新增</button></div>
+    </div></form></div>
+    <div class="app-table"><table id="resultTable" lay-filter="resultTable"></table></div>
+    <div id="pagenation" class="app-pagenation"></div>
+    <!-- 编辑 -->
+    <div id="editBox" style="display:none; padding:20px;"><form class="layui-form" id="editForm">
+        <input type="hidden" name="oid">
+        <div class="layui-form-item"><label class="layui-form-label">订单号<span class="app-req">*</span></label><div class="layui-input-block"><input type="text" name="orderId" class="layui-input" lay-verify="required"></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">总额<span class="app-req">*</span></label><div class="layui-input-block"><input type="number" step="0.01" name="total" class="layui-input" lay-verify="required"></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">成本</label><div class="layui-input-block"><input type="number" step="0.01" name="cost" class="layui-input"></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">系数</label><div class="layui-input-block"><input type="number" step="0.01" name="threshold" class="layui-input"></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">奖励</label><div class="layui-input-block"><input type="number" step="0.01" name="award" class="layui-input"></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">利润</label><div class="layui-input-block"><input type="number" step="0.01" name="profit" class="layui-input"></div></div>
+        <div class="layui-form-item"><label class="layui-form-label">备注</label><div class="layui-input-block"><textarea name="comment" class="layui-textarea"></textarea></div></div>
+        <div class="layui-form-item app-form-footer"><button type="button" class="layui-btn" id="btnSave">保存</button><button type="button" class="layui-btn layui-btn-primary" id="btnCancel">取消</button></div>
+    </form></div>
+    <script type="text/html" id="rowToolbar">
+        <button class="layui-btn layui-btn-xs" lay-event="edit">编辑</button>
+        <button class="layui-btn layui-btn-xs layui-btn-warm" lay-event="item">明细</button>
+        <button class="layui-btn layui-btn-xs layui-btn-normal" lay-event="pay">付款</button>
+        <button class="layui-btn layui-btn-xs" lay-event="record">记录</button>
+        <button class="layui-btn layui-btn-xs layui-btn-danger" lay-event="del">删除</button>
+        <button class="layui-btn layui-btn-xs" lay-event="submit">提交</button>
+        <button class="layui-btn layui-btn-xs" lay-event="confirm">确认</button>
+        <button class="layui-btn layui-btn-xs" lay-event="check">审核</button>
+        <button class="layui-btn layui-btn-xs" lay-event="finish">完成</button>
+    </script>
+</div>
+<script src="../../layui/layui.js"></script><script src="../../js/app/config.js"></script><script src="../../js/app/server.js"></script><script src="../../js/app/utils.js"></script><script src="../../js/app/post.js"></script><script src="../../js/app/api.js"></script><script src="../../js/app/core.js"></script><script src="../../js/app/validate.js"></script><script src="../../js/app/bootstrap.js"></script><script src="../../js/sales/oales.js"></script>
+</body></html>

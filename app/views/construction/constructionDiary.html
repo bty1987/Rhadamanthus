@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<!-- app/views/construction/constructionDiary.html —— 施工日志（进离场记录 + 图片管理）
+  行按钮：图片（弹日志图库 + 上传）。 -->
+<html lang="zh-CN"><head><meta charset="utf-8"><title>施工日志</title>
+<link rel="stylesheet" href="../../layui/css/layui.css"><link rel="stylesheet" href="../../css/app.css">
+<style>
+.diary-gallery { margin: 0; padding: 0; list-style: none; }
+.diary-gallery li { position: relative; float: left; margin: 8px; border: 1px solid #e6e6e6; padding: 4px; border-radius: 4px; }
+.diary-gallery li img { width: 130px; height: 130px; object-fit: cover; cursor: pointer; display: block; }
+.diary-gallery li .tools { position: absolute; bottom: 4px; right: 6px; cursor: pointer; color: #fff; background: rgba(0,0,0,.5); border-radius: 2px; padding: 1px 6px; }
+</style></head>
+<body><div class="app-page">
+    <div class="app-search"><form class="layui-form" id="searchForm"><div class="layui-form-item">
+        <div class="layui-inline"><label class="layui-form-label">装修单号</label><div class="layui-input-inline"><input name="decoration.orderId" data-op="eq" class="layui-input" placeholder="装修单号"></div></div>
+        <div class="layui-inline"><label class="layui-form-label">是否上传图片</label><div class="layui-input-inline"><select name="constructionDiary.isUpload" data-op="eq"><option value="">全部</option><option value="0">否</option><option value="1">是</option></select></div></div>
+        <div class="layui-inline"><button type="button" class="layui-btn" id="btnSearch"><i class="layui-icon layui-icon-search"></i>查询</button><button type="button" class="layui-btn layui-btn-primary" id="btnReset">重置</button></div>
+    </div></form></div>
+    <div class="app-table"><table id="resultTable" lay-filter="resultTable"></table></div>
+    <div id="pagenation" class="app-pagenation"></div>
+    <script type="text/html" id="rowToolbar">
+        <button class="layui-btn layui-btn-xs layui-btn-warm" lay-event="picture">图片</button>
+    </script>
+
+    <div id="drawingBox" style="display:none;padding:15px 20px;">
+        <div style="margin-bottom:10px;"><button type="button" class="layui-btn layui-btn-sm" id="constructionUpload"><i class="layui-icon layui-icon-upload-drag"></i>上传图片</button></div>
+        <ul class="diary-gallery" id="constructionDrawing"></ul>
+        <div style="clear:both;"></div>
+    </div>
+</div>
+<script src="../../layui/layui.js"></script><script src="../../js/app/upload.js"></script><script src="../../js/app/config.js"></script><script src="../../js/app/server.js"></script><script src="../../js/app/utils.js"></script><script src="../../js/app/post.js"></script><script src="../../js/app/api.js"></script><script src="../../js/app/core.js"></script><script src="../../js/app/validate.js"></script><script src="../../js/app/bootstrap.js"></script><script src="../../js/construction/construction-common.js"></script><script src="../../js/construction/constructionDiary.js"></script>
+</body></html>

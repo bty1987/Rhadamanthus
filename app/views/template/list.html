@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<!--
+  app/views/template/list.html —— 列表页模板（纯 LayUI）
+
+  ★ 这是"新业务列表页"的起手式模板。复制本文件 + list.js + api/_template.js，
+    全局把 "template" 替换为你的模块名（如 "mytask"），改字段名即可跑通：
+       搜索 → 列表(table+laypage) → 新增/编辑(layer 弹窗表单) → 删除
+
+  后端契约（与旧 Searcher 一致，后端零改动）：
+    请求：paging.page(1基) + paging.rows + filters[N].{field,data,op}
+           op ∈ eq/cn/le/ge/... （无 between，日期范围用 ge+le 两条）
+    响应：{ paging: { page,rows,totalPage,totalRecords, data:[...] } }
+
+  资源：仅引 layui + 本页逻辑，不依赖 ace/bootstrap。
+  ⚠️ 注意：业务页运行在 index.html 的 iframe 内，需自带 layui 引用（各 tab iframe 独立）。
+-->
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8" />
+    <title>模板列表</title>
+    <link rel="stylesheet" href="../../layui/css/layui.css">
+    <link rel="stylesheet" href="../../css/app.css">
+</head>
+<body>
+<div class="app-page" id="templatePage">
+
+    <!-- ============ 搜索条 ============ -->
+    <div class="app-search">
+        <form class="layui-form" lay-filter="searchForm" id="searchForm">
+            <div class="layui-form-item" lay-filter="searchFields">
+                <!-- 示例字段：按需增删，name 即后端 field，data-op 即过滤操作符 -->
+                <div class="layui-inline">
+                    <label class="layui-form-label">名称</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="name" data-op="cn" placeholder="请输入名称" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">状态</label>
+                    <div class="layui-input-inline">
+                        <select name="status" data-op="eq">
+                            <option value="">全部</option>
+                            <option value="0">启用</option>
+                            <option value="1">禁用</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">创建时间</label>
+                    <div class="layui-input-inline" style="width:240px;">
+                        <input type="text" name="createTime" id="createTime" placeholder="日期范围" class="layui-input" readonly>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <button type="button" class="layui-btn" id="btnSearch"><i class="layui-icon layui-icon-search"></i>查询</button>
+                    <button type="reset" class="layui-btn layui-btn-primary" id="btnReset">重置</button>
+                    <button type="button" class="layui-btn layui-btn-normal" id="btnAdd"><i class="layui-icon layui-icon-add-1"></i>新增</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <!-- ============ 数据表格 ============ -->
+    <div class="app-table">
+        <table id="resultTable" lay-filter="resultTable"></table>
+    </div>
+
+    <!-- ============ 分页 ============ -->
+    <div id="pagenation" class="app-pagenation"></div>
+
+    <!-- ============ 新增/编辑表单（layer 弹窗内容） ============ -->
+    <div id="editBox" style="display:none; padding:20px;">
+        <form class="layui-form" lay-filter="editForm" id="editForm">
+            <input type="hidden" name="id">
+            <div class="layui-form-item">
+                <label class="layui-form-label">名称<span class="app-req">*</span></label>
+                <div class="layui-input-block">
+                    <input type="text" name="name" placeholder="请输入名称" class="layui-input v_required" lay-verify="required">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">金额<span class="app-req">*</span></label>
+                <div class="layui-input-block">
+                    <!-- 金额字段：v_float_3 校验；精度转换由 api.tranargs 处理（×1000/÷1000） -->
+                    <input type="text" name="price" placeholder="请输入金额" class="layui-input v_required v_float_3" lay-verify="required">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">状态</label>
+                <div class="layui-input-block">
+                    <select name="status">
+                        <option value="0">启用</option>
+                        <option value="1">禁用</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">备注</label>
+                <div class="layui-input-block">
+                    <textarea name="comment" placeholder="请输入备注" class="layui-textarea"></textarea>
+                </div>
+            </div>
+            <div class="layui-form-item app-form-footer">
+                <button type="button" class="layui-btn" id="btnSave">保存</button>
+                <button type="reset" class="layui-btn layui-btn-primary" id="btnCancel">取消</button>
+            </div>
+        </form>
+    </div>
+
+</div>
+
+<!-- 业务页运行在 iframe 内，需自带 layui + 本应用运行时（精简子集） -->
+<script src="../../layui/layui.js"></script>
+<script src="../../js/app/config.js"></script>
+<script src="../../js/app/server.js"></script>
+<script src="../../js/app/utils.js"></script>
+<script src="../../js/app/post.js"></script>
+<script src="../../js/app/api.js"></script>
+<script src="../../js/app/core.js"></script>
+<script src="../../js/app/validate.js"></script>
+<script src="../../js/app/bootstrap.js"></script>
+<script src="../../js/template/list.js"></script>
+</body>
+</html>

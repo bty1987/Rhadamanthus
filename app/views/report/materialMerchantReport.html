@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<!-- app/views/report/materialMerchantReport.html —— 主材品类/品牌业绩报表（echarts 柱状 + 明细表）。 -->
+<html lang="zh-CN"><head><meta charset="utf-8"><title>主材品类品牌报表</title>
+<link rel="stylesheet" href="../../layui/css/layui.css"><link rel="stylesheet" href="../../css/app.css"></head>
+<body><div class="app-page">
+    <div class="app-search"><form class="layui-form" id="searchForm" onsubmit="return false;"><div class="layui-form-item">
+        <div class="layui-inline"><label class="layui-form-label">日期范围<span class="app-req">*</span></label><div class="layui-input-inline" style="width:240px;"><input type="text" name="dateRange" id="dateRange" placeholder="开始 - 结束" class="layui-input" autocomplete="off"></div></div>
+        <div class="layui-inline"><label class="layui-form-label">类型<span class="app-req">*</span></label><div class="layui-input-inline"><select name="reportType" id="reportType"><option value="">请选择</option><option value="1">主材</option></select></div></div>
+        <div class="layui-inline"><button type="button" class="layui-btn" id="btnSearch"><i class="layui-icon layui-icon-search"></i>查询</button></div>
+    </div></form></div>
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md6"><div id="materialTypeReport" style="height:380px;"></div><table id="materialTypeTable" class="layui-table" lay-size="sm"></table></div>
+        <div class="layui-col-md6"><div id="materialBrandReport" style="height:380px;"></div><table id="materialBrandTable" class="layui-table" lay-size="sm"></table></div>
+    </div>
+</div>
+<script src="../../layui/layui.js"></script><script src="../../lib/echarts.min.js"></script><script src="../../js/app/config.js"></script><script src="../../js/app/server.js"></script><script src="../../js/app/utils.js"></script><script src="../../js/app/post.js"></script><script src="../../js/app/api.js"></script><script src="../../js/app/core.js"></script><script src="../../js/app/validate.js"></script><script src="../../js/app/bootstrap.js"></script><script src="../../js/report/materialMerchantReport.js"></script>
+</body></html>

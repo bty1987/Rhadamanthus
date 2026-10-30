@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<!-- app/views/payment/payment2print.html —— 款项明细打印（弹窗打印子页）
+  上下文：app.params.printConf = { decoration, ptype:[0,1,3,4 选若干], rtype:[1,2,3,4,5,6,7 选若干] }。
+  ptype: 0=预付款,1=装修款,3=销售款,4=服务款。rtype: 1=现金,2=刷卡,3=银行,4=分期,5=对公,6=预付款,7=券。 -->
+<html lang="zh-CN"><head><meta charset="utf-8"><title>收款明细表</title>
+<link rel="stylesheet" href="../../layui/css/layui.css"><link rel="stylesheet" href="../../css/app.css"></head>
+<body><div class="app-page">
+    <div style="padding:10px;"><button type="button" class="layui-btn" id="btnPrint"><i class="layui-icon layui-icon-print"></i>打印</button></div>
+    <div id="receiptList" style="padding:10px;"></div>
+</div>
+<script src="../../layui/layui.js"></script><script src="../../js/app/config.js"></script><script src="../../js/app/server.js"></script><script src="../../js/app/utils.js"></script><script src="../../js/app/post.js"></script><script src="../../js/app/api.js"></script><script src="../../js/app/core.js"></script><script src="../../js/app/validate.js"></script><script src="../../js/app/bootstrap.js"></script><script src="../../js/payment/payment2print.js"></script>
+</body></html>

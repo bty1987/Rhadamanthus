@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<!-- app/views/decoration/decorationContract2create.html —— 创建合同（弹窗子页：选择合同模板）
+  上下文：app.params.decoration = { orderId, contract? }；app.params.customer = { cid }。
+  选择模板后把 contractargs 写回 app.params 并关闭，由父页（decorationContract）继续生成。 -->
+<html lang="zh-CN"><head><meta charset="utf-8"><title>创建合同</title>
+<link rel="stylesheet" href="../../layui/css/layui.css"><link rel="stylesheet" href="../../css/app.css"></head>
+<body><div class="app-page" style="padding:20px;">
+    <form class="layui-form" id="mainForm">
+        <div class="layui-form-item">
+            <label class="layui-form-label">合同模板</label>
+            <div class="layui-input-inline" style="width:320px;">
+                <select name="contract" id="contract" lay-search=""><option value="">请选择合同模板</option></select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block" style="margin-left:130px;">
+                <button type="button" class="layui-btn" id="btnOk">确定</button>
+            </div>
+        </div>
+    </form>
+    <blockquote class="layui-elem-quote" style="margin-top:15px;">选择合同模板后确定，将回到合同页生成合同文件。</blockquote>
+</div>
+<script src="../../layui/layui.js"></script><script src="../../js/app/config.js"></script><script src="../../js/app/server.js"></script><script src="../../js/app/utils.js"></script><script src="../../js/app/post.js"></script><script src="../../js/app/api.js"></script><script src="../../js/app/core.js"></script><script src="../../js/app/validate.js"></script><script src="../../js/app/bootstrap.js"></script><script src="../../js/decoration/decoration-common.js"></script><script src="../../js/decoration/decorationContract2create.js"></script>
+</body></html>

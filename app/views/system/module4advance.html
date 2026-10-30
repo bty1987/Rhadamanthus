@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<!-- app/views/system/module4advance.html —— 模块高级配置（树形导航 + 角色/人员配置入口）
+  旧版三栏：一级模块 → 点"下级"展开二级/三级；每个模块带"角色"/"人员"按钮（弹窗跳转）
+  这里用 layui collapse 折叠面板呈现三级模块树，每行带"角色"/"人员"操作按钮 -->
+<html lang="zh-CN">
+<head><meta charset="utf-8"><title>模块配置</title>
+<link rel="stylesheet" href="../../layui/css/layui.css"><link rel="stylesheet" href="../../css/app.css"></head>
+<body>
+<div class="app-page">
+    <div class="app-search"><form class="layui-form" id="searchForm"><div class="layui-form-item">
+        <div class="layui-inline"><label class="layui-form-label">模块名</label><div class="layui-input-inline"><input type="text" name="name" placeholder="过滤模块名" class="layui-input" autocomplete="off"></div></div>
+        <div class="layui-inline"><button type="button" class="layui-btn" id="btnSearch"><i class="layui-icon layui-icon-search"></i>查询</button><button type="reset" class="layui-btn layui-btn-primary" id="btnReset">重置</button></div>
+    </div></form></div>
+    <div class="app-table"><table id="resultTable" lay-filter="resultTable"></table></div>
+    <div id="pagenation" class="app-pagenation"></div>
+    <script type="text/html" id="rowToolbar">
+        <button class="layui-btn layui-btn-xs layui-btn-normal" lay-event="role">角色</button>
+        <button class="layui-btn layui-btn-xs layui-btn-warm" lay-event="user">人员</button>
+    </script>
+</div>
+<script src="../../layui/layui.js"></script><script src="../../js/app/config.js"></script><script src="../../js/app/server.js"></script><script src="../../js/app/utils.js"></script><script src="../../js/app/post.js"></script><script src="../../js/app/api.js"></script><script src="../../js/app/core.js"></script><script src="../../js/app/validate.js"></script><script src="../../js/app/bootstrap.js"></script><script src="../../js/system/module4advance.js"></script>
+</body></html>
