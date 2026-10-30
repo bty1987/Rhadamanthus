@@ -179,6 +179,17 @@ public class DutyServiceImpl implements DutyService {
 			}
 		}
 
+		// 如果修改了名称，检查唯一性(防重名再发:与addDuty同码同消息)
+		if (dutyVO.getName() != null && !dutyVO.getName().trim().isEmpty()) {
+			String newName = dutyVO.getName().trim();
+			if (!newName.equals(dutyPO.getName())) {
+				DutyPO existingName = dutyDao.queryDutyByName(newName);
+				if (existingName != null && existingName.getDid() != dutyPO.getDid()) {
+					throw new FLException(130016, "职位已存在");
+				}
+			}
+		}
+
 		DepartmentTypePO departmentTypePO = departmentTypeDao.get(dutyVO.getDepartmentType().getDtid());
 
 		BeanUtil.copyProperties(dutyVO, dutyPO, Arrays.asList("departmentType", "status"));
