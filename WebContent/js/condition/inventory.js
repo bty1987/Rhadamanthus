@@ -118,6 +118,22 @@ Condition.addupRule("inventory", {
             valuePath: "value"
         }
     },
+    "accessories-assignFlag": {
+        label: "分配状态",
+        type: "select",
+        submitConfig: {
+            name: "assignFlag",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            // 字面量选项: 规避条件装载期常量组依赖(condition-loadtime-constant-ref教训)
+            listPath: [{key: "0", value: "未标记"}, {key: "1", value: "需分配"}, {key: "2", value: "已分配"}],
+            postData: {},
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
     "accessories-type": {
         label: "类型",
         type: "select",

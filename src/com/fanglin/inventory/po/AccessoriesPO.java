@@ -47,6 +47,8 @@ public class AccessoriesPO implements Serializable {
 
 	public static final String COLUMN_NO_STR = "no";
 
+	public static final String COLUMN_ASSIGNFLAG_STR = "assignFlag";
+
 	public static final short TYPE_COMMON_INT = 0;
 
 	public static final short TYPE_POST_INT = 1;
@@ -72,6 +74,8 @@ public class AccessoriesPO implements Serializable {
 	public static final short ASSIGNFLAG_INIT_INT = 0; // 未标记
 
 	public static final short ASSIGNFLAG_MARKED_INT = 1; // 需分配（分配厂商/出库闸依据）
+
+	public static final short ASSIGNFLAG_ASSIGNED_INT = 2; // 已分配（分配厂商后写入）
 
 	private long aid;
 

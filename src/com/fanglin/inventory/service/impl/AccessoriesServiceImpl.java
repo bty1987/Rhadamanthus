@@ -317,6 +317,9 @@ public class AccessoriesServiceImpl implements AccessoriesService {
 
 		accessoriesPO.setSupplier(supplier);
 
+		// 分配厂商即写入已分配态(分配标记三态: 0未标记/1需分配/2已分配, 改派重写仍为2)
+		accessoriesPO.setAssignFlag(AccessoriesPO.ASSIGNFLAG_ASSIGNED_INT);
+
 		accessoriesDao.update(accessoriesPO);
 
 		final UserPO supervisor = accessoriesPO.getSupervisor();

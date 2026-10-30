@@ -19,7 +19,7 @@ $(function() {
     accessories.type = constant.inventory().accessories.type.keys;
     accessories.status = constant.inventory().accessories.status.keys;
     accessories.cnid = constant.data().construction.node.keys;
-    var conditions = ['inventory-accessories-orderId', 'inventory-accessories-no', 'inventory-accessories-createrName', 'inventory-accessories-approverName', 'inventory-accessories-createTime', 'inventory-accessories-approverTime', 'inventory-accessories-stauts', 'inventory-accessories-type'];
+    var conditions = ['inventory-accessories-orderId', 'inventory-accessories-no', 'inventory-accessories-createrName', 'inventory-accessories-approverName', 'inventory-accessories-createTime', 'inventory-accessories-approverTime', 'inventory-accessories-stauts', 'inventory-accessories-type', 'inventory-accessories-assignFlag'];
 
     // 厂商视角固定看自己的单(登录人=厂商), 授权按公司 pageBtn 自行开放(拍板②)
     var url = api.inventory.pageAccessories;
@@ -276,7 +276,8 @@ $(function() {
             return v.assignFlag == 1;
         },
         show: function (v) {
-            return (accessories.pageType != "supplier" && v.status != constant.inventory().accessories.STATUS_BALANCED_INT)
+            // 已分配(2)不显示开关: 开关只管0/1互切, 对已分配行切换会 regress 分配态
+            return (accessories.pageType != "supplier" && v.status != constant.inventory().accessories.STATUS_BALANCED_INT && v.assignFlag != 2)
         }
     }, {
         name: "分配厂商",
@@ -291,8 +292,8 @@ $(function() {
             return false;
         },
         show: function (v) {
-            // 分配闸: 仅标记需分配的单开放(后端260093兜底)
-            return (accessories.pageType != "supplier" && v.assignFlag == 1 && (v.status == 0 || v.status == 1 || v.status == 2))
+            // 分配闸: 标记需分配(1)或已分配(2,改派)的单开放; 后端260093兜底
+            return (accessories.pageType != "supplier" && (v.assignFlag == 1 || v.assignFlag == 2) && (v.status == 0 || v.status == 1 || v.status == 2))
         }
     }, {
         name: "结算",
