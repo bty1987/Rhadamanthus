@@ -61,7 +61,29 @@ layui.use(['table', 'form', 'layer', 'jquery'], function () {
             + '<br>设计师：' + (d.designer ? d.designer.currentName : '') + '<br>业务员：' + (d.salesman ? d.salesman.currentName : ''));
         $('#customerInfo').html('姓名：<b>' + (customer.name || '') + '<\/b><br>认证状态：<span class="layui-badge ' + (authFlag ? 'layui-bg-green' : 'layui-bg-orange') + '">' + (authFlag ? '已认证' : '未认证') + '<\/span>'
             + '<br>身份证：' + (customer.identity || '-') + '<br>类型：' + (customer.type != null ? customer.type : ''));
+        loadCustomerAuth();
     });
+
+    // 双厂商认证状态(签宝/法大大各一条, status: 0注册未实名/1已实名/2已签署, 无行=未注册)
+    function loadCustomerAuth() {
+
+        app.post(api.data.queryElecsignAuthByCid, { 'customer.cid': cid }, function (res) {
+
+            var auth = {};
+            $.each(res.elecsignAuths || [], function (i, a) { auth[a.provider] = a.status; });
+
+            function label(provider) {
+                var name = provider == 2 ? 'e签宝' : '法大大';
+                var s = auth[provider];
+                if (s === undefined || s === null) return name + ' 未注册';
+                if (s == 0) return name + ' 注册未实名';
+                if (s == 1) return '<span class="layui-badge layui-bg-green">' + name + ' 已实名<\/span>';
+                return name + ' 已签署';
+            }
+
+            $('#customerInfo').append('<br>认证(厂商)：<span>' + label(2) + ' ｜ ' + label(1) + '<\/span>');
+        });
+    }
 
     function loadRecord() {
         app.post(api.decoration.queryDecorationContractRecord, { 'decorationContractRecord.orderId': orderId }, function (res) {

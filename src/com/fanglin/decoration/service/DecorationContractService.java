@@ -1,5 +1,6 @@
 package com.fanglin.decoration.service;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 import com.fanglin.communion.vo.CustomerVO;
@@ -7,12 +8,15 @@ import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Authentication;
 import com.fanglin.data.common.vo.ContractVO;
 import com.fanglin.data.common.vo.SignetVO;
+import com.fanglin.decoration.po.DecorationContractPO;
 import com.fanglin.decoration.vo.DecorationContractVO;
 import com.fanglin.decoration.vo.DecorationVO;
 
 public interface DecorationContractService {
 
 	public List<DecorationContractVO> queryDecorationContractByOrderId(DecorationContractVO decorationContract) throws FLException;
+
+	public List<DecorationContractPO> queryDecorationContractForFlowPatrol(Short provider, List<Short> status, Timestamp deadline, int limit) throws FLException;
 
 	public void sendDecorationContractForAuth(DecorationContractVO decorationContractVO) throws FLException;
 
@@ -31,6 +35,8 @@ public interface DecorationContractService {
 	public String signDecorationContractForCustomer(DecorationContractVO decorationContractVO, CustomerVO customerVO) throws FLException;
 
 	public int affixDecorationContract(DecorationContractVO decorationContractVO, String userId) throws FLException;
+
+	public boolean signDecorationContractForPatrol(DecorationContractVO decorationContractVO) throws FLException;
 
 	public int noticeDecorationContract(DecorationContractVO decorationContractVO) throws FLException;
 

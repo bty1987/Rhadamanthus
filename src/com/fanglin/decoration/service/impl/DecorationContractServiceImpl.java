@@ -1,5 +1,6 @@
 package com.fanglin.decoration.service.impl;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -177,6 +178,13 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 		}
 
 		return decorationContractVOs;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public List<DecorationContractPO> queryDecorationContractForFlowPatrol(Short provider, List<Short> status, Timestamp deadline, int limit) throws FLException {
+
+		return decorationContractDao.queryDecorationContractForFlowPatrol(provider, status, deadline, limit);
 	}
 
 	@Override
@@ -568,6 +576,25 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 		decorationContractDao.update(decorationContractPO);
 
 		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public boolean signDecorationContractForPatrol(DecorationContractVO decorationContractVO) throws FLException {
+
+		DecorationContractPO decorationContractPO = decorationContractDao.get(decorationContractVO.getDcid());
+
+		// 巡检系统侧推"已签": 仅初始态可推(与 SIGN_FLOW_COMPLETE 回调同语义, 不落signner); 已签/归档返回false跳过
+		if (decorationContractPO == null || decorationContractPO.getStatus() != DecorationContractPO.STATUS_VALID_INT) {
+			return false;
+		}
+
+		decorationContractPO.setStatus(DecorationContractPO.STATUS_SIGN_INT);
+		decorationContractPO.setCussignTime(DateUtil.getDateToTimestamp(new Date()));
+
+		decorationContractDao.update(decorationContractPO);
+
+		return true;
 	}
 
 	@Override

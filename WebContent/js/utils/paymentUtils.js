@@ -1326,6 +1326,15 @@ var paymentUtils = {
 
             $("#" + htmlFlag + "companySignBtn").unbind("click").click(function() {
 
+                // 印章厂商须与合同签署厂商一致(合同厂商生成即固定不可换): 不一致拦截, 与装修合同线防呆对齐
+                var signetProvider = Number($("#" + htmlFlag + "signets").find("option:selected").attr("data-provider")) || 1;
+                var contractProvider = Number(paymentContract.provider) || 1;
+
+                if (signetProvider != contractProvider) {
+                    com.showAlert(com.warning, "所选印章厂商与合同签署厂商不一致, 请选择同厂商印章.");
+                    return false;
+                }
+
                 paymentUtils.companySign(paymentContract, $("#" + htmlFlag + "signets").val());
                 $("#" + htmlFlag + "paymentContractModal").modal("hide");
             });
@@ -1389,7 +1398,8 @@ var paymentUtils = {
 
             for ( var i = 0; i < signets.length; i++) {
                 var item = signets[i];
-                $("<option value=" + item["sid"] + ">" + item["name"] + "</option>").appendTo(id);
+                // 印章标注厂商并记录data-provider, 供公司签时与合同签署厂商一致性校验(存量无厂商=法大大)
+                $("<option value=" + item["sid"] + " data-provider='" + (item["provider"] || 1) + "'>" + item["name"] + (item["provider"] == 2 ? "(e签宝)" : "(法大大)") + "</option>").appendTo(id);
             }
         });
     },

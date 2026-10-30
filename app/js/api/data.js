@@ -498,6 +498,7 @@ $.extend(api, { data: {
     confirmCustomer:            { url: 'confirmCustomer.do' },
     signateCustomer:            { url: 'signateCustomer.do' },
     resetCustomer:              { url: 'resetCustomer.do' },
+    queryElecsignAuthByCid:     { url: 'queryElecsignAuthByCid.do' },
 
     // ===== 客户账户 customerAccount =====
     pageCustomerAccount:    { url: 'pageCustomerAccount.do' },

@@ -44,6 +44,8 @@ public class PaymentContractVO implements Serializable {
 
 	private Short status;
 
+	private Short provider;// 电子签厂商(1法大大/2e签宝), 前端公司签选章按厂商防呆对齐装修合同线
+
 	private List<DecorationPaymentVO> payments;
 
 	private List<Integer> paymentRates;
@@ -173,6 +175,14 @@ public class PaymentContractVO implements Serializable {
 
 	public void setStatus(Short status) {
 		this.status = status;
+	}
+
+	public Short getProvider() {
+		return provider;
+	}
+
+	public void setProvider(Short provider) {
+		this.provider = provider;
 	}
 
 	public List<DecorationPaymentVO> getPayments() {

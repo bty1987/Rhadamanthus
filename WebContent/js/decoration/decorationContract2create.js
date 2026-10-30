@@ -126,7 +126,7 @@ jQuery(function($) {
         params.decoration.contractargs = com.splitUrl(page);
         params.decoration.contractargs.cid = cid;
 
-        // 切换模板时厂商自动跟随模板path推导, 用户仍可手动覆盖
+        // 切换模板时厂商跟随模板path推导(厂商由模板固定, 生成即绑定, 不可手动覆盖)
         addDecorationContract.items.vendor.val(addDecorationContract.vendorOfPath(page));
 
         addDecorationContract.htmls.contractPopUp.load(page);

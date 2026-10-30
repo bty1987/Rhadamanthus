@@ -249,7 +249,8 @@ jQuery(function($) {
         },
         show: function(v) {
 
-            return (v.status == 3);
+            // 签章图片上传系法大大专属API(签宝侧130098): 仅法大大章显示
+            return (v.status == 3) && v.provider != 2;
         }
     }, {
         name: "自动授权",
@@ -297,7 +298,8 @@ jQuery(function($) {
         },
         show: function(v) {
 
-            return (v.status == 3);
+            // 印章明细管理直连法大大Signature接口(签宝无此能力): 仅法大大章显示
+            return (v.status == 3) && v.provider != 2;
         }
     }, {
         name: "复制",
@@ -466,7 +468,7 @@ jQuery(function($) {
     function autoSignAuth(v) {
 
         var html = '<div style="padding:12px 18px;">' +
-            '<div style="margin-bottom:8px;color:#666;">绑定流程模板编号(多个用英文逗号分隔, 从模板管理-更多-复制模板编号获取):</div>' +
+            '<div style="margin-bottom:8px;color:#666;">绑定流程模板编号(多个用英文逗号分隔, 即合同模板管理列表的"编号"列——e签宝模板的编号就是流程模板ID):</div>' +
             '<textarea id="autoSignTplIds" style="width:96%;height:64px;" placeholder="如: befdeb9a772845ff8f490b677e6b643b, 另一个模板ID"></textarea>' +
             '<div style="margin-top:10px;color:#f60;" id="autoSignAuthResult"></div>' +
             '</div>';
