@@ -43,6 +43,7 @@ import com.fanglin.system.po.RolePO;
 import com.fanglin.system.po.SystemConfigPO;
 import com.fanglin.utils.FormatUtil;
 import com.fanglin.utils.PinYin4Util;
+import com.fanglin.utils.SystemConfig;
 
 @Service("A20260324Service")
 @Transactional
@@ -652,9 +653,9 @@ public class A20260324ServiceImpl implements A20260324Service {
 				if (code != null && !code.trim().isEmpty()) {
 					userId = code;
 				} else {
-					// 自动生成工号
+					// 自动生成工号(与addUser同款: multicompany!=0={简称}U-, 否则FL-; 计数器同源不撞号)
 					int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_USER_INT, CountingPO.COUNTING_DATE_SILNLE_STR, company);
-					userId = String.format("%sU-%s", companyPO.getShortname(), FormatUtil.fillZero(count, "00000"));
+					userId = (SystemConfig.getInt("multicompany", 0) != 0 ? String.format("%sU-", companyPO.getShortname()) : "FL-") + FormatUtil.fillZero(count, "00000");
 					logger.info("自动生成工号: userId={}", userId);
 				}
 
