@@ -50,7 +50,20 @@ jQuery(function($) {
     com.focusPage("#esignConsoleBtn").on('click', function() {
 
         // PC客户端环境新标签页不可用, 页内弹窗承载(近全屏iframe); web.esign.cn未设X-Frame-Options可嵌
-        com.popup4frame("e签宝模板操作页", "https://web.esign.cn/");
+        // 🔴时序互斥: 先收编辑弹窗再开操作台frame, 任意时刻仅一窗——规避双layer固定zIndex(编辑弹窗3000/操作台2500)
+        // 互相覆盖及layer z计数被固定值压低的显示顺序问题; frame关闭(cancel/end双触发, 同id去重幂等)后原样重开弹窗
+        // (#layerAdd节点跨layer关闭存活, 已填表单值与厂商形态不丢; 重开不带prepare, 不做cleanItems/initUpdate重置)
+        var _title = contract.cid != null ? '编辑' : '添加';
+
+        com.closePopup();
+
+        com.popup4frame("e签宝模板操作页", "https://web.esign.cn/", null, function() {
+
+            com.popup4model('#layerAdd', _title, null, function() {
+
+                com.clearValidator();
+            });
+        });
     });
 
     contract.items.page.bindData(constant.data().contract.type.datas.sort(function(a, b) {
