@@ -2886,14 +2886,6 @@ var QuotationDetail = (function() {
             var oldNum = handler.find('.cell.num .cell-wrap .number').text();
             var _type = handler.find('.type').attr('data-type');
 
-            // 🔴NaN字面量闸: 聚合数非法(count-num缺失/空被parseFloat成NaN, 历史脏数据成因)时不写单元格也不落库
-            // ($.param会把NaN数字序列化成字面"NaN", formula是String列后端原样入库——本页所有写formula的路径中仅此处写计算数值)
-            if (!isFinite(parseFloat(newNum))) {
-
-                console.warn("quotationPart: 引用聚合数非法, 已跳过回写", handler.attr("data-qfaiid"), newNum);
-                return false;
-            }
-
             handler.find('.cell.formula .cell-wrap span').text(newNum);
             handler.find('.cell.num .cell-wrap .number').text(newNum);
             handler.find(".icon-arrow-up").removeClass("grey").addClass("green");
