@@ -17,9 +17,9 @@ import org.springframework.stereotype.Controller;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.fanglin.core.action.BaseAction;
+import com.fanglin.core.interceptor.FLException;
+import com.fanglin.esign.service.ESignTemplateService;
 import com.fanglin.esign.utils.EsignClient;
-import com.fanglin.system.dao.SystemConfigDao;
-import com.fanglin.system.po.SystemConfigPO;
 
 /**
  * e签宝印章自动落章授权。
@@ -46,7 +46,7 @@ public class ESignAutoSignAuthAction extends BaseAction {
 	private EsignClient esignClient;
 
 	@Autowired
-	private SystemConfigDao systemConfigDao;
+	private ESignTemplateService esignTemplateService;
 
 	private String orgId;
 
@@ -143,11 +143,10 @@ public class ESignAutoSignAuthAction extends BaseAction {
 		return fallback;
 	}
 
-	private String configValue(String key) {
+	private String configValue(String key) throws FLException {
 
-		SystemConfigPO configPO = systemConfigDao.querySystemConfig(key);
-
-		return configPO == null || configPO.getValue() == null || "".equals(configPO.getValue().trim()) ? null : configPO.getValue().trim();
+		// Action 层无事务 session, DAO 读取统一下沉 @Transactional 服务(直调即抛 No Hibernate Session bound to thread)
+		return esignTemplateService.queryConfigValue(key);
 	}
 
 	public String getOrgId() {
