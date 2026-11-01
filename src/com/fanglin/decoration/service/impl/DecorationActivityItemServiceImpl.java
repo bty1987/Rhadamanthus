@@ -11,10 +11,13 @@
 
 package com.fanglin.decoration.service.impl;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,10 +43,16 @@ import com.fanglin.decoration.vo.DecorationActivityItemVO;
 import com.fanglin.decoration.vo.DecorationVO;
 import com.fanglin.information.dao.AwardRecordDao;
 import com.fanglin.information.dao.AwardStockDao;
+import com.fanglin.payment.dao.PaymentDao;
+import com.fanglin.payment.po.PaymentPO;
 import com.fanglin.information.po.AwardRecordPO;
 import com.fanglin.information.po.AwardStockPO;
 import com.fanglin.information.po.MessageCueuingPO;
+import com.fanglin.information.dao.ActivityDao;
+import com.fanglin.information.dao.ActivityRuleDao;
 import com.fanglin.information.dao.ActivityItemDao;
+import com.fanglin.information.po.ActivityPO;
+import com.fanglin.information.po.ActivityRulePO;
 import com.fanglin.information.po.ActivityItemPO;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
@@ -101,6 +110,15 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 
 	@Autowired
 	private DecorationActivityCostService decorationActivityCostService;
+
+	@Autowired
+	private ActivityDao activityDao;
+
+	@Autowired
+	private ActivityRuleDao activityRuleDao;
+
+	@Autowired
+	private PaymentDao paymentDao;
 
 	@Override
 	public List<DecorationActivityItemVO> queryDecorationActivityItemByOrderId(DecorationVO decorationVO) {
@@ -731,5 +749,165 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 		CustomerChancePO customerChancePO = customerChanceDao.queryCustomerChance(orderId);
 
 		return customerChancePO != null ? ",\"ccid\":" + customerChancePO.getCcid() : "";
+	}
+
+	// ==================== 抽奖券发放(收款/提现链插桩驱动 + 补发入口) ====================
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int issueDecorationActivityItemByOrderId(String orderId, String userId) throws FLException {
+
+		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(orderId);
+
+		if (decorationPO == null) return 0;
+
+		// 定位公司当前有效窗口内的抽奖活动(type=抽奖券, 窗口条件在DAO)
+		ActivityPO activityPO = activityDao.queryActivityForLottery(decorationPO.getCompany(), DateUtil.getDateToTimestamp(new Date()));
+
+		if (activityPO == null) return 0;
+
+		List<ActivityRulePO> rules = activityRuleDao.queryActivityRuleForEnabled(activityPO.getAid());
+
+		if (rules.isEmpty()) return 0;
+
+		// 预存主材净额 = 活动窗口内收款(type=1) − 提现(type=0), 仅有效流水(DAO sum)
+		long net = paymentDao.amountPayment(orderId, PaymentPO.PAYMENT_PAYMENTTYPE_MATERIAL_INT, activityPO.getStartTime(), activityPO.getEndTime());
+
+		// 签约判定: 合同签约时间落在活动窗口内(重签单 contractTime 为原签约时间, 同样命中)
+		boolean signed = decorationPO.getContractTime() != null
+				&& (activityPO.getStartTime() == null || !decorationPO.getContractTime().before(activityPO.getStartTime()))
+				&& (activityPO.getEndTime() == null || !decorationPO.getContractTime().after(activityPO.getEndTime()));
+
+		// 应得券数 = Σ规则行: 1=签约赠 2=预存每满(可封顶) 3=预存阶梯
+		Set<Long> asids = new HashSet<Long>();
+
+		int entitlement = 0;
+
+		for (ActivityRulePO rule : rules) {
+			asids.add(rule.getAsid());
+			if (rule.getRuleType() == ActivityRulePO.RULETYPE_SIGN_INT) {
+				if (signed) entitlement += rule.getTickets();
+			} else if (rule.getRuleType() == ActivityRulePO.RULETYPE_EVERY_INT) {
+				if (rule.getPerAmount() != null && rule.getPerAmount() > 0 && net >= rule.getPerAmount()) {
+					long count = (net / rule.getPerAmount()) * rule.getTickets();
+					if (rule.getMaxTickets() > 0 && count > rule.getMaxTickets()) count = rule.getMaxTickets();
+					entitlement += (int) count;
+				}
+			} else if (rule.getRuleType() == ActivityRulePO.RULETYPE_LADDER_INT) {
+				if (net >= rule.getThreshold()) entitlement += rule.getTickets();
+			}
+		}
+
+		// 已发有效券数(count): 排除失效/退货; 已中奖(state=11)/已核销(10)等非初始态天然不在补发对齐范围
+		int diff = entitlement - decorationActivityItemDao.countDecorationActivityItemForLottery(orderId, new ArrayList<Long>(asids));
+
+		if (diff == 0) return 0;
+
+		UserPO creater = userDao.queryUserByUserId(userId);
+
+		if (diff > 0) {
+			// 补发: 券行 state=初始, no=LT+8位流水, 记轨迹; 优先每满/阶梯行奖品
+			ActivityRulePO rule = rules.get(0);
+
+			for (ActivityRulePO r : rules) {
+				if (r.getRuleType() != ActivityRulePO.RULETYPE_SIGN_INT) {
+					rule = r;
+					break;
+				}
+			}
+
+			AwardStockPO awardStockPO = awardStockDao.get(rule.getAsid());
+
+			if (awardStockPO == null) {
+				throw new FLException(240075, "奖品不存在");
+			}
+
+			for (int i = 0; i < diff; i++) {
+
+				DecorationActivityItemPO decorationActivityItemPO = new DecorationActivityItemPO();
+
+				decorationActivityItemPO.setAid(activityPO.getAid());
+				decorationActivityItemPO.setAsid(awardStockPO.getAsId());
+				decorationActivityItemPO.setOrderId(orderId);
+				decorationActivityItemPO.setActivityName(activityPO.getName());
+				decorationActivityItemPO.setActivityItemName(awardStockPO.getName());
+				decorationActivityItemPO.setType(DecorationActivityItemPO.TYPE_COUPON_INT);
+				decorationActivityItemPO.setState(DecorationActivityItemPO.STATUS_INIT_INT);
+				decorationActivityItemPO.setAtttype(DecorationActivityItemPO.ATTTYPE_ONLINE_INT);
+				decorationActivityItemPO.setNum(1);
+				decorationActivityItemPO.setMoney(0);
+				decorationActivityItemPO.setExpendPrice(0);
+				decorationActivityItemPO.setDiscountPrice(0);
+				decorationActivityItemPO.setIsPrefor(DecorationActivityItemPO.ISPREFOR_UNCAL_INT);
+				decorationActivityItemPO.setIsStock(awardStockPO.getIsStock());
+				decorationActivityItemPO.setIsPayment(DecorationActivityItemPO.ISPAYMENT_UNCAL_INT);
+				decorationActivityItemPO.setCreater(creater);
+				decorationActivityItemPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
+
+				decorationActivityItemDao.save(decorationActivityItemPO);
+
+				decorationActivityItemPO.setNo(String.format("LT%08d", decorationActivityItemPO.getDaiId()));
+
+				decorationActivityItemDao.update(decorationActivityItemPO);
+
+				decorationActivityRecordDao.save(new DecorationActivityRecordPO().init(activityPO.getAid(), decorationActivityItemPO, DecorationActivityItemPO.STATUS_INIT_INT, creater, "抽奖券自动发放"));
+			}
+		} else {
+			// 回收: 候选=state初始(0), 已中奖(11)/已核销(10)等非初始态天然不在候选, 已中奖券绝不回收; daiId 逆序(后发的先收)
+			List<DecorationActivityItemPO> candidates = decorationActivityItemDao.queryDecorationActivityItemForLottery(orderId, new ArrayList<Long>(asids));
+
+			int abated = 0;
+
+			for (DecorationActivityItemPO decorationActivityItemPO : candidates) {
+				if (abated >= -diff) break;
+
+				decorationActivityItemPO.setState(DecorationActivityItemPO.STATUS_UNVALID_INT);
+
+				decorationActivityItemDao.update(decorationActivityItemPO);
+
+				decorationActivityRecordDao.save(new DecorationActivityRecordPO().init(decorationActivityItemPO.getAid(), decorationActivityItemPO, DecorationActivityItemPO.STATUS_UNVALID_INT, creater, "抽奖券自动回收(应得数下降)"));
+
+				abated++;
+			}
+		}
+
+		return diff;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int issueDecorationActivityItem(long aid, String userId) throws FLException {
+
+		ActivityPO activityPO = activityDao.get(aid);
+
+		if (activityPO == null) {
+			throw new FLException(160011, "活动信息不存在");
+		}
+
+		if (activityPO.getStartTime() == null || activityPO.getEndTime() == null) {
+			throw new FLException(160064, "活动窗口未配置, 无法执行抽奖券补发");
+		}
+
+		List<ActivityRulePO> rules = activityRuleDao.queryActivityRuleForEnabled(aid);
+
+		if (rules.isEmpty()) {
+			throw new FLException(160064, "活动未配置奖励规则, 无法执行抽奖券补发");
+		}
+
+		// 前置识别: 规则行奖品存在性一次校验, 配置错误直接抛出(240075)
+		for (ActivityRulePO rule : rules) {
+			if (awardStockDao.get(rule.getAsid()) == null) {
+				throw new FLException(240075, "奖品不存在");
+			}
+		}
+
+		int count = 0;
+
+		for (DecorationPO decorationPO : decorationDao.queryDecorationForLottery(activityPO.getCompany(), activityPO.getStartTime(), activityPO.getEndTime())) {
+			int diff = issueDecorationActivityItemByOrderId(decorationPO.getOrderId(), userId);
+			if (diff > 0) count += diff;
+		}
+
+		return count;
 	}
 }

@@ -43,6 +43,8 @@ public class DecorationActivityItemPO implements java.io.Serializable {
 
 	public static final short STATUS_VERIFY_INT = 10; // 核销
 
+	public static final short STATUS_WINNING_INT = 11; // 已中奖(抽奖系统开奖回写, 待礼品部核销)
+
 	public static final short TYPE_COUPON_INT = 0; // 卷
 
 	public static final short TYPE_THING_INT = 1; // 物品
@@ -132,8 +134,6 @@ public class DecorationActivityItemPO implements java.io.Serializable {
 	private short isPayment; // 金额标识
 
 	private short isAffirm; // 是否确认
-
-	private String awardName; // 中奖奖项(抽奖系统直写, ORM 侧只读透传)
 
 	private String content;
 
@@ -393,15 +393,6 @@ public class DecorationActivityItemPO implements java.io.Serializable {
 
 	public void setIsAffirm(short isAffirm) {
 		this.isAffirm = isAffirm;
-	}
-
-	@Column(name = "awardName")
-	public String getAwardName() {
-		return awardName;
-	}
-
-	public void setAwardName(String awardName) {
-		this.awardName = awardName;
 	}
 
 	@Column(name = "content")

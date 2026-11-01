@@ -12,6 +12,7 @@
 package com.fanglin.decoration.dao.impl;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -288,8 +289,22 @@ public class DecorationActivityItemDaoImpl extends DaoImpl<DecorationActivityIte
 				.add(Restrictions.eq(DecorationActivityItemPO.COLUMN_ORDERID_STR, orderId))
 				.add(Restrictions.eq(DecorationActivityItemPO.COLUMN_TYPE_STR, DecorationActivityItemPO.TYPE_COUPON_INT))
 				.add(Restrictions.eq(DecorationActivityItemPO.COLUMN_STATUS_STR, DecorationActivityItemPO.STATUS_INIT_INT))
-				.add(Restrictions.isNull("awardName"))
 				.add(Restrictions.in("asid", asids))
 				.addOrder(Order.desc("daiId")).list();
+	}
+
+	@Override
+	public int countDecorationActivityItemForLottery(String orderId, List<Long> asids) {
+
+		String sql = "select count(*) from decoration.decorationactivityitem where orderId = :orderId and type = :type and asid in (:asids) and state not in (:excludeStates)";
+
+		BigInteger count = (BigInteger) session().createSQLQuery(sql)
+				.setString("orderId", orderId)
+				.setShort("type", DecorationActivityItemPO.TYPE_COUPON_INT)
+				.setParameterList("asids", asids)
+				.setParameterList("excludeStates", Arrays.asList(DecorationActivityItemPO.STATUS_UNVALID_INT, DecorationActivityItemPO.STATUS_RETREAT_INT))
+				.uniqueResult();
+
+		return count.intValue();
 	}
 }

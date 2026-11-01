@@ -11,7 +11,9 @@
 
 package com.fanglin.information.dao.impl;
 
+import java.math.BigInteger;
 import java.util.Arrays;
+import java.sql.Timestamp;
 import java.util.List;
 
 import org.hibernate.criterion.Restrictions;
@@ -56,8 +58,11 @@ public class ActivityDaoImpl extends DaoImpl<ActivityPO> implements ActivityDao 
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<ActivityPO> queryActivityForLottery(int company) {
-		return session().createCriteria(ActivityPO.class).add(Restrictions.eq("company", company)).add(Restrictions.eq("rewardType", ActivityPO.REWARDTYPE_LOTTERY_INT)).add(Restrictions.eq(ActivityPO.COLUMN_STATUS_STR, ActivityPO.STATUS_VALID_INT)).list();
+	public ActivityPO queryActivityForLottery(int company, Timestamp now) {
+		return (ActivityPO) session().createCriteria(ActivityPO.class).add(Restrictions.eq("company", company)).add(Restrictions.eq("rewardType", ActivityPO.REWARDTYPE_LOTTERY_INT)).add(Restrictions.eq(ActivityPO.COLUMN_STATUS_STR, ActivityPO.STATUS_VALID_INT))
+				.add(Restrictions.or(Restrictions.isNull("startTime"), Restrictions.le("startTime", now)))
+				.add(Restrictions.or(Restrictions.isNull("endTime"), Restrictions.ge("endTime", now)))
+				.setMaxResults(1).uniqueResult();
 	}
 
 	@Override
@@ -88,4 +93,21 @@ public class ActivityDaoImpl extends DaoImpl<ActivityPO> implements ActivityDao 
 
 	}
 
+
+	@Override
+	public int countActivityForLottery(int company, Timestamp startTime, Timestamp endTime, long excludeAid) {
+
+		String sql = "select count(*) from information.activity where company = :company and rewardType = :rewardType and status = :status and aid != :excludeAid and (startTime is null or startTime < :endTime) and (endTime is null or endTime > :startTime)";
+
+		BigInteger count = (BigInteger) session().createSQLQuery(sql)
+				.setInteger("company", company)
+				.setShort("rewardType", ActivityPO.REWARDTYPE_LOTTERY_INT)
+				.setShort("status", ActivityPO.STATUS_VALID_INT)
+				.setLong("excludeAid", excludeAid)
+				.setTimestamp("startTime", startTime)
+				.setTimestamp("endTime", endTime)
+				.uniqueResult();
+
+		return count.intValue();
+	}
 }

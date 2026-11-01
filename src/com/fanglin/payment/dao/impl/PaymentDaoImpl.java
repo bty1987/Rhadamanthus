@@ -133,4 +133,15 @@ public class PaymentDaoImpl extends DaoImpl<PaymentPO> implements PaymentDao {
 		}
 	}
 
+
+	@Override
+	public long amountPayment(String orderId, Short paymentType, Timestamp startTime, Timestamp endTime) {
+
+		// 活动窗口净额: 收款(type=1)为正, 提现(type=0)为负; 仅计入已付(1)/已确认(2)
+		String sql = "SELECT SUM(CASE WHEN p.type = 1 THEN p.recharge WHEN p.type = 0 THEN -p.recharge ELSE 0 END) FROM payment.payment p WHERE p.orderId = :orderId AND p.paymentType = :paymentType AND p.status IN (1, 2) AND p.createTime >= :startTime AND p.createTime <= :endTime";
+
+		BigDecimal sqlQuery = (BigDecimal) session().createSQLQuery(sql).setString("orderId", orderId).setShort("paymentType", paymentType).setTimestamp("startTime", startTime).setTimestamp("endTime", endTime).uniqueResult();
+
+		return sqlQuery == null ? 0 : sqlQuery.longValue();
+	}
 }

@@ -11,6 +11,7 @@
 
 package com.fanglin.information.dao;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 import com.fanglin.core.dao.Dao;
@@ -26,7 +27,12 @@ public interface ActivityDao extends Dao<ActivityPO> {
 
 	public ActivityPO queryActivityForDefault(int company, short type);
 
-	public List<ActivityPO> queryActivityForLottery(int company);
+	public ActivityPO queryActivityForLottery(int company, Timestamp now);
+
+	/**
+	 * 统计窗口重叠的其他抽奖活动数(唯一性闸): company + type=抽奖券 + status=有效 + 窗口重叠, 排除自身
+	 */
+	public int countActivityForLottery(int company, Timestamp startTime, Timestamp endTime, long excludeAid);
 
 	public int resetActivityForDefault(short type,int company);
 

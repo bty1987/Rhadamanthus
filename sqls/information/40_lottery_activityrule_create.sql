@@ -43,23 +43,9 @@ CALL `information`.`_tmp_add_rewardtype`() $$
 DROP PROCEDURE IF EXISTS `information`.`_tmp_add_rewardtype` $$
 DELIMITER ;
 
--- 3. decorationactivityitem 加列 awardName (中奖奖项, 抽奖系统 12-01 起直写; M1 提前建列供引擎区分已中奖券)
-DELIMITER $$
-DROP PROCEDURE IF EXISTS `decoration`.`_tmp_add_awardname` $$
-CREATE PROCEDURE `decoration`.`_tmp_add_awardname`()
-BEGIN
-  IF NOT EXISTS (SELECT 1 FROM information_schema.COLUMNS
-                 WHERE TABLE_SCHEMA='decoration' AND TABLE_NAME='decorationactivityitem' AND COLUMN_NAME='awardName') THEN
-    ALTER TABLE `decoration`.`decorationactivityitem`
-      ADD COLUMN `awardName` VARCHAR(100) DEFAULT NULL COMMENT '中奖奖项(抽奖系统直写)' AFTER `isAffirm`;
-  END IF;
-END $$
-CALL `decoration`.`_tmp_add_awardname`() $$
-DROP PROCEDURE IF EXISTS `decoration`.`_tmp_add_awardname` $$
-DELIMITER ;
-
--- 4. 验证
+-- 3. 验证
 -- SELECT COUNT(*) FROM information_schema.TABLES  WHERE TABLE_SCHEMA='information' AND TABLE_NAME='activityrule';
 -- SELECT COUNT(*) FROM information_schema.COLUMNS WHERE TABLE_SCHEMA='information' AND TABLE_NAME='activity' AND COLUMN_NAME='rewardType';
--- SELECT COUNT(*) FROM information_schema.COLUMNS WHERE TABLE_SCHEMA='decoration' AND TABLE_NAME='decorationactivityitem' AND COLUMN_NAME='awardName';
--- 期望: 三行均为 1
+-- 期望: 两行均为 1
+-- 注: 中奖展示复用既有 activityItemName(未开奖=奖品名, 开奖后抽奖系统覆盖为奖项名)+activityName(活动名), 不加 awardName 列
+--     (dev/test-erp 曾按旧方案建的 decoration.decorationactivityitem.awardName 列已 DROP, 生产从未建过)

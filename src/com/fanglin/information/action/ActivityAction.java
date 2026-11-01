@@ -148,33 +148,4 @@ public class ActivityAction extends BaseListAction {
 	public void setActivitys(List<ActivityVO> activitys) {
 		this.activitys = activitys;
 	}
-
-
-	private long aid;
-
-	private int count;
-
-	@Action(value = "issueActivityForLottery", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String issueActivityForLottery() throws FLException {
-
-		count = activityService.issueActivityForLottery(aid, queryUserId());
-
-		return SUCCESS;
-	}
-
-	public long getAid() {
-		return aid;
-	}
-
-	public void setAid(long aid) {
-		this.aid = aid;
-	}
-
-	public int getCount() {
-		return count;
-	}
-
-	public void setCount(int count) {
-		this.count = count;
-	}
 }

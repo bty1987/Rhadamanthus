@@ -217,4 +217,32 @@ public class DecorationActivityItemAction extends BaseListAction {
 		this.company = company;
 	}
 
+
+	private long aid;
+
+	private int count;
+
+	@Action(value = "issueDecorationActivityItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String issueDecorationActivityItem() throws FLException {
+
+		count = decorationActivityItemService.issueDecorationActivityItem(aid, queryUserId());
+
+		return SUCCESS;
+	}
+
+	public long getAid() {
+		return aid;
+	}
+
+	public void setAid(long aid) {
+		this.aid = aid;
+	}
+
+	public int getCount() {
+		return count;
+	}
+
+	public void setCount(int count) {
+		this.count = count;
+	}
 }

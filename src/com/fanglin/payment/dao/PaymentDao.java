@@ -38,6 +38,11 @@ public interface PaymentDao extends Dao<PaymentPO> {
 	 */
 	public long balancePayment(String orderId, Short paymentType);
 
+	/**
+	 * 活动窗口内预付款净额(sum): 收款(type=1)为正, 提现(type=0)为负; 仅计已付(1)/已确认(2), createTime∈[startTime, endTime]
+	 */
+	public long amountPayment(String orderId, Short paymentType, Timestamp startTime, Timestamp endTime);
+
 	public PaymentDO queryPaymentByReceiptId(long arId);
 
 	public int updatePaymentForAid(String orderId, short paymentType, long aid);

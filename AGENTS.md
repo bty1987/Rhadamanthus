@@ -205,6 +205,24 @@ query.add(query.getCriterion("otherField", value, "like")).desc("id");
 return query.list();
 ```
 
+### 🔴 统计查询SQL优先（禁止Service层大量for做统计）
+- **判断类 / 总数类 → DAO 层 `count*` 方法**（`select count(*)`），禁止拉 list 回 Service 再 for 过滤计数
+- **汇总类（金额/数量累计）→ DAO 层 `amount*` / `sum`**（`SELECT SUM(...)`，可用 `SUM(CASE WHEN ...)` 表达正负净额），禁止 for 累加
+- Service 层拿到的是**数值结果**（`count.intValue()` / `amount.longValue()`），不是中间数据集
+- **豁免**（允许 for）：①带轨迹/流水记录的**写操作循环**（逐行 save+记轨迹）②**业务规则计算**（如多规则类型分支算应得，公式硬塞 SQL 会毁可读性）③**业务编排循环**（扫单逐个调子方法）
+- DAO count/amount 实现惯例：原生 SQL + `createSQLQuery` + `BigInteger`/`BigDecimal` 接收，`uniqueResult()`，null 归零（参考 `PlanDaoImpl.countPlan` / `PaymentDaoImpl.balancePayment`）
+- 多条件参数化：`setParameterList("asids", asids)` 处理 in 集合；方法名动词用 `count`/`amount` 前缀，对象=DAO 实体，可带 `For目的`（如 `countDecorationActivityItemForLottery`）
+```java
+// ❌ 错误: Service 层拉列表 + for 过滤计数
+int issued = 0;
+for (XxxPO po : dao.queryXxxByOrderId(orderId)) {
+    if (po.getType() == 0 && states.contains(po.getState())) issued++;
+}
+
+// ✅ 正确: DAO 层 count 条件化
+int issued = dao.countXxxForLottery(orderId, asids);
+```
+
 ### 🔴 生产SQL文件存放规范
 - **所有生产/变更 SQL 一律放 `sqls/` 目录**，禁止新建 `sql/` 或散放根目录
 - 按模块/库分子目录：`sqls/communion/`、`sqls/data/`、`sqls/construction/`、`sqls/customer/`、`sqls/elecsign/`、`sqls/misc/` 等
