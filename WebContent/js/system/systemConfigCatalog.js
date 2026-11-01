@@ -108,6 +108,7 @@ window.SYSTEM_CONFIG_CATALOG = [
     { key: "isv",                            group: "decoration",   name: "ISV白标开关",          desc: "是否启用 ISV/白标模式(0=关闭)",                         type: "int",    defaultValue: "0" },
     { key: "communion",                      group: "decoration",   name: "集团版开关",           desc: "集团/共享版功能开关(DB 级,非文件总开关)",              type: "string", defaultValue: "" },
     { key: "TENCENT_MAP_KEY_STR",            group: "decoration",   name: "腾讯地图Key",          desc: "腾讯地图服务 Key",                                       type: "string", defaultValue: "" },
+    { key: "DECORATION_SIGNED_HIDEDAYS",     group: "decoration",   name: "签约单隐藏天数",       desc: "装修单-通用-设计/业务:签约后N天内不显示,按公司配置,0=不隐藏,缺省14", type: "int", defaultValue: "14" },
 
     // ==================== 金蝶对接 kingdee ====================
     { key: "salesCollectPurpose",            group: "kingdee",      name: "销售收款用途",         desc: "金蝶销售收款对应用途编码",                               type: "string", defaultValue: "" },

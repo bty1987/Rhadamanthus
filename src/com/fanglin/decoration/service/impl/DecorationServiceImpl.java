@@ -101,7 +101,9 @@ import com.fanglin.right.po.DecorationDesignDepartmentRightPO;
 import com.fanglin.right.po.DecorationSalesmanDepartmentRightPO;
 import com.fanglin.right.po.DecorationStatusRightPO;
 import com.fanglin.system.dao.CompanyDao;
+import com.fanglin.system.dao.SystemConfigDao;
 import com.fanglin.system.po.CompanyPO;
+import com.fanglin.system.po.SystemConfigPO;
 import com.fanglin.system.service.impl.CompanyServiceImpl;
 import com.fanglin.utils.Arith;
 import com.fanglin.utils.BeanUtil;
@@ -113,11 +115,18 @@ import com.fanglin.utils.Paging;
 @Transactional(readOnly = true)
 public class DecorationServiceImpl implements DecorationService {
 
+	private static final String SIGNED_HIDEDAYS_KEY = "DECORATION_SIGNED_HIDEDAYS";// 签约单隐藏天数(systemconfig, 按公司)
+
+	private static final int SIGNED_HIDEDAYS_DEFAULT = 14;// 未配置缺省14天, 0=不隐藏
+
 	@Autowired
 	private CustomerChanceDao customerChanceDao;
 
 	@Autowired
 	private CompanyDao companyDao;
+
+	@Autowired
+	private SystemConfigDao systemConfigDao;
 
 	@Autowired
 	private CountingService countingService;
@@ -231,6 +240,14 @@ public class DecorationServiceImpl implements DecorationService {
 		Integer company = (companyType == null || companyType == 0) ? null : authentication.getCompany();
 
 		filters.add(new Filter("decoration.statuses", statuses, "in", Filter.RANGE_TYPE_SHORT_INT));
+
+		// 装修单-通用-设计/业务(companyType=0 集团页): 签约后N天内的装修单不显示, 天数按公司取systemconfig, 缺省14, 0=不隐藏
+		if (companyType != null && companyType == 0) {
+			String signTimeMax = querySignTimeMax(authentication.getCompany());
+			if (signTimeMax != null) {
+				filters.add(new Filter("decoration.signTime.max", signTimeMax, "le"));
+			}
+		}
 
 		List<DecorationPO> decorationPOs = decorationDao.pageDecoration(paging, filters, company);
 		List<DecorationVO> decorationVOs = new ArrayList<DecorationVO>();
@@ -1891,6 +1908,27 @@ public class DecorationServiceImpl implements DecorationService {
 		if (decorationVO.getSalesman() != null && decorationVO.getSalesman().getDept() != null && decorationVO.getSalesman().getDept().getFatherDept() != null && addition.getSalesRegion() != null) decorationVO.getSalesman().getDept().getFatherDept().setName(addition.getSalesRegion());
 
 		return decorationVO;
+	}
+
+	// 签约单隐藏天数: 取systemconfig(先公司行再全局行company=0, 缺省14, 0=不隐藏), 返回显示边界时间(签约时间不晚于该值才显示), null=不过滤
+	private String querySignTimeMax(int company) {
+
+		SystemConfigPO systemConfigPO = systemConfigDao.querySystemConfig(SIGNED_HIDEDAYS_KEY, company);
+
+		if (systemConfigPO == null && company != 0) {
+			systemConfigPO = systemConfigDao.querySystemConfig(SIGNED_HIDEDAYS_KEY, 0);
+		}
+
+		int days = SIGNED_HIDEDAYS_DEFAULT;
+
+		if (systemConfigPO != null) {
+			try {
+				days = Integer.parseInt(systemConfigPO.getValue().trim());
+			} catch (NumberFormatException e) {
+			}
+		}
+
+		return days <= 0 ? null : DateUtil.getDateToDateString(DateUtil.plusDay(new Date(), -days), "yyyy-MM-dd HH:mm:ss");
 	}
 
 	private String buildCcidArgs(String orderId) {

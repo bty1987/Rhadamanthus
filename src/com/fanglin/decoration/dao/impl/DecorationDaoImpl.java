@@ -27,6 +27,7 @@ import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.system.service.impl.CompanyServiceImpl;
 import com.fanglin.utils.Arith;
+import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.Paging;
 
 @Repository("decoratioDao")
@@ -492,6 +493,9 @@ public class DecorationDaoImpl extends DaoImpl<DecorationPO> implements Decorati
 				query.timeranges(String.format("%sprecontractTime", prefix), String.format("%sprecontractTime", prefix), data);
 			} else if ("decoration.signTime.range".equals(field)) {
 				query.timeranges(String.format("%scontractTime", prefix), String.format("%scontractTime", prefix), data);
+			} else if ("decoration.signTime.max".equals(field)) {
+				// 签约时间不晚于指定时间才显示, 未签约(contractTime空)视为通过 —— 签约单隐藏(装修单-通用-设计/业务)
+				query.add(Restrictions.or(Restrictions.isNull(String.format("%scontractTime", prefix)), Restrictions.le(String.format("%scontractTime", prefix), DateUtil.getDateToTimestamp(DateUtil.parseDate(data, "yyyy-MM-dd HH:mm:ss")))));
 			} else if ("decoration.recontractTime.range".equals(field)) {
 				query.timeranges(String.format("%srecontractTime", prefix), String.format("%srecontractTime", prefix), data);
 			} else if ("decoration.accountTime.range".equals(field)) {
