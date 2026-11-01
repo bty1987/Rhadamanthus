@@ -914,7 +914,7 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 
 		int count = 0;
 
-		for (DecorationPO decorationPO : decorationDao.queryDecorationForLottery(activityPO.getCompany(), activityPO.getStartTime(), activityPO.getEndTime())) {
+		for (DecorationPO decorationPO : decorationDao.queryDecorationForLottery(activityPO.getCompany(), activityPO.getEndTime())) {
 			int diff = issueDecorationActivityItemByOrderId(decorationPO.getOrderId(), userId);
 			if (diff > 0) count += diff;
 		}

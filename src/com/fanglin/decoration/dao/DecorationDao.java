@@ -74,8 +74,9 @@ public interface DecorationDao extends Dao<DecorationPO> {
 	public void updateDesignStatus(String orderId, short designStatus);
 
 	/**
-	 * 扫描窗口内签约单(补发入口用): company + contractTime∈[start,end] + 排除废单/终止
+	 * 扫描补发入口单集合(老客户预存赠也参与, 用户拍板2026-11-01): company + contractTime≤end(全量历史签约单) + 排除废单/终止
+	 * 签约赠只给窗口内新签约(signed 判定在引擎), 老单按净额参与预存赠
 	 */
-	public List<DecorationPO> queryDecorationForLottery(int company, Timestamp start, Timestamp end);
+	public List<DecorationPO> queryDecorationForLottery(int company, Timestamp end);
 
 }

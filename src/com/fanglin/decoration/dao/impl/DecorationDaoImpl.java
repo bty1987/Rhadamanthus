@@ -513,10 +513,9 @@ public class DecorationDaoImpl extends DaoImpl<DecorationPO> implements Decorati
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<DecorationPO> queryDecorationForLottery(int company, Timestamp start, Timestamp end) {
+	public List<DecorationPO> queryDecorationForLottery(int company, Timestamp end) {
 		return session().createCriteria(DecorationPO.class)
 				.add(Restrictions.eq("company", company))
-				.add(Restrictions.ge("contractTime", start))
 				.add(Restrictions.le("contractTime", end))
 				.add(Restrictions.not(Restrictions.in("status", Arrays.asList(DecorationPO.STATUS_WASTE_INT, DecorationPO.STATUS_TERMINATION_INT))))
 				.addOrder(Order.asc("contractTime")).list();
