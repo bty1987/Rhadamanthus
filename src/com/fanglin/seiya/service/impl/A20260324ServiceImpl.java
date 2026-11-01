@@ -291,6 +291,9 @@ public class A20260324ServiceImpl implements A20260324Service {
 				// 设置别称
 				deptPO.setAlias(name);
 
+				// 设置创建日期（department.createTime 为 date NOT NULL 且无默认值，漏设将导致插入失败）
+				deptPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
+
 				// 设置部门编号（如果提供）
 				if (code != null && !code.trim().isEmpty()) {
 					deptPO.setNo(code);
