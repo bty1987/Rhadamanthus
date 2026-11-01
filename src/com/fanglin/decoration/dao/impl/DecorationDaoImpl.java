@@ -11,10 +11,12 @@
 
 package com.fanglin.decoration.dao.impl;
 
+import java.sql.Timestamp;
 import java.util.Arrays;
 import java.util.List;
 
 import org.hibernate.Criteria;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
@@ -508,4 +510,15 @@ public class DecorationDaoImpl extends DaoImpl<DecorationPO> implements Decorati
 		}
 	}
 
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<DecorationPO> queryDecorationForLottery(int company, Timestamp start, Timestamp end) {
+		return session().createCriteria(DecorationPO.class)
+				.add(Restrictions.eq("company", company))
+				.add(Restrictions.ge("contractTime", start))
+				.add(Restrictions.le("contractTime", end))
+				.add(Restrictions.not(Restrictions.in("status", Arrays.asList(DecorationPO.STATUS_WASTE_INT, DecorationPO.STATUS_TERMINATION_INT))))
+				.addOrder(Order.asc("contractTime")).list();
+	}
 }

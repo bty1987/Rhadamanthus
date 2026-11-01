@@ -62,6 +62,8 @@ public class DecorationActivityItemVO implements java.io.Serializable {
 
 	private Short isAffirm; // 是否确认
 
+	private String awardName; // 中奖奖项(抽奖系统直写, 会员小程序据此渲染中奖文案)
+
 	private String content;
 
 	private String comment;
@@ -285,6 +287,14 @@ public class DecorationActivityItemVO implements java.io.Serializable {
 
 	public void setIsAffirm(Short isAffirm) {
 		this.isAffirm = isAffirm;
+	}
+
+	public String getAwardName() {
+		return awardName;
+	}
+
+	public void setAwardName(String awardName) {
+		this.awardName = awardName;
 	}
 
 	public String getContent() {

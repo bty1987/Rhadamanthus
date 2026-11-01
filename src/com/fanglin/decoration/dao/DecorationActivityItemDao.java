@@ -73,4 +73,13 @@ public interface DecorationActivityItemDao extends Dao<DecorationActivityItemPO>
 	 */
 	public int banchDecorationActivityItem(String orderId, short atttype, short targetState, List<Short> excludeStates, long receiverId);
 
+	/**
+	 * 查询订单下可回收的抽奖券(有效券行, 未中奖): type=券 + asid∈规则奖品 + state=初始 + awardName 为空, daiId 逆序
+	 *
+	 * @param orderId 订单号
+	 * @param asids 抽奖规则指向的奖品档案ID集合
+	 * @return 可回收券行
+	 */
+	public List<DecorationActivityItemPO> queryDecorationActivityItemForLottery(String orderId, List<Long> asids);
+
 }

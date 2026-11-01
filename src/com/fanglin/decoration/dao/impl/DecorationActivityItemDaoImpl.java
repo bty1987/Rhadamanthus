@@ -17,6 +17,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.hibernate.SQLQuery;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
@@ -278,5 +279,17 @@ public class DecorationActivityItemDaoImpl extends DaoImpl<DecorationActivityIte
 		}
 
 		return sqlQuery.executeUpdate();
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<DecorationActivityItemPO> queryDecorationActivityItemForLottery(String orderId, List<Long> asids) {
+		return session().createCriteria(DecorationActivityItemPO.class)
+				.add(Restrictions.eq(DecorationActivityItemPO.COLUMN_ORDERID_STR, orderId))
+				.add(Restrictions.eq(DecorationActivityItemPO.COLUMN_TYPE_STR, DecorationActivityItemPO.TYPE_COUPON_INT))
+				.add(Restrictions.eq(DecorationActivityItemPO.COLUMN_STATUS_STR, DecorationActivityItemPO.STATUS_INIT_INT))
+				.add(Restrictions.isNull("awardName"))
+				.add(Restrictions.in("asid", asids))
+				.addOrder(Order.desc("daiId")).list();
 	}
 }

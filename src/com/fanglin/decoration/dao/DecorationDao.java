@@ -11,6 +11,7 @@
 
 package com.fanglin.decoration.dao;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 import com.fanglin.core.dao.Dao;
@@ -71,5 +72,10 @@ public interface DecorationDao extends Dao<DecorationPO> {
 	 * @param designStatus 设计状态
 	 */
 	public void updateDesignStatus(String orderId, short designStatus);
+
+	/**
+	 * 扫描窗口内签约单(补发入口用): company + contractTime∈[start,end] + 排除废单/终止
+	 */
+	public List<DecorationPO> queryDecorationForLottery(int company, Timestamp start, Timestamp end);
 
 }

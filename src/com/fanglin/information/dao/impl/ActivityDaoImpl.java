@@ -55,6 +55,12 @@ public class ActivityDaoImpl extends DaoImpl<ActivityPO> implements ActivityDao 
 	}
 
 	@Override
+	@SuppressWarnings("unchecked")
+	public List<ActivityPO> queryActivityForLottery(int company) {
+		return session().createCriteria(ActivityPO.class).add(Restrictions.eq("company", company)).add(Restrictions.eq("rewardType", ActivityPO.REWARDTYPE_LOTTERY_INT)).add(Restrictions.eq(ActivityPO.COLUMN_STATUS_STR, ActivityPO.STATUS_VALID_INT)).list();
+	}
+
+	@Override
 	public int resetActivityForDefault(short type,int company) {
 
 		String sql = "update information.activity set defaults = :defaults where type = :type and company = :company";

@@ -133,6 +133,8 @@ public class DecorationActivityItemPO implements java.io.Serializable {
 
 	private short isAffirm; // 是否确认
 
+	private String awardName; // 中奖奖项(抽奖系统直写, ORM 侧只读透传)
+
 	private String content;
 
 	private String comment;
@@ -391,6 +393,15 @@ public class DecorationActivityItemPO implements java.io.Serializable {
 
 	public void setIsAffirm(short isAffirm) {
 		this.isAffirm = isAffirm;
+	}
+
+	@Column(name = "awardName")
+	public String getAwardName() {
+		return awardName;
+	}
+
+	public void setAwardName(String awardName) {
+		this.awardName = awardName;
 	}
 
 	@Column(name = "content")
