@@ -37,15 +37,14 @@ import com.fanglin.communion.po.CustomerPhonePO;
 import com.fanglin.communion.po.DepartmentPO;
 import com.fanglin.communion.po.DepartmentPartnerPO;
 import com.fanglin.communion.po.HousePO;
-import com.fanglin.customer.dao.CustomerChanceDao;
-import com.fanglin.customer.po.CustomerChancePO;
-import com.fanglin.log.context.ActionLogContext;
 import com.fanglin.communion.po.ServiceNodePO;
 import com.fanglin.communion.vo.CustomerVO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.security.SensitiveDataHelper;
 import com.fanglin.core.vo.Authentication;
 import com.fanglin.core.vo.Filter;
+import com.fanglin.customer.dao.CustomerChanceDao;
+import com.fanglin.customer.po.CustomerChancePO;
 import com.fanglin.data.common.dao.DecorationMeasureRuleDao;
 import com.fanglin.data.common.dao.PaymentTypeDao;
 import com.fanglin.data.po.DecorationBusitypePO;
@@ -53,16 +52,16 @@ import com.fanglin.data.po.DecorationMeasureRuleItemPO;
 import com.fanglin.data.po.PaymentTypePO;
 import com.fanglin.data.po.QuotationVersionPO;
 import com.fanglin.data.quotation.dao.QuotationVersionDao;
-import com.fanglin.decoration.dao.DecorationAuditDao;
 import com.fanglin.decoration.dao.DecorationAdditionDao;
+import com.fanglin.decoration.dao.DecorationAuditDao;
 import com.fanglin.decoration.dao.DecorationBelongDao;
 import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.dao.DecorationInfoDao;
 import com.fanglin.decoration.dao.DecorationOperateDao;
 import com.fanglin.decoration.dao.DecorationServiceDao;
 import com.fanglin.decoration.dao.DecorationUserDao;
-import com.fanglin.decoration.po.DecorationAuditPO;
 import com.fanglin.decoration.po.DecorationAdditionPO;
+import com.fanglin.decoration.po.DecorationAuditPO;
 import com.fanglin.decoration.po.DecorationBelongPO;
 import com.fanglin.decoration.po.DecorationInfoPO;
 import com.fanglin.decoration.po.DecorationOperatePO;
@@ -76,6 +75,7 @@ import com.fanglin.information.po.MessageCueuingPO;
 import com.fanglin.information.po.MessagePO;
 import com.fanglin.information.po.MessageQueuingPO;
 import com.fanglin.information.service.MessageService;
+import com.fanglin.log.context.ActionLogContext;
 import com.fanglin.payment.dao.AdvancePaymentDao;
 import com.fanglin.payment.dao.DecorationPaymentDao;
 import com.fanglin.payment.dao.DecorationReceiptDao;
@@ -114,10 +114,6 @@ import com.fanglin.utils.Paging;
 @Service("decorationServiceO")
 @Transactional(readOnly = true)
 public class DecorationServiceImpl implements DecorationService {
-
-	private static final String SIGNED_HIDEDAYS_KEY = "DECORATION_SIGNED_HIDEDAYS";// 签约单隐藏天数(systemconfig, 按公司)
-
-	private static final int SIGNED_HIDEDAYS_DEFAULT = 14;// 未配置缺省14天, 0=不隐藏
 
 	@Autowired
 	private CustomerChanceDao customerChanceDao;
@@ -241,12 +237,10 @@ public class DecorationServiceImpl implements DecorationService {
 
 		filters.add(new Filter("decoration.statuses", statuses, "in", Filter.RANGE_TYPE_SHORT_INT));
 
-		// 装修单-通用-设计/业务(companyType=0 集团页): 签约后N天内的装修单不显示, 天数按公司取systemconfig, 缺省14, 0=不隐藏
-		if (companyType != null && companyType == 0) {
-			String signTimeMax = querySignTimeMax(authentication.getCompany());
-			if (signTimeMax != null) {
-				filters.add(new Filter("decoration.signTime.max", signTimeMax, "le"));
-			}
+		SystemConfigPO daynum = systemConfigDao.querySystemConfig("DECORATION_SIGNED_HIDEDAYS", company);
+
+		if (daynum != null) {
+			filters.add(new Filter("decoration.signTime.max", DateUtil.getDateToDateString(DateUtil.plusDay(new Date(), -Integer.parseInt(daynum.getValue().trim())), "yyyy-MM-dd HH:mm:ss"), "le"));
 		}
 
 		List<DecorationPO> decorationPOs = decorationDao.pageDecoration(paging, filters, company);
@@ -1908,27 +1902,6 @@ public class DecorationServiceImpl implements DecorationService {
 		if (decorationVO.getSalesman() != null && decorationVO.getSalesman().getDept() != null && decorationVO.getSalesman().getDept().getFatherDept() != null && addition.getSalesRegion() != null) decorationVO.getSalesman().getDept().getFatherDept().setName(addition.getSalesRegion());
 
 		return decorationVO;
-	}
-
-	// 签约单隐藏天数: 取systemconfig(先公司行再全局行company=0, 缺省14, 0=不隐藏), 返回显示边界时间(签约时间不晚于该值才显示), null=不过滤
-	private String querySignTimeMax(int company) {
-
-		SystemConfigPO systemConfigPO = systemConfigDao.querySystemConfig(SIGNED_HIDEDAYS_KEY, company);
-
-		if (systemConfigPO == null && company != 0) {
-			systemConfigPO = systemConfigDao.querySystemConfig(SIGNED_HIDEDAYS_KEY, 0);
-		}
-
-		int days = SIGNED_HIDEDAYS_DEFAULT;
-
-		if (systemConfigPO != null) {
-			try {
-				days = Integer.parseInt(systemConfigPO.getValue().trim());
-			} catch (NumberFormatException e) {
-			}
-		}
-
-		return days <= 0 ? null : DateUtil.getDateToDateString(DateUtil.plusDay(new Date(), -days), "yyyy-MM-dd HH:mm:ss");
 	}
 
 	private String buildCcidArgs(String orderId) {
