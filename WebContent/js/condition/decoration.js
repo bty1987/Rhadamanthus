@@ -858,3 +858,113 @@ Condition.addupRule("decoration", {
         }
     }
 });
+
+// 活动物品查询条件(全类型: 券/物品/额度系), 抽奖券(no=LT前缀)同池可查
+var decorationActivityItemTypeDatas = [
+    { key: 0, value: "券" },
+    { key: 1, value: "物品" },
+    { key: 10, value: "优惠额度-券" },
+    { key: 11, value: "优惠额度-物品" },
+    { key: 12, value: "优惠额度-红包" }
+];
+
+Condition.addupRule("decorationActivityItem", {
+
+    "orderId": {
+        label: "装修单号",
+        type: "text",
+        submitConfig: {
+            name: "decorationActivityItem.orderId",
+            op: "eq",
+            validate: {
+                "reg": /^[A-Z0-9]*$/,
+                "msg": "格式不正确A-Z,0-9"
+            }
+        }
+    },
+    "no": {
+        label: "券编码",
+        type: "text",
+        submitConfig: {
+            name: "decorationActivityItem.no",
+            op: "eq",
+            validate: null
+        }
+    },
+    "activityName": {
+        label: "活动名称",
+        type: "text",
+        submitConfig: {
+            name: "decorationActivityItem.activityName",
+            op: "like",
+            validate: null
+        }
+    },
+    "activityItemName": {
+        label: "奖励名称",
+        type: "text",
+        submitConfig: {
+            name: "decorationActivityItem.activityItemName",
+            op: "like",
+            validate: null
+        }
+    },
+    "state": {
+        label: "券状态",
+        type: "select",
+        submitConfig: {
+            name: "decorationActivityItem.state",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: null,
+            postData: null,
+            listPath: [
+                { key: 0, value: "初始" },
+                { key: 1, value: "失效" },
+                { key: 2, value: "已领" },
+                { key: 3, value: "退货" },
+                { key: 10, value: "已领" },
+                { key: 11, value: "抽奖" }
+            ],
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+    "type": {
+        label: "物品类型",
+        type: "select",
+        submitConfig: {
+            name: "decorationActivityItem.type",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: null,
+            postData: null,
+            listPath: decorationActivityItemTypeDatas,
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+    "atttype": {
+        label: "线上线下",
+        type: "select",
+        submitConfig: {
+            name: "decorationActivityItem.atttype",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: null,
+            postData: null,
+            listPath: [
+                { key: 0, value: "线下" },
+                { key: 1, value: "线上" }
+            ],
+            keyPath: "key",
+            valuePath: "value"
+        }
+    }
+});

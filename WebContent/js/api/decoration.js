@@ -932,6 +932,11 @@ $.extend(api, {
             url: "queryDecorationSchedule.do"
         },
 
+        pageDecorationActivityItem: {
+            url: "pageDecorationActivityItem.do",
+            demo: true,
+            type: "query"
+        },
         pageDecorationForUser: {
             url: "pageDecorationForUser.do",
             demo: true,
