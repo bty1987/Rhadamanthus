@@ -117,6 +117,12 @@ if (SystemConfig.getInt("operationPureTriple", 0) != 0) {
 
 ---
 
-## 附录A:收集期机制作废说明(2026-11-01 实锤)
+## 附录A:收集机制实锤与修复(2026-11-01)
 
-AccessInterceptor 全仓唯一 `fillOperation` 调用点 = L200(through=0 分支、校验通过后);through=1 PASS 分支(L96-97)直接放行不收集(L127 的 through=2 调用已被注释)。SOP 原设计的"每个已登录请求自动补全 roleoperation"对 1,157 个 through=1 接口**从未发生**——现有 301k 行全部来自 10-02(22.9万)与 10-12(2.6万)两次批量回填。actionlog 仅 1.4 万行(logFlag=1 才记),不可作为使用矩阵来源。因此本方案**不依赖收集期**:以回填矩阵为基线 + 关闸后 fill 沉淀为增量 + 工单驱动兜底,三源合一推进到终态。
+**实锤**:AccessInterceptor 全仓原唯一 `fillOperation` 调用点 = L200(through=0 分支、校验通过后);through=1 PASS 分支(L96-97)直接放行不收集(L127 的 through=2 调用已被注释)。SOP 原设计的"每个已登录请求自动补全 roleoperation"对 1,157 个 through=1 接口**从未发生**——现有 301k 行全部来自 10-02(22.9万)与 10-12(2.6万)两次批量回填。actionlog 仅 1.4 万行(logFlag=1 才记),不可作为使用矩阵来源。
+
+**修复(2026-11-01拍板"让它也收集")**:PASS 分支放行同时尝试影子收集——解密 authentication(参数或 cookie)→ fillOperation(主角色+全部附加角色,公司显式行);无认证/解密失败/要素不全静默跳过,任何异常仅 warn 不阻断放行(登录页/验证码类无 authentication 天然不收集)。fill 的 addRoleOperation 走精确 company 匹配(不带通配),收集产物天生即终态显式行。
+
+**对方案的影响**:收集引擎恢复后,各批关闸的显式化沉淀数据源=关闸前 PASS 收集 + 关闸后校验通过收集,双段连续;批1关闸不受影响(用回填覆盖),后续批次可按"收集数天→覆盖核验→关闸"的节奏用真实数据驱动。roleoperation 表无 (rid,oid,company) 唯一键,并发首调可能产生罕见重复行(功能无害,校验取第一行)。
+
+**产出指纹**:fanglin-core-8.3.030.jar(44174B),AccessInterceptor.class 指纹 `7d00250ab5e1a4210fa6604e3e701e59`,jar 内 fillOperation 调用点 2 处(PASS 分支新增 + 关闸分支原有)。core 属 Tomcat 共享 lib,替换后需重启 Tomcat。
