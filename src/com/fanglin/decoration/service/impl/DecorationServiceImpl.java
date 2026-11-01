@@ -237,7 +237,7 @@ public class DecorationServiceImpl implements DecorationService {
 
 		filters.add(new Filter("decoration.statuses", statuses, "in", Filter.RANGE_TYPE_SHORT_INT));
 
-		SystemConfigPO daynum = systemConfigDao.querySystemConfig("DECORATION_SIGNED_HIDEDAYS", company);
+		SystemConfigPO daynum = systemConfigDao.querySystemConfig("DECORATION_SIGNED_HIDEDAYS", company == null ? 0 : company);
 
 		if (daynum != null) {
 			filters.add(new Filter("decoration.signTime.max", DateUtil.getDateToDateString(DateUtil.plusDay(new Date(), -Integer.parseInt(daynum.getValue().trim())), "yyyy-MM-dd HH:mm:ss"), "le"));

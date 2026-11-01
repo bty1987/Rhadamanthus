@@ -100,6 +100,13 @@ LogUtils.log(userId, "操作描述", "操作模块", 对象ID);
 - **错误码段约定**:前 2-3 位标识模块(110=系统,140=装修,150=款项,240=审批等),详见 error.md 顶部"模块码段说明"
 - **新增码流程**:① error.md 登记 → ② 用码值 throw,不要直接写裸 magic number
 
+##### 🔴 业务逻辑禁止 try-catch 做判断(全局死规则)
+- **适用范围**:`com.fanglin` 下所有业务代码(action/service/dao/po/vo);**豁免仅两类**:`core` 框架代码、`utils` 工具类(对外部输入/IO 的解析防护属其本职,如 `DateUtil.parseDate` 内部吞 `ParseException`)
+- **禁止形态**:业务方法里用 try-catch 做判断、流程控制、取值兜底——典型反例:`parseInt` 包一层 catch 取默认值、catch 后吞掉继续跑、`catch (Exception)` 摸错误再分支
+- **报错唯一出路**:业务报错只允许 `throw new FLException(码, "消息")`(码值查 error.md);非业务性运行时异常**一律不捕获**,上抛由框架拦截器(`CommonInterceptor`/`AccessInterceptor` 等)统一捕获转 JSON
+- **catch 的替代 = 前置校验**:外部输入/配置值先校验后使用(判空 / `StringUtils.isNumeric` / 格式校验),校验不过走正常业务分支(取默认值或抛 FLException),不进 catch
+- **新增业务代码出现 try-catch**:Code Review 必须说明豁免理由;Action 层另遵循下方 Action 层规范
+
 ##### 🔴 Action 层异常处理规范
 - **默认风格:Action 方法 `throws FLException`,禁止本地 try-catch**
   - 业务异常一律上抛,由拦截器(`CommonInterceptor`/`AccessInterceptor`/`LoginInterceptor`)统一捕获并转 JSON
