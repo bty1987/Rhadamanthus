@@ -815,7 +815,15 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 
 		if (diff > 0) {
 			// 补发: 券行 state=初始, no=LT+8位流水, 记轨迹; 优先每满/阶梯行奖品
-			String issueContent = activityPO.getName() + "：" + String.join("；", ruleSegments) + "；活动期内主材预存净额" + (net / 1000) + "元";
+			// 🔴String.join 系 Java 8 API(1.7 JVM 报 NoSuchMethodError, 同EsignClient签名串先例), 改 StringBuilder 逐段拼接(拼接结果一致)
+			StringBuilder issueContentBuilder = new StringBuilder(activityPO.getName()).append("：");
+
+			for (int i = 0; i < ruleSegments.size(); i++) {
+				if (i > 0) issueContentBuilder.append("；");
+				issueContentBuilder.append(ruleSegments.get(i));
+			}
+
+			String issueContent = issueContentBuilder.append("；活动期内主材预存净额").append(net / 1000).append("元").toString();
 
 			ActivityRulePO rule = rules.get(0);
 
