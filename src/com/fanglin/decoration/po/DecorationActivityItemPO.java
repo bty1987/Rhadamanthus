@@ -43,7 +43,7 @@ public class DecorationActivityItemPO implements java.io.Serializable {
 
 	public static final short STATUS_VERIFY_INT = 10; // 核销
 
-	public static final short STATUS_WINNING_INT = 11; // 已中奖(抽奖系统开奖回写, 待礼品部核销)
+	public static final short STATUS_DRAW_INT = 11; // 抽奖(参与抽奖, 抽奖系统回写; 奖项详情由抽奖系统说明)
 
 	public static final short TYPE_COUPON_INT = 0; // 卷
 

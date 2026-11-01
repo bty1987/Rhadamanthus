@@ -27,6 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.fanglin.common.dao.ServiceRecordDao;
 import com.fanglin.common.po.ServiceRecordPO;
 import com.fanglin.core.interceptor.FLException;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.core.security.SensitiveDataHelper;
 import com.fanglin.customer.dao.CustomerChanceDao;
 import com.fanglin.customer.po.CustomerChancePO;
@@ -59,6 +60,7 @@ import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.utils.Arith;
+import com.fanglin.utils.Paging;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.FormatUtil;
@@ -775,27 +777,36 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 		// 签约判定: 合同签约时间落在活动窗口内(重签单 contractTime 为原签约时间, 同样命中)
 		boolean signed = decorationPO.getContractTime() != null && (activityPO.getStartTime() == null || !decorationPO.getContractTime().before(activityPO.getStartTime())) && (activityPO.getEndTime() == null || !decorationPO.getContractTime().after(activityPO.getEndTime()));
 
-		// 应得券数 = Σ规则行: 1=签约赠 2=预存每满(可封顶) 3=预存阶梯
+		// 应得券数 = Σ规则行: 1=签约赠 2=预存每满(可封顶) 3=预存阶梯; 顺手收集发放说明段
 		Set<Long> asids = new HashSet<Long>();
+
+		List<String> ruleSegments = new ArrayList<String>();
 
 		int entitlement = 0;
 
 		for (ActivityRulePO rule : rules) {
 			asids.add(rule.getAsid());
 			if (rule.getRuleType() == ActivityRulePO.RULETYPE_SIGN_INT) {
-				if (signed) entitlement += rule.getTickets();
+				if (signed) {
+					entitlement += rule.getTickets();
+					ruleSegments.add("签约赠" + rule.getTickets() + "张");
+				}
 			} else if (rule.getRuleType() == ActivityRulePO.RULETYPE_EVERY_INT) {
 				if (rule.getPerAmount() != null && rule.getPerAmount() > 0 && net >= rule.getPerAmount()) {
 					long count = (net / rule.getPerAmount()) * rule.getTickets();
 					if (rule.getMaxTickets() > 0 && count > rule.getMaxTickets()) count = rule.getMaxTickets();
 					entitlement += (int) count;
+					ruleSegments.add("预存主材款每满" + (rule.getPerAmount() / 1000) + "元赠" + rule.getTickets() + "张" + (rule.getMaxTickets() > 0 ? "(封顶" + rule.getMaxTickets() + "张)" : ""));
 				}
 			} else if (rule.getRuleType() == ActivityRulePO.RULETYPE_LADDER_INT) {
-				if (net >= rule.getThreshold()) entitlement += rule.getTickets();
+				if (net >= rule.getThreshold()) {
+					entitlement += rule.getTickets();
+					ruleSegments.add("预存主材款满" + (rule.getThreshold() / 1000) + "元赠" + rule.getTickets() + "张");
+				}
 			}
 		}
 
-		// 已发有效券数(count): 排除失效/退货; 已中奖(state=11)/已核销(10)等非初始态天然不在补发对齐范围
+		// 已发有效券数(count): 排除失效/退货; 抽奖(11)/已领(10)等非初始态天然不在补发对齐范围
 		int diff = entitlement - decorationActivityItemDao.countDecorationActivityItemForLottery(orderId, new ArrayList<Long>(asids));
 
 		if (diff == 0) return 0;
@@ -804,6 +815,8 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 
 		if (diff > 0) {
 			// 补发: 券行 state=初始, no=LT+8位流水, 记轨迹; 优先每满/阶梯行奖品
+			String issueContent = activityPO.getName() + "：" + String.join("；", ruleSegments) + "；活动期内主材预存净额" + (net / 1000) + "元";
+
 			ActivityRulePO rule = rules.get(0);
 
 			for (ActivityRulePO r : rules) {
@@ -839,6 +852,7 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 				decorationActivityItemPO.setIsStock(awardStockPO.getIsStock());
 				decorationActivityItemPO.setIsPayment(DecorationActivityItemPO.ISPAYMENT_UNCAL_INT);
 				decorationActivityItemPO.setCreater(creater);
+				decorationActivityItemPO.setContent(issueContent);
 				decorationActivityItemPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 
 				decorationActivityItemDao.save(decorationActivityItemPO);
@@ -850,7 +864,7 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 				decorationActivityRecordDao.save(new DecorationActivityRecordPO().init(activityPO.getAid(), decorationActivityItemPO, DecorationActivityItemPO.STATUS_INIT_INT, creater, "抽奖券自动发放"));
 			}
 		} else {
-			// 回收: 候选=state初始(0), 已中奖(11)/已核销(10)等非初始态天然不在候选, 已中奖券绝不回收; daiId 逆序(后发的先收)
+			// 回收: 候选=state初始(0), 抽奖(11)/已领(10)等非初始态天然不在候选, 已参与抽奖的券绝不回收; daiId 逆序(后发的先收)
 			List<DecorationActivityItemPO> candidates = decorationActivityItemDao.queryDecorationActivityItemForLottery(orderId, new ArrayList<Long>(asids));
 
 			int abated = 0;
@@ -906,5 +920,25 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 		}
 
 		return count;
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public void pageDecorationActivityItem(Paging paging, List<Filter> filters) throws FLException {
+
+		List<DecorationActivityItemPO> decorationActivityItemPOs = decorationActivityItemDao.pageDecorationActivityItem(paging, filters);
+
+		List<DecorationActivityItemVO> decorationActivityItemVOs = new ArrayList<DecorationActivityItemVO>();
+
+		for (DecorationActivityItemPO decorationActivityItemPO : decorationActivityItemPOs) {
+
+			DecorationActivityItemVO decorationActivityItemVO = new DecorationActivityItemVO();
+
+			BeanUtil.copyProperties(decorationActivityItemPO, decorationActivityItemVO, Arrays.asList("creater", "receiver", "refunder"));
+
+			decorationActivityItemVOs.add(decorationActivityItemVO);
+		}
+
+		paging.setData(decorationActivityItemVOs);
 	}
 }

@@ -48,13 +48,11 @@ public class ActivityPO implements java.io.Serializable {
 
 	public static final short TYPE_SALES_INT = 3;// 销售
 
+	public static final short TYPE_LOTTERY_INT = 20;// 抽奖券活动(奖励类型, 引擎定位锚点)
+
 	public static final short ATTTYPE_OFFLINE_INT = 0;// 线下
 
 	public static final short ATTTYPE_ONLINE_INT = 1;// 线上
-
-	public static final short REWARDTYPE_COMMON_INT = 0;// 普通活动
-
-	public static final short REWARDTYPE_LOTTERY_INT = 1;// 抽奖券活动(引擎定位锚点)
 
 	private long aid;
 
@@ -69,8 +67,6 @@ public class ActivityPO implements java.io.Serializable {
 	private short defaults;
 
 	private short atttype;
-
-	private short rewardType;
 
 	private int multiple;
 
@@ -163,15 +159,6 @@ public class ActivityPO implements java.io.Serializable {
 
 	public void setAtttype(short atttype) {
 		this.atttype = atttype;
-	}
-
-	@Column(name = "rewardType")
-	public short getRewardType() {
-		return rewardType;
-	}
-
-	public void setRewardType(short rewardType) {
-		this.rewardType = rewardType;
 	}
 
 	@Column(name = "multiple")

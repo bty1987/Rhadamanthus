@@ -14,7 +14,10 @@ package com.fanglin.decoration.dao;
 import java.util.List;
 
 import com.fanglin.core.dao.Dao;
+import com.fanglin.core.interceptor.FLException;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.decoration.po.DecorationActivityItemPO;
+import com.fanglin.utils.Paging;
 
 public interface DecorationActivityItemDao extends Dao<DecorationActivityItemPO> {
 
@@ -75,7 +78,7 @@ public interface DecorationActivityItemDao extends Dao<DecorationActivityItemPO>
 
 	/**
 	 * 查询订单下可回收的抽奖券(未中奖未领用): type=券 + asid∈规则奖品 + state=初始, daiId 逆序
-	 * 已中奖(state=11, 抽奖系统开奖回写)/已核销(10)等非初始态天然不在候选
+	 * 抽奖(state=11, 抽奖系统回写)/已领(10)等非初始态天然不在候选
 	 *
 	 * @param orderId 订单号
 	 * @param asids 抽奖规则指向的奖品档案ID集合
@@ -91,5 +94,10 @@ public interface DecorationActivityItemDao extends Dao<DecorationActivityItemPO>
 	 * @return 已发有效券数
 	 */
 	public int countDecorationActivityItemForLottery(String orderId, List<Long> asids);
+
+	/**
+	 * 分页查询活动物品(覆盖全部活动类型/全部type): 白名单条件 orderId/no/activityName/activityItemName/type/state/atttype
+	 */
+	public List<DecorationActivityItemPO> pageDecorationActivityItem(Paging paging, List<Filter> filters) throws FLException;
 
 }

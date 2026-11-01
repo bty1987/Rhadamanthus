@@ -13,7 +13,10 @@ package com.fanglin.decoration.service;
 
 import java.util.List;
 
+import com.fanglin.utils.Paging;
+
 import com.fanglin.core.interceptor.FLException;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.decoration.vo.DecorationActivityItemVO;
 import com.fanglin.decoration.vo.DecorationVO;
 
@@ -65,4 +68,9 @@ public interface DecorationActivityItemService {
 	 * @return 补发总张数
 	 */
 	public int issueDecorationActivityItem(long aid, String userId) throws FLException;
+
+	/**
+	 * 分页查询活动物品(覆盖全部活动类型/全部type, 白名单条件: 订单号/券编码/活动名/奖励名/类型/状态/线上线下)
+	 */
+	public void pageDecorationActivityItem(Paging paging, List<Filter> filters) throws FLException;
 }

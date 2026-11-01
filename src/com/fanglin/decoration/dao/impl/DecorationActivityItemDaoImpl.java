@@ -23,9 +23,12 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 import com.fanglin.core.dao.impl.DaoImpl;
+import com.fanglin.core.interceptor.FLException;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.decoration.dao.DecorationActivityItemDao;
 import com.fanglin.decoration.po.DecorationActivityItemPO;
 import com.fanglin.utils.Arith;
+import com.fanglin.utils.Paging;
 import com.fanglin.utils.DateUtil;
 
 @Repository("decorationActivityItemDao")
@@ -306,5 +309,42 @@ public class DecorationActivityItemDaoImpl extends DaoImpl<DecorationActivityIte
 				.uniqueResult();
 
 		return count.intValue();
+	}
+
+	@Override
+	public List<DecorationActivityItemPO> pageDecorationActivityItem(Paging paging, List<Filter> filters) throws FLException {
+
+		PagingQuery<DecorationActivityItemPO> query = pagingQuery(paging, DecorationActivityItemPO.class);
+
+		queryFilterExcute(query, filters);
+
+		query.desc("daiId");
+
+		return query.list();
+	}
+
+	private void queryFilterExcute(PagingQuery<DecorationActivityItemPO> query, List<Filter> filters) throws FLException {
+
+		if (filters == null) return;
+
+		for (Filter filter : filters) {
+
+			if ("decorationActivityItem.orderId".equals(filter.getField())) {
+				query.add(query.getCriterion("orderId", filter.getData(), "eq"));
+			} else if ("decorationActivityItem.no".equals(filter.getField())) {
+				query.add(query.getCriterion("no", filter.getData(), "eq"));
+			} else if ("decorationActivityItem.activityName".equals(filter.getField())) {
+				query.add(query.getCriterion("activityName", filter.getData(), "like"));
+			} else if ("decorationActivityItem.activityItemName".equals(filter.getField())) {
+				query.add(query.getCriterion("activityItemName", filter.getData(), "like"));
+			} else if ("decorationActivityItem.state".equals(filter.getField())) {
+				query.add(query.getCriterion("state", filter.getData(), "eq"));
+			} else if ("decorationActivityItem.atttype".equals(filter.getField())) {
+				query.add(query.getCriterion("atttype", filter.getData(), "eq"));
+			}
+			else if ("decorationActivityItem.type".equals(filter.getField())) {
+				query.add(query.getCriterion("type", filter.getData(), "eq"));
+			}
+		}
 	}
 }

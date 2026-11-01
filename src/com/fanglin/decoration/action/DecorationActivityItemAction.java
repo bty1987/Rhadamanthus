@@ -245,4 +245,12 @@ public class DecorationActivityItemAction extends BaseListAction {
 	public void setCount(int count) {
 		this.count = count;
 	}
+
+	@Action(value = "pageDecorationActivityItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String pageDecorationActivityItem() throws FLException {
+
+		decorationActivityItemService.pageDecorationActivityItem(getPaging(), getFilters());
+
+		return SUCCESS;
+	}
 }

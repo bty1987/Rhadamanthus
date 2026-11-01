@@ -87,8 +87,8 @@ public class ActivityServiceImpl implements ActivityService {
 
 		activityPO.setCompany(company);
 
-		// 同公司同奖励类型窗口重叠唯一性闸(防两个抽奖活动叠加发双券); 新建活动 rewardType 恒为普通, 防御性校验
-		if (activityPO.getRewardType() == ActivityPO.REWARDTYPE_LOTTERY_INT) {
+		// 同公司同奖励类型窗口重叠唯一性闸(防两个抽奖活动叠加发双券); 抽奖活动=type 20(初始化SQL预置), 防御性校验
+		if (activityPO.getType() == ActivityPO.TYPE_LOTTERY_INT) {
 			checkLotteryActivityUnique(activityPO);
 		}
 
@@ -132,7 +132,7 @@ public class ActivityServiceImpl implements ActivityService {
 		}
 
 		// 启用动作: 同公司同奖励类型窗口重叠唯一性闸(防两个抽奖活动叠加发双券)
-		if (activityVO.getStatus() != null && activityVO.getStatus() == ActivityPO.STATUS_VALID_INT && activityPO.getRewardType() == ActivityPO.REWARDTYPE_LOTTERY_INT) {
+		if (activityVO.getStatus() != null && activityVO.getStatus() == ActivityPO.STATUS_VALID_INT && activityPO.getType() == ActivityPO.TYPE_LOTTERY_INT) {
 			checkLotteryActivityUnique(activityPO);
 		}
 
@@ -142,7 +142,7 @@ public class ActivityServiceImpl implements ActivityService {
 	}
 
 	/**
-	 * 抽奖活动唯一性闸: 同公司 + rewardType=抽奖券 + status=有效 + 时间窗重叠 (MySQL 5.6 无部分唯一索引, 应用层管)
+	 * 抽奖活动唯一性闸: 同公司 + type=抽奖券(20) + status=有效 + 时间窗重叠 (MySQL 5.6 无部分唯一索引, 应用层管)
 	 */
 	private void checkLotteryActivityUnique(ActivityPO activityPO) {
 
