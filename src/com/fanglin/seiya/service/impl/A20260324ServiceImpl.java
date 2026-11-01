@@ -11,6 +11,7 @@
 
 package com.fanglin.seiya.service.impl;
 
+import java.util.Date;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -31,8 +32,12 @@ import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.security.MD5Helper;
 import com.fanglin.personel.dao.DutmentDao;
 import com.fanglin.personel.dao.UserDao;
+import com.fanglin.personel.dao.UserExperienceDao;
+import com.fanglin.personel.dao.UserInfoDao;
 import com.fanglin.personel.dao.UserRoleDao;
 import com.fanglin.personel.po.DutmentPO;
+import com.fanglin.personel.po.UserExperiencePO;
+import com.fanglin.personel.po.UserInfoPO;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.po.UserRolePO;
 import com.fanglin.seiya.service.A20260324Service;
@@ -41,6 +46,7 @@ import com.fanglin.system.dao.SystemConfigDao;
 import com.fanglin.system.po.CompanyPO;
 import com.fanglin.system.po.RolePO;
 import com.fanglin.system.po.SystemConfigPO;
+import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.FormatUtil;
 import com.fanglin.utils.PinYin4Util;
 import com.fanglin.utils.SystemConfig;
@@ -74,6 +80,12 @@ public class A20260324ServiceImpl implements A20260324Service {
 
 	@Autowired
 	private UserRoleDao userRoleDao;
+
+	@Autowired
+	private UserInfoDao userInfoDao;
+
+	@Autowired
+	private UserExperienceDao userExperienceDao;
 
 	@Autowired
 	private SystemConfigDao systemConfigDao;
@@ -716,6 +728,26 @@ public class A20260324ServiceImpl implements A20260324Service {
 
 				// 6.10 保存用户角色关联（使用用户自己作为创建人，满足cuid NOT NULL约束）
 				userRoleDao.save(new UserRolePO(userPO.getUid(), userPO.getRole(), userPO));
+
+				// 6.10.1 保存用户档案（照 addUser 同款骨架，缺失会导致员工管理列表不可见、详情查询返空）
+				UserInfoPO userInfoPO = new UserInfoPO();
+				userInfoPO.setSalary("0");
+				userInfoPO.setUser(userPO);
+				userInfoPO.setHireTime(DateUtil.getDateToTimestamp(new Date()));
+				userInfoDao.save(userInfoPO);
+
+				// 6.10.2 记录入职经历
+				UserExperiencePO userExperiencePO = new UserExperiencePO();
+				userExperiencePO.setUid(userPO.getUid());
+				userExperiencePO.setType("入职");
+				userExperiencePO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
+				userExperiencePO.setOperateTime(DateUtil.getDateToTimestamp(new Date()));
+				userExperiencePO.setComment(String.format("公司:%s, 部门:%s, 职位:%s. ", companyPO.getName(), deptPO.getName(), dutyPO.getName()));
+				userExperiencePO.setOperator(userPO);
+				userExperiencePO.setTcid(companyPO.getCid());
+				userExperiencePO.setTdid(deptId);
+				userExperiencePO.setTrid(userPO.getRole().getRid());
+				userExperienceDao.save(userExperiencePO);
 
 				// 6.11 更新定岗人数
 				DutmentPO dutmentPO = dutmentDao.queryDutmentByDids(deptId, dutyId);
