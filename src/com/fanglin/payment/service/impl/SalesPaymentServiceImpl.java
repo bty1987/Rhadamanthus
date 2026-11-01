@@ -42,11 +42,9 @@ import com.fanglin.payment.vo.SalesReceiptVO;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserBaseVO;
-import com.fanglin.sales.dao.SalesBalanceDao;
 import com.fanglin.sales.dao.SalesDao;
 import com.fanglin.sales.dao.SalesItemDao;
 import com.fanglin.sales.dao.SalesRefundsDao;
-import com.fanglin.sales.po.SalesBalancePO;
 import com.fanglin.sales.po.SalesPO;
 import com.fanglin.sales.po.SalesRefundsPO;
 import com.fanglin.sales.service.SalesActivityService;
@@ -99,9 +97,6 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 
 	@Autowired
 	private SalesBalanceService salesBalanceService;
-
-	@Autowired
-	private SalesBalanceDao salesBalanceDao;
 
 	@Autowired
 	private PaytranDao paytranDao;
@@ -869,9 +864,7 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 	}
 
 	/**
-	 * 销售撤款直执行(去审批): 仅支持已落款且已确认的收款类行(type∈{2定金,3补款,8不可退定金})——
-	 * 不退定金(type=8)场景不支持撤单语义; 退款渠道跟随落款收据: 现金/转账/银行/预付四渠道合计退回主材预付款余额,
-	 * 券(coupon)部分不退; 原行翻转为退款型(type 3→5, 2/8→7), 前置活动积分校验; 无可撤款项 → 150036。
+	 * 销售撤款直执行(去审批): 仅支持已落款且已确认的收款类行(type∈{2定金,3补款,8不可退定金})—— 不退定金(type=8)场景不支持撤单语义; 退款渠道跟随落款收据: 现金/转账/银行/预付四渠道合计退回主材预付款余额, 券(coupon)部分不退; 原行翻转为退款型(type 3→5, 2/8→7), 前置活动积分校验; 无可撤款项 → 150036。
 	 */
 	@Override
 	@Transactional(rollbackFor = Exception.class)

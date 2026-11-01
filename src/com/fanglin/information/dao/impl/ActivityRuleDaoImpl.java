@@ -29,10 +29,8 @@ public class ActivityRuleDaoImpl extends DaoImpl<ActivityRulePO> implements Acti
 	}
 
 	@Override
+	@SuppressWarnings("unchecked")
 	public List<ActivityRulePO> queryActivityRuleForEnabled(long aid) {
-		return session().createCriteria(ActivityRulePO.class)
-				.add(Restrictions.eq("aid", aid))
-				.add(Restrictions.eq("status", ActivityRulePO.STATUS_ENABLED_INT))
-				.addOrder(Order.asc("sort")).addOrder(Order.asc("arId")).list();
+		return session().createCriteria(ActivityRulePO.class).add(Restrictions.eq("aid", aid)).add(Restrictions.eq("status", ActivityRulePO.STATUS_ENABLED_INT)).addOrder(Order.asc("sort")).addOrder(Order.asc("arId")).list();
 	}
 }

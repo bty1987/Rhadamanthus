@@ -11,7 +11,6 @@
 
 package com.fanglin.decoration.service.impl;
 
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -38,22 +37,24 @@ import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.po.DecorationActivityItemPO;
 import com.fanglin.decoration.po.DecorationActivityRecordPO;
 import com.fanglin.decoration.po.DecorationPO;
+import com.fanglin.decoration.service.DecorationActivityCostService;
 import com.fanglin.decoration.service.DecorationActivityItemService;
+import com.fanglin.decoration.vo.ActivityCostVO;
 import com.fanglin.decoration.vo.DecorationActivityItemVO;
 import com.fanglin.decoration.vo.DecorationVO;
+import com.fanglin.information.dao.ActivityDao;
+import com.fanglin.information.dao.ActivityItemDao;
+import com.fanglin.information.dao.ActivityRuleDao;
 import com.fanglin.information.dao.AwardRecordDao;
 import com.fanglin.information.dao.AwardStockDao;
-import com.fanglin.payment.dao.PaymentDao;
-import com.fanglin.payment.po.PaymentPO;
+import com.fanglin.information.po.ActivityItemPO;
+import com.fanglin.information.po.ActivityPO;
+import com.fanglin.information.po.ActivityRulePO;
 import com.fanglin.information.po.AwardRecordPO;
 import com.fanglin.information.po.AwardStockPO;
 import com.fanglin.information.po.MessageCueuingPO;
-import com.fanglin.information.dao.ActivityDao;
-import com.fanglin.information.dao.ActivityRuleDao;
-import com.fanglin.information.dao.ActivityItemDao;
-import com.fanglin.information.po.ActivityPO;
-import com.fanglin.information.po.ActivityRulePO;
-import com.fanglin.information.po.ActivityItemPO;
+import com.fanglin.payment.dao.PaymentDao;
+import com.fanglin.payment.po.PaymentPO;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserBaseVO;
@@ -63,8 +64,6 @@ import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.FormatUtil;
 import com.fanglin.wechat.service.WeChatAppService;
 import com.fanglin.wechat.vo.WeChatPhoneInfoVO;
-import com.fanglin.decoration.service.DecorationActivityCostService;
-import com.fanglin.decoration.vo.ActivityCostVO;
 
 @Service("decorationActivityItemService")
 @Transactional(readOnly = true)
@@ -774,9 +773,7 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 		long net = paymentDao.amountPayment(orderId, PaymentPO.PAYMENT_PAYMENTTYPE_MATERIAL_INT, activityPO.getStartTime(), activityPO.getEndTime());
 
 		// 签约判定: 合同签约时间落在活动窗口内(重签单 contractTime 为原签约时间, 同样命中)
-		boolean signed = decorationPO.getContractTime() != null
-				&& (activityPO.getStartTime() == null || !decorationPO.getContractTime().before(activityPO.getStartTime()))
-				&& (activityPO.getEndTime() == null || !decorationPO.getContractTime().after(activityPO.getEndTime()));
+		boolean signed = decorationPO.getContractTime() != null && (activityPO.getStartTime() == null || !decorationPO.getContractTime().before(activityPO.getStartTime())) && (activityPO.getEndTime() == null || !decorationPO.getContractTime().after(activityPO.getEndTime()));
 
 		// 应得券数 = Σ规则行: 1=签约赠 2=预存每满(可封顶) 3=预存阶梯
 		Set<Long> asids = new HashSet<Long>();
