@@ -53,12 +53,12 @@ WHERE NOT EXISTS (
   SELECT 1 FROM information.awardstock WHERE `no` = '2026110101' AND name = '双人海外玩翻天抽奖券'
 );
 
--- ③ activity 每参战公司 1 条(type=20 抽奖券活动, 窗口 2026-11-01~12-31)
+-- ③ activity 每参战公司 1 条(type=20 抽奖券活动, 窗口 2026-11-01~12-31 18:00(互动截止18:00, 22:00抽奖))
 INSERT INTO information.activity
   (`name`, `cuid`, `status`, `type`, `paytype`, `atttype`, `defaults`, `multiple`, `validays`, `exchange`, `createTime`, `startTime`, `endTime`, `content`, `company`)
 SELECT
   '双人海外玩翻天', 34, 0, 20, 0, 1, 1, 0, 0, 0,
-  NOW(), '2026-11-01 00:00:00', '2026-12-31 23:59:59',
+  NOW(), '2026-11-01 00:00:00', '2026-12-31 18:00:00',
   '双人海外玩翻天抽奖券活动', c.`cid`
 FROM communion.`company` c
 WHERE (c.`name` LIKE '%方林%' OR c.`name` LIKE '%爱林%' OR c.`name` LIKE '%恩林%' OR c.`name` LIKE '%屿林%' OR c.`name` LIKE '%1918%')
@@ -66,7 +66,7 @@ WHERE (c.`name` LIKE '%方林%' OR c.`name` LIKE '%爱林%' OR c.`name` LIKE '%�
   AND NOT EXISTS (
     SELECT 1 FROM information.activity a
     WHERE a.company = c.`cid` AND a.type = 20 AND a.name = '双人海外玩翻天'
-      AND a.startTime = '2026-11-01 00:00:00' AND a.endTime = '2026-12-31 23:59:59'
+      AND a.startTime = '2026-11-01 00:00:00' AND a.endTime = '2026-12-31 18:00:00'
 );
 
 -- ④ activityrule 每公司 2 行

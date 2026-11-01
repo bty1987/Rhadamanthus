@@ -3,7 +3,7 @@
 -- 库表: information.awardstock / information.activity / information.activityrule
 -- 用途: 双人海外玩翻天抽奖券——全国初始化数据(参战范围=五板块全部公司, 用户拍板 2026-11-01):
 --       ① awardstock 奖品档案 1 条(全局共享, 券品"双人海外玩翻天抽奖券", isStock=1不计库存口径同存量礼品券)
---       ② activity 每参战公司 1 条(type=20 抽奖券活动, 窗口 2026-11-01~12-31, status=0 有效)
+--       ② activity 每参战公司 1 条(type=20 抽奖券活动, 窗口 2026-11-01~12-31 18:00(互动截止18:00, 22:00抽奖), status=0 有效)
 --       ③ activityrule 每公司 2 行(签约赠 tickets=1 / 预存每满 tickets=1):
 --          门槛(厘): 方林/屿林=30000000(3万) 恩林/爱林=20000000(2万) 1918别墅=60000000(6万), 按公司名 LIKE 匹配
 --       参战公司口径: communion.company name 匹配 方林/爱林/恩林/屿林/1918 且 cid>0 (生产实测 67 家, 排除 cid=0 方林集团壳)
@@ -33,7 +33,7 @@ INSERT INTO information.activity
   (`name`, `cuid`, `status`, `type`, `paytype`, `atttype`, `defaults`, `multiple`, `validays`, `exchange`, `createTime`, `startTime`, `endTime`, `content`, `company`)
 SELECT
   '双人海外玩翻天', 34, 0, 20, 0, 1, 1, 0, 0, 0,
-  NOW(), '2026-11-01 00:00:00', '2026-12-31 23:59:59',
+  NOW(), '2026-11-01 00:00:00', '2026-12-31 18:00:00',
   '双人海外玩翻天抽奖券活动', c.`cid`
 FROM communion.`company` c
 WHERE (c.`name` LIKE '%方林%' OR c.`name` LIKE '%爱林%' OR c.`name` LIKE '%恩林%' OR c.`name` LIKE '%屿林%' OR c.`name` LIKE '%1918%')
@@ -41,7 +41,7 @@ WHERE (c.`name` LIKE '%方林%' OR c.`name` LIKE '%爱林%' OR c.`name` LIKE '%�
   AND NOT EXISTS (
     SELECT 1 FROM information.activity a
     WHERE a.company = c.`cid` AND a.type = 20 AND a.name = '双人海外玩翻天'
-      AND a.startTime = '2026-11-01 00:00:00' AND a.endTime = '2026-12-31 23:59:59'
+      AND a.startTime = '2026-11-01 00:00:00' AND a.endTime = '2026-12-31 18:00:00'
 );
 
 -- 3. activityrule 每公司 2 行(签约赠 + 预存每满, 门槛按板块匹配, asid 全局指向奖品档案)
