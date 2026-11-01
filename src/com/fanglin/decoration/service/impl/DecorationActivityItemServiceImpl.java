@@ -899,11 +899,6 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 			throw new FLException(160064, "活动窗口未配置, 无法执行抽奖券补发");
 		}
 
-		// 到期守卫: 活动窗口已结束则拒绝补发(单单路径 queryActivityForLottery 已含窗口条件天然止发, 此处给人工操作明确反馈)
-		if (activityPO.getEndTime().before(DateUtil.getDateToTimestamp(new Date()))) {
-			throw new FLException(160065, "活动已到期, 无法执行抽奖券补发");
-		}
-
 		List<ActivityRulePO> rules = activityRuleDao.queryActivityRuleForEnabled(aid);
 
 		if (rules.isEmpty()) {
