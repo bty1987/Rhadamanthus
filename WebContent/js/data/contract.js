@@ -34,6 +34,8 @@ jQuery(function($) {
         com.focusPage("#uploadNoticeRow").toggle(!esign);
         com.focusPage("#uploadRow").toggle(!esign);
         com.focusPage("#uploadVideoRow").toggle(!esign);
+        // 编辑按钮仅编辑态(已有模板行)显示, 新增态无模板可编辑
+        com.focusPage("#esignEditBtn").toggle(esign && contract.cid != null);
 
         if (esign) {
             contract.items.path.val("esign://docTemplate");
@@ -47,22 +49,87 @@ jQuery(function($) {
 
     contract.items.vendor.trigger('change');
 
+    // e签宝免登落点页桥接: 落点页(contract4esignCreate/Edit.html)为同源iframe独立页,
+    // 拦截器硬校验authentication参数(无session校验), 由parent桥接供给; done()用于落点页完成后的收窗+刷新
+    window.contractEsignBridge = {
+        authentication: function() {
+            return params.authentication;
+        },
+        context: function() {
+            return {
+                name: contract.items.name.val(),
+                title: contract.items.title.val(),
+                page: contract.items.page.val(),
+                atttype: contract.items.atttype.val()
+            };
+        },
+        done: function() {
+            // 防误重开: 落点页已完成建档/开启, 收窗时跳过frame的cancel回调重开弹窗逻辑
+            contract.__esignDone = true;
+            com.closePopup();
+            searcher.doSearch();
+        }
+    };
+
+    // frame关闭回调重开弹窗前检查守卫(落点页done()已收窗刷新时不重开)
+    function reopenGuarded(callback) {
+
+        return function() {
+
+            if (contract.__esignDone) {
+                contract.__esignDone = false;
+                return;
+            }
+
+            callback();
+        };
+    }
+
+    // 免登创建: 服务端换免登制作页链接(30分钟时效, 实时获取不缓存), 弹窗值经bridge.context()带入落点页预填
     com.focusPage("#esignConsoleBtn").on('click', function() {
 
-        // PC客户端环境新标签页不可用, 页内弹窗承载(近全屏iframe); web.esign.cn未设X-Frame-Options可嵌
         // 🔴时序互斥: 先收编辑弹窗再开操作台frame, 任意时刻仅一窗——规避双layer固定zIndex(编辑弹窗3000/操作台2500)
         // 互相覆盖及layer z计数被固定值压低的显示顺序问题; frame关闭(cancel/end双触发, 同id去重幂等)后原样重开弹窗
         // (#layerAdd节点跨layer关闭存活, 已填表单值与厂商形态不丢; 重开不带prepare, 不做cleanItems/initUpdate重置)
         var _title = contract.cid != null ? '编辑' : '添加';
 
-        com.closePopup();
+        com.post(api.data.querySignTemplateCreateUrl, {}, function(res) {
 
-        com.popup4frame("e签宝模板操作页", "https://web.esign.cn/", null, function() {
+            com.closePopup();
 
-            com.popup4model('#layerAdd', _title, null, function() {
+            com.popup4frame("e签宝模板创建页(免登, 30分钟内有效)", res.url, null, reopenGuarded(function() {
 
-                com.clearValidator();
-            });
+                com.popup4model('#layerAdd', _title, null, function() {
+
+                    com.clearValidator();
+                });
+            }));
+        });
+    });
+
+    // 免登编辑: 服务端先停用模板再换编辑页链接, 编辑完成落点页自动重新开启(TEMPLATE_CHANGED: 改模板后跨企业授权失效需重授权)
+    com.focusPage("#esignEditBtn").on('click', function() {
+
+        var _no = contract.items.no.val();
+
+        if (!_no) {
+            com.showAlert(com.warning, "编号栏为空, 无已存在的流程模板可编辑");
+            return false;
+        }
+
+        com.post(api.data.querySignTemplateEditUrl, {
+            "signTemplateId": _no
+        }, function(res) {
+
+            com.closePopup();
+
+            com.popup4frame("e签宝模板编辑页(免登, 30分钟内有效)", res.url, null, reopenGuarded(function() {
+
+                com.popup4model('#layerAdd', '编辑', null, function() {
+
+                    com.clearValidator();
+                });
+            }));
         });
     });
 

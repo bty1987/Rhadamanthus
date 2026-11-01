@@ -1888,6 +1888,15 @@ $.extend(api, {
         countContract: {
             url: "countContract.do"
         },
+        querySignTemplateCreateUrl: {
+            url: "querySignTemplateCreateUrl.do"
+        },
+        querySignTemplateEditUrl: {
+            url: "querySignTemplateEditUrl.do"
+        },
+        enableSignTemplate: {
+            url: "enableSignTemplate.do"
+        },
 
         pageSignet: {
             url: "pageSignet.do"

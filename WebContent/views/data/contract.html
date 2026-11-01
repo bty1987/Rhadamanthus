@@ -54,14 +54,17 @@
                 <label class="col-sm-3 control-label no-padding-right"></label>
                 <div class="col-sm-9" style="padding-top: 5px;">
                     <div style="margin-bottom: 6px;">
-                        流程模板在e签宝控制台创建: 上传底稿PDF → 添加填写控件与签章区 → 保存后将
-                        <b style="color: orange;">流程模板ID</b> 复制填入上方
-                        <b style="color: orange;">编号</b> 栏 (本条即完成模板部署, 无需本地上传文件)。
+                        流程模板通过e签宝<b style="color: orange;">免登页面</b>创建/维护(无需e签宝账号登录, 链接30分钟内有效):
+                        上传底稿PDF → 添加填写控件与签章区 → 保存后自动跳回落点页完成建档。
+                        也可在e签宝官网控制台创建后, 将<b style="color: orange;">流程模板ID</b>填入上方<b style="color: orange;">编号</b>栏保存。
                     </div>
                     <button type="button" id="esignConsoleBtn" class="btn btn-primary btn-minier">
-                        <i class="icon-external-link"></i> 打开e签宝模板操作页
+                        <i class="icon-external-link"></i> 创建流程模板(免登)
                     </button>
-                    <span style="color: #999; margin-left: 8px;">授权与签章区配置见e签宝控制台, 模板定稿后勿再修改(授权随模板修改失效)</span>
+                    <button type="button" id="esignEditBtn" class="btn btn-yellow btn-minier" style="display: none;">
+                        <i class="icon-edit"></i> 编辑流程模板(免登)
+                    </button>
+                    <span style="color: #999; margin-left: 8px;">模板定稿后勿再修改(跨企业自动签署授权随模板修改失效, 需重新发起授权)</span>
                 </div>
             </div>
 

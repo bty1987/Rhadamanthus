@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>e签宝流程模板 - 创建回执</title>
+    <style>
+        body { margin: 0; padding: 24px; background: #f5f6f8; font-family: "Microsoft YaHei", sans-serif; color: #333; }
+        .wrap { max-width: 520px; margin: 0 auto; background: #fff; border: 1px solid #e5e5e5; border-radius: 6px; padding: 24px 28px; }
+        h3 { margin: 0 0 18px; font-size: 17px; }
+        .row { margin-bottom: 12px; }
+        .row label { display: inline-block; width: 90px; text-align: right; margin-right: 8px; color: #666; }
+        .row input, .row select { width: 320px; height: 28px; border: 1px solid #ccc; border-radius: 3px; padding: 2px 6px; box-sizing: border-box; }
+        button { height: 28px; padding: 0 14px; border: 1px solid #ccc; border-radius: 3px; background: #fafafa; cursor: pointer; }
+        button.primary { background: #337ab7; border-color: #2e6da4; color: #fff; }
+        .note { margin: 14px 0; padding: 8px 10px; background: #fcf8e3; border: 1px solid #faebcc; border-radius: 3px; color: #8a6d3b; font-size: 12px; }
+        .alert-err { margin-bottom: 14px; padding: 8px 10px; background: #f2dede; border: 1px solid #ebccd1; border-radius: 3px; color: #a94442; }
+        .alert-tip { margin-bottom: 14px; padding: 8px 10px; background: #fcf8e3; border: 1px solid #faebcc; border-radius: 3px; color: #a94442; }
+        .ok { margin: 10px 0 16px; color: #5cb85c; font-size: 15px; }
+    </style>
+</head>
+<body>
+<div class="wrap">
+    <h3>e签宝流程模板创建完成</h3>
+    <div id="errBox" class="alert-err" style="display: none;"></div>
+    <div id="tipBox" class="alert-tip" style="display: none;"></div>
+    <div class="row">
+        <label>流程模板ID</label>
+        <input id="tplId" type="text" readonly placeholder="未自动识别到请手工粘贴">
+        <button id="copyBtn" type="button">复制</button>
+    </div>
+    <div id="createForm" style="display: none;">
+        <div class="row"><label>名称 *</label><input id="name" type="text" maxlength="32"></div>
+        <div class="row"><label>标题 *</label><input id="title" type="text" maxlength="64"></div>
+        <div class="row"><label>页面 *</label><select id="page"></select></div>
+        <div class="row"><label>业务类型 *</label><select id="atttype"></select></div>
+        <div class="note">厂商=e签宝(流程模板), 模板路径固定 esign://docTemplate; 保存后即完成模板部署, 生成装修合同时可选用。</div>
+        <button id="saveBtn" type="button" class="primary">保存建档</button>
+    </div>
+    <div id="okBox" style="display: none;">
+        <div class="ok">模板已保存建档 ✔</div>
+        <button id="doneBtn" type="button" class="primary">完成, 关闭并刷新列表</button>
+    </div>
+</div>
+<script src="../../assets/altogether/js/jquery-2.0.3.min.js"></script>
+<script src="../../js/data/contract4esign.js"></script>
+<script>
+    contract4esign.init('create');
+</script>
+</body>
+</html>
