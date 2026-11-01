@@ -840,7 +840,7 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 		return 0;
 	}
 
-	// 销售撤款：退回到主材预付款余额
+	// 销售撤款：执行未付款的退款类款项行(type=4), 非券金额退回到主材预付款余额并闭环退货单; 非退款类行一律拒绝(防止未收款的定金/补款行被当退款执行造成资损)
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public int withdrawSalesPayment(SalesPaymentVO salesPaymentVO, String userId, Integer company) throws FLException {
@@ -851,6 +851,10 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 			throw new FLException(150003, "款项不存在");
 		}
 
+		if (salesPaymentPO.getType() != SalesPaymentPO.TYPE_REFUNDS_INT) {
+			throw new FLException(150012, "款项不能进行退款");
+		}
+
 		SalesReceiptVO salesReceiptVO = new SalesReceiptVO();
 
 		salesReceiptVO.setAdvance(salesPaymentPO.getReferMoney());
@@ -859,96 +863,6 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 		salesPaymentVO.setReferMoney(salesPaymentPO.getReferMoney());
 
 		refundSalesPayment(salesPaymentVO, salesReceiptVO, userId, company);
-
-		return 0;
-	}
-
-	/**
-	 * 销售撤款直执行(去审批): 仅支持已落款且已确认的收款类行(type∈{2定金,3补款,8不可退定金})—— 不退定金(type=8)场景不支持撤单语义; 退款渠道跟随落款收据: 现金/转账/银行/预付四渠道合计退回主材预付款余额, 券(coupon)部分不退; 原行翻转为退款型(type 3→5, 2/8→7), 前置活动积分校验; 无可撤款项 → 150036。
-	 */
-	@Override
-	@Transactional(rollbackFor = Exception.class)
-	public int cancelSalesPayment(SalesPaymentVO salesPaymentVO, String userId, Integer company) throws FLException {
-
-		if (salesPaymentVO.getSales() == null || salesPaymentVO.getSales().getSid() == null) {
-			throw new FLException(330095, "销售单不存在");
-		}
-
-		long sid = salesPaymentVO.getSales().getSid();
-
-		SalesPO salesPO = salesDao.get(sid);
-
-		if (salesPO == null) {
-			throw new FLException(330095, "销售单不存在");
-		}
-
-		UserPO operater = userDao.queryUserByUserId(userId);
-
-		if (operater == null) {
-			throw new FLException(190005, "人员不存在");
-		}
-
-		List<SalesPaymentPO> salesPaymentPOs = salesPaymentDao.querySalesPaymentsBySid(sid);
-
-		boolean canceled = false;
-
-		for (SalesPaymentPO salesPaymentPO : salesPaymentPOs) {
-
-			short type = salesPaymentPO.getType();
-
-			// 仅撤已落款且已确认的收款类行(2定金/3补款/8不可退定金)
-			if (type != SalesPaymentPO.TYPE_DEPOSIT_INT && type != SalesPaymentPO.TYPE_REPLENISHMENT_INT && type != SalesPaymentPO.TYPE_NOTDEPOSITREFUND_INT) {
-				continue;
-			}
-
-			if (salesPaymentPO.getStatus() != SalesPaymentPO.STATUS_CONFIRMED_INT || salesPaymentPO.getSalesReceipt() == null) {
-				continue;
-			}
-
-			// 退款渠道跟随落款收据: 现金/转账/银行/预付四渠道合计退回主材预付款余额, 券不退
-			SalesReceiptPO originReceipt = salesPaymentPO.getSalesReceipt();
-
-			long refundAmount = Arith.add(Arith.add(originReceipt.getCash(), originReceipt.getBank()), Arith.add(originReceipt.getCheckv(), originReceipt.getAdvance()));
-
-			if (refundAmount <= 0) {
-				continue;
-			}
-
-			// 撤款使已支付积分额度减少, 校验已领取活动物品积分是否超出
-			salesActivityService.checkSalesActivity(sid, refundAmount);
-
-			// 退款收据(TYPE_REFUND, 实退金额=四渠道合计退预付款)
-			SalesReceiptPO refundReceipt = new SalesReceiptPO();
-
-			refundReceipt.setCollecter(operater);
-			refundReceipt.setCollecterName(operater.getUserName());
-			refundReceipt.setCollectTime(new Timestamp(System.currentTimeMillis()));
-			refundReceipt.setComment(String.format("销售单:%s,款项撤款,退回主材预付款余额%s%s", salesPO.getNo(), refundAmount, originReceipt.getCoupon() > 0 ? ",券部分不退" : ""));
-			refundReceipt.setType(SalesReceiptPO.TYPE_REFUND_INT);
-			refundReceipt.setRealMoney(refundAmount);
-			refundReceipt.setAdvance(refundAmount);
-			refundReceipt.setCash(SalesReceiptPO.COLUMN_MONEY_INT);
-			refundReceipt.setBank(SalesReceiptPO.COLUMN_MONEY_INT);
-			refundReceipt.setCheckv(SalesReceiptPO.COLUMN_MONEY_INT);
-			refundReceipt.setCoupon(SalesReceiptPO.COLUMN_COUPON_INT);
-
-			salesReceiptDao.save(refundReceipt);
-
-			// 原行翻转为退款型(3补款→5补款退款, 2定金/8不可退定金→7定金退款), 状态保持已确认
-			salesPaymentPO.setType(type == SalesPaymentPO.TYPE_REPLENISHMENT_INT ? SalesPaymentPO.TYPE_MAKEAREFUND_INT : SalesPaymentPO.TYPE_DEPOSITREFUND_INT);
-			salesPaymentPO.setSalesReceipt(refundReceipt);
-
-			salesPaymentDao.update(salesPaymentPO);
-
-			// 退回主材预付款余额
-			paymentService.returnPayment(new PaymentVO().trans(salesPO.getOrderId(), PaymentPO.PAYMENT_PAYMENTTYPE_MATERIAL_INT, refundAmount, String.format("SA%sR", salesPaymentPO.getSpid()), String.format("装修单号:%s,销售单:%s,款项撤款退回主材预付款", salesPO.getOrderId(), salesPO.getNo())), userId);
-
-			canceled = true;
-		}
-
-		if (!canceled) {
-			throw new FLException(150036, "无可撤款项");
-		}
 
 		return 0;
 	}

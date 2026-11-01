@@ -521,9 +521,6 @@ $.extend(api, {
         affirmSalesPayment: {
             url: "affirmSalesPayment.do"
         },
-        cancelSalesPayment: {
-            url: "cancelSalesPayment.do"
-        },
         settleSalesPayment: {
             url: "settleSalesPayment.do",
             type: "update"

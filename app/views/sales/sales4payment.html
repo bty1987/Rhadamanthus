@@ -6,7 +6,7 @@
 <body><div class="app-page">
     <div class="app-table"><table id="resultTable" lay-filter="resultTable"></table></div>
     <script type="text/html" id="rowToolbar">
-        {{# if(d.status == 0 && (d.type == 2 || d.type == 3 || d.type == 8)){ }}<button class="layui-btn layui-btn-xs layui-btn-normal" lay-event="settle">落款</button>{{# } else { }}<button class="layui-btn layui-btn-xs layui-btn-danger" lay-event="refund">撤款</button>{{# } }}
+        {{# if(d.status == 0 && (d.type == 2 || d.type == 3 || d.type == 8)){ }}<button class="layui-btn layui-btn-xs layui-btn-normal" lay-event="settle">落款</button>{{# } else if(d.status == 0 && d.type == 4){ }}<button class="layui-btn layui-btn-xs layui-btn-danger" lay-event="refund">撤款</button>{{# } }}
     </script>
     <div id="returnBox" style="display:none; padding:20px;">
         <form class="layui-form" id="returnForm">

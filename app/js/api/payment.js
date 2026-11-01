@@ -301,7 +301,6 @@ $.extend(api, { payment: {
     },
     confirmSalesPayment:    { url: 'confirmSalesPayment.do' },
     affirmSalesPayment:     { url: 'affirmSalesPayment.do' },
-    cancelSalesPayment:     { url: 'cancelSalesPayment.do' },
     settleSalesPayment:     { url: 'settleSalesPayment.do', type: 'update' },
     withdrawSalesPayment:   { url: 'withdrawSalesPayment.do', type: 'update' },
     refundSalesPayment: {

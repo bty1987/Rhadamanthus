@@ -139,12 +139,12 @@ jQuery(function() {
                     $liPropertys.appendTo($ulProperty);
                 });
 
-                // 收款类(2定金/3补款/8不可退定金)初始态→落款, 其余(含收款类已流转/退款类记录)→撤款(审批流); balance入口(结算场景)不挂操作
+                // 收款类(2定金/3补款/8不可退定金)初始态→落款; 未付款退款行(type=4,status=0)→撤款(行级执行,非券全额退回主材预付款并闭环退货单); 已流转行不挂操作(退款走退货单正规流程); balance入口(结算场景)不挂操作
                 if (salesPayment.type != "balance") {
 
                     if ([2, 3, 8].indexOf(v.type) != -1 && v.status == constant.payment().materialPayment.STATUS_INIT_INT) {
                         $btnDiv.append($btnSettle);
-                    } else {
+                    } else if (v.type == 4 && v.status == constant.payment().materialPayment.STATUS_INIT_INT) {
                         $btnDiv.append($btnRetrun);
                     }
 
@@ -159,8 +159,9 @@ jQuery(function() {
 
                     com.showConfirm("是否确认撤款, 撤款金额 " + v.referMoney + " 将退回主材预付款余额", function() {
 
-                        com.post(api.payment.cancelSalesPayment, {
-                            "salesPayment.sales.sid": v.sales.sid
+                        com.post(api.payment.withdrawSalesPayment, {
+                            "salesPayment.spid": v.spid,
+                            "salesPayment.sales.orderId": v.sales.orderId
                         }, function(res) {
 
                             com.showAlert(com.info, "撤款成功。");

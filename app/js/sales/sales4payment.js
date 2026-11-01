@@ -39,20 +39,11 @@ layui.use(['table', 'layer', 'jquery'], function () {
         });
     }
     function openRefund(v) {
-        state.curSid = v.sales ? v.sales.sid : ctx.sid;
-        $('#returnTotal').val(v.referMoney);
-        $('#approver').val(''); $('#comment').val('');
-        state.returnIndex = layer.open({ type: 1, title: '撤款信息', content: $('#returnBox'), area: ['480px', 'auto'] });
-    }
-    function doRefundSubmit() {
-        var uid = $.trim($('#approver').val());
-        if (!uid) { app.showAlert(app.warning, '请填写审批人 userId'); return; }
-        app.post(api.approval.submitApprovalForSalesDayment, {
-            'approval.receiver.userId': uid,
-            'approval.comment': $('#comment').val(),
-            'approvalSalesDayment.sid': state.curSid
-        }, function () {
-            app.showAlert(app.success, '操作成功'); layer.close(state.returnIndex); state.returnIndex = null;
+        // 撤款=行级执行未付款退款行(非券全额退回主材预付款并闭环退货单), 与PC弹窗口径一致(撤款去审批直执行)
+        app.showConfirm('是否确认撤款, 撤款金额 ' + v.referMoney + ' 将退回主材预付款余额', function () {
+            app.post(api.payment.withdrawSalesPayment, { 'salesPayment.spid': v.spid, 'salesPayment.sales.orderId': v.sales ? v.sales.orderId : '' }, function () {
+                app.showAlert(app.success, '撤款成功'); query();
+            });
         });
     }
     function doSettle(v) {
@@ -62,7 +53,5 @@ layui.use(['table', 'layer', 'jquery'], function () {
             });
         });
     }
-    $('#btnApproveSave').on('click', doRefundSubmit);
-    $('#btnApproveCancel').on('click', function () { layer.close(state.returnIndex); state.returnIndex = null; });
 });
 }); // end app.ready
