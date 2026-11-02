@@ -741,8 +741,8 @@ var decorationUtils = {
                     // 首个抽奖券出现时创建分组(标题+容器), 无抽奖券则整个分组不渲染
                     if (lotteryItempack == null) {
 
-                        lotteryItempack = $("<div></div>").addClass("col-md-12").attr("id", "lotteryActivityItems").css("padding", "0px").insertAfter(itempack);
-                        $("<div></div>").addClass("col-md-12").attr("style", "padding: 0;margin: 0 8px;font-size: 24px;color: #2679b5;").html("抽奖券").appendTo(lotteryItempack);
+                        lotteryItempack = $("<div></div>").addClass("col-md-12").attr("id", "lotteryActivityItems").insertAfter(itempack);
+                        $("<div></div>").addClass("col-md-12").attr("style", "padding: 0;margin: 0 8px;font-size: 24px;color: #2679b5;").html("").appendTo(lotteryItempack);
                     }
 
                     var ltPricingSpan = $("<div></div>").addClass("col-md-6").css("margin", "5px 0px").attr("id", "pricing_" + item.daiId).appendTo(lotteryItempack);
