@@ -722,6 +722,11 @@ var decorationUtils = {
 
             itempack.html("");
 
+            // 抽奖券分组容器: 与活动物品容器同级排其后, 重复初始化时先移除旧分组
+            com.focusPage("#lotteryActivityItems").remove();
+
+            var lotteryItempack = null;
+
             if (wizard.btnSend == "btnSend") {
                 com.focusPage("#btnNotice").removeClass("hide");
                 com.focusPage("#btnNoticeQRCode").removeClass("hide");
@@ -733,7 +738,14 @@ var decorationUtils = {
 
                 if (item.atttype == 1 && item.state == 0) {
 
-                    var ltPricingSpan = $("<div></div>").addClass("col-md-6").css("margin", "5px 0px").attr("id", "pricing_" + item.daiId).appendTo(itempack);
+                    // 首个抽奖券出现时创建分组(标题+容器), 无抽奖券则整个分组不渲染
+                    if (lotteryItempack == null) {
+
+                        lotteryItempack = $("<div></div>").addClass("col-md-12").attr("id", "lotteryActivityItems").css("padding", "0px").insertAfter(itempack);
+                        $("<div></div>").addClass("col-md-12").css("padding: 0;margin: 0 8px;font-size: 24px;color: #2679b5;").html("抽奖券").appendTo(lotteryItempack);
+                    }
+
+                    var ltPricingSpan = $("<div></div>").addClass("col-md-6").css("margin", "5px 0px").attr("id", "pricing_" + item.daiId).appendTo(lotteryItempack);
                     var ltWidgetBox = $("<div></div>").appendTo(ltPricingSpan);
                     var ltUl = $("<ul class='item-list fl-table-list ui-sortable'></ul>").appendTo(ltWidgetBox);
                     var ltLi = $('<li class="item-orange clearfix"></li>').appendTo(ltUl);
