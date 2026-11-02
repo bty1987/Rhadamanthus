@@ -18,8 +18,8 @@ import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.service.UserService;
 import com.fanglin.personel.vo.UserVO;
 import com.fanglin.system.dao.SystemConfigDao;
-import com.fanglin.system.po.SystemConfigPO;
 import com.fanglin.system.po.OperationPO;
+import com.fanglin.system.po.SystemConfigPO;
 import com.fanglin.system.service.OperationService;
 import com.fanglin.system.service.impl.CompanyServiceImpl;
 import com.fanglin.system.vo.OperationVO;
@@ -95,28 +95,23 @@ public class AccessInterceptor extends AbstractInterceptor {
 
 			if (operationVO.getThrough() != null && operationVO.getThrough() == OperationPO.THROUGH_PASS_INT) {
 
-				// 影子收集(收集期核心修复): PASS分支此前直接放行不收集, 致through=1层授权数据永远缺失;
-				// 现放行同时尝试补登(主角色+附加角色, 公司显式行)。
-				// 🔴全局死规则: 不用try-catch, 前置校验替代——AESHelper.decrypt失败返回null(工具类内部消化)判空跳过;
-				// 四要素不全跳过(fillOperation内同款守卫双保险); 员工不存在等FLException与关闸分支同语义, 上抛外层统一处理。
-				String passAuth = $authentication != null ? $authentication : CookieUtil.getCookie(request, Constant.COOKIE_AUTHENTICATION);
+				String result = invocation.invoke();
 
-				if (passAuth != null) {
+				$authentication = $authentication != null ? $authentication : CookieUtil.getCookie(request, Constant.COOKIE_AUTHENTICATION);
 
-					String passDecrypt = AESHelper.decrypt(passAuth, SystemConfig.getString("encryptKey"), SystemConfig.getString("encryptIv"));
+				if ($authentication == null) return result;
 
-					if (passDecrypt != null && !"".equals(passDecrypt)) {
+				String $decrypt = AESHelper.decrypt($authentication, SystemConfig.getString("encryptKey"), SystemConfig.getString("encryptIv"));
 
-						Authentication passAuthRef = new Authentication(passDecrypt);
+				if ($decrypt == null || "".equals($decrypt)) return result;
 
-						// getCompany系基本类型int无判空语义; fillOperation内四要素守卫双保险
-						if (passAuthRef.getUserId() != null && passAuthRef.getRoleId() != null) {
-							operationService.fillOperation(passAuthRef.getUserId(), passAuthRef.getRoleId(), passAuthRef.getCompany(), actionName);
-						}
-					}
+				Authentication authentication = new Authentication($decrypt);
+
+				if (authentication.getUserId() != null && authentication.getRoleId() != null) {
+					operationService.fillOperation(authentication.getUserId(), authentication.getRoleId(), authentication.getCompany(), actionName);
 				}
 
-				return invocation.invoke();
+				return result;
 			} else if (operationVO.getThrough() != null && operationVO.getThrough() == OperationPO.THROUGH_COMMON_INT) {
 
 				if ($authentication == null) {
@@ -282,6 +277,7 @@ public class AccessInterceptor extends AbstractInterceptor {
 		}
 		return actionLogRecorder;
 	}
+
 	// 登录时长(分钟): communion.systemconfig 全局行(key=cookieOvertime, company=0), 库中未配置缺省120; 改库即生效免重启
 	private int readCookieOvertime() {
 
