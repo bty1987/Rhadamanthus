@@ -189,11 +189,8 @@ $(function() {
 
     var loadBalances = function() {
 
-        com.post(api.sales.querySalesBalanceByOrderId, {
-            "salesBalance.sales.orderId": orderId,
-            "salesBalance.type": 0,
-            "salesBalance.onetype": 0,
-            "sid[0]": sid
+        com.post(api.sales.querySalesBalance, {
+            "salesBalance.sales.sid": sid
         }, function(res) {
 
             var salesBalances = res.salesBalances || [];

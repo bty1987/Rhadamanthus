@@ -467,6 +467,18 @@ $.extend(api, {
             }
         },
 
+        querySalesBalance: {
+            url: "querySalesBalance.do",
+            type: "query",
+            tranargs: [{
+                result: "salesBalances",
+                args: ["balance", "pbalance", "total", "vbalance", "difference", "coupon", "allowance"]
+            }, {
+                result: "salesBalances-sales",
+                args: ["total"]
+            }]
+        },
+
         querySalesBalanceByOrderId: {
             url: "querySalesBalanceByOrderId.do",
             type: "query",

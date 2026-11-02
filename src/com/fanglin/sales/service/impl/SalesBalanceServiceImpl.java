@@ -209,6 +209,14 @@ public class SalesBalanceServiceImpl implements SalesBalanceService {
 	}
 
 	@Override
+	public List<SalesBalanceVO> querySalesBalance(SalesBalanceVO salesBalanceVO) {
+
+		if (salesBalanceVO == null || salesBalanceVO.getSales() == null || salesBalanceVO.getSales().getSid() == null) return new ArrayList<SalesBalanceVO>();
+
+		return pageSalesBalance(salesBalanceDao.querySalesBalanceBySid(salesBalanceVO.getSales().getSid()));
+	}
+
+	@Override
 	public List<SalesBalanceVO> querySalesBalanceByOrderId(List<Long> sids, SalesBalanceVO salesBalanceVO) {
 
 		if (salesBalanceVO == null || salesBalanceVO.getSales() == null || salesBalanceVO.getSales().getOrderId() == null) return new ArrayList<SalesBalanceVO>();
