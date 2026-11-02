@@ -37,6 +37,7 @@ import com.fanglin.data.po.DecorationBusitypePO;
 import com.fanglin.data.po.SignetPO;
 import com.fanglin.decoration.dao.DecorationActivityDao;
 import com.fanglin.decoration.dao.DecorationActivityItemDao;
+import com.fanglin.decoration.service.DecorationActivityItemService;
 import com.fanglin.decoration.dao.DecorationAdditionDao;
 import com.fanglin.decoration.dao.DecorationBelongDao;
 import com.fanglin.decoration.dao.DecorationContractDao;
@@ -88,6 +89,9 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 
 	@Autowired
 	private ElecsignRouter elecsignRouter;
+
+	@Autowired
+	private DecorationActivityItemService decorationActivityItemService;
 	@Autowired
 	private CustomerChanceDao customerChanceDao;
 	@Autowired
@@ -912,6 +916,9 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 		messageQueuingDao.save(new MessageQueuingPO().init(orderId, "resignDecorationContract", "{\"orderId\":\"" + orderId + "\",\"userId\":\"" + userId + "\",\"event\":\"CUSTOMER_STATUS_CHANGED\"" + (decorationPO.getBusitype() != null ? ",\"busiTypeName\":\"" + decorationPO.getBusitype().getName() + "\"" : "") + "}"));
 		// 生成消息提示数据
 		messageQueuingDao.save(new MessageCueuingPO().init(orderId, "resignDecorationContract", "{\"orderId\":\"" + orderId + "\",\"userId\":\"" + userId + "\",\"event\":\"CUSTOMER_STATUS_CHANGED\"" + (decorationPO.getBusitype() != null ? ",\"busiTypeName\":\"" + decorationPO.getBusitype().getName() + "\"" : "") + buildCcidArgs(orderId) + "}"));
+
+		// 抽奖券引擎插桩: 重签(合同作废待重签) → 签约赠回收(status=4 视同未签约); 重新签约后再次触发自动补发
+		decorationActivityItemService.issueDecorationActivityItemByOrderId(orderId, userId);
 
 		return 0;
 	}

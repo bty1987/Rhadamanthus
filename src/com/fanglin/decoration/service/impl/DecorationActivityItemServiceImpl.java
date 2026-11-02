@@ -775,8 +775,9 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 		long net = paymentDao.amountPayment(orderId, PaymentPO.PAYMENT_PAYMENTTYPE_MATERIAL_INT, activityPO.getStartTime(), activityPO.getEndTime());
 
 		// 签约判定: 合同签约时间落在活动窗口内(重签单 contractTime 为原签约时间, 同样命中);
-		// 退单排除: 合同终止(6)/废单(5)视同未签约 → 已发签约赠随应得数下降被自动回收
-		boolean retired = Arrays.asList(DecorationPO.STATUS_TERMINATION_INT, DecorationPO.STATUS_WASTE_INT).contains(decorationPO.getStatus());
+		// 退单排除: 合同终止(6)/废单(5)/重签(4, 合同作废待重签)视同未签约 → 已发签约赠随应得数下降被自动回收;
+		// 重签完成后重新签约回到状态3且contractTime刷新在窗口内 → 再次触发时签约赠重新补发
+		boolean retired = Arrays.asList(DecorationPO.STATUS_TERMINATION_INT, DecorationPO.STATUS_WASTE_INT, DecorationPO.STATUS_RESIGNED_INT).contains(decorationPO.getStatus());
 
 		boolean signed = !retired && decorationPO.getContractTime() != null && (activityPO.getStartTime() == null || !decorationPO.getContractTime().before(activityPO.getStartTime())) && (activityPO.getEndTime() == null || !decorationPO.getContractTime().after(activityPO.getEndTime()));
 
