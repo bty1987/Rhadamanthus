@@ -734,7 +734,7 @@ var decorationUtils = {
 
                     var ltStateMap = { 0: "初始", 1: "失效", 2: "已领", 3: "退货", 10: "已领", 11: "抽奖" };
 
-                    var ltPricingSpan = $("<div></div>").addClass("col-md-6").css("margin", "5px 0px").attr("id", "pricing_" + item.daiId).prependTo(itempack);
+                    var ltPricingSpan = $("<div></div>").addClass("col-md-6").css("margin", "5px 0px").attr("id", "pricing_" + item.daiId).appendTo(itempack);
                     var ltWidgetBox = $("<div></div>").appendTo(ltPricingSpan);
                     var ltUl = $("<ul class='item-list fl-table-list ui-sortable'></ul>").appendTo(ltWidgetBox);
                     var ltLi = $('<li class="item-orange clearfix"></li>').appendTo(ltUl);
