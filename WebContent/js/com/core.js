@@ -1077,7 +1077,6 @@ var com = {
             // OSS直传对象:走预签名显示(私有桶OSS原生方式),不经showImg.do文件服务器
             // 单次请求同时取原图(url)与缩略图(thumbUrl),结果按key缓存复用,避免图片墙批量请求
             var ossKey = url.slice(url.indexOf('aliyuncs.com/') + 'aliyuncs.com/'.length);
-            var $imgA = $e.closest('a'); // 现役姿势:href=showImg返回值承载大图,如balanceCutpay/decorationUtils
 
             var applyPresign = function(presigned) {
 
@@ -1088,7 +1087,6 @@ var com = {
                 }
                 if (presigned.url) {
                     $e.attr('layer-src', presigned.url).attr('alt', alt || '');
-                    $imgA.attr('href', presigned.url);
                 }
             };
 
@@ -2770,3 +2768,21 @@ var com = {
     }
 
 })(jQuery);
+
+// 大图查看统一接管(框架级): cboxElement锚点内嵌img时,点击打开layer-src(原图/预签名)或src
+// 覆盖全系统未接href的图片卡片(历史缺口约20处),对已接href页面行为等价(layer-src与href同源);
+// 无内嵌img的cboxElement(如删除按钮)直接放行,不影响原有逻辑
+$(document).on("click", "a.cboxElement", function(e) {
+
+    var $img = $(this).find("img").first();
+
+    if (!$img.length) return;
+
+    var url = $img.attr("layer-src") || $img.attr("src");
+
+    if (!url || url.indexOf("javascript:") === 0) return;
+
+    e.preventDefault();
+    e.stopPropagation();
+    window.open(url, "_blank");
+});
