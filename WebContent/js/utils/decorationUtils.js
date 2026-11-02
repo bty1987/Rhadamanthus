@@ -201,12 +201,14 @@ var decorationUtils = {
                 };
 
                 $.each(sids, function(i, sid) {
+
                     options["sid[" + i + "]"] = sid;
                 });
 
                 com.post(api.sales.querySalesBalanceByOrderId, options, function(res) {
 
                     $.each(res.salesBalances, function(i, v) {
+
                         salesBalanceMap[v.sales.sid] = v.pbalance;
                     });
                 }, null, false);
@@ -729,9 +731,30 @@ var decorationUtils = {
 
                 var item = decorationActivityItems[i];
 
-                // 抽奖券(type=20): 走专用精简绘制(状态/编号/活动/奖励/时间), 不参与优惠合计与操作按钮
-                if (decorationUtils.isLotteryDecorationActivityItem(item)) {
-                    decorationUtils.drawLotteryDecorationActivityItem(itempack, item);
+                if (item.atttype == 1 && item.state == 0) {
+
+                    var ltPricingSpan = $("<div></div>").addClass("col-md-6").css("margin", "5px 0px").attr("id", "pricing_" + item.daiId).appendTo(itempack);
+                    var ltWidgetBox = $("<div></div>").appendTo(ltPricingSpan);
+                    var ltUl = $("<ul class='item-list fl-table-list ui-sortable'></ul>").appendTo(ltWidgetBox);
+                    var ltLi = $('<li class="item-orange clearfix"></li>').appendTo(ltUl);
+                    var ltHeader = $("<h3 class='oid'></h3>").appendTo(ltLi);
+                    
+                    ltHeader.append($('<small class="blue"></small>').text(item.no == null ? "" : item.no));
+
+                    var ltUl2 = $("<ul></ul>").addClass("list-unstyled fl-inline-list clearfix").css("padding-left", "12px").appendTo(ltLi);
+                    var ltLi1 = $("<li></li>").appendTo(ltUl2);
+                    $("<strong></strong>").text("活动:").appendTo(ltLi1);
+                    $("<span></span>").text(item.activityName).appendTo(ltLi1);
+                    var ltLi2 = $("<li></li>").appendTo(ltUl2);
+                    $("<strong></strong>").text("奖励:").appendTo(ltLi2);
+                    $("<span></span>").text(item.activityItemName).appendTo(ltLi2);
+                    var ltLi3 = $("<li></li>").appendTo(ltUl2);
+                    $("<strong></strong>").text("发放时间:").appendTo(ltLi3);
+                    $("<span></span>").addClass("green").text(com.checkNull(item.createTime)).appendTo(ltLi3);
+                    var ltLi4 = $("<li></li>").appendTo(ltUl2);
+                    $("<strong></strong>").text("说明:").appendTo(ltLi4);
+                    $("<span></span>").addClass("blue").text(com.checkNull(item.content)).appendTo(ltLi4);
+
                     continue;
                 }
 
@@ -849,7 +872,6 @@ var decorationUtils = {
 
             if (uiBtnMethod == "uiBtnMethod") {
 
-
                 var decorationActivityRecordBtn = $("<a></a>").addClass("btn btn-minier btn-pink").html("记录").css("margin", "0px 3px").appendTo(uiPgDiv);
 
                 decorationActivityRecordBtn.on("click", function() {
@@ -886,14 +908,13 @@ var decorationUtils = {
                 if (uniqueId) {
                     var ids = uniqueId.split('-');
                     if (ids.length === 2 && ids[0] && ids[1]) {
-                        var referInfoBtn = $("<a></a>").addClass("btn btn-minier btn-info")
-                            .html("<i class='icon-info-sign'></i> 推荐")
-                            .css("margin", "0px 3px")
-                            .appendTo(uiPgDiv);
+                        var referInfoBtn = $("<a></a>").addClass("btn btn-minier btn-info").html("<i class='icon-info-sign'></i> 推荐").css("margin", "0px 3px").appendTo(uiPgDiv);
 
                         // 点击按钮弹窗显示推荐信息
                         referInfoBtn.on("click", (function(doid1, doid2) {
+
                             return function() {
+
                                 // 显示加载提示
                                 var loadingIndex = com.showLoading('正在查询推荐信息...');
 
@@ -906,12 +927,14 @@ var decorationUtils = {
                                 com.post(api.decoration.queryDecorationByDoid, {
                                     "decoration.doid": parseInt(doid1)
                                 }, function(res1) {
+
                                     if (res1.decoration) {
                                         referDecoration = res1.decoration;
                                     }
                                     queryCount++;
                                     checkAndShow();
                                 }, function(err1) {
+
                                     queryCount++;
                                     checkAndShow();
                                 });
@@ -920,18 +943,21 @@ var decorationUtils = {
                                 com.post(api.decoration.queryDecorationByDoid, {
                                     "decoration.doid": parseInt(doid2)
                                 }, function(res2) {
+
                                     if (res2.decoration) {
                                         referredDecoration = res2.decoration;
                                     }
                                     queryCount++;
                                     checkAndShow();
                                 }, function(err2) {
+
                                     queryCount++;
                                     checkAndShow();
                                 });
 
                                 // 检查是否两个查询都完成，然后显示弹窗
                                 function checkAndShow() {
+
                                     if (queryCount === 2) {
                                         // 关闭加载提示
                                         layer.close(loadingIndex);
@@ -1068,7 +1094,7 @@ var decorationUtils = {
             itempack.html("");
 
             // 直接渲染活动物品，传递 uniqueId 参数
-            for (var i = 0; i < decorationActivityItems.length; i++) {
+            for ( var i = 0; i < decorationActivityItems.length; i++) {
                 var item = decorationActivityItems[i];
 
                 // 只显示线上活动（atttype=1）的数据到会员活动物品区域
@@ -1973,19 +1999,14 @@ var decorationUtils = {
 
         // 为 type=1 (合同方案) 图片添加批量选择复选框
         if (i.type == 1) {
-            var $checkbox = $('<input type="checkbox">')
-                .addClass('picture-checkbox')
-                .attr('data-dpid', i.dpId)
-                .attr('data-orderid', i.orderId)
-                .css({
-                    'position': 'absolute',
-                    'top': '5px',
-                    'left': '5px',
-                    'z-index': '10',
-                    'width': '18px',
-                    'height': '18px'
-                })
-                .appendTo($li);
+            var $checkbox = $('<input type="checkbox">').addClass('picture-checkbox').attr('data-dpid', i.dpId).attr('data-orderid', i.orderId).css({
+                'position': 'absolute',
+                'top': '5px',
+                'left': '5px',
+                'z-index': '10',
+                'width': '18px',
+                'height': '18px'
+            }).appendTo($li);
         }
 
         var $delA = $('<a></a>').addClass("icon-remove").appendTo($tools);
@@ -2085,9 +2106,9 @@ var decorationUtils = {
         var $infoboxLeft = $('<div></div>').css('float', 'left').appendTo($infoboxData);
         var $infoboxContent = $('<div></div>').addClass('infobox-content').text(i.name).appendTo($infoboxLeft);
         var $infoboxContent = $('<div></div>').addClass('infobox-content').text(i.createTime).appendTo($infoboxLeft);
-        
+
         $infobox.click(function() {
-            
+
             if (params.urlLoadParams.depage == "designer" || params.urlLoadParams.depage == "plan")
                 return false;
 
@@ -2262,7 +2283,14 @@ var decorationUtils = {
     // 服务团队成员类型文案: 优先取 communion.constant(decoration.decorationUser.type), SQL未配置或历史NULL值时回退硬编码
     userTypeText: function(type) {
 
-        var fallback = { 0: '业务', 1: '装饰', 2: '服务', 3: '合同', 4: '销售', 99: '其他' };
+        var fallback = {
+            0: '业务',
+            1: '装饰',
+            2: '服务',
+            3: '合同',
+            4: '销售',
+            99: '其他'
+        };
 
         var key = type == null ? 99 : type;
 
@@ -2281,13 +2309,16 @@ var decorationUtils = {
 
         var $datalist = com.focusPage("#" + (datalistId || "duContentOptions"));
 
-        if ($datalist.length == 0 || $datalist.children().length > 0) return;
+        if ($datalist.length == 0 || $datalist.children().length > 0)
+            return;
 
         var roleNode = constant.decoration().decorationUser.contentRole;
 
-        if (!roleNode || !roleNode.datas || roleNode.datas.length == 0) return;
+        if (!roleNode || !roleNode.datas || roleNode.datas.length == 0)
+            return;
 
         $.each(roleNode.datas, function(i, v) {
+
             $('<option></option>').attr("value", v.value).appendTo($datalist);
         });
     },
@@ -2915,7 +2946,7 @@ var decorationUtils = {
             params.quotation.quotation = {
                 "printConf": printConf
             };
-            
+
             var $show = wizard.opt == null ? [] : wizard.opt.btn == null ? [] : wizard.opt.btn;
 
             status = $show.includes("quotationIsPrint") ? true : false
