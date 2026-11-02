@@ -82,23 +82,16 @@ WHERE ro.company=0 AND ro.oid IN (批内oid清单)
 - 2027-01-04 后:批5(财务/结算/支付)关闸 → 全部业务接口 through=0
 - 终态巡检:`SELECT COUNT(*) FROM operation WHERE type=0 AND through<>0` 应=0
 
-### 阶段 6:代码收口(✅ 已实现,2026-11-01 baa5bdc20)
-
-已按**配置开关**方式实现(比原定硬删分支更安全——jar 可提前部署,激活/回滚免发版):
+### 阶段 6:代码收口(通配清零后一次性执行,一行改动)
 
 ```java
 // RoleOperationDaoImpl.queryRoleOperation(List<Integer>, int, int):
-if (SystemConfig.getInt("operationPureTriple", 0) != 0) {
-    criteria.add(Restrictions.eq("company", company));                        // 终态: 纯三元组严格匹配
-} else {
-    criteria.add(Restrictions.or(Restrictions.eq("company", company), Restrictions.eq("company", 0)));  // 过渡期: 双匹配(现网行为)
-}
+// 删除通配分支,终态防御:防止未来误插 company=0 行又全局生效
+- criteria.add(Restrictions.or(Restrictions.eq("company", company), Restrictions.eq("company", 0)));
++ criteria.add(Restrictions.eq("company", company));
 ```
-
-- **部署时机:随时**。缺省(无配置键)= 过渡期双匹配,与现网行为完全一致,零影响
-- **激活(终态)**:`INSERT INTO communion.systemconfig (\`key\`,value,company) VALUES ('operationPureTriple','1',0);` —— 🔴 前置:`roleoperation` 中 `company=0` 行数=0
-- **回滚**:改 value='0' 或删该行,实时生效(SystemConfig 每次实时读库)
-- jar:`fanglin-system-8.3.030`(120387B,RoleOperationDaoImpl.class 指纹 `4cb41dea2db9b9db5ab1c12b0d95f300`)
+- 前置:`SELECT COUNT(*) FROM roleoperation WHERE company=0` = 0
+- (2026-11-02 注:曾实现的 operationPureTriple 配置开关已按拍板还原——收集优先路线下无此必要,终态直接删行即可;system jar 以还原后构建为准)
 
 ## 四、运维终态(长期机制)
 

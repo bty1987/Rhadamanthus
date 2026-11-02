@@ -22,7 +22,6 @@ import com.fanglin.core.dao.impl.DaoImpl;
 import com.fanglin.system.dao.RoleOperationDao;
 import com.fanglin.system.po.OperationPO;
 import com.fanglin.system.po.RoleOperationPO;
-import com.fanglin.utils.SystemConfig;
 
 @Repository("roleOperationDao")
 public class RoleOperationDaoImpl extends DaoImpl<RoleOperationPO> implements RoleOperationDao {
@@ -59,17 +58,10 @@ public class RoleOperationDaoImpl extends DaoImpl<RoleOperationPO> implements Ro
 	@Override
 	public RoleOperationPO queryRoleOperation(List<Integer> rids, int oid, int company) {
 
-		// 鉴权语义: 该批角色对该operation有授权行。
-		// 过渡期(缺省/0): 公司配权 或 全局通配(company=0)任一命中即放行——通配行是纯三元组治理的过渡脚手架;
-		// 终态(operationPureTriple=1, systemconfig company=0): 仅公司配权严格匹配——通配行清零后置位即终态,
-		// 激活/回滚均为一条配置, 无需发版。🔴 置位前置: roleoperation 中 company=0 行数必须为 0。
+		// 鉴权语义: 该批角色在公司配权或全局配权(company=0,游客/超级管理员等通用角色)下对该operation有授权行
 		Criteria criteria = session().createCriteria(RoleOperationPO.class).createAlias("operation", "operation").add(Restrictions.in("rid", rids)).add(Restrictions.eq("operation.oid", oid)).add(Restrictions.eq("operation.status", OperationPO.STATUS_ENABLE_INT));
 
-		if (SystemConfig.getInt("operationPureTriple", 0) != 0) {
-			criteria.add(Restrictions.eq("company", company));
-		} else {
-			criteria.add(Restrictions.or(Restrictions.eq("company", company), Restrictions.eq("company", 0)));
-		}
+		criteria.add(Restrictions.or(Restrictions.eq("company", company), Restrictions.eq("company", 0)));
 
 		return (RoleOperationPO) criteria.setMaxResults(1).uniqueResult();
 	}
