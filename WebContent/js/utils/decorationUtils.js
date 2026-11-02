@@ -729,6 +729,36 @@ var decorationUtils = {
 
                 var item = decorationActivityItems[i];
 
+                // 抽奖券(no=LT前缀, atttype=1 线上): 精简展示——只显示编号/活动/奖励/状态/时间, 不参与优惠合计, 无操作按钮
+                if (item.no != null && item.no.indexOf("LT") == 0) {
+
+                    var ltStateMap = { 0: "初始", 1: "失效", 2: "已领", 3: "退货", 10: "已领", 11: "抽奖" };
+
+                    var ltPricingSpan = $("<div></div>").addClass("col-md-6").css("margin", "5px 0px").attr("id", "pricing_" + item.daiId).prependTo(itempack);
+                    var ltWidgetBox = $("<div></div>").appendTo(ltPricingSpan);
+                    var ltUl = $("<ul class='item-list fl-table-list ui-sortable'></ul>").appendTo(ltWidgetBox);
+                    var ltLi = $('<li class="item-orange clearfix"></li>').appendTo(ltUl);
+                    var ltHeader = $("<h3 class='oid'></h3>").appendTo(ltLi);
+                    ltHeader.append($('<small class="blue"></small>').text(item.no == null ? "" : item.no));
+                    ltHeader.append($('<span></span>').addClass("pull-right").text(item.state == null ? "" : (ltStateMap[item.state] || item.state)));
+
+                    var ltUl2 = $("<ul></ul>").addClass("list-unstyled fl-inline-list clearfix").css("padding-left", "12px").appendTo(ltLi);
+                    var ltLi1 = $("<li></li>").appendTo(ltUl2);
+                    $("<strong></strong>").text("活动:").appendTo(ltLi1);
+                    $("<span></span>").text(item.activityName).appendTo(ltLi1);
+                    var ltLi2 = $("<li></li>").appendTo(ltUl2);
+                    $("<strong></strong>").text("奖励:").appendTo(ltLi2);
+                    $("<span></span>").text(item.activityItemName).appendTo(ltLi2);
+                    var ltLi3 = $("<li></li>").appendTo(ltUl2);
+                    $("<strong></strong>").text("发放时间:").appendTo(ltLi3);
+                    $("<span></span>").addClass("green").text(com.checkNull(item.createTime)).appendTo(ltLi3);
+                    var ltLi4 = $("<li></li>").appendTo(ltUl2);
+                    $("<strong></strong>").text("说明:").appendTo(ltLi4);
+                    $("<span></span>").addClass("blue").text(com.checkNull(item.content)).appendTo(ltLi4);
+
+                    continue;
+                }
+
                 // 只显示线下活动（atttype=0）的数据到装修活动物品区域
                 if (item.atttype != 0) {
                     continue;
