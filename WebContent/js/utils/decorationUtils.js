@@ -787,7 +787,7 @@ var decorationUtils = {
         if (_activityItem.state == 1)
             return false;
 
-        var pricingSpan = $("<div></div>").addClass("col-md-6").css("margin", "5px 0px").attr("id", "pricing_" + _activityItem.daiId).prependTo(itempack);
+        var pricingSpan = $("<div></div>").addClass("col-md-6").css("margin", "5px 0px").attr("id", "pricing_" + _activityItem.daiId).appendTo(itempack);
         var widgetBox = $("<div></div>").appendTo(pricingSpan);
         var total = [0, 2, 4, 5, 6].indexOf(_activityItem.state) != -1 ? utils.accMul(_activityItem.money, _activityItem.num) : 0;
 
