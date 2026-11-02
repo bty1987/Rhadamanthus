@@ -103,10 +103,12 @@ INSERT INTO decoration.decorationactivityitem (aid, asid, orderId, activityName,
 -- 【编码回填】执行上段后运行(本批 no 为空):
 UPDATE decoration.decorationactivityitem SET no = CONCAT('LT', LPAD(daiId, 8, '0')) WHERE no IS NULL AND activityName = '双人海外玩翻天' AND content LIKE '%存量补齐%';
 
--- 【轨迹】补轨迹行(按 daiId 关联, 幂等):
-INSERT INTO decoration.decorationactivityrecord (aid, daiId, type, operaterUid, operateTime, comment)
-SELECT i.aid, i.daiId, 0, 34, i.createTime, '抽奖券存量补齐(上线前应发未发)' FROM decoration.decorationactivityitem i
+-- 【轨迹】补轨迹行(实际列: daid=活动aid, daiid=物品行daiId, ouid=操作人; 幂等按 daiid):
+INSERT INTO decoration.decorationactivityrecord (daid, daiid, ouid, operateTime, type, comment)
+SELECT a.aid, i.daiId, 34, i.createTime, 0, '抽奖券存量补齐(上线前应发未发)'
+FROM decoration.decorationactivityitem i
+JOIN information.activity a ON a.aid = (SELECT aid FROM decoration.decorationactivityitem x WHERE x.daiId = i.daiId)
 WHERE i.activityName = '双人海外玩翻天' AND i.content LIKE '%存量补齐%'
-  AND NOT EXISTS (SELECT 1 FROM decoration.decorationactivityrecord r WHERE r.daiId = i.daiId);
+  AND NOT EXISTS (SELECT 1 FROM decoration.decorationactivityrecord r WHERE r.daiid = i.daiId);
 
 -- 涉及订单 40 个, 共 94 张
