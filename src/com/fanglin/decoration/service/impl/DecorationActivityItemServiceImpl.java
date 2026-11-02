@@ -788,24 +788,32 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 
 		int entitlement = 0;
 
+		// 现存有效的规则段(回收时反向匹配: 券行content不含任何现存段=该券的发放依据已消失, 优先回收)
+		Set<String> activeSegments = new HashSet<String>();
+
 		for (ActivityRulePO rule : rules) {
 			asids.add(rule.getAsid());
 			if (rule.getRuleType() == ActivityRulePO.RULETYPE_SIGN_INT) {
 				if (signed) {
 					entitlement += rule.getTickets();
 					ruleSegments.add("签约赠" + rule.getTickets() + "张");
+					activeSegments.add("签约赠" + rule.getTickets() + "张");
 				}
 			} else if (rule.getRuleType() == ActivityRulePO.RULETYPE_EVERY_INT) {
 				if (rule.getPerAmount() != null && rule.getPerAmount() > 0 && net >= rule.getPerAmount()) {
 					long count = (net / rule.getPerAmount()) * rule.getTickets();
 					if (rule.getMaxTickets() > 0 && count > rule.getMaxTickets()) count = rule.getMaxTickets();
 					entitlement += (int) count;
-					ruleSegments.add("预存主材款每满" + (rule.getPerAmount() / 1000) + "元赠" + rule.getTickets() + "张" + (rule.getMaxTickets() > 0 ? "(封顶" + rule.getMaxTickets() + "张)" : ""));
+					String segment = "预存主材款每满" + (rule.getPerAmount() / 1000) + "元赠" + rule.getTickets() + "张";
+					ruleSegments.add(segment);
+					activeSegments.add(segment.replace("(封顶" + rule.getMaxTickets() + "张)", ""));
 				}
 			} else if (rule.getRuleType() == ActivityRulePO.RULETYPE_LADDER_INT) {
 				if (net >= rule.getThreshold()) {
 					entitlement += rule.getTickets();
-					ruleSegments.add("预存主材款满" + (rule.getThreshold() / 1000) + "元赠" + rule.getTickets() + "张");
+					String segment = "预存主材款满" + (rule.getThreshold() / 1000) + "元赠" + rule.getTickets() + "张";
+					ruleSegments.add(segment);
+					activeSegments.add(segment);
 				}
 			}
 		}
@@ -876,12 +884,35 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 				decorationActivityRecordDao.save(new DecorationActivityRecordPO().init(activityPO.getAid(), decorationActivityItemPO, DecorationActivityItemPO.STATUS_INIT_INT, creater, "抽奖券自动发放"));
 			}
 		} else {
-			// 回收: 候选=state初始(0), 抽奖(11)/已领(10)等非初始态天然不在候选, 已参与抽奖的券绝不回收; daiId 逆序(后发的先收)
+			// 回收: 退"发放依据已消失"的券——券行content与现存规则段比对, 不含任何现存段(如签约赠因退单消失/某档每满因提现跌破)的优先收;
+			// 同组内 daiId 逆序(后发的先收); 候选=state初始(0), 抽奖(11)/已领(10)等非初始态天然不在候选, 已参与抽奖的券绝不回收
 			List<DecorationActivityItemPO> candidates = decorationActivityItemDao.queryDecorationActivityItemForLottery(orderId, new ArrayList<Long>(asids));
+
+			List<DecorationActivityItemPO> candidatesPool = new ArrayList<DecorationActivityItemPO>();
+
+			List<DecorationActivityItemPO> orphanFirst = new ArrayList<DecorationActivityItemPO>();
+
+			for (DecorationActivityItemPO decorationActivityItemPO : candidates) {
+				String couponContent = decorationActivityItemPO.getContent() == null ? "" : decorationActivityItemPO.getContent();
+
+				boolean active = false;
+
+				for (String segment : activeSegments) {
+					if (couponContent.contains(segment)) {
+						active = true;
+						break;
+					}
+				}
+
+				if (!active) orphanFirst.add(decorationActivityItemPO);
+				else candidatesPool.add(decorationActivityItemPO);
+			}
+
+			orphanFirst.addAll(candidatesPool); // 孤儿券(依据消失)在前, 仍有效依据的在后兜底
 
 			int abated = 0;
 
-			for (DecorationActivityItemPO decorationActivityItemPO : candidates) {
+			for (DecorationActivityItemPO decorationActivityItemPO : orphanFirst) {
 				if (abated >= -diff) break;
 
 				decorationActivityItemPO.setState(DecorationActivityItemPO.STATUS_UNVALID_INT);
