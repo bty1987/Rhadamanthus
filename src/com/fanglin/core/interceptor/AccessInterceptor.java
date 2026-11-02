@@ -95,28 +95,25 @@ public class AccessInterceptor extends AbstractInterceptor {
 
 			if (operationVO.getThrough() != null && operationVO.getThrough() == OperationPO.THROUGH_PASS_INT) {
 
-				// 影子收集(收集期核心修复): PASS分支此前直接放行不收集, 致through=1层授权数据永远缺失(2026-11-01实锤);
-				// 现放行同时尝试补登(主角色+附加角色, 公司显式行)。无认证/解密失败/要素不全静默跳过,
-				// 任何异常只记warn不阻断放行——PASS分支职责优先, 登录页/验证码类(无authentication)天然不收集。
-				try {
+				// 影子收集(收集期核心修复): PASS分支此前直接放行不收集, 致through=1层授权数据永远缺失;
+				// 现放行同时尝试补登(主角色+附加角色, 公司显式行)。
+				// 🔴全局死规则: 不用try-catch, 前置校验替代——AESHelper.decrypt失败返回null(工具类内部消化)判空跳过;
+				// 四要素不全跳过(fillOperation内同款守卫双保险); 员工不存在等FLException与关闸分支同语义, 上抛外层统一处理。
+				String passAuth = $authentication != null ? $authentication : CookieUtil.getCookie(request, Constant.COOKIE_AUTHENTICATION);
 
-					String passAuthentication = $authentication != null ? $authentication : CookieUtil.getCookie(request, Constant.COOKIE_AUTHENTICATION);
+				if (passAuth != null) {
 
-					if (passAuthentication != null) {
+					String passDecrypt = AESHelper.decrypt(passAuth, SystemConfig.getString("encryptKey"), SystemConfig.getString("encryptIv"));
 
-						String passDecryptString = AESHelper.decrypt(passAuthentication, SystemConfig.getString("encryptKey"), SystemConfig.getString("encryptIv"));
+					if (passDecrypt != null && !"".equals(passDecrypt)) {
 
-						if (passDecryptString != null && !"".equals(passDecryptString)) {
+						Authentication passAuthRef = new Authentication(passDecrypt);
 
-							Authentication passAuthenticationRef = new Authentication(passDecryptString);
-
-							if (passAuthenticationRef.getUserId() != null) {
-								operationService.fillOperation(passAuthenticationRef.getUserId(), passAuthenticationRef.getRoleId(), passAuthenticationRef.getCompany(), actionName);
-							}
+						// getCompany系基本类型int无判空语义; fillOperation内四要素守卫双保险
+						if (passAuthRef.getUserId() != null && passAuthRef.getRoleId() != null) {
+							operationService.fillOperation(passAuthRef.getUserId(), passAuthRef.getRoleId(), passAuthRef.getCompany(), actionName);
 						}
 					}
-				} catch (Exception e) {
-					logger.warn("PASS分支影子收集失败(不阻断放行): actionName={}", actionName, e);
 				}
 
 				return invocation.invoke();
