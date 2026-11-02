@@ -758,7 +758,7 @@ public class MemberServiceImpl implements MemberService {
 			decorationActivityItemPO.setNo(memberOrderVO.getPointOrderId());
 			decorationActivityItemPO.setAtttype(DecorationActivityItemPO.ATTTYPE_ONLINE_INT);
 			// 类型: 支持传参, 未传兜底物品(10-16拍板; 存量1204行仍为券口径不受影响)
-			decorationActivityItemPO.setType(memberOrderItemVO.getType() != null ? memberOrderItemVO.getType() : DecorationActivityItemPO.TYPE_THING_INT);
+			decorationActivityItemPO.setType(memberOrderItemVO.getType() != null ? memberOrderItemVO.getType() : (awardStockPO != null ? awardStockPO.getType() : DecorationActivityItemPO.TYPE_THING_INT));
 			decorationActivityItemPO.setStateType(DecorationActivityItemPO.STATUSTYPE_POINTSHOP_INT);
 			decorationActivityItemPO.setNum((int) Arith.mul(memberOrderItemVO.getNum(), 1000000l));
 			decorationActivityItemPO.setMoney((int) Arith.mul(memberOrderItemVO.getPoint(), 1000000l));
@@ -866,7 +866,7 @@ public class MemberServiceImpl implements MemberService {
 		decorationActivityItemPO.setNo(memberOrderVO.getPointOrderId());
 		decorationActivityItemPO.setAtttype(DecorationActivityItemPO.ATTTYPE_ONLINE_INT);
 		// 类型: 支持传参, 未传兜底物品(10-16拍板; 存量1204行仍为券口径不受影响)
-		decorationActivityItemPO.setType(memberOrderItemVO.getType() != null ? memberOrderItemVO.getType() : DecorationActivityItemPO.TYPE_THING_INT);
+		decorationActivityItemPO.setType(memberOrderItemVO.getType() != null ? memberOrderItemVO.getType() : (awardStockPO != null ? awardStockPO.getType() : DecorationActivityItemPO.TYPE_THING_INT));
 		decorationActivityItemPO.setStateType(DecorationActivityItemPO.STATUSTYPE_POINTSHOP_INT);
 		decorationActivityItemPO.setNum((int) Arith.mul(memberOrderItemVO.getNum(), 1000000l));
 		decorationActivityItemPO.setMoney((int) Arith.mul(memberOrderItemVO.getPoint(), 1000000l));
