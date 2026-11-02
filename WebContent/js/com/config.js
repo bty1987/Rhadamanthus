@@ -66,7 +66,7 @@ var config = {
     },
 
     // 文件上传配置
-    isAliOss: false,  // 是否启用阿里云 OSS 上传（false=本地上传，true=OSS上传）
+    isAliOss: true,  // 是否启用阿里云 OSS 上传（false=本地上传，true=OSS上传）2026-11-02接入fl-prod-erp/fl-daily-erp STS直传
     uploadMode: 'sts', // OSS 上传模式：'sts'（STS临时凭证，推荐）| 'policy'（旧Policy签名，兼容）
 
     // OSS 图片显示配置（type=3 时使用）

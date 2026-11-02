@@ -1956,6 +1956,7 @@ var com = {
             'height': commonConfig.height,
             'buttonClass': commonConfig.buttonClass,
             'buttonText': commonConfig.buttonText,
+            'uploader': "", // 直传模式:置空并配合huploadify的_sendBlob守卫,跳过控件自身POST(huploadify已配对修改)
 
             // 上传开始：先申请 STS 凭证再直传
             'onUploadStart': function(file) {
@@ -1965,8 +1966,8 @@ var com = {
                     var sts = data.stsToken;
 
                     // 用 STS 三元组构建 OSS 客户端
-                    var client = new OSS.Wrapper({
-                        region: sts.region,
+                    var client = new (OSS.Wrapper || OSS)({ // Wrapper为v5写法,v6浏览器包直接用OSS构造器
+                        region: sts.region.indexOf('oss-') === 0 ? sts.region : 'oss-' + sts.region, // ali-oss要求带oss-前缀
                         accessKeyId: sts.accessKeyId,
                         accessKeySecret: sts.accessKeySecret,
                         stsToken: sts.securityToken,

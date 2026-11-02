@@ -384,6 +384,9 @@
 			  	},
 			  	//上传文件片
 			  	_sendBlob : function(xhr, file, originalfile){
+			  		if(!option.uploader){ // uploader为空=直传模式(STS/OSS),上传由onUploadStart自行接管,跳过控件自身向页面URL的POST
+			  			return;
+			  		}
 			  		if(file.status===0){
 						file.status = 1;//标记为正在上传
 						uploadManager.uploadStopped = false;
