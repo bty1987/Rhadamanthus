@@ -774,8 +774,11 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 		// 预存主材净额 = 活动窗口内收款(type=1) − 提现(type=0), 仅有效流水(DAO sum)
 		long net = paymentDao.amountPayment(orderId, PaymentPO.PAYMENT_PAYMENTTYPE_MATERIAL_INT, activityPO.getStartTime(), activityPO.getEndTime());
 
-		// 签约判定: 合同签约时间落在活动窗口内(重签单 contractTime 为原签约时间, 同样命中)
-		boolean signed = decorationPO.getContractTime() != null && (activityPO.getStartTime() == null || !decorationPO.getContractTime().before(activityPO.getStartTime())) && (activityPO.getEndTime() == null || !decorationPO.getContractTime().after(activityPO.getEndTime()));
+		// 签约判定: 合同签约时间落在活动窗口内(重签单 contractTime 为原签约时间, 同样命中);
+		// 退单排除: 合同终止(6)/废单(5)视同未签约 → 已发签约赠随应得数下降被自动回收
+		boolean retired = Arrays.asList(DecorationPO.STATUS_TERMINATION_INT, DecorationPO.STATUS_WASTE_INT).contains(decorationPO.getStatus());
+
+		boolean signed = !retired && decorationPO.getContractTime() != null && (activityPO.getStartTime() == null || !decorationPO.getContractTime().before(activityPO.getStartTime())) && (activityPO.getEndTime() == null || !decorationPO.getContractTime().after(activityPO.getEndTime()));
 
 		// 应得券数 = Σ规则行: 1=签约赠 2=预存每满(可封顶) 3=预存阶梯; 顺手收集发放说明段
 		Set<Long> asids = new HashSet<Long>();

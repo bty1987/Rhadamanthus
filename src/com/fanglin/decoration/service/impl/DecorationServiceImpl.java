@@ -68,6 +68,7 @@ import com.fanglin.decoration.po.DecorationOperatePO;
 import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.decoration.po.DecorationUserPO;
 import com.fanglin.decoration.service.DecorationAdditionService;
+import com.fanglin.decoration.service.DecorationActivityItemService;
 import com.fanglin.decoration.service.DecorationService;
 import com.fanglin.decoration.vo.DecorationInfoVO;
 import com.fanglin.decoration.vo.DecorationVO;
@@ -168,6 +169,9 @@ public class DecorationServiceImpl implements DecorationService {
 
 	@Autowired
 	private DecorationOperateDao decorationOperateDao;
+
+	@Autowired
+	private DecorationActivityItemService decorationActivityItemService;
 
 	@Autowired
 	private DecorationDesignDepartmentRightDao decorationDesignDepartmentRightDao;
@@ -1667,6 +1671,9 @@ public class DecorationServiceImpl implements DecorationService {
 		messageQueuingDao.save(new MessageQueuingPO().init(orderId, "terminalDecoration", "{\"orderId\":\"" + orderId + "\",\"userId\":\"" + userId + "\",\"event\":\"CUSTOMER_STATUS_CHANGED\"" + (decorationPO.getBusitype() != null ? ",\"busiTypeName\":\"" + decorationPO.getBusitype().getName() + "\"" : "") + "}"));
 		// 生成消息提示数据
 		messageQueuingDao.save(new MessageCueuingPO().init(orderId, "terminalDecoration", "{\"orderId\":\"" + orderId + "\",\"userId\":\"" + userId + "\",\"event\":\"CUSTOMER_STATUS_CHANGED\"" + (decorationPO.getBusitype() != null ? ",\"busiTypeName\":\"" + decorationPO.getBusitype().getName() + "\"" : "") + buildCcidArgs(orderId) + "}"));
+
+		// 抽奖券引擎插桩: 合同终止 → 签约赠回收(signed=false 应得下降, 未中奖券置失效)
+		decorationActivityItemService.issueDecorationActivityItemByOrderId(orderId, userId);
 	}
 
 	@Override
