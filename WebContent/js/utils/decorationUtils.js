@@ -729,8 +729,8 @@ var decorationUtils = {
 
                 var item = decorationActivityItems[i];
 
-                // 抽奖券(no=LT前缀, atttype=1 线上): 精简展示——只显示编号/活动/奖励/状态/时间, 不参与优惠合计, 无操作按钮
-                if (item.no != null && item.no.indexOf("LT") == 0) {
+                // 抽奖券(activityName=双人海外玩翻天, atttype=1 线上): 精简展示——只显示编号/活动/奖励/状态/时间, 不参与优惠合计, 无操作按钮
+                if (item.activityName == "双人海外玩翻天") {
 
                     var ltStateMap = { 0: "初始", 1: "失效", 2: "已领", 3: "退货", 10: "已领", 11: "抽奖" };
 
