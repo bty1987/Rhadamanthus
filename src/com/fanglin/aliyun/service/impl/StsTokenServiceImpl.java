@@ -29,6 +29,10 @@ public class StsTokenServiceImpl implements StsTokenService {
 
 	public static final Logger logger = LoggerFactory.getLogger(StsTokenServiceImpl.class);
 
+	/** 读凭证缓存:预签名场景每次请求都AssumeRole会撞STS限流,凭证15分钟内复用(提前2分钟失效) */
+	private static volatile StsTokenVO cachedReadToken;
+	private static volatile long cachedReadTokenExpireAt;
+
 	@Autowired
 	private OssProperties ossProperties;
 
@@ -39,7 +43,22 @@ public class StsTokenServiceImpl implements StsTokenService {
 
 	@Override
 	public StsTokenVO assumeReadToken(String sessionName) throws Exception {
-		return doAssumeRole(ossProperties.getReadRoleArn(), sessionName);
+
+		StsTokenVO cached = cachedReadToken;
+		if (cached != null && System.currentTimeMillis() < cachedReadTokenExpireAt) {
+			return cached;
+		}
+
+		synchronized (this) {
+			if (cachedReadToken != null && System.currentTimeMillis() < cachedReadTokenExpireAt) {
+				return cachedReadToken;
+			}
+
+			StsTokenVO token = doAssumeRole(ossProperties.getReadRoleArn(), sessionName);
+			cachedReadToken = token;
+			cachedReadTokenExpireAt = System.currentTimeMillis() + Math.max(0L, (ossProperties.getStsExpireSeconds() - 120L)) * 1000L;
+			return token;
+		}
 	}
 
 	/**

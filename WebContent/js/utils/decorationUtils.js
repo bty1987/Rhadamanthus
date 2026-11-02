@@ -1973,7 +1973,8 @@ var decorationUtils = {
         var $img = $('<img></img>').attr('width', size).attr('height', size);
         var $imgA = $('<a></a>').addClass('cboxElement').attr('target', '_blank').append($img).appendTo($li);
 
-        com.showImg($img, i.path, size, size, i.name);
+        // href接showImg返回值(原图地址,与balanceCutpay同姿势);OSS直传路径下预签名地址由showImg异步升级href
+        $imgA.attr('href', com.showImg($img, i.path, size, size, i.name));
 
         var $tags = $('<div></div>').addClass('tags').appendTo($li);
         var $nameHolder = $('<span></span>').addClass('label-holder').appendTo($tags);
@@ -2400,7 +2401,8 @@ var decorationUtils = {
         }).append($img).appendTo($li);
 
         if (userBase.userPhoto != "" && userBase.userPhoto != null && userBase.userPhoto != undefined) {
-            com.showImg($img, userBase.userPhoto, 180, 180, userBase.currentName);
+            // href接showImg返回值(原图地址);OSS直传路径下预签名地址由showImg异步升级href
+            $imgA.attr('href', com.showImg($img, userBase.userPhoto, 180, 180, userBase.currentName));
         }
         var $tags = $('<div></div>').addClass('tags').appendTo($li);
         var $isShowHolder = $('<span></span>').addClass('label-holder').appendTo($tags);

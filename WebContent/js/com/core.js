@@ -1073,6 +1073,42 @@ var com = {
 
         var $media = '', imgUrl = '', sourceUrl = '';
 
+        if (url && url.indexOf('aliyuncs.com/') > -1) {
+            // OSS直传对象:走预签名显示(私有桶OSS原生方式),不经showImg.do文件服务器
+            // 单次请求同时取原图(url)与缩略图(thumbUrl),结果按key缓存复用,避免图片墙批量请求
+            var ossKey = url.slice(url.indexOf('aliyuncs.com/') + 'aliyuncs.com/'.length);
+            var $imgA = $e.closest('a'); // 现役姿势:href=showImg返回值承载大图,如balanceCutpay/decorationUtils
+
+            var applyPresign = function(presigned) {
+
+                if (width && height && presigned.thumbUrl) {
+                    $e.attr('src', presigned.thumbUrl);
+                } else if (presigned.url) {
+                    $e.attr('src', presigned.url);
+                }
+                if (presigned.url) {
+                    $e.attr('layer-src', presigned.url).attr('alt', alt || '');
+                    $imgA.attr('href', presigned.url);
+                }
+            };
+
+            var cached = com._ossPresignCache && com._ossPresignCache[ossKey + '_' + (width || 0) + 'x' + (height || 0)];
+            if (cached) {
+                applyPresign(cached);
+                return url;
+            }
+
+            com.post(api.upgrade.getProgressiveImage, { 'ossConfig.key': ossKey, 'ossConfig.width': width, 'ossConfig.height': height }, function(data) {
+
+                if (data.ossConfig && data.ossConfig.url) {
+                    com._ossPresignCache = com._ossPresignCache || {};
+                    com._ossPresignCache[ossKey + '_' + (width || 0) + 'x' + (height || 0)] = data.ossConfig;
+                    applyPresign(data.ossConfig);
+                }
+            });
+            return url; // 同步返回原始URL保持调用方兼容,预签名地址异步回填
+        }
+
         if (type == 1) {
             // 钉钉图片处理
             $media = config.dmedia;
@@ -1961,6 +1997,11 @@ var com = {
             // 上传开始：先申请 STS 凭证再直传
             'onUploadStart': function(file) {
 
+                // 定位本文件的队列行(STS直传绕过huploadify自身XHR收尾,进度与行清理需自行接管)
+                var $item = container.find('.uploadify-queue-item').filter(function() {
+                    return $('.up_filename', this).text() === file.name;
+                });
+
                 com.post(api.upgrade.getOssStsToken, {}, function(data) {
 
                     var sts = data.stsToken;
@@ -1987,17 +2028,32 @@ var com = {
                     client.multipartUpload(objectKey, file, {
                         partSize: 5 * 1024 * 1024,
                         progress: function(p) {
-                            // p 为 0~1 进度，可在此更新进度条
+                            // p 为 0~1,回填huploadify队列行进度条
+                            if ($item.length) {
+                                $item.find('.uploadify-progress-bar').css('width', (p * 100).toFixed(2) + '%');
+                            }
                         }
                     }).then(function(result) {
 
-                        // 统一成功响应格式
+                        // 行收尾对齐huploadify原生成功流:进度拉满,延迟后整行淡出(含上传/删除按钮)
+                        if ($item.length) {
+                            $item.find('.uploadify-progress-bar').css('width', '100%');
+                            setTimeout(function() {
+                                $item.fadeOut();
+                            }, 1000); // 对齐huploadify默认removeTimeout
+                            container.find('.selectbtn').val(''); // 清空文件选择框,同名文件可重选
+                        }
+
+                        // 统一成功响应格式(字段对齐后端uploadImg/uploadOther的resUrl形状,业务回调普遍读data.resUrl;strutsUploadsFileName为老上传响应字段,存量业务仍在消费)
                         var result2 = {
                             errorCode: 0,
                             errorMsg: '上传成功',
+                            resUrl: sts.host + '/' + objectKey,
                             uploadPath: sts.host + '/' + objectKey,
+                            strutsUploadsFileName: file.name,
                             fileName: file.name,
                             fileSize: file.size,
+                            filesize: file.size,
                             fileType: file.type
                         };
 
@@ -2067,6 +2123,11 @@ var com = {
             // OSS上传开始事件
             'onUploadStart': function(file) {
 
+                // 定位本文件的队列行(直传绕过huploadify自身XHR收尾,成功后需自行清理)
+                var $item = container.find('.uploadify-queue-item').filter(function() {
+                    return $('.up_filename', this).text() === file.name;
+                });
+
                 // 步骤1: 获取OSS上传签名
                 com.post(api.upgrade.generatePostSignature, {
                     "ossConfig.accessKeyId": ossArgs.accessKeyId,
@@ -2095,13 +2156,25 @@ var com = {
                         timeout: config.uploadTimeout * 1000,
                         success: function(response) {
 
-                            // 构建成功响应对象（统一格式）
+                            // 行收尾对齐huploadify原生成功流
+                            if ($item.length) {
+                                $item.find('.uploadify-progress-bar').css('width', '100%');
+                                setTimeout(function() {
+                                    $item.fadeOut();
+                                }, 1000);
+                                container.find('.selectbtn').val('');
+                            }
+
+                            // 构建成功响应对象（统一格式,字段对齐后端resUrl形状;strutsUploadsFileName为老上传响应字段,存量业务仍在消费）
                             var result = {
                                 errorCode: 0,
                                 errorMsg: '上传成功',
+                                resUrl: ossConfig.host + '/' + (ossArgs.dir ? ossArgs.dir + file.name : file.name),
                                 uploadPath: ossConfig.host + '/' + (ossArgs.dir ? ossArgs.dir + file.name : file.name),
+                                strutsUploadsFileName: file.name,
                                 fileName: file.name,
                                 fileSize: file.size,
+                                filesize: file.size,
                                 fileType: file.type
                             };
 

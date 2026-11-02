@@ -34,6 +34,8 @@ public class OssConfigVO {
 
 	private String url;
 
+	private String thumbUrl;
+
 	public OssConfigVO() {
 		super();
 	}
@@ -149,5 +151,13 @@ public class OssConfigVO {
 
 	public void setUrl(String url) {
 		this.url = url;
+	}
+
+	public String getThumbUrl() {
+		return thumbUrl;
+	}
+
+	public void setThumbUrl(String thumbUrl) {
+		this.thumbUrl = thumbUrl;
 	}
 }

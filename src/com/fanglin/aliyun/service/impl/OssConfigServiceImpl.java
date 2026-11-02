@@ -23,7 +23,9 @@ import com.fanglin.aliyun.config.OssProperties;
 import com.fanglin.aliyun.dao.OssConfigDao;
 import com.fanglin.aliyun.po.OssConfigPO;
 import com.fanglin.aliyun.service.OssConfigService;
+import com.fanglin.aliyun.service.StsTokenService;
 import com.fanglin.aliyun.vo.OssConfigVO;
+import com.fanglin.aliyun.vo.StsTokenVO;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
 
@@ -105,8 +107,57 @@ public class OssConfigServiceImpl implements OssConfigService {
 		return ossConfig;
 	}
 
+	@Autowired
+	private StsTokenService stsTokenService;
+
 	@Override
 	public OssConfigVO getProgressiveImage(OssConfigVO ossConfig) {
+
+		// STS通道优先:用读角色临时凭证预签名(私有桶OSS原生显示,不走文件服务器showImg.do)
+		// 单次调用同时签原图(url)与缩略图(thumbUrl),凭证由StsTokenService缓存复用,避免图片墙批量撞STS限流
+		if (ossProperties.isEnabled()) {
+
+			try {
+
+				StsTokenVO sts = stsTokenService.assumeReadToken("presign");
+
+				OSS ossClient = null;
+
+				try {
+
+					ossClient = new OSSClientBuilder().build(ossProperties.getEndpoint(), sts.getAccessKeyId(), sts.getAccessKeySecret(), sts.getSecurityToken());
+
+					String objectName = String.format("%s%s", ossConfig.getDir() == null ? "" : ossConfig.getDir(), ossConfig.getKey());
+					String bucket = ossConfig.getBucket() != null ? ossConfig.getBucket() : sts.getBucket();
+
+					if (ossClient.doesObjectExist(bucket, objectName)) {
+
+						Date expiration = new Date(System.currentTimeMillis() + ossProperties.getPresignExpireSeconds() * 1000);
+
+						GeneratePresignedUrlRequest req = new GeneratePresignedUrlRequest(bucket, objectName, HttpMethod.GET);
+						req.setExpiration(expiration);
+						ossConfig.setUrl(ossClient.generatePresignedUrl(req).toString());
+
+						if (ossConfig.getWidth() != null && ossConfig.getHeight() != null) {
+							GeneratePresignedUrlRequest thumbReq = new GeneratePresignedUrlRequest(bucket, objectName, HttpMethod.GET);
+							thumbReq.setExpiration(expiration);
+							thumbReq.setProcess(String.format("image/resize,m_fill,w_%s,h_%s", ossConfig.getWidth(), ossConfig.getHeight()));
+							ossConfig.setThumbUrl(ossClient.generatePresignedUrl(thumbReq).toString());
+						}
+					}
+
+					return ossConfig;
+
+				} finally {
+					if (ossClient != null) {
+						ossClient.shutdown();
+					}
+				}
+
+			} catch (Exception e) {
+				logger.error("STS预签名失败,回退旧Policy通道", e);
+			}
+		}
 
 		OssConfigPO ossConfigPO = ossConfigDao.querySignature(ossConfig.getAccessKeyId(), ossConfig.getEndpoint(), ossConfig.getBucket(), ossConfig.getDir());
 
