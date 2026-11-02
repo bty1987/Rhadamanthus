@@ -861,7 +861,8 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 				decorationActivityItemPO.setOrderId(orderId);
 				decorationActivityItemPO.setActivityName(activityPO.getName());
 				decorationActivityItemPO.setActivityItemName(awardStockPO.getName());
-				decorationActivityItemPO.setType(DecorationActivityItemPO.TYPE_COUPON_INT);
+				// 类型: 20=抽奖券(区别于0=活动券, 抽奖券不参与券/物品优惠合计; 引擎发放口径与count/recycle的type过滤三处一致)
+				decorationActivityItemPO.setType(DecorationActivityItemPO.TYPE_LOTTERY_ACTIVITY_ITEM);
 				decorationActivityItemPO.setState(DecorationActivityItemPO.STATUS_INIT_INT);
 				decorationActivityItemPO.setAtttype(DecorationActivityItemPO.ATTTYPE_ONLINE_INT);
 				decorationActivityItemPO.setNum(1);

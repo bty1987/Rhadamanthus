@@ -736,7 +736,8 @@ var decorationUtils = {
 
                 var item = decorationActivityItems[i];
 
-                if (item.atttype == 1 && item.state == 0) {
+                // 抽奖券(type=20): 精简卡绘制, 不参与优惠合计与线下物品操作按钮
+                if (item.type == 20) {
 
                     // 首个抽奖券出现时创建分组(标题+容器), 无抽奖券则整个分组不渲染
                     if (lotteryItempack == null) {

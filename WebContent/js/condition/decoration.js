@@ -865,7 +865,8 @@ var decorationActivityItemTypeDatas = [
     { key: 1, value: "物品" },
     { key: 10, value: "优惠额度-券" },
     { key: 11, value: "优惠额度-物品" },
-    { key: 12, value: "优惠额度-红包" }
+    { key: 12, value: "优惠额度-红包" },
+    { key: 20, value: "抽奖券" }
 ];
 
 Condition.addupRule("decorationActivityItem", {

@@ -290,7 +290,7 @@ public class DecorationActivityItemDaoImpl extends DaoImpl<DecorationActivityIte
 	public List<DecorationActivityItemPO> queryDecorationActivityItemForLottery(String orderId, List<Long> asids) {
 		return session().createCriteria(DecorationActivityItemPO.class)
 				.add(Restrictions.eq(DecorationActivityItemPO.COLUMN_ORDERID_STR, orderId))
-				.add(Restrictions.eq(DecorationActivityItemPO.COLUMN_TYPE_STR, DecorationActivityItemPO.TYPE_COUPON_INT))
+				.add(Restrictions.eq(DecorationActivityItemPO.COLUMN_TYPE_STR, DecorationActivityItemPO.TYPE_LOTTERY_ACTIVITY_ITEM))
 				.add(Restrictions.eq(DecorationActivityItemPO.COLUMN_STATUS_STR, DecorationActivityItemPO.STATUS_INIT_INT))
 				.add(Restrictions.in("asid", asids))
 				.addOrder(Order.desc("daiId")).list();
@@ -303,7 +303,7 @@ public class DecorationActivityItemDaoImpl extends DaoImpl<DecorationActivityIte
 
 		BigInteger count = (BigInteger) session().createSQLQuery(sql)
 				.setString("orderId", orderId)
-				.setShort("type", DecorationActivityItemPO.TYPE_COUPON_INT)
+				.setShort("type", DecorationActivityItemPO.TYPE_LOTTERY_ACTIVITY_ITEM)
 				.setParameterList("asids", asids)
 				.setParameterList("excludeStates", Arrays.asList(DecorationActivityItemPO.STATUS_UNVALID_INT, DecorationActivityItemPO.STATUS_RETREAT_INT))
 				.uniqueResult();
