@@ -5,7 +5,7 @@ jQuery(function($) {
         items: {
             contract: com.focusPage("#contract"),
             contractGroup: com.focusPage("#contractGroup"),
-            vendor: com.focusPage("#vendor"),
+            vendor: com.focusPage("#vendor").find("input[name='vendor']"),
             customerAuthInfo: com.focusPage("#customerAuthInfo"),
         },
 
@@ -71,7 +71,7 @@ jQuery(function($) {
 
         // 编辑已有合同时, 厂商回显合同行上的provider
         if (addDecorationContract.contract && addDecorationContract.contract.provider) {
-            addDecorationContract.items.vendor.val(String(addDecorationContract.contract.provider));
+            addDecorationContract.items.vendor.val([String(addDecorationContract.contract.provider)]);
         }
     });
     
@@ -127,7 +127,7 @@ jQuery(function($) {
         params.decoration.contractargs.cid = cid;
 
         // 切换模板时厂商跟随模板path推导(厂商由模板固定, 生成即绑定, 不可手动覆盖)
-        addDecorationContract.items.vendor.val(addDecorationContract.vendorOfPath(page));
+        addDecorationContract.items.vendor.val([addDecorationContract.vendorOfPath(page)]);
 
         addDecorationContract.htmls.contractPopUp.load(page);
     });

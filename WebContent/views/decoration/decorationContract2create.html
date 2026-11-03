@@ -1,3 +1,20 @@
+<style>
+    /* 签署厂商只读展示: 药丸按钮式(原生radio隐藏, 禁用态=模板固定不可切换) */
+    .provider-radio { display: inline-block; margin: 0 10px 0 0; cursor: pointer; }
+    .provider-radio input { display: none; }
+    .provider-radio span {
+        display: inline-block; padding: 5px 18px; border-radius: 16px;
+        border: 1px solid #d5d5d5; background: #fff; color: #555;
+        font-size: 13px; line-height: 18px; user-select: none;
+        transition: all .15s ease;
+    }
+    .provider-radio input:checked + span {
+        background: #2679b5; border-color: #2679b5; color: #fff;
+        box-shadow: 0 1px 3px rgba(38, 121, 181, .35);
+    }
+    .provider-radio input:disabled + span { opacity: .6; border-color: #d5d5d5; color: #555; background: #f5f5f5; cursor: not-allowed; }
+</style>
+
 <div class="row">
     <div class="widget-container-span col-md-12">
         <div class="widget-box transparent">
@@ -18,13 +35,11 @@
 
                         <div class="form-group" id="vendorGroup">
                             <label for="vendor" class="col-sm-2 control-label no-padding-right">签署厂商</label>
-                            <div class="col-sm-10">
-                                <!-- 厂商由模板固定(生成即绑定,不可切换): 只读展示, 切模板自动跟随 -->
-                                <select class='col-xs-10 col-sm-7' id='vendor' disabled>
-                                    <option value="">按模板路由</option>
-                                    <option value="2">e签宝</option>
-                                    <option value="1">法大大</option>
-                                </select>
+                            <div class="col-sm-10" style="padding-top: 4px;" id="vendor">
+                                <!-- 厂商由模板固定(生成即绑定,不可切换): 只读展示, 切模板自动跟随; 未选模板=两者均未点亮(按模板路由) -->
+                                <label class="provider-radio"><input type="radio" name="vendor" value="1" disabled><span>法大大</span></label>
+                                <label class="provider-radio"><input type="radio" name="vendor" value="2" disabled><span>e签宝</span></label>
+                                <small style="margin-left: 4px; color: #999;">按模板自动路由, 切模板跟随</small>
                             </div>
                         </div>
 

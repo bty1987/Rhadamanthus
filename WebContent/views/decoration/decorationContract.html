@@ -76,11 +76,27 @@
                         <form class="form-horizontal">
                             <div class="col-md-12">
 
+                            <style>
+                                /* 认证平台单选: 药丸按钮式(原生radio隐藏保留选中语义, label原生toggle) */
+                                .provider-radio { display: inline-block; margin: 0 10px 0 0; cursor: pointer; }
+                                .provider-radio input { display: none; }
+                                .provider-radio span {
+                                    display: inline-block; padding: 5px 18px; border-radius: 16px;
+                                    border: 1px solid #d5d5d5; background: #fff; color: #555;
+                                    font-size: 13px; line-height: 18px; user-select: none;
+                                    transition: all .15s ease;
+                                }
+                                .provider-radio:hover span { border-color: #2679b5; color: #2679b5; }
+                                .provider-radio input:checked + span {
+                                    background: #2679b5; border-color: #2679b5; color: #fff;
+                                    box-shadow: 0 1px 3px rgba(38, 121, 181, .35);
+                                }
+                            </style>
                             <div class="form-group">
                                 <label class="col-sm-3 control-label no-padding-right">认证平台</label>
-                                <div class="col-sm-9" style="padding-top: 7px;">
-                                    <label class="radio-inline"><input type="radio" name="authProvider" value="1" checked> 法大大</label>
-                                    <label class="radio-inline"><input type="radio" name="authProvider" value="2"> e签宝</label>
+                                <div class="col-sm-9" style="padding-top: 4px;">
+                                    <label class="provider-radio"><input type="radio" name="authProvider" value="1" checked><span>法大大</span></label>
+                                    <label class="provider-radio"><input type="radio" name="authProvider" value="2"><span>e签宝</span></label>
                                 </div>
                             </div>
 

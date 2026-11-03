@@ -15,7 +15,7 @@ jQuery(function($) {
             videopath: com.focusPage("#videopath"),
             noticePath: com.focusPage("#noticePath"),
             atttype: com.focusPage("#atttype"),
-            vendor: com.focusPage("#vendor")
+            vendor: com.focusPage("#vendor").find("input[name='vendor']")
         },
 
         cid: null
@@ -25,7 +25,7 @@ jQuery(function($) {
     // 厂商切换: 法大大=文件上传(现状); e签宝=流程模板(无需本地文件, path固定esign://docTemplate, 编号填e签宝流程模板ID)
     contract.items.vendor.on('change', function() {
 
-        var esign = contract.items.vendor.val() == "2";
+        var esign = contract.items.vendor.filter(":checked").val() == "2";
 
         com.focusPage("#esignTipRow").toggle(esign);
         com.focusPage("#pathRow").toggle(!esign);
@@ -271,8 +271,8 @@ jQuery(function($) {
         com.cleanItems(contract.items);
 
         // 新增默认法大大形态, 重置表单行显隐; 新增可选厂商, 编辑态锁定不可切换(模板厂商建好即固定)
-        contract.items.vendor.removeAttr("disabled");
-        contract.items.vendor.val("1").trigger('change');
+        contract.items.vendor.prop("disabled", false);
+        contract.items.vendor.val(["1"]).trigger('change');
 
         com.popup4model('#layerAdd', '添加', null, function() {
 
@@ -293,8 +293,8 @@ jQuery(function($) {
 
         // 编辑按path前缀回显厂商(esign://=签宝流程模板, 其余=文件上传), 触发change切换表单形态;
         // 编辑态厂商锁定不可切换(模板厂商建好即固定, 后续生成均按此厂商路由)
-        contract.items.vendor.val((v.path || "").indexOf("esign://") == 0 ? "2" : "1").trigger('change');
-        contract.items.vendor.attr("disabled", "disabled");
+        contract.items.vendor.val([(v.path || "").indexOf("esign://") == 0 ? "2" : "1"]).trigger('change');
+        contract.items.vendor.prop("disabled", true);
     }
 
     function saveData() {
