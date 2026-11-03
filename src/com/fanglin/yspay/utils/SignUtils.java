@@ -137,6 +137,7 @@ public class SignUtils {
 	 * @param responseJsonStr
 	 * @return
 	 */
+	@SuppressWarnings("deprecation")
 	public static boolean checkSign(String responseJsonStr, String charset) {
 
 		String methodStr = ReUtil.get("ysepay(.*?)response", responseJsonStr, 0);
@@ -154,8 +155,7 @@ public class SignUtils {
 	/**
 	 * 根据证书存放路径、src来获取证书签名
 	 * 
-	 * @param params
-	 *            要签名的map
+	 * @param params 要签名的map
 	 * @return 签名后的字符串
 	 */
 	public static String getSign(Map<String, String> params) {
