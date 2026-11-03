@@ -269,7 +269,7 @@ public class ApprovalDecorationActivityServiceImpl implements ApprovalDecoration
 			}
 
 			// 添加类操作同步 messagecueuing: args=orderId/daiId/designerId(装修单设计师, 空则缺省)
-			messageQueuingDao.save(new MessageCueuingPO().init(decorationPO.getOrderId(), "addDecorationActivityItem", "{\"orderId\":\"" + decorationPO.getOrderId() + "\",\"daiId\":\"" + decorationActivityItemPO.getDaiId() + "\"" + (decorationPO.getDesigner() != null ? ",\"designerId\":\"" + decorationPO.getDesigner().getUserId() + "\"" : "") + "}"));
+			messageQueuingDao.save(new MessageCueuingPO().init(decorationPO.getOrderId(), "approveDecorationActivityItem", "{\"orderId\":\"" + decorationPO.getOrderId() + "\",\"daiId\":\"" + decorationActivityItemPO.getDaiId() + "\"" + (decorationPO.getDesigner() != null ? ",\"designerId\":\"" + decorationPO.getDesigner().getUserId() + "\"" : "") + "}"));
 		}
 
 		List<DecorationActivityPO> decorationActivityPOs = decorationActivityDao.queryDecorationActivityByOrderId(decorationPO.getOrderId());
