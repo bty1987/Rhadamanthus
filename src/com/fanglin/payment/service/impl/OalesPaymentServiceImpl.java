@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.fanglin.communion.vo.DepartmentVO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
+import com.fanglin.decoration.service.DecorationActivityItemService;
 import com.fanglin.decoration.vo.DecorationVO;
 import com.fanglin.payment.dao.OalesPaymentDao;
 import com.fanglin.payment.dao.OalesReceiptDao;
@@ -47,6 +48,9 @@ public class OalesPaymentServiceImpl implements OalesPaymentService {
 
 	@Autowired
 	private UserDao userDao;
+
+	@Autowired
+	private DecorationActivityItemService decorationActivityItemService;
 
 	@Override
 	public void pageOalesPayment(Paging paging, List<Filter> filters, OalesPaymentVO oalesPayment, int company, String companyType) throws FLException {
@@ -266,6 +270,11 @@ public class OalesPaymentServiceImpl implements OalesPaymentService {
 
 		oalesDao.update(oales);
 
+		// 抽奖券引擎插桩: 外销款收款实时同步发券(活动基数=主材预存+外销款, 上涨补发); 引擎内无在窗活动自识别返回
+		if (oalesPayment.getOrderId() != null && oalesPayment.getOrderId().length() > 0) {
+			decorationActivityItemService.issueDecorationActivityItemByOrderId(oalesPayment.getOrderId(), userId);
+		}
+
 		return 0;
 	}
 
@@ -342,6 +351,11 @@ public class OalesPaymentServiceImpl implements OalesPaymentService {
 		oalesPayment.setCompany(oales.getCompany());
 
 		oalesPaymentDao.update(oalesPayment);
+
+		// 抽奖券引擎插桩: 外销款退款实时同步回收(活动基数下降, 未中奖券置失效)
+		if (oalesPayment.getOrderId() != null && oalesPayment.getOrderId().length() > 0) {
+			decorationActivityItemService.issueDecorationActivityItemByOrderId(oalesPayment.getOrderId(), userId);
+		}
 
 		return 0;
 	}

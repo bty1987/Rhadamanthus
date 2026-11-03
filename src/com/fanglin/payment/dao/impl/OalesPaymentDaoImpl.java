@@ -1,5 +1,7 @@
 package com.fanglin.payment.dao.impl;
 
+import java.math.BigDecimal;
+import java.sql.Timestamp;
 import java.util.List;
 
 import org.hibernate.criterion.Restrictions;
@@ -79,6 +81,17 @@ public class OalesPaymentDaoImpl extends DaoImpl<OalesPaymentPO> implements Oale
 	@Override
 	public OalesPaymentPO queryOalesPayment(long osid) {
 		return (OalesPaymentPO) session().createCriteria(OalesPaymentPO.class).add(Restrictions.eq("osid", osid)).setMaxResults(1).uniqueResult();
+	}
+
+	@Override
+	public long amountOalesPaymentForLottery(String orderId, Timestamp startTime, Timestamp endTime) {
+
+		// 活动窗口外销款净额: 收款(type=0)为正, 退款(type=1)为负; 仅计入已付(1)/已确认(2), 排除初始(0); 归因=oalespayment.orderId(装修单号), 窗口锚=收款时间
+		String sql = "SELECT SUM(CASE WHEN op.type = 0 THEN op.referMoney WHEN op.type = 1 THEN -op.referMoney ELSE 0 END) FROM payment.oalespayment op, payment.oalesreceipt r WHERE op.orderId = :orderId AND op.status IN (1, 2) AND op.orid = r.orid AND r.collectTime >= :startTime AND r.collectTime <= :endTime";
+
+		BigDecimal sqlQuery = (BigDecimal) session().createSQLQuery(sql).setString("orderId", orderId).setTimestamp("startTime", startTime).setTimestamp("endTime", endTime).uniqueResult();
+
+		return sqlQuery == null ? 0L : sqlQuery.longValue();
 	}
 
 	private void queryFilterExecute(PagingQuery<?> query, List<Filter> filters) throws FLException {

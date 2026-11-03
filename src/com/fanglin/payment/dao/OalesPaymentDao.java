@@ -1,5 +1,6 @@
 package com.fanglin.payment.dao;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 import com.fanglin.core.dao.Dao;
@@ -23,5 +24,7 @@ public interface OalesPaymentDao extends Dao<OalesPaymentPO> {
 	public List<OalesPaymentPO> queryOalesPaymentForNotInitByOrid(long orid);
 
 	public OalesPaymentPO queryOalesPayment(long osid);
+
+	public long amountOalesPaymentForLottery(String orderId, Timestamp startTime, Timestamp endTime);
 
 }

@@ -54,6 +54,7 @@ import com.fanglin.information.po.ActivityRulePO;
 import com.fanglin.information.po.AwardRecordPO;
 import com.fanglin.information.po.AwardStockPO;
 import com.fanglin.information.po.MessageCueuingPO;
+import com.fanglin.payment.dao.OalesPaymentDao;
 import com.fanglin.payment.dao.PaymentDao;
 import com.fanglin.payment.po.PaymentPO;
 import com.fanglin.personel.dao.UserDao;
@@ -120,6 +121,9 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 
 	@Autowired
 	private PaymentDao paymentDao;
+
+	@Autowired
+	private OalesPaymentDao oalesPaymentDao;
 
 	@Override
 	public List<DecorationActivityItemVO> queryDecorationActivityItemByOrderId(DecorationVO decorationVO) {
@@ -771,8 +775,11 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 
 		if (rules.isEmpty()) return 0;
 
-		// 预存主材净额 = 活动窗口内收款(type=1) − 提现(type=0), 仅有效流水(DAO sum)
-		long net = paymentDao.amountPayment(orderId, PaymentPO.PAYMENT_PAYMENTTYPE_MATERIAL_INT, activityPO.getStartTime(), activityPO.getEndTime());
+		// 预存主材净额 = 活动窗口内收款(type=1) − 提现(type=0) + 外销款净额(收款type=0 − 退款type=1, 同窗同状态口径), 仅有效流水(DAO sum);
+		// 外销款在基数源头并入, 与主材预存合并参与每满/阶梯计算(独立基数已被需求否决), 无在窗活动时引擎在上方已返回, 不触达求和
+		long oalesNet = oalesPaymentDao.amountOalesPaymentForLottery(orderId, activityPO.getStartTime(), activityPO.getEndTime());
+
+		long net = paymentDao.amountPayment(orderId, PaymentPO.PAYMENT_PAYMENTTYPE_MATERIAL_INT, activityPO.getStartTime(), activityPO.getEndTime()) + oalesNet;
 
 		// 签约判定: 合同签约时间落在活动窗口内(重签单 contractTime 为原签约时间, 同样命中);
 		// 退单排除: 合同终止(6)/废单(5)/重签(4, 合同作废待重签)视同未签约 → 已发签约赠随应得数下降被自动回收;
@@ -835,7 +842,14 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 				issueContentBuilder.append(ruleSegments.get(i));
 			}
 
-			String issueContent = issueContentBuilder.append("；活动期内主材预存净额").append(net / 1000).append("元").toString();
+			// 尾部摘要(非回收锚, 规则段措辞才是): 外销款参与合并基数时追加读数, 便于事后对账
+			issueContentBuilder.append("；活动期内主材预存净额").append(net / 1000).append("元");
+
+			if (oalesNet != 0) {
+				issueContentBuilder.append("(含外销款").append(oalesNet / 1000).append("元)");
+			}
+
+			String issueContent = issueContentBuilder.toString();
 
 			ActivityRulePO rule = rules.get(0);
 
