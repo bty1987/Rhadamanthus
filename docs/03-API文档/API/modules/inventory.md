@@ -3382,3 +3382,296 @@
     "inventoryDrawing.idid": 1
 }
 ```
+
+## 补录接口 (自动生成 2026-11-03)
+
+
+> **类**: `api.inventory.AccessoriesAction`
+
+
+##### `查询` pageAccessoriesForSupplier
+
+- **接口**: `pageAccessoriesForSupplier.do`
+- **方法**: `pageAccessoriesForSupplier()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `paging` | Paging | 分页参数 , 参照 [paging](../check_rule.html#page) |
+| `accessories` | AccessoriesVO |  |
+
+##### `查询` queryAccessoriesByAid
+
+- **接口**: `queryAccessoriesByAid.do`
+- **方法**: `queryAccessoriesByAid()`
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `accessories` | AccessoriesVO |
+
+##### `查询` queryAccessoriesBalance
+
+- **接口**: `queryAccessoriesBalance.do`
+- **方法**: `queryAccessoriesBalance()`
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `accessories` | AccessoriesVO |
+
+##### `新增` bindAccessories
+
+- **接口**: `bindAccessories.do`
+- **方法**: `bindAccessories()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `accessories` | AccessoriesVO |  |
+
+##### `更新` updateAccessoriesForAssign
+
+- **接口**: `updateAccessoriesForAssign.do`
+- **方法**: `updateAccessoriesForAssign()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `accessories` | AccessoriesVO |  |
+
+##### `更新` balanceAccessories
+
+- **接口**: `balanceAccessories.do`
+- **方法**: `balanceAccessories()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `accessories` | AccessoriesVO |  |
+
+##### `查询` checkAccessoriesItem
+
+- **接口**: `checkAccessoriesItem.do`
+- **方法**: `checkAccessoriesItem()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `accessories` | AccessoriesVO |  |
+| `accessoriesItem` | AccessoriesItemVO |  |
+
+
+> **类**: `api.inventory.AccessoriesChargeAction`
+
+
+##### `查询` queryAccessoriesCharge
+
+- **接口**: `queryAccessoriesCharge.do`
+- **方法**: `queryAccessoriesCharge()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `accessoriesCharge` | AccessoriesChargeVO |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `accessoriesCharges` | List<AccessoriesChargeVO> |
+
+##### `新增` addAccessoriesCharge
+
+- **接口**: `addAccessoriesCharge.do`
+- **方法**: `addAccessoriesCharge()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `accessoriesCharge` | AccessoriesChargeVO |  |
+
+##### `更新` updateAccessoriesCharge
+
+- **接口**: `updateAccessoriesCharge.do`
+- **方法**: `updateAccessoriesCharge()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `accessoriesCharge` | AccessoriesChargeVO |  |
+
+##### `删除` deleteAccessoriesCharge
+
+- **接口**: `deleteAccessoriesCharge.do`
+- **方法**: `deleteAccessoriesCharge()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `accessoriesCharge` | AccessoriesChargeVO |  |
+
+##### `更新` batchAccessoriesCharge
+
+- **接口**: `batchAccessoriesCharge.do`
+- **方法**: `batchAccessoriesCharge()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `accessoriesCharge` | AccessoriesChargeVO |  |
+| `accessoriesCharges` | List<AccessoriesChargeVO> |  |
+
+
+> **类**: `api.inventory.OccessoriesAction`
+
+
+##### `更新` updateOccessoriesForBalance
+
+- **接口**: `updateOccessoriesForBalance.do`
+- **方法**: `updateOccessoriesForBalance()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `occessories` | OccessoriesVO |  |
+
+##### `更新` batchBalanceOccessories
+
+- **接口**: `batchBalanceOccessories.do`
+- **方法**: `batchBalanceOccessories()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `occessoriess` | List<OccessoriesVO> |  |
+
+##### `撤销` rejectOccessories
+
+- **接口**: `rejectOccessories.do`
+- **方法**: `rejectOccessories()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `occessories` | OccessoriesVO |  |
+
+##### `更新` updateOccessoriesForRemark
+
+- **接口**: `updateOccessoriesForRemark.do`
+- **方法**: `updateOccessoriesForRemark()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `occessories` | OccessoriesVO |  |
+
+##### `撤销` cancelOccessories
+
+- **接口**: `cancelOccessories.do`
+- **方法**: `cancelOccessories()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `occessories` | OccessoriesVO |  |
+
+
+> **类**: `api.inventory.OccessoriesChargeAction`
+
+
+##### `查询` queryOccessoriesCharge
+
+- **接口**: `queryOccessoriesCharge.do`
+- **方法**: `queryOccessoriesCharge()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `occessoriesCharge` | OccessoriesChargeVO |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `occessoriesCharges` | List<OccessoriesChargeVO> |
+
+##### `新增` addOccessoriesCharge
+
+- **接口**: `addOccessoriesCharge.do`
+- **方法**: `addOccessoriesCharge()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `occessoriesCharge` | OccessoriesChargeVO |  |
+
+##### `更新` updateOccessoriesCharge
+
+- **接口**: `updateOccessoriesCharge.do`
+- **方法**: `updateOccessoriesCharge()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `occessoriesCharge` | OccessoriesChargeVO |  |
+
+##### `删除` deleteOccessoriesCharge
+
+- **接口**: `deleteOccessoriesCharge.do`
+- **方法**: `deleteOccessoriesCharge()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `occessoriesCharge` | OccessoriesChargeVO |  |
+
+##### `更新` batchOccessoriesCharge
+
+- **接口**: `batchOccessoriesCharge.do`
+- **方法**: `batchOccessoriesCharge()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `occessoriesCharge` | OccessoriesChargeVO |  |
+| `occessoriesCharges` | List<OccessoriesChargeVO> |  |
+
+
+> **类**: `api.inventory.OccessoriesItemAction`
+
+
+##### `查询` amountOccessoriesItem
+
+- **接口**: `amountOccessoriesItem.do`
+- **方法**: `amountOccessoriesItem()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `occessoriesItem` | OccessoriesItemVO |  |
+| `occessories` | OccessoriesVO |  |
+

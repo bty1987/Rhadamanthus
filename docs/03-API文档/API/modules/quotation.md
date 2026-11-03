@@ -7191,3 +7191,1560 @@
     ...
 }
 ```
+
+## 补录接口 (自动生成 2026-11-03)
+
+
+> **类**: `api.quotation.AddReduceAction`
+
+
+##### `更新` updateAddReduceForAccount
+
+- **接口**: `updateAddReduceForAccount.do`
+- **方法**: `updateAddReduceForAccount()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `addReduce` | AddReduceVO |  |
+
+##### `更新` openAddReduceForSalary
+
+- **接口**: `openAddReduceForSalary.do`
+- **方法**: `openAddReduceForSalary()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `addReduce` | AddReduceVO |  |
+
+##### `撤销` rejectAddReduceForSalary
+
+- **接口**: `rejectAddReduceForSalary.do`
+- **方法**: `rejectAddReduceForSalary()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `addReduce` | AddReduceVO |  |
+
+
+> **类**: `api.quotation.AddReduceItemAction`
+
+
+##### `更新` updateAddReduceItemForIndex
+
+- **接口**: `updateAddReduceItemForIndex.do`
+- **方法**: `updateAddReduceItemForIndex()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `addReduceItems` | List<AddReduceItemVO> |  |
+
+
+> **类**: `api.quotation.ExtensionAction`
+
+
+##### `查询` amountExtension
+
+- **接口**: `amountExtension.do`
+- **方法**: `amountExtension()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `extension` | ExtensionVO |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `amount` | Long |
+
+
+> **类**: `api.quotation.ExtensionItemAction`
+
+
+##### `更新` upgradeExtensionItem
+
+- **接口**: `upgradeExtensionItem.do`
+- **方法**: `upgradeExtensionItem()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `extensionItem` | ExtensionItemVO |  |
+| `extension` | ExtensionVO |  |
+
+
+> **类**: `api.quotation.NormoodItemAction`
+
+
+##### `查询` amountNormoodItem
+
+- **接口**: `amountNormoodItem.do`
+- **方法**: `amountNormoodItem()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `normoodItem` | NormoodItemVO |  |
+
+
+> **类**: `api.quotation.NormriceItemAction`
+
+
+##### `查询` queryNormriceItemByType
+
+- **接口**: `queryNormriceItemByType.do`
+- **方法**: `queryNormriceItemByType()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `normriceItem` | NormriceItemVO |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `normriceItems` | List<NormriceItemVO> |
+
+##### `更新` confirmNormriceItem
+
+- **接口**: `confirmNormriceItem.do`
+- **方法**: `confirmNormriceItem()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `normriceItem` | NormriceItemVO |  |
+
+##### `撤销` rejectNormriceItem
+
+- **接口**: `rejectNormriceItem.do`
+- **方法**: `rejectNormriceItem()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `normriceItem` | NormriceItemVO |  |
+
+
+> **类**: `api.quotation.NormtimeItemAction`
+
+
+##### `查询` queryNormtimeItem
+
+- **接口**: `queryNormtimeItem.do`
+- **方法**: `queryNormtimeItem()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `normtimeItem` | NormtimeItemVO |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `normtimeItems` | List<NormtimeItemVO> |
+
+##### `新增` addNormtimeItem
+
+- **接口**: `addNormtimeItem.do`
+- **方法**: `addNormtimeItem()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `normtimeItem` | NormtimeItemVO |  |
+| `normtion` | NormtionVO |  |
+
+##### `删除` deleteNormtimeItem
+
+- **接口**: `deleteNormtimeItem.do`
+- **方法**: `deleteNormtimeItem()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `normtimeItem` | NormtimeItemVO |  |
+| `normtion` | NormtionVO |  |
+
+
+> **类**: `api.quotation.NormtionAction`
+
+
+##### `查询` queryQuotationNormtime
+
+- **接口**: `queryQuotationNormtime.do`
+- **方法**: `queryQuotationNormtime()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `quotation` | QuotationVO |  |
+| `schedule` | Short |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `quotationFunctionAreas` | List<QuotationFunctionAreaVO> |
+
+##### `查询` queryExtensionNormtime
+
+- **接口**: `queryExtensionNormtime.do`
+- **方法**: `queryExtensionNormtime()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `extension` | ExtensionVO |  |
+| `schedule` | Short |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `extensions` | List<ExtensionVO> |
+
+##### `查询` queryAddReduceNormtime
+
+- **接口**: `queryAddReduceNormtime.do`
+- **方法**: `queryAddReduceNormtime()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `addReduce` | AddReduceVO |  |
+| `schedule` | Short |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `addReduces` | List<AddReduceVO> |
+
+##### `查询` amountQuotationNormtime
+
+- **接口**: `amountQuotationNormtime.do`
+- **方法**: `amountQuotationNormtime()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `quotation` | QuotationVO |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `normtimes` | List<NormtimeVO> |
+
+##### `查询` amountExtensionNormtime
+
+- **接口**: `amountExtensionNormtime.do`
+- **方法**: `amountExtensionNormtime()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `extension` | ExtensionVO |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `normtimes` | List<NormtimeVO> |
+
+##### `查询` amountAddReduceNormtime
+
+- **接口**: `amountAddReduceNormtime.do`
+- **方法**: `amountAddReduceNormtime()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `addReduce` | AddReduceVO |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `normtimes` | List<NormtimeVO> |
+
+##### `新增` makeNormtion
+
+- **接口**: `makeNormtion.do`
+- **方法**: `makeNormtion()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `normtion` | NormtionVO |  |
+
+
+> **类**: `api.quotation.ProtationAction`
+
+
+##### `更新` updateProtationForProfit
+
+- **接口**: `updateProtationForProfit.do`
+- **方法**: `updateProtationForProfit()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `protation` | ProtationVO |  |
+
+
+> **类**: `api.quotation.QeasureAction`
+
+
+##### `查询` pageQeasure
+
+- **接口**: `pageQeasure.do`
+- **方法**: `pageQeasure()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `paging` | Paging | 分页参数 , 参照 [paging](../check_rule.html#page) |
+
+##### `查询` queryQeasureByOrderId
+
+- **接口**: `queryQeasureByOrderId.do`
+- **方法**: `queryQeasureByOrderId()`
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `qeasure` | QeasureVO |
+
+##### `查询` queryQeasureByQmid
+
+- **接口**: `queryQeasureByQmid.do`
+- **方法**: `queryQeasureByQmid()`
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `qeasure` | QeasureVO |
+
+##### `查询` queryQeasureFunctionArea
+
+- **接口**: `queryQeasureFunctionArea.do`
+- **方法**: `queryQeasureFunctionArea()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `qeasureFunctionArea` | QeasureFunctionAreaVO |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `qeasureFunctionAreas` | List<QeasureFunctionAreaVO> |
+
+##### `查询` queryQeasureFunctionAreaByQmfaId
+
+- **接口**: `queryQeasureFunctionAreaByQmfaId.do`
+- **方法**: `queryQeasureFunctionAreaByQmfaId()`
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `qeasureFunctionArea` | QeasureFunctionAreaVO |
+
+##### `新增` makeQeasure
+
+- **接口**: `makeQeasure.do`
+- **方法**: `makeQeasure()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `qeasure` | QeasureVO |  |
+
+##### `新增` makeQeasureFunctionArea
+
+- **接口**: `makeQeasureFunctionArea.do`
+- **方法**: `makeQeasureFunctionArea()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `qeasure` | QeasureVO |  |
+| `qeasureFunctionArea` | QeasureFunctionAreaVO |  |
+
+##### `更新` handleQeasure
+
+- **接口**: `handleQeasure.do`
+- **方法**: `handleQeasure()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `qeasure` | QeasureVO |  |
+
+##### `更新` handleQeasureFunctionArea
+
+- **接口**: `handleQeasureFunctionArea.do`
+- **方法**: `handleQeasureFunctionArea()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `qeasure` | QeasureVO |  |
+| `qeasureFunctionArea` | QeasureFunctionAreaVO |  |
+
+##### `删除` deleteQeasureFunctionArea
+
+- **接口**: `deleteQeasureFunctionArea.do`
+- **方法**: `deleteQeasureFunctionArea()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `qeasureFunctionArea` | QeasureFunctionAreaVO |  |
+
+
+> **类**: `api.quotation.QuotationAction`
+
+
+##### `更新` submitQuotation
+
+- **接口**: `submitQuotation.do`
+- **方法**: `submitQuotation()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `quotation` | QuotationVO |  |
+
+##### `更新` auditQuotation
+
+- **接口**: `auditQuotation.do`
+- **方法**: `auditQuotation()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `quotation` | QuotationVO |  |
+
+##### `更新` finishQuotation
+
+- **接口**: `finishQuotation.do`
+- **方法**: `finishQuotation()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `quotation` | QuotationVO |  |
+
+
+> **类**: `api.quotation.QuotationAssignAction`
+
+
+##### `更新` autoQuotationAssign
+
+- **接口**: `autoQuotationAssign.do`
+- **方法**: `autoQuotationAssign()`
+- **说明**: 正向自动分配（设计师发起）
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `quotationAssign` | QuotationAssignVO |  |
+
+##### `新增` addQuotationAssignRequestForAuto
+
+- **接口**: `addQuotationAssignRequestForAuto.do`
+- **方法**: `addQuotationAssignRequestForAuto()`
+- **说明**: 入待分配队列（按 orderId 自动补全维度，写 PENDING 记录） <p> 与 autoQuotationAssign 解耦：前端先调本接口入队，再调 autoQuotationAssign 尝试消费。
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `quotationAssign` | QuotationAssignVO |  |
+
+##### `更新` manualQuotationAssign
+
+- **接口**: `manualQuotationAssign.do`
+- **方法**: `manualQuotationAssign()`
+- **说明**: 手动分配报价员（预算经理派单）
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `quotationAssign` | QuotationAssignVO |  |
+
+##### `更新` reassignQuotationAssign
+
+- **接口**: `reassignQuotationAssign.do`
+- **方法**: `reassignQuotationAssign()`
+- **说明**: 重新分配报价员（更换预算员）
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `quotationAssign` | QuotationAssignVO |  |
+
+##### `更新` finishQuotationAssign
+
+- **接口**: `finishQuotationAssign.do`
+- **方法**: `finishQuotationAssign()`
+- **说明**: 完成报价单后触发反向自动分配
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `quotationAssign` | QuotationAssignVO |  |
+
+##### `更新` transferQuotationAssign
+
+- **接口**: `transferQuotationAssign.do`
+- **方法**: `transferQuotationAssign()`
+- **说明**: 转交报价员（预算员将任务转交给其他预算员）
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `quotationAssign` | QuotationAssignVO |  |
+
+
+> **类**: `api.quotation.QuotationAssignConfigAction`
+
+
+##### `查询` pageQuotationAssignConfig
+
+- **接口**: `pageQuotationAssignConfig.do`
+- **方法**: `pageQuotationAssignConfig()`
+- **说明**: 分页查询配置列表
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `paging` | Paging | 分页参数 , 参照 [paging](../check_rule.html#page) |
+
+##### `查询` queryQuotationAssignConfigById
+
+- **接口**: `queryQuotationAssignConfigById.do`
+- **方法**: `queryQuotationAssignConfigById()`
+- **说明**: 查询配置详情（用于编辑回显）
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `quotationAssignConfig` | QuotationAssignConfigVO |
+
+##### `新增` createQuotationAssignConfig
+
+- **接口**: `createQuotationAssignConfig.do`
+- **方法**: `createQuotationAssignConfig()`
+- **说明**: 新增配置
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `quotationAssignConfig` | QuotationAssignConfigVO |  |
+
+##### `更新` updateQuotationAssignConfig
+
+- **接口**: `updateQuotationAssignConfig.do`
+- **方法**: `updateQuotationAssignConfig()`
+- **说明**: 更新配置
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `quotationAssignConfig` | QuotationAssignConfigVO |  |
+
+##### `删除` deleteQuotationAssignConfig
+
+- **接口**: `deleteQuotationAssignConfig.do`
+- **方法**: `deleteQuotationAssignConfig()`
+- **说明**: 删除配置
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `quotationAssignConfig` | QuotationAssignConfigVO |  |
+
+##### `更新` updateQuotationAssignConfigForStatus
+
+- **接口**: `updateQuotationAssignConfigForStatus.do`
+- **方法**: `updateQuotationAssignConfigForStatus()`
+- **说明**: 启用/禁用配置
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `quotationAssignConfig` | QuotationAssignConfigVO |  |
+
+##### `更新` updateQuotationAssignConfigForAssign
+
+- **接口**: `updateQuotationAssignConfigForAssign.do`
+- **方法**: `updateQuotationAssignConfigForAssign()`
+- **说明**: 切换自动分配模式
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `quotationAssignConfig` | QuotationAssignConfigVO |  |
+
+
+> **类**: `api.quotation.QuotationAssignRecordAction`
+
+
+##### `查询` pageQuotationAssignRecord
+
+- **接口**: `pageQuotationAssignRecord.do`
+- **方法**: `pageQuotationAssignRecord()`
+- **说明**: 分页查询分配记录列表
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `paging` | Paging | 分页参数 , 参照 [paging](../check_rule.html#page) |
+
+##### `查询` queryQuotationAssignRecordById
+
+- **接口**: `queryQuotationAssignRecordById.do`
+- **方法**: `queryQuotationAssignRecordById()`
+- **说明**: 查询分配记录详情
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `quotationAssignRecord` | QuotationAssignRecordVO |
+
+##### `新增` createQuotationAssignRecord
+
+- **接口**: `createQuotationAssignRecord.do`
+- **方法**: `createQuotationAssignRecord()`
+- **说明**: 创建分配记录（通常由系统自动调用，不对外开放）
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `quotationAssignRecord` | QuotationAssignRecordVO |  |
+
+##### `查询` queryQuotationAssignRecordByOrderId
+
+- **接口**: `queryQuotationAssignRecordByOrderId.do`
+- **方法**: `queryQuotationAssignRecordByOrderId()`
+- **说明**: 根据装修单号查询分配记录列表
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `quotationAssignRecord` | QuotationAssignRecordVO |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `quotationAssignRecords` | List<QuotationAssignRecordVO> |
+
+
+> **类**: `api.quotation.QuotationAssignRequestAction`
+
+
+##### `查询` pageQuotationAssignRequest
+
+- **接口**: `pageQuotationAssignRequest.do`
+- **方法**: `pageQuotationAssignRequest()`
+- **说明**: 分页查询分配请求列表
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `paging` | Paging | 分页参数 , 参照 [paging](../check_rule.html#page) |
+
+##### `查询` pageQuotationAssignRequestByUserId
+
+- **接口**: `pageQuotationAssignRequestByUserId.do`
+- **方法**: `pageQuotationAssignRequestByUserId()`
+- **说明**: 预算员自助查询：分页查询当前登录预算员的分配请求 通过 queryUserId() 获取当前登录用户，直接作为 Service 参数传递
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `paging` | Paging | 分页参数 , 参照 [paging](../check_rule.html#page) |
+
+##### `查询` queryQuotationAssignRequestById
+
+- **接口**: `queryQuotationAssignRequestById.do`
+- **方法**: `queryQuotationAssignRequestById()`
+- **说明**: 查询分配请求详情（用于编辑回显）
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `quotationAssignRequest` | QuotationAssignRequestVO |
+
+##### `新增` createQuotationAssignRequest
+
+- **接口**: `createQuotationAssignRequest.do`
+- **方法**: `createQuotationAssignRequest()`
+- **说明**: 新增分配请求
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `quotationAssignRequest` | QuotationAssignRequestVO |  |
+
+##### `更新` updateQuotationAssignRequest
+
+- **接口**: `updateQuotationAssignRequest.do`
+- **方法**: `updateQuotationAssignRequest()`
+- **说明**: 更新分配请求
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `quotationAssignRequest` | QuotationAssignRequestVO |  |
+
+##### `删除` deleteQuotationAssignRequest
+
+- **接口**: `deleteQuotationAssignRequest.do`
+- **方法**: `deleteQuotationAssignRequest()`
+- **说明**: 删除分配请求
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `quotationAssignRequest` | QuotationAssignRequestVO |  |
+
+
+> **类**: `api.quotation.QuotationAssignTalkAction`
+
+
+##### `查询` queryQuotationAssignTalkByOrderId
+
+- **接口**: `queryQuotationAssignTalkByOrderId.do`
+- **方法**: `queryQuotationAssignTalkByOrderId()`
+- **说明**: 根据装修单号查询沟通消息列表
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `quotationAssignTalk` | QuotationAssignTalkVO |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `quotationAssignTalks` | List<QuotationAssignTalkVO> |
+
+##### `更新` sendQuotationAssignTalk
+
+- **接口**: `sendQuotationAssignTalk.do`
+- **方法**: `sendQuotationAssignTalk()`
+- **说明**: 发送沟通消息 <p> 前端传递 quotationAssignTalk.orderId 和 quotationAssignTalk.content， 后端自动从当前登录用户获取发送人信息
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `quotationAssignTalk` | QuotationAssignTalkVO |
+
+
+> **类**: `api.quotation.QuotationAssignUserRuleAction`
+
+
+##### `查询` queryQuotationAssignUserRuleItem
+
+- **接口**: `queryQuotationAssignUserRuleItem.do`
+- **方法**: `queryQuotationAssignUserRuleItem()`
+- **说明**: 根据规则ID查询明细列表
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `quotationAssignUserRuleItem` | QuotationAssignUserRuleItemVO |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `quotationAssignUserRuleItems` | List<QuotationAssignUserRuleItemVO> |
+
+##### `查询` pageQuotationAssignUserRule
+
+- **接口**: `pageQuotationAssignUserRule.do`
+- **方法**: `pageQuotationAssignUserRule()`
+- **说明**: 分页查询预算员规则列表
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `paging` | Paging | 分页参数 , 参照 [paging](../check_rule.html#page) |
+
+##### `查询` queryQuotationAssignUserRuleById
+
+- **接口**: `queryQuotationAssignUserRuleById.do`
+- **方法**: `queryQuotationAssignUserRuleById()`
+- **说明**: 查询规则详情（含明细，用于编辑回显）
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `quotationAssignUserRule` | QuotationAssignUserRuleVO |
+
+##### `新增` createQuotationAssignUserRule
+
+- **接口**: `createQuotationAssignUserRule.do`
+- **方法**: `createQuotationAssignUserRule()`
+- **说明**: 新增预算员规则（同时创建明细项）
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `quotationAssignUserRule` | QuotationAssignUserRuleVO |  |
+
+##### `更新` updateQuotationAssignUserRule
+
+- **接口**: `updateQuotationAssignUserRule.do`
+- **方法**: `updateQuotationAssignUserRule()`
+- **说明**: 更新预算员规则（同时更新明细项）
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `quotationAssignUserRule` | QuotationAssignUserRuleVO |  |
+
+##### `删除` deleteQuotationAssignUserRule
+
+- **接口**: `deleteQuotationAssignUserRule.do`
+- **方法**: `deleteQuotationAssignUserRule()`
+- **说明**: 删除预算员规则（同时删除明细项）
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `quotationAssignUserRule` | QuotationAssignUserRuleVO |  |
+
+##### `更新` updateQuotationAssignUserRuleForStatus
+
+- **接口**: `updateQuotationAssignUserRuleForStatus.do`
+- **方法**: `updateQuotationAssignUserRuleForStatus()`
+- **说明**: 启用/停止预算员
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `quotationAssignUserRule` | QuotationAssignUserRuleVO |  |
+
+##### `查询` pageQuotationAssignUserRuleSummary
+
+- **接口**: `pageQuotationAssignUserRuleSummary.do`
+- **方法**: `pageQuotationAssignUserRuleSummary()`
+- **说明**: 全集团预算员汇总查询（含实时任务数和状态）
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `paging` | Paging | 分页参数 , 参照 [paging](../check_rule.html#page) |
+
+##### `更新` syncQuotationAssignUserRuleStatus
+
+- **接口**: `syncQuotationAssignUserRuleStatus.do`
+- **方法**: `syncQuotationAssignUserRuleStatus()`
+- **说明**: 同步所有预算员的任务数和状态
+
+##### `查询` queryQuotationAssignUserRuleForAvaile
+
+- **接口**: `queryQuotationAssignUserRuleForAvaile.do`
+- **方法**: `queryQuotationAssignUserRuleForAvaile()`
+- **说明**: 根据公司/部门/装修类型查询可分配的预算员规则列表（反向查询）
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `company` | int |  |
+| `department` | Integer |  |
+| `decorationType` | Short |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `quotationAssignUserRules` | List<QuotationAssignUserRuleVO> |
+
+##### `查询` pageQuotationAssignUserRuleItem
+
+- **接口**: `pageQuotationAssignUserRuleItem.do`
+- **方法**: `pageQuotationAssignUserRuleItem()`
+- **说明**: 分页查询预算员规则明细列表
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `paging` | Paging | 分页参数 , 参照 [paging](../check_rule.html#page) |
+| `quotationAssignUserRuleItem` | QuotationAssignUserRuleItemVO |  |
+
+##### `新增` createQuotationAssignUserRuleItem
+
+- **接口**: `createQuotationAssignUserRuleItem.do`
+- **方法**: `createQuotationAssignUserRuleItem()`
+- **说明**: 新增预算员规则明细
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `quotationAssignUserRuleItem` | QuotationAssignUserRuleItemVO |  |
+
+##### `更新` updateQuotationAssignUserRuleItem
+
+- **接口**: `updateQuotationAssignUserRuleItem.do`
+- **方法**: `updateQuotationAssignUserRuleItem()`
+- **说明**: 更新预算员规则明细
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `quotationAssignUserRuleItem` | QuotationAssignUserRuleItemVO |  |
+
+##### `删除` deleteQuotationAssignUserRuleItem
+
+- **接口**: `deleteQuotationAssignUserRuleItem.do`
+- **方法**: `deleteQuotationAssignUserRuleItem()`
+- **说明**: 删除预算员规则明细
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `quotationAssignUserRuleItem` | QuotationAssignUserRuleItemVO |  |
+
+##### `新增` createQuotationAssignUserRuleItemWithRule
+
+- **接口**: `createQuotationAssignUserRuleItemWithRule.do`
+- **方法**: `createQuotationAssignUserRuleItemWithRule()`
+- **说明**: 独立页面新增预算员规则明细（自动查找/创建UserRule）
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `quotationAssignUserRuleItem` | QuotationAssignUserRuleItemVO |  |
+
+
+> **类**: `api.quotation.QuotationFunctionAction`
+
+
+##### `查询` pageQuotationFunction
+
+- **接口**: `pageQuotationFunction.do`
+- **方法**: `pageQuotationFunction()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `paging` | Paging | 分页参数 , 参照 [paging](../check_rule.html#page) |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `quotationFunctions` | List<QuotationFunctionVO> |
+
+##### `新增` addQuotationFunction
+
+- **接口**: `addQuotationFunction.do`
+- **方法**: `addQuotationFunction()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `quotationFunction` | QuotationFunctionVO |  |
+
+##### `更新` updateQuotationFunction
+
+- **接口**: `updateQuotationFunction.do`
+- **方法**: `updateQuotationFunction()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `quotationFunction` | QuotationFunctionVO |  |
+
+##### `删除` deleteQuotationFunction
+
+- **接口**: `deleteQuotationFunction.do`
+- **方法**: `deleteQuotationFunction()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `quotationFunction` | QuotationFunctionVO |  |
+
+
+> **类**: `api.quotation.QuotationFunctionAreaAction`
+
+
+##### `查询` queryFunctionAreaCategoryForQuotation
+
+- **接口**: `queryFunctionAreaCategoryForQuotation.do`
+- **方法**: `queryFunctionAreaCategoryForQuotation()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `quotation` | QuotationVO |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `quotationFunctionAreaCategorys` | List<QuotationFunctionAreaCategoryVO> |
+
+##### `更新` copyQuotationFunctionArea
+
+- **接口**: `copyQuotationFunctionArea.do`
+- **方法**: `copyQuotationFunctionArea()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `quotation` | QuotationVO |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `quotationFunctionArea` | QuotationFunctionAreaVO |
+
+
+> **类**: `api.quotation.QuotationPictureAction`
+
+
+##### `查询` queryQuotationPicture
+
+- **接口**: `queryQuotationPicture.do`
+- **方法**: `queryQuotationPicture()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `quotationPicture` | QuotationPictureVO |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `quotationPictures` | List<QuotationPictureVO> |
+
+##### `新增` addQuotationPicture
+
+- **接口**: `addQuotationPicture.do`
+- **方法**: `addQuotationPicture()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `quotationPictures` | List<QuotationPictureVO> |  |
+
+##### `删除` deleteQuotationPicture
+
+- **接口**: `deleteQuotationPicture.do`
+- **方法**: `deleteQuotationPicture()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `quotationPicture` | QuotationPictureVO |  |
+
+
+> **类**: `api.quotation.QuotationPreferAction`
+
+
+##### `查询` queryQuotationPrefer
+
+- **接口**: `queryQuotationPrefer.do`
+- **方法**: `queryQuotationPrefer()`
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `quotationPrefer` | QuotationPreferVO |
+
+##### `更新` updateQuotationPrefer
+
+- **接口**: `updateQuotationPrefer.do`
+- **方法**: `updateQuotationPrefer()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `quotationPrefer` | QuotationPreferVO |  |
+| `quotation` | QuotationVO |  |
+
+##### `更新` updateQuotationForInfo
+
+- **接口**: `updateQuotationForInfo.do`
+- **方法**: `updateQuotationForInfo()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `quotationPrefer` | QuotationPreferVO |  |
+| `quotation` | QuotationVO |  |
+
+
+> **类**: `api.quotation.QuotationProfileAction`
+
+
+##### `查询` pageQuotationProfile
+
+- **接口**: `pageQuotationProfile.do`
+- **方法**: `pageQuotationProfile()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `paging` | Paging | 分页参数 , 参照 [paging](../check_rule.html#page) |
+
+##### `查询` queryQuotationProfileByQid
+
+- **接口**: `queryQuotationProfileByQid.do`
+- **方法**: `queryQuotationProfileByQid()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `quotationProfile` | QuotationProfileVO |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `quotationProfiles` | List<QuotationProfileVO> |
+
+##### `查询` queryQuotationProfileByOrderId
+
+- **接口**: `queryQuotationProfileByOrderId.do`
+- **方法**: `queryQuotationProfileByOrderId()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `quotationProfile` | QuotationProfileVO |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `quotationProfiles` | List<QuotationProfileVO> |
+
+##### `查询` queryQuotationProfileByQpid
+
+- **接口**: `queryQuotationProfileByQpid.do`
+- **方法**: `queryQuotationProfileByQpid()`
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `quotationProfile` | QuotationProfileVO |
+
+##### `新增` addQuotationProfile
+
+- **接口**: `addQuotationProfile.do`
+- **方法**: `addQuotationProfile()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `quotationProfile` | QuotationProfileVO |  |
+
+##### `新增` makeQuotationProfile
+
+- **接口**: `makeQuotationProfile.do`
+- **方法**: `makeQuotationProfile()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `quotationProfile` | QuotationProfileVO |  |
+
+##### `更新` handleQuotationProfile
+
+- **接口**: `handleQuotationProfile.do`
+- **方法**: `handleQuotationProfile()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `quotationProfile` | QuotationProfileVO |  |
+
+
+> **类**: `api.quotation.QuotationRecordAction`
+
+
+##### `查询` pageQuotationRecord
+
+- **接口**: `pageQuotationRecord.do`
+- **方法**: `pageQuotationRecord()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `paging` | Paging | 分页参数 , 参照 [paging](../check_rule.html#page) |
+| `quotationRecord` | QuotationRecordVO |  |
+
+##### `新增` addQuotationRecord
+
+- **接口**: `addQuotationRecord.do`
+- **方法**: `addQuotationRecord()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `quotationRecord` | QuotationRecordVO |  |
+
+
+> **类**: `api.quotation.QuotetionFunctionAreaAction`
+
+
+##### `新增` addQuotetionFunctionArea
+
+- **接口**: `addQuotetionFunctionArea.do`
+- **方法**: `addQuotetionFunctionArea()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `quotetion` | QuotetionVO |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `quotetionFunctionAreas` | List<QuotetionFunctionAreaVO> |
+
+##### `更新` copyQuotetionFunctionArea
+
+- **接口**: `copyQuotetionFunctionArea.do`
+- **方法**: `copyQuotetionFunctionArea()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `quotetion` | QuotetionVO |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `quotetionFunctionArea` | QuotetionFunctionAreaVO |
+
+
+> **类**: `api.quotation.RuotationAction`
+
+
+##### `查询` pageRuotation
+
+- **接口**: `pageRuotation.do`
+- **方法**: `pageRuotation()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `paging` | Paging | 分页参数 , 参照 [paging](../check_rule.html#page) |
+
+##### `查询` queryRuotationById
+
+- **接口**: `queryRuotationById.do`
+- **方法**: `queryRuotationById()`
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `ruotation` | RuotationVO |
+
+##### `查询` queryRuotationByOrderId
+
+- **接口**: `queryRuotationByOrderId.do`
+- **方法**: `queryRuotationByOrderId()`
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `ruotation` | RuotationVO |
+
+##### `新增` addRuotation
+
+- **接口**: `addRuotation.do`
+- **方法**: `addRuotation()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `ruotation` | RuotationVO |  |
+
+##### `更新` updateRuotation
+
+- **接口**: `updateRuotation.do`
+- **方法**: `updateRuotation()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `ruotation` | RuotationVO |  |
+
+##### `删除` deleteRuotation
+
+- **接口**: `deleteRuotation.do`
+- **方法**: `deleteRuotation()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `ruotation` | RuotationVO |  |
+
+
+> **类**: `api.quotation.RuotationItemAction`
+
+
+##### `查询` queryRuotationItem
+
+- **接口**: `queryRuotationItem.do`
+- **方法**: `queryRuotationItem()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `ruotationItem` | RuotationItemVO |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `ruotationItems` | List<RuotationItemVO> |
+
+##### `查询` queryRuotationItemForCandidateByOrderId
+
+- **接口**: `queryRuotationItemForCandidateByOrderId.do`
+- **方法**: `queryRuotationItemForCandidateByOrderId()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `ruotationItem` | RuotationItemVO |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `ruotationItems` | List<RuotationItemVO> |
+
+##### `更新` updateRuotationItem
+
+- **接口**: `updateRuotationItem.do`
+- **方法**: `updateRuotationItem()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `ruotation` | RuotationVO |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `ruotationItem` | RuotationItemVO |
+
+##### `更新` updateRuotationItemForIndex
+
+- **接口**: `updateRuotationItemForIndex.do`
+- **方法**: `updateRuotationItemForIndex()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `ruotationItems` | List<RuotationItemVO> |  |
+
+##### `删除` deleteRuotationItem
+
+- **接口**: `deleteRuotationItem.do`
+- **方法**: `deleteRuotationItem()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `ruotationItem` | RuotationItemVO |  |
+| `ruotation` | RuotationVO |  |
+
+
+> **类**: `api.quotation.SelectionAction`
+
+
+##### `更新` unlockSelection
+
+- **接口**: `unlockSelection.do`
+- **方法**: `unlockSelection()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `selection` | SelectionVO |  |
+
+##### `更新` resetSelection
+
+- **接口**: `resetSelection.do`
+- **方法**: `resetSelection()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `selection` | SelectionVO |  |
+
+
+> **类**: `api.quotation.SelectionItemAction`
+
+
+##### `更新` updateSelectionItemForSupplier
+
+- **接口**: `updateSelectionItemForSupplier.do`
+- **方法**: `updateSelectionItemForSupplier()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `selectionItem` | SelectionItemVO |  |
+
+##### `新增` addedSelectionItem
+
+- **接口**: `addedSelectionItem.do`
+- **方法**: `addedSelectionItem()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `selectionItem` | SelectionItemVO |  |
+
+##### `更新` accountSelectionItem
+
+- **接口**: `accountSelectionItem.do`
+- **方法**: `accountSelectionItem()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `selectionItem` | SelectionItemVO |  |
+

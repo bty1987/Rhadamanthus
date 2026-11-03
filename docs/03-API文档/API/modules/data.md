@@ -14816,3 +14816,1775 @@
 
 
 ##### `查询` deleteInspectItem
+
+## 补录接口 (自动生成 2026-11-03)
+
+
+> **类**: `api.data.BankAccountAction`
+
+
+##### `查询` pageBankAccount
+
+- **接口**: `pageBankAccount.do`
+- **方法**: `pageBankAccount()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `paging` | Paging | 分页参数 , 参照 [paging](../check_rule.html#page) |
+
+##### `查询` queryBankAccount
+
+- **接口**: `queryBankAccount.do`
+- **方法**: `queryBankAccount()`
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `bankAccount` | BankAccountVO |
+
+##### `新增` addBankAccount
+
+- **接口**: `addBankAccount.do`
+- **方法**: `addBankAccount()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `bankAccount` | BankAccountVO |  |
+
+##### `更新` updateBankAccount
+
+- **接口**: `updateBankAccount.do`
+- **方法**: `updateBankAccount()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `bankAccount` | BankAccountVO |  |
+
+##### `更新` updateBankAccountForStatus
+
+- **接口**: `updateBankAccountForStatus.do`
+- **方法**: `updateBankAccountForStatus()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `bankAccount` | BankAccountVO |  |
+
+
+> **类**: `api.data.BrandDeliverAction`
+
+
+##### `查询` queryBrandDeliver
+
+- **接口**: `queryBrandDeliver.do`
+- **方法**: `queryBrandDeliver()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `brandDeliver` | BrandDeliverVO |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `brandDelivers` | List<BrandDeliverVO> |
+
+##### `新增` addBrandDeliver
+
+- **接口**: `addBrandDeliver.do`
+- **方法**: `addBrandDeliver()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `brandDeliver` | BrandDeliverVO |  |
+
+##### `更新` updateBrandDeliver
+
+- **接口**: `updateBrandDeliver.do`
+- **方法**: `updateBrandDeliver()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `brandDeliver` | BrandDeliverVO |  |
+
+##### `删除` deleteBrandDeliver
+
+- **接口**: `deleteBrandDeliver.do`
+- **方法**: `deleteBrandDeliver()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `brandDeliver` | BrandDeliverVO |  |
+
+
+> **类**: `api.data.BrandInstallAction`
+
+
+##### `查询` queryBrandInstall
+
+- **接口**: `queryBrandInstall.do`
+- **方法**: `queryBrandInstall()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `brandInstall` | BrandInstallVO |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `brandInstalls` | List<BrandInstallVO> |
+
+##### `新增` addBrandInstall
+
+- **接口**: `addBrandInstall.do`
+- **方法**: `addBrandInstall()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `brandInstall` | BrandInstallVO |  |
+
+##### `更新` updateBrandInstall
+
+- **接口**: `updateBrandInstall.do`
+- **方法**: `updateBrandInstall()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `brandInstall` | BrandInstallVO |  |
+
+##### `删除` deleteBrandInstall
+
+- **接口**: `deleteBrandInstall.do`
+- **方法**: `deleteBrandInstall()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `brandInstall` | BrandInstallVO |  |
+
+
+> **类**: `api.data.BrandServerAction`
+
+
+##### `查询` queryBrandServer
+
+- **接口**: `queryBrandServer.do`
+- **方法**: `queryBrandServer()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `brandServer` | BrandServerVO |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `brandServers` | List<BrandServerVO> |
+
+##### `新增` addBrandServer
+
+- **接口**: `addBrandServer.do`
+- **方法**: `addBrandServer()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `brandServer` | BrandServerVO |  |
+
+##### `更新` updateBrandServer
+
+- **接口**: `updateBrandServer.do`
+- **方法**: `updateBrandServer()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `brandServer` | BrandServerVO |  |
+
+##### `删除` deleteBrandServer
+
+- **接口**: `deleteBrandServer.do`
+- **方法**: `deleteBrandServer()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `brandServer` | BrandServerVO |  |
+
+
+> **类**: `api.data.ConstructionNodeAction`
+
+
+##### `查询` queryConstructionNodeForGroup
+
+- **接口**: `queryConstructionNodeForGroup.do`
+- **方法**: `queryConstructionNodeForGroup()`
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `constructionNode` | ConstructionNodeVO |
+| `constructionNodes` | List<ConstructionNodeVO> |
+
+
+> **类**: `api.data.ConstructionPaceAction`
+
+
+##### `删除` deleteConstructionPace
+
+- **接口**: `deleteConstructionPace.do`
+- **方法**: `deleteConstructionPace()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `constructionPace` | ConstructionPaceVO |  |
+
+
+> **类**: `api.data.ConstructionPaceNodeAction`
+
+
+##### `查询` pageConstructionPaceNode
+
+- **接口**: `pageConstructionPaceNode.do`
+- **方法**: `pageConstructionPaceNode()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `paging` | Paging | 分页参数 , 参照 [paging](../check_rule.html#page) |
+| `constructionPaceNode` | ConstructionPaceNodeVO |  |
+
+##### `查询` queryConstructionPaceNode
+
+- **接口**: `queryConstructionPaceNode.do`
+- **方法**: `queryConstructionPaceNode()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `constructionPaceNode` | ConstructionPaceNodeVO |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `constructionPaceNodes` | List<ConstructionPaceNodeVO> |
+
+##### `新增` addConstructionPaceNode
+
+- **接口**: `addConstructionPaceNode.do`
+- **方法**: `addConstructionPaceNode()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `constructionPaceNode` | ConstructionPaceNodeVO |  |
+
+##### `更新` updateConstructionPaceNode
+
+- **接口**: `updateConstructionPaceNode.do`
+- **方法**: `updateConstructionPaceNode()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `constructionPaceNode` | ConstructionPaceNodeVO |  |
+
+##### `更新` updateConstructionPaceNodeForStatus
+
+- **接口**: `updateConstructionPaceNodeForStatus.do`
+- **方法**: `updateConstructionPaceNodeForStatus()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `constructionPaceNode` | ConstructionPaceNodeVO |  |
+
+
+> **类**: `api.data.ConstructionPeriodAction`
+
+
+##### `查询` queryConstructionPeriod
+
+- **接口**: `queryConstructionPeriod.do`
+- **方法**: `queryConstructionPeriod()`
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `constructionPeriod` | ConstructionPeriodVO |
+
+
+> **类**: `api.data.ConstructionPeriodNodeAction`
+
+
+##### `查询` queryConstructionPeriodNodeByCpid
+
+- **接口**: `queryConstructionPeriodNodeByCpid.do`
+- **方法**: `queryConstructionPeriodNodeByCpid()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `constructionPeriodNode` | ConstructionPeriodNodeVO |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `constructionPeriodNodes` | List<ConstructionPeriodNodeVO> |
+
+##### `新增` addConstructionPeriodNode
+
+- **接口**: `addConstructionPeriodNode.do`
+- **方法**: `addConstructionPeriodNode()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `constructionPeriodNode` | ConstructionPeriodNodeVO |  |
+
+##### `新增` deleteConstructionPeriodNodeByCpnid
+
+- **接口**: `deleteConstructionPeriodNodeByCpnid.do`
+- **方法**: `addConstructionPeriod()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `constructionPeriodNode` | ConstructionPeriodNodeVO |  |
+
+
+> **类**: `api.data.ContractAction`
+
+
+##### `查询` queryContractByCid
+
+- **接口**: `queryContractByCid.do`
+- **方法**: `queryContractByCid()`
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `contract` | ContractVO |
+
+
+> **类**: `api.data.DecorationAtttypeAction`
+
+
+##### `查询` queryDecorationAtttypeByType
+
+- **接口**: `queryDecorationAtttypeByType.do`
+- **方法**: `queryDecorationAtttypeByType()`
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `decorationAtttype` | DecorationAtttypeVO |
+
+##### `更新` updateDecorationAtttype
+
+- **接口**: `updateDecorationAtttype.do`
+- **方法**: `updateDecorationAtttype()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `decorationAtttype` | DecorationAtttypeVO |  |
+
+
+> **类**: `api.data.DecorationBusitypeAction`
+
+
+##### `查询` queryDecorationBusitypeByName
+
+- **接口**: `queryDecorationBusitypeByName.do`
+- **方法**: `queryDecorationBusitypeByName()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `company` | String |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `decorationBusitype` | DecorationBusitypeVO |
+
+
+> **类**: `api.data.DecorationMeasureRuleAction`
+
+
+##### `查询` queryDecorationMeasureRule
+
+- **接口**: `queryDecorationMeasureRule.do`
+- **方法**: `queryDecorationMeasureRule()`
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `decorationMeasures` | List<DecorationMeasureRuleVO> |
+
+##### `查询` pageDecorationMeasureRule
+
+- **接口**: `pageDecorationMeasureRule.do`
+- **方法**: `pageDecorationMeasureRule()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `paging` | Paging | 分页参数 , 参照 [paging](../check_rule.html#page) |
+
+##### `新增` addDecorationMeasureRule
+
+- **接口**: `addDecorationMeasureRule.do`
+- **方法**: `addDecorationMeasureRule()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `decorationMeasureRule` | DecorationMeasureRuleVO |  |
+
+##### `更新` updateDecorationMeasureRule
+
+- **接口**: `updateDecorationMeasureRule.do`
+- **方法**: `updateDecorationMeasureRule()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `decorationMeasureRule` | DecorationMeasureRuleVO |  |
+
+##### `更新` updateDecorationMeasureRuleForStatus
+
+- **接口**: `updateDecorationMeasureRuleForStatus.do`
+- **方法**: `updateDecorationMeasureRuleForStatus()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `decorationMeasureRule` | DecorationMeasureRuleVO |  |
+
+##### `删除` deleteDecorationMeasureRule
+
+- **接口**: `deleteDecorationMeasureRule.do`
+- **方法**: `deleteDecorationMeasureRule()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `decorationMeasureRule` | DecorationMeasureRuleVO |  |
+
+##### `查询` queryDecorationMeasureRuleItem
+
+- **接口**: `queryDecorationMeasureRuleItem.do`
+- **方法**: `queryDecorationMeasureRuleItem()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `decorationMeasureRuleItem` | DecorationMeasureRuleItemVO |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `decorationMeasureRuleItems` | List<DecorationMeasureRuleItemVO> |
+
+##### `新增` addDecorationMeasureRuleItem
+
+- **接口**: `addDecorationMeasureRuleItem.do`
+- **方法**: `addDecorationMeasureRuleItem()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `decorationMeasureRuleItem` | DecorationMeasureRuleItemVO |  |
+
+##### `删除` deleteDecorationMeasureRuleItem
+
+- **接口**: `deleteDecorationMeasureRuleItem.do`
+- **方法**: `deleteDecorationMeasureRuleItem()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `decorationMeasureRuleItem` | DecorationMeasureRuleItemVO |  |
+
+
+> **类**: `api.data.GoodsKindAction`
+
+
+##### `查询` queryGoodsKindByFgkid
+
+- **接口**: `queryGoodsKindByFgkid.do`
+- **方法**: `queryGoodsKindByFgkid()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `goodsKind` | GoodsKindVO |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `goodsKinds` | List<GoodsKindVO> |
+
+##### `查询` queryGoodsKindByGkid
+
+- **接口**: `queryGoodsKindByGkid.do`
+- **方法**: `queryGoodsKindByGkid()`
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `goodsKind` | GoodsKindVO |
+
+##### `更新` updateGoodsKindForStatus
+
+- **接口**: `updateGoodsKindForStatus.do`
+- **方法**: `updateGoodsKindForStatus()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `goodsKind` | GoodsKindVO |  |
+
+
+> **类**: `api.data.HolidayAction`
+
+
+##### `查询` pageHoliday
+
+- **接口**: `pageHoliday.do`
+- **方法**: `pageHoliday()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `paging` | Paging | 分页参数 , 参照 [paging](../check_rule.html#page) |
+
+##### `查询` queryHoliday
+
+- **接口**: `queryHoliday.do`
+- **方法**: `queryHoliday()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `holiday` | HolidayVO |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `holidays` | List<HolidayVO> |
+
+##### `新增` addHoliday
+
+- **接口**: `addHoliday.do`
+- **方法**: `addHoliday()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `holiday` | HolidayVO |  |
+
+##### `更新` updateHoliday
+
+- **接口**: `updateHoliday.do`
+- **方法**: `updateHoliday()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `holiday` | HolidayVO |  |
+
+##### `删除` deleteHoliday
+
+- **接口**: `deleteHoliday.do`
+- **方法**: `deleteHoliday()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `holiday` | HolidayVO |  |
+
+
+> **类**: `api.data.MaterialPlanNodeAction`
+
+
+##### `查询` pageMaterialPlanNode
+
+- **接口**: `pageMaterialPlanNode.do`
+- **方法**: `pageMaterialPlanNode()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `paging` | Paging | 分页参数 , 参照 [paging](../check_rule.html#page) |
+
+##### `查询` queryMaterialPlanNode
+
+- **接口**: `queryMaterialPlanNode.do`
+- **方法**: `queryMaterialPlanNode()`
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `materialPlanNodes` | List<MaterialPlanNodeVO> |
+
+##### `新增` addMaterialPlanNode
+
+- **接口**: `addMaterialPlanNode.do`
+- **方法**: `addMaterialPlanNode()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `materialPlanNode` | MaterialPlanNodeVO |  |
+
+##### `更新` updateMaterialPlanNode
+
+- **接口**: `updateMaterialPlanNode.do`
+- **方法**: `updateMaterialPlanNode()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `materialPlanNode` | MaterialPlanNodeVO |  |
+
+##### `更新` updateMaterialPlanNodeForStatus
+
+- **接口**: `updateMaterialPlanNodeForStatus.do`
+- **方法**: `updateMaterialPlanNodeForStatus()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `materialPlanNode` | MaterialPlanNodeVO |  |
+
+
+> **类**: `api.data.PaymentScaleItemAction`
+
+
+##### `查询` fetchPaymentScaleItem
+
+- **接口**: `fetchPaymentScaleItem.do`
+- **方法**: `fetchPaymentScaleItem()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `paymentScaleItem` | PaymentScaleItemVO |  |
+| `paymentScale` | PaymentScaleVO |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `paymentScaleItems` | List<PaymentScaleItemVO> |
+
+##### `查询` queryPaymentScaleItem
+
+- **接口**: `queryPaymentScaleItem.do`
+- **方法**: `queryPaymentScaleItem()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `paymentScale` | PaymentScaleVO |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `paymentScaleItem` | PaymentScaleItemVO |
+
+
+> **类**: `api.data.SupplierSignetAction`
+
+
+##### `查询` pageSupplierSignet
+
+- **接口**: `pageSupplierSignet.do`
+- **方法**: `pageSupplierSignet()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `paging` | Paging | 分页参数 , 参照 [paging](../check_rule.html#page) |
+| `signet` | SupplierSignetVO |  |
+
+##### `查询` querySupplierSignet
+
+- **接口**: `querySupplierSignet.do`
+- **方法**: `querySupplierSignet()`
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `signets` | List<SupplierSignetVO> |
+| `signet` | SupplierSignetVO |
+
+##### `查询` querySupplierSignetBySid
+
+- **接口**: `querySupplierSignetBySid.do`
+- **方法**: `querySupplierSignetBySid()`
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `signet` | SupplierSignetVO |
+
+##### `新增` addSupplierSignet
+
+- **接口**: `addSupplierSignet.do`
+- **方法**: `addSupplierSignet()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `signet` | SupplierSignetVO |  |
+
+##### `更新` updateSupplierSignet
+
+- **接口**: `updateSupplierSignet.do`
+- **方法**: `updateSupplierSignet()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `signet` | SupplierSignetVO |  |
+
+##### `新增` registSupplierSignet
+
+- **接口**: `registSupplierSignet.do`
+- **方法**: `registSupplierSignet()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `signet` | SupplierSignetVO |  |
+
+##### `更新` authSupplierSignet
+
+- **接口**: `authSupplierSignet.do`
+- **方法**: `authSupplierSignet()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `signet` | SupplierSignetVO |  |
+
+##### `更新` confirmSupplierSignet
+
+- **接口**: `confirmSupplierSignet.do`
+- **方法**: `confirmSupplierSignet()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `signet` | SupplierSignetVO |  |
+
+##### `更新` signateSupplierSignet
+
+- **接口**: `signateSupplierSignet.do`
+- **方法**: `signateSupplierSignet()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `signet` | SupplierSignetVO |  |
+
+##### `更新` autoSupplierSignet
+
+- **接口**: `autoSupplierSignet.do`
+- **方法**: `autoSupplierSignet()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `signet` | SupplierSignetVO |  |
+
+##### `更新` selectSupplierSignet
+
+- **接口**: `selectSupplierSignet.do`
+- **方法**: `selectSupplierSignet()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `signet` | SupplierSignetVO |  |
+
+##### `撤销` cancelSupplierSignet
+
+- **接口**: `cancelSupplierSignet.do`
+- **方法**: `cancelSupplierSignet()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `signet` | SupplierSignetVO |  |
+
+##### `更新` copySupplierSignet
+
+- **接口**: `copySupplierSignet.do`
+- **方法**: `copySupplierSignet()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `signet` | SupplierSignetVO |  |
+
+##### `更新` moveSupplierSignet
+
+- **接口**: `moveSupplierSignet.do`
+- **方法**: `moveSupplierSignet()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `signet` | SupplierSignetVO |  |
+
+
+> **类**: `api.data.SurveyTemplateAction`
+
+
+##### `更新` copySurveyTemplate
+
+- **接口**: `copySurveyTemplate.do`
+- **方法**: `copySurveyTemplate()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `surveyTemplate` | SurveyTemplateVO |  |
+
+
+> **类**: `api.data.AoodsAction`
+
+
+##### `更新` updateAoodsForAdvance
+
+- **接口**: `updateAoodsForAdvance.do`
+- **方法**: `updateAoodsForAdvance()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `aoods` | AoodsVO |  |
+
+##### `更新` updateKaoods
+
+- **接口**: `updateKaoods.do`
+- **方法**: `updateKaoods()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `aoods` | AoodsVO |  |
+| `goods` | GoodsVO |  |
+
+
+> **类**: `api.data.AoodsChargeAction`
+
+
+##### `查询` pageAoodsCharge
+
+- **接口**: `pageAoodsCharge.do`
+- **方法**: `pageAoodsCharge()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `paging` | Paging | 分页参数 , 参照 [paging](../check_rule.html#page) |
+| `aoodsCharge` | AoodsChargeVO |  |
+
+##### `查询` queryAoodsChargeByAid
+
+- **接口**: `queryAoodsChargeByAid.do`
+- **方法**: `queryAoodsChargeByAid()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `aoodsCharge` | AoodsChargeVO |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `aoodsCharges` | List<AoodsChargeVO> |
+
+##### `新增` addAoodsCharge
+
+- **接口**: `addAoodsCharge.do`
+- **方法**: `addAoodsCharge()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `aoodsCharge` | AoodsChargeVO |  |
+
+##### `更新` updateAoodsCharge
+
+- **接口**: `updateAoodsCharge.do`
+- **方法**: `updateAoodsCharge()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `aoodsCharge` | AoodsChargeVO |  |
+
+##### `删除` deleteAoodsCharge
+
+- **接口**: `deleteAoodsCharge.do`
+- **方法**: `deleteAoodsCharge()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `aoodsCharge` | AoodsChargeVO |  |
+
+
+> **类**: `api.data.GoodsAction`
+
+
+##### `查询` queryGoodsByGpid
+
+- **接口**: `queryGoodsByGpid.do`
+- **方法**: `queryGoodsByGpid()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `goods` | GoodsVO |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `goodes` | List<GoodsVO> |
+
+
+> **类**: `api.data.GoodsPackageAction`
+
+
+##### `查询` queryGoodsPackage
+
+- **接口**: `queryGoodsPackage.do`
+- **方法**: `queryGoodsPackage()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `goodsPackage` | GoodsPackageVO |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `goodsPackages` | List<GoodsPackageVO> |
+
+##### `新增` addGoodsPackage
+
+- **接口**: `addGoodsPackage.do`
+- **方法**: `addGoodsPackage()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `goodsPackages` | List<GoodsPackageVO> |  |
+| `goods` | GoodsVO |  |
+
+##### `更新` updateGoodsPackage
+
+- **接口**: `updateGoodsPackage.do`
+- **方法**: `updateGoodsPackage()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `goodsPackage` | GoodsPackageVO |  |
+
+##### `删除` deleteGoodsPackage
+
+- **接口**: `deleteGoodsPackage.do`
+- **方法**: `deleteGoodsPackage()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `goodsPackage` | GoodsPackageVO |  |
+
+
+> **类**: `api.data.GoodsRecordAction`
+
+
+##### `查询` pageGoodsRecord
+
+- **接口**: `pageGoodsRecord.do`
+- **方法**: `pageGoodsRecord()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `paging` | Paging | 分页参数 , 参照 [paging](../check_rule.html#page) |
+| `goodsRecord` | GoodsRecordVO |  |
+
+##### `新增` addGoodsRecord
+
+- **接口**: `addGoodsRecord.do`
+- **方法**: `addGoodsRecord()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `goodsRecord` | GoodsRecordVO |  |
+
+
+> **类**: `api.data.NoodsAction`
+
+
+##### `查询` queryNoodsForGroup
+
+- **接口**: `queryNoodsForGroup.do`
+- **方法**: `queryNoodsForGroup()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `noods` | NoodsVO |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `noodes` | List<NoodsVO> |
+
+##### `更新` updateNoodsForCalc
+
+- **接口**: `updateNoodsForCalc.do`
+- **方法**: `updateNoodsForCalc()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `noods` | NoodsVO |  |
+
+
+> **类**: `api.data.CormoodAction`
+
+
+##### `查询` pageCormood
+
+- **接口**: `pageCormood.do`
+- **方法**: `pageCormood()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `paging` | Paging | 分页参数 , 参照 [paging](../check_rule.html#page) |
+
+##### `查询` queryCormoodByQfid
+
+- **接口**: `queryCormoodByQfid.do`
+- **方法**: `queryCormoodByQfid()`
+
+##### `新增` addCormood
+
+- **接口**: `addCormood.do`
+- **方法**: `addCormood()`
+
+##### `删除` deleteCormood
+
+- **接口**: `deleteCormood.do`
+- **方法**: `deleteCormood()`
+
+
+> **类**: `api.data.CormriceAction`
+
+
+##### `查询` queryCormriceByQfid
+
+- **接口**: `queryCormriceByQfid.do`
+- **方法**: `queryCormriceByQfid()`
+
+
+> **类**: `api.data.CormtimeAction`
+
+
+##### `查询` pageCormtime
+
+- **接口**: `pageCormtime.do`
+- **方法**: `pageCormtime()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `paging` | Paging | 分页参数 , 参照 [paging](../check_rule.html#page) |
+
+##### `查询` queryCormtimeByQfid
+
+- **接口**: `queryCormtimeByQfid.do`
+- **方法**: `queryCormtimeByQfid()`
+
+##### `新增` addCormtime
+
+- **接口**: `addCormtime.do`
+- **方法**: `addCormtime()`
+
+##### `删除` deleteCormtime
+
+- **接口**: `deleteCormtime.do`
+- **方法**: `deleteCormtime()`
+
+
+> **类**: `api.data.FunctionAreaAction`
+
+
+##### `更新` updateFunctionAreaForStatus
+
+- **接口**: `updateFunctionAreaForStatus.do`
+- **方法**: `updateFunctionAreaForStatus()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `functionArea` | FunctionAreaVO |  |
+
+
+> **类**: `api.data.FunctionAreaCategoryAction`
+
+
+##### `查询` queryFunctionAreaCategoryByFaid
+
+- **接口**: `queryFunctionAreaCategoryByFaid.do`
+- **方法**: `queryFunctionAreaCategoryByFaid()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `functionAreaCategory` | FunctionAreaCategoryVO |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `functionAreaCategorys` | List<FunctionAreaCategoryVO> |
+
+##### `查询` queryFunctionAreaFormatByFacids
+
+- **接口**: `queryFunctionAreaFormatByFacids.do`
+- **方法**: `queryFunctionAreaFormatByFacids()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `facids` | String |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `functionAreaFormats` | List<FunctionAreaFormatVO> |
+
+##### `新增` addFunctionAreaCategory
+
+- **接口**: `addFunctionAreaCategory.do`
+- **方法**: `addFunctionAreaCategory()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `functionAreaCategory` | FunctionAreaCategoryVO |  |
+
+##### `删除` deleteFunctionAreaCategory
+
+- **接口**: `deleteFunctionAreaCategory.do`
+- **方法**: `deleteFunctionAreaCategory()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `functionAreaCategory` | FunctionAreaCategoryVO |  |
+
+##### `新增` addFunctionAreaFormat
+
+- **接口**: `addFunctionAreaFormat.do`
+- **方法**: `addFunctionAreaFormat()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `functionAreaFormat` | FunctionAreaFormatVO |  |
+
+##### `更新` updateFunctionAreaFormat
+
+- **接口**: `updateFunctionAreaFormat.do`
+- **方法**: `updateFunctionAreaFormat()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `functionAreaFormat` | FunctionAreaFormatVO |  |
+
+##### `删除` deleteFunctionAreaFormat
+
+- **接口**: `deleteFunctionAreaFormat.do`
+- **方法**: `deleteFunctionAreaFormat()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `functionAreaFormat` | FunctionAreaFormatVO |  |
+
+
+> **类**: `api.data.FunctionAreaOtemAction`
+
+
+##### `查询` queryFunctionAreaOtem
+
+- **接口**: `queryFunctionAreaOtem.do`
+- **方法**: `queryFunctionAreaOtem()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `functionAreaOtem` | FunctionAreaOtemVO |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `functionAreaOtems` | List<FunctionAreaOtemVO> |
+
+##### `新增` makeFunctionAreaOtem
+
+- **接口**: `makeFunctionAreaOtem.do`
+- **方法**: `makeFunctionAreaOtem()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `functionAreaOtems` | List<FunctionAreaOtemVO> |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `functionAreaOtem` | FunctionAreaOtemVO |
+
+
+> **类**: `api.data.FunctionAreaTypeAction`
+
+
+##### `查询` pageFunctionAreaType
+
+- **接口**: `pageFunctionAreaType.do`
+- **方法**: `pageFunctionAreaType()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `paging` | Paging | 分页参数 , 参照 [paging](../check_rule.html#page) |
+
+##### `查询` queryFunctionAreaType
+
+- **接口**: `queryFunctionAreaType.do`
+- **方法**: `queryFunctionAreaType()`
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `functionAreaTypes` | List<FunctionAreaTypeVO> |
+
+##### `新增` addFunctionAreaType
+
+- **接口**: `addFunctionAreaType.do`
+- **方法**: `addFunctionAreaType()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `functionAreaType` | FunctionAreaTypeVO |  |
+
+##### `更新` updateFunctionAreaType
+
+- **接口**: `updateFunctionAreaType.do`
+- **方法**: `updateFunctionAreaType()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `functionAreaType` | FunctionAreaTypeVO |  |
+
+##### `更新` updateFunctionAreaTypeForStatus
+
+- **接口**: `updateFunctionAreaTypeForStatus.do`
+- **方法**: `updateFunctionAreaTypeForStatus()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `functionAreaType` | FunctionAreaTypeVO |  |
+
+##### `删除` deleteFunctionAreaType
+
+- **接口**: `deleteFunctionAreaType.do`
+- **方法**: `deleteFunctionAreaType()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `functionAreaType` | FunctionAreaTypeVO |  |
+
+
+> **类**: `api.data.NormaddAction`
+
+
+##### `更新` updateNormadd
+
+- **接口**: `updateNormadd.do`
+- **方法**: `updateNormadd()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `normadd` | NormaddVO |  |
+
+##### `删除` deleteNormadd
+
+- **接口**: `deleteNormadd.do`
+- **方法**: `deleteNormadd()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `normadd` | NormaddVO |  |
+
+
+> **类**: `api.data.NormpackAction`
+
+
+##### `删除` deleteNormpack
+
+- **接口**: `deleteNormpack.do`
+- **方法**: `deleteNormpack()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `normpack` | NormpackVO |  |
+
+
+> **类**: `api.data.NormpackItemAction`
+
+
+##### `删除` deleteNormpackItem
+
+- **接口**: `deleteNormpackItem.do`
+- **方法**: `deleteNormpackItem()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `normpackItem` | NormpackItemVO |  |
+
+
+> **类**: `api.data.NormtimeAction`
+
+
+##### `查询` pageNormtime
+
+- **接口**: `pageNormtime.do`
+- **方法**: `pageNormtime()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `paging` | Paging | 分页参数 , 参照 [paging](../check_rule.html#page) |
+
+##### `查询` queryNormtimeByQiid
+
+- **接口**: `queryNormtimeByQiid.do`
+- **方法**: `queryNormtimeByQiid()`
+
+##### `新增` addNormtime
+
+- **接口**: `addNormtime.do`
+- **方法**: `addNormtime()`
+
+##### `删除` deleteNormtime
+
+- **接口**: `deleteNormtime.do`
+- **方法**: `deleteNormtime()`
+
+
+> **类**: `api.data.PresignItemAction`
+
+
+##### `查询` pagePresignItemByPpid
+
+- **接口**: `pagePresignItemByPpid.do`
+- **方法**: `pagePresignItemByPpid()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `paging` | Paging | 分页参数 , 参照 [paging](../check_rule.html#page) |
+| `presignItem` | PresignItemVO |  |
+
+
+> **类**: `api.data.PresignPriceAction`
+
+
+##### `查询` queryPresignPrice
+
+- **接口**: `queryPresignPrice.do`
+- **方法**: `queryPresignPrice()`
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `presignPrice` | PresignPriceVO |
+
+
+> **类**: `api.data.QuotationItemAction`
+
+
+##### `更新` updateQuotationItemForImportant
+
+- **接口**: `updateQuotationItemForImportant.do`
+- **方法**: `updateQuotationItemForImportant()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `quotationItem` | QuotationItemVO |  |
+
+
+> **类**: `api.data.QuotationLabelAction`
+
+
+##### `查询` pageQuotationLabel
+
+- **接口**: `pageQuotationLabel.do`
+- **方法**: `pageQuotationLabel()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `paging` | Paging | 分页参数 , 参照 [paging](../check_rule.html#page) |
+
+##### `新增` addQuotationLabel
+
+- **接口**: `addQuotationLabel.do`
+- **方法**: `addQuotationLabel()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `quotationLabel` | QuotationLabelVO |  |
+
+##### `更新` updateQuotationLabel
+
+- **接口**: `updateQuotationLabel.do`
+- **方法**: `updateQuotationLabel()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `quotationLabel` | QuotationLabelVO |  |
+
+##### `删除` deleteQuotationLabel
+
+- **接口**: `deleteQuotationLabel.do`
+- **方法**: `deleteQuotationLabel()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `quotationLabel` | QuotationLabelVO |  |
+
+
+> **类**: `api.data.QuotationNamingRuleAction`
+
+
+##### `查询` pageQuotationNamingRule
+
+- **接口**: `pageQuotationNamingRule.do`
+- **方法**: `pageQuotationNamingRule()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `paging` | Paging | 分页参数 , 参照 [paging](../check_rule.html#page) |
+
+##### `查询` queryQuotationNamingRule
+
+- **接口**: `queryQuotationNamingRule.do`
+- **方法**: `queryQuotationNamingRule()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `quotationNamingRule` | QuotationNamingRuleVO |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `quotationNamingRules` | List<QuotationNamingRuleVO> |
+
+##### `查询` queryQuotationNamingRuleByPinyin
+
+- **接口**: `queryQuotationNamingRuleByPinyin.do`
+- **方法**: `queryQuotationNamingRuleByPinyin()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `quotationNamingRule` | QuotationNamingRuleVO |  |
+| `pinyinName` | String |  |
+
+##### `新增` addQuotationNamingRule
+
+- **接口**: `addQuotationNamingRule.do`
+- **方法**: `addQuotationNamingRule()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `quotationNamingRule` | QuotationNamingRuleVO |  |
+
+##### `更新` updateQuotationNamingRule
+
+- **接口**: `updateQuotationNamingRule.do`
+- **方法**: `updateQuotationNamingRule()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `quotationNamingRule` | QuotationNamingRuleVO |  |
+
+##### `更新` updateQuotationNamingRuleForStatus
+
+- **接口**: `updateQuotationNamingRuleForStatus.do`
+- **方法**: `updateQuotationNamingRuleForStatus()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `quotationNamingRule` | QuotationNamingRuleVO |  |
+
+##### `删除` deleteQuotationNamingRule
+
+- **接口**: `deleteQuotationNamingRule.do`
+- **方法**: `deleteQuotationNamingRule()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `quotationNamingRule` | QuotationNamingRuleVO |  |
+
+
+> **类**: `api.data.QuotationRtemAction`
+
+
+##### `查询` queryQuotationRtem
+
+- **接口**: `queryQuotationRtem.do`
+- **方法**: `queryQuotationRtem()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `quotationRtem` | QuotationRtemVO |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `quotationRtems` | List<QuotationRtemVO> |
+
+##### `查询` queryQuotationRtemByQuotationId
+
+- **接口**: `queryQuotationRtemByQuotationId.do`
+- **方法**: `queryQuotationRtemByQuotationId()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `quotationId` | long |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `quotationRtems` | List<QuotationRtemVO> |
+
+##### `新增` addQuotationRtem
+
+- **接口**: `addQuotationRtem.do`
+- **方法**: `addQuotationRtem()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `quotationRtem` | QuotationRtemVO |  |
+
+##### `删除` deleteQuotationRtem
+
+- **接口**: `deleteQuotationRtem.do`
+- **方法**: `deleteQuotationRtem()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `quotationRtem` | QuotationRtemVO |  |
+

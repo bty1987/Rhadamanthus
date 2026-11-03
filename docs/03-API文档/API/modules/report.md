@@ -1126,3 +1126,413 @@
     ...
 }
 ```
+
+## 补录接口 (自动生成 2026-11-03)
+
+
+> **类**: `api.report.ApprovalMetricAction`
+
+
+##### `查询` queryApprovalTrend
+
+- **接口**: `queryApprovalTrend.do`
+- **方法**: `queryApprovalTrend()`
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `approvalTrend` | List<MetricDualTrendVO> |
+
+##### `查询` queryApprovalTypeDist
+
+- **接口**: `queryApprovalTypeDist.do`
+- **方法**: `queryApprovalTypeDist()`
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `typeDist` | List<MetricPointVO> |
+
+##### `更新` refreshApprovalMetric
+
+- **接口**: `refreshApprovalMetric.do`
+- **方法**: `refreshApprovalMetric()`
+
+
+> **类**: `api.report.ConstructionMetricAction`
+
+
+##### `查询` queryConstructionStartFinishTrend
+
+- **接口**: `queryConstructionStartFinishTrend.do`
+- **方法**: `queryConstructionStartFinishTrend()`
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `startFinishTrend` | List<MetricDualTrendVO> |
+
+##### `查询` queryConstructionPeriodTrend
+
+- **接口**: `queryConstructionPeriodTrend.do`
+- **方法**: `queryConstructionPeriodTrend()`
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `periodTrend` | List<MetricDualTrendVO> |
+
+##### `查询` queryConstructionOverdueDist
+
+- **接口**: `queryConstructionOverdueDist.do`
+- **方法**: `queryConstructionOverdueDist()`
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `overdueDist` | List<MetricPointVO> |
+
+##### `更新` refreshConstructionMetric
+
+- **接口**: `refreshConstructionMetric.do`
+- **方法**: `refreshConstructionMetric()`
+
+
+> **类**: `api.report.CustomerMetricAction`
+
+
+##### `查询` queryCustomerFunnelTrend
+
+- **接口**: `queryCustomerFunnelTrend.do`
+- **方法**: `queryCustomerFunnelTrend()`
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `funnelTrend` | List<MetricDualTrendVO> |
+
+##### `查询` queryCustomerSourceDist
+
+- **接口**: `queryCustomerSourceDist.do`
+- **方法**: `queryCustomerSourceDist()`
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `sourceDist` | List<MetricPointVO> |
+
+##### `查询` queryCustomerConvertTrend
+
+- **接口**: `queryCustomerConvertTrend.do`
+- **方法**: `queryCustomerConvertTrend()`
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `convertTrend` | List<MetricPointVO> |
+
+##### `更新` refreshCustomerMetric
+
+- **接口**: `refreshCustomerMetric.do`
+- **方法**: `refreshCustomerMetric()`
+
+
+> **类**: `api.report.DecorationMetricAction`
+
+
+##### `查询` queryDecorationFunnel
+
+- **接口**: `queryDecorationFunnel.do`
+- **方法**: `queryDecorationFunnel()`
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `funnel` | List<MetricPointVO> |
+
+##### `查询` queryDecorationStatusDist
+
+- **接口**: `queryDecorationStatusDist.do`
+- **方法**: `queryDecorationStatusDist()`
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `statusDist` | List<MetricPointVO> |
+
+##### `查询` queryDecorationSignTrend
+
+- **接口**: `queryDecorationSignTrend.do`
+- **方法**: `queryDecorationSignTrend()`
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `signTrend` | List<MetricTrendVO> |
+
+##### `查询` queryDecorationTypeDist
+
+- **接口**: `queryDecorationTypeDist.do`
+- **方法**: `queryDecorationTypeDist()`
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `typeDist` | List<MetricPointVO> |
+
+##### `更新` refreshDecorationMetric
+
+- **接口**: `refreshDecorationMetric.do`
+- **方法**: `refreshDecorationMetric()`
+
+
+> **类**: `api.report.DecorationRankAction`
+
+
+##### `更新` decorationRank
+
+- **接口**: `decorationRank.do`
+- **方法**: `decorationDesignerRank()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `decorationRank` | DecorationRankVO |  |
+
+##### `更新` decorationDepartmentRank
+
+- **接口**: `decorationDepartmentRank.do`
+- **方法**: `decorationDesignerDepartmentRank()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `decorationDepartmentRank` | DecorationDepartmentRankVO |  |
+
+##### `更新` decorationRegionRank
+
+- **接口**: `decorationRegionRank.do`
+- **方法**: `decorationRegionRank()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `decorationRegionRank` | DecorationRegionRankVO |  |
+
+
+> **类**: `api.report.FundsMetricAction`
+
+
+##### `查询` queryFundsTrend
+
+- **接口**: `queryFundsTrend.do`
+- **方法**: `queryFundsTrend()`
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `fundsTrend` | List<FundsTrendVO> |
+
+##### `更新` refreshFundsMetric
+
+- **接口**: `refreshFundsMetric.do`
+- **方法**: `refreshFundsMetric()`
+
+
+> **类**: `api.report.InventoryMetricAction`
+
+
+##### `查询` queryInventoryInOutTrend
+
+- **接口**: `queryInventoryInOutTrend.do`
+- **方法**: `queryInventoryInOutTrend()`
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `inOutTrend` | List<MetricDualTrendVO> |
+
+##### `查询` queryInventoryTypeDist
+
+- **接口**: `queryInventoryTypeDist.do`
+- **方法**: `queryInventoryTypeDist()`
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `typeDist` | List<MetricPointVO> |
+
+##### `更新` refreshInventoryMetric
+
+- **接口**: `refreshInventoryMetric.do`
+- **方法**: `refreshInventoryMetric()`
+
+
+> **类**: `api.report.PanoramaMetricAction`
+
+
+##### `查询` queryOrderPanorama
+
+- **接口**: `queryOrderPanorama.do`
+- **方法**: `queryOrderPanorama()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `orderId` | String |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `panorama` | OrderPanoramaVO |
+
+
+> **类**: `api.report.PaymentMetricAction`
+
+
+##### `查询` queryPaymentTrend
+
+- **接口**: `queryPaymentTrend.do`
+- **方法**: `queryPaymentTrend()`
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `collectTrend` | List<MetricTrendVO> |
+| `refundTrend` | List<MetricTrendVO> |
+| `netTrend` | List<MetricTrendVO> |
+
+##### `查询` queryPaymentTypeDist
+
+- **接口**: `queryPaymentTypeDist.do`
+- **方法**: `queryPaymentTypeDist()`
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `paymentTypeDist` | List<MetricPointVO> |
+
+##### `更新` refreshPaymentMetric
+
+- **接口**: `refreshPaymentMetric.do`
+- **方法**: `refreshPaymentMetric()`
+
+
+> **类**: `api.report.QuotationMetricAction`
+
+
+##### `查询` queryQuotationSignTrend
+
+- **接口**: `queryQuotationSignTrend.do`
+- **方法**: `queryQuotationSignTrend()`
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `quotationSignTrend` | List<MetricDualTrendVO> |
+
+##### `更新` refreshQuotationMetric
+
+- **接口**: `refreshQuotationMetric.do`
+- **方法**: `refreshQuotationMetric()`
+
+
+> **类**: `api.report.QuotationRankAction`
+
+
+##### `更新` rankAddReduce
+
+- **接口**: `rankAddReduce.do`
+- **方法**: `rankAddReduce()`
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `addReduceRankVOs` | List<AddReduceRankVO> |
+
+
+> **类**: `api.report.SalaryMetricAction`
+
+
+##### `查询` querySalaryMetricTrend
+
+- **接口**: `querySalaryMetricTrend.do`
+- **方法**: `querySalaryMetricTrend()`
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `salaryTrend` | List<MetricDualTrendVO> |
+
+##### `查询` querySalaryWorkerTypeDist
+
+- **接口**: `querySalaryWorkerTypeDist.do`
+- **方法**: `querySalaryWorkerTypeDist()`
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `workerTypeDist` | List<MetricPointVO> |
+
+##### `更新` refreshSalaryMetric
+
+- **接口**: `refreshSalaryMetric.do`
+- **方法**: `refreshSalaryMetric()`
+
+
+> **类**: `api.report.SalesMetricAction`
+
+
+##### `查询` querySalesTrend
+
+- **接口**: `querySalesTrend.do`
+- **方法**: `querySalesTrend()`
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `salesTrend` | List<MetricDualTrendVO> |
+
+##### `查询` querySalesCategoryDist
+
+- **接口**: `querySalesCategoryDist.do`
+- **方法**: `querySalesCategoryDist()`
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `categoryDist` | List<MetricPointVO> |
+
+##### `更新` refreshSalesMetric
+
+- **接口**: `refreshSalesMetric.do`
+- **方法**: `refreshSalesMetric()`
+

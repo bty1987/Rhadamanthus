@@ -5138,3 +5138,1429 @@
     ...
 }
 ```
+
+## 补录接口 (自动生成 2026-11-03)
+
+
+> **类**: `api.user.AttendanceAction`
+
+
+##### `更新` reportAttendance
+
+- **接口**: `reportAttendance.do`
+- **方法**: `reportAttendance()`
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `option` | JSONObject |
+
+
+> **类**: `api.user.InstorerAction`
+
+
+##### `查询` pageInstorer
+
+- **接口**: `pageInstorer.do`
+- **方法**: `pageInstorer()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `paging` | Paging | 分页参数 , 参照 [paging](../check_rule.html#page) |
+
+##### `查询` queryInstorerByPinyin
+
+- **接口**: `queryInstorerByPinyin.do`
+- **方法**: `queryInstorerByPinyin()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `instorer` | UserVO |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `instorers` | List<UserVO> |
+
+##### `新增` addInstorer
+
+- **接口**: `addInstorer.do`
+- **方法**: `addInstorer()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `instorer` | UserVO |  |
+
+##### `更新` updateInstorer
+
+- **接口**: `updateInstorer.do`
+- **方法**: `updateInstorer()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `instorer` | UserVO |  |
+
+
+> **类**: `api.user.MerchantAction`
+
+
+##### `查询` pageMerchant
+
+- **接口**: `pageMerchant.do`
+- **方法**: `pageMerchant()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `paging` | Paging | 分页参数 , 参照 [paging](../check_rule.html#page) |
+
+
+> **类**: `api.user.PerformanceAction`
+
+
+##### `查询` pagePerformance
+
+- **接口**: `pagePerformance.do`
+- **方法**: `pagePerformance()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `paging` | Paging | 分页参数 , 参照 [paging](../check_rule.html#page) |
+
+##### `新增` addPreformance
+
+- **接口**: `addPreformance.do`
+- **方法**: `addPreformance()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `performance` | PerformanceVO |  |
+
+
+> **类**: `api.user.SupplierContractAction`
+
+
+##### `查询` querySupplierContractById
+
+- **接口**: `querySupplierContractById.do`
+- **方法**: `querySupplierContractById()`
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `supplierContract` | SupplierContractVO |
+
+##### `新增` makeSupplierContract
+
+- **接口**: `makeSupplierContract.do`
+- **方法**: `makeSupplierContract()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `supplierContract` | SupplierContractVO |  |
+| `data` | String |  |
+| `table` | String |  |
+
+
+> **类**: `api.user.SupplierContractBrandAction`
+
+
+##### `查询` pageSupplierContractBrand
+
+- **接口**: `pageSupplierContractBrand.do`
+- **方法**: `pageSupplierBrands()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `paging` | Paging | 分页参数 , 参照 [paging](../check_rule.html#page) |
+| `supplierContractBrand` | SupplierContractBrandVO |  |
+
+##### `查询` querySupplierContractBrand
+
+- **接口**: `querySupplierContractBrand.do`
+- **方法**: `querySupplierContractBrand()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `supplierContractBrand` | SupplierContractBrandVO |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `supplierContractBrands` | List<SupplierContractBrandVO> |
+
+##### `新增` addSupplierContractBrand
+
+- **接口**: `addSupplierContractBrand.do`
+- **方法**: `addSupplierContractBrand()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `supplierContractBrand` | SupplierContractBrandVO |  |
+
+##### `删除` deleteSupplierContractBrand
+
+- **接口**: `deleteSupplierContractBrand.do`
+- **方法**: `deleteSupplierContractBrand()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `supplierContractBrand` | SupplierContractBrandVO |  |
+
+##### `更新` updateSupplierContractBrand
+
+- **接口**: `updateSupplierContractBrand.do`
+- **方法**: `updateSupplierContractBrand()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `supplierContractBrand` | SupplierContractBrandVO |  |
+
+
+> **类**: `api.user.SupplierContractCategoryAction`
+
+
+##### `查询` querySupplierContractCategory
+
+- **接口**: `querySupplierContractCategory.do`
+- **方法**: `querySupplierContractCategory()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `supplierContractCategory` | SupplierContractCategoryVO |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `supplierContractCategorys` | List<SupplierContractCategoryVO> |
+
+##### `新增` addSupplierContractCategory
+
+- **接口**: `addSupplierContractCategory.do`
+- **方法**: `addSupplierContractCategory()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `supplierContractCategory` | SupplierContractCategoryVO |  |
+
+##### `删除` deleteSupplierContractCategory
+
+- **接口**: `deleteSupplierContractCategory.do`
+- **方法**: `deleteSupplierContractCategory()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `supplierContractCategory` | SupplierContractCategoryVO |  |
+
+
+> **类**: `api.user.SupplierContractGoodsAction`
+
+
+##### `查询` pageSupplierContractGoods
+
+- **接口**: `pageSupplierContractGoods.do`
+- **方法**: `pageSupplierContractGoods()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `paging` | Paging | 分页参数 , 参照 [paging](../check_rule.html#page) |
+| `supplierContractGoods` | SupplierContractGoodsVO |  |
+
+##### `查询` querySupplierContractGoods
+
+- **接口**: `querySupplierContractGoods.do`
+- **方法**: `querySupplierContractGoods()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `supplierContractGoods` | SupplierContractGoodsVO |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `supplierContractGoodes` | List<SupplierContractGoodsVO> |
+
+##### `新增` addSupplierContractGoods
+
+- **接口**: `addSupplierContractGoods.do`
+- **方法**: `addSupplierContractGoods()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `supplierContractGoods` | SupplierContractGoodsVO |  |
+
+##### `删除` deleteSupplierContractGoods
+
+- **接口**: `deleteSupplierContractGoods.do`
+- **方法**: `deleteSupplierContractGoods()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `supplierContractGoods` | SupplierContractGoodsVO |  |
+
+
+> **类**: `api.user.SupplierContractProductAction`
+
+
+##### `查询` querySupplierContractProduct
+
+- **接口**: `querySupplierContractProduct.do`
+- **方法**: `querySupplierContractProduct()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `supplierContractProduct` | SupplierContractProductVO |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `supplierContractProducts` | List<SupplierContractProductVO> |
+
+##### `新增` addSupplierContractProduct
+
+- **接口**: `addSupplierContractProduct.do`
+- **方法**: `addSupplierContractProduct()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `supplierContractProducts` | List<SupplierContractProductVO> |  |
+
+##### `删除` deleteSupplierContractProduct
+
+- **接口**: `deleteSupplierContractProduct.do`
+- **方法**: `deleteSupplierContractProduct()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `supplierContractProduct` | SupplierContractProductVO |  |
+
+
+> **类**: `api.user.SupplierContractServiceAction`
+
+
+##### `查询` querySupplierContractServiceBySid
+
+- **接口**: `querySupplierContractServiceBySid.do`
+- **方法**: `querySupplierContractServiceBySid()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `supplierContractServiceVO` | SupplierContractServiceVO |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `supplierContractServices` | List<SupplierContractServiceVO> |
+
+##### `新增` addSupplierContractService
+
+- **接口**: `addSupplierContractService.do`
+- **方法**: `addSupplierContractService()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `supplierContractServiceVO` | SupplierContractServiceVO |  |
+
+##### `删除` deleteSupplierContractService
+
+- **接口**: `deleteSupplierContractService.do`
+- **方法**: `deleteSupplierContractBrand()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `supplierContractServiceVO` | SupplierContractServiceVO |  |
+
+
+> **类**: `api.user.UserAction`
+
+
+##### `查询` pageUserByMid
+
+- **接口**: `pageUserByMid.do`
+- **方法**: `pageUserByMid()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `paging` | Paging | 分页参数 , 参照 [paging](../check_rule.html#page) |
+| `module` | ModuleVO |  |
+
+
+> **类**: `api.user.UserDepartmentAction`
+
+
+##### `查询` queryUserDepartment
+
+- **接口**: `queryUserDepartment.do`
+- **方法**: `queryUserDepartment()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `user` | UserBaseVO |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `userDepartments` | List<UserDepartmentVO> |
+
+##### `更新` updateUserDepartment
+
+- **接口**: `updateUserDepartment.do`
+- **方法**: `updateUserDepartment()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `user` | UserBaseVO |  |
+| `dids` | List<Integer> |  |
+
+
+> **类**: `api.user.UserFunctionAction`
+
+
+##### `查询` queryUserFunction
+
+- **接口**: `queryUserFunction.do`
+- **方法**: `queryUserFunction()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `userFunction` | UserFunctionVO |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `userFunctions` | List<UserFunctionVO> |
+
+
+> **类**: `api.user.UserPartnerAction`
+
+
+##### `查询` queryUserPartner
+
+- **接口**: `queryUserPartner.do`
+- **方法**: `queryUserPartner()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `userPartner` | UserPartnerVO |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `userPartners` | List<UserPartnerVO> |
+
+##### `新增` addUserPartner
+
+- **接口**: `addUserPartner.do`
+- **方法**: `addUserPartner()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `userPartner` | UserPartnerVO |  |
+
+##### `删除` deleteUserPartner
+
+- **接口**: `deleteUserPartner.do`
+- **方法**: `deleteUserPartner()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `userPartner` | UserPartnerVO |  |
+
+
+> **类**: `api.user.UserPreferAction`
+
+
+##### `查询` queryUserPrefer
+
+- **接口**: `queryUserPrefer.do`
+- **方法**: `queryUserPrefer()`
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `userPrefer` | UserPreferVO |
+
+##### `查询` queryUserPrefers
+
+- **接口**: `queryUserPrefers.do`
+- **方法**: `queryUserPrefers()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `userPrefer` | UserPreferVO |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `userPrefers` | List<UserPreferVO> |
+
+##### `更新` updateUserPrefer
+
+- **接口**: `updateUserPrefer.do`
+- **方法**: `updateUserPrefer()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `userPrefer` | UserPreferVO |  |
+
+
+> **类**: `api.user.A20251113Action`
+
+
+##### `新增` registAuthCode
+
+- **接口**: `registAuthCode.do`
+- **方法**: `registAuthCode()`
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `osstoken` | String |
+
+##### `更新` exchangeAuthCode
+
+- **接口**: `exchangeAuthCode.do`
+- **方法**: `exchangeAuthCode()`
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `osstoken` | String |
+
+##### `更新` exchangeAuthCodeForToken
+
+- **接口**: `exchangeAuthCodeForToken.do`
+- **方法**: `exchangeAuthCodeForToken()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `accessToken` | String |  |
+| `userId` | String |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `osstoken` | String |
+
+##### `更新` socialAuthCode
+
+- **接口**: `socialAuthCode.do`
+- **方法**: `socialAuthCode()`
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `domain` | String |
+
+##### `更新` stateAuthCode
+
+- **接口**: `stateAuthCode.do`
+- **方法**: `stateAuthCode()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `socialCode` | String |  |
+| `socialState` | String |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `domain` | String |
+
+##### `更新` logoutAuthCode
+
+- **接口**: `logoutAuthCode.do`
+- **方法**: `logoutAuthCode()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `osstoken` | String |  |
+| `userId` | String |  |
+| `domain` | String |  |
+
+
+> **类**: `api.user.A20251208Action`
+
+
+##### `更新` saveOrUpdateUserForPlatforPm
+
+- **接口**: `saveOrUpdateUserForPlatforPm.do`
+- **方法**: `saveOrUpdateUserForPlatforPm()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `userInfo` | UserInfoVO |  |
+
+##### `更新` tranUserForPlatforPm
+
+- **接口**: `tranUserForPlatforPm.do`
+- **方法**: `tranUserForPlatforPm()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `user` | UserVO |  |
+| `approve` | String |  |
+
+##### `更新` quitUserForPlatforPm
+
+- **接口**: `quitUserForPlatforPm.do`
+- **方法**: `quitUserForPlatforPm()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `approve` | String |  |
+| `userId` | String |  |
+
+##### `更新` beginConstructionScheduleForPlatforPm
+
+- **接口**: `beginConstructionScheduleForPlatforPm.do`
+- **方法**: `beginConstructionScheduleForPlatforPm()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `constructionSchedule` | ConstructionScheduleVO |  |
+
+##### `更新` finishConstructionScheduleForPlatforPm
+
+- **接口**: `finishConstructionScheduleForPlatforPm.do`
+- **方法**: `finishConstructionScheduleForPlatforPm()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `constructionSchedule` | ConstructionScheduleVO |  |
+
+##### `更新` syncConstructionScheduleForPlatforPm
+
+- **接口**: `syncConstructionScheduleForPlatforPm.do`
+- **方法**: `syncConstructionScheduleForPlatforPm()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `constructionSchedule` | ConstructionScheduleVO |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `constructionSchedules` | List<ConstructionScheduleVO> |
+
+##### `新增` addConstructerForPlatforPm
+
+- **接口**: `addConstructerForPlatforPm.do`
+- **方法**: `addConstructerForPlatforPm()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `constructer` | ConstructerVO |  |
+
+##### `删除` deleteConstructerForPlatforPm
+
+- **接口**: `deleteConstructerForPlatforPm.do`
+- **方法**: `deleteConstructerForPlatforPm()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `constructer` | ConstructerVO |  |
+
+##### `更新` syncSupervisorForPlatforPm
+
+- **接口**: `syncSupervisorForPlatforPm.do`
+- **方法**: `syncSupervisorForPlatforPm()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `construction` | ConstructionVO |  |
+
+##### `更新` beginConstructionForPlatforPm
+
+- **接口**: `beginConstructionForPlatforPm.do`
+- **方法**: `beginConstructionForPlatforPm()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `construction` | ConstructionVO |  |
+
+##### `更新` syncConstructionForPlatforPm
+
+- **接口**: `syncConstructionForPlatforPm.do`
+- **方法**: `syncConstructionForPlatforPm()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `construction` | ConstructionVO |  |
+
+##### `更新` updateAcceptanceForPlatforPm
+
+- **接口**: `updateAcceptanceForPlatforPm.do`
+- **方法**: `updateAcceptanceForPlatforPm()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `acceptance` | AcceptanceVO |  |
+
+##### `更新` syncAcceptanceForPlatforPm
+
+- **接口**: `syncAcceptanceForPlatforPm.do`
+- **方法**: `syncAcceptanceForPlatforPm()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `acceptance` | AcceptanceVO |  |
+
+##### `更新` syncConstructionNodeForPlatforPm
+
+- **接口**: `syncConstructionNodeForPlatforPm.do`
+- **方法**: `syncConstructionNodeForPlatforPm()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `constructionNode` | ConstructionNodeVO |  |
+
+
+> **类**: `api.user.A20260103Action`
+
+
+##### `更新` updateCustomerLead
+
+- **接口**: `updateCustomerLead.do`
+- **方法**: `updateCustomerLead()`
+- **说明**: 更新客户线索接口 通过线索编号更新现有客户线索信息 更新规则： 1. 楼盘+楼号必须一起更新，缺一不可 2. house存在则关联，不存在则创建 3. customer存在则关联，不存在则创建
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `leadCode` | String |  |
+| `name` | String |  |
+| `phone` | String |  |
+| `village` | String |  |
+| `houseNumber` | String |  |
+| `buildArea` | Integer |  |
+| `userId` | String |  |
+| `orgId` | Integer |  |
+| `referOrderId` | String |  |
+| `sourceInfo` | String |  |
+| `contactInfo` | String |  |
+| `salesmanId` | String |  |
+| `name` | String |  |
+| `name` | String |  |
+| `name` | String |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `data` | Map<String, Object> |
+
+##### `查询` queryCustomerLead
+
+- **接口**: `queryCustomerLead.do`
+- **方法**: `queryCustomerLead()`
+- **说明**: 查询客户线索接口 支持三种查询方式： 1. orderId - 单独查询 2. village + houseNumber - 楼盘+楼号一同查询 3. phone - 单独查询
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `orderId` | String |  |
+| `name` | String |  |
+| `phone` | String |  |
+| `village` | String |  |
+| `houseNumber` | String |  |
+| `orgId` | Integer |  |
+| `name` | String |  |
+| `name` | String |  |
+| `name` | String |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `data` | Map<String, Object> |
+
+##### `查询` checkoverCustomerLead
+
+- **接口**: `checkoverCustomerLead.do`
+- **方法**: `checkoverCustomerLead()`
+- **说明**: 验证装修单是否存在接口 参考DecorationService.checkOverDecoration逻辑： 通过客户电话和楼盘+楼号查询是否存在有效装修单 请求参数：
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `leadCode` | String |  |
+| `phone` | String |  |
+| `village` | String |  |
+| `houseNumber` | String |  |
+| `orgId` | Integer |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `data` | Map<String, Object> |
+
+##### `新增` addCustomerLead
+
+- **接口**: `addCustomerLead.do`
+- **方法**: `addCustomerLead()`
+- **说明**: 添加客户线索接口 接收外部系统传入的客户线索信息，转换为 ERP 客户机会并创建
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `leadCode` | String |  |
+| `customerNo` | String |  |
+| `adornCode` | String |  |
+| `gender` | String |  |
+| `village` | String |  |
+| `houseNumber` | String |  |
+| `buildArea` | Integer |  |
+| `userId` | String |  |
+| `designerId` | String |  |
+| `departmentId` | Integer |  |
+| `regionId` | Integer |  |
+| `referOrderId` | String |  |
+| `sourceInfo` | String |  |
+| `contactInfo` | String |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `name` | String |
+| `phone` | String |
+| `busitype` | String |
+| `orgId` | Integer |
+| `erpJhCode` | String |
+| `erpAssignerCode` | String |
+| `erpDesignerCode` | String |
+| `issusTime` | String |
+| `erpZxdCode` | String |
+| `data` | Map<String, Object> |
+| `name` | String |
+| `name` | String |
+| `region` | String |
+| `name` | String |
+
+##### `查询` queryDepartmentByNameForSF
+
+- **接口**: `queryDepartmentByNameForSF.do`
+- **方法**: `queryDepartmentByNameForSF()`
+- **说明**: 查询部门列表接口（重写） 请求参数：
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `orgId` | Integer |  |
+| `deptType` | String |  |
+| `simpleDeptList` | List<SimpleDepartmentVO> |  |
+| `dept` | String |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `data` | Map<String, Object> |
+| `deptName` | String |
+
+##### `查询` queryUserByPinyinForSF
+
+- **接口**: `queryUserByPinyinForSF.do`
+- **方法**: `queryUserByPinyinForSF()`
+- **说明**: 根据拼音查询用户接口（重写） 请求参数：
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `pinyinName` | String |  |
+| `simpleUserList` | List<SimpleUserVO> |  |
+| `userStatus` | String |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `orgId` | Integer |
+| `data` | Map<String, Object> |
+| `user` | UserVO |
+| `departmentType` | DepartmentTypeVO |
+
+##### `查询` queryCustomerDeptRuleByDbidForSF
+
+- **接口**: `queryCustomerDeptRuleByDbidForSF.do`
+- **方法**: `queryCustomerDeptRuleByDbidForSF()`
+- **说明**: 根据部门ID和业务类型dbid查询客户部门规则接口（SF专用） 请求参数：
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `busitype` | String |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `userId` | String |
+| `orgId` | Integer |
+| `data` | Map<String, Object> |
+| `customerDeptRuleVO` | CustomerDeptRuleVO |
+| `ruleId` | Integer |
+
+##### `查询` queryCompanyForSF
+
+- **接口**: `queryCompanyForSF.do`
+- **方法**: `queryCompanyForSF()`
+- **说明**: 查询公司列表接口 请求参数：
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `cpid` | Integer |  |
+| `buildArea` | Integer |  |
+| `busitype` | String |  |
+| `simpleCompanyList` | List<SimpleCompanyVO> |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `userId` | String |
+| `orgId` | Integer |
+| `data` | Map<String, Object> |
+
+##### `更新` updateDecorationForSF
+
+- **接口**: `updateDecorationForSF.do`
+- **方法**: `updateDecorationForSF()`
+- **说明**: SF更新装修单接口 通过装修单号(orderId)修改装修单的客户电话和楼盘楼号 不存在则创建，存在则更新 请求参数：
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `orderId` | String |  |
+| `phone` | String |  |
+| `village` | String |  |
+| `houseNumber` | String |  |
+| `userId` | String |  |
+| `orgId` | Integer |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `data` | Map<String, Object> |
+
+##### `更新` updateCustomerChanceForSF
+
+- **接口**: `updateCustomerChanceForSF.do`
+- **方法**: `updateCustomerChanceForSF()`
+- **说明**: 更新客户机会客户编号接口 通过装修单号更新关联客户机会的客户编号（customerchance.customerno） 定位客户机会：ccid优先（主键直查），未传ccid时按 customerchance.orderId 定位（不走 customerchanceorder 映射）：存在则更新，不存在报 330075
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `customerNo` | String |  |
+| `orderId` | String |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `ccid` | Integer |
+| `data` | Map<String, Object> |
+
+
+> **类**: `api.user.A20260109Action`
+
+
+##### `更新` publishErpEvent
+
+- **接口**: `publishErpEvent.do`
+- **方法**: `publishErpEvent()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `eventType` | String |  |
+| `orderId` | String |  |
+| `cnid` | Long |  |
+| `userId` | Integer |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `result` | JSONObject |
+
+
+> **类**: `api.user.A20260303Action`
+
+
+##### `更新` syncVillageData
+
+- **接口**: `syncVillageData.do`
+- **方法**: `syncVillageData()`
+- **说明**: 同步楼盘数据接口 请求参数示例（表单格式）： vid= name=万科城市花园 proper=铁西区 city=沈阳市 pvid= company=1 no=FLP-00001 rule=[{"rule":"\\d#\\d-\\d","comment":"数字#数字-数字"}]
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `pvid` | String |  |
+| `company` | Integer |  |
+| `no` | String |  |
+| `rule` | String |  |
+| `x` | Double |  |
+| `companyDistance` | Long |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `vid` | String |
+| `name` | String |
+| `proper` | String |
+| `city` | String |
+| `y` | Double |
+
+
+> **类**: `api.user.A20260324Action`
+
+
+##### `更新` syncDuty
+
+- **接口**: `syncDuty.do`
+- **方法**: `syncDuty()`
+- **说明**: 同步职位信息接口 请求参数示例： { "name": "司机", // 职位名称 "code": "POST9526", // 职位编码（更新时提供） "type": 1, // 部门类型ID "org_code": "DEPT9526", // 部门编号（保留但未使用） "status": 1, // 状态：1启用，2禁用 "leader_flag": 0 // 是否领导岗：0否，1是 }
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `code` | String |  |
+| `org_code` | String |  |
+| `status` | Integer |  |
+| `leader_flag` | Integer |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `name` | String |
+| `type` | Integer |
+| `data` | String |
+
+##### `更新` syncDepartment
+
+- **接口**: `syncDepartment.do`
+- **方法**: `syncDepartment()`
+- **说明**: 同步部门信息接口 请求参数示例： { "dept_id": 123, // 部门主键ID（更新时提供，优先级高于code） "name": "设计一部", // 部门名称 "code": "DEPT9526", // 信息平台部门ID或编码：更新时提供 "type": 1, // 部门类型ID "parent_code": "DEPT9525", // 信息平台父级编码：创建/更新时提供 "org_code": "1", // 公司ID（对应 company.cid）：创建时提供 "status": 1, // 状态：1启用，2禁用 "order_value": 1, // 排序值 "leader_code": "FL-09527", // 部门经理工号 "posts": "{\"1\": 10, \"2\": 20}" // 定岗映射信息：岗位码 => 人员上限值（JSON字符串） } 更新定位优先级：dept_id（主键）→ code（编码）；两者均为空时视为新增。
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `status` | Integer |  |
+| `parent_code` | String |  |
+| `order_value` | Integer |  |
+| `leader_code` | String |  |
+| `posts` | String |  |
+| `dept_id` | Integer |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `name` | String |
+| `code` | String |
+| `org_code` | String |
+| `type` | Integer |
+| `data` | String |
+
+##### `更新` syncUser
+
+- **接口**: `syncUser.do`
+- **方法**: `syncUser()`
+- **说明**: 同步用户信息接口 请求参数示例： { "code": "FL-09527", // 用户工号（更新时提供，新增时为空） "name": "张三", // 姓名（必填） "current_name": "张三", // 现用名（可选，默认使用name） "gender": 1, // 性别：0女，1男（可选，默认1） "identity": "210xxx...", // 身份证号（必填） "phone": "13800138000", // 手机号（必填） "login_id": "zhangsan", // 登录用户名（可选，默认使用userId） "dept_id": 123, // 部门ID（必填） "duty_id": 456, // 职位ID（必填） "company": 1, // 公司ID（必填，user.company） "status": 1 // 状态：1在职, 0离职, 2停薪留职（可选，默认1） } 响应示例： { "errorCode": 0, "errorMsg": "", "code": "FL-09527", // 工号userId(顶层, 新增) "data": { "code": "12345", // user.uid "belong_org_code": "1", // user.company "userId": "FL-09527" // user.userId（工号, 原样保留兼容既有解析方） } }
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `status` | Integer |  |
+| `current_name` | String |  |
+| `gender` | Integer |  |
+| `login_id` | String |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `name` | String |
+| `code` | String |
+| `identity` | String |
+| `phone` | String |
+| `dept_id` | Integer |
+| `duty_id` | Long |
+| `company` | Integer |
+| `data` | String |
+
+
+> **类**: `api.user.A20260404Action`
+
+
+##### `更新` syncSupplier
+
+- **接口**: `syncSupplier.do`
+- **方法**: `syncSupplier()`
+- **说明**: 同步供应商数据接口 通过编号(userId)判断是否存在，存在则更新，不存在则创建
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `creditCode` | String |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `userId` | String |
+| `userName` | String |
+| `phone` | String |
+| `company` | Integer |
+| `data` | Map<String, Object> |
+
+##### `更新` syncInstorer
+
+- **接口**: `syncInstorer.do`
+- **方法**: `syncInstorer()`
+- **说明**: 同步驻店人员数据接口 通过编号(userId)判断是否存在：存在且类型为驻店员则更新，不存在则创建；存在但非驻店员则报错 传入 brands 时以品牌编号列表为准全量对齐品牌绑定关系（补缺删多）；brands 未传时跳过品牌绑定管理（不新增/不删除/不改代理信息）
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `brands` | String |  |
+| `agentName` | String |  |
+| `agentPhone` | String |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `userId` | String |
+| `userName` | String |
+| `phone` | String |
+| `company` | Integer |
+| `supplierUserId` | String |
+| `data` | Map<String, Object> |
+
+
+> **类**: `api.user.A20260904Action`
+
+
+##### `更新` syncAoods
+
+- **接口**: `syncAoods.do`
+- **方法**: `syncAoods()`
+- **说明**: 同步辅材档案接口 以货号(no)为业务键：商品不存在则创建商品（含默认颜色/规格）+ 辅材档案，存在则更新
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `measurementUnit` | String |  |
+| `normunit` | String |  |
+| `normnum` | Integer |  |
+| `storeunit` | String |  |
+| `storenum` | Integer |  |
+| `atid` | Long |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `no` | String |
+| `name` | String |
+| `company` | Integer |
+| `data` | Map<String, Object> |
+
+##### `更新` syncStorehouse
+
+- **接口**: `syncStorehouse.do`
+- **方法**: `syncStorehouse()`
+- **说明**: 同步仓库档案接口 以仓库编号(code)为业务键：不存在则创建，存在则更新名称/状态
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `status` | Integer |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `name` | String |
+| `code` | String |
+| `data` | Map<String, Object> |
+
+##### `更新` syncStorehouseStock
+
+- **接口**: `syncStorehouseStock.do`
+- **方法**: `syncStorehouseStock()`
+- **说明**: 同步出入库接口（含 manifest 单据信息） type=in 入库：库存行不存在自动创建并累加；type=out 出库：库存行不存在或不足直接拒绝 每次调用生成一张 manifest 单据（in=CG 进货 / out=XG 出货）+ 明细，单事务失败整体回滚
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `manifestTime` | String |  |
+| `comment` | String |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `no` | String |
+| `storehouseCode` | String |
+| `type` | String |
+| `num` | Integer |
+| `company` | Integer |
+| `data` | Map<String, Object> |
+
+
+> **类**: `api.user.A20261025Action`
+
+
+##### `更新` syncProsignForNerp
+
+- **接口**: `syncProsignForNerp.do`
+- **方法**: `syncProsignForNerp()`
+- **说明**: NERP凭空预签接口 不依赖 ERP 预签报价流程: 凭空创建一张无明细的锁定预签单(protation, 金额/面积/版本等字段按入参回填), 并将装修单推进到预签状态
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `name` | String |  |
+| `ppid` | Long |  |
+| `qvid` | Long |  |
+| `product` | String |  |
+| `comment` | String |  |
+| `totalPrice` | Long |  |
+| `quotePrice` | Long |  |
+| `quoteArea` | Integer |  |
+| `unitPrice` | Long |  |
+| `costPrice` | Long |  |
+| `profitRate` | Integer |  |
+| `basicPrice` | Long |  |
+| `comdPrice` | Long |  |
+| `commPrice` | Long |  |
+| `adddPrice` | Long |  |
+| `addmPrice` | Long |  |
+| `subdPrice` | Long |  |
+| `submPrice` | Long |  |
+| `subcPrice` | Long |  |
+| `accdPrice` | Long |  |
+| `accmPrice` | Long |  |
+| `mostPrice` | Long |  |
+| `costRate` | Integer |  |
+| `mostRate` | Integer |  |
+| `totalCost` | Long |  |
+| `totalProfit` | Long |  |
+| `discount` | Integer |  |
+| `manageRate` | Integer |  |
+| `manageFormula` | String |  |
+| `manageDiscount` | Integer |  |
+| `managePrice` | Long |  |
+| `taxRate` | Integer |  |
+| `taxFormula` | String |  |
+| `taxPrice` | Long |  |
+| `preferPrice` | Long |  |
+| `activityPrice` | Long |  |
+| `activityProfit` | Long |  |
+| `manageProfit` | Long |  |
+| `advanceProfit` | Long |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `orderId` | String |
+| `data` | Map<String, Object> |
+
+##### `更新` syncSignContractForNerp
+
+- **接口**: `syncSignContractForNerp.do`
+- **方法**: `syncSignContractForNerp()`
+- **说明**: NERP凭空签约接口 匹配 signDecorationContract: 订单无默认报价时凭空创建一条无明细报价单并锁单, 装修单推进签约状态(3), 归属提成挂账, 签约消息队列与页面签约同路
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `qvid` | Long |  |
+| `totalPrice` | Long |  |
+| `discount` | Integer |  |
+| `quotationName` | String |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `orderId` | String |
+| `data` | Map<String, Object> |
+
+##### `更新` syncDecorationPaymentForNerp
+
+- **接口**: `syncDecorationPaymentForNerp.do`
+- **方法**: `syncDecorationPaymentForNerp()`
+- **说明**: NERP凭空款项计划接口 匹配 makeDecorationPayment: 按款项比例方案(psid)将提交额(money)拆分为若干未收装修款项, 支撑后续在 ERP 走正常收款动作
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `money` | Long |  |
+| `cost` | Long |  |
+| `psid` | Long |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `orderId` | String |
+| `data` | Map<String, Object> |
+

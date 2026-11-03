@@ -7520,3 +7520,535 @@ Parameters:	salesPayments (List) – 销售款信息列表 , 每条数据类型 
     ...
 }
 ```
+
+## 补录接口 (自动生成 2026-11-03)
+
+
+> **类**: `api.payment.DecorationPaymentAction`
+
+
+##### `更新` settleDecorationPayment
+
+- **接口**: `settleDecorationPayment.do`
+- **方法**: `settleDecorationPayment()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `decorationPayment` | DecorationPaymentVO |  |
+
+##### `更新` withdrawDecorationPayment
+
+- **接口**: `withdrawDecorationPayment.do`
+- **方法**: `withdrawDecorationPayment()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `decorationPayment` | DecorationPaymentVO |  |
+
+##### `更新` refundDecorationPaymentForDesign
+
+- **接口**: `refundDecorationPaymentForDesign.do`
+- **方法**: `refundDecorationPaymentForDesign()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `decorationPayment` | DecorationPaymentVO |  |
+
+##### `更新` affirmDecorationPayment
+
+- **接口**: `affirmDecorationPayment.do`
+- **方法**: `affirmDecorationPayment()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `decorationPayment` | DecorationPaymentVO |  |
+| `securityCode` | String |  |
+| `verifyCode` | String |  |
+| `phoneCode` | String |  |
+| `company` | String |  |
+
+##### `更新` pushDecorationPayment
+
+- **接口**: `pushDecorationPayment.do`
+- **方法**: `pushDecorationPayment()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `decorationPayment` | DecorationPaymentVO |  |
+
+
+> **类**: `api.payment.MaterialPaymentAction`
+
+
+##### `查询` amountMaterialPayment
+
+- **接口**: `amountMaterialPayment.do`
+- **方法**: `amountMaterialPayment()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `materialPayment` | MaterialPaymentVO |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `amount` | Long |
+
+
+> **类**: `api.payment.OalesPaymentAction`
+
+
+##### `查询` pageOalesPayment
+
+- **接口**: `pageOalesPayment.do`
+- **方法**: `pageOalesPayment()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `paging` | Paging | 分页参数 , 参照 [paging](../check_rule.html#page) |
+| `oalesPayment` | OalesPaymentVO |  |
+| `companyType` | String |  |
+
+##### `查询` queryOalesPaymentByOrderId
+
+- **接口**: `queryOalesPaymentByOrderId.do`
+- **方法**: `queryOalesPaymentByOrderId()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `oalesPayment` | OalesPaymentVO |  |
+| `companyType` | String |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `oalesPayments` | List<OalesPaymentVO> |
+
+##### `查询` queryOalesPaymentByOid
+
+- **接口**: `queryOalesPaymentByOid.do`
+- **方法**: `queryOalesPaymentByOid()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `oalesPayment` | OalesPaymentVO |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `oalesPayments` | List<OalesPaymentVO> |
+
+##### `查询` queryOalesPaymentForNotInitByOrid
+
+- **接口**: `queryOalesPaymentForNotInitByOrid.do`
+- **方法**: `queryOalesPaymentForNotInitByOrid()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `oalesReceipt` | OalesReceiptVO |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `oalesPayments` | List<OalesPaymentVO> |
+
+##### `新增` addOalesPayment
+
+- **接口**: `addOalesPayment.do`
+- **方法**: `addOalesPayment()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `oalesPayment` | OalesPaymentVO |  |
+
+##### `撤销` cancelOalesPayment
+
+- **接口**: `cancelOalesPayment.do`
+- **方法**: `cancelOalesPayment()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `oalesPayment` | OalesPaymentVO |  |
+
+##### `更新` collectOalesPayment
+
+- **接口**: `collectOalesPayment.do`
+- **方法**: `collectOalesPayment()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `oalesPayment` | OalesPaymentVO |  |
+| `oalesReceipt` | OalesReceiptVO |  |
+| `ptids` | List<Long> |  |
+
+##### `更新` refundOalesPayment
+
+- **接口**: `refundOalesPayment.do`
+- **方法**: `refundOalesPayment()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `oalesPayment` | OalesPaymentVO |  |
+| `oalesReceipt` | OalesReceiptVO |  |
+
+##### `更新` updateOalesPayment
+
+- **接口**: `updateOalesPayment.do`
+- **方法**: `updateOalesPayment()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `oalesPayment` | OalesPaymentVO |  |
+| `oalesReceipt` | OalesReceiptVO |  |
+
+##### `更新` confirmOalesPayment
+
+- **接口**: `confirmOalesPayment.do`
+- **方法**: `confirmOalesPayment()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `opids` | List<Long> |  |
+
+
+> **类**: `api.payment.OalesReceiptAction`
+
+
+##### `查询` queryOalesReceiptByOrId
+
+- **接口**: `queryOalesReceiptByOrId.do`
+- **方法**: `queryOalesReceiptByOrId()`
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `oalesReceipt` | OalesReceiptVO |
+
+
+> **类**: `api.payment.PaymentAction`
+
+
+##### `查询` queryPaymentByArid
+
+- **接口**: `queryPaymentByArid.do`
+- **方法**: `queryPaymentByArid()`
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `payment` | PaymentVO |
+
+
+> **类**: `api.payment.PaymentCommonAction`
+
+
+##### `更新` divisionCallback
+
+- **接口**: `divisionCallback.do`
+- **方法**: `divisionCallback()`
+
+##### `查询` queryPaymentByPid
+
+- **接口**: `queryPaymentByPid.do`
+- **方法**: `queryPaymentByPid()`
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `payment` | PaymentVO |
+
+##### `更新` wxpay
+
+- **接口**: `wxpay.do`
+- **方法**: `wxpay()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `wxpay` | Wxpay |  |
+
+##### `更新` alipay
+
+- **接口**: `alipay.do`
+- **方法**: `alipay()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `wxpay` | Wxpay |  |
+
+
+> **类**: `api.payment.PaymentFunctionAction`
+
+
+##### `查询` pagePaymentFunction
+
+- **接口**: `pagePaymentFunction.do`
+- **方法**: `pagePaymentFunction()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `paging` | Paging | 分页参数 , 参照 [paging](../check_rule.html#page) |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `paymentFunctions` | List<PaymentFunctionVO> |
+
+##### `新增` addPaymentFunction
+
+- **接口**: `addPaymentFunction.do`
+- **方法**: `addPaymentFunction()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `paymentFunction` | PaymentFunctionVO |  |
+
+##### `更新` updatePaymentFunction
+
+- **接口**: `updatePaymentFunction.do`
+- **方法**: `updatePaymentFunction()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `paymentFunction` | PaymentFunctionVO |  |
+
+##### `删除` deletePaymentFunction
+
+- **接口**: `deletePaymentFunction.do`
+- **方法**: `deletePaymentFunction()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `paymentFunction` | PaymentFunctionVO |  |
+
+
+> **类**: `api.payment.PaytranAction`
+
+
+##### `更新` pospay
+
+- **接口**: `pospay.do`
+- **方法**: `pospay()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `paytran` | PaytranVO |  |
+
+##### `更新` codepay
+
+- **接口**: `codepay.do`
+- **方法**: `codepay()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `paytran` | PaytranVO |  |
+
+##### `更新` updateKey
+
+- **接口**: `updateKey.do`
+- **方法**: `updateKey()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `mchNo` | String |  |
+| `bsCheckoutPublickey` | String |  |
+| `bsPrivateKey` | String |  |
+
+
+> **类**: `api.payment.ProxyPaymentAction`
+
+
+##### `查询` queryProxyReceiptByPrId
+
+- **接口**: `queryProxyReceiptByPrId.do`
+- **方法**: `queryProxyReceiptByPrId()`
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `proxyReceipt` | ProxyReceiptVO |
+
+
+> **类**: `api.payment.SalesPaymentAction`
+
+
+##### `更新` settleSalesPayment
+
+- **接口**: `settleSalesPayment.do`
+- **方法**: `settleSalesPayment()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `salesPayment` | SalesPaymentVO |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `company` | String |
+
+##### `更新` withdrawSalesPayment
+
+- **接口**: `withdrawSalesPayment.do`
+- **方法**: `withdrawSalesPayment()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `salesPayment` | SalesPaymentVO |  |
+
+##### `更新` pushSalesPayment
+
+- **接口**: `pushSalesPayment.do`
+- **方法**: `pushSalesPayment()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `salesPayment` | SalesPaymentVO |  |
+
+##### `更新` affirmSalesPayment
+
+- **接口**: `affirmSalesPayment.do`
+- **方法**: `affirmSalesPayment()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `salesPayment` | SalesPaymentVO |  |
+| `securityCode` | String |  |
+| `verifyCode` | String |  |
+| `phoneCode` | String |  |
+| `company` | String |  |
+
+
+> **类**: `api.payment.ServicePaymentAction`
+
+
+##### `查询` queryServicePaymentBySpid
+
+- **接口**: `queryServicePaymentBySpid.do`
+- **方法**: `queryServicePaymentBySpid()`
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `servicePayment` | ServicePaymentVO |
+
+##### `更新` sendServicePayment
+
+- **接口**: `sendServicePayment.do`
+- **方法**: `sendServicePayment()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `servicePayment` | ServicePaymentVO |  |
+
+
+> **类**: `api.payment.WalletresAction`
+
+
+##### `新增` addWalletres
+
+- **接口**: `addWalletres.do`
+- **方法**: `addWalletres()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `walletres` | WalletresVO |  |
+
+
+> **类**: `api.payment.PostarAction`
+
+
+##### `更新` callbackPostar
+
+- **接口**: `callbackPostar.do`
+- **方法**: `callbackPostar()`
+
+
+> **类**: `api.payment.SwiftpassAction`
+
+
+##### `更新` callbackSwiftpass
+
+- **接口**: `callbackSwiftpass.do`
+- **方法**: `callbackSwiftpass()`
+
+
+> **类**: `api.payment.YSPayCallback`
+
+
+##### `更新` yspayCallback
+
+- **接口**: `yspayCallback.do`
+- **方法**: `yspayCallback()`
+

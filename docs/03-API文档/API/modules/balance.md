@@ -3600,3 +3600,345 @@
     "comcost.status": 0
 }
 ```
+
+## 补录接口 (自动生成 2026-11-03)
+
+
+> **类**: `api.balance.BalanceAccountAction`
+
+
+##### `更新` updateBalanceAccount
+
+- **接口**: `updateBalanceAccount.do`
+- **方法**: `updateBalanceAccount()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `balanceAccount` | BalanceAccountVO |  |
+
+
+> **类**: `api.balance.BalanceApportAction`
+
+
+##### `查询` queryBalanceApportForBalance
+
+- **接口**: `queryBalanceApportForBalance.do`
+- **方法**: `queryBalanceApportForBalance()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `balanceApport` | BalanceApportVO |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `balanceApports` | List<BalanceApportVO> |
+
+##### `新增` addBalanceApport
+
+- **接口**: `addBalanceApport.do`
+- **方法**: `addBalanceApport()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `balanceApport` | BalanceApportVO |  |
+
+
+> **类**: `api.balance.BalanceCutpayAction`
+
+
+##### `查询` queryBalanceCutpayByOuid
+
+- **接口**: `queryBalanceCutpayByOuid.do`
+- **方法**: `queryBalanceCutpayByOuid()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `balanceCutpay` | BalanceCutpayVO |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `balanceCutpays` | List<BalanceCutpayVO> |
+
+##### `更新` submitBalanceCutpay
+
+- **接口**: `submitBalanceCutpay.do`
+- **方法**: `submitBalanceCutpay()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `balanceCutpay` | BalanceCutpayVO |  |
+
+##### `更新` unbindBalanceCutpay
+
+- **接口**: `unbindBalanceCutpay.do`
+- **方法**: `unbindBalanceCutpay()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `balanceCutpay` | BalanceCutpayVO |  |
+
+
+> **类**: `api.balance.BalanceOalesItemAction`
+
+
+##### `查询` pageBalanceOalesItem
+
+- **接口**: `pageBalanceOalesItem.do`
+- **方法**: `pageBalanceOalesItem()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `paging` | Paging | 分页参数 , 参照 [paging](../check_rule.html#page) |
+| `balanceOales` | BalanceOalesVO |  |
+
+##### `查询` queryBalanceOalesItem
+
+- **接口**: `queryBalanceOalesItem.do`
+- **方法**: `queryBalanceOalesItem()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `balanceOalesItem` | BalanceOalesItemVO |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `balanceOalesItems` | List<BalanceOalesItemVO> |
+
+##### `查询` countBalanceOalesItem
+
+- **接口**: `countBalanceOalesItem.do`
+- **方法**: `countBalanceOalesItem()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `balanceOales` | BalanceOalesVO |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `count` | int |
+
+
+> **类**: `api.balance.BalancePictureAction`
+
+
+##### `查询` queryBalancePicture
+
+- **接口**: `queryBalancePicture.do`
+- **方法**: `queryBalancePicture()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `balancePicture` | BalancePictureVO |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `balancePictures` | List<BalancePictureVO> |
+
+##### `新增` addBalancePicture
+
+- **接口**: `addBalancePicture.do`
+- **方法**: `addBalancePicture()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `balancePicture` | BalancePictureVO |  |
+
+##### `删除` deleteBalancePicture
+
+- **接口**: `deleteBalancePicture.do`
+- **方法**: `deleteBalancePicture()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `balancePicture` | BalancePictureVO |  |
+
+
+> **类**: `api.balance.BalanceSalesAction`
+
+
+##### `查询` pageBalanceSalesForSupplier
+
+- **接口**: `pageBalanceSalesForSupplier.do`
+- **方法**: `pageBalanceSalesForSupplier()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `paging` | Paging | 分页参数 , 参照 [paging](../check_rule.html#page) |
+
+##### `更新` splitBalanceSales
+
+- **接口**: `splitBalanceSales.do`
+- **方法**: `splitBalanceSales()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `balanceSales` | BalanceSalesVO |  |
+
+##### `更新` affirmBalanceSales
+
+- **接口**: `affirmBalanceSales.do`
+- **方法**: `affirmBalanceSales()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `balanceSales` | BalanceSalesVO |  |
+
+
+> **类**: `api.balance.BalanceSelectionAction`
+
+
+##### `查询` pageBalanceSelectionForSupplier
+
+- **接口**: `pageBalanceSelectionForSupplier.do`
+- **方法**: `pageBalanceSelectionForSupplier()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `paging` | Paging | 分页参数 , 参照 [paging](../check_rule.html#page) |
+
+##### `更新` batchBalanceSelection
+
+- **接口**: `batchBalanceSelection.do`
+- **方法**: `batchBalanceSelection()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `balanceSelection` | BalanceSelectionVO |  |
+| `balanceSelectionItems` | List<BalanceSelectionItemVO> |  |
+
+##### `更新` splitBalanceSelection
+
+- **接口**: `splitBalanceSelection.do`
+- **方法**: `splitBalanceSelection()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `balanceSelection` | BalanceSelectionVO |  |
+
+##### `更新` auditBalanceSelection
+
+- **接口**: `auditBalanceSelection.do`
+- **方法**: `auditBalanceSelection()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `balanceSelection` | BalanceSelectionVO |  |
+
+##### `更新` unauditBalanceSelection
+
+- **接口**: `unauditBalanceSelection.do`
+- **方法**: `unauditBalanceSelection()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `balanceSelection` | BalanceSelectionVO |  |
+
+##### `更新` discountBalanceSelection
+
+- **接口**: `discountBalanceSelection.do`
+- **方法**: `discountBalanceSelection()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `balanceSelection` | BalanceSelectionVO |  |
+
+
+> **类**: `api.balance.BalanceSelectionItemAction`
+
+
+##### `查询` fetchBalanceSelectionItem
+
+- **接口**: `fetchBalanceSelectionItem.do`
+- **方法**: `fetchBalanceSelectionItem()`
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `balanceSelectionItem` | BalanceSelectionItemVO |
+
+##### `更新` pendingBalanceSelectionItem
+
+- **接口**: `pendingBalanceSelectionItem.do`
+- **方法**: `pendingBalanceSelectionItem()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `balanceSelection` | BalanceSelectionVO |  |
+| `balanceSelectionItem` | BalanceSelectionItemVO |  |
+
+
+> **类**: `api.balance.BalanceSelectionRecordAction`
+
+
+##### `查询` queryBalanceSelectionRecord
+
+- **接口**: `queryBalanceSelectionRecord.do`
+- **方法**: `queryBalanceSelectionRecord()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `balanceSelectionRecord` | BalanceSelectionRecordVO |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `balanceSelectionRecords` | List<BalanceSelectionRecordVO> |
+

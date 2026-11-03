@@ -8647,3 +8647,1343 @@
     "background.path": "2016/08/02/2/c7ec4da2429a4debbc3cca21eb5035b9.png"
 }
 ```
+
+## 补录接口 (自动生成 2026-11-03)
+
+
+> **类**: `api.customer.CustomerAfterSalesAction`
+
+
+##### `查询` pageCustomerAfterSales
+
+- **接口**: `pageCustomerAfterSales.do`
+- **方法**: `pageCustomerAfterSales()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `paging` | Paging | 分页参数 , 参照 [paging](../check_rule.html#page) |
+
+##### `查询` queryCustomerAfterSalesByAsid
+
+- **接口**: `queryCustomerAfterSalesByAsid.do`
+- **方法**: `queryCustomerAfterSalesByAsid()`
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `customerAfterSales` | CustomerAfterSalesVO |
+
+##### `查询` queryCustomerAfterSalesByOrderId
+
+- **接口**: `queryCustomerAfterSalesByOrderId.do`
+- **方法**: `queryCustomerAfterSalesByOrderId()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `customerAfterSales` | CustomerAfterSalesVO |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `customerAfterSaleses` | List<CustomerAfterSalesVO> |
+
+##### `查询` queryCustomerAfterSalesByCid
+
+- **接口**: `queryCustomerAfterSalesByCid.do`
+- **方法**: `queryCustomerAfterSalesByCid()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `customerAfterSales` | CustomerAfterSalesVO |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `customerAfterSaleses` | List<CustomerAfterSalesVO> |
+
+##### `新增` addCustomerAfterSales
+
+- **接口**: `addCustomerAfterSales.do`
+- **方法**: `addCustomerAfterSales()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `customerAfterSales` | CustomerAfterSalesVO |  |
+
+##### `更新` receiveCustomerAfterSales
+
+- **接口**: `receiveCustomerAfterSales.do`
+- **方法**: `receiveCustomerAfterSales()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `customerAfterSales` | CustomerAfterSalesVO |  |
+
+##### `更新` handleCustomerAfterSales
+
+- **接口**: `handleCustomerAfterSales.do`
+- **方法**: `handleCustomerAfterSales()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `customerAfterSales` | CustomerAfterSalesVO |  |
+
+##### `更新` dispatchCustomerAfterSales
+
+- **接口**: `dispatchCustomerAfterSales.do`
+- **方法**: `dispatchCustomerAfterSales()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `customerAfterSales` | CustomerAfterSalesVO |  |
+
+##### `更新` tranCustomerAfterSales
+
+- **接口**: `tranCustomerAfterSales.do`
+- **方法**: `tranCustomerAfterSales()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `customerAfterSales` | CustomerAfterSalesVO |  |
+
+##### `更新` holdCustomerAfterSales
+
+- **接口**: `holdCustomerAfterSales.do`
+- **方法**: `holdCustomerAfterSales()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `customerAfterSales` | CustomerAfterSalesVO |  |
+
+##### `更新` upgradeCustomerAfterSales
+
+- **接口**: `upgradeCustomerAfterSales.do`
+- **方法**: `upgradeCustomerAfterSales()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `customerAfterSales` | CustomerAfterSalesVO |  |
+
+##### `更新` finishCustomerAfterSales
+
+- **接口**: `finishCustomerAfterSales.do`
+- **方法**: `finishCustomerAfterSales()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `customerAfterSales` | CustomerAfterSalesVO |  |
+
+##### `更新` closeCustomerAfterSales
+
+- **接口**: `closeCustomerAfterSales.do`
+- **方法**: `closeCustomerAfterSales()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `customerAfterSales` | CustomerAfterSalesVO |  |
+
+##### `撤销` cancelCustomerAfterSales
+
+- **接口**: `cancelCustomerAfterSales.do`
+- **方法**: `cancelCustomerAfterSales()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `customerAfterSales` | CustomerAfterSalesVO |  |
+
+##### `更新` reopenCustomerAfterSales
+
+- **接口**: `reopenCustomerAfterSales.do`
+- **方法**: `reopenCustomerAfterSales()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `customerAfterSales` | CustomerAfterSalesVO |  |
+
+##### `查询` queryCustomerAfterSalesRecord
+
+- **接口**: `queryCustomerAfterSalesRecord.do`
+- **方法**: `queryCustomerAfterSalesRecord()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `customerAfterSalesRecord` | CustomerAfterSalesRecordVO |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `customerAfterSalesRecords` | List<CustomerAfterSalesRecordVO> |
+
+##### `新增` addCustomerAfterSalesRecord
+
+- **接口**: `addCustomerAfterSalesRecord.do`
+- **方法**: `addCustomerAfterSalesRecord()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `customerAfterSalesRecord` | CustomerAfterSalesRecordVO |  |
+
+##### `查询` queryCustomerAfterSalesRef
+
+- **接口**: `queryCustomerAfterSalesRef.do`
+- **方法**: `queryCustomerAfterSalesRef()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `customerAfterSalesRef` | CustomerAfterSalesRefVO |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `customerAfterSalesRefs` | List<CustomerAfterSalesRefVO> |
+
+##### `新增` addCustomerAfterSalesRef
+
+- **接口**: `addCustomerAfterSalesRef.do`
+- **方法**: `addCustomerAfterSalesRef()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `customerAfterSalesRef` | CustomerAfterSalesRefVO |  |
+
+
+> **类**: `api.customer.CustomerChanceAction`
+
+
+##### `查询` queryCustomerChanceByCcid
+
+- **接口**: `queryCustomerChanceByCcid.do`
+- **方法**: `queryCustomerChanceByCcid()`
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `customerChance` | CustomerChanceVO |
+
+##### `新增` addCustomerChance
+
+- **接口**: `addCustomerChance.do`
+- **方法**: `addCustomerChance()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `customerChance` | CustomerChanceVO |  |
+| `company` | String |  |
+
+##### `更新` vodeCustomerChance
+
+- **接口**: `vodeCustomerChance.do`
+- **方法**: `vodeCustomerChance()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `customerChance` | CustomerChanceVO |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `securityCode` | String |
+
+##### `更新` confirmCustomerChance
+
+- **接口**: `confirmCustomerChance.do`
+- **方法**: `confirmCustomerChance()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `customerChance` | CustomerChanceVO |  |
+| `company` | String |  |
+| `securityCode` | String |  |
+| `verifyCode` | String |  |
+| `phoneCode` | String |  |
+
+##### `更新` affirmCustomerChance
+
+- **接口**: `affirmCustomerChance.do`
+- **方法**: `affirmCustomerChance()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `customerChance` | CustomerChanceVO |  |
+| `company` | String |  |
+| `securityCode` | String |  |
+| `verifyCode` | String |  |
+| `phoneCode` | String |  |
+
+##### `更新` readCustomerChance
+
+- **接口**: `readCustomerChance.do`
+- **方法**: `readCustomerChance()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `customerChance` | CustomerChanceVO |  |
+
+##### `更新` configCustomerChance
+
+- **接口**: `configCustomerChance.do`
+- **方法**: `configCustomerChance()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `customerChance` | CustomerChanceVO |  |
+
+##### `更新` fineCustomerChance
+
+- **接口**: `fineCustomerChance.do`
+- **方法**: `fineCustomerChance()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `customerChance` | CustomerChanceVO |  |
+
+##### `更新` finishCustomerChance
+
+- **接口**: `finishCustomerChance.do`
+- **方法**: `finishCustomerChance()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `customerChance` | CustomerChanceVO |  |
+| `decoration` | DecorationVO |  |
+
+##### `更新` uncheckCustomerChance
+
+- **接口**: `uncheckCustomerChance.do`
+- **方法**: `uncheckCustomerChance()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `customerChance` | CustomerChanceVO |  |
+
+##### `更新` tranCustomerChance
+
+- **接口**: `tranCustomerChance.do`
+- **方法**: `tranCustomerChance()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `customerChance` | CustomerChanceVO |  |
+
+##### `更新` approveCustomerChance
+
+- **接口**: `approveCustomerChance.do`
+- **方法**: `approveCustomerChance()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `customerChance` | CustomerChanceVO |  |
+
+
+> **类**: `api.customer.CustomerCityProperRuleAction`
+
+
+##### `查询` pageCustomerCityProperRule
+
+- **接口**: `pageCustomerCityProperRule.do`
+- **方法**: `pageCustomerCityProperRule()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `paging` | Paging | 分页参数 , 参照 [paging](../check_rule.html#page) |
+
+##### `查询` queryCustomerCityProperRule
+
+- **接口**: `queryCustomerCityProperRule.do`
+- **方法**: `queryCustomerCityProperRule()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `customerCityProperRule` | CustomerCityProperRuleVO |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `customerCityProperRules` | List<CustomerCityProperRuleVO> |
+
+##### `新增` addCustomerCityProperRule
+
+- **接口**: `addCustomerCityProperRule.do`
+- **方法**: `addCustomerCityProperRule()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `customerCityProperRule` | CustomerCityProperRuleVO |  |
+
+##### `删除` deleteCustomerCityProperRule
+
+- **接口**: `deleteCustomerCityProperRule.do`
+- **方法**: `deleteCustomerCityProperRule()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `customerCityProperRule` | CustomerCityProperRuleVO |  |
+
+##### `更新` updateCustomerCityProperRule
+
+- **接口**: `updateCustomerCityProperRule.do`
+- **方法**: `updateCustomerCityProperRule()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `customerCityProperRule` | CustomerCityProperRuleVO |  |
+
+
+> **类**: `api.customer.CustomerCompanyRuleAction`
+
+
+##### `查询` pageCustomerCompanyRule
+
+- **接口**: `pageCustomerCompanyRule.do`
+- **方法**: `pageCustomerCompanyRule()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `paging` | Paging | 分页参数 , 参照 [paging](../check_rule.html#page) |
+
+
+> **类**: `api.customer.CustomerDeptRuleAction`
+
+
+##### `查询` queryCustomerDeptRuleByDid
+
+- **接口**: `queryCustomerDeptRuleByDid.do`
+- **方法**: `queryCustomerDeptRuleByDid()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `customerDeptRule` | CustomerDeptRuleVO |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `customerDeptRules` | List<CustomerDeptRuleVO> |
+
+##### `查询` queryCustomerDeptRuleByDbid
+
+- **接口**: `queryCustomerDeptRuleByDbid.do`
+- **方法**: `queryCustomerDeptRuleByDbid()`
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `customerDeptRule` | CustomerDeptRuleVO |
+
+
+> **类**: `api.customer.CustomerFunctionAction`
+
+
+##### `查询` pageCustomerFunction
+
+- **接口**: `pageCustomerFunction.do`
+- **方法**: `pageCustomerFunction()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `paging` | Paging | 分页参数 , 参照 [paging](../check_rule.html#page) |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `customerFunctions` | List<CustomerFunctionVO> |
+
+##### `查询` queryCustomerFunction
+
+- **接口**: `queryCustomerFunction.do`
+- **方法**: `queryCustomerFunction()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `customerFunction` | CustomerFunctionVO |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `customerFunctions` | List<CustomerFunctionVO> |
+
+##### `新增` addCustomerFunction
+
+- **接口**: `addCustomerFunction.do`
+- **方法**: `addCustomerFunction()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `customerFunction` | CustomerFunctionVO |  |
+
+##### `更新` updateCustomerFunction
+
+- **接口**: `updateCustomerFunction.do`
+- **方法**: `updateCustomerFunction()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `customerFunction` | CustomerFunctionVO |  |
+
+##### `删除` deleteCustomerFunction
+
+- **接口**: `deleteCustomerFunction.do`
+- **方法**: `deleteCustomerFunction()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `customerFunction` | CustomerFunctionVO |  |
+
+
+> **类**: `api.customer.CustomerNoticeAction`
+
+
+##### `查询` pageCustomerNotice
+
+- **接口**: `pageCustomerNotice.do`
+- **方法**: `pageCustomerNotice()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `paging` | Paging | 分页参数 , 参照 [paging](../check_rule.html#page) |
+| `customerNotice` | CustomerNoticeVO |  |
+
+
+> **类**: `api.customer.CustomerOriginAction`
+
+
+##### `更新` approveCustomerOrigin
+
+- **接口**: `approveCustomerOrigin.do`
+- **方法**: `approveCustomerOrigin()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `customerOrigin` | CustomerOriginVO |  |
+
+##### `更新` tranCustomerOrigin
+
+- **接口**: `tranCustomerOrigin.do`
+- **方法**: `tranCustomerOrigin()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `customerOrigin` | CustomerOriginVO |  |
+
+
+> **类**: `api.customer.CustomerProfileAction`
+
+
+##### `查询` queryCustomerProfileByCsid
+
+- **接口**: `queryCustomerProfileByCsid.do`
+- **方法**: `queryCustomerProfileByCsid()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `customerProfile` | CustomerProfileVO |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `customerProfiles` | List<CustomerProfileVO> |
+
+##### `查询` queryCustomerProfileByCid
+
+- **接口**: `queryCustomerProfileByCid.do`
+- **方法**: `queryCustomerProfileByCid()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `customerProfile` | CustomerProfileVO |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `customerProfiles` | List<CustomerProfileVO> |
+
+##### `新增` addCustomerProfile
+
+- **接口**: `addCustomerProfile.do`
+- **方法**: `addCustomerProfile()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `customerProfile` | CustomerProfileVO |  |
+
+
+> **类**: `api.customer.CustomerProtectRuleAction`
+
+
+##### `查询` checkCustomerProtectRule
+
+- **接口**: `checkCustomerProtectRule.do`
+- **方法**: `checkCustomerProtectRule()`
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `customerProtectRule` | CustomerProtectRuleVO |
+
+
+> **类**: `api.customer.CustomerSourceAction`
+
+
+##### `更新` updateCustomerSourceForAdvance
+
+- **接口**: `updateCustomerSourceForAdvance.do`
+- **方法**: `updateCustomerSourceForAdvance()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `customerSource` | CustomerSourceVO |  |
+
+##### `更新` updateCustomerSourceForCustomer
+
+- **接口**: `updateCustomerSourceForCustomer.do`
+- **方法**: `updateCustomerSourceForCustomer()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `customerSource` | CustomerSourceVO |  |
+
+##### `更新` updateCustomerSourceForHouse
+
+- **接口**: `updateCustomerSourceForHouse.do`
+- **方法**: `updateCustomerSourceForHouse()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `customerSource` | CustomerSourceVO |  |
+
+
+> **类**: `api.customer.CustomerSourceRecordAction`
+
+
+##### `查询` queryCustomerSourceRecord
+
+- **接口**: `queryCustomerSourceRecord.do`
+- **方法**: `queryCustomerSourceRecord()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `customerSourceRecord` | CustomerSourceRecordVO |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `customerSourceRecords` | List<CustomerSourceRecordVO> |
+
+
+> **类**: `api.customer.CustomerUserRuleAction`
+
+
+##### `查询` queryCustomerUserRuleByPinyin
+
+- **接口**: `queryCustomerUserRuleByPinyin.do`
+- **方法**: `queryCustomerUserRuleByPinyin()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `user` | UserVO |  |
+| `departmentType` | DepartmentTypeVO |  |
+| `pinyinName` | String |  |
+
+##### `更新` disableCustomerUserRuleByCurid
+
+- **接口**: `disableCustomerUserRuleByCurid.do`
+- **方法**: `disableCustomerUserRuleByCurid()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `customerUserRule` | CustomerUserRuleVO |  |
+
+
+> **类**: `api.customer.CustomerUserRuleItemAction`
+
+
+##### `查询` queryCustomerUserRuleItemByPinyin
+
+- **接口**: `queryCustomerUserRuleItemByPinyin.do`
+- **方法**: `queryCustomerUserRuleItemByPinyin()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `pinyinName` | String |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `customerUserRuleItems` | List<CustomerUserRuleItemVO> |
+
+
+> **类**: `api.customer.DecorationAction`
+
+
+##### `查询` queryCusTalking
+
+- **接口**: `queryCusTalking.do`
+- **方法**: `queryCusTalking()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `decoration` | DecorationVO |  |
+| `talking` | TalkingVO |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `talkings` | List<TalkingVO> |
+
+
+> **类**: `api.customer.FeedbackAction`
+
+
+##### `查询` pageFeedbackByOrderId
+
+- **接口**: `pageFeedbackByOrderId.do`
+- **方法**: `pageFeedbackByOrderId()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `paging` | Paging | 分页参数 , 参照 [paging](../check_rule.html#page) |
+
+##### `更新` receiveFeedback
+
+- **接口**: `receiveFeedback.do`
+- **方法**: `receiveFeedback()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `feedback` | FeedbackVO |  |
+
+##### `更新` finishFeedback
+
+- **接口**: `finishFeedback.do`
+- **方法**: `finishFeedback()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `feedback` | FeedbackVO |  |
+
+
+> **类**: `api.customer.FeedbackBackVisitAction`
+
+
+##### `查询` queryFeedbackBackVisit
+
+- **接口**: `queryFeedbackBackVisit.do`
+- **方法**: `queryFeedbackBackVisit()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `feedbackBackVisit` | FeedbackBackVisitVO |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `feedbackBackVisits` | List<FeedbackBackVisitVO> |
+
+##### `新增` addFeedbackBackVisit
+
+- **接口**: `addFeedbackBackVisit.do`
+- **方法**: `addFeedbackBackVisit()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `feedbackBackVisit` | FeedbackBackVisitVO |  |
+
+
+> **类**: `api.customer.FeedbackComplaintAction`
+
+
+##### `查询` queryFeedbackComplaint
+
+- **接口**: `queryFeedbackComplaint.do`
+- **方法**: `queryFeedbackComplaint()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `feedbackComplaint` | FeedbackComplaintVO |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `feedbackComplaints` | List<FeedbackComplaintVO> |
+
+##### `新增` addFeedbackComplaint
+
+- **接口**: `addFeedbackComplaint.do`
+- **方法**: `addFeedbackComplaint()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `feedbackComplaint` | FeedbackComplaintVO |  |
+
+##### `更新` finishFeedbackComplaint
+
+- **接口**: `finishFeedbackComplaint.do`
+- **方法**: `finishFeedbackComplaint()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `feedbackComplaint` | FeedbackComplaintVO |  |
+
+##### `更新` updateFeedbackComplaint
+
+- **接口**: `updateFeedbackComplaint.do`
+- **方法**: `updateFeedbackComplaint()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `feedbackComplaint` | FeedbackComplaintVO |  |
+
+
+> **类**: `api.customer.FeedbackComplaintDeptAction`
+
+
+##### `查询` queryFeedbackComplaintDept
+
+- **接口**: `queryFeedbackComplaintDept.do`
+- **方法**: `queryFeedbackComplaintDept()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `feedbackComplaintDept` | FeedbackComplaintDeptVO |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `feedbackComplaintDepts` | List<FeedbackComplaintDeptVO> |
+
+##### `新增` addFeedbackComplaintDept
+
+- **接口**: `addFeedbackComplaintDept.do`
+- **方法**: `addFeedbackComplaintDept()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `feedbackComplaintDept` | FeedbackComplaintDeptVO |  |
+
+##### `更新` updateFeedbackComplaintDept
+
+- **接口**: `updateFeedbackComplaintDept.do`
+- **方法**: `updateFeedbackComplaintDept()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `feedbackComplaintDept` | FeedbackComplaintDeptVO |  |
+
+##### `删除` deleteFeedbackComplaintDept
+
+- **接口**: `deleteFeedbackComplaintDept.do`
+- **方法**: `deleteFeedbackComplaintDept()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `feedbackComplaintDept` | FeedbackComplaintDeptVO |  |
+
+
+> **类**: `api.customer.FeedbackComplaintProblemAction`
+
+
+##### `查询` queryFeedbackComplaintProblem
+
+- **接口**: `queryFeedbackComplaintProblem.do`
+- **方法**: `queryFeedbackComplaintProblem()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `deptTypes` | List<Long> |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `feedbackComplaintProblems` | List<FeedbackComplaintProblemVO> |
+
+
+> **类**: `api.customer.FeedbackDrawingAction`
+
+
+##### `查询` queryFeedbackDrawingBySid
+
+- **接口**: `queryFeedbackDrawingBySid.do`
+- **方法**: `queryFeedbackDrawingBySid()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `feedbackDrawing` | FeedbackDrawingVO |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `feedbackDrawings` | List<FeedbackDrawingVO> |
+
+##### `删除` deleteFeedbackDrawing
+
+- **接口**: `deleteFeedbackDrawing.do`
+- **方法**: `deleteFeedbackDrawing()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `feedbackDrawing` | FeedbackDrawingVO |  |
+
+##### `更新` updateFeedbackDrawing
+
+- **接口**: `updateFeedbackDrawing.do`
+- **方法**: `updateFeedbackDrawing()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `feedbackDrawing` | FeedbackDrawingVO |  |
+
+
+> **类**: `api.customer.FeedbackGuaranteeAction`
+
+
+##### `查询` queryFeedbackGuarantee
+
+- **接口**: `queryFeedbackGuarantee.do`
+- **方法**: `queryFeedbackGuarantee()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `feedbackGuarantee` | FeedbackGuaranteeVO |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `feedbackGuarantees` | List<FeedbackGuaranteeVO> |
+
+##### `查询` queryFeedbackGuaranteeByFgid
+
+- **接口**: `queryFeedbackGuaranteeByFgid.do`
+- **方法**: `queryFeedbackGuaranteeByFgid()`
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `feedbackGuarantee` | FeedbackGuaranteeVO |
+
+##### `新增` addFeedbackGuarantee
+
+- **接口**: `addFeedbackGuarantee.do`
+- **方法**: `addFeedbackGuarantee()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `feedbackGuarantee` | FeedbackGuaranteeVO |  |
+
+##### `更新` updateFeedbackGuarantee
+
+- **接口**: `updateFeedbackGuarantee.do`
+- **方法**: `updateFeedbackGuarantee()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `feedbackGuarantee` | FeedbackGuaranteeVO |  |
+
+
+> **类**: `api.customer.FeedbackRecordAction`
+
+
+##### `查询` queryFeedbackRecord
+
+- **接口**: `queryFeedbackRecord.do`
+- **方法**: `queryFeedbackRecord()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `feedbackRecord` | FeedbackRecordVO |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `feedbackRecords` | List<FeedbackRecordVO> |
+
+##### `新增` addFeedbackRecord
+
+- **接口**: `addFeedbackRecord.do`
+- **方法**: `addFeedback()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `feedbackRecord` | FeedbackRecordVO |  |
+
+
+> **类**: `api.customer.MemberAction`
+
+
+##### `查询` queryMemberByPhone
+
+- **接口**: `queryMemberByPhone.do`
+- **方法**: `queryMemberByPhone()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `members` | List<MemberVO> |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `resultMap` | Map<String, List<MemberVO>> |
+
+##### `查询` queryMemberPoint
+
+- **接口**: `queryMemberPoint.do`
+- **方法**: `queryMemberPoint()`
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `memberPoints` | List<MemberPointVO> |
+
+##### `查询` queryMemberPointDetail
+
+- **接口**: `queryMemberPointDetail.do`
+- **方法**: `queryMemberPointDetail()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `memberPoints` | List<MemberPointVO> |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `decorationPointDetails` | List<MemberPointDetailVO> |
+| `materialPointDetails` | List<MemberPointDetailVO> |
+| `operatePointDetails` | List<MemberPointDetailVO> |
+
+##### `新增` addMemberActivity
+
+- **接口**: `addMemberActivity.do`
+- **方法**: `addMemberActivity()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `memberActivity` | MemberActivityVO |  |
+| `companys` | List<String> |  |
+
+##### `新增` makeMemberOrder
+
+- **接口**: `makeMemberOrder.do`
+- **方法**: `makeMemberOrder()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `memberOrder` | MemberOrderVO |  |
+| `memberOrderItems` | List<MemberOrderItemVO> |  |
+
+##### `撤销` cancelMemberOrder
+
+- **接口**: `cancelMemberOrder.do`
+- **方法**: `cancelMemberOrder()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `memberOrder` | MemberOrderVO |  |
+
+##### `新增` makeMemberOrderItem
+
+- **接口**: `makeMemberOrderItem.do`
+- **方法**: `makeMemberOrderItem()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `memberOrder` | MemberOrderVO |  |
+| `memberOrderItem` | MemberOrderItemVO |  |
+
+##### `撤销` cancelMemberOrderItem
+
+- **接口**: `cancelMemberOrderItem.do`
+- **方法**: `cancelMemberOrderItem()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `memberOrder` | MemberOrderVO |  |
+| `memberOrderItem` | MemberOrderItemVO |  |
+
+##### `更新` updateMemberGoods
+
+- **接口**: `updateMemberGoods.do`
+- **方法**: `updateMemberGoods()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `memberGoods` | MemberGoodsVO |  |
+
+##### `查询` queryMemberForInfo
+
+- **接口**: `queryMemberForInfo.do`
+- **方法**: `queryMemberForInfo()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `members` | List<MemberVO> |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `resultMap` | Map<String, List<MemberVO>> |
+
+
+> **类**: `api.customer.PaymentAction`
+
+
+##### `查询` queryCusPaymentConfig
+
+- **接口**: `queryCusPaymentConfig.do`
+- **方法**: `queryCusPaymentConfig()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `orderId` | String |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `config` | Integer |
+
+##### `查询` queryCusPaymentPlatform
+
+- **接口**: `queryCusPaymentPlatform.do`
+- **方法**: `queryCusPaymentPlatform()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `orderId` | String |  |
+| `atttype` | Integer |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `platform` | String |
+
+
+> **类**: `api.customer.PointAccountAction`
+
+
+##### `查询` pagePointAccount
+
+- **接口**: `pagePointAccount.do`
+- **方法**: `pagePointAccount()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `paging` | Paging | 分页参数 , 参照 [paging](../check_rule.html#page) |
+
+##### `更新` updatePointAccountForOperatePoint
+
+- **接口**: `updatePointAccountForOperatePoint.do`
+- **方法**: `updatePointAccountForOperatePoint()`
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `pointAccount` | PointAccountVO |
+

@@ -1378,3 +1378,41 @@
     "account.aid": 2
 }
 ```
+
+## 补录接口 (自动生成 2026-11-03)
+
+
+> **类**: `api.finance.SubjectBalanceUpinfoAction`
+
+
+##### `更新` handleSubjectBalanceUpinfo
+
+- **接口**: `handleSubjectBalanceUpinfo.do`
+- **方法**: `handleSubjectBalanceUpinfo()`
+
+
+> **类**: `api.finance.KingdeeRecordAction`
+
+
+##### `查询` pageKingdeeRecord
+
+- **接口**: `pageKingdeeRecord.do`
+- **方法**: `pageKingdeeRecord()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `paging` | Paging | 分页参数 , 参照 [paging](../check_rule.html#page) |
+
+##### `新增` addKingdeeRecord
+
+- **接口**: `addKingdeeRecord.do`
+- **方法**: `addKingdeeRecord()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `kingdeeRecord` | KingdeeRecordVO |  |
+

@@ -2727,3 +2727,251 @@
     "upgrade.ugid": 1
 }
 ```
+
+## 补录接口 (自动生成 2026-11-03)
+
+
+> **类**: `api.system.OssConfigAction`
+
+
+##### `更新` generatePostSignature
+
+- **接口**: `generatePostSignature.do`
+- **方法**: `generatePostSignature()`
+- **说明**: 生成上传签名（旧 Policy 方式，保留用于并行灰度）
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `ossConfig` | OssConfigVO |  |
+
+##### `新增` getOssStsToken
+
+- **接口**: `getOssStsToken.do`
+- **方法**: `issueOssStsToken()`
+- **说明**: 获取 STS 上传临时凭证（推荐） 前端用返回的三元组（accessKeyId/accessKeySecret/securityToken）直传 OSS， 凭证默认 15 分钟失效，过期后重新申请。会话名取当前登录 userId，实现按用户目录隔离。
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `stsToken` | StsTokenVO |
+
+##### `查询` getProgressiveImage
+
+- **接口**: `getProgressiveImage.do`
+- **方法**: `queryProgressiveImage()`
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `ossConfig` | OssConfigVO |
+
+
+> **类**: `api.system.FactoryAction`
+
+
+##### `查询` checkLicense
+
+- **接口**: `checkLicense.do`
+- **方法**: `checkLicense()`
+
+
+> **类**: `api.system.SecretAction`
+
+
+##### `更新` QWQMVERQMVTYU
+
+- **接口**: `QWQMVERQMVTYU.do`
+- **方法**: `QWEQMVRTQMVYU()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `QWERTYU` | String |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `ASDFGHJ` | String |
+
+
+> **类**: `api.system.Secret1Action`
+
+
+##### `更新` QWQMVERQMVTYU
+
+- **接口**: `QWQMVERQMVTYU.do`
+- **方法**: `QWEQMVRTQMVYU()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `QWERTYU` | String |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `ASDFGHJ` | String |
+
+##### `更新` CVLIBHQMVWFSPQWU
+
+- **接口**: `CVLIBHQMVWFSPQWU.do`
+- **方法**: `CVLIBHQMVWFSPQWU()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `VZYKHFFK` | String |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `OTCVCJSC` | List<String> |
+
+##### `更新` KGZPHFBAOKWVMWGW
+
+- **接口**: `KGZPHFBAOKWVMWGW.do`
+- **方法**: `KGZPHFBAOKWVMWGW()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `FAKKGDAZ` | String |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `AJIGRRVT` | List<DecorationVO> |
+
+
+> **类**: `api.system.ModuleAction`
+
+
+##### `查询` queryModuleByFatherModule
+
+- **接口**: `queryModuleByFatherModule.do`
+- **方法**: `queryModuleByFatherModule()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `module` | ModuleVO |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `modules` | List<ModuleVO> |
+
+##### `更新` updateModule
+
+- **接口**: `updateModule.do`
+- **方法**: `updateModule()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `module` | ModuleVO |  |
+
+##### `更新` updateRoleModule
+
+- **接口**: `updateRoleModule.do`
+- **方法**: `updateRoleModule()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `module` | ModuleVO |  |
+| `modules` | List<ModuleVO> |  |
+| `role` | RoleVO |  |
+
+##### `更新` syncRoleModule
+
+- **接口**: `syncRoleModule.do`
+- **方法**: `syncRoleModule()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `role` | RoleVO |  |
+| `companys` | List<CompanyVO> |  |
+
+
+> **类**: `api.system.OperationAction`
+
+
+##### `更新` syncRoleOperation
+
+- **接口**: `syncRoleOperation.do`
+- **方法**: `syncRoleOperation()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `role` | RoleVO |  |
+| `companys` | List<CompanyVO> |  |
+
+
+> **类**: `api.system.RoleAction`
+
+
+##### `查询` pageRoleByMid
+
+- **接口**: `pageRoleByMid.do`
+- **方法**: `pageRoleByMid()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `paging` | Paging | 分页参数 , 参照 [paging](../check_rule.html#page) |
+| `module` | ModuleVO |  |
+
+
+> **类**: `api.system.SystemConfigAction`
+
+
+##### `查询` querySystemConfigByGroup
+
+- **接口**: `querySystemConfigByGroup.do`
+- **方法**: `querySystemConfigByGroup()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `systemConfig` | SystemConfigVO |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `systemConfigs` | List<SystemConfigVO> |
+
+##### `删除` deleteSystemConfig
+
+- **接口**: `deleteSystemConfig.do`
+- **方法**: `deleteSystemConfig()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `systemConfig` | SystemConfigVO |  |
+

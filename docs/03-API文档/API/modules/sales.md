@@ -5569,3 +5569,388 @@
     ...
 }
 ```
+
+## 补录接口 (自动生成 2026-11-03)
+
+
+> **类**: `api.sales.OalesAction`
+
+
+##### `查询` pageOalesForAccount
+
+- **接口**: `pageOalesForAccount.do`
+- **方法**: `pageOalesForAccount()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `paging` | Paging | 分页参数 , 参照 [paging](../check_rule.html#page) |
+
+##### `更新` scaleOales
+
+- **接口**: `scaleOales.do`
+- **方法**: `scaleOales()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `oales` | OalesVO |  |
+
+##### `更新` activityOales
+
+- **接口**: `activityOales.do`
+- **方法**: `activityOales()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `oales` | OalesVO |  |
+
+
+> **类**: `api.sales.OalesItemAction`
+
+
+##### `查询` pageOalesItem
+
+- **接口**: `pageOalesItem.do`
+- **方法**: `pageOalesItem()`
+- **说明**: 分页查询外销单项目明细 前端调用示例： com.post(api.oalesItem.pageOalesItem, {
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `paging` | Paging | 分页参数 , 参照 [paging](../check_rule.html#page) |
+| `oalesItem` | OalesItemVO |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `oalesItems` | List<OalesItemVO> |
+
+##### `查询` queryOalesItem
+
+- **接口**: `queryOalesItem.do`
+- **方法**: `queryOalesItem()`
+- **说明**: 查询外销单的所有项目明细 前端调用示例： com.post(api.oalesItem.queryOalesItem, {
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `oalesItem` | OalesItemVO |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `oalesItems` | List<OalesItemVO> |
+
+##### `新增` addOalesItem
+
+- **接口**: `addOalesItem.do`
+- **方法**: `addOalesItem()`
+- **说明**: 添加外销单项目明细 前端调用示例： com.post(api.oalesItem.addOalesItem, {
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `oales` | OalesVO |  |
+| `oalesItem` | OalesItemVO |  |
+
+##### `删除` deleteOalesItem
+
+- **接口**: `deleteOalesItem.do`
+- **方法**: `deleteOalesItem()`
+- **说明**: 删除外销单项目明细 前端调用示例： com.post(api.oalesItem.deleteOalesItem, {
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `oalesItem` | OalesItemVO |  |
+
+
+> **类**: `api.sales.OalesPayAction`
+
+
+##### `更新` updateOalesPayForAdvance
+
+- **接口**: `updateOalesPayForAdvance.do`
+- **方法**: `updateOalesPayForAdvance()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `oalesPay` | OalesPayVO |  |
+
+
+> **类**: `api.sales.OalesRecordAction`
+
+
+##### `查询` pageOalesRecord
+
+- **接口**: `pageOalesRecord.do`
+- **方法**: `pageOalesRecord()`
+- **说明**: 分页查询外销单操作记录
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `paging` | Paging | 分页参数 , 参照 [paging](../check_rule.html#page) |
+| `oid` | Long |  |
+
+##### `查询` queryOalesRecordByOid
+
+- **接口**: `queryOalesRecordByOid.do`
+- **方法**: `queryOalesRecordByOid()`
+- **说明**: 根据外销单ID查询操作记录
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `oid` | Long |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `oalesRecords` | List<OalesRecordVO> |
+
+
+> **类**: `api.sales.SalesAction`
+
+
+##### `查询` querySalesByOrderId
+
+- **接口**: `querySalesByOrderId.do`
+- **方法**: `querySalesByOrderId()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `sales` | SalesVO |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `saleses` | List<SalesVO> |
+
+##### `更新` unpaySales
+
+- **接口**: `unpaySales.do`
+- **方法**: `unpaySales()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `sales` | SalesVO |  |
+
+
+> **类**: `api.sales.SalesActivityRecordAction`
+
+
+##### `查询` querySalesActivityRecord
+
+- **接口**: `querySalesActivityRecord.do`
+- **方法**: `querySalesActivityRecord()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `salesActivityRecord` | SalesActivityRecordVO |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `salesActivityRecords` | List<SalesActivityRecordVO> |
+
+##### `新增` addSalesActivityRecord
+
+- **接口**: `addSalesActivityRecord.do`
+- **方法**: `addSalesActivityRecord()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `salesActivityRecord` | SalesActivityRecordVO |  |
+
+
+> **类**: `api.sales.SalesBalanceAction`
+
+
+##### `查询` querySalesBalance
+
+- **接口**: `querySalesBalance.do`
+- **方法**: `querySalesBalance()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `salesBalance` | SalesBalanceVO |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `salesBalances` | List<SalesBalanceVO> |
+
+##### `查询` querySalesBalanceByOrderId
+
+- **接口**: `querySalesBalanceByOrderId.do`
+- **方法**: `querySalesBalanceByOrderId()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `salesBalance` | SalesBalanceVO |  |
+| `sid` | List<Long> |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `salesBalances` | List<SalesBalanceVO> |
+
+##### `撤销` rejectSalesBalance
+
+- **接口**: `rejectSalesBalance.do`
+- **方法**: `rejectSalesBalance()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `salesBalance` | SalesBalanceVO |  |
+
+
+> **类**: `api.sales.SalesDeliveryAction`
+
+
+##### `更新` deliveSalesDelivery
+
+- **接口**: `deliveSalesDelivery.do`
+- **方法**: `deliveSalesDelivery()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `salesDelivery` | SalesDeliveryVO |  |
+
+
+> **类**: `api.sales.SalesProfileAction`
+
+
+##### `查询` querySalesProfileByOrderId
+
+- **接口**: `querySalesProfileByOrderId.do`
+- **方法**: `querySalesProfileByOrderId()`
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `salesProfile` | SalesProfileVO |
+
+##### `新增` makeSalesProfile
+
+- **接口**: `makeSalesProfile.do`
+- **方法**: `makeSalesProfile()`
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `salesProfile` | SalesProfileVO |
+
+##### `更新` handleSalesProfile
+
+- **接口**: `handleSalesProfile.do`
+- **方法**: `handleSalesProfile()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `salesProfile` | SalesProfileVO |  |
+
+##### `新增` addSalesProfileBrand
+
+- **接口**: `addSalesProfileBrand.do`
+- **方法**: `addSalesProfileBrand()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `salesProfile` | SalesProfileVO |  |
+
+##### `更新` updateSalesProfileBrand
+
+- **接口**: `updateSalesProfileBrand.do`
+- **方法**: `updateSalesProfileBrand()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `salesProfile` | SalesProfileVO |  |
+
+
+> **类**: `api.sales.SalesRefundsAction`
+
+
+##### `查询` querySalesRefundsByRid
+
+- **接口**: `querySalesRefundsByRid.do`
+- **方法**: `querySalesRefundsByRid()`
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `refunds` | SalesRefundsVO |
+
+##### `更新` sendSalesRefunds
+
+- **接口**: `sendSalesRefunds.do`
+- **方法**: `sendSalesRefunds()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `refunds` | SalesRefundsVO |  |
+
+##### `更新` affirmSalesRefunds
+
+- **接口**: `affirmSalesRefunds.do`
+- **方法**: `affirmSalesRefunds()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `refunds` | SalesRefundsVO |  |
+| `securityCode` | String |  |
+| `verifyCode` | String |  |
+| `phoneCode` | String |  |
+| `company` | String |  |
+

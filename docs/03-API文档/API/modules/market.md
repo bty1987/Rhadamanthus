@@ -4052,3 +4052,103 @@ OR::
 - URL: `countMarketInboundForChannel.do`
 - 参数: `marketInbound.channelId`, `marketInbound.status`
 - 返回: `count`
+
+## 补录接口 (自动生成 2026-11-03)
+
+
+> **类**: `api.market.EnoticeAction`
+
+
+##### `查询` queryCnoticeByReceiver
+
+- **接口**: `queryCnoticeByReceiver.do`
+- **方法**: `queryCnoticeByReceiver()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `cnotice` | CnoticeVO |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `cnotices` | List<CnoticeVO> |
+
+##### `更新` updateCnoticeForStatus
+
+- **接口**: `updateCnoticeForStatus.do`
+- **方法**: `updateCnoticeForStatus()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `cnotice` | CnoticeVO |  |
+
+
+> **类**: `api.market.EopinionsAction`
+
+
+##### `查询` pageEopinions
+
+- **接口**: `pageEopinions.do`
+- **方法**: `pageEopinions()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `paging` | Paging | 分页参数 , 参照 [paging](../check_rule.html#page) |
+
+##### `查询` queryEopinionsByType
+
+- **接口**: `queryEopinionsByType.do`
+- **方法**: `queryEopinionsByType()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `eopinion` | EopinionsVO |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `eopinions` | List<EopinionsVO> |
+
+##### `新增` addEopinion
+
+- **接口**: `addEopinion.do`
+- **方法**: `addEopinion()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `eopinion` | EopinionsVO |  |
+
+##### `更新` updateEopinion
+
+- **接口**: `updateEopinion.do`
+- **方法**: `updateEcase()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `eopinion` | EopinionsVO |  |
+
+##### `删除` deleteEopinion
+
+- **接口**: `deleteEopinion.do`
+- **方法**: `deleteEopinion()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `eopinion` | EopinionsVO |  |
+

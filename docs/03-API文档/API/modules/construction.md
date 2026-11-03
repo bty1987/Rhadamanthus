@@ -3546,3 +3546,947 @@
     "acceptance.waterwayServer": 0
 }
 ```
+
+## 补录接口 (自动生成 2026-11-03)
+
+
+> **类**: `api.construction.ConstructionCameraAction`
+
+
+##### `查询` pageConstructionCamera
+
+- **接口**: `pageConstructionCamera.do`
+- **方法**: `pageConstructionCamera()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `paging` | Paging | 分页参数 , 参照 [paging](../check_rule.html#page) |
+
+##### `查询` queryConstructionCameraByOrderId
+
+- **接口**: `queryConstructionCameraByOrderId.do`
+- **方法**: `queryConstructionCameraByOrderId()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `constructionCamera` | ConstructionCameraVO |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `constructionCameras` | List<ConstructionCameraVO> |
+
+##### `查询` queryConstructionCameraLiveUrl
+
+- **接口**: `queryConstructionCameraLiveUrl.do`
+- **方法**: `queryConstructionCameraLiveUrl()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `constructionCamera` | ConstructionCameraVO |  |
+| `protocol` | String |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `constructionCameraLive` | ConstructionCameraLiveVO |
+
+##### `新增` addConstructionCamera
+
+- **接口**: `addConstructionCamera.do`
+- **方法**: `addConstructionCamera()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `constructionCamera` | ConstructionCameraVO |  |
+
+##### `更新` updateConstructionCamera
+
+- **接口**: `updateConstructionCamera.do`
+- **方法**: `updateConstructionCamera()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `constructionCamera` | ConstructionCameraVO |  |
+
+##### `更新` updateConstructionCameraForStatus
+
+- **接口**: `updateConstructionCameraForStatus.do`
+- **方法**: `updateConstructionCameraForStatus()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `constructionCamera` | ConstructionCameraVO |  |
+
+##### `更新` updateConstructionCameraForVisible
+
+- **接口**: `updateConstructionCameraForVisible.do`
+- **方法**: `updateConstructionCameraForVisible()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `constructionCamera` | ConstructionCameraVO |  |
+
+##### `删除` deleteConstructionCamera
+
+- **接口**: `deleteConstructionCamera.do`
+- **方法**: `deleteConstructionCamera()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `constructionCamera` | ConstructionCameraVO |  |
+
+
+> **类**: `api.construction.ConstructionCameraMediaAction`
+
+
+##### `查询` queryConstructionCameraMedia
+
+- **接口**: `queryConstructionCameraMedia.do`
+- **方法**: `queryConstructionCameraMedia()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `constructionCameraMedia` | ConstructionCameraMediaVO |  |
+| `startTime` | String |  |
+| `endTime` | String |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `constructionCameraMedias` | List<ConstructionCameraMediaVO> |
+
+##### `查询` queryConstructionCameraPlayList
+
+- **接口**: `queryConstructionCameraPlayList.do`
+- **方法**: `queryConstructionCameraPlayList()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `constructionCameraPlay` | ConstructionCameraPlayVO |  |
+| `orderId` | String |  |
+| `startTime` | String |  |
+| `endTime` | String |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `constructionCameraMedias` | List<ConstructionCameraMediaVO> |
+
+##### `更新` captureConstructionCamera
+
+- **接口**: `captureConstructionCamera.do`
+- **方法**: `captureConstructionCamera()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `constructionCamera` | ConstructionCameraVO |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `constructionCameraMedia` | ConstructionCameraMediaVO |
+
+
+> **类**: `api.construction.ConstructerRecordAction`
+
+
+##### `查询` pageConstructerRecord
+
+- **接口**: `pageConstructerRecord.do`
+- **方法**: `pageConstructerRecord()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `paging` | Paging | 分页参数 , 参照 [paging](../check_rule.html#page) |
+
+##### `查询` queryConstructerRecord
+
+- **接口**: `queryConstructerRecord.do`
+- **方法**: `queryConstructerRecord()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `constructerRecord` | ConstructerRecordVO |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `constructerRecords` | List<ConstructerRecordVO> |
+
+##### `新增` addConstructerRecord
+
+- **接口**: `addConstructerRecord.do`
+- **方法**: `addConstructerRecord()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `constructerRecord` | ConstructerRecordVO |  |
+
+
+> **类**: `api.construction.ConstructionAction`
+
+
+##### `更新` updateConstructionByCid
+
+- **接口**: `updateConstructionByCid.do`
+- **方法**: `updateConstructionByCid()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `construction` | ConstructionVO |  |
+
+##### `更新` openConstruction
+
+- **接口**: `openConstruction.do`
+- **方法**: `openConstruction()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `construction` | ConstructionVO |  |
+
+##### `更新` lockConstruction
+
+- **接口**: `lockConstruction.do`
+- **方法**: `lockConstruction()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `construction` | ConstructionVO |  |
+
+##### `更新` balanceConstruction
+
+- **接口**: `balanceConstruction.do`
+- **方法**: `balanceConstruction()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `construction` | ConstructionVO |  |
+
+##### `撤销` rejectConstructionForBalance
+
+- **接口**: `rejectConstructionForBalance.do`
+- **方法**: `rejectConstructionForBalance()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `construction` | ConstructionVO |  |
+
+
+> **类**: `api.construction.ConstructionDiaryAction`
+
+
+##### `查询` pageConstructionDiary
+
+- **接口**: `pageConstructionDiary.do`
+- **方法**: `pageConstructionDiary()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `paging` | Paging | 分页参数 , 参照 [paging](../check_rule.html#page) |
+
+##### `查询` queryConstructionDiary
+
+- **接口**: `queryConstructionDiary.do`
+- **方法**: `queryConstructionDiary()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `constructionDiary` | ConstructionDiaryVO |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `constructionDiarys` | List<ConstructionDiaryVO> |
+
+##### `新增` addConstructionDiary
+
+- **接口**: `addConstructionDiary.do`
+- **方法**: `addConstructionDiary()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `constructionDiary` | ConstructionDiaryVO |  |
+| `constructionDiaryDrawings` | List<ConstructionDiaryDrawingVO> |  |
+
+
+> **类**: `api.construction.ConstructionDiaryDrawingAction`
+
+
+##### `查询` queryConstructionDiaryDrawingByCdid
+
+- **接口**: `queryConstructionDiaryDrawingByCdid.do`
+- **方法**: `queryConstructionDiaryDrawingByCdid()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `constructionDiaryDrawing` | ConstructionDiaryDrawingVO |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `constructionDiaryDrawings` | List<ConstructionDiaryDrawingVO> |
+
+##### `新增` addConstructionDiaryDrawing
+
+- **接口**: `addConstructionDiaryDrawing.do`
+- **方法**: `addConstructionDiaryDrawing()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `constructionDiaryDrawing` | ConstructionDiaryDrawingVO |  |
+
+##### `删除` deleteConstructionDiaryDrawing
+
+- **接口**: `deleteConstructionDiaryDrawing.do`
+- **方法**: `deleteConstructionDiaryDrawing()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `constructionDiaryDrawing` | ConstructionDiaryDrawingVO |  |
+
+
+> **类**: `api.construction.ConstructionFunctionAction`
+
+
+##### `查询` pageConstructionFunction
+
+- **接口**: `pageConstructionFunction.do`
+- **方法**: `pageConstructionFunction()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `paging` | Paging | 分页参数 , 参照 [paging](../check_rule.html#page) |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `constructionFunctions` | List<ConstructionFunctionVO> |
+
+##### `查询` queryConstructionFunction
+
+- **接口**: `queryConstructionFunction.do`
+- **方法**: `queryConstructionFunction()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `constructionFunction` | ConstructionFunctionVO |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `constructionFunctions` | List<ConstructionFunctionVO> |
+
+##### `查询` queryConstructionFunctionByName
+
+- **接口**: `queryConstructionFunctionByName.do`
+- **方法**: `queryConstructionFunctionByName()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `constructionFunction` | ConstructionFunctionVO |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `constructionFunctions` | List<ConstructionFunctionVO> |
+
+##### `新增` addConstructionFunction
+
+- **接口**: `addConstructionFunction.do`
+- **方法**: `addConstructionFunction()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `constructionFunction` | ConstructionFunctionVO |  |
+
+##### `更新` updateConstructionFunction
+
+- **接口**: `updateConstructionFunction.do`
+- **方法**: `updateConstructionFunction()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `constructionFunction` | ConstructionFunctionVO |  |
+
+##### `删除` deleteConstructionFunction
+
+- **接口**: `deleteConstructionFunction.do`
+- **方法**: `deleteConstructionFunction()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `constructionFunction` | ConstructionFunctionVO |  |
+
+
+> **类**: `api.construction.ConstructionInfoAction`
+
+
+##### `查询` countConstructionInfo
+
+- **接口**: `countConstructionInfo.do`
+- **方法**: `countConstructionInfo()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `constructionInfo` | ConstructionInfoVO |  |
+
+##### `查询` checkConstructionInfo
+
+- **接口**: `checkConstructionInfo.do`
+- **方法**: `checkConstructionInfo()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `constructionInfo` | ConstructionInfoVO |  |
+
+##### `更新` handoverConstructionInfo
+
+- **接口**: `handoverConstructionInfo.do`
+- **方法**: `handoverConstructionInfo()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `constructionInfo` | ConstructionInfoVO |  |
+
+
+> **类**: `api.construction.ConstructionPlanAction`
+
+
+##### `新增` makeConstructionPlan
+
+- **接口**: `makeConstructionPlan.do`
+- **方法**: `makeConstructionPlan()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `constructionPlan` | ConstructionPlanVO |  |
+
+##### `更新` updateConstructionPlan
+
+- **接口**: `updateConstructionPlan.do`
+- **方法**: `updateConstructionPlan()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `constructionPlan` | ConstructionPlanVO |  |
+
+##### `更新` moveConstructionPlan
+
+- **接口**: `moveConstructionPlan.do`
+- **方法**: `moveConstructionPlan()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `constructionPlan` | ConstructionPlanVO |  |
+
+
+> **类**: `api.construction.ConstructionProfileAction`
+
+
+##### `查询` pageConstructionProfile
+
+- **接口**: `pageConstructionProfile.do`
+- **方法**: `pageConstructionProfile()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `paging` | Paging | 分页参数 , 参照 [paging](../check_rule.html#page) |
+
+##### `查询` queryConstructionProfileByCid
+
+- **接口**: `queryConstructionProfileByCid.do`
+- **方法**: `queryConstructionProfileByCid()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `constructionProfile` | ConstructionProfileVO |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `constructionProfiles` | List<ConstructionProfileVO> |
+
+##### `查询` queryConstructionProfileByOrderId
+
+- **接口**: `queryConstructionProfileByOrderId.do`
+- **方法**: `queryConstructionProfileByOrderId()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `constructionProfile` | ConstructionProfileVO |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `constructionProfiles` | List<ConstructionProfileVO> |
+
+##### `查询` queryConstructionProfileByCpid
+
+- **接口**: `queryConstructionProfileByCpid.do`
+- **方法**: `queryConstructionProfileByCpid()`
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `constructionProfile` | ConstructionProfileVO |
+
+##### `新增` addConstructionProfile
+
+- **接口**: `addConstructionProfile.do`
+- **方法**: `addConstructionProfile()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `constructionProfile` | ConstructionProfileVO |  |
+
+##### `新增` makeConstructionProfile
+
+- **接口**: `makeConstructionProfile.do`
+- **方法**: `makeConstructionProfile()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `constructionProfile` | ConstructionProfileVO |  |
+
+##### `更新` handleConstructionProfile
+
+- **接口**: `handleConstructionProfile.do`
+- **方法**: `handleConstructionProfile()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `constructionProfile` | ConstructionProfileVO |  |
+
+
+> **类**: `api.construction.ConstructionRecordAction`
+
+
+##### `查询` queryConstructionRecordByOrderId
+
+- **接口**: `queryConstructionRecordByOrderId.do`
+- **方法**: `queryConstructionByOrderId()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `constructionRecord` | ConstructionRecordVO |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `constructionRecords` | List<ConstructionRecordVO> |
+
+
+> **类**: `api.construction.ConstructionScheduleAction`
+
+
+##### `查询` queryConstructionScheduleByCsid
+
+- **接口**: `queryConstructionScheduleByCsid.do`
+- **方法**: `queryConstructionScheduleByCsid()`
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `constructionSchedule` | ConstructionScheduleVO |
+
+##### `更新` updateConstructionScheduleForNorm
+
+- **接口**: `updateConstructionScheduleForNorm.do`
+- **方法**: `updateConstructionScheduleForNorm()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `constructionSchedule` | ConstructionScheduleVO |  |
+
+##### `更新` updateConstructionScheduleForScal
+
+- **接口**: `updateConstructionScheduleForScal.do`
+- **方法**: `updateConstructionScheduleForScal()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `constructionSchedule` | ConstructionScheduleVO |  |
+
+##### `更新` updateConstructionScheduleForPeriod
+
+- **接口**: `updateConstructionScheduleForPeriod.do`
+- **方法**: `updateConstructionScheduleForPeriod()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `constructionSchedule` | ConstructionScheduleVO |  |
+
+##### `更新` updateConstructionScheduleForSalary
+
+- **接口**: `updateConstructionScheduleForSalary.do`
+- **方法**: `updateConstructionScheduleForSalary()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `constructionSchedule` | ConstructionScheduleVO |  |
+
+##### `更新` resetConstructionSchedule
+
+- **接口**: `resetConstructionSchedule.do`
+- **方法**: `resetConstructionSchedule()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `constructionSchedule` | ConstructionScheduleVO |  |
+
+##### `更新` planConstructionSchedule
+
+- **接口**: `planConstructionSchedule.do`
+- **方法**: `planConstructionSchedule()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `constructionSchedule` | ConstructionScheduleVO |  |
+
+##### `新增` addConstructionSchedule
+
+- **接口**: `addConstructionSchedule.do`
+- **方法**: `addConstructionSchedule()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `constructionSchedule` | ConstructionScheduleVO |  |
+
+##### `删除` deleteConstructionSchedule
+
+- **接口**: `deleteConstructionSchedule.do`
+- **方法**: `deleteConstructionSchedule()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `constructionSchedule` | ConstructionScheduleVO |  |
+
+
+> **类**: `api.construction.DrawLineAction`
+
+
+##### `更新` pretreatDrawLine
+
+- **接口**: `pretreatDrawLine.do`
+- **方法**: `pretreatDrawLine()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `drawLine` | DrawLineVO |  |
+| `constructionNodes` | List<ConstructionNodeVO> |  |
+
+##### `更新` finishDrawLine
+
+- **接口**: `finishDrawLine.do`
+- **方法**: `finishDrawLine()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `drawLine` | DrawLineVO |  |
+| `constructionNodes` | List<ConstructionNodeVO> |  |
+
+
+> **类**: `api.construction.DrawlineProfileAction`
+
+
+##### `查询` pageDrawlineProfile
+
+- **接口**: `pageDrawlineProfile.do`
+- **方法**: `pageDrawlineProfile()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `paging` | Paging | 分页参数 , 参照 [paging](../check_rule.html#page) |
+
+##### `查询` queryDrawlineProfileByDlid
+
+- **接口**: `queryDrawlineProfileByDlid.do`
+- **方法**: `queryDrawlineProfileByDlid()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `drawlineProfile` | DrawlineProfileVO |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `drawlineProfiles` | List<DrawlineProfileVO> |
+
+##### `查询` queryDrawlineProfileByOrderId
+
+- **接口**: `queryDrawlineProfileByOrderId.do`
+- **方法**: `queryDrawlineProfileByOrderId()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `drawlineProfile` | DrawlineProfileVO |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `drawlineProfiles` | List<DrawlineProfileVO> |
+
+##### `查询` queryDrawlineProfileByDpid
+
+- **接口**: `queryDrawlineProfileByDpid.do`
+- **方法**: `queryDrawlineProfileByDpid()`
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `drawlineProfile` | DrawlineProfileVO |
+
+##### `新增` addDrawlineProfile
+
+- **接口**: `addDrawlineProfile.do`
+- **方法**: `addDrawlineProfile()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `drawlineProfile` | DrawlineProfileVO |  |
+
+##### `新增` makeDrawlineProfile
+
+- **接口**: `makeDrawlineProfile.do`
+- **方法**: `makeDrawlineProfile()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `drawlineProfile` | DrawlineProfileVO |  |
+
+##### `更新` handleDrawlineProfile
+
+- **接口**: `handleDrawlineProfile.do`
+- **方法**: `handleDrawlineProfile()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `drawlineProfile` | DrawlineProfileVO |  |
+
+
+> **类**: `api.construction.MaterialPlanAction`
+
+
+##### `查询` queryMaterialPlanByOrderId
+
+- **接口**: `queryMaterialPlanByOrderId.do`
+- **方法**: `queryMaterialPlanByOrderId()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `materialPlan` | MaterialPlanVO |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `materialPlans` | List<MaterialPlanVO> |
+
+##### `新增` makeMaterialPlan
+
+- **接口**: `makeMaterialPlan.do`
+- **方法**: `makeMaterialPlan()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `materialPlan` | MaterialPlanVO |  |
+
+##### `新增` addMaterialPlan
+
+- **接口**: `addMaterialPlan.do`
+- **方法**: `addMaterialPlan()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `materialPlan` | MaterialPlanVO |  |
+
+##### `更新` updateMaterialPlan
+
+- **接口**: `updateMaterialPlan.do`
+- **方法**: `updateMaterialPlan()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `materialPlan` | MaterialPlanVO |  |
+
+##### `更新` confirmMaterialPlan
+
+- **接口**: `confirmMaterialPlan.do`
+- **方法**: `confirmMaterialPlan()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `materialPlan` | MaterialPlanVO |  |
+
+##### `撤销` cancelMaterialPlan
+
+- **接口**: `cancelMaterialPlan.do`
+- **方法**: `cancelMaterialPlan()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `materialPlan` | MaterialPlanVO |  |
+
+##### `删除` deleteMaterialPlan
+
+- **接口**: `deleteMaterialPlan.do`
+- **方法**: `deleteMaterialPlan()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `materialPlan` | MaterialPlanVO |  |
+

@@ -3824,3 +3824,27 @@
 ##### `查询` queryProductionFunctionByName
 
 通过名称获取生产功能信息
+
+## 补录接口 (自动生成 2026-11-03)
+
+
+> **类**: `api.production.ProductionWorkFlowAction`
+
+
+##### `查询` queryProductionWorkFlowByPwpid
+
+- **接口**: `queryProductionWorkFlowByPwpid.do`
+- **方法**: `queryProductionWorkFlowByPwpid()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `productionWorkFlow` | ProductionWorkFlowVO |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `productionWorkFlows` | List<ProductionWorkFlowVO> |
+

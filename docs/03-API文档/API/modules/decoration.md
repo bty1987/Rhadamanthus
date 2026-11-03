@@ -6843,3 +6843,804 @@
     ...
 }
 ```
+
+## 补录接口 (自动生成 2026-11-03)
+
+
+> **类**: `api.decoration.DecorationAccountAction`
+
+
+##### `查询` pageDecorationAccount
+
+- **接口**: `pageDecorationAccount.do`
+- **方法**: `pageDecorationAccount()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `paging` | Paging | 分页参数 , 参照 [paging](../check_rule.html#page) |
+
+
+> **类**: `api.decoration.DecorationAccountItemAction`
+
+
+##### `查询` queryDecorationAccountItem
+
+- **接口**: `queryDecorationAccountItem.do`
+- **方法**: `queryDecorationAccountItem()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `decorationAccountItem` | DecorationAccountItemVO |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `decorationAccountItems` | List<DecorationAccountItemVO> |
+
+##### `更新` updateDecorationAccountItem
+
+- **接口**: `updateDecorationAccountItem.do`
+- **方法**: `updateDecorationAccountItem()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `decorationAccountItem` | DecorationAccountItemVO |  |
+| `decorationAccountItems` | List<DecorationAccountItemVO> |  |
+
+
+> **类**: `api.decoration.DecorationAction`
+
+
+##### `查询` pageDecorationForMaterialer
+
+- **接口**: `pageDecorationForMaterialer.do`
+- **方法**: `pageDecorationForMaterialer()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `paging` | Paging | 分页参数 , 参照 [paging](../check_rule.html#page) |
+
+##### `查询` queryDecorationForReferByOrderId
+
+- **接口**: `queryDecorationForReferByOrderId.do`
+- **方法**: `queryDecorationForReferByOrderId()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `decoration` | DecorationVO |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `decorations` | List<DecorationVO> |
+
+##### `查询` queryDecorationByDoid
+
+- **接口**: `queryDecorationByDoid.do`
+- **方法**: `queryDecorationByDoid()`
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `decoration` | DecorationVO |
+
+##### `更新` hiddenDecoration
+
+- **接口**: `hiddenDecoration.do`
+- **方法**: `hiddenDecoration()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `decoration` | DecorationVO |  |
+
+##### `更新` resetDecorationFordesignStatus
+
+- **接口**: `resetDecorationFordesignStatus.do`
+- **方法**: `resetDecorationFordesignStatus()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `decoration` | DecorationVO |  |
+
+
+> **类**: `api.decoration.DecorationActivityCostAction`
+
+
+##### `更新` updateDecorationActivityCost
+
+- **接口**: `updateDecorationActivityCost.do`
+- **方法**: `updateDecorationActivityCost()`
+- **说明**: 额度值独立更新入口: 按装修单重调 validate 接口回写 decorationactivitycost 缓存档(balance/toplimit/createTime)。 入参 orderId; 返回 activityCosts 逐行更新结果(summary 含 usable/reason)。
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `orderId` | String |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `activityCosts` | List<ActivityCostVO> |
+
+
+> **类**: `api.decoration.DecorationActivityItemAction`
+
+
+##### `更新` consumeDecorationActivityItem
+
+- **接口**: `consumeDecorationActivityItem.do`
+- **方法**: `consumeDecorationActivityItem()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `decorationActivityItem` | DecorationActivityItemVO |  |
+
+##### `更新` pointDecorationActivityItem
+
+- **接口**: `pointDecorationActivityItem.do`
+- **方法**: `pointDecorationActivityItem()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `decoration` | DecorationVO |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `amount` | Long |
+
+##### `新增` issueDecorationActivityItem
+
+- **接口**: `issueDecorationActivityItem.do`
+- **方法**: `issueDecorationActivityItem()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `aid` | long |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `count` | int |
+
+##### `查询` pageDecorationActivityItem
+
+- **接口**: `pageDecorationActivityItem.do`
+- **方法**: `pageDecorationActivityItem()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `paging` | Paging | 分页参数 , 参照 [paging](../check_rule.html#page) |
+
+
+> **类**: `api.decoration.DecorationActivityRecordAction`
+
+
+##### `查询` queryDecorationActivityRecord
+
+- **接口**: `queryDecorationActivityRecord.do`
+- **方法**: `queryDecorationActivityRecord()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `decorationActivityRecord` | DecorationActivityRecordVO |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `decorationActivityRecords` | List<DecorationActivityRecordVO> |
+
+##### `新增` addDecorationActivityRecord
+
+- **接口**: `addDecorationActivityRecord.do`
+- **方法**: `addDecorationActivityRecord()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `decorationActivityRecord` | DecorationActivityRecordVO |  |
+
+
+> **类**: `api.decoration.DecorationAuditAction`
+
+
+##### `查询` pageDecorationAudit
+
+- **接口**: `pageDecorationAudit.do`
+- **方法**: `pageDecorationAudit()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `paging` | Paging | 分页参数 , 参照 [paging](../check_rule.html#page) |
+
+##### `更新` applyDecorationAudit
+
+- **接口**: `applyDecorationAudit.do`
+- **方法**: `applyDecorationAudit()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `audit` | DecorationAuditVO |  |
+
+
+> **类**: `api.decoration.DecorationAuditRecordAction`
+
+
+##### `查询` queryDecorationAuditRecordByOrderId
+
+- **接口**: `queryDecorationAuditRecordByOrderId.do`
+- **方法**: `queryDecorationAuditRecordByOrderId()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `auditRecord` | DecorationAuditRecordVO |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `auditRecords` | List<DecorationAuditRecordVO> |
+
+##### `新增` addDecorationAuditRecord
+
+- **接口**: `addDecorationAuditRecord.do`
+- **方法**: `addDecorationAuditRecord()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `auditRecord` | DecorationAuditRecordVO |  |
+
+##### `更新` updateDecorationAuditRecord
+
+- **接口**: `updateDecorationAuditRecord.do`
+- **方法**: `updateDecorationAuditRecord()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `auditRecord` | DecorationAuditRecordVO |  |
+
+
+> **类**: `api.decoration.DecorationAuditScaleAction`
+
+
+##### `查询` queryDecorationAuditScaleByArid
+
+- **接口**: `queryDecorationAuditScaleByArid.do`
+- **方法**: `queryDecorationAuditScaleByArid()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `auditScale` | DecorationAuditScaleVO |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `auditScales` | List<DecorationAuditScaleVO> |
+
+##### `新增` makeDecorationAuditScale
+
+- **接口**: `makeDecorationAuditScale.do`
+- **方法**: `makeDecorationAuditScale()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `auditScales` | List<DecorationAuditScaleVO> |  |
+
+##### `更新` updateDecorationAuditScaleForStatus
+
+- **接口**: `updateDecorationAuditScaleForStatus.do`
+- **方法**: `updateDecorationAuditScaleForStatus()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `auditScale` | DecorationAuditScaleVO |  |
+
+##### `新增` addDecorationAuditScale
+
+- **接口**: `addDecorationAuditScale.do`
+- **方法**: `addDecorationAuditScale()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `auditScale` | DecorationAuditScaleVO |  |
+
+##### `删除` deleteDecorationAuditScale
+
+- **接口**: `deleteDecorationAuditScale.do`
+- **方法**: `deleteDecorationAuditScale()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `auditScale` | DecorationAuditScaleVO |  |
+
+
+> **类**: `api.decoration.DecorationBackVisitAction`
+
+
+##### `查询` pageDecorationBackVisitByOrderId
+
+- **接口**: `pageDecorationBackVisitByOrderId.do`
+- **方法**: `pageDecorationBackVisitByOrderId()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `paging` | Paging | 分页参数 , 参照 [paging](../check_rule.html#page) |
+| `backVisit` | DecorationBackVisitVO |  |
+
+##### `查询` queryDecorationBackVisitByOrderId
+
+- **接口**: `queryDecorationBackVisitByOrderId.do`
+- **方法**: `queryDecorationBackVisitByOrderId()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `backVisit` | DecorationBackVisitVO |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `backVisits` | List<DecorationBackVisitVO> |
+
+##### `新增` addDecorationBackVisit
+
+- **接口**: `addDecorationBackVisit.do`
+- **方法**: `addDecorationBackVisit()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `backVisit` | DecorationBackVisitVO |  |
+
+##### `删除` deleteDecorationBackVisitById
+
+- **接口**: `deleteDecorationBackVisitById.do`
+- **方法**: `deleteDecorationBackVisitById()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `backVisit` | DecorationBackVisitVO |  |
+
+
+> **类**: `api.decoration.DecorationBelongAction`
+
+
+##### `更新` sendDecorationBelong
+
+- **接口**: `sendDecorationBelong.do`
+- **方法**: `sendDecorationBelong()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `decorationBelong` | DecorationBelongVO |  |
+
+##### `更新` confirmDecorationBelong
+
+- **接口**: `confirmDecorationBelong.do`
+- **方法**: `confirmDecorationBelong()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `decorationBelong` | DecorationBelongVO |  |
+| `decoration` | DecorationVO |  |
+| `securityCode` | String |  |
+| `verifyCode` | String |  |
+| `phoneCode` | String |  |
+| `company` | String |  |
+
+##### `更新` tranDecorationBelong
+
+- **接口**: `tranDecorationBelong.do`
+- **方法**: `tranDecorationBelong()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `decorationBelong` | DecorationBelongVO |  |
+| `decorationBelongs` | List<DecorationBelongVO> |  |
+
+##### `更新` mergeDecorationBelong
+
+- **接口**: `mergeDecorationBelong.do`
+- **方法**: `mergeDecorationBelong()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `decorationBelong` | DecorationBelongVO |  |
+| `decorationBelongs` | List<DecorationBelongVO> |  |
+
+##### `更新` confirmMergeDecorationBelong
+
+- **接口**: `confirmMergeDecorationBelong.do`
+- **方法**: `confirmMergeDecorationBelong()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `decorationBelong` | DecorationBelongVO |  |
+| `decorationBelongs` | List<DecorationBelongVO> |  |
+
+
+> **类**: `api.decoration.DecorationContractAction`
+
+
+##### `更新` noticeDecorationContract
+
+- **接口**: `noticeDecorationContract.do`
+- **方法**: `noticeDecorationContract()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `decorationContract` | DecorationContractVO |  |
+
+
+> **类**: `api.decoration.DecorationContractRecordAction`
+
+
+##### `查询` queryDecorationContractRecord
+
+- **接口**: `queryDecorationContractRecord.do`
+- **方法**: `queryDecorationContractRecord()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `decorationContractRecord` | DecorationContractRecordVO |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `decorationContractRecords` | List<DecorationContractRecordVO> |
+
+##### `更新` updateDecorationContract
+
+- **接口**: `updateDecorationContract.do`
+- **方法**: `updateDecorationContract()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `decorationContractRecord` | DecorationContractRecordVO |  |
+
+
+> **类**: `api.decoration.DecorationFunctionAction`
+
+
+##### `查询` pageDecorationFunction
+
+- **接口**: `pageDecorationFunction.do`
+- **方法**: `pageDecorationFunction()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `paging` | Paging | 分页参数 , 参照 [paging](../check_rule.html#page) |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `decorationFunctions` | List<DecorationFunctionVO> |
+
+##### `新增` addDecorationFunction
+
+- **接口**: `addDecorationFunction.do`
+- **方法**: `addDecorationFunction()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `decorationFunction` | DecorationFunctionVO |  |
+
+##### `更新` updateDecorationFunction
+
+- **接口**: `updateDecorationFunction.do`
+- **方法**: `updateDecorationFunction()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `decorationFunction` | DecorationFunctionVO |  |
+
+##### `删除` deleteDecorationFunction
+
+- **接口**: `deleteDecorationFunction.do`
+- **方法**: `deleteDecorationFunction()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `decorationFunction` | DecorationFunctionVO |  |
+
+
+> **类**: `api.decoration.DecorationInfoAction`
+
+
+##### `查询` queryDecorationInfoForCustomer
+
+- **接口**: `queryDecorationInfoForCustomer.do`
+- **方法**: `queryDecorationInfoForCustomer()`
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `decorationInfo` | DecorationInfoVO |
+
+##### `更新` referDecorationInfo
+
+- **接口**: `referDecorationInfo.do`
+- **方法**: `referDecorationInfo()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `decorationInfo` | DecorationInfoVO |  |
+| `decoration` | DecorationVO |  |
+
+##### `删除` deleteReferDecorationInfo
+
+- **接口**: `deleteReferDecorationInfo.do`
+- **方法**: `deleteReferDecorationInfo()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `decorationInfo` | DecorationInfoVO |  |
+| `decoration` | DecorationVO |  |
+
+
+> **类**: `api.decoration.DecorationMeasureAction`
+
+
+##### `查询` pageDecorationMeasureForApplay
+
+- **接口**: `pageDecorationMeasureForApplay.do`
+- **方法**: `pageDecorationMeasureForApplay()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `paging` | Paging | 分页参数 , 参照 [paging](../check_rule.html#page) |
+| `decorationMeasure` | DecorationMeasureVO |  |
+
+##### `更新` updateDecorationMeasure
+
+- **接口**: `updateDecorationMeasure.do`
+- **方法**: `updateDrawLine()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `decorationMeasure` | DecorationMeasureVO |  |
+
+
+> **类**: `api.decoration.DecorationPictureAction`
+
+
+##### `更新` batchDecorationPicture
+
+- **接口**: `batchDecorationPicture.do`
+- **方法**: `batchDecorationPictureForStatus()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `decorationPictures` | List<DecorationPictureVO> |  |
+
+
+> **类**: `api.decoration.DecorationServiceAction`
+
+
+##### `查询` pageDecorationService
+
+- **接口**: `pageDecorationService.do`
+- **方法**: `pageDecorationService()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `paging` | Paging | 分页参数 , 参照 [paging](../check_rule.html#page) |
+
+
+> **类**: `api.decoration.ElecsignAuthAction`
+
+
+##### `查询` queryElecsignAuthByCid
+
+- **接口**: `queryElecsignAuthByCid.do`
+- **方法**: `queryElecsignAuthByCid()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `customer` | CustomerVO |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `elecsignAuths` | List<ElecsignAuthVO> |
+
+
+> **类**: `api.decoration.ESignAuthCallbackAction`
+
+
+##### `更新` esignAuthCallback
+
+- **接口**: `esignAuthCallback.do`
+- **方法**: `esignAuthCallback()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `elecsignRouter` | ElecsignRouter |  |
+
+
+> **类**: `api.decoration.ESignAutoSignAuthAction`
+
+
+##### `更新` esignAutoSignAuth
+
+- **接口**: `esignAutoSignAuth.do`
+- **方法**: `esignAutoSignAuth()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `EP_SEAL_INTERNAL_AUTH` | static final String |  |
+| `esignClient` | EsignClient |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `orgId` | String |
+| `templateIds` | String |
+
+
+> **类**: `api.decoration.ESignTemplateAction`
+
+
+##### `查询` querySignTemplateCreateUrl
+
+- **接口**: `querySignTemplateCreateUrl.do`
+- **方法**: `querySignTemplateCreateUrl()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `LANDING_CREATE` | static final String |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `url` | String |
+
+##### `查询` querySignTemplateEditUrl
+
+- **接口**: `querySignTemplateEditUrl.do`
+- **方法**: `querySignTemplateEditUrl()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `LANDING_EDIT` | static final String |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `url` | String |
+| `signTemplateId` | String |
+
+##### `更新` enableSignTemplate
+
+- **接口**: `enableSignTemplate.do`
+- **方法**: `enableSignTemplate()`
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `signTemplateId` | String |
+
+
+> **类**: `api.decoration.FadadaCallback`
+
+
+##### `更新` fadadaCallback
+
+- **接口**: `fadadaCallback.do`
+- **方法**: `fadadaCallback()`
+

@@ -2402,3 +2402,520 @@
     "processItem.piid": 1
 }
 ```
+
+## 补录接口 (自动生成 2026-11-03)
+
+
+> **类**: `api.approval.ApprovalAction`
+
+
+##### `更新` updateApprovalForLocal
+
+- **接口**: `updateApprovalForLocal.do`
+- **方法**: `updateApprovalForLocal()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `approval` | ApprovalVO |  |
+
+##### `更新` callbackApproval
+
+- **接口**: `callbackApproval.do`
+- **方法**: `callbackApproval()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `piid` | String |  |
+| `approve` | String |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `approval` | ApprovalVO |
+
+
+> **类**: `api.approval.ApprovalCommonAction`
+
+
+##### `更新` submitApprovalForDing
+
+- **接口**: `submitApprovalForDing.do`
+- **方法**: `submitApprovalForDing()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `code` | String |  |
+| `forms` | String |  |
+
+
+> **类**: `api.approval.ApprovalCustomerChanceAction`
+
+
+##### `更新` submitApprovalForCustomerChanceToDisabled
+
+- **接口**: `submitApprovalForCustomerChanceToDisabled.do`
+- **方法**: `submitApprovalForCustomerChanceToDisabled()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `approval` | ApprovalVO |  |
+| `approvalCustomerChance` | ApprovalCustomerChanceVO |  |
+
+
+> **类**: `api.approval.ApprovalCustomerOriginAction`
+
+
+##### `查询` pageApprovalCustomerOrigin
+
+- **接口**: `pageApprovalCustomerOrigin.do`
+- **方法**: `pageApprovalCustomerOrigin()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `paging` | Paging | 分页参数 , 参照 [paging](../check_rule.html#page) |
+
+
+> **类**: `api.approval.ApprovalCustomerOriginTDecorationAction`
+
+
+##### `查询` pageApprovalCustomerOriginTDecoration
+
+- **接口**: `pageApprovalCustomerOriginTDecoration.do`
+- **方法**: `pageApprovalCustomerOriginTDecoration()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `paging` | Paging | 分页参数 , 参照 [paging](../check_rule.html#page) |
+
+
+> **类**: `api.approval.ApprovalCustomerSourceAction`
+
+
+##### `查询` pageApprovalCustomerSource
+
+- **接口**: `pageApprovalCustomerSource.do`
+- **方法**: `pageApprovalCustomerSource()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `paging` | Paging | 分页参数 , 参照 [paging](../check_rule.html#page) |
+
+
+> **类**: `api.approval.ApprovalDecorationContractAction`
+
+
+##### `更新` submitApprovalForDecorationContract
+
+- **接口**: `submitApprovalForDecorationContract.do`
+- **方法**: `submitApprovalForQuotationPrefer()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `approval` | ApprovalVO |  |
+| `approvalDecorationContract` | ApprovalDecorationContractVO |  |
+| `code` | String |  |
+| `forms` | String |  |
+
+
+> **类**: `api.approval.ApprovalFlowAction`
+
+
+##### `查询` pageApprovalFlow
+
+- **接口**: `pageApprovalFlow.do`
+- **方法**: `pageApprovalFlow()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `paging` | Paging | 分页参数 , 参照 [paging](../check_rule.html#page) |
+
+##### `查询` queryApprovalFlowByFlowId
+
+- **接口**: `queryApprovalFlowByFlowId.do`
+- **方法**: `queryApprovalFlowByFlowId()`
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `flow` | ApprovalFlowVO |
+
+##### `查询` queryApprovalFlowNode
+
+- **接口**: `queryApprovalFlowNode.do`
+- **方法**: `queryApprovalFlowNode()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `flow` | ApprovalFlowVO |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `flowNodes` | List<ApprovalFlowNodeVO> |
+
+##### `新增` addApprovalFlow
+
+- **接口**: `addApprovalFlow.do`
+- **方法**: `addApprovalFlow()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `flow` | ApprovalFlowVO |  |
+| `flowNodes` | List<ApprovalFlowNodeVO> |  |
+
+##### `更新` updateApprovalFlow
+
+- **接口**: `updateApprovalFlow.do`
+- **方法**: `updateApprovalFlow()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `flow` | ApprovalFlowVO |  |
+| `flowNodes` | List<ApprovalFlowNodeVO> |  |
+
+##### `更新` updateApprovalFlowForStatus
+
+- **接口**: `updateApprovalFlowForStatus.do`
+- **方法**: `updateApprovalFlowForStatus()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `flow` | ApprovalFlowVO |  |
+
+##### `删除` deleteApprovalFlow
+
+- **接口**: `deleteApprovalFlow.do`
+- **方法**: `deleteApprovalFlow()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `flow` | ApprovalFlowVO |  |
+
+
+> **类**: `api.approval.ApprovalFormAction`
+
+
+##### `查询` pageApprovalForm
+
+- **接口**: `pageApprovalForm.do`
+- **方法**: `pageApprovalForm()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `paging` | Paging | 分页参数 , 参照 [paging](../check_rule.html#page) |
+
+##### `查询` queryApprovalFormByFormId
+
+- **接口**: `queryApprovalFormByFormId.do`
+- **方法**: `queryApprovalFormByFormId()`
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `form` | ApprovalFormVO |
+
+##### `查询` queryApprovalFormByFlowId
+
+- **接口**: `queryApprovalFormByFlowId.do`
+- **方法**: `queryApprovalFormByFlowId()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `flowId` | Long |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `form` | ApprovalFormVO |
+
+##### `查询` queryApprovalFormField
+
+- **接口**: `queryApprovalFormField.do`
+- **方法**: `queryApprovalFormField()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `form` | ApprovalFormVO |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `formFields` | List<ApprovalFormFieldVO> |
+
+##### `新增` addApprovalForm
+
+- **接口**: `addApprovalForm.do`
+- **方法**: `addApprovalForm()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `form` | ApprovalFormVO |  |
+| `formFields` | List<ApprovalFormFieldVO> |  |
+
+##### `更新` updateApprovalForm
+
+- **接口**: `updateApprovalForm.do`
+- **方法**: `updateApprovalForm()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `form` | ApprovalFormVO |  |
+| `formFields` | List<ApprovalFormFieldVO> |  |
+
+##### `更新` updateApprovalFormForStatus
+
+- **接口**: `updateApprovalFormForStatus.do`
+- **方法**: `updateApprovalFormForStatus()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `form` | ApprovalFormVO |  |
+
+##### `删除` deleteApprovalForm
+
+- **接口**: `deleteApprovalForm.do`
+- **方法**: `deleteApprovalForm()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `form` | ApprovalFormVO |  |
+
+##### `查询` queryApprovalFormData
+
+- **接口**: `queryApprovalFormData.do`
+- **方法**: `queryApprovalFormData()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `aid` | long |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `formDataList` | List<ApprovalFormDataVO> |
+
+
+> **类**: `api.approval.ApprovalFunctionAction`
+
+
+##### `查询` queryApprovalFunction
+
+- **接口**: `queryApprovalFunction.do`
+- **方法**: `queryApprovalFunction()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `approvalFunction` | ApprovalFunctionVO |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `approvalFunctions` | List<ApprovalFunctionVO> |
+
+
+> **类**: `api.approval.ApprovalPaymentWithdrawAction`
+
+
+##### `更新` submitApprovalForPaymentWithdraw
+
+- **接口**: `submitApprovalForPaymentWithdraw.do`
+- **方法**: `submitApprovalForPaymentWithdraw()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `approval` | ApprovalVO |  |
+| `approvalPaymentWithdraw` | ApprovalPaymentWithdrawVO |  |
+| `code` | String |  |
+| `forms` | String |  |
+
+
+> **类**: `api.approval.ApprovalProtationPreferAction`
+
+
+##### `更新` submitApprovalForProtationPrefer
+
+- **接口**: `submitApprovalForProtationPrefer.do`
+- **方法**: `submitApprovalForProtationPrefer()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `approval` | ApprovalVO |  |
+| `approvalProtationPrefer` | ApprovalProtationPreferVO |  |
+| `protation` | ProtationVO |  |
+| `code` | String |  |
+| `forms` | String |  |
+
+
+> **类**: `api.approval.ApprovalQuotationPreferAction`
+
+
+##### `更新` submitApprovalForQuotationPrefer
+
+- **接口**: `submitApprovalForQuotationPrefer.do`
+- **方法**: `submitApprovalForQuotationPrefer()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `approval` | ApprovalVO |  |
+| `approvalQuotationPrefer` | ApprovalQuotationPreferVO |  |
+| `code` | String |  |
+| `forms` | String |  |
+
+
+> **类**: `api.approval.ApprovalSalesRefundAction`
+
+
+##### `查询` pageApprovalSalesRefund
+
+- **接口**: `pageApprovalSalesRefund.do`
+- **方法**: `pageApprovalSalesRefund()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `paging` | Paging | 分页参数 , 参照 [paging](../check_rule.html#page) |
+
+
+> **类**: `api.approval.ApprovalTaskAction`
+
+
+##### `更新` startGeneralApproval
+
+- **接口**: `startGeneralApproval.do`
+- **方法**: `startGeneralApproval()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `code` | String |  |
+| `forms` | String |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `aid` | long |
+
+##### `更新` agreeApprovalTask
+
+- **接口**: `agreeApprovalTask.do`
+- **方法**: `agreeApprovalTask()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `taskId` | long |  |
+| `comment` | String |  |
+
+##### `撤销` refuseApprovalTask
+
+- **接口**: `refuseApprovalTask.do`
+- **方法**: `refuseApprovalTask()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `taskId` | long |  |
+| `comment` | String |  |
+
+##### `更新` transferApprovalTask
+
+- **接口**: `transferApprovalTask.do`
+- **方法**: `transferApprovalTask()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `taskId` | long |  |
+| `transferTo` | String |  |
+| `comment` | String |  |
+
+##### `查询` queryApprovalTaskTrace
+
+- **接口**: `queryApprovalTaskTrace.do`
+- **方法**: `queryApprovalTaskTrace()`
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `task` | ApprovalTaskVO |
+| `tasks` | List<ApprovalTaskVO> |
+| `aid` | long |
+
+##### `查询` queryApprovalTodoTask
+
+- **接口**: `queryApprovalTodoTask.do`
+- **方法**: `queryApprovalTodoTask()`
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `tasks` | List<ApprovalTaskVO> |
+

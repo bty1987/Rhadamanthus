@@ -896,3 +896,227 @@
 ##### `查询` updateQuotationFunctionRight
 
 更新功能名称和功能之间关系
+
+## 补录接口 (自动生成 2026-11-03)
+
+
+> **类**: `api.right.ApprovalFunctionRightAction`
+
+
+##### `查询` queryApprovalFunctionRight
+
+- **接口**: `queryApprovalFunctionRight.do`
+- **方法**: `queryApprovalFunctionRight()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `approvalFunctionRight` | ApprovalFunctionRightVO |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `approvalFunctionRights` | List<ApprovalFunctionRightVO> |
+
+##### `更新` updateApprovalFunctionRight
+
+- **接口**: `updateApprovalFunctionRight.do`
+- **方法**: `updateApprovalFunctionRight()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `approvalFunctionRight` | ApprovalFunctionRightVO |  |
+| `cfids` | List<Long> |  |
+
+
+> **类**: `api.right.ConstructionFunctionRightAction`
+
+
+##### `查询` queryConstructionFunctionRightByName
+
+- **接口**: `queryConstructionFunctionRightByName.do`
+- **方法**: `queryConstructionFunctionRightByName()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `constructionFunctionRight` | ConstructionFunctionRightVO |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `constructionFunctionRights` | List<ConstructionFunctionRightVO> |
+
+##### `更新` updateConstructionFunctionRight
+
+- **接口**: `updateConstructionFunctionRight.do`
+- **方法**: `updateConstructionFunctionRight()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `constructionFunctionRight` | ConstructionFunctionRightVO |  |
+| `cfids` | List<Long> |  |
+
+##### `更新` syncConstructionFunctionRight
+
+- **接口**: `syncConstructionFunctionRight.do`
+- **方法**: `syncConstructionFunctionRight()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `constructionFunctionRight` | ConstructionFunctionRightVO |  |
+| `companys` | List<String> |  |
+
+
+> **类**: `api.right.CustomerFunctionRightAction`
+
+
+##### `查询` queryCustomerFunctionRight
+
+- **接口**: `queryCustomerFunctionRight.do`
+- **方法**: `queryCustomerFunctionRight()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `customerFunctionRight` | CustomerFunctionRightVO |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `customerFunctionRights` | List<CustomerFunctionRightVO> |
+
+##### `更新` updateCustomerFunctionRight
+
+- **接口**: `updateCustomerFunctionRight.do`
+- **方法**: `updateCustomerFunctionRight()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `customerFunctionRight` | CustomerFunctionRightVO |  |
+| `cfids` | List<Long> |  |
+
+##### `更新` syncCustomerFunctionRight
+
+- **接口**: `syncCustomerFunctionRight.do`
+- **方法**: `syncCustomerFunctionRight()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `customerFunctionRight` | CustomerFunctionRightVO |  |
+| `companys` | List<String> |  |
+
+
+> **类**: `api.right.DecorationFunctionRightAction`
+
+
+##### `更新` syncDecorationFunctionRight
+
+- **接口**: `syncDecorationFunctionRight.do`
+- **方法**: `syncDecorationFunctionRight()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `decorationFunctionRight` | DecorationFunctionRightVO |  |
+| `companys` | List<String> |  |
+
+
+> **类**: `api.right.DecorationRightAction`
+
+
+##### `更新` syncDecorationRight
+
+- **接口**: `syncDecorationRight.do`
+- **方法**: `syncDecorationRight()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `user` | UserBaseVO |  |
+| `companys` | List<CompanyVO> |  |
+
+
+> **类**: `api.right.SelectionItemStatusRightAction`
+
+
+##### `查询` querySelectionItemStatusRight
+
+- **接口**: `querySelectionItemStatusRight.do`
+- **方法**: `querySalesDeliveryStatusRight()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `selectionItemStatusRight` | SelectionItemStatusRightVO |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `selectionItemStatusRights` | List<SelectionItemStatusRightVO> |
+
+##### `更新` updateSelectionItemStatusRight
+
+- **接口**: `updateSelectionItemStatusRight.do`
+- **方法**: `updateSalesDeliveryStatusRight()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `selectionItemStatusRights` | List<SelectionItemStatusRightVO> |  |
+| `selectionItemStatusRight` | SelectionItemStatusRightVO |  |
+
+
+> **类**: `api.right.UserFunctionRightAction`
+
+
+##### `查询` queryUserFunctionRight
+
+- **接口**: `queryUserFunctionRight.do`
+- **方法**: `queryUserFunctionRight()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `userFunctionRight` | UserFunctionRightVO |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `userFunctionRights` | List<UserFunctionRightVO> |
+
+##### `更新` updateUserFunctionRight
+
+- **接口**: `updateUserFunctionRight.do`
+- **方法**: `updateUserFunctionRight()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `userFunctionRight` | UserFunctionRightVO |  |
+| `ufids` | List<Long> |  |
+

@@ -747,3 +747,779 @@
 ##### `创建` pageLoginLog
 
 分页方式获取登陆记录
+
+## 补录接口 (自动生成 2026-11-03)
+
+
+> **类**: `api.common.LoginAction`
+
+
+##### `更新` requestLoginChallenge
+
+- **接口**: `requestLoginChallenge.do`
+- **方法**: `requestLoginChallenge()`
+- **说明**: 生成登录挑战（nonce） 用于挑战-响应认证
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `nonce` | String |
+
+##### `更新` phoneAuthCode
+
+- **接口**: `phoneAuthCode.do`
+- **方法**: `phoneAuthCode()`
+
+
+> **类**: `api.common.BrandAction`
+
+
+##### `删除` deleteBrandByBIds
+
+- **接口**: `deleteBrandByBIds.do`
+- **方法**: `deleteBrandByBIds()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `brands` | List<BrandVO> |  |
+
+
+> **类**: `api.common.BrandPoolAction`
+
+
+##### `查询` pageBrandPool
+
+- **接口**: `pageBrandPool.do`
+- **方法**: `pageBrandPool()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `paging` | Paging | 分页参数 , 参照 [paging](../check_rule.html#page) |
+
+##### `查询` queryBrandPoolByName
+
+- **接口**: `queryBrandPoolByName.do`
+- **方法**: `queryBrandPoolByName()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `brandPool` | BrandPoolVO |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `brandPools` | List<BrandPoolVO> |
+
+##### `新增` addBrandPool
+
+- **接口**: `addBrandPool.do`
+- **方法**: `addBrandPool()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `brandPool` | BrandPoolVO |  |
+
+##### `更新` updateBrandPool
+
+- **接口**: `updateBrandPool.do`
+- **方法**: `updateBrandPool()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `brandPool` | BrandPoolVO |  |
+
+##### `更新` updateBrandPoolForStatus
+
+- **接口**: `updateBrandPoolForStatus.do`
+- **方法**: `updateBrandPoolForStatus()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `brandPool` | BrandPoolVO |  |
+
+
+> **类**: `api.common.BuildingNameRuleAction`
+
+
+##### `新增` addBuildingNameRule
+
+- **接口**: `addBuildingNameRule.do`
+- **方法**: `addBuildingNameRule()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `buildingNameRule` | BuildingNameRuleVO |  |
+
+##### `更新` updateBuildingNameRule
+
+- **接口**: `updateBuildingNameRule.do`
+- **方法**: `updateBuildingNameRule()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `buildingNameRule` | BuildingNameRuleVO |  |
+
+##### `删除` deleteBuildingNameRule
+
+- **接口**: `deleteBuildingNameRule.do`
+- **方法**: `deleteBuildingNameRule()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `buildingNameRule` | BuildingNameRuleVO |  |
+
+
+> **类**: `api.common.CategoryFormatAction`
+
+
+##### `查询` queryCategoryFormatByCid
+
+- **接口**: `queryCategoryFormatByCid.do`
+- **方法**: `queryCategoryFormatByCid()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `categoryFormat` | CategoryFormatVO |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `categoryFormats` | List<CategoryFormatVO> |
+
+##### `新增` addCategoryFormat
+
+- **接口**: `addCategoryFormat.do`
+- **方法**: `addCategoryFormat()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `categoryFormat` | CategoryFormatVO |  |
+
+##### `更新` updateCategoryFormat
+
+- **接口**: `updateCategoryFormat.do`
+- **方法**: `updateCategoryFormat()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `categoryFormat` | CategoryFormatVO |  |
+
+##### `删除` deleteCategoryFormat
+
+- **接口**: `deleteCategoryFormat.do`
+- **方法**: `deleteCategoryFormat()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `categoryFormat` | CategoryFormatVO |  |
+
+
+> **类**: `api.common.CityProperPartnerAction`
+
+
+##### `查询` queryCityProperPartner
+
+- **接口**: `queryCityProperPartner.do`
+- **方法**: `queryCityProperPartner()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `cityProperPartner` | CityProperPartnerVO |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `cityProperPartners` | List<CityProperPartnerVO> |
+
+##### `新增` addCityProperPartner
+
+- **接口**: `addCityProperPartner.do`
+- **方法**: `addCityProperPartner()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `cityProperPartner` | CityProperPartnerVO |  |
+
+##### `删除` deleteCityProperPartner
+
+- **接口**: `deleteCityProperPartner.do`
+- **方法**: `deleteCityProperPartner()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `cityProperPartner` | CityProperPartnerVO |  |
+
+
+> **类**: `api.common.ColorPoolAction`
+
+
+##### `查询` pageColorPool
+
+- **接口**: `pageColorPool.do`
+- **方法**: `pageColorPool()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `paging` | Paging | 分页参数 , 参照 [paging](../check_rule.html#page) |
+
+##### `查询` queryColorPoolByGpid
+
+- **接口**: `queryColorPoolByGpid.do`
+- **方法**: `queryColorPoolByGpid()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `colorPool` | ColorPoolVO |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `colorPools` | List<ColorPoolVO> |
+
+##### `查询` queryColorPoolForEnableByGpid
+
+- **接口**: `queryColorPoolForEnableByGpid.do`
+- **方法**: `queryColorPoolForEnableByGpid()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `colorPool` | ColorPoolVO |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `colorPools` | List<ColorPoolVO> |
+
+##### `新增` addColorPool
+
+- **接口**: `addColorPool.do`
+- **方法**: `addColorPool()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `colorPool` | ColorPoolVO |  |
+
+##### `更新` updateColorPoolForStatus
+
+- **接口**: `updateColorPoolForStatus.do`
+- **方法**: `updateColorPoolForStatus()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `colorPool` | ColorPoolVO |  |
+
+
+> **类**: `api.common.CustomerAccountAction`
+
+
+##### `查询` queryCustomerAccount
+
+- **接口**: `queryCustomerAccount.do`
+- **方法**: `queryCustomerAccount()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `customerAccount` | CustomerAccountVO |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `customerAccounts` | List<CustomerAccountVO> |
+
+##### `查询` queryDefaultCustomerAccount
+
+- **接口**: `queryDefaultCustomerAccount.do`
+- **方法**: `queryDefaultCustomerAccount()`
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `customerAccount` | CustomerAccountVO |
+
+##### `新增` addCustomerAccount
+
+- **接口**: `addCustomerAccount.do`
+- **方法**: `addCustomerAccount()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `customerAccount` | CustomerAccountVO |  |
+
+##### `更新` updateCustomerAccount
+
+- **接口**: `updateCustomerAccount.do`
+- **方法**: `updateCustomerAccount()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `customerAccount` | CustomerAccountVO |  |
+
+##### `删除` deleteCustomerAccount
+
+- **接口**: `deleteCustomerAccount.do`
+- **方法**: `deleteCustomerAccount()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `customerAccount` | CustomerAccountVO |  |
+
+##### `更新` setDefaultCustomerAccount
+
+- **接口**: `setDefaultCustomerAccount.do`
+- **方法**: `setDefaultCustomerAccount()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `customerAccount` | CustomerAccountVO |  |
+
+
+> **类**: `api.common.CustomerRecordAction`
+
+
+##### `新增` addCustomerRecord
+
+- **接口**: `addCustomerRecord.do`
+- **方法**: `addCustomerRecord()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `customerRecord` | CustomerRecordVO |  |
+
+
+> **类**: `api.common.DepartmentPartnerAction`
+
+
+##### `查询` queryDepartmentPartner
+
+- **接口**: `queryDepartmentPartner.do`
+- **方法**: `queryDepartmentPartner()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `departmentPartner` | DepartmentPartnerVO |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `departmentPartners` | List<DepartmentPartnerVO> |
+
+##### `新增` addDepartmentPartner
+
+- **接口**: `addDepartmentPartner.do`
+- **方法**: `addDepartmentPartner()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `departmentPartner` | DepartmentPartnerVO |  |
+
+##### `删除` deleteDepartmentPartner
+
+- **接口**: `deleteDepartmentPartner.do`
+- **方法**: `deleteDepartmentPartner()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `departmentPartner` | DepartmentPartnerVO |  |
+
+
+> **类**: `api.common.FormatPoolAction`
+
+
+##### `查询` pageFormatPool
+
+- **接口**: `pageFormatPool.do`
+- **方法**: `pageFormatPool()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `paging` | Paging | 分页参数 , 参照 [paging](../check_rule.html#page) |
+
+##### `查询` queryFormatPoolByGpid
+
+- **接口**: `queryFormatPoolByGpid.do`
+- **方法**: `queryFormatPoolByGpid()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `formatPool` | FormatPoolVO |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `formatPools` | List<FormatPoolVO> |
+
+##### `查询` queryFormatPoolForEnableByGpid
+
+- **接口**: `queryFormatPoolForEnableByGpid.do`
+- **方法**: `queryFormatPoolForEnableByGpid()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `formatPool` | FormatPoolVO |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `formatPools` | List<FormatPoolVO> |
+
+##### `新增` addFormatPool
+
+- **接口**: `addFormatPool.do`
+- **方法**: `addFormatPool()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `formatPool` | FormatPoolVO |  |
+
+##### `更新` updateFormatPoolForStatus
+
+- **接口**: `updateFormatPoolForStatus.do`
+- **方法**: `updateFormatPoolForStatus()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `formatPool` | FormatPoolVO |  |
+
+
+> **类**: `api.common.GoodsPoolAction`
+
+
+##### `查询` pageGoodsPool
+
+- **接口**: `pageGoodsPool.do`
+- **方法**: `pageGoodsPool()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `paging` | Paging | 分页参数 , 参照 [paging](../check_rule.html#page) |
+| `goodsPool` | GoodsPoolVO |  |
+
+##### `查询` queryGoodsPool
+
+- **接口**: `queryGoodsPool.do`
+- **方法**: `queryGoodsPool()`
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `goodsPools` | List<GoodsPoolVO> |
+
+##### `查询` queryGoodsPoolByAtid
+
+- **接口**: `queryGoodsPoolByAtid.do`
+- **方法**: `queryGoodsPoolByAtid()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `goodsPool` | GoodsPoolVO |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `goodsPools` | List<GoodsPoolVO> |
+
+##### `查询` queryGoodsPoolByNo
+
+- **接口**: `queryGoodsPoolByNo.do`
+- **方法**: `queryGoodsPoolByNo()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `goodsPool` | GoodsPoolVO |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `goodsPools` | List<GoodsPoolVO> |
+
+##### `查询` queryGoodsPoolByName
+
+- **接口**: `queryGoodsPoolByName.do`
+- **方法**: `queryGoodsPoolByName()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `goodsPool` | GoodsPoolVO |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `goodsPools` | List<GoodsPoolVO> |
+
+##### `查询` queryGoodsPoolByBarcode
+
+- **接口**: `queryGoodsPoolByBarcode.do`
+- **方法**: `queryGoodsPoolByBarcode()`
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `goodsPool` | GoodsPoolVO |
+
+##### `查询` queryGoodsPoolByGpid
+
+- **接口**: `queryGoodsPoolByGpid.do`
+- **方法**: `queryGoodsPoolByGpid()`
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `goodsPool` | GoodsPoolVO |
+
+##### `新增` addGoodsPool
+
+- **接口**: `addGoodsPool.do`
+- **方法**: `addGoodsPool()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `goodsPool` | GoodsPoolVO |  |
+
+##### `更新` batchAddFromPool
+
+- **接口**: `batchAddFromPool.do`
+- **方法**: `batchAddFromPool()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `goodsPools` | List<GoodsPoolVO> |  |
+
+##### `更新` updateGoodsPool
+
+- **接口**: `updateGoodsPool.do`
+- **方法**: `updateGoodsPool()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `goodsPool` | GoodsPoolVO |  |
+
+##### `更新` updateGoodsPoolForStatus
+
+- **接口**: `updateGoodsPoolForStatus.do`
+- **方法**: `updateGoodsPoolForStatus()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `goodsPool` | GoodsPoolVO |  |
+
+
+> **类**: `api.common.PricePoolAction`
+
+
+##### `查询` pagePricePool
+
+- **接口**: `pagePricePool.do`
+- **方法**: `pagePricePool()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `paging` | Paging | 分页参数 , 参照 [paging](../check_rule.html#page) |
+
+##### `查询` queryPricePoolByGpid
+
+- **接口**: `queryPricePoolByGpid.do`
+- **方法**: `queryPricePoolByGpid()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `pricePool` | PricePoolVO |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `pricePools` | List<PricePoolVO> |
+
+##### `查询` queryPricePoolByPpid
+
+- **接口**: `queryPricePoolByPpid.do`
+- **方法**: `queryPricePoolByPpid()`
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `pricePool` | PricePoolVO |
+
+##### `新增` addPricePool
+
+- **接口**: `addPricePool.do`
+- **方法**: `addPricePool()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `pricePool` | PricePoolVO |  |
+
+##### `更新` updatePricePoolForStatus
+
+- **接口**: `updatePricePoolForStatus.do`
+- **方法**: `updatePricePoolForStatus()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `pricePool` | PricePoolVO |  |
+
+##### `删除` deletePricePool
+
+- **接口**: `deletePricePool.do`
+- **方法**: `deletePricePool()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `pricePool` | PricePoolVO |  |
+
+
+> **类**: `api.common.TaskAction`
+
+
+##### `更新` updateTask
+
+- **接口**: `updateTask.do`
+- **方法**: `updateTask()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `task` | TaskVO |  |
+
+##### `更新` syncRoleTask
+
+- **接口**: `syncRoleTask.do`
+- **方法**: `syncRoleTask()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `role` | RoleVO |  |
+| `companys` | List<com.fanglin.system.vo.CompanyVO> |  |
+
+
+> **类**: `api.common.VillageAction`
+
+
+##### `更新` locateVillage
+
+- **接口**: `locateVillage.do`
+- **方法**: `locateVillage()`
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `village` | VillageVO |
+

@@ -1219,3 +1219,49 @@
     "salaryDrawing.sdid": 1
 }
 ```
+
+## 补录接口 (自动生成 2026-11-03)
+
+
+> **类**: `api.salary.WorkerSalaryAction`
+
+
+##### `查询` queryWorkerSalaryByOrderId
+
+- **接口**: `queryWorkerSalaryByOrderId.do`
+- **方法**: `queryWorkerSalaryByOrderId()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `workerSalary` | WorkerSalaryVO |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `workerSalarys` | List<WorkerSalaryVO> |
+
+##### `更新` updateWorkerSalary
+
+- **接口**: `updateWorkerSalary.do`
+- **方法**: `updateWorkerSalary()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `workerSalary` | WorkerSalaryVO |  |
+
+##### `更新` adoptWorkerSalaryForTimeRange
+
+- **接口**: `adoptWorkerSalaryForTimeRange.do`
+- **方法**: `adoptWorkerSalaryForTimeRange()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `workerSalary` | WorkerSalaryVO |  |
+

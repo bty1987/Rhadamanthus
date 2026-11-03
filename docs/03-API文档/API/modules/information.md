@@ -3282,3 +3282,27 @@
     "worksheet.wsid": 1
 }
 ```
+
+## 补录接口 (自动生成 2026-11-03)
+
+
+> **类**: `api.information.AwardPurchaseAction`
+
+
+##### `查询` queryAwardPurchaseByFapid
+
+- **接口**: `queryAwardPurchaseByFapid.do`
+- **方法**: `queryAwardPurchaseByFapid()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `awardPurchase` | AwardPurchaseVO |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `awardPurchases` | List<AwardPurchaseVO> |
+
