@@ -2,6 +2,7 @@ package com.fanglin.decoration.service.impl;
 
 import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -78,18 +79,19 @@ public class DecorationAccountStatusServiceImpl implements DecorationAccountStat
 		return decorationAccountStatusVO;
 	}
 
+	/** 全量刷新的分类顺序 */
+	private static final short[] STATUS_TYPES = {DecorationAccountStatusPO.TYPE_SIGN_INT, DecorationAccountStatusPO.TYPE_SALES_INT, DecorationAccountStatusPO.TYPE_CONSTRUCTION_INT, DecorationAccountStatusPO.TYPE_SELECTION_INT, DecorationAccountStatusPO.TYPE_DECORATION_PAYMENT_INT, DecorationAccountStatusPO.TYPE_SALES_PAYMENT_INT};
+
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public DecorationAccountStatusPO updateDecorationAccountStatus(String orderId) throws FLException {
 
 		DecorationAccountStatusPO decorationAccountStatusPO = ensureDecorationAccountStatus(orderId);
 
-		updateSignStatus(decorationAccountStatusPO);
-		updateSalesStatus(decorationAccountStatusPO);
-		updateConstructionStatus(decorationAccountStatusPO);
-		updateSelectionStatus(decorationAccountStatusPO);
-		updateDecorationPaymentStatus(decorationAccountStatusPO);
-		updateSalesPaymentStatus(decorationAccountStatusPO);
+		for (short type : STATUS_TYPES) {
+			updateStatus(decorationAccountStatusPO, type);
+		}
+
 		updateStatus(decorationAccountStatusPO);
 
 		return decorationAccountStatusPO;
@@ -106,28 +108,7 @@ public class DecorationAccountStatusServiceImpl implements DecorationAccountStat
 
 		DecorationAccountStatusPO decorationAccountStatusPO = ensureDecorationAccountStatus(orderId);
 
-		switch (type) {
-			case DecorationAccountStatusPO.TYPE_SIGN_INT:
-				updateSignStatus(decorationAccountStatusPO);
-				break;
-			case DecorationAccountStatusPO.TYPE_SALES_INT:
-				updateSalesStatus(decorationAccountStatusPO);
-				break;
-			case DecorationAccountStatusPO.TYPE_CONSTRUCTION_INT:
-				updateConstructionStatus(decorationAccountStatusPO);
-				break;
-			case DecorationAccountStatusPO.TYPE_SELECTION_INT:
-				updateSelectionStatus(decorationAccountStatusPO);
-				break;
-			case DecorationAccountStatusPO.TYPE_DECORATION_PAYMENT_INT:
-				updateDecorationPaymentStatus(decorationAccountStatusPO);
-				break;
-			case DecorationAccountStatusPO.TYPE_SALES_PAYMENT_INT:
-				updateSalesPaymentStatus(decorationAccountStatusPO);
-				break;
-			default:
-				return;
-		}
+		if (!updateStatus(decorationAccountStatusPO, type)) return;
 
 		updateStatus(decorationAccountStatusPO);
 	}
@@ -145,68 +126,102 @@ public class DecorationAccountStatusServiceImpl implements DecorationAccountStat
 		}
 	}
 
-	private void updateSignStatus(DecorationAccountStatusPO decorationAccountStatusPO) throws FLException {
+	/** 按分类刷新对应子状态(未知分类返回false, 调用方不落库) */
+	private boolean updateStatus(DecorationAccountStatusPO decorationAccountStatusPO, short type) throws FLException {
 
-		DecorationPO decorationPO = queryDecoration(decorationAccountStatusPO.getOrderId());
-		int company = decorationPO.getCompany();
-		boolean checkEnable = isEnable(CONFIG_CHECK_ENABLE_STR, company);
+		switch (type) {
+			case DecorationAccountStatusPO.TYPE_SIGN_INT: {
+				DecorationPO decorationPO = queryDecoration(decorationAccountStatusPO.getOrderId());
+				int company = decorationPO.getCompany();
+				boolean checkEnable = isEnable(CONFIG_CHECK_ENABLE_STR, company);
 
-		decorationAccountStatusPO.setCompany(company);
-		decorationAccountStatusPO.setSignStatus(makeStatus(checkEnable, CONFIG_CHECK_SIGN_ENABLE_STR, company, Arrays.asList(DecorationPO.STATUS_SIGNED_INT, DecorationPO.STATUS_FINAL_INT).contains(decorationPO.getStatus())));
-	}
+				decorationAccountStatusPO.setCompany(company);
+				decorationAccountStatusPO.setSignStatus(makeStatus(checkEnable, CONFIG_CHECK_SIGN_ENABLE_STR, company, Arrays.asList(DecorationPO.STATUS_SIGNED_INT, DecorationPO.STATUS_FINAL_INT).contains(decorationPO.getStatus())));
+				return true;
+			}
+			case DecorationAccountStatusPO.TYPE_SALES_INT: {
+				int company = decorationAccountStatusPO.getCompany();
+				boolean checkEnable = isEnable(CONFIG_CHECK_ENABLE_STR, company);
+				int salesUnfinish = salesDao.countSalesForUnfinishByOrderId(decorationAccountStatusPO.getOrderId());
 
-	private void updateSalesStatus(DecorationAccountStatusPO decorationAccountStatusPO) {
+				decorationAccountStatusPO.setSalesUnfinish(salesUnfinish);
+				decorationAccountStatusPO.setSalesStatus(makeStatus(checkEnable, CONFIG_CHECK_SALES_ENABLE_STR, company, salesUnfinish == 0));
+				return true;
+			}
+			case DecorationAccountStatusPO.TYPE_CONSTRUCTION_INT: {
+				int company = decorationAccountStatusPO.getCompany();
+				boolean checkEnable = isEnable(CONFIG_CHECK_ENABLE_STR, company);
 
-		String orderId = decorationAccountStatusPO.getOrderId();
-		int company = decorationAccountStatusPO.getCompany();
-		boolean checkEnable = isEnable(CONFIG_CHECK_ENABLE_STR, company);
-		int salesUnfinish = salesDao.countSalesForUnfinishByOrderId(orderId);
+				if (!checkEnable || !isEnable(CONFIG_CHECK_CONSTRUCTION_ENABLE_STR, company)) {
+					decorationAccountStatusPO.setConstructionCnid(0);
+					decorationAccountStatusPO.setConstructionName("");
+					decorationAccountStatusPO.setConstructionStatus(DecorationAccountStatusPO.STATUS_UNCHECK_INT);
+					return true;
+				}
 
-		decorationAccountStatusPO.setSalesUnfinish(salesUnfinish);
-		decorationAccountStatusPO.setSalesStatus(makeStatus(checkEnable, CONFIG_CHECK_SALES_ENABLE_STR, company, salesUnfinish == 0));
-	}
+				boolean hasAccountNode = false;
 
-	private void updateConstructionStatus(DecorationAccountStatusPO decorationAccountStatusPO) {
+				for (ConstructionSchedulePO constructionSchedulePO : constructionScheduleDao.queryConstructionScheduleByOrderId(decorationAccountStatusPO.getOrderId())) {
 
-		int company = decorationAccountStatusPO.getCompany();
-		boolean checkEnable = isEnable(CONFIG_CHECK_ENABLE_STR, company);
+					if (constructionSchedulePO.getNode() == null) continue;
 
-		decorationAccountStatusPO.setConstructionStatus(makeConstructionStatus(decorationAccountStatusPO, checkEnable, company));
-	}
+					if (constructionSchedulePO.getNode().getAccount() != ConstructionNodePO.ACCOUNT_VALID_INT) continue;
 
-	private void updateSelectionStatus(DecorationAccountStatusPO decorationAccountStatusPO) {
+					hasAccountNode = true;
 
-		String orderId = decorationAccountStatusPO.getOrderId();
-		int company = decorationAccountStatusPO.getCompany();
-		boolean checkEnable = isEnable(CONFIG_CHECK_ENABLE_STR, company);
-		int selectionUnfinish = selectionItemDao.countSelectionItemForUnfinishByOrderId(orderId);
+					ConstructionNodePO constructionNodePO = constructionSchedulePO.getNode();
 
-		decorationAccountStatusPO.setSelectionUnfinish(selectionUnfinish);
-		decorationAccountStatusPO.setSelectionStatus(makeStatus(checkEnable, CONFIG_CHECK_SELECTION_ENABLE_STR, company, selectionUnfinish == 0));
-	}
+					decorationAccountStatusPO.setConstructionCnid(constructionNodePO.getCnid());
+					decorationAccountStatusPO.setConstructionName(constructionNodePO.getName());
 
-	private void updateDecorationPaymentStatus(DecorationAccountStatusPO decorationAccountStatusPO) throws FLException {
+					if (constructionSchedulePO.getStatus() != ConstructionSchedulePO.STATUS_FINISH_INT) {
+						decorationAccountStatusPO.setConstructionStatus(DecorationAccountStatusPO.STATUS_FAIL_INT);
+						return true;
+					}
+				}
 
-		DecorationPO decorationPO = queryDecoration(decorationAccountStatusPO.getOrderId());
-		int company = decorationPO.getCompany();
-		boolean checkEnable = isEnable(CONFIG_CHECK_ENABLE_STR, company);
+				if (!hasAccountNode) {
+					decorationAccountStatusPO.setConstructionCnid(0);
+					decorationAccountStatusPO.setConstructionName("");
+				}
 
-		decorationAccountStatusPO.setCompany(company);
-		decorationAccountStatusPO.setDecorationPaymentTarget((short) getInt(CONFIG_DECORATION_PAYMENT_SCALE_STR, company, 99));
-		decorationAccountStatusPO.setDecorationPaymentScale(decorationPO.getPaySacle());
-		decorationAccountStatusPO.setDecorationPaymentStatus(makeStatus(checkEnable, CONFIG_CHECK_DECORATION_PAYMENT_ENABLE_STR, company, decorationPO.getPaySacle() >= decorationAccountStatusPO.getDecorationPaymentTarget()));
-	}
+				decorationAccountStatusPO.setConstructionStatus(hasAccountNode ? DecorationAccountStatusPO.STATUS_PASS_INT : DecorationAccountStatusPO.STATUS_FAIL_INT);
+				return true;
+			}
+			case DecorationAccountStatusPO.TYPE_SELECTION_INT: {
+				int company = decorationAccountStatusPO.getCompany();
+				boolean checkEnable = isEnable(CONFIG_CHECK_ENABLE_STR, company);
+				int selectionUnfinish = selectionItemDao.countSelectionItemForUnfinishByOrderId(decorationAccountStatusPO.getOrderId());
 
-	private void updateSalesPaymentStatus(DecorationAccountStatusPO decorationAccountStatusPO) throws FLException {
+				decorationAccountStatusPO.setSelectionUnfinish(selectionUnfinish);
+				decorationAccountStatusPO.setSelectionStatus(makeStatus(checkEnable, CONFIG_CHECK_SELECTION_ENABLE_STR, company, selectionUnfinish == 0));
+				return true;
+			}
+			case DecorationAccountStatusPO.TYPE_DECORATION_PAYMENT_INT: {
+				DecorationPO decorationPO = queryDecoration(decorationAccountStatusPO.getOrderId());
+				int company = decorationPO.getCompany();
+				boolean checkEnable = isEnable(CONFIG_CHECK_ENABLE_STR, company);
 
-		DecorationPO decorationPO = queryDecoration(decorationAccountStatusPO.getOrderId());
-		int company = decorationPO.getCompany();
-		boolean checkEnable = isEnable(CONFIG_CHECK_ENABLE_STR, company);
+				decorationAccountStatusPO.setCompany(company);
+				decorationAccountStatusPO.setDecorationPaymentTarget((short) getInt(CONFIG_DECORATION_PAYMENT_SCALE_STR, company, 99));
+				decorationAccountStatusPO.setDecorationPaymentScale(decorationPO.getPaySacle());
+				decorationAccountStatusPO.setDecorationPaymentStatus(makeStatus(checkEnable, CONFIG_CHECK_DECORATION_PAYMENT_ENABLE_STR, company, decorationPO.getPaySacle() >= decorationAccountStatusPO.getDecorationPaymentTarget()));
+				return true;
+			}
+			case DecorationAccountStatusPO.TYPE_SALES_PAYMENT_INT: {
+				DecorationPO decorationPO = queryDecoration(decorationAccountStatusPO.getOrderId());
+				int company = decorationPO.getCompany();
+				boolean checkEnable = isEnable(CONFIG_CHECK_ENABLE_STR, company);
 
-		decorationAccountStatusPO.setCompany(company);
-		decorationAccountStatusPO.setSalesPaymentTarget((short) getInt(CONFIG_SALES_PAYMENT_SCALE_STR, company, 99));
-		decorationAccountStatusPO.setSalesPaymentScale(decorationPO.getSaleScale());
-		decorationAccountStatusPO.setSalesPaymentStatus(makeStatus(checkEnable, CONFIG_CHECK_SALES_PAYMENT_ENABLE_STR, company, decorationPO.getSaleScale() >= decorationAccountStatusPO.getSalesPaymentTarget()));
+				decorationAccountStatusPO.setCompany(company);
+				decorationAccountStatusPO.setSalesPaymentTarget((short) getInt(CONFIG_SALES_PAYMENT_SCALE_STR, company, 99));
+				decorationAccountStatusPO.setSalesPaymentScale(decorationPO.getSaleScale());
+				decorationAccountStatusPO.setSalesPaymentStatus(makeStatus(checkEnable, CONFIG_CHECK_SALES_PAYMENT_ENABLE_STR, company, decorationPO.getSaleScale() >= decorationAccountStatusPO.getSalesPaymentTarget()));
+				return true;
+			}
+			default:
+				return false;
+		}
 	}
 
 	private DecorationAccountStatusPO ensureDecorationAccountStatus(String orderId) throws FLException {
@@ -248,40 +263,6 @@ public class DecorationAccountStatusServiceImpl implements DecorationAccountStat
 		return decorationPO;
 	}
 
-	private short makeConstructionStatus(DecorationAccountStatusPO decorationAccountStatusPO, boolean checkEnable, int company) {
-
-		if (!checkEnable || !isEnable(CONFIG_CHECK_CONSTRUCTION_ENABLE_STR, company)) {
-			decorationAccountStatusPO.setConstructionCnid(0);
-			decorationAccountStatusPO.setConstructionName("");
-			return DecorationAccountStatusPO.STATUS_UNCHECK_INT;
-		}
-
-		boolean hasAccountNode = false;
-
-		for (ConstructionSchedulePO constructionSchedulePO : constructionScheduleDao.queryConstructionScheduleByOrderId(decorationAccountStatusPO.getOrderId())) {
-
-			if (constructionSchedulePO.getNode() == null) continue;
-
-			if (constructionSchedulePO.getNode().getAccount() != ConstructionNodePO.ACCOUNT_VALID_INT) continue;
-
-			hasAccountNode = true;
-
-			ConstructionNodePO constructionNodePO = constructionSchedulePO.getNode();
-
-			decorationAccountStatusPO.setConstructionCnid(constructionNodePO.getCnid());
-			decorationAccountStatusPO.setConstructionName(constructionNodePO.getName());
-
-			if (constructionSchedulePO.getStatus() != ConstructionSchedulePO.STATUS_FINISH_INT) return DecorationAccountStatusPO.STATUS_FAIL_INT;
-		}
-
-		if (!hasAccountNode) {
-			decorationAccountStatusPO.setConstructionCnid(0);
-			decorationAccountStatusPO.setConstructionName("");
-		}
-
-		return hasAccountNode ? DecorationAccountStatusPO.STATUS_PASS_INT : DecorationAccountStatusPO.STATUS_FAIL_INT;
-	}
-
 	private short makeStatus(boolean checkEnable, String key, int company, boolean pass) {
 
 		if (!checkEnable || !isEnable(key, company)) return DecorationAccountStatusPO.STATUS_UNCHECK_INT;
@@ -291,22 +272,18 @@ public class DecorationAccountStatusServiceImpl implements DecorationAccountStat
 
 	private void updateStatus(DecorationAccountStatusPO decorationAccountStatusPO) {
 
-		decorationAccountStatusPO.setStatus(makeOverallStatus(decorationAccountStatusPO));
+		List<Short> statusList = Arrays.asList(decorationAccountStatusPO.getSignStatus(), decorationAccountStatusPO.getSalesStatus(), decorationAccountStatusPO.getConstructionStatus(), decorationAccountStatusPO.getSelectionStatus(), decorationAccountStatusPO.getDecorationPaymentStatus(), decorationAccountStatusPO.getSalesPaymentStatus());
+
+		if (statusList.contains(DecorationAccountStatusPO.STATUS_FAIL_INT)) {
+			decorationAccountStatusPO.setStatus(DecorationAccountStatusPO.STATUS_FAIL_INT);
+		} else if (statusList.contains(DecorationAccountStatusPO.STATUS_PASS_INT)) {
+			decorationAccountStatusPO.setStatus(DecorationAccountStatusPO.STATUS_PASS_INT);
+		} else {
+			decorationAccountStatusPO.setStatus(DecorationAccountStatusPO.STATUS_UNCHECK_INT);
+		}
+
 		decorationAccountStatusPO.setUpdateTime(DateUtil.getDateToTimestamp(new Date()));
 		decorationAccountStatusDao.update(decorationAccountStatusPO);
-	}
-
-	private short makeOverallStatus(DecorationAccountStatusPO decorationAccountStatusPO) {
-
-		if (Arrays.asList(decorationAccountStatusPO.getSignStatus(), decorationAccountStatusPO.getSalesStatus(), decorationAccountStatusPO.getConstructionStatus(), decorationAccountStatusPO.getSelectionStatus(), decorationAccountStatusPO.getDecorationPaymentStatus(), decorationAccountStatusPO.getSalesPaymentStatus()).contains(DecorationAccountStatusPO.STATUS_FAIL_INT)) {
-			return DecorationAccountStatusPO.STATUS_FAIL_INT;
-		}
-
-		if (Arrays.asList(decorationAccountStatusPO.getSignStatus(), decorationAccountStatusPO.getSalesStatus(), decorationAccountStatusPO.getConstructionStatus(), decorationAccountStatusPO.getSelectionStatus(), decorationAccountStatusPO.getDecorationPaymentStatus(), decorationAccountStatusPO.getSalesPaymentStatus()).contains(DecorationAccountStatusPO.STATUS_PASS_INT)) {
-			return DecorationAccountStatusPO.STATUS_PASS_INT;
-		}
-
-		return DecorationAccountStatusPO.STATUS_UNCHECK_INT;
 	}
 
 	private boolean isEnable(String key, int company) {
