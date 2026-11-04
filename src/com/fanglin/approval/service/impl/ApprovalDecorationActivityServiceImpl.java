@@ -213,6 +213,16 @@ public class ApprovalDecorationActivityServiceImpl implements ApprovalDecoration
 			}
 		}
 
+		// 签约/决算装修单额度类奖品锁死(140111): 提交链已有白名单守卫, 通过时复查拦截提交~通过间隙转签约的额度类审批
+		if (costItemMap.size() > 0) {
+
+			List<Short> statuses = Arrays.asList(DecorationPO.STATUS_SIGNED_INT, DecorationPO.STATUS_FINAL_INT, DecorationPO.STATUS_SIGNEDTERMINABLE_INT);
+
+			if (statuses.contains(decorationPO.getStatus())) {
+				throw new FLException(140111, "装修单已签约或决算,活动奖品不可操作");
+			}
+		}
+
 		ActivityCostVO costSnapshot = costItemMap.size() > 0 ? decorationActivityCostService.queryActivityCost(decorationPO.getOrderId(), approvalPO.getSender().getUserId(), Arith.div(costAmountSum, 1000000L)) : null;
 
 		for (ApprovalDecorationActivityItemPO approvalDecorationActivityItemPO : approvalDecorationActivityItemPOs) {

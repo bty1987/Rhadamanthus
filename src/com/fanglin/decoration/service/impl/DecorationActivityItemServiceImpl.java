@@ -160,6 +160,9 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 			activityItemPO = activityItemPOs != null && activityItemPOs.size() > 0 ? activityItemPOs.get(0) : null;
 		}
 
+		// 签约/决算装修单额度类奖品锁死(140111): 按配置 type 判定, 配置查不到视为非额度放行
+		ensureDecorationActivityItemOperable(decorationActivityItemVO.getOrderId(), activityItemPO == null ? (short) 0 : activityItemPO.getType());
+
 		int money = decorationActivityItemVO.getMoney() == null ? 0 : decorationActivityItemVO.getMoney();
 		int num = decorationActivityItemVO.getNum() == null ? 0 : decorationActivityItemVO.getNum();
 
@@ -227,6 +230,9 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 		if (decorationActivityItemPO == null) {
 			throw new FLException(140101, "装修活动物品不存在");
 		}
+
+		// 签约/决算装修单额度类奖品锁死(140111)
+		ensureDecorationActivityItemOperable(decorationActivityItemPO.getOrderId(), decorationActivityItemPO.getType());
 
 		if (decorationActivityItemPO.getState() != DecorationActivityItemPO.STATUS_INIT_INT) {
 			throw new FLException(140102, "装修活动奖品不可操作");
@@ -327,6 +333,9 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 			throw new FLException(140101, "装修活动物品不存在");
 		}
 
+		// 签约/决算装修单额度类奖品锁死(140111)
+		ensureDecorationActivityItemOperable(decorationActivityItemPO.getOrderId(), decorationActivityItemPO.getType());
+
 		if (decorationActivityItemPO.getState() != DecorationActivityItemPO.STATUS_INIT_INT) {
 			throw new FLException(140102, "装修活动奖品不可操作");
 		}
@@ -378,6 +387,9 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 			throw new FLException(140101, "装修活动物品不存在");
 		}
 
+		// 签约/决算装修单额度类奖品锁死(140111)
+		ensureDecorationActivityItemOperable(decorationActivityItemPO.getOrderId(), decorationActivityItemPO.getType());
+
 		if (decorationActivityItemPO.getState() != DecorationActivityItemPO.STATUS_RECEIVE_INT) {
 			throw new FLException(140102, "装修活动奖品不可操作");
 		}
@@ -416,6 +428,9 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 		if (decorationActivityItemPO == null) {
 			throw new FLException(140101, "装修活动物品不存在");
 		}
+
+		// 签约/决算装修单额度类奖品锁死(140111)
+		ensureDecorationActivityItemOperable(decorationActivityItemPO.getOrderId(), decorationActivityItemPO.getType());
 
 		List<Short> status = Arrays.asList(new Short[] { DecorationActivityItemPO.STATUS_RECEIVE_INT, DecorationActivityItemPO.STATUS_DELIVERY_INT, DecorationActivityItemPO.STATUS_WAIT_INT });
 
@@ -478,6 +493,9 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 			throw new FLException(140101, "装修活动物品不存在");
 		}
 
+		// 签约/决算装修单额度类奖品锁死(140111)
+		ensureDecorationActivityItemOperable(decorationActivityItemPO.getOrderId(), decorationActivityItemPO.getType());
+
 		List<Short> status = Arrays.asList(new Short[] { DecorationActivityItemPO.STATUS_RECEIVE_INT, DecorationActivityItemPO.STATUS_DELIVERY_INT, DecorationActivityItemPO.STATUS_DISCOUNT_INT });
 
 		if (!status.contains(decorationActivityItemPO.getState())) {
@@ -521,6 +539,9 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 			throw new FLException(140101, "装修活动物品不存在");
 		}
 
+		// 签约/决算装修单额度类奖品锁死(140111)
+		ensureDecorationActivityItemOperable(decorationActivityItemPO.getOrderId(), decorationActivityItemPO.getType());
+
 		if (decorationActivityItemPO.getState() != DecorationActivityItemPO.STATUS_INIT_INT) {
 			throw new FLException(140102, "装修活动奖品不可操作");
 		}
@@ -561,6 +582,9 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 		if (decorationActivityItemPO == null) {
 			throw new FLException(140101, "装修活动物品不存在");
 		}
+
+		// 签约/决算装修单额度类奖品锁死(140111)
+		ensureDecorationActivityItemOperable(decorationActivityItemPO.getOrderId(), decorationActivityItemPO.getType());
 
 		// 会员/线上物品(atttype=1)由积分商城同步产生, 初始即已领(STATUS_RECEIVE_INT); 装修/线下物品仅初始可核销
 		if (decorationActivityItemPO.getAtttype() == DecorationActivityItemPO.ATTTYPE_ONLINE_INT) {
@@ -733,6 +757,26 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 		}
 
 		return 0;
+	}
+
+	// 签约/决算装修单额度类奖品锁死守卫(140111): 额度类 type∈{10,11,12} 且装修单状态∈{签约3, 决算7, 签约可终止33} 时拒绝操作
+	private void ensureDecorationActivityItemOperable(String orderId, short type) throws FLException {
+
+		if (type < DecorationActivityItemPO.TYPE_COST_COUPON_INT || type > DecorationActivityItemPO.TYPE_COST_REDPACKAGE_INT) {
+			return;
+		}
+
+		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(orderId);
+
+		if (decorationPO == null) {
+			throw new FLException(140013, "装修单不存在");
+		}
+
+		List<Short> statuses = Arrays.asList(DecorationPO.STATUS_SIGNED_INT, DecorationPO.STATUS_FINAL_INT, DecorationPO.STATUS_SIGNEDTERMINABLE_INT);
+
+		if (statuses.contains(decorationPO.getStatus())) {
+			throw new FLException(140111, "装修单已签约或决算,活动奖品不可操作");
+		}
 	}
 
 	private void subDecorationForCut(DecorationPO decorationPO, DecorationActivityItemPO decorationActivityItemPO) {
