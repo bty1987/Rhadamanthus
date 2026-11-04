@@ -775,9 +775,20 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 
 		if (rules.isEmpty()) return 0;
 
+		// 场外款并入闸门: 仅活动配置了场外规则行(ruleType=4 纯标记行, 有此行的公司才计算场外, 门槛/基数与主材预存共用, 43号SQL)才并入场外款
+		boolean oalesEnabled = false;
+
+		for (ActivityRulePO gateRule : rules) {
+			if (gateRule.getRuleType() == ActivityRulePO.RULETYPE_OALES_MERGE_INT) {
+				oalesEnabled = true;
+				break;
+			}
+		}
+
 		// 预存主材净额 = 活动窗口内收款(type=1) − 提现(type=0) + 外销款净额(收款type=0 − 退款type=1, 同窗同状态口径), 仅有效流水(DAO sum);
-		// 外销款在基数源头并入, 与主材预存合并参与每满/阶梯计算(独立基数已被需求否决), 无在窗活动时引擎在上方已返回, 不触达求和
-		long oalesNet = oalesPaymentDao.amountOalesPaymentForLottery(orderId, activityPO.getStartTime(), activityPO.getEndTime());
+		// 外销款在基数源头并入, 与主材预存合并参与每满/阶梯计算(独立基数已被需求否决), 无在窗活动时引擎在上方已返回, 不触达求和;
+		// 无场外标记行的公司 oalesNet 恒 0, 连外销款查询都不发生(与公司无在窗活动时跳过主材求和同构)
+		long oalesNet = oalesEnabled ? oalesPaymentDao.amountOalesPaymentForLottery(orderId, activityPO.getStartTime(), activityPO.getEndTime()) : 0;
 
 		long net = paymentDao.amountPayment(orderId, PaymentPO.PAYMENT_PAYMENTTYPE_MATERIAL_INT, activityPO.getStartTime(), activityPO.getEndTime()) + oalesNet;
 

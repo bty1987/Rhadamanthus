@@ -22,6 +22,8 @@ public class ActivityRulePO implements java.io.Serializable {
 
 	public static final short RULETYPE_LADDER_INT = 3; // 预存阶梯
 
+	public static final short RULETYPE_OALES_MERGE_INT = 4; // 场外款并入标记(与主材预存共用基数和门槛, 纯开关行不单独计张, 有此行才并入场外款)
+
 	public static final short STATUS_ENABLED_INT = 0; // 启用
 
 	public static final short STATUS_DISABLED_INT = 1; // 停用
