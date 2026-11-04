@@ -710,6 +710,9 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 		// 生成消息队列数据
 		// messageQueuingDao.save(new MessageQueuingPO().init(orderId, "collectDecorationPayment", "{\"orderId\":\"" + orderId + "\",\"dpid\":" + decorationPaymentVO.getDpid() + ",\"userId\":\"" + userId + "\",\"event\":\"CUSTOMER_STATUS_CHANGED\"" + (decorationPO.getBusitype() != null ? ",\"busiTypeName\":\"" + decorationPO.getBusitype().getName() + "\"" : "") + "}"));
 
+		// 收款成功即自动确认(收款+确认同事务原子完成; confirmDecorationPayment 仅已收态执行, 其余静默跳过)
+		confirmDecorationPayment(Arrays.asList(decorationPaymentVO.getDpid()), userId);
+
 		return 0;
 	}
 

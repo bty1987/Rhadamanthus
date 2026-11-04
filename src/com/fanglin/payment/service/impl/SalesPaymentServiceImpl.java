@@ -572,6 +572,11 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 
 		decorationService.sendMessage("PAYMENT_SALES_MESSAGE_FLAG", sales.getOrderId(), "主材单", String.format("主材交款金额%.3f元", Arith.div(salesPayment.getReferMoney(), 1000.0)), String.format("pages/payment/receipt/receipt?orderId=%s&rid=%s&paymentType=3", sales.getOrderId(), salesReceiptPO.getSrId()), collecter);
 
+		// 收款成功即自动确认(收款+确认同事务原子完成; confirmSalesPayment 非已收态抛150036, 紧随收款必为已收态); 类型3补款/5补款退款因定金确认前置守卫跳过自动确认, 保持手动
+		if (salesPayment.getType() != SalesPaymentPO.TYPE_REPLENISHMENT_INT && salesPayment.getType() != SalesPaymentPO.TYPE_MAKEAREFUND_INT) {
+			confirmSalesPayment(Arrays.asList(salesPayment.getSpid()), userId);
+		}
+
 		return 0;
 	}
 

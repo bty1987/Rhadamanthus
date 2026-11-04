@@ -340,6 +340,9 @@ public class PaymentServiceImpl implements PaymentService {
 		// 生成消息队列数据
 		// messageQueuingDao.save(new MessageQueuingPO().init(paymentVO.getOrderId(), "collectPayment", "{\"orderId\":\"" + paymentVO.getOrderId() + "\",\"userId\":\"" + userId + "\",\"event\":\"CUSTOMER_STATUS_CHANGED\"" + (decorationPO.getBusitype() != null ? ",\"busiTypeName\":\"" + decorationPO.getBusitype().getName() + "\"" : "") + "}"));
 
+		// 收款成功即自动确认(收款+确认同事务原子完成; confirmPayment 幂等, 非已确认态跳过)
+		confirmPayment(Arrays.asList(paymentPO.getPid()), userId);
+
 		return 0;
 	}
 
