@@ -775,8 +775,13 @@ public class A20260324ServiceImpl implements A20260324Service {
 				userPO.setUserName(name);
 				userPO.setCurrentName((currentName != null && !currentName.trim().isEmpty()) ? currentName : name);
 				userPO.setGender(gender != null && gender == 0 ? "女" : "男");
-				userPO.setIdentity(identity);
-				userPO.setPhone(phone);
+				// 报文未传手机/身份证(空)时不覆盖档案, 防止离职同步只改状态却清空三要素
+				if (phone != null && !phone.trim().isEmpty()) {
+					userPO.setPhone(phone);
+				}
+				if (identity != null && !identity.trim().isEmpty()) {
+					userPO.setIdentity(identity);
+				}
 				userPO.setDept(deptPO);
 				userPO.setDuty(dutyPO);
 				userPO.setCompany(company); // 允许跨公司调动

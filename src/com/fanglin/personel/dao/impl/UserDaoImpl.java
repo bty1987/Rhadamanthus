@@ -1,9 +1,11 @@
 package com.fanglin.personel.dao.impl;
 
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
+import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Disjunction;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Restrictions;
@@ -126,7 +128,20 @@ public class UserDaoImpl extends DaoImpl<UserPO> implements UserDao {
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<UserPO> queryUserByPhoneAIdent(String phone, String ident) {
-		return session().createCriteria(UserPO.class).add(Restrictions.or(Restrictions.in("phone", SensitiveDataHelper.getAllEncryptedForms(phone)), Restrictions.in("identity", SensitiveDataHelper.getAllEncryptedForms(ident)))).add(Restrictions.eq("type", UserPO.TYPE_USER_INT)).list();
+
+		// 空值不参与匹配: 空串IN会命中全部空档用户(生产空identity 934个), 离职同步等未传全字段的调用会被误判占用冲突
+		if (StringUtils.isBlank(phone) && StringUtils.isBlank(ident)) {
+			return new ArrayList<UserPO>();
+		}
+
+		Criterion criterion = StringUtils.isNotBlank(phone) ? Restrictions.in("phone", SensitiveDataHelper.getAllEncryptedForms(phone)) : null;
+
+		if (StringUtils.isNotBlank(ident)) {
+			Criterion identCriterion = Restrictions.in("identity", SensitiveDataHelper.getAllEncryptedForms(ident));
+			criterion = criterion == null ? identCriterion : Restrictions.or(criterion, identCriterion);
+		}
+
+		return session().createCriteria(UserPO.class).add(criterion).add(Restrictions.eq("type", UserPO.TYPE_USER_INT)).list();
 	}
 
 	@Override

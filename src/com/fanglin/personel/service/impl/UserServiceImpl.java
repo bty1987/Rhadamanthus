@@ -1164,6 +1164,10 @@ public class UserServiceImpl implements UserService {
 
 		UserInfoPO userInfoPO = userInfoDao.queryUserInfoByUserId(userVO.getUserId());
 
+		if (userInfoPO == null) {
+			throw new FLException(190005, "人员不存在");
+		}
+
 		userInfoPO.setFireTime(DateUtil.getDateToTimestamp(new Date()));
 
 		userInfoDao.update(userInfoPO);
@@ -1311,6 +1315,10 @@ public class UserServiceImpl implements UserService {
 		userExperienceDao.save(userExperiencePO);
 
 		UserInfoPO userInfoPO = userInfoDao.queryUserInfoByUserId(userVO.getUserId());
+
+		if (userInfoPO == null) {
+			throw new FLException(190005, "人员不存在");
+		}
 
 		userInfoPO.setTranTime(DateUtil.getDateToTimestamp(new Date()));
 
