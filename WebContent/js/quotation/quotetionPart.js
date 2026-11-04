@@ -9,6 +9,8 @@
             var quotationRtems = this.quotationRtems;
             qiid = parseInt(qiid);
 
+            if (isNaN(qiid)) return _rtems; // 自定义等无标准报价项背书的行无data-qiid, 发NaN会被转成"NaN"致后端Long转换失败(input)
+
             if (quotationRtems[qiid]) {
                 _rtems = quotationRtems[qiid];
             } else {

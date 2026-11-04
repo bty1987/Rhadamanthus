@@ -37,6 +37,13 @@
 		<global-results>
 			<result name="error">operateError.do</result>
 			<result name="login">login.do</result>
+			<!-- 参数转换失败兜底: 补置110040后JSON直出, 复用前端统一弹错链, 消除"No result defined ... input"异常 -->
+			<result name="input" type="com.fanglin.core.result.InputJsonResult">
+				<param name="errorCode">110040</param>
+				<param name="errorMsg">请求参数格式不正确</param>
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">errorCode,errorMsg,fieldErrors.*</param>
+			</result>
 		</global-results>
 	</package>
 	

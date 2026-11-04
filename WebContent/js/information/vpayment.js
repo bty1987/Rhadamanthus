@@ -169,17 +169,21 @@ jQuery(function($) {
 
                     vpayment.mno = v.mno;
 
-                    com.post(api.payment.queryPaytran, {
-                        "paytran.pid": v.mno,
-                        "paytran.type": 5
-                    }, function(res) {
+                    // 历史活动收款单存在非数字会员号, 塞Long型paytran.pid会类型转换失败致input炸, 非法时跳过已有POS记录查询
+                    if (/^\d+$/.test(v.mno)) {
 
-                        $.each(res.paytrans, function(i, v) {
+                        com.post(api.payment.queryPaytran, {
+                            "paytran.pid": v.mno,
+                            "paytran.type": 5
+                        }, function(res) {
 
-                            if (v.status == constant.information().vpayment.STATUS_INIT_INT || v.status == constant.information().vpayment.STATUS_PAYED_INT)
-                                addPos(v);
+                            $.each(res.paytrans, function(i, v) {
+
+                                if (v.status == constant.information().vpayment.STATUS_INIT_INT || v.status == constant.information().vpayment.STATUS_PAYED_INT)
+                                    addPos(v);
+                            });
                         });
-                    });
+                    }
 
                     $("li[class='search-choice']", com.focusPage('#couponType_chosen')).each(function(i, v) {
 
@@ -460,17 +464,21 @@ jQuery(function($) {
 
             vpayment.mno = mnoId[0];
 
-            com.post(api.payment.queryPaytran, {
-                "paytran.pid": mnoId[0],
-                "paytran.type": 5
-            }, function(res) {
+            // 同上: 非数字会员号跳过已有POS记录查询, 避免paytran.pid类型转换炸
+            if (/^\d+$/.test(mnoId[0])) {
 
-                $.each(res.paytrans, function(i, v) {
+                com.post(api.payment.queryPaytran, {
+                    "paytran.pid": mnoId[0],
+                    "paytran.type": 5
+                }, function(res) {
 
-                    if (v.status == constant.information().vpayment.STATUS_INIT_INT || v.status == constant.information().vpayment.STATUS_PAYED_INT)
-                        addPos(v);
+                    $.each(res.paytrans, function(i, v) {
+
+                        if (v.status == constant.information().vpayment.STATUS_INIT_INT || v.status == constant.information().vpayment.STATUS_PAYED_INT)
+                            addPos(v);
+                    });
                 });
-            });
+            }
 
             $("li[class='search-choice']", com.focusPage('#couponType_chosen')).each(function(i, v) {
 
@@ -737,6 +745,12 @@ jQuery(function($) {
 
             if (com.validate("bankDiv_" + _index))
                 return false;
+
+            // 非数字会员号直传Long型pid必转换炸(后端type=5还会因无装修单报140013), 拦截提示不发请求
+            if (!/^\d+$/.test(vpayment.mno)) {
+                com.showAlert(com.warning, "会员号格式不正确, 无法添加POS收款记录");
+                return false;
+            }
 
             var options = {
                 "paytran.pid": vpayment.mno,
