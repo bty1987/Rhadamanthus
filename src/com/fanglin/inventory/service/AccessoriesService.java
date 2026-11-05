@@ -43,6 +43,12 @@ public interface AccessoriesService {
 	 */
 	public int updateAccessoriesForAssign(AccessoriesVO accessoriesVO) throws FLException;
 
+	/**
+	 * 配送/自配切换（属性行为; 出库后不可改: 仅初始/预出可操作）
+	 * @param accessoriesVO 需包含aid与delivery(1配送 0自配)
+	 */
+	public int updateAccessoriesForDelivery(AccessoriesVO accessoriesVO) throws FLException;
+
 	public int deliveAccessories(AccessoriesVO accessoriesVO, String userId) throws FLException;
 
 	public int balanceAccessories(AccessoriesVO accessoriesVO, String userId) throws FLException;

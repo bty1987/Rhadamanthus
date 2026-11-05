@@ -45,6 +45,8 @@ public class AccessoriesItemPO implements Serializable {
 
 	private long caid;
 
+	private short delivery; // 是否需要配送: 0自配 1配送(创建时按caid快照data.aoods)
+
 	private long nid;
 
 	private GoodsPO goods;
@@ -160,6 +162,15 @@ public class AccessoriesItemPO implements Serializable {
 	@Column(name = "caid")
 	public long getCaid() {
 		return caid;
+	}
+
+	@Column(name = "delivery")
+	public short getDelivery() {
+		return delivery;
+	}
+
+	public void setDelivery(short delivery) {
+		this.delivery = delivery;
 	}
 
 	public void setCaid(long caid) {

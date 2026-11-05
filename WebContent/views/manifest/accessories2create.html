@@ -194,6 +194,34 @@
     </div>
 </div>
 
+<div id="deliveryModal" class="modal fade" tabindex="-1">
+    <div class="modal-dialog" style="width: 420px; margin-top: 10%;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">配送方式确认</h4>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-warning" style="margin-bottom: 15px;">本单存在需要配送的辅料项, 请确认配送方式</div>
+                <div class="radio">
+                    <label>
+                        <input type="radio" name="deliveryRadio" value="1" checked>配送
+                    </label>
+                </div>
+                <div class="radio">
+                    <label>
+                        <input type="radio" name="deliveryRadio" value="0">自配
+                    </label>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="saveDeliveryBtn" class="btn btn-primary btn-sm">确定</button>
+                <button type="button" class="btn btn-sm" data-dismiss="modal">取消</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script type="text/javascript">
     $.loadScript(['js/manifest/accessories2create.js']);
 </script>

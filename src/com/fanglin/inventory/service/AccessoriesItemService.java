@@ -15,6 +15,13 @@ public interface AccessoriesItemService {
 
 	public List<AccessoriesItemVO> queryAccessoriesItemByOrderId(AccessoriesVO accessoriesVO);
 
+	/**
+	 * 辅材是否需要配送（创建辅料项时按caid快照用）
+	 * @param caid 关联辅材aid, 空/0或辅材不存在按自配
+	 * @return 0自配 1配送
+	 */
+	public short queryAoodsDeliveryByCaid(Long caid);
+
 	public long checkAccessoriesItem(AccessoriesVO accessoriesVO, AccessoriesItemVO accessoriesItemVO) throws FLException;
 
 	public long amountAccessoriesCharge(AccessoriesPO accessoriesPO);

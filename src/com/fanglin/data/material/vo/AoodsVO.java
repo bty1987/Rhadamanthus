@@ -38,6 +38,8 @@ public class AoodsVO implements Serializable {
 
 	private Short atttype;
 
+	private Short delivery; // 是否需要配送: 0自配 1配送
+
 	private Short checkup;
 
 	private Short status;
@@ -219,6 +221,14 @@ public class AoodsVO implements Serializable {
 
 	public void setAtttype(Short atttype) {
 		this.atttype = atttype;
+	}
+
+	public Short getDelivery() {
+		return delivery;
+	}
+
+	public void setDelivery(Short delivery) {
+		this.delivery = delivery;
 	}
 
 }

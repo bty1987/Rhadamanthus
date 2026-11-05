@@ -151,6 +151,14 @@ public class AccessoriesAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "updateAccessoriesForDelivery", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateAccessoriesForDelivery() throws FLException {
+
+		accessoriesService.updateAccessoriesForDelivery(accessories);
+
+		return SUCCESS;
+	}
+
 	@Action(value = "deliveAccessories", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String deliveAccessories() throws FLException {
 

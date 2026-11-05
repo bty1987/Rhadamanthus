@@ -7,7 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.fanglin.communion.vo.WorkTypeVO;
 import com.fanglin.core.interceptor.FLException;
+import com.fanglin.data.material.vo.AccessoriesTypeVO;
+import com.fanglin.data.material.vo.GoodsVO;
 import com.fanglin.inventory.dao.AccessoriesChargeDao;
 import com.fanglin.inventory.dao.AccessoriesDao;
 import com.fanglin.inventory.dao.AccessoriesItemDao;
@@ -59,7 +62,8 @@ public class AccessoriesChargeServiceImpl implements AccessoriesChargeService {
 
 		if (accessoriesChargePOs != null) {
 			for (AccessoriesChargePO accessoriesChargePO : accessoriesChargePOs) {
-				AccessoriesChargeVO vo = new AccessoriesChargeVO(new AccessoriesVO(), new AccessoriesItemVO());
+				// 项VO带GoodsVO: 费用行嵌套项带出商品信息(费用查看弹窗显示商品名)
+				AccessoriesChargeVO vo = new AccessoriesChargeVO(new AccessoriesVO(), new AccessoriesItemVO(new GoodsVO(new AccessoriesTypeVO(new WorkTypeVO()))));
 				accessoriesChargePO.ptv(vo);
 				accessoriesChargeVOs.add(vo);
 			}

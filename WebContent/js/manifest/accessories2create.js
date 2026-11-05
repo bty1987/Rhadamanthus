@@ -57,7 +57,7 @@ jQuery(function() {
 
                 if (val.aid == k) {
                     
-                    accessories.leftitems.goodsHidden.attr('data-gid', val.goods.gid).attr('data-type', val.goods.type).attr('data-selling', val.goods.selling).attr('data-caid', val.aid).attr('data-nid', val.noods.nid).attr('data-normnum', val.normnum).attr('data-normunit', val.normunit).attr('data-storenum', val.storenum).attr('data-storeunit', val.storeunit);
+                    accessories.leftitems.goodsHidden.attr('data-gid', val.goods.gid).attr('data-type', val.goods.type).attr('data-selling', val.goods.selling).attr('data-caid', val.aid).attr('data-nid', val.noods.nid).attr('data-normnum', val.normnum).attr('data-normunit', val.normunit).attr('data-storenum', val.storenum).attr('data-storeunit', val.storeunit).attr('data-delivery', val.delivery);
 
                     accessories.leftitems.goodsNo.attr('data-no', val.goods.no).val(val.goods.no);
                     accessories.leftitems.category.attr('data-category', val.goods.category).val(val.goods.category);
@@ -89,6 +89,7 @@ jQuery(function() {
         var normunit = accessories.leftitems.goodsHidden.attr('data-normunit');
         var storenum = accessories.leftitems.goodsHidden.attr('data-storenum');
         var storeunit = accessories.leftitems.goodsHidden.attr("data-storeunit");
+        var delivery = accessories.leftitems.goodsHidden.attr('data-delivery');
 
         var name = accessories.leftitems.goodsName.val();
         var no = accessories.leftitems.goodsNo.val();
@@ -105,7 +106,7 @@ jQuery(function() {
             return false;
         }
 
-        var $liList = $('<li></li>').addClass('list-group-item').attr("data-gid", gid).attr("data-num", num).attr("data-selling", selling).attr('data-caid', caid).attr('data-normnum', normnum).attr('data-normunit', normunit).attr('data-storenum', storenum).attr('data-storeunit', storeunit);
+        var $liList = $('<li></li>').addClass('list-group-item').attr("data-gid", gid).attr("data-num", num).attr("data-selling", selling).attr('data-caid', caid).attr('data-normnum', normnum).attr('data-normunit', normunit).attr('data-storenum', storenum).attr('data-storeunit', storeunit).attr('data-delivery', delivery);
 
         // 行费用键: 费用弹窗缓存与提交收集的关联键
         var chargeIdx = ++accessories.chargeIdx;
@@ -343,6 +344,36 @@ jQuery(function() {
             return false;
         }
 
+        // 存在需配送辅料项时弹窗确认配送方式(默认配送可改自配), 确认后继续提交
+        var hasDeliveryItem = false;
+        $list && $list.length && $.each($list, function(i, v) {
+
+            if ($(v).attr('data-delivery') == '1') hasDeliveryItem = true;
+        });
+
+        if (hasDeliveryItem) {
+            com.focusPage('#deliveryModal').modal('show');
+            return false;
+        }
+
+        submitAccessories(0);
+    });
+
+    // 配送方式弹窗确认: 取radio值继续提交, 取消(data-dismiss)留在本页
+    com.focusPage('#saveDeliveryBtn').click(function() {
+
+        var delivery = com.focusPage('input[name="deliveryRadio"]:checked').val() || 0;
+
+        com.focusPage('#deliveryModal').modal('hide');
+
+        submitAccessories(delivery);
+    });
+
+    // 组载荷提交(配送标识随创建一次落库, 服务端另有按项推导兜底)
+    function submitAccessories(delivery) {
+
+        var $list = com.focusPage('.list-group-item');
+
         var total = 0;
         $list && $list.length && $.each($list, function(i, v) {
 
@@ -358,6 +389,7 @@ jQuery(function() {
             "accessories.schedule": accessories.rightitems.schedule.val(),
             "accessories.comment": accessories.rightitems.comment.val(),
             "accessories.type": accessories.rightitems.type.val(),
+            "accessories.delivery": delivery,
             "accessories.total": total
         };
 
@@ -369,7 +401,7 @@ jQuery(function() {
             options["accessoriesItems[" + i + "].num"] = $v.attr('data-num');
             options["accessoriesItems[" + i + "].selling"] = $v.attr('data-selling');
             options["accessoriesItems[" + i + "].caid"] = $v.attr('data-caid');
-            
+
             options["accessoriesItems[" + i + "].normnum"] = $v.attr('data-normnum');
             options["accessoriesItems[" + i + "].normunit"] = $v.attr('data-normunit');
             options["accessoriesItems[" + i + "].storenum"] = $v.attr('data-storenum');
@@ -402,6 +434,6 @@ jQuery(function() {
             com.cleanItems(accessories.rightitems);
             accessories.itemlist.html("");
         });
-    });
+    }
 
 });

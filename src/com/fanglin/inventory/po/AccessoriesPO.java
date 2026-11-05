@@ -77,6 +77,10 @@ public class AccessoriesPO implements Serializable {
 
 	public static final short ASSIGNFLAG_ASSIGNED_INT = 2; // 已分配（分配厂商后写入）
 
+	public static final short DELIVERY_NO_INT = 0; // 自配
+
+	public static final short DELIVERY_YES_INT = 1; // 配送
+
 	private long aid;
 
 	private String no;
@@ -116,6 +120,8 @@ public class AccessoriesPO implements Serializable {
 	private short schedule;
 
 	private short assignFlag; // 分配标记: 0未标记 1需分配
+
+	private short delivery; // 配送标识: 0自配 1配送
 
 	private long total;
 
@@ -281,6 +287,15 @@ public class AccessoriesPO implements Serializable {
 
 	public void setAssignFlag(short assignFlag) {
 		this.assignFlag = assignFlag;
+	}
+
+	@Column(name = "delivery")
+	public short getDelivery() {
+		return delivery;
+	}
+
+	public void setDelivery(short delivery) {
+		this.delivery = delivery;
 	}
 
 	@Column(name = "type")

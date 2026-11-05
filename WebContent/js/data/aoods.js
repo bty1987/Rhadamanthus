@@ -35,6 +35,7 @@ $(function() {
             editNormnum: com.focusPage('#normnum', "#editLayer"),
             editStoreunit: com.focusPage('#storeunit', "#editLayer"),
             editStorenum: com.focusPage('#storenum', "#editLayer"),
+            editDelivery: com.focusPage('#editDelivery', "#editLayer"),
 
             advanceOld: com.focusPage("#advanceOld", "#advanceLayer"),
             advanceBcompany: com.focusPage("#advanceBcompany", "#advanceLayer"),
@@ -264,6 +265,13 @@ $(function() {
         clazz: "red",
         dataset: aoods.atttype
     }, {
+        field: "delivery",
+        name: "配送",
+        prop: function(v) {
+            return v.delivery == 1 ? "配送" : "自配";
+        },
+        clazz: "grey"
+    }, {
         field: "noods.name",
         name: "定材 ",
         prop: "noods.name",
@@ -327,6 +335,7 @@ $(function() {
             aoods.items.editAccessoriesType.val(v.accessoriesType.atid);
             aoods.items.editSortType.val(v.sortType.atid);
             aoods.items.editAtttype.val(v.atttype);
+            aoods.items.editDelivery.val(v.delivery);
             aoods.items.editConstructionNode.val(v.constructionNode.cnid);
 
             com.popup4model("#editLayer", "编辑");
@@ -470,6 +479,7 @@ $(function() {
             "aoods.accessoriesType.atid": aoods.items.editAccessoriesType.val(),
             "aoods.sortType.atid": aoods.items.editSortType.val(),
             "aoods.atttype": aoods.items.editAtttype.val(),
+            "aoods.delivery": aoods.items.editDelivery.val(),
             "aoods.balance": aoods.items.editBalance.val(),
             "aoods.selling": aoods.items.editSelling.val(),
             "aoods.constructionNode.cnid": aoods.items.editConstructionNode.val(),

@@ -49,6 +49,10 @@ public class AoodsPO implements Serializable {
 
 	public static final short CHECKUP_CHECK_INT = 0;
 
+	public static final short DELIVERY_NO_INT = 0; // 自配
+
+	public static final short DELIVERY_YES_INT = 1; // 配送
+
 	private long aid;
 
 	private String name;
@@ -76,6 +80,8 @@ public class AoodsPO implements Serializable {
 	private int selling;
 
 	private short atttype;
+
+	private short delivery; // 是否需要配送: 0自配 1配送
 
 	private short checkup;
 
@@ -281,6 +287,15 @@ public class AoodsPO implements Serializable {
 
 	public void setAtttype(short atttype) {
 		this.atttype = atttype;
+	}
+
+	@Column(name = "delivery")
+	public short getDelivery() {
+		return delivery;
+	}
+
+	public void setDelivery(short delivery) {
+		this.delivery = delivery;
 	}
 
 	public AoodsVO ptv(AoodsVO aoodsVO) {

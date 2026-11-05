@@ -68,6 +68,13 @@ $(function() {
         prop: "supplier.userName",
         clazz: "grey"
     }, {
+        field: "delivery",
+        name: "配送",
+        prop: function (v) {
+            return v.delivery == 1 ? "配送" : "自配";
+        },
+        clazz: "grey"
+    }, {
         field: "charge",
         name: "费用额",
         prop: "charge",
@@ -256,14 +263,15 @@ $(function() {
             return (accessories.pageType != "advance" && v.status == constant.inventory().accessories.STATUS_BATCHOUT_INT)
         }
     }, {
-        // 需分配标记(开关): 标记后开放分配厂商功能, 标记未分配不可出库(后端闸)
+        // 需分配标记(按钮): 标记后开放分配厂商功能, 配送单标记未分配不可出库(后端闸); 已标记点击取消
         name: "需分配",
         clazz: "btn-success",
-        handle: function (v, flag) {
+        handle: function (v) {
 
             com.post(api.inventory.updateAccessoriesForAssign, {
                 "accessories.aid": v.aid,
-                "accessories.assignFlag": flag ? 1 : 0
+                // 按钮式切换: 按当前标记取反(searcher普通按钮handle第二参为$(this)恒truthy, 不可用作状态)
+                "accessories.assignFlag": v.assignFlag == 1 ? 0 : 1
             }, function() {
 
                 com.showAlert(com.info, "操作成功");
@@ -295,6 +303,27 @@ $(function() {
             return (accessories.pageType != "supplier" && (v.assignFlag == 1 || v.assignFlag == 2) && (v.status == 0 || v.status == 1 || v.status == 2))
         }
     }, {
+        // 配送/自配切换: 按钮名显示目标态; 出库后不可改(后端260024同口径守卫)
+        name: function (v) {
+            return v.delivery == 1 ? "改自配" : "改配送";
+        },
+        clazz: "btn-warning",
+        handle: function (v) {
+
+            com.post(api.inventory.updateAccessoriesForDelivery, {
+                "accessories.aid": v.aid,
+                "accessories.delivery": v.delivery == 1 ? 0 : 1
+            }, function() {
+
+                com.showAlert(com.info, "操作成功");
+                searcher.doSearch();
+            });
+            return false;
+        },
+        show: function (v) {
+            return (accessories.pageType != "supplier" && (v.status == 0 || v.status == 1))
+        }
+    }, {
         name: "结算",
         clazz: "btn-success",
         handle: function (v) {
@@ -316,6 +345,18 @@ $(function() {
         },
         show: function (v) {
             return (accessories.pageType != "supplier" && v.status == constant.inventory().accessories.STATUS_DELIVER_INT)
+        }
+    }, {
+        // 费用明细查看(只读): 整单费用行按项展示, 到货/结算后亦可查(照外辅费用查看形态)
+        name: "费用",
+        clazz: "btn-info",
+        handle: function (v) {
+
+            openChargeViewModal(v.aid);
+            return false;
+        },
+        show: function (v) {
+            return true;
         }
     }, {
         name: "审核",
@@ -414,6 +455,56 @@ $(function() {
 
                 layero.find("iframe").contents().find("#printNum").text("打印次数:" + res.accessories.printnum)
             }, null, false)
+        });
+    }
+
+    // 费用明细查看弹窗(只读): 整单拉取按项展示, 小计=(单价+浮动)×数量与resolveItemCharge服务端口径一致
+    function openChargeViewModal(aid) {
+
+        com.focusPage('#accessoriesChargeViewBody').html('');
+        com.focusPage('#accessoriesChargeTotalAmount').text('0.000');
+        com.focusPage('#accessoriesChargeTotalRow').show();
+
+        com.post(api.inventory.queryAccessoriesCharge, {
+            "accessoriesCharge.accessories.aid": aid
+        }, function(res) {
+
+            if (res && res.accessoriesCharges && res.accessoriesCharges.length > 0) {
+
+                var totalAmount = 0;
+
+                $.each(res.accessoriesCharges, function(i, charge) {
+
+                    // tranargs已将price/surplus折元, num为原值
+                    var price = charge.price || 0;
+                    var surplus = charge.surplus || 0;
+                    var num = charge.num || 0;
+                    var subtotal = utils.accAdd(price, surplus) * num;
+
+                    totalAmount += subtotal;
+
+                    var goodsName = charge.accessoriesItem && charge.accessoriesItem.goods ? (charge.accessoriesItem.goods.no + ' ' + charge.accessoriesItem.goods.name) : '未关联辅材项';
+
+                    var $row = $('<tr></tr>');
+                    $row.append($('<td></td>').text(goodsName));
+                    $row.append($('<td></td>').text(charge.name));
+                    $row.append($('<td></td>').text(price.toFixed(3)));
+                    $row.append($('<td></td>').text(surplus.toFixed(3)));
+                    $row.append($('<td></td>').text(num));
+                    $row.append($('<td></td>').addClass('red').text(subtotal.toFixed(3)));
+
+                    com.focusPage('#accessoriesChargeViewBody').append($row);
+                });
+
+                com.focusPage('#accessoriesChargeTotalAmount').text(totalAmount.toFixed(3));
+            } else {
+                var $emptyRow = $('<tr></tr>');
+                $emptyRow.append($('<td></td>').attr('colspan', 6).addClass('text-center').text('暂无费用数据'));
+                com.focusPage('#accessoriesChargeViewBody').append($emptyRow);
+                com.focusPage('#accessoriesChargeTotalRow').hide();
+            }
+
+            com.focusPage('#accessoriesChargeViewModal').modal('show');
         });
     }
 });

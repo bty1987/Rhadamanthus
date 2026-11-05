@@ -41,6 +41,8 @@ public class AccessoriesItemVO implements Serializable {
 
 	private Long caid;
 
+	private Short delivery; // 是否需要配送: 0自配 1配送(创建时按caid快照data.aoods)
+
 	private Long nid;
 
 	private Short schedule;
@@ -192,6 +194,14 @@ public class AccessoriesItemVO implements Serializable {
 
 	public void setCaid(Long caid) {
 		this.caid = caid;
+	}
+
+	public Short getDelivery() {
+		return delivery;
+	}
+
+	public void setDelivery(Short delivery) {
+		this.delivery = delivery;
 	}
 
 	public Long getNid() {
