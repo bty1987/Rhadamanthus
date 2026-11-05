@@ -832,11 +832,6 @@ public class MemberServiceImpl implements MemberService {
 			throw new FLException(160011, "活动信息不存在");
 		}
 
-		// 校验:atttype=1(线上)物品无论何种状态,每单仅限1件
-		if (decorationActivityItemDao.countDecorationActivityItem(orderId, DecorationActivityItemPO.ATTTYPE_ONLINE_INT) > 1) {
-			throw new FLException(140103, "活动物品数量超限");
-		}
-
 		// 校验:decorationActivityItem.no 全局唯一,防止重复下单
 		String no = memberOrderVO.getPointOrderId();
 		if (decorationActivityItemDao.countDecorationActivityItem(no) > 0) {

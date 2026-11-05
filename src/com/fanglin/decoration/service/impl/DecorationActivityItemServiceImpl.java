@@ -933,7 +933,8 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 				// 类型: 20=抽奖券(区别于0=活动券, 抽奖券不参与券/物品优惠合计; 引擎发放口径与count/recycle的type过滤三处一致)
 				decorationActivityItemPO.setType(DecorationActivityItemPO.TYPE_LOTTERY_ACTIVITY_ITEM);
 				decorationActivityItemPO.setState(DecorationActivityItemPO.STATUS_INIT_INT);
-				decorationActivityItemPO.setAtttype(DecorationActivityItemPO.ATTTYPE_ONLINE_INT);
+				// atttype=0(线下): 券行不参与线上物品签约自动核销链(banch 仅按 atttype=1 圈行), 避免签约时被误核销
+				decorationActivityItemPO.setAtttype(DecorationActivityItemPO.ATTTYPE_OFFLINE_INT);
 				decorationActivityItemPO.setNum(1);
 				decorationActivityItemPO.setMoney(0);
 				decorationActivityItemPO.setExpendPrice(0);
