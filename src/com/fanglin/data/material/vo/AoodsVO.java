@@ -38,7 +38,7 @@ public class AoodsVO implements Serializable {
 
 	private Short atttype;
 
-	private Short delivery; // 是否需要配送: 0自配 1配送
+	private Short deliveryFlag; // 配送标识(是否需要配送): 0自配 1配送
 
 	private Short checkup;
 
@@ -223,12 +223,12 @@ public class AoodsVO implements Serializable {
 		this.atttype = atttype;
 	}
 
-	public Short getDelivery() {
-		return delivery;
+	public Short getDeliveryFlag() {
+		return deliveryFlag;
 	}
 
-	public void setDelivery(Short delivery) {
-		this.delivery = delivery;
+	public void setDeliveryFlag(Short deliveryFlag) {
+		this.deliveryFlag = deliveryFlag;
 	}
 
 }

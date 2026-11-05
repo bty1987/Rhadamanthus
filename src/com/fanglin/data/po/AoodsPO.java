@@ -81,7 +81,7 @@ public class AoodsPO implements Serializable {
 
 	private short atttype;
 
-	private short delivery; // 是否需要配送: 0自配 1配送
+	private short deliveryFlag; // 配送标识(是否需要配送): 0自配 1配送
 
 	private short checkup;
 
@@ -289,13 +289,13 @@ public class AoodsPO implements Serializable {
 		this.atttype = atttype;
 	}
 
-	@Column(name = "delivery")
-	public short getDelivery() {
-		return delivery;
+	@Column(name = "deliveryFlag")
+	public short getDeliveryFlag() {
+		return deliveryFlag;
 	}
 
-	public void setDelivery(short delivery) {
-		this.delivery = delivery;
+	public void setDeliveryFlag(short deliveryFlag) {
+		this.deliveryFlag = deliveryFlag;
 	}
 
 	public AoodsVO ptv(AoodsVO aoodsVO) {

@@ -57,7 +57,7 @@ jQuery(function() {
 
                 if (val.aid == k) {
                     
-                    accessories.leftitems.goodsHidden.attr('data-gid', val.goods.gid).attr('data-type', val.goods.type).attr('data-selling', val.goods.selling).attr('data-caid', val.aid).attr('data-nid', val.noods.nid).attr('data-normnum', val.normnum).attr('data-normunit', val.normunit).attr('data-storenum', val.storenum).attr('data-storeunit', val.storeunit).attr('data-delivery', val.delivery);
+                    accessories.leftitems.goodsHidden.attr('data-gid', val.goods.gid).attr('data-type', val.goods.type).attr('data-selling', val.goods.selling).attr('data-caid', val.aid).attr('data-nid', val.noods.nid).attr('data-normnum', val.normnum).attr('data-normunit', val.normunit).attr('data-storenum', val.storenum).attr('data-storeunit', val.storeunit).attr('data-delivery', val.deliveryFlag);
 
                     accessories.leftitems.goodsNo.attr('data-no', val.goods.no).val(val.goods.no);
                     accessories.leftitems.category.attr('data-category', val.goods.category).val(val.goods.category);
@@ -389,7 +389,7 @@ jQuery(function() {
             "accessories.schedule": accessories.rightitems.schedule.val(),
             "accessories.comment": accessories.rightitems.comment.val(),
             "accessories.type": accessories.rightitems.type.val(),
-            "accessories.delivery": delivery,
+            "accessories.deliveryStatus": delivery,
             "accessories.total": total
         };
 

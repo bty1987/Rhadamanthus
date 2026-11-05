@@ -121,7 +121,7 @@ public class AccessoriesPO implements Serializable {
 
 	private short assignFlag; // 分配标记: 0未标记 1需分配
 
-	private short delivery; // 配送标识: 0自配 1配送
+	private short deliveryStatus; // 配送状态: 0自配 1配送
 
 	private long total;
 
@@ -289,13 +289,13 @@ public class AccessoriesPO implements Serializable {
 		this.assignFlag = assignFlag;
 	}
 
-	@Column(name = "delivery")
-	public short getDelivery() {
-		return delivery;
+	@Column(name = "deliveryStatus")
+	public short getDeliveryStatus() {
+		return deliveryStatus;
 	}
 
-	public void setDelivery(short delivery) {
-		this.delivery = delivery;
+	public void setDeliveryStatus(short deliveryStatus) {
+		this.deliveryStatus = deliveryStatus;
 	}
 
 	@Column(name = "type")

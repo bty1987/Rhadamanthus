@@ -236,10 +236,10 @@ public class AccessoriesServiceImpl implements AccessoriesService {
 
 			AccessoriesItemPO accessoriesItemPO = new AccessoriesItemPO().init(accessoriesVO.getAid(), accessoriesItemVO);
 
-			// 项配送标识: 按关联辅材档案快照(data.aoods.delivery)
-			accessoriesItemPO.setDelivery(accessoriesItemService.queryAoodsDeliveryByCaid(accessoriesItemVO.getCaid()));
+			// 项配送标识: 按关联辅材档案快照(data.aoods.deliveryFlag)
+			accessoriesItemPO.setDeliveryFlag(accessoriesItemService.queryAoodsDeliveryByCaid(accessoriesItemVO.getCaid()));
 
-			if (accessoriesItemPO.getDelivery() == AccessoriesPO.DELIVERY_YES_INT) {
+			if (accessoriesItemPO.getDeliveryFlag() == AccessoriesPO.DELIVERY_YES_INT) {
 				hasDeliveryItem = true;
 			}
 
@@ -263,8 +263,8 @@ public class AccessoriesServiceImpl implements AccessoriesService {
 			}
 		}
 
-		// 主单配送标识: 创建弹窗值优先, 未传(老调用方/app)按项推导兜底(存在需配送项即配送)
-		accessoriesPO.setDelivery(accessoriesVO.getDelivery() != null ? accessoriesVO.getDelivery() : (hasDeliveryItem ? AccessoriesPO.DELIVERY_YES_INT : AccessoriesPO.DELIVERY_NO_INT));
+		// 主单配送状态: 创建弹窗值优先, 未传(老调用方/app)按项推导兜底(存在需配送项即配送)
+		accessoriesPO.setDeliveryStatus(accessoriesVO.getDeliveryStatus() != null ? accessoriesVO.getDeliveryStatus() : (hasDeliveryItem ? AccessoriesPO.DELIVERY_YES_INT : AccessoriesPO.DELIVERY_NO_INT));
 
 		accessoriesPO.setCharge(accessoriesItemService.refreshAccessoriesCharge(accessoriesPO));
 
@@ -544,7 +544,7 @@ public class AccessoriesServiceImpl implements AccessoriesService {
 			throw new FLException(260024, "辅料单状态不可操作");
 		}
 
-		accessoriesPO.setDelivery(accessoriesVO.getDelivery() != null && accessoriesVO.getDelivery() == AccessoriesPO.DELIVERY_YES_INT ? AccessoriesPO.DELIVERY_YES_INT : AccessoriesPO.DELIVERY_NO_INT);
+		accessoriesPO.setDeliveryStatus(accessoriesVO.getDeliveryStatus() != null && accessoriesVO.getDeliveryStatus() == AccessoriesPO.DELIVERY_YES_INT ? AccessoriesPO.DELIVERY_YES_INT : AccessoriesPO.DELIVERY_NO_INT);
 
 		accessoriesDao.update(accessoriesPO);
 

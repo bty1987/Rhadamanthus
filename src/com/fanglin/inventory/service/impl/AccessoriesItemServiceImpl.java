@@ -127,7 +127,7 @@ public class AccessoriesItemServiceImpl implements AccessoriesItemService {
 
 		AoodsPO aoodsPO = aoodsDao.get(caid.longValue());
 
-		return aoodsPO == null ? AccessoriesPO.DELIVERY_NO_INT : aoodsPO.getDelivery();
+		return aoodsPO == null ? AccessoriesPO.DELIVERY_NO_INT : aoodsPO.getDeliveryFlag();
 	}
 
 	@Override
@@ -303,7 +303,7 @@ public class AccessoriesItemServiceImpl implements AccessoriesItemService {
 		AccessoriesItemPO accessoriesItemPO = new AccessoriesItemPO().init(accessoriesVO.getAid(), accessoriesItemVO);
 
 		// 项配送标识: 按关联辅材档案快照(加项与创建同口径)
-		accessoriesItemPO.setDelivery(queryAoodsDeliveryByCaid(accessoriesItemVO.getCaid()));
+		accessoriesItemPO.setDeliveryFlag(queryAoodsDeliveryByCaid(accessoriesItemVO.getCaid()));
 
 		accessoriesItemDao.save(accessoriesItemPO);
 

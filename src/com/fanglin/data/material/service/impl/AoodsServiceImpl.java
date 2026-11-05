@@ -176,9 +176,9 @@ public class AoodsServiceImpl implements AoodsService {
 		aoodsPO.setBalance(aoodsVO.getBalance());
 		aoodsPO.setSelling(aoodsVO.getSelling());
 
-		// 是否需要配送: 未传保持原值(旧版页面缓存不带该字段时防误重置)
-		if (aoodsVO.getDelivery() != null) {
-			aoodsPO.setDelivery(aoodsVO.getDelivery());
+		// 配送标识: 未传保持原值(旧版页面缓存不带该字段时防误重置)
+		if (aoodsVO.getDeliveryFlag() != null) {
+			aoodsPO.setDeliveryFlag(aoodsVO.getDeliveryFlag());
 		}
 
 		aoodsPO.setNormnum(aoodsVO.getNormnum());

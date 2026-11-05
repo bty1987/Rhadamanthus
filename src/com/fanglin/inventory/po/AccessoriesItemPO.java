@@ -45,7 +45,7 @@ public class AccessoriesItemPO implements Serializable {
 
 	private long caid;
 
-	private short delivery; // 是否需要配送: 0自配 1配送(创建时按caid快照data.aoods)
+	private short deliveryFlag; // 配送标识: 0自配 1配送(创建时按caid快照data.aoods.deliveryFlag)
 
 	private long nid;
 
@@ -164,13 +164,13 @@ public class AccessoriesItemPO implements Serializable {
 		return caid;
 	}
 
-	@Column(name = "delivery")
-	public short getDelivery() {
-		return delivery;
+	@Column(name = "deliveryFlag")
+	public short getDeliveryFlag() {
+		return deliveryFlag;
 	}
 
-	public void setDelivery(short delivery) {
-		this.delivery = delivery;
+	public void setDeliveryFlag(short deliveryFlag) {
+		this.deliveryFlag = deliveryFlag;
 	}
 
 	public void setCaid(long caid) {

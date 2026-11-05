@@ -68,10 +68,10 @@ $(function() {
         prop: "supplier.userName",
         clazz: "grey"
     }, {
-        field: "delivery",
+        field: "deliveryStatus",
         name: "配送",
         prop: function (v) {
-            return v.delivery == 1 ? "配送" : "自配";
+            return v.deliveryStatus == 1 ? "配送" : "自配";
         },
         clazz: "grey"
     }, {
@@ -305,14 +305,14 @@ $(function() {
     }, {
         // 配送/自配切换: 按钮名显示目标态; 出库后不可改(后端260024同口径守卫)
         name: function (v) {
-            return v.delivery == 1 ? "改自配" : "改配送";
+            return v.deliveryStatus == 1 ? "改自配" : "改配送";
         },
         clazz: "btn-warning",
         handle: function (v) {
 
             com.post(api.inventory.updateAccessoriesForDelivery, {
                 "accessories.aid": v.aid,
-                "accessories.delivery": v.delivery == 1 ? 0 : 1
+                "accessories.deliveryStatus": v.deliveryStatus == 1 ? 0 : 1
             }, function() {
 
                 com.showAlert(com.info, "操作成功");

@@ -265,10 +265,10 @@ $(function() {
         clazz: "red",
         dataset: aoods.atttype
     }, {
-        field: "delivery",
+        field: "deliveryFlag",
         name: "配送",
         prop: function(v) {
-            return v.delivery == 1 ? "配送" : "自配";
+            return v.deliveryFlag == 1 ? "配送" : "自配";
         },
         clazz: "grey"
     }, {
@@ -335,7 +335,7 @@ $(function() {
             aoods.items.editAccessoriesType.val(v.accessoriesType.atid);
             aoods.items.editSortType.val(v.sortType.atid);
             aoods.items.editAtttype.val(v.atttype);
-            aoods.items.editDelivery.val(v.delivery);
+            aoods.items.editDelivery.val(v.deliveryFlag);
             aoods.items.editConstructionNode.val(v.constructionNode.cnid);
 
             com.popup4model("#editLayer", "编辑");
@@ -479,7 +479,7 @@ $(function() {
             "aoods.accessoriesType.atid": aoods.items.editAccessoriesType.val(),
             "aoods.sortType.atid": aoods.items.editSortType.val(),
             "aoods.atttype": aoods.items.editAtttype.val(),
-            "aoods.delivery": aoods.items.editDelivery.val(),
+            "aoods.deliveryFlag": aoods.items.editDelivery.val(),
             "aoods.balance": aoods.items.editBalance.val(),
             "aoods.selling": aoods.items.editSelling.val(),
             "aoods.constructionNode.cnid": aoods.items.editConstructionNode.val(),

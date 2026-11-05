@@ -647,7 +647,7 @@ public class ManifestServiceImpl implements ManifestService {
 			}
 
 			// 出库闸: 配送单已标记需分配但未分配厂商的不可出库(自配单豁免, 存量默认自配行为不变)
-			if (accessoriesPO.getDelivery() == AccessoriesPO.DELIVERY_YES_INT
+			if (accessoriesPO.getDeliveryStatus() == AccessoriesPO.DELIVERY_YES_INT
 					&& accessoriesPO.getAssignFlag() == AccessoriesPO.ASSIGNFLAG_MARKED_INT && accessoriesPO.getSupplier() == null) {
 				throw new FLException(260094, "辅料单需分配厂商后方可出库");
 			}
