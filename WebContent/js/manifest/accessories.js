@@ -61,7 +61,7 @@ $(function() {
         field: "total",
         name: "总价",
         prop: "total",
-        clazz: "green"
+        clazz: "blue"
     }, {
         field: "supplier",
         name: "厂商",
@@ -71,12 +71,12 @@ $(function() {
         field: "charge",
         name: "费用额",
         prop: "charge",
-        clazz: "green"
+        clazz: "blue"
     }, {
         field: "balance",
         name: "结算额",
         prop: "balance",
-        clazz: "green"
+        clazz: "blue"
     }, {
         field: "cnid",
         name: "施工环节",
@@ -258,8 +258,7 @@ $(function() {
     }, {
         // 需分配标记(开关): 标记后开放分配厂商功能, 标记未分配不可出库(后端闸)
         name: "需分配",
-        type: "switch",
-        clazz: "status-lbl",
+        clazz: "btn-success",
         handle: function (v, flag) {
 
             com.post(api.inventory.updateAccessoriesForAssign, {

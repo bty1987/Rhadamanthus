@@ -674,7 +674,7 @@ public class NormtionServiceImpl implements NormtionService {
 			throw new FLException(140013, "装修单不存在");
 		}
 
-		if (decorationPO.getProjectStatus() == DecorationPO.PROJECTSTATUS_FINISH_INT) {
+		if (decorationPO.getProjectStatus() == DecorationPO.STATUS_INIT_INT) {
 
 			normoodItemDao.deleteNormoodItem(normtionPO.getQid(), NormoodItemPO.TYPE_OFFER_INT, NormoodItemPO.STATUS_DISABLED_INT);
 			normoodItemDao.deleteNormoodItem(normtionPO.getQid(), NormoodItemPO.TYPE_EXPAND_INT, NormoodItemPO.STATUS_DISABLED_INT);

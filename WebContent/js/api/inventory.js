@@ -485,6 +485,10 @@ $.extend(api, {
             url: "updateAccessoriesForPrint.do",
             intercept: true
         },
+        updateAccessoriesForAssign: {
+            url: "updateAccessoriesForAssign.do",
+            intercept: true
+        },
         deliveAccessories: {
             url: "deliveAccessories.do"
         },
