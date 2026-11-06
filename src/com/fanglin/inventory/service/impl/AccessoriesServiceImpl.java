@@ -234,7 +234,7 @@ public class AccessoriesServiceImpl implements AccessoriesService {
 				accessoriesItemService.checkAccessoriesItem(accessoriesVO, accessoriesItemVO);
 			}
 
-			AccessoriesItemPO accessoriesItemPO = new AccessoriesItemPO().init(accessoriesVO.getAid(), accessoriesItemVO);
+			AccessoriesItemPO accessoriesItemPO = new AccessoriesItemPO().init(accessoriesPO.getAid(), accessoriesItemVO);
 
 			// 项配送标识: 按关联辅材档案快照(data.aoods.deliveryFlag)
 			accessoriesItemPO.setDeliveryFlag(accessoriesItemService.queryAoodsDeliveryByCaid(accessoriesItemVO.getCaid()));
