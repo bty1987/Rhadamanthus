@@ -102,7 +102,7 @@ public class DecorationActivityCostServiceImpl implements DecorationActivityCost
 	}
 
 	@Override
-	public ActivityCostVO queryActivityCost(String orderId, String userId, ActivityItemPO activityItemPO, int money, int num) throws FLException {
+	public ActivityCostVO queryActivityCost(String orderId, ActivityItemPO activityItemPO, int money, int num) throws FLException {
 
 		// 配置反查不到(含存量前端未传 aiid 且 asid 无配置行)视为非额度类, 走原逻辑
 		if (activityItemPO == null || !isCostItem(activityItemPO)) {
@@ -117,18 +117,18 @@ public class DecorationActivityCostServiceImpl implements DecorationActivityCost
 			return null;
 		}
 
-		return tryValidate(orderId, userId, amount);
+		return tryValidate(orderId, amount);
 	}
 
 	@Override
-	public ActivityCostVO queryActivityCost(String orderId, String userId, long amount) throws FLException {
+	public ActivityCostVO queryActivityCost(String orderId, long amount) throws FLException {
 
 		if (amount <= 0) {
 			log.warn(String.format("优惠额度合并金额无效, 跳过校验放行, orderId:%s, amount:%s", orderId, amount));
 			return null;
 		}
 
-		return tryValidate(orderId, userId, amount);
+		return tryValidate(orderId, amount);
 	}
 
 	@Override
@@ -219,8 +219,9 @@ public class DecorationActivityCostServiceImpl implements DecorationActivityCost
 
 	/**
 	 * 尽力而为校验: 唯一拦截 = usable=false(140108); 未配置/请求异常/响应不完整一律 log 后返回 null 放行。
+	 * 校验身份(staffCode)=装修单设计师(decoration.designer.userId), 装修单或设计师缺失同样跳过放行。
 	 */
-	private ActivityCostVO tryValidate(String orderId, String userId, long amount) throws FLException {
+	private ActivityCostVO tryValidate(String orderId, long amount) throws FLException {
 
 		// 配置读 communion.systemconfig(全局 key): 任一未配置 = 跳过校验放行(尽力而为)
 		SystemConfigPO urlConfig = systemConfigDao.querySystemConfig(KEY_VALIDATE_URL);
@@ -231,11 +232,19 @@ public class DecorationActivityCostServiceImpl implements DecorationActivityCost
 			return null;
 		}
 
+		// 校验身份=装修单设计师(2026-11-07 调整: 原为操作人/审批发起人); 设计师缺失视为无法校验, 尽力而为放行
+		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(orderId);
+
+		if (decorationPO == null || decorationPO.getDesigner() == null) {
+			log.warn(String.format("优惠额度校验装修单或设计师缺失, 跳过校验放行, orderId:%s", orderId));
+			return null;
+		}
+
 		String url = urlConfig.getValue().trim();
 		String secret = secretConfig.getValue().trim();
 
 		JSONObject body = new JSONObject();
-		body.put("staffCode", userId);
+		body.put("staffCode", decorationPO.getDesigner().getUserId());
 		body.put("orderId", orderId);
 		body.put("amount", amount);
 
@@ -248,7 +257,7 @@ public class DecorationActivityCostServiceImpl implements DecorationActivityCost
 		int code = response.getIntValue("code");
 
 		if (code != 0) {
-			log.error(String.format("优惠额度校验接口处理失败, 跳过校验放行, orderId:%s, userId:%s, response:%s", orderId, userId, response.toJSONString()));
+			log.error(String.format("优惠额度校验接口处理失败, 跳过校验放行, orderId:%s, designer:%s, response:%s", orderId, decorationPO.getDesigner().getUserId(), response.toJSONString()));
 			return null;
 		}
 

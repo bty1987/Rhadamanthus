@@ -139,7 +139,7 @@ public class ApprovalDecorationActivityServiceImpl implements ApprovalDecoration
 		}
 
 		if (costItemCount > 0) {
-			decorationActivityCostService.queryActivityCost(orderId, userId, Arith.div(costAmountSum, 1000000L));
+			decorationActivityCostService.queryActivityCost(orderId, Arith.div(costAmountSum, 1000000L));
 		}
 
 		UserPO receiver = userDao.queryUserByUserId(approvalVO.getReceiver().getUserId());
@@ -223,7 +223,7 @@ public class ApprovalDecorationActivityServiceImpl implements ApprovalDecoration
 			}
 		}
 
-		ActivityCostVO costSnapshot = costItemMap.size() > 0 ? decorationActivityCostService.queryActivityCost(decorationPO.getOrderId(), approvalPO.getSender().getUserId(), Arith.div(costAmountSum, 1000000L)) : null;
+		ActivityCostVO costSnapshot = costItemMap.size() > 0 ? decorationActivityCostService.queryActivityCost(decorationPO.getOrderId(), Arith.div(costAmountSum, 1000000L)) : null;
 
 		for (ApprovalDecorationActivityItemPO approvalDecorationActivityItemPO : approvalDecorationActivityItemPOs) {
 

@@ -166,8 +166,8 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 		int money = decorationActivityItemVO.getMoney() == null ? 0 : decorationActivityItemVO.getMoney();
 		int num = decorationActivityItemVO.getNum() == null ? 0 : decorationActivityItemVO.getNum();
 
-		// 额度类物品(type>=10)创建前调 fl-yy validate 校验资格(现算), 非额度类返回 null 走原逻辑
-		ActivityCostVO costSnapshot = decorationActivityCostService.queryActivityCost(decorationActivityItemVO.getOrderId(), userId, activityItemPO, money, num);
+		// 额度类物品(type>=10)创建前调 fl-yy validate 校验资格(现算, 身份=装修单设计师), 非额度类返回 null 走原逻辑
+		ActivityCostVO costSnapshot = decorationActivityCostService.queryActivityCost(decorationActivityItemVO.getOrderId(), activityItemPO, money, num);
 
 		AwardStockPO awardStockPO = awardStockDao.get(decorationActivityItemVO.getAsid());
 
