@@ -228,18 +228,22 @@ public class CustomerUserRuleServiceImpl implements CustomerUserRuleService {
 			throw new FLException(330123, "管理启用状态下, 个人无法操作");
 		}
 
-		if (customerUserRuleVO.getStatus() == CustomerUserRulePO.STATUS_USER_INVALID_INT && systemConfigDao.querySystemConfig("CUSTOMER_USER_RULE_CONTROL", customerUserRulePO.getCompany()) != null) {
+		// 归属人本人对已停用(1)规则发 target=1 → 翻转为接单(0): 外部小程序停/接单双钮共用一函数恒发1, 翻转仅限本人自己的规则(2026-11-07拍板), 管理侧对他人规则仍为显式直写不受影响
+		boolean flip = owner && status == CustomerUserRulePO.STATUS_USER_INVALID_INT && customerUserRuleVO.getStatus() == CustomerUserRulePO.STATUS_USER_INVALID_INT;
+		short target = flip ? CustomerUserRulePO.STATUS_ENABLE_INT : customerUserRuleVO.getStatus();
+
+		if (target == CustomerUserRulePO.STATUS_USER_INVALID_INT && systemConfigDao.querySystemConfig("CUSTOMER_USER_RULE_CONTROL", customerUserRulePO.getCompany()) != null) {
 			throw new FLException(330082, "规则不可操作");
 		}
 
-		// target驱动直写(0/1/2/3/5/6均为显式目标状态, 由前端按钮选择口径与目标)
-		customerUserRulePO.setStatus(customerUserRuleVO.getStatus());
+		// target驱动直写(0/1/2/3/5/6均为显式目标状态, 由前端按钮选择口径与目标; 仅本人flip翻转例外)
+		customerUserRulePO.setStatus(target);
 
 		customerUserRuleDao.update(customerUserRulePO);
 
 		UserPO issuer = userDao.queryUserByUserId(userId);
 
-		customerSourceRecordDao.save(new CustomerSourceRecordPO().init(String.format("更新人员规则,归属:%s(%s),原状态:%s,现状态:%s", customerUserRulePO.getUser().getCurrentName(), customerUserRulePO.getUser().getUserId(), status, customerUserRulePO.getStatus()), CustomerSourceRecordPO.TYPE_USER_RULE_INT, issuer));
+		customerSourceRecordDao.save(new CustomerSourceRecordPO().init(String.format("更新人员规则,归属:%s(%s),原状态:%s,现状态:%s%s", customerUserRulePO.getUser().getCurrentName(), customerUserRulePO.getUser().getUserId(), status, customerUserRulePO.getStatus(), flip ? "(个人侧翻转)" : ""), CustomerSourceRecordPO.TYPE_USER_RULE_INT, issuer));
 	}
 
 	@Override
