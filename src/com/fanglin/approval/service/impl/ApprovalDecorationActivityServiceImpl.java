@@ -244,7 +244,7 @@ public class ApprovalDecorationActivityServiceImpl implements ApprovalDecoration
 			decorationActivityItemPO.setIsPayment(awardStockPO.getIsPayment());
 			decorationActivityItemPO.setReceiveTime(approvalPO.getApprovalTime());
 
-			// 额度类 type 服务端按配置覆盖(不信前端), type∈{10,11,12} 天然不进 couponCut/thingCut 金额口径(校验跳过时同样覆盖)
+			// 额度类 type 服务端按配置覆盖(不信前端); 券族口径: 10额度券随券族计入 couponCut 金额, 11/12(额度-物品/红包)不进 couponCut/thingCut 金额口径
 			ActivityItemPO activityItemPO = costItemMap.get(approvalDecorationActivityItemPO.getAsid());
 
 			if (activityItemPO != null) {

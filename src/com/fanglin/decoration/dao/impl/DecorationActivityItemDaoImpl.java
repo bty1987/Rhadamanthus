@@ -46,12 +46,6 @@ public class DecorationActivityItemDaoImpl extends DaoImpl<DecorationActivityIte
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<DecorationActivityItemPO> queryDecorationActivityItemByOrderId(String orderId, short type, short status) {
-		return session().createCriteria(DecorationActivityItemPO.class).add(Restrictions.eq(DecorationActivityItemPO.COLUMN_ORDERID_STR, orderId)).add(Restrictions.eq(DecorationActivityItemPO.COLUMN_TYPE_STR, type)).add(Restrictions.eq(DecorationActivityItemPO.COLUMN_STATUS_STR, status)).list();
-	}
-
-	@Override
-	@SuppressWarnings("unchecked")
 	public List<DecorationActivityItemPO> queryDecorationActivityItem(String orderId, String no) {
 		return session().createCriteria(DecorationActivityItemPO.class).add(Restrictions.eq(DecorationActivityItemPO.COLUMN_ORDERID_STR, orderId)).add(Restrictions.eq("no", no)).list();
 	}
@@ -59,8 +53,9 @@ public class DecorationActivityItemDaoImpl extends DaoImpl<DecorationActivityIte
 	@Override
 	public long amountDecorationActivityItem(String orderId, short isPayment) {
 
-		String sql = "SELECT COALESCE(SUM(money*num), 0) as priceSum FROM decoration.decorationActivityitem WHERE orderId =:orderId AND type = 0 AND isPayment =:isPayment AND ((atttype = 0 AND state = 0) OR (atttype = 1 AND state IN (2, 10)))";
-		BigDecimal sqlQuery = (BigDecimal) session().createSQLQuery(sql).setString("orderId", orderId).setShort("isPayment", isPayment).uniqueResult();
+		// 券族口径: 0券/10额度券/20抽奖券同按券参与优惠合计(抽奖券money恒0, 数值无感但口径统一)
+		String sql = "SELECT COALESCE(SUM(money*num), 0) as priceSum FROM decoration.decorationActivityitem WHERE orderId =:orderId AND type IN (:types) AND isPayment =:isPayment AND ((atttype = 0 AND state = 0) OR (atttype = 1 AND state IN (2, 10)))";
+		BigDecimal sqlQuery = (BigDecimal) session().createSQLQuery(sql).setString("orderId", orderId).setParameterList("types", Arrays.asList(DecorationActivityItemPO.TYPE_COUPON_FAMILY)).setShort("isPayment", isPayment).uniqueResult();
 
 		return Arith.div(sqlQuery.longValue(), 1000000);
 	}
@@ -72,8 +67,13 @@ public class DecorationActivityItemDaoImpl extends DaoImpl<DecorationActivityIte
 
 		sql.append("SELECT COALESCE(SUM(money*num), 0) AS priceSum FROM decoration.decorationActivityitem WHERE orderId = :orderId AND ((atttype = 0 and state in (:state)) OR (atttype = 1 and state IN (2, 10)))");
 
+		// 券族口径: 传入0/10/20任一值均按整族圈定(券逻辑统一支持), 其余type原样等值
 		if (type != null) {
-			sql.append(" AND type = :type");
+			if (Arrays.asList(DecorationActivityItemPO.TYPE_COUPON_FAMILY).contains(type)) {
+				sql.append(" AND type IN (:types)");
+			} else {
+				sql.append(" AND type = :type");
+			}
 		}
 
 		if (isPrefor != null) {
@@ -89,7 +89,11 @@ public class DecorationActivityItemDaoImpl extends DaoImpl<DecorationActivityIte
 		sqlQuery.setString("orderId", orderId);
 
 		if (type != null) {
-			sqlQuery.setShort("type", type);
+			if (Arrays.asList(DecorationActivityItemPO.TYPE_COUPON_FAMILY).contains(type)) {
+				sqlQuery.setParameterList("types", Arrays.asList(DecorationActivityItemPO.TYPE_COUPON_FAMILY));
+			} else {
+				sqlQuery.setShort("type", type);
+			}
 		}
 
 		if (isPrefor != null) {
@@ -103,54 +107,6 @@ public class DecorationActivityItemDaoImpl extends DaoImpl<DecorationActivityIte
 		List<Short> states = Arrays.asList(DecorationActivityItemPO.STATUS_INIT_INT, DecorationActivityItemPO.STATUS_RECEIVE_INT, DecorationActivityItemPO.STATUS_DELIVERY_INT, DecorationActivityItemPO.STATUS_WAIT_INT, DecorationActivityItemPO.STATUS_UPGRADE_INT, DecorationActivityItemPO.STATUS_VERIFY_INT);
 
 		sqlQuery.setParameterList("state", states);
-
-		BigDecimal amount = (BigDecimal) sqlQuery.setMaxResults(1).uniqueResult();
-
-		return Arith.div(amount.longValue(), 1000000);
-	}
-
-	@Override
-	public long amountDecorationActivityItem(String orderId, Short type, List<Short> states, Short isPrefor, Short isPayment) {
-
-		StringBuffer sql = new StringBuffer();
-
-		sql.append("SELECT COALESCE(SUM(money*num), 0) AS priceSum FROM decoration.decorationActivityitem WHERE orderId =:orderId");
-
-		if (type != null) {
-			sql.append(" AND type = :type");
-		}
-
-		if (states != null) {
-			sql.append(" AND state IN (:state)");
-		}
-
-		if (isPrefor != null) {
-			sql.append(" AND isPrefor = :isPrefor");
-		}
-
-		if (isPayment != null) {
-			sql.append(" AND isPayment = :isPayment");
-		}
-
-		SQLQuery sqlQuery = session().createSQLQuery(sql.toString());
-
-		sqlQuery.setString("orderId", orderId);
-
-		if (type != null) {
-			sqlQuery.setShort("type", type);
-		}
-
-		if (states != null) {
-			sqlQuery.setParameterList("state", states);
-		}
-
-		if (isPrefor != null) {
-			sqlQuery.setShort("isPrefor", isPrefor);
-		}
-
-		if (isPayment != null) {
-			sqlQuery.setShort("isPayment", isPayment);
-		}
 
 		BigDecimal amount = (BigDecimal) sqlQuery.setMaxResults(1).uniqueResult();
 

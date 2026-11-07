@@ -57,6 +57,12 @@ public class DecorationActivityItemPO implements java.io.Serializable {
 
 	public static final short TYPE_COST_REDPACKAGE_INT = 12; // 优惠额度-红包
 
+	/**
+	 * 券族: 0券/10额度券/20抽奖券 同属"券", 金额/统计类 DAO 口径按整族圈定
+	 * (amountDecorationActivityItem 等方法无论 type 是否传入, 券族逻辑统一支持)
+	 */
+	public static final Short[] TYPE_COUPON_FAMILY = {TYPE_COUPON_INT, TYPE_COST_COUPON_INT, TYPE_LOTTERY_ACTIVITY_ITEM};
+
 	public static final short STATUSTYPE_POINTSHOP_INT = 15; // 办理类型: 积分商城
 
 	public static final short ISPREFOR_CAL_INT = 0; // 业绩标识 0 计算
