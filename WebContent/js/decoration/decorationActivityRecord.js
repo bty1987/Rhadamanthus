@@ -43,4 +43,35 @@ $(function() {
     var btns = [];
 
     searcher.line("operate.currentName", props, btns).render();
+
+    decorationActivityRecord.addActivityRecordModal = com.focusPage("#addActivityRecordModal");
+
+    // 手动创建流水记录(类型可选, 仅作记录不改变物品状态)
+    com.focusPage("#addActivityRecordBtn").on("click", function() {
+
+        com.clearTypeahead("recordType");
+        com.focusPage("#recordType").bindData(constant.decoration().decorationActivityItem.status.keys, "key", "value");
+        com.focusPage("#recordComment").val("");
+
+        decorationActivityRecord.addActivityRecordModal.modal("show");
+    });
+
+    com.focusPage("#submitActivityRecordBtn").on("click", function() {
+
+        if (com.validate("addActivityRecordModal")) {
+            return;
+        }
+
+        com.post(api.decoration.addDecorationActivityRecord, {
+            "decorationActivityRecord.daid": decorationActivityRecord.decorationActivityItem.aid,
+            "decorationActivityRecord.decorationActivityItem.daiId": decorationActivityRecord.decorationActivityItem.daiId,
+            "decorationActivityRecord.type": com.focusPage("#recordType").val(),
+            "decorationActivityRecord.comment": com.focusPage("#recordComment").val()
+        }, function(res) {
+
+            com.showAlert(com.info, "创建成功");
+            decorationActivityRecord.addActivityRecordModal.modal("hide");
+            searcher.doSearch();
+        });
+    });
 });

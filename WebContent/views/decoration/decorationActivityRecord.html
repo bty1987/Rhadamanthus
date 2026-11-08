@@ -1,6 +1,12 @@
 
 <div class="row">
 	<div class="col-xs-12">
+		<div style="margin-bottom: 8px;">
+			<button id="addActivityRecordBtn" class="btn btn-xs btn-info" type="button">
+				<i class="icon-plus bigger-110"></i>
+				<span>创建记录</span>
+			</button>
+		</div>
 		<div id="activityRecordCondList" class="fl_search clearfix"></div>
 		<div id="activityRecordResultList" class="clearfix tab-pane active"></div>
 		<div id="activityRecordPagenation" class="fl-page-wrap clearfix"></div>
@@ -10,3 +16,34 @@
 <script type="text/javascript">
     $.loadScript(['js/decoration/decorationActivityRecord.js']);
 </script>
+
+	<div class="modal fade" id="addActivityRecordModal" tabindex="-1" data-backdrop="static">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"><span>&times;</span><span class="sr-only">Close</span></button>
+					<h4 class="modal-title">创建流水记录</h4>
+				</div>
+				<div class="modal-body">
+					<form class="form-horizontal">
+						<div class="form-group">
+							<label class="col-sm-3 control-label">类型</label>
+							<div class="col-sm-6">
+								<select id="recordType" class="col-xs-10 col-sm-6 v_required" data-toggle="popover" data-placement="bottom" data-trigger="manual"></select>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-3 control-label">说明</label>
+							<div class="col-sm-6">
+								<textarea id="recordComment" class="col-xs-10 col-sm-6 v_required" rows="3" placeholder="请输入记录说明"></textarea>
+							</div>
+						</div>
+					</form>
+				</div>
+				<div class="modal-footer">
+					<button type="button" id="submitActivityRecordBtn" class="btn btn-primary">保存</button>
+					<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+				</div>
+			</div>
+		</div>
+	</div>

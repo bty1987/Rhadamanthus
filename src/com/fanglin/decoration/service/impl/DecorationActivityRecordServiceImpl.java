@@ -59,7 +59,10 @@ public class DecorationActivityRecordServiceImpl implements DecorationActivityRe
 
 		UserPO operater = userDao.queryUserByUserId(userId);
 
-		decorationActivityRecordPO.init(decorationActivityRecordVO.getDaid(), decorationActivityItemPO, DecorationActivityItemPO.STATUS_PURCHER_INT, operater, decorationActivityRecordVO.getComment());
+		// 类型前端可选, 缺省补款——手动补记仅作流水记录, 不改变物品状态
+		short type = decorationActivityRecordVO.getType() == null ? DecorationActivityItemPO.STATUS_PURCHER_INT : decorationActivityRecordVO.getType();
+
+		decorationActivityRecordPO.init(decorationActivityRecordVO.getDaid(), decorationActivityItemPO, type, operater, decorationActivityRecordVO.getComment());
 
 		decorationActivityRecordDao.save(decorationActivityRecordPO);
 
