@@ -19,7 +19,7 @@ FROM DUAL WHERE NOT EXISTS (
 
 -- ---------- 2. activityItem.type=30 (活动物品配置页渲染分支) ----------
 INSERT INTO communion.constant (name, module, clazz, type, field, `key`, value, status)
-SELECT '活动物品类型', 'information', 'activityItem', 'type', 'TYPE_LADDER_LOTTERY_INT', '30', '限量奖品', 0
+SELECT '活动物品类型', 'information', 'activityItem', 'type', 'TYPE_LADDER_LOTTERY_INT', '30', '限量券', 0
 FROM DUAL WHERE NOT EXISTS (
     SELECT 1 FROM communion.constant WHERE module='information' AND clazz='activityItem' AND type='type' AND field='TYPE_LADDER_LOTTERY_INT'
 );
