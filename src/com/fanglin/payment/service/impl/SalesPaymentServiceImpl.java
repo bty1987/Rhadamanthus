@@ -628,7 +628,7 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 
 		salesPaymentVO.setReferMoney(salesPaymentPO.getReferMoney());
 
-		collectSalesPayment(salesPaymentVO, salesReceiptVO, null, userId, company);
+		collectSalesPayment(salesPaymentVO, salesReceiptVO, null, null, null, userId, company);
 
 		return 0;
 	}
@@ -829,7 +829,7 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 				throw new FLException(140112, "优惠额度券已被其他收款使用");
 			}
 
-			if (couponItem.getMoney() == null || couponItem.getMoney() <= 0) {
+			if (couponItem.getMoney() <= 0) {
 				throw new FLException(140114, "优惠额度券金额无效");
 			}
 

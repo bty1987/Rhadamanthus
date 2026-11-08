@@ -11,6 +11,7 @@
 
 package com.fanglin.decoration.service.impl;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -1128,37 +1129,46 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 		DecorationActivityItemPO preItem = null;
 		long aid = 0;
 
-		List<DecorationActivityItemPO> orderItems = decorationActivityItemDao.queryDecorationActivityItemByOrderId(orderId);
+		if (scene == LADDER_SCENE_RECEIVE && receiveDaiId != null) {
+			// 领取: 按 daiId 直查(领取入口不持 orderId, 走 queryDecorationActivityItemByOrderId(null) 即 eq("orderId", null) 恒空集永不命中);
+			// 仅预占行(state=0)可结算, 已发放/已作废幂等返回 0, 防重复扣库存
+			preItem = decorationActivityItemDao.get(receiveDaiId.longValue());
 
-		for (DecorationActivityItemPO item : orderItems) {
-
-			if (item.getType() != DecorationActivityItemPO.TYPE_LADDER_LOTTERY_ACTIVITY_ITEM) {
-				continue;
+			if (preItem == null || preItem.getType() != DecorationActivityItemPO.TYPE_LADDER_LOTTERY_ACTIVITY_ITEM
+					|| preItem.getState() != DecorationActivityItemPO.STATUS_INIT_INT) {
+				return 0;
 			}
 
-			if (scene == LADDER_SCENE_JOIN) {
-				// 参与幂等: 该单该活动已有预占行 → 跳过(复审补防重, 防双预占悬挂)
-				if (item.getAid() == joinAid.longValue() && item.getState() == DecorationActivityItemPO.STATUS_INIT_INT) {
-					return 0;
+			orderId = preItem.getOrderId();
+			aid = preItem.getAid();
+		} else {
+
+			List<DecorationActivityItemPO> orderItems = decorationActivityItemDao.queryDecorationActivityItemByOrderId(orderId);
+
+			for (DecorationActivityItemPO item : orderItems) {
+
+				if (item.getType() != DecorationActivityItemPO.TYPE_LADDER_LOTTERY_ACTIVITY_ITEM) {
+					continue;
 				}
-				continue;
+
+				if (scene == LADDER_SCENE_JOIN) {
+					// 参与幂等: 该单已有预占行(state=0) → 跳过(复审拍板按单防重, 防跨活动双预占悬挂)
+					if (item.getState() == DecorationActivityItemPO.STATUS_INIT_INT) {
+						return 0;
+					}
+					continue;
+				}
+
+				if (scene == LADDER_SCENE_CONTRACT && item.getState() == DecorationActivityItemPO.STATUS_INIT_INT) {
+					preItem = item;
+					aid = item.getAid();
+					break;
+				}
 			}
 
-			if (scene == LADDER_SCENE_CONTRACT && item.getState() == DecorationActivityItemPO.STATUS_INIT_INT) {
-				preItem = item;
-				aid = item.getAid();
-				break;
+			if (scene != LADDER_SCENE_JOIN && preItem == null) {
+				return 0; // 无预占(未参与/已发放/已作废) → 无操作
 			}
-
-			if (scene == LADDER_SCENE_RECEIVE && item.getDaiId() == receiveDaiId.longValue()) {
-				preItem = item;
-				aid = item.getAid();
-				break;
-			}
-		}
-
-		if (scene != LADDER_SCENE_JOIN && preItem == null) {
-			return 0; // 无预占(未参与/已发放/已作废) → 无操作
 		}
 
 		ActivityPO activityPO = activityDao.get(scene == LADDER_SCENE_JOIN ? joinAid.longValue() : preItem.getAid());
@@ -1167,7 +1177,7 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 			return 0;
 		}
 
-		Date now = DateUtil.getDateToTimestamp(new Date());
+		Timestamp now = DateUtil.getDateToTimestamp(new Date());
 
 		// 参与有效期校验(仅参与; 签约/领取以预占锚定不受窗口限制)
 		if (scene == LADDER_SCENE_JOIN) {

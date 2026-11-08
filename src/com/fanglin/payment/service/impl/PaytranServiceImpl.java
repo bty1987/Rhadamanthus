@@ -1264,7 +1264,7 @@ public class PaytranServiceImpl implements PaytranService {
 				salesReceiptVO.setRealMoney(paidMoney);
 				salesReceiptVO.setComment(comment);
 
-				salesPaymentService.collectSalesPayment(salesPaymentVO, salesReceiptVO, ptids, userId, company);
+				salesPaymentService.collectSalesPayment(salesPaymentVO, salesReceiptVO, ptids, null, null, userId, company);
 
 				break;
 
