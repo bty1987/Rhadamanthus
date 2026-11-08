@@ -397,9 +397,6 @@ jQuery(function($) {
 
     decorationUtils.init();
 
-    // 阶梯奖品直领区(主力领取页): 有内容才显示整块
-    decorationUtils.initLadderPanel("#ladderPanel4detail", params.decoration.orderId, true);
-
     decorationDetail.orderId = params.decoration.orderId;
     decorationDetail.orderStatus = params.decoration.orderStatus;
     decorationDetail.orderType = params.decoration.orderType;
@@ -533,7 +530,7 @@ jQuery(function($) {
             decorationUtils.addDecorationActivityForDiv(decorationDetail.activitys, decorationActivity, activityBtnMethod);
 
             // 阶梯奖品直领面板刷新(新参加的活动可能挂 type=30 物品)
-            decorationUtils.initLadderPanel("#ladderPanel4detail", decorationDetail.orderId, true);
+            decorationUtils.initLadderPanel("#activityLadderPanel", decorationDetail.orderId);
         });
 
         decorationDetail.joinDecorationActivityModal.modal("hide");
@@ -1810,6 +1807,9 @@ jQuery(function($) {
                 decorationUtils.decorationActivityItemInfo(decorationDetail.orderId, decorationDetail.activityPriceInfo, decorationDetail.activityItems, decorationActivity, wizard);
                 decorationUtils.salesActivityItemInfo(decorationDetail.orderId, decorationDetail.salesActivityItems, salesActivityItem, wizard);
                 decorationUtils.memberActivityItemInfo(decorationDetail.orderId, decorationDetail.memberActivityItems, decorationActivity, wizard);
+
+                // 阶梯奖品直领面板: 装修活动列表下方(activityLadderPanel, 免申领审批)
+                decorationUtils.initLadderPanel("#activityLadderPanel", decorationDetail.orderId);
 
                 initActivityIntegral(decorationDetail.orderId);
 
