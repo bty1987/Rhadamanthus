@@ -144,6 +144,9 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 			decorationActivityItemVO.setReceiver(new UserBaseVO());
 			BeanUtil.copyProperties(decorationActivityItemPO.getReceiver(), decorationActivityItemVO.getReceiver(), Arrays.asList("dept", "duty"));
 
+			// 创建信息(创建人名): 前端展示用, 不透传UserPO代理
+			decorationActivityItemVO.setCreaterName(decorationActivityItemPO.getCreater() == null ? "" : decorationActivityItemPO.getCreater().getUserName());
+
 			decorationActivityItemVOs.add(decorationActivityItemVO);
 		}
 

@@ -330,4 +330,14 @@ public class DecorationActivityItemVO implements java.io.Serializable {
 		this.expireTime = expireTime;
 	}
 
+	private String createrName; // 创建人名(展示用字符串, 不透传UserPO代理)
+
+	public String getCreaterName() {
+		return createrName;
+	}
+
+	public void setCreaterName(String createrName) {
+		this.createrName = createrName;
+	}
+
 }

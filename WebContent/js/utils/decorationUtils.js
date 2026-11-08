@@ -3308,6 +3308,13 @@ var decorationUtils = {
         $('<strong></strong>').text("活动:").appendTo(activityLi);
         $('<span></span>').text(activity.activity.name).appendTo(activityLi);
 
+        // 创建信息(创建人/创建时间): 已参与(有券行)时显示
+        if (coupon != null) {
+            var createLi = $('<li></li>').appendTo(ul);
+            $('<strong></strong>').text("创建:").appendTo(createLi);
+            $('<span></span>').text((coupon.createrName ? coupon.createrName + " " : "") + coupon.createTime).appendTo(createLi);
+        }
+
         if (activityItem.stockNum != null) {
             var stockLi = $('<li></li>').appendTo(ul);
             $('<strong></strong>').text("剩余:").appendTo(stockLi);
