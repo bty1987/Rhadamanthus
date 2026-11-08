@@ -1,6 +1,7 @@
 package com.fanglin.decoration.dao.impl;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 
 import org.springframework.stereotype.Repository;
 
@@ -20,7 +21,8 @@ public class DecorationScaleDetailDaoImpl extends DaoImpl<DecorationScaleDetailP
 
 		String sql = "SELECT COUNT(*) FROM decoration.decorationscaledetail WHERE daiId = :daiId AND status = 0";
 
-		BigDecimal count = (BigDecimal) session().createSQLQuery(sql).setLong("daiId", daiId).uniqueResult();
+		// COUNT(*) 原生查询返回 BigInteger, 强转 BigDecimal 会 ClassCastException
+		BigInteger count = (BigInteger) session().createSQLQuery(sql).setLong("daiId", daiId).uniqueResult();
 
 		return count == null ? 0 : count.intValue();
 	}
@@ -41,7 +43,7 @@ public class DecorationScaleDetailDaoImpl extends DaoImpl<DecorationScaleDetailP
 
 		String sql = "SELECT COUNT(*) FROM decoration.decorationscaledetail WHERE spid = :spid AND status = 0";
 
-		BigDecimal count = (BigDecimal) session().createSQLQuery(sql).setLong("spid", spid).uniqueResult();
+		BigInteger count = (BigInteger) session().createSQLQuery(sql).setLong("spid", spid).uniqueResult();
 
 		return count == null ? 0 : count.intValue();
 	}
