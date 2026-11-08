@@ -536,7 +536,7 @@ jQuery(function($) {
             options["approvalDecorationActivityItems[" + index + "].activityName"] = activityName;
             options["approvalDecorationActivityItems[" + index + "].activityItemName"] = _.children('span').attr("typename").split(" ")[0];
             var costType = decorationActivityItem.activityItemMap[_.children('span').attr("asid")];
-            options["approvalDecorationActivityItems[" + index + "].type"] = costType >= 10 ? costType : 1;
+            options["approvalDecorationActivityItems[" + index + "].type"] = costType == 10 || costType == 11 || costType == 12 ? costType : 1;
             options["approvalDecorationActivityItems[" + index + "].num"] = _.children('span').attr('num');
             options["approvalDecorationActivityItems[" + index + "].money"] = _.children('span').attr("typename").split(" ")[1].split(':')[1];
             options["approvalDecorationActivityItems[" + index + "].content"] = "";
@@ -553,7 +553,7 @@ jQuery(function($) {
             options["approvalDecorationActivityItems[" + index + "].activityName"] = activityName;
             options["approvalDecorationActivityItems[" + index + "].activityItemName"] = _.children('span').attr("typename").split(" ")[0];
             var costType = decorationActivityItem.activityItemMap[_.children('span').attr("asid")];
-            options["approvalDecorationActivityItems[" + index + "].type"] = costType >= 10 ? costType : 0;
+            options["approvalDecorationActivityItems[" + index + "].type"] = costType == 10 || costType == 11 || costType == 12 ? costType : 0;
             options["approvalDecorationActivityItems[" + index + "].num"] = _.children('span').attr('num');
             options["approvalDecorationActivityItems[" + index + "].money"] = _.children('span').attr("typename").split(" ")[1].split(':')[1];
             options["approvalDecorationActivityItems[" + index + "].content"] = "";
@@ -571,7 +571,7 @@ jQuery(function($) {
             options["approvalDecorationActivityItems[" + index + "].activityName"] = activityName;
             options["approvalDecorationActivityItems[" + index + "].activityItemName"] = _.children('span').attr("typename").split(" ")[0];
             var costType = decorationActivityItem.activityItemMap[_.children('span').attr("asid")];
-            options["approvalDecorationActivityItems[" + index + "].type"] = costType >= 10 ? costType : 2;
+            options["approvalDecorationActivityItems[" + index + "].type"] = costType == 10 || costType == 11 || costType == 12 ? costType : 2;
             options["approvalDecorationActivityItems[" + index + "].num"] = _.children('span').attr('num');
             options["approvalDecorationActivityItems[" + index + "].money"] = _.children('span').attr("typename").split(" ")[1].split(':')[1];
             options["approvalDecorationActivityItems[" + index + "].content"] = "";
@@ -616,7 +616,7 @@ jQuery(function($) {
             "decorationActivityItem.activityItemName": activityItem.name,
             // 优惠额度物品(type 10/11/12)按配置值提交, aiid 供服务端精确识别
             "decorationActivityItem.aiid": activityItem.aiid,
-            "decorationActivityItem.type": activityItem.type >= 10 ? activityItem.type : decorationActivityItem.activityItems.itemType.val(),
+            "decorationActivityItem.type": (activityItem.type == 10 || activityItem.type == 11 || activityItem.type == 12) ? activityItem.type : decorationActivityItem.activityItems.itemType.val(),
             "decorationActivityItem.num": decorationActivityItem.activityItems.itemNum.val(),
             "decorationActivityItem.money": activityItem.money,
             "decorationActivityItem.stateType": decorationActivityItem.activityItems.receiveType1.val(),

@@ -11,6 +11,7 @@ import java.net.URL;
 import java.security.MessageDigest;
 import java.security.SecureRandom;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -98,7 +99,8 @@ public class DecorationActivityCostServiceImpl implements DecorationActivityCost
 
 	@Override
 	public boolean isCostItem(ActivityItemPO activityItemPO) {
-		return activityItemPO != null && activityItemPO.getType() >= ActivityItemPO.TYPE_COST_COUPON_INT;
+		// 精确族枚举判定(勿用>=范围: type=30阶梯券会被>=10误圈进额度校验)
+		return activityItemPO != null && Arrays.asList(ActivityItemPO.TYPE_COST_FAMILY).contains(activityItemPO.getType());
 	}
 
 	@Override
