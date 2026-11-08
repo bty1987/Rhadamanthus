@@ -74,7 +74,8 @@ public class AwardStockDaoImpl extends DaoImpl<AwardStockPO> implements AwardSto
 
 	@Override
 	public int deductAwardStockNum(long asid) {
-		return session().createSQLQuery("UPDATE information.awardstock SET num = num - 1 WHERE asId = :asid AND num > 0").setLong("asid", asid).executeUpdate();
+		// 券类奖品num按毫存储(1张=1000毫, 对齐额度券既有口径): 每张扣1000毫, 余量不足1000毫(不足1张)即不可发
+		return session().createSQLQuery("UPDATE information.awardstock SET num = num - 1000 WHERE asId = :asid AND num >= 1000").setLong("asid", asid).executeUpdate();
 	}
 
 }

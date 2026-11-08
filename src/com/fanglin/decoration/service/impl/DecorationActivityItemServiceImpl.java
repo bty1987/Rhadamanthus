@@ -1264,7 +1264,7 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 				decorationActivityItemPO.setType(DecorationActivityItemPO.TYPE_LADDER_LOTTERY_ACTIVITY_ITEM);
 				decorationActivityItemPO.setState(DecorationActivityItemPO.STATUS_INIT_INT);
 				decorationActivityItemPO.setAtttype(DecorationActivityItemPO.ATTTYPE_OFFLINE_INT);
-				decorationActivityItemPO.setNum(1);
+				decorationActivityItemPO.setNum(1000); // 券行num按毫(1张=1000毫, tranargs÷1000显示1)
 				decorationActivityItemPO.setMoney(ladderItem.getMoney());
 				decorationActivityItemPO.setExpendPrice(0);
 				decorationActivityItemPO.setDiscountPrice(0);
@@ -1335,7 +1335,7 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 			decorationActivityItemPO.setType(DecorationActivityItemPO.TYPE_LADDER_LOTTERY_ACTIVITY_ITEM);
 			decorationActivityItemPO.setState(DecorationActivityItemPO.STATUS_RECEIVE_INT);
 			decorationActivityItemPO.setAtttype(DecorationActivityItemPO.ATTTYPE_OFFLINE_INT);
-			decorationActivityItemPO.setNum(1);
+			decorationActivityItemPO.setNum(1000); // 券行num按毫(1张=1000毫)
 			decorationActivityItemPO.setMoney(ladderItem.getMoney());
 			decorationActivityItemPO.setExpendPrice(0);
 			decorationActivityItemPO.setDiscountPrice(0);
