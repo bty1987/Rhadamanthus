@@ -49,7 +49,7 @@ $(function() {
     // 手动创建流水记录(类型可选, 仅作记录不改变物品状态)
     com.focusPage("#addActivityRecordBtn").on("click", function() {
 
-        com.clearTypeahead("recordType");
+        // bindData重拉选项即自动重置选中(recordType为普通select, 非typeahead组件)
         com.focusPage("#recordType").bindData(constant.decoration().decorationActivityItem.status.keys, "key", "value");
         com.focusPage("#recordComment").val("");
 
