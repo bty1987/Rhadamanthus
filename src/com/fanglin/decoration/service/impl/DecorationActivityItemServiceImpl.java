@@ -1178,8 +1178,9 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 				}
 
 				if (scene == LADDER_SCENE_JOIN) {
-					// 参与幂等: 该单已有预占行(state=0) → 跳过(复审拍板按单防重, 防跨活动双预占悬挂)
-					if (item.getState() == DecorationActivityItemPO.STATUS_INIT_INT) {
+					// 每单一张: 该单已存在任意非失效阶梯券行(预占0/已领2/已抵扣7)即拦——
+					// 原"仅拦state=0"存在领后再参与再领的多券漏洞; 失效(1,降级换行/作废)不拦可重新参与
+					if (item.getState() != DecorationActivityItemPO.STATUS_UNVALID_INT) {
 						return 0;
 					}
 					continue;

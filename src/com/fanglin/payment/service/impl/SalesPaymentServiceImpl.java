@@ -804,6 +804,11 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 	 */
 	private void saveScaleDetails(SalesPaymentPO salesPayment, SalesPO sales, List<Long> daiIds, List<Integer> scaleFlags, UserPO operater) throws FLException {
 
+		// 每单一张(深度防御): 该单已有有效配比明细即拒绝再收新券
+		if (daiIds != null && !daiIds.isEmpty() && decorationScaleDetailDao.countDecorationScaleDetailByOrderId(sales.getOrderId()) > 0) {
+			throw new FLException(140112, "优惠额度券已被其他收款使用");
+		}
+
 		if (daiIds == null || daiIds.size() == 0) {
 			return;
 		}

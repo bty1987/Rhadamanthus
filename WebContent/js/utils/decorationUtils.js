@@ -3324,7 +3324,20 @@ var decorationUtils = {
 
         var $btn = $('<button type="button" class="btn btn-minier btn-primary" style="float: right; margin-top: 4px;"></button>').appendTo(widgetHeader);
 
+        // 每单一张: 该单已持有券行(预占/已领/已抵扣)时, 其他档位不可再参与
+        var held = false;
+        $.each(coupons, function(i, c) {
+            if (c.state == 0 || c.state == 2 || c.state == 7) {
+                held = true;
+                return false;
+            }
+        });
+
         if (coupon == null || coupon.state == 1) {
+
+            if (held) {
+                $btn.addClass("disabled").prop("disabled", true).text("—");
+            }
 
             $btn.text("参与预占").on("click", function() {
 

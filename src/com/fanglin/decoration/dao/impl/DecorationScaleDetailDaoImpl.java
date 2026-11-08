@@ -55,4 +55,15 @@ public class DecorationScaleDetailDaoImpl extends DaoImpl<DecorationScaleDetailP
 		return count == null ? 0 : count.intValue();
 	}
 
+	@Override
+	public int countDecorationScaleDetailByOrderId(String orderId) {
+
+		String sql = "SELECT COUNT(*) FROM decoration.decorationscaledetail WHERE orderId = :orderId AND status = 0";
+
+		// COUNT(*) 原生查询返回 BigInteger
+		BigInteger count = (BigInteger) session().createSQLQuery(sql).setString("orderId", orderId).uniqueResult();
+
+		return count == null ? 0 : count.intValue();
+	}
+
 }

@@ -20,4 +20,9 @@ public interface DecorationScaleDetailDao extends Dao<DecorationScaleDetailPO> {
 	 */
 	public int countDecorationScaleDetailBySpid(long spid);
 
+	/**
+	 * 该装修单是否已有有效配比明细(每单一张守卫)
+	 */
+	public int countDecorationScaleDetailByOrderId(String orderId);
+
 }
