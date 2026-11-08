@@ -44,7 +44,6 @@ $(function() {
             checkvGroup: com.focusPage("#checkvGroup", "#salesPayment"),
             couponDiv: com.focusPage("#couponDiv", "#salesPayment"),
             ladderCouponDiv: com.focusPage("#ladderCouponDiv", "#salesPayment"),
-            ladderCouponObj: com.focusPage("#ladderCouponObj", "#salesPayment"),
             ladderCouponGroup: com.focusPage("#ladderCouponGroup", "#salesPayment"),
             ladderScale: com.focusPage("#ladderScale", "#salesPayment"),
             couponInputs: com.focusPage("#couponInputs", "#salesPayment"),

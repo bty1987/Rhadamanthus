@@ -182,7 +182,19 @@ var paymentUtils = {
                 });
             });
 
-            com.selectTypeahead("ladderCouponObj", ladderItems, 'daiId', 'ladderName');
+            // 直选radio平铺(Ace样式): 每单一张=单选, 勾选即选券; "不使用"占位默认选中=不用券
+            var $group = com.focusPage("#ladderCouponGroup").html("");
+
+            var $noneLabel = $('<label style="margin-right: 15px;"></label>').appendTo($group);
+            $('<input type="radio" name="ladderCouponRadio" class="ace" checked>').attr("daiId", "").attr("money", 0).attr("typename", "").appendTo($noneLabel);
+            $('<span class="lbl"></span>').text(" 不使用").appendTo($noneLabel);
+
+            $.each(ladderItems, function(i, v) {
+
+                var $label = $('<label style="margin-right: 15px;"></label>').appendTo($group);
+                $('<input type="radio" name="ladderCouponRadio" class="ace">').attr("daiId", v.daiId).attr("money", v.money).attr("typename", v.ladderName).appendTo($label);
+                $('<span class="lbl"></span>').text(" " + v.ladderName).appendTo($label);
+            });
 
             com.focusPage("#ladderCouponDiv")[ladderItems.length > 0 ? "show" : "hide"]();
 
@@ -255,37 +267,18 @@ var paymentUtils = {
             return 0;
         }
 
-        var ladder = 0;
-        var ladderInfo = "#";
-        var daiIds = [];
-        var scaleFlags = [];
+        // 勾选radio即选券(每单一张, "不使用"占位); 计入配比取ladderScale勾选
+        var $radio = com.focusPage("input[name='ladderCouponRadio']:checked", "#salesPayment");
 
-        var coupons = com.focusPage("li", com.focusPage("#ladderCouponGroup"));
-
-        if (coupons.length == 0) {
+        if ($radio.length == 0 || $radio.attr("daiId") == "") {
             return 0;
         }
 
-        $.each(coupons, function(i, e) {
+        var ladder = parseFloat($radio.attr("money"));
+        var ladderInfo = "#" + $radio.attr("typename") + "|" + ladder + "#";
 
-            var _ = $(e);
-            var item = _.children("span");
-            var money = parseFloat(item.attr("money"));
-
-            ladder = utils.accAdd(ladder, money);
-            ladderInfo += item.attr("typename") + "|" + money + "#";
-
-            daiIds.push(item.attr("daiId"));
-            scaleFlags.push(item.attr("isscale"));
-        });
-
-        $.each(daiIds, function(i, v) {
-            options["daiIds[" + i + "]"] = v;
-        });
-
-        $.each(scaleFlags, function(i, v) {
-            options["scaleFlags[" + i + "]"] = v;
-        });
+        options["daiIds[0]"] = $radio.attr("daiId");
+        options["scaleFlags[0]"] = com.focusPage("#ladderScale").prop("checked") ? 0 : 1;
 
         // 双写: 阶梯券金额并入收据"券"展示档(字典券+活动券合计, couponInfo 分段可区分)
         var dictCoupon = options[name + ".coupon"] != null ? parseFloat(options[name + ".coupon"]) : 0;
@@ -543,61 +536,6 @@ var paymentUtils = {
             $li.remove();
         });
     },
-
-    addLadderCoupon: function(payment) {
-
-        var daiId = com.typeahead("ladderCouponObj", "", false);
-        var ladderName = com.typeahead("ladderCouponObj", "", true);
-
-        if (daiId == null || daiId == "") {
-            com.showAlert(com.warning, "请选择活动券");
-            return false;
-        }
-
-        // 面值只读: 从数据源取
-        var face = 0;
-        $.each(payment.ladderItems, function(i, v) {
-            if (v.daiId == daiId) {
-                face = v.money;
-                return false;
-            }
-        });
-
-        var isScale = com.focusPage("#ladderScale").prop("checked") ? 0 : 1;
-
-        var $li = $("<li></li>").css({
-            "background-color": "#87ceeb",
-            "margin-bottom": "5px",
-            "margin-right": "5px"
-        }).appendTo(com.focusPage("#ladderCouponGroup"));
-
-        var $span = $("<span></span>").css({
-            'color': '#fff'
-        }).attr('typename', ladderName).attr('daiId', daiId).attr('money', face).attr('isscale', isScale).html(ladderName).appendTo($li);
-
-        var $spanTwo = $("<span></span>").css({
-            'font-size': '16px',
-            'color': '#fff',
-            'margin': '0 5px'
-        }).html(face).appendTo($span);
-
-        var $scaleTag = $("<span></span>").css({
-            'font-size': '12px',
-            'color': '#fff',
-            'margin': '0 5px'
-        }).html(isScale == 0 ? "计入配比" : "不计入").appendTo($span);
-
-        var $a = $("<a></a>").addClass("glyphicon glyphicon-remove").css({
-            'color': '#d15b47'
-        }).appendTo($li);
-
-        $a.click(function() {
-            $li.remove();
-        });
-
-        com.cleanTypeahead("ladderCouponObj");
-    },
-
 
     splitBankInfo: function(bank, bankInfo, bankArray, flag) {
 
