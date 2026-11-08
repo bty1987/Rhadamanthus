@@ -39,4 +39,10 @@ public class ActivityItemDaoImpl extends DaoImpl<ActivityItemPO> implements Acti
 		return session().createCriteria(ActivityItemPO.class).add(Restrictions.eq("asid", asid)).list();
 	}
 
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<ActivityItemPO> queryActivityItemForLadder(long aId) {
+		return session().createCriteria(ActivityItemPO.class).add(Restrictions.eq(ActivityItemPO.COLUMN_AID_STR, aId)).add(Restrictions.eq("type", ActivityItemPO.TYPE_LADDER_LOTTERY_INT)).list();
+	}
+
 }

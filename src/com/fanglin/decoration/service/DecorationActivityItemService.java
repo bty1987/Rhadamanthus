@@ -74,25 +74,18 @@ public interface DecorationActivityItemService {
 	 */
 	public void pageDecorationActivityItem(Paging paging, List<Filter> filters) throws FLException;
 	/**
-	 * 阶梯抽奖活动: 装修单参与活动并预占券(参与时点, 数量卡着理论上谁点都行)
+	 * 阶梯抽奖活动: 添加 type=30 活动物品触发参与预占(每单一张, 窗口/清零守卫在 settle 内; 真实档位由结算按库存定)
 	 *
 	 * @return 1=预占成功/0=幂等跳过(已预占)
 	 */
 	public int settleLadderActivityItemForJoin(String orderId, long aid, String userId) throws FLException;
 
 	/**
-	 * 阶梯抽奖活动: 签约结算(以预占行aid锚定活动, 原子扣减降级循环——按剩余量沿优先级降级, 数量不够保持初始等领取)
+	 * 阶梯抽奖活动: 签约结算(以预占行aid锚定活动, 原子扣减降级循环——按剩余量沿面值降级, 数量不够保持初始等领取)
 	 *
 	 * @return 1=发放已领/0=全清零保持初始
 	 */
 	public int settleLadderActivityItemForContract(String orderId, String userId) throws FLException;
-
-	/**
-	 * 阶梯抽奖活动: 领取结算(实时判断剩余数量是否变化, 有货发放已领/无货拒绝)
-	 *
-	 * @return 1=发放已领
-	 */
-	public int settleLadderActivityItemForReceive(long daiId, String userId) throws FLException;
 
 	/**
 	 * 阶梯券选券数据源: 本装修单 type=30/state=2 已领的阶梯券行(销售收款选券抵扣用)

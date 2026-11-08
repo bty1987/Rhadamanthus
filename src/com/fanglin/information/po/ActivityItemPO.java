@@ -26,6 +26,8 @@ public class ActivityItemPO implements java.io.Serializable {
 
 	public static final short TYPE_COST_REDPACKAGE_INT = 12;// 优惠额度-红包
 
+	public static final short TYPE_LADDER_LOTTERY_INT = 30;// 阶梯奖品(挂awardstock, money=面值, 同活动多行按面值降序降级发放, 收款抵扣走salespayment)
+
 	public static final Short[] TYPE_COST_FAMILY = {TYPE_COST_COUPON_INT, TYPE_COST_THING_INT, TYPE_COST_REDPACKAGE_INT};// 优惠额度族(精确枚举,勿用>=范围判定——type=30阶梯券会被误圈)
 
 	public static final String COLUMN_AID_STR = "aid";

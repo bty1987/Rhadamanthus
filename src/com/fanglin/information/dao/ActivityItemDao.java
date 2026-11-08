@@ -22,4 +22,9 @@ public interface ActivityItemDao extends Dao<ActivityItemPO> {
 
 	public List<ActivityItemPO> queryActivityItemByAsid(long asid);
 
+	/**
+	 * 该活动的阶梯奖品行(type=30, 面值降序由调用方排序)
+	 */
+	public List<ActivityItemPO> queryActivityItemForLadder(long aId);
+
 }

@@ -164,6 +164,35 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 			activityItemPO = activityItemPOs != null && activityItemPOs.size() > 0 ? activityItemPOs.get(0) : null;
 		}
 
+		// 阶梯奖品物品(type=30): 添加即参与预占(每单一张, 窗口/清零守卫在 settle 内); 真实档位由签约/领取结算按库存定, 选中的 aiid 仅作活动锚点
+		if (activityItemPO != null && activityItemPO.getType() == ActivityItemPO.TYPE_LADDER_LOTTERY_INT) {
+
+			List<Short> statuses = Arrays.asList(DecorationPO.STATUS_INIT_INT, DecorationPO.STATUS_DEPOSIT_INT, DecorationPO.STATUS_PROSIGN_INT, DecorationPO.STATUS_RESIGNED_INT);
+			DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(decorationActivityItemVO.getOrderId());
+
+			if (decorationPO == null) {
+				throw new FLException(140013, "装修单不存在");
+			}
+
+			if (!statuses.contains(decorationPO.getStatus())) {
+				throw new FLException(140003, "装修单已签约");
+			}
+
+			if (settleLadderActivityItemForJoin(decorationActivityItemVO.getOrderId(), decorationActivityItemVO.getAid(), userId) == 0) {
+				return 0;
+			}
+
+			// 回填预占券行 VO 供前端渲染(该单该活动 type=30 预占行)
+			for (DecorationActivityItemPO ladderPreItem : decorationActivityItemDao.queryDecorationActivityItemByOrderId(decorationActivityItemVO.getOrderId())) {
+				if (ladderPreItem.getType() == DecorationActivityItemPO.TYPE_LADDER_LOTTERY_ACTIVITY_ITEM && ladderPreItem.getState() == DecorationActivityItemPO.STATUS_INIT_INT && ladderPreItem.getAid() == decorationActivityItemVO.getAid()) {
+					BeanUtil.copyProperties(ladderPreItem, decorationActivityItemVO, Arrays.asList("creater", "receiver", "refunder"));
+					break;
+				}
+			}
+
+			return 0;
+		}
+
 		// 签约/决算装修单额度类奖品锁死(140111): 按配置 type 判定, 配置查不到视为非额度放行
 		ensureDecorationActivityItemOperable(decorationActivityItemVO.getOrderId(), activityItemPO == null ? (short) 0 : activityItemPO.getType());
 
@@ -1113,12 +1142,6 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 		return settleLadderActivityItem(orderId, null, null, LADDER_SCENE_CONTRACT, userId);
 	}
 
-	@Override
-	@Transactional(rollbackFor = Exception.class)
-	public int settleLadderActivityItemForReceive(long daiId, String userId) throws FLException {
-		return settleLadderActivityItem(null, null, Long.valueOf(daiId), LADDER_SCENE_RECEIVE, userId);
-	}
-
 	/**
 	 * 阶梯结算核心: 参与=按水位预占(只读不扣库存); 签约/领取=原子扣减降级循环
 	 * (🔴并发安全: UPDATE num-1 WHERE num>0 失败即降下一级, 原先查后扣两单并发抢最后一张会 num=−1 超发;
@@ -1173,7 +1196,7 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 
 		ActivityPO activityPO = activityDao.get(scene == LADDER_SCENE_JOIN ? joinAid.longValue() : preItem.getAid());
 
-		if (activityPO == null || activityPO.getType() != ActivityPO.TYPE_LADDER_LOTTERY_INT) {
+		if (activityPO == null) {
 			return 0;
 		}
 
@@ -1189,23 +1212,20 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 			}
 		}
 
-		// 阶梯奖品规则行(ruleType=5 启用), 按优先级(sort)升序分组展平, 同优先级随机
-		List<ActivityRulePO> priorityRules = new ArrayList<ActivityRulePO>();
-		Map<Integer, List<ActivityRulePO>> priorityGroups = new TreeMap<Integer, List<ActivityRulePO>>();
+		// 阶梯奖品行: 活动下 type=30 物品(activityitem, 配置页挂 awardstock), 按面值(money)降序分组展平, 同面值随机(面值即奖级)
+		List<ActivityItemPO> priorityRules = new ArrayList<ActivityItemPO>();
+		Map<Integer, List<ActivityItemPO>> priorityGroups = new TreeMap<Integer, List<ActivityItemPO>>(Collections.reverseOrder());
 
-		for (ActivityRulePO rule : activityRuleDao.queryActivityRuleForEnabled(aid)) {
-			if (rule.getRuleType() != ActivityRulePO.RULETYPE_LADDER_PRIZE_INT) {
-				continue;
-			}
-			List<ActivityRulePO> group = priorityGroups.get(rule.getSort());
+		for (ActivityItemPO ladderItem : activityItemDao.queryActivityItemForLadder(aid)) {
+			List<ActivityItemPO> group = priorityGroups.get(ladderItem.getMoney());
 			if (group == null) {
-				group = new ArrayList<ActivityRulePO>();
-				priorityGroups.put(rule.getSort(), group);
+				group = new ArrayList<ActivityItemPO>();
+				priorityGroups.put(ladderItem.getMoney(), group);
 			}
-			group.add(rule);
+			group.add(ladderItem);
 		}
 
-		for (List<ActivityRulePO> group : priorityGroups.values()) {
+		for (List<ActivityItemPO> group : priorityGroups.values()) {
 			if (group.size() > 1) {
 				Collections.shuffle(group);
 			}
@@ -1224,15 +1244,15 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 		// 参与: 按水位预占(只读不扣库存, 扣减发生在签约/领取结算)
 		if (scene == LADDER_SCENE_JOIN) {
 
-			for (ActivityRulePO rule : priorityRules) {
+			for (ActivityItemPO ladderItem : priorityRules) {
 
-				AwardStockPO awardStockPO = awardStockDao.get(rule.getAsid());
+				AwardStockPO awardStockPO = awardStockDao.get(ladderItem.getAsid());
 
 				if (awardStockPO == null || awardStockPO.getNum() <= 0) {
 					continue;
 				}
 
-				String summary = "阶梯活动预占: " + activityPO.getName() + " " + gradeDesc(rule.getGrade());
+				String summary = "阶梯活动预占: " + activityPO.getName() + " " + ladderItem.getName();
 
 				DecorationActivityItemPO decorationActivityItemPO = new DecorationActivityItemPO();
 
@@ -1245,7 +1265,7 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 				decorationActivityItemPO.setState(DecorationActivityItemPO.STATUS_INIT_INT);
 				decorationActivityItemPO.setAtttype(DecorationActivityItemPO.ATTTYPE_OFFLINE_INT);
 				decorationActivityItemPO.setNum(1);
-				decorationActivityItemPO.setMoney(ladderItemMoney(rule.getAsid()));
+				decorationActivityItemPO.setMoney(ladderItem.getMoney());
 				decorationActivityItemPO.setExpendPrice(0);
 				decorationActivityItemPO.setDiscountPrice(0);
 				decorationActivityItemPO.setIsPrefor(DecorationActivityItemPO.ISPREFOR_UNCAL_INT);
@@ -1270,20 +1290,20 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 		}
 
 		// 签约/领取: 原子扣减降级循环
-		for (ActivityRulePO rule : priorityRules) {
+		for (ActivityItemPO ladderItem : priorityRules) {
 
-			if (awardStockDao.deductAwardStockNum(rule.getAsid()) <= 0) {
-				continue; // 该等级被并发抢空, 降下一级
+			if (awardStockDao.deductAwardStockNum(ladderItem.getAsid()) <= 0) {
+				continue; // 该档被并发抢空, 降下一档
 			}
 
-			AwardStockPO awardStockPO = awardStockDao.get(rule.getAsid());
+			AwardStockPO awardStockPO = awardStockDao.get(ladderItem.getAsid());
 
-			String summary = "阶梯活动" + gradeDesc(rule.getGrade()) + "发放: " + activityPO.getName();
+			String summary = "阶梯活动发放: " + activityPO.getName() + " " + ladderItem.getName();
 
-			// 原预占行结算(同等级直转已领/异等级失效换行)
+			// 原预占行结算(同档直转已领/异档失效换行)
 			if (preItem != null && preItem.getState() == DecorationActivityItemPO.STATUS_INIT_INT) {
 
-				if (preItem.getAsid() == rule.getAsid()) {
+				if (preItem.getAsid() == ladderItem.getAsid()) {
 
 					preItem.setState(DecorationActivityItemPO.STATUS_RECEIVE_INT);
 					preItem.setReceiver(operater);
@@ -1298,11 +1318,11 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 				}
 
 				preItem.setState(DecorationActivityItemPO.STATUS_UNVALID_INT);
-				preItem.setContent((preItem.getContent() == null ? "" : preItem.getContent()) + "(预占等级清零降级)");
+				preItem.setContent((preItem.getContent() == null ? "" : preItem.getContent()) + "(预占档清零降级)");
 
 				decorationActivityItemDao.update(preItem);
 
-				decorationActivityRecordDao.save(new DecorationActivityRecordPO().init(preItem.getAid(), preItem, DecorationActivityItemPO.STATUS_UNVALID_INT, operater, "预占等级清零降级"));
+				decorationActivityRecordDao.save(new DecorationActivityRecordPO().init(preItem.getAid(), preItem, DecorationActivityItemPO.STATUS_UNVALID_INT, operater, "预占档清零降级"));
 			}
 
 			DecorationActivityItemPO decorationActivityItemPO = new DecorationActivityItemPO();
@@ -1316,7 +1336,7 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 			decorationActivityItemPO.setState(DecorationActivityItemPO.STATUS_RECEIVE_INT);
 			decorationActivityItemPO.setAtttype(DecorationActivityItemPO.ATTTYPE_OFFLINE_INT);
 			decorationActivityItemPO.setNum(1);
-			decorationActivityItemPO.setMoney(ladderItemMoney(rule.getAsid()));
+			decorationActivityItemPO.setMoney(ladderItem.getMoney());
 			decorationActivityItemPO.setExpendPrice(0);
 			decorationActivityItemPO.setDiscountPrice(0);
 			decorationActivityItemPO.setIsPrefor(DecorationActivityItemPO.ISPREFOR_UNCAL_INT);
@@ -1352,31 +1372,6 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 		awardRecordDao.save(new AwardRecordPO().init(awardStockPO, operater, item.getOrderId(), AwardRecordPO.TYPE_XG_INT, AwardRecordPO.SUBTYPE_RECEIVE_INT, AwardRecordPO.ONETYPE_DECORATION_INT, item.getIsStock(), item.getMoney(), item.getNum(), summary));
 
 		decorationActivityRecordDao.save(new DecorationActivityRecordPO().init(item.getAid(), item, item.getState(), operater, summary));
-	}
-
-	private int ladderItemMoney(long asid) {
-
-		List<ActivityItemPO> activityItemPOs = activityItemDao.queryActivityItemByAsid(asid);
-
-		return activityItemPOs != null && !activityItemPOs.isEmpty() ? activityItemPOs.get(0).getMoney() : 0;
-	}
-
-	private String gradeDesc(Short grade) {
-
-		if (grade == null) {
-			return "";
-		}
-		if (grade == 1) {
-			return "一等奖";
-		}
-		if (grade == 2) {
-			return "二等奖";
-		}
-		if (grade == 3) {
-			return "三等奖";
-		}
-
-		return grade + "等奖";
 	}
 
 	@Override
