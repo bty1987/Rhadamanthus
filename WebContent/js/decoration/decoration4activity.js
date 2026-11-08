@@ -60,7 +60,7 @@ jQuery(function($) {
 
                 decorationActivityItem.activityItemMap[activityItem.asid] = activityItem.type;
 
-                if (activityItem.type == 0 || activityItem.type == 10) {
+                if (activityItem.type == 0 || activityItem.type == 10 || activityItem.type == 30) {
                     coupons.push(item);
                 } else if (activityItem.type == 1 || activityItem.type == 11) {
                     things.push(item);
@@ -539,7 +539,7 @@ jQuery(function($) {
             options["approvalDecorationActivityItems[" + index + "].activityName"] = activityName;
             options["approvalDecorationActivityItems[" + index + "].activityItemName"] = _.children('span').attr("typename").split(" ")[0];
             var costType = decorationActivityItem.activityItemMap[_.children('span').attr("asid")];
-            options["approvalDecorationActivityItems[" + index + "].type"] = costType == 10 || costType == 11 || costType == 12 ? costType : 1;
+            options["approvalDecorationActivityItems[" + index + "].type"] = costType == 10 || costType == 11 || costType == 12 || costType == 30 ? costType : 1;
             options["approvalDecorationActivityItems[" + index + "].num"] = _.children('span').attr('num');
             options["approvalDecorationActivityItems[" + index + "].money"] = _.children('span').attr("typename").split(" ")[1].split(':')[1];
             options["approvalDecorationActivityItems[" + index + "].content"] = "";
@@ -556,7 +556,7 @@ jQuery(function($) {
             options["approvalDecorationActivityItems[" + index + "].activityName"] = activityName;
             options["approvalDecorationActivityItems[" + index + "].activityItemName"] = _.children('span').attr("typename").split(" ")[0];
             var costType = decorationActivityItem.activityItemMap[_.children('span').attr("asid")];
-            options["approvalDecorationActivityItems[" + index + "].type"] = costType == 10 || costType == 11 || costType == 12 ? costType : 0;
+            options["approvalDecorationActivityItems[" + index + "].type"] = costType == 10 || costType == 11 || costType == 12 || costType == 30 ? costType : 0;
             options["approvalDecorationActivityItems[" + index + "].num"] = _.children('span').attr('num');
             options["approvalDecorationActivityItems[" + index + "].money"] = _.children('span').attr("typename").split(" ")[1].split(':')[1];
             options["approvalDecorationActivityItems[" + index + "].content"] = "";
@@ -574,7 +574,7 @@ jQuery(function($) {
             options["approvalDecorationActivityItems[" + index + "].activityName"] = activityName;
             options["approvalDecorationActivityItems[" + index + "].activityItemName"] = _.children('span').attr("typename").split(" ")[0];
             var costType = decorationActivityItem.activityItemMap[_.children('span').attr("asid")];
-            options["approvalDecorationActivityItems[" + index + "].type"] = costType == 10 || costType == 11 || costType == 12 ? costType : 2;
+            options["approvalDecorationActivityItems[" + index + "].type"] = costType == 10 || costType == 11 || costType == 12 || costType == 30 ? costType : 2;
             options["approvalDecorationActivityItems[" + index + "].num"] = _.children('span').attr('num');
             options["approvalDecorationActivityItems[" + index + "].money"] = _.children('span').attr("typename").split(" ")[1].split(':')[1];
             options["approvalDecorationActivityItems[" + index + "].content"] = "";

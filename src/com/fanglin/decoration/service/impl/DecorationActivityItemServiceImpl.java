@@ -1216,7 +1216,7 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 		List<ActivityItemPO> priorityRules = new ArrayList<ActivityItemPO>();
 		Map<Integer, List<ActivityItemPO>> priorityGroups = new TreeMap<Integer, List<ActivityItemPO>>(Collections.reverseOrder());
 
-		for (ActivityItemPO ladderItem : activityItemDao.queryActivityItemForLadder(aid)) {
+		for (ActivityItemPO ladderItem : activityItemDao.queryActivityItemForLadder(scene == LADDER_SCENE_JOIN ? joinAid.longValue() : aid)) {
 			List<ActivityItemPO> group = priorityGroups.get(ladderItem.getMoney());
 			if (group == null) {
 				group = new ArrayList<ActivityItemPO>();

@@ -172,7 +172,8 @@ var paymentUtils = {
 
             $.each(res.decorationActivityItems, function(i, v) {
 
-                var face = utils.accDiv(v.money, 1000);
+                // 面值元: ForScale tranargs 框架已转, 勿再除1000
+                var face = v.money;
 
                 ladderItems.push({
                     daiId: v.daiId,

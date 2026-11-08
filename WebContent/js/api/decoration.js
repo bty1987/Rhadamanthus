@@ -120,6 +120,13 @@ $.extend(api, {
                 args: ["num", "money"]
             }]
         },
+        queryDecorationActivityItemForScale: {
+            url: "queryDecorationActivityItemForScale.do",
+            tranargs: [{
+                result: "decorationActivityItems",
+                args: ["money"]
+            }]
+        },
         addDecorationActivity: {
             url: "addDecorationActivity.do"
         },

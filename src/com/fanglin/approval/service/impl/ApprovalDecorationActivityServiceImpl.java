@@ -38,6 +38,7 @@ import com.fanglin.decoration.dao.DecorationActivityItemDao;
 import com.fanglin.decoration.dao.DecorationActivityRecordDao;
 import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.po.DecorationActivityItemPO;
+import com.fanglin.decoration.service.DecorationActivityItemService;
 import com.fanglin.decoration.po.DecorationActivityPO;
 import com.fanglin.decoration.po.DecorationActivityRecordPO;
 import com.fanglin.decoration.po.DecorationPO;
@@ -94,6 +95,9 @@ public class ApprovalDecorationActivityServiceImpl implements ApprovalDecoration
 
 	@Autowired
 	private MessageQueuingDao messageQueuingDao;
+
+	@Autowired
+	private DecorationActivityItemService decorationActivityItemService;
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
@@ -226,6 +230,12 @@ public class ApprovalDecorationActivityServiceImpl implements ApprovalDecoration
 		ActivityCostVO costSnapshot = costItemMap.size() > 0 ? decorationActivityCostService.queryActivityCost(decorationPO.getOrderId(), Arith.div(costAmountSum, 1000000L)) : null;
 
 		for (ApprovalDecorationActivityItemPO approvalDecorationActivityItemPO : approvalDecorationActivityItemPOs) {
+
+			// 阶梯奖品(type=30): 预占委派settle引擎(参与窗口/每单一张/清零守卫在引擎内), 不落审批直插行; 已预占幂等返回0跳过
+			if (approvalDecorationActivityItemPO.getType() == DecorationActivityItemPO.TYPE_LADDER_LOTTERY_ACTIVITY_ITEM) {
+				decorationActivityItemService.settleLadderActivityItemForJoin(approvalDecorationActivityPO.getOrderId(), approvalDecorationActivityPO.getActivityId(), approvalPO.getSender().getUserId());
+				continue;
+			}
 
 			AwardStockPO awardStockPO = awardStockDao.get(approvalDecorationActivityItemPO.getAsid());
 

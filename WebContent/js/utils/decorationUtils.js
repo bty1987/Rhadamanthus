@@ -3289,7 +3289,7 @@ var decorationUtils = {
         $('<strong></strong>').text(activityItem.name).appendTo($row);
         $('<span></span>').css({
             "margin-left": "15px"
-        }).text("面值: " + utils.accDiv(activityItem.money, 1000) + "元").appendTo($row);
+        }).text("面值: " + activityItem.money + "元").appendTo($row);
         $('<span></span>').css({
             "margin-left": "15px"
         }).text("活动: " + activity.activity.name).appendTo($row);
