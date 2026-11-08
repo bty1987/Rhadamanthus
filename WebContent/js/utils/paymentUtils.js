@@ -571,7 +571,8 @@ var paymentUtils = {
             var _s = couponInfo.split('#');
             for ( var i = 1; i < utils.accSub(_s.length, 1); i++) {
                 var _i = _s[i].split(':');
-                _info += (couponArray && couponArray[_i[0]] ? couponArray[_i[0]][1] : "无匹配") + " " + _i[1] + ", ";
+                // 未命中字典券类型时显示段键本身(阶梯券段键=券名), 不再打"无匹配"
+                _info += (couponArray && couponArray[_i[0]] ? couponArray[_i[0]][1] : _i[0]) + " " + _i[1] + ", ";
             }
         }
         return _info;
