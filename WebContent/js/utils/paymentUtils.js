@@ -188,7 +188,7 @@ var paymentUtils = {
             $.each(ladderItems, function(i, v) {
 
                 var $label = $('<label style="display: inline-block; margin: 4px 14px 4px 0; white-space: nowrap;"></label>').appendTo($group);
-                $('<input type="checkbox" name="ladderCouponCheck" class="ace">').attr("daiId", v.daiId).attr("money", v.money).attr("typename", v.ladderName).appendTo($label);
+                $('<input type="checkbox" name="ladderCouponCheck" class="ace">').attr("daiId", v.daiId).attr("money", v.money).attr("typename", v.ladderName).attr("itemname", v.activityItemName).appendTo($label);
                 $('<span class="lbl"></span>').text(" " + v.ladderName).appendTo($label);
             });
 
@@ -281,7 +281,9 @@ var paymentUtils = {
         }
 
         var ladder = parseFloat($check.attr("money"));
-        var ladderInfo = "#" + $check.attr("typename") + "|" + ladder + "#";
+        // daiId织入收据展示文本(凭证无外键, 结构化关联在decorationscaledetail);
+        // 🔴段格式对齐既有拆分(paramCoupon="#券类型:金额#", splitCoupon按#分段/:拆键值): 键=券名(无冒号), 值=金额元|daiId编号(无冒号)
+        var ladderInfo = "#" + $check.attr("itemname") + ":" + ladder + "元|daiId" + $check.attr("daiId") + "#";
 
         options["daiIds[0]"] = $check.attr("daiId");
         options["scaleFlags[0]"] = com.focusPage("#ladderScale").prop("checked") ? 0 : 1;
