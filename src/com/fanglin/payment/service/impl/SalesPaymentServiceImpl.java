@@ -585,7 +585,7 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 		}
 
 		// 阶梯券配比明细+券行消耗(在重算销售比例之前落表, 计入的券金额即随本次重算生效)
-		saveScaleDetails(salesPayment, sales, daiIds, scaleFlags, user);
+		saveScaleDetails(salesPayment, sales, daiIds, scaleFlags, collecter);
 
 		decorationAdditionService.updateDecorationForSaleScale(new DecorationVO(sales.getOrderId())); // 更新装修单上的销售比例
 
@@ -783,7 +783,7 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 		}
 
 		// 阶梯券配比明细(批量=同一装修单, daiIds 对整批生效, spid 可空; 批内 orderId 一致性服务端兜底)
-		saveScaleDetails(null, sales, daiIds, scaleFlags, user);
+		saveScaleDetails(null, sales, daiIds, scaleFlags, collecter);
 
 		decorationAdditionService.updateDecorationForSaleScale(new DecorationVO(sales.getOrderId())); // 更新装修单上的销售比例
 
