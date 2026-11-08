@@ -3296,7 +3296,8 @@ var decorationUtils = {
         var widgetMain = $('<li class="item-orange clearfix"></li>').appendTo(widgetBody);
         var widgetHeader = $('<h3 class="oid"></h3>').text(activityItem.name).appendTo(widgetMain);
 
-        $('<span class="label pull-right ' + stateClass + '"></span>').text(stateText).appendTo(widgetHeader);
+        // 状态徽标贴名称右侧(与右缘的功能按钮分离, 避免拥挤)
+        $('<span class="label ' + stateClass + '" style="margin-left: 8px; vertical-align: middle;"></span>').text(stateText).appendTo(widgetHeader);
 
         var ul = $('<ul></ul>').addClass("list-unstyled fl-inline-list clearfix").css("padding-left", "12px").appendTo(widgetMain);
 
