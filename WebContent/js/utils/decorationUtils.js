@@ -3308,6 +3308,12 @@ var decorationUtils = {
         $('<strong></strong>').text("活动:").appendTo(activityLi);
         $('<span></span>').text(activity.activity.name).appendTo(activityLi);
 
+        if (activityItem.stockNum != null) {
+            var stockLi = $('<li></li>').appendTo(ul);
+            $('<strong></strong>').text("剩余:").appendTo(stockLi);
+            $('<span></span>').text(activityItem.stockNum + "张").appendTo(stockLi);
+        }
+
         var $btn = $('<button type="button" class="btn btn-minier btn-primary" style="float: right; margin-top: 4px;"></button>').appendTo(widgetHeader);
 
         if (coupon == null || coupon.state == 1) {

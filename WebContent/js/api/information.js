@@ -137,7 +137,7 @@ $.extend(api, {
             type: "query",
             tranargs: [{
                 result: "activityItems",
-                args: ["money", "integral"]
+                args: ["money", "integral", "stockNum"]
             }]
         },
         queryActivityItemByAiid: {

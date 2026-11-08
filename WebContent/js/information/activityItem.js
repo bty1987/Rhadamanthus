@@ -102,7 +102,7 @@ jQuery(function($) {
             widgetHeaderH5.text("优惠额度红包");
         } else if (_activityItem.type == constant.information().activityItem.TYPE_LADDER_LOTTERY_INT) {
             widgetHeader.addClass("header-color-orange");
-            widgetHeaderH5.text("阶梯奖品");
+            widgetHeaderH5.text("限量奖品");
         }
 
         var widgetBody = $("<div></div>").addClass("widget-body").appendTo(widgetBox);

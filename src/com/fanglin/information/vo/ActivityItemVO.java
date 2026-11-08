@@ -20,6 +20,8 @@ public class ActivityItemVO implements java.io.Serializable {
 
 	private Integer integral;
 
+	private Integer stockNum; // 奖品剩余库存(毫→tranargs转张, 展示用非映射字段)
+
 	public ActivityItemVO() {
 		super();
 	}
@@ -86,6 +88,14 @@ public class ActivityItemVO implements java.io.Serializable {
 
 	public void setIntegral(Integer integral) {
 		this.integral = integral;
+	}
+
+	public Integer getStockNum() {
+		return stockNum;
+	}
+
+	public void setStockNum(Integer stockNum) {
+		this.stockNum = stockNum;
 	}
 
 }
