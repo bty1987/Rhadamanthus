@@ -192,9 +192,10 @@ var paymentUtils = {
                 $('<span class="lbl"></span>').text(" " + v.ladderName).appendTo($label);
             });
 
-            // 计入配比并入同一行流
-            $group.append(com.focusPage("#ladderScale").closest("label").attr("style", "display: inline-block; margin: 4px 0;").removeClass("hide"));
-            com.focusPage("#ladderCouponInputs").addClass("hide");
+            // 计入配比并入同一行流(与券行同款Ace结构, 原生checkbox不走Ace皮肤会错位)
+            var $scaleLabel = $('<label style="display: inline-block; margin: 4px 0; white-space: nowrap;"></label>').appendTo($group);
+            $('<input type="checkbox" id="ladderScale" class="ace" checked>').appendTo($scaleLabel);
+            $('<span class="lbl"></span>').text(" 计入配比").appendTo($scaleLabel);
 
             $group.off("change").on("change", "input[name='ladderCouponCheck']", function() {
                 if (this.checked)
