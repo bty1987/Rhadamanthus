@@ -58,7 +58,7 @@ public class ActivityItemServiceImpl implements ActivityItemService {
 			BeanUtil.copyProperties(activityItemPO, activityItemVO);
 
 			// 奖品剩余库存(毫, tranargs÷1000转张): 阶梯奖品面板展示剩余数量用
-			AwardStockPO awardStockPO = awardStockDao.get(activityItemPO.getAsid());
+			AwardStockPO awardStockPO = activityItemPO.getAwardStock();
 
 			if (awardStockPO != null) {
 				activityItemVO.setStockNum((int) awardStockPO.getNum());

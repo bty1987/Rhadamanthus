@@ -4,8 +4,11 @@ import static javax.persistence.GenerationType.IDENTITY;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -37,6 +40,8 @@ public class ActivityItemPO implements java.io.Serializable {
 	private long aid;
 
 	private long asid;
+
+	private AwardStockPO awardStock; // 奖品库关联(asid只读外联取库存/名称; 增改仍走asid标量, 不参与持久化)
 
 	private String activity;
 
@@ -102,6 +107,16 @@ public class ActivityItemPO implements java.io.Serializable {
 	@Column(name = "asid")
 	public long getAsid() {
 		return asid;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "asid", referencedColumnName = "asId", insertable = false, updatable = false)
+	public AwardStockPO getAwardStock() {
+		return awardStock;
+	}
+
+	public void setAwardStock(AwardStockPO awardStock) {
+		this.awardStock = awardStock;
 	}
 
 	public void setAsid(long asid) {

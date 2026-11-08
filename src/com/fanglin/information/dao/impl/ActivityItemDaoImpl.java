@@ -13,6 +13,7 @@ package com.fanglin.information.dao.impl;
 
 import java.util.List;
 
+import org.hibernate.FetchMode;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
@@ -30,7 +31,8 @@ public class ActivityItemDaoImpl extends DaoImpl<ActivityItemPO> implements Acti
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<ActivityItemPO> queryActivityItemByAid(long aId) {
-		return session().createCriteria(ActivityItemPO.class).add(Restrictions.eq(ActivityItemPO.COLUMN_AID_STR, aId)).list();
+		// JOIN fetch带出奖品库关联, 避免循环逐行get的N+1
+		return session().createCriteria(ActivityItemPO.class).add(Restrictions.eq(ActivityItemPO.COLUMN_AID_STR, aId)).setFetchMode("awardStock", FetchMode.JOIN).list();
 	}
 
 	@Override
