@@ -397,6 +397,9 @@ jQuery(function($) {
 
     decorationUtils.init();
 
+    // 阶梯奖品直领区(主力领取页): 有内容才显示整块
+    decorationUtils.initLadderPanel("#ladderPanel4detail", params.decoration.orderId, true);
+
     decorationDetail.orderId = params.decoration.orderId;
     decorationDetail.orderStatus = params.decoration.orderStatus;
     decorationDetail.orderType = params.decoration.orderType;
@@ -528,6 +531,9 @@ jQuery(function($) {
             var decorationActivity = res.decorationActivity;
 
             decorationUtils.addDecorationActivityForDiv(decorationDetail.activitys, decorationActivity, activityBtnMethod);
+
+            // 阶梯奖品直领面板刷新(新参加的活动可能挂 type=30 物品)
+            decorationUtils.initLadderPanel("#ladderPanel4detail", decorationDetail.orderId, true);
         });
 
         decorationDetail.joinDecorationActivityModal.modal("hide");

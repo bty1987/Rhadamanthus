@@ -496,7 +496,7 @@ jQuery(function($) {
             decorationUtils.addDecorationActivityForDiv(decorationActivityItem.items.decorationActivitys, decorationActivity, activityBtnMethod);
 
             // 阶梯奖品直领面板刷新(新参加的活动可能挂 type=30 物品)
-            initLadderPanel();
+            decorationUtils.initLadderPanel("#ladderPanel", params.decoration.orderId);
         });
         decorationActivityItem.joinDecorationActivityModal.modal("hide");
     });
@@ -637,7 +637,7 @@ jQuery(function($) {
             decorationUtils.addActivityItemForDiv(decorationActivityItem.items.decorationActivityItems, res.decorationActivityItem, uiBtnMethod, decorationActivity, params.decoration.decorationActivityContent);
 
             // 阶梯奖品直领面板刷新(type=30 物品预占后状态变化)
-            initLadderPanel();
+            decorationUtils.initLadderPanel("#ladderPanel", params.decoration.orderId);
 
             decorationActivityItem.addDecorationActivityItemModal.modal("hide");
         }, null, false);
@@ -943,144 +943,6 @@ jQuery(function($) {
 
     });
 
-    // ==================== 阶梯奖品直领区(ladderPanel, 参加活动信息下方内联) ====================
-    // 以活动物品(activityitem.type=30)为显示行, 免申领审批直接参与预占/领取; 参加活动/添加物品成功后调 initLadderPanel() 刷新
-
-    var ladderStates = {
-        0: "已预占(待领取)",
-        1: "已失效",
-        2: "已领取(可收款抵扣)",
-        3: "已退款",
-        7: "已抵扣"
-    };
-
-    function initLadderPanel() {
-
-        var $ladderPanel = com.focusPage("#ladderPanel");
-
-        $ladderPanel.html("");
-
-        com.post(api.decoration.queryDecorationActivityByOrderId, {
-            "decorationActivity.orderId": params.decoration.orderId
-        }, function(res) {
-
-            var activities = res.decorationActivitys;
-
-            com.post(api.decoration.queryDecorationActivityItem, {
-                "decoration.orderId": params.decoration.orderId
-            }, function(res) {
-
-                var coupons = [];
-
-                $.each(res.decorationActivityItems, function(i, item) {
-                    if (item.type == 30)
-                        coupons.push(item);
-                });
-
-                var shown = 0;
-                var processed = 0;
-
-                $.each(activities, function(i, activity) {
-
-                    com.post(api.information.queryActivityItemByAid, {
-                        "activity.aid": activity.activity.aid
-                    }, function(res) {
-
-                        $.each(res.activityItems, function(i, activityItem) {
-
-                            if (activityItem.type != 30)
-                                return;
-
-                            shown++;
-                            renderLadderRow($ladderPanel, activity, activityItem, coupons);
-                        });
-
-                        processed++;
-
-                        if (processed == activities.length && shown == 0)
-                            $ladderPanel.html('<div class="alert alert-info" style="margin-bottom: 5px;">该装修单参加的活动均未配置阶梯奖品</div>');
-                    }, null, false);
-                });
-
-                if (activities.length == 0)
-                    $ladderPanel.html('<div class="alert alert-info" style="margin-bottom: 5px;">该装修单尚未参加活动, 请先参加活动后再领取阶梯奖品</div>');
-            }, null, false);
-        }, null, false);
-    }
-
-    function renderLadderRow($panel, activity, activityItem, coupons) {
-
-        // 券行与奖品按 asid 对应(券行asid=awardstock, activityitem.asid同源)
-        var coupon = null;
-
-        $.each(coupons, function(i, item) {
-            if (item.asid == activityItem.asid) {
-                coupon = item;
-                return false;
-            }
-        });
-
-        var stateText = coupon ? (ladderStates[coupon.state] || coupon.state) : "未参与";
-
-        var $row = $('<div class="alert" style="margin-bottom: 5px; padding: 8px 15px;"></div>').appendTo($panel);
-        $('<strong></strong>').text(activityItem.name).appendTo($row);
-        $('<span></span>').css({
-            "margin-left": "15px"
-        }).text("面值: " + utils.accDiv(activityItem.money, 1000) + "元").appendTo($row);
-        $('<span></span>').css({
-            "margin-left": "15px"
-        }).text("活动: " + activity.activity.name).appendTo($row);
-
-        var $state = $('<span></span>').css({
-            "margin-left": "15px",
-            "font-weight": "bold"
-        }).text(stateText).appendTo($row);
-
-        var $btn = $('<button type="button" class="btn btn-xs btn-primary" style="float: right;"></button>');
-        $btn.appendTo($row);
-
-        if (coupon == null || coupon.state == 1) {
-
-            $btn.text("参与预占").on("click", function() {
-
-                com.post(api.decoration.addDecorationActivityItem, {
-                    "decorationActivityItem.orderId": params.decoration.orderId,
-                    "decorationActivityItem.aid": activity.activity.aid,
-                    "decorationActivityItem.aiid": activityItem.aiid,
-                    "decorationActivityItem.activityName": activity.activity.name,
-                    "decorationActivityItem.activityItemName": activityItem.name,
-                    "decorationActivityItem.type": activityItem.type,
-                    "decorationActivityItem.num": 1,
-                    "decorationActivityItem.money": activityItem.money,
-                    "decorationActivityItem.stateType": 0,
-                    "decorationActivityItem.asid": activityItem.asid,
-                    "decorationActivityItem.content": ""
-                }, function(res) {
-
-                    com.showAlert(com.info, "预占成功, 库存以签约/领取时点为准");
-                    initLadderPanel();
-                });
-            });
-
-        } else if (coupon.state == 0) {
-
-            $btn.text("直接领取").on("click", function() {
-
-                com.post(api.decoration.receiveDecorationActivityItem, {
-                    "decorationActivityItem.daiId": coupon.daiId
-                }, function(res) {
-
-                    com.showAlert(com.info, "领取成功");
-                    initLadderPanel();
-                });
-            });
-
-        } else {
-            $btn.addClass("disabled").prop("disabled", true).text("—");
-            if (coupon.state == 2)
-                $row.addClass("alert-success");
-        }
-    }
-
-    initLadderPanel();
+    // 阶梯奖品直领区(ladderPanel, 参加活动信息下方内联): 渲染逻辑见 decorationUtils.initLadderPanel
+    decorationUtils.initLadderPanel("#ladderPanel", params.decoration.orderId);
 });

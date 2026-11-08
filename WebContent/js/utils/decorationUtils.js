@@ -3199,5 +3199,149 @@ var decorationUtils = {
 
             com.popup("打印预签", api.index.protationOutputIndex.url, null, null, true);
         });
+    },
+
+    // ==================== 阶梯奖品直领区(activityitem.type=30, 免申领审批直接参与预占/领取) ====================
+
+    ladderStates: {
+        0: "已预占(待领取)",
+        1: "已失效",
+        2: "已领取(可收款抵扣)",
+        3: "已退款",
+        7: "已抵扣"
+    },
+
+    // 内联渲染直领面板: selector=面板容器, orderId=装修单号; hideWhenEmpty=true时无内容连同最近widget-box一起隐藏(主力页降噪)
+    initLadderPanel: function(selector, orderId, hideWhenEmpty) {
+
+        var $panel = com.focusPage(selector);
+
+        $panel.html("");
+
+        if (hideWhenEmpty)
+            $panel.closest(".widget-box").hide();
+
+        com.post(api.decoration.queryDecorationActivityByOrderId, {
+            "decorationActivity.orderId": orderId
+        }, function(res) {
+
+            var activities = res.decorationActivitys;
+
+            com.post(api.decoration.queryDecorationActivityItem, {
+                "decoration.orderId": orderId
+            }, function(res) {
+
+                var coupons = [];
+
+                $.each(res.decorationActivityItems, function(i, item) {
+                    if (item.type == 30)
+                        coupons.push(item);
+                });
+
+                var shown = 0;
+                var processed = 0;
+
+                $.each(activities, function(i, activity) {
+
+                    com.post(api.information.queryActivityItemByAid, {
+                        "activity.aid": activity.activity.aid
+                    }, function(res) {
+
+                        $.each(res.activityItems, function(i, activityItem) {
+
+                            if (activityItem.type != 30)
+                                return;
+
+                            shown++;
+                            decorationUtils.renderLadderRow($panel, activity, activityItem, coupons, function() {
+                                decorationUtils.initLadderPanel(selector, orderId, hideWhenEmpty);
+                            });
+                        });
+
+                        processed++;
+
+                        if (processed == activities.length && shown == 0 && !hideWhenEmpty)
+                            $panel.html('<div class="alert alert-info" style="margin-bottom: 5px;">该装修单参加的活动均未配置阶梯奖品</div>');
+                    }, null, false);
+                });
+
+                if (activities.length == 0 && !hideWhenEmpty)
+                    $panel.html('<div class="alert alert-info" style="margin-bottom: 5px;">该装修单尚未参加活动, 请先参加活动后再领取阶梯奖品</div>');
+            }, null, false);
+        }, null, false);
+    },
+
+    renderLadderRow: function($panel, activity, activityItem, coupons, refresh) {
+
+        // 券行与奖品按 asid 对应(券行asid=awardstock, activityitem.asid同源)
+        var coupon = null;
+
+        $.each(coupons, function(i, item) {
+            if (item.asid == activityItem.asid) {
+                coupon = item;
+                return false;
+            }
+        });
+
+        var stateText = coupon ? (decorationUtils.ladderStates[coupon.state] || coupon.state) : "未参与";
+
+        var $row = $('<div class="alert" style="margin-bottom: 5px; padding: 8px 15px;"></div>').appendTo($panel);
+        $('<strong></strong>').text(activityItem.name).appendTo($row);
+        $('<span></span>').css({
+            "margin-left": "15px"
+        }).text("面值: " + utils.accDiv(activityItem.money, 1000) + "元").appendTo($row);
+        $('<span></span>').css({
+            "margin-left": "15px"
+        }).text("活动: " + activity.activity.name).appendTo($row);
+
+        var $state = $('<span></span>').css({
+            "margin-left": "15px",
+            "font-weight": "bold"
+        }).text(stateText).appendTo($row);
+
+        var $btn = $('<button type="button" class="btn btn-xs btn-primary" style="float: right;"></button>');
+        $btn.appendTo($row);
+
+        if (coupon == null || coupon.state == 1) {
+
+            $btn.text("参与预占").on("click", function() {
+
+                com.post(api.decoration.addDecorationActivityItem, {
+                    "decorationActivityItem.orderId": params.decoration.orderId,
+                    "decorationActivityItem.aid": activity.activity.aid,
+                    "decorationActivityItem.aiid": activityItem.aiid,
+                    "decorationActivityItem.activityName": activity.activity.name,
+                    "decorationActivityItem.activityItemName": activityItem.name,
+                    "decorationActivityItem.type": activityItem.type,
+                    "decorationActivityItem.num": 1,
+                    "decorationActivityItem.money": activityItem.money,
+                    "decorationActivityItem.stateType": 0,
+                    "decorationActivityItem.asid": activityItem.asid,
+                    "decorationActivityItem.content": ""
+                }, function(res) {
+
+                    com.showAlert(com.info, "预占成功, 库存以签约/领取时点为准");
+                    refresh();
+                });
+            });
+
+        } else if (coupon.state == 0) {
+
+            $btn.text("直接领取").on("click", function() {
+
+                com.post(api.decoration.receiveDecorationActivityItem, {
+                    "decorationActivityItem.daiId": coupon.daiId
+                }, function(res) {
+
+                    com.showAlert(com.info, "领取成功");
+                    refresh();
+                });
+            });
+
+        } else {
+            $btn.addClass("disabled").prop("disabled", true).text("—");
+            if (coupon.state == 2)
+                $row.addClass("alert-success");
+        }
     }
 }
