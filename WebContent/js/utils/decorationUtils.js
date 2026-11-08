@@ -825,12 +825,15 @@ var decorationUtils = {
         var nameLi = $("<li></li>").appendTo(ul);
         var typeLi = $("<strong></strong>").text("类型:").appendTo(nameLi);
         var typeSpan = $("<span></span>").attr("id", "type_" + _activityItem.daiId).attr("type", _activityItem.type).text(config.types[_activityItem.type]).appendTo(nameLi);
-        var $stateTypeLi = $("<li></li>").appendTo(ul);
-        var $stateTypeStrong = $("<strong></strong>").text("办理类型:").appendTo($stateTypeLi);
-        var $stateTypeSpan = $("<span></span>").addClass("red").attr("id", "stateType_" + _activityItem.daiId).text(config.stateTypes[_activityItem.stateType]).appendTo($stateTypeLi);
-        var stateLi = $("<li></li>").appendTo(ul);
-        var stateState = $("<strong></strong>").text("办理状态:").appendTo(stateLi);
-        var stateSpan = $("<span></span>").addClass("red").attr("id", "state_" + _activityItem.daiId).text(config.states[_activityItem.state]).appendTo(stateLi);
+        // type=30阶梯券行不渲染办理类型/办理状态(阶梯自有状态机, 两字段为引擎默认值无意义; 状态展示在阶梯奖品面板)
+        if (_activityItem.type != 30) {
+            var $stateTypeLi = $("<li></li>").appendTo(ul);
+            var $stateTypeStrong = $("<strong></strong>").text("办理类型:").appendTo($stateTypeLi);
+            var $stateTypeSpan = $("<span></span>").addClass("red").attr("id", "stateType_" + _activityItem.daiId).text(config.stateTypes[_activityItem.stateType]).appendTo($stateTypeLi);
+            var stateLi = $("<li></li>").appendTo(ul);
+            var stateState = $("<strong></strong>").text("办理状态:").appendTo(stateLi);
+            var stateSpan = $("<span></span>").addClass("red").attr("id", "state_" + _activityItem.daiId).text(config.states[_activityItem.state]).appendTo(stateLi);
+        }
         var moneyLi = $("<li></li>").appendTo(ul);
         var moneyState = $("<strong></strong>").text("金额:").appendTo(moneyLi);
         var moneySpan = $("<span></span>").addClass("blue").attr("id", "money_" + _activityItem.daiId).text(_activityItem.money).appendTo(moneyLi);
@@ -3284,23 +3287,28 @@ var decorationUtils = {
         });
 
         var stateText = coupon ? (decorationUtils.ladderStates[coupon.state] || coupon.state) : "未参与";
+        var stateClass = coupon == null ? "label-default" : (coupon.state == 0 ? "label-warning" : (coupon.state == 2 ? "label-success" : (coupon.state == 7 ? "label-danger" : "label-default")));
 
-        var $row = $('<div class="alert" style="margin-bottom: 5px; padding: 8px 15px;"></div>').appendTo($panel);
-        $('<strong></strong>').text(activityItem.name).appendTo($row);
-        $('<span></span>').css({
-            "margin-left": "15px"
-        }).text("面值: " + activityItem.money + "元").appendTo($row);
-        $('<span></span>').css({
-            "margin-left": "15px"
-        }).text("活动: " + activity.activity.name).appendTo($row);
+        // 卡片式: 与装修活动物品行同款widget卡片语言
+        var pricingSpan = $('<div class="col-md-6" style="margin: 5px 0px;"></div>').appendTo($panel);
+        var widgetBox = $('<div></div>').appendTo(pricingSpan);
+        var widgetBody = $('<ul class="item-list fl-table-list ui-sortable"></ul>').appendTo(widgetBox);
+        var widgetMain = $('<li class="item-orange clearfix"></li>').appendTo(widgetBody);
+        var widgetHeader = $('<h3 class="oid"></h3>').text(activityItem.name).appendTo(widgetMain);
 
-        var $state = $('<span></span>').css({
-            "margin-left": "15px",
-            "font-weight": "bold"
-        }).text(stateText).appendTo($row);
+        $('<span class="label pull-right ' + stateClass + '"></span>').text(stateText).appendTo(widgetHeader);
 
-        var $btn = $('<button type="button" class="btn btn-xs btn-primary" style="float: right;"></button>');
-        $btn.appendTo($row);
+        var ul = $('<ul></ul>').addClass("list-unstyled fl-inline-list clearfix").css("padding-left", "12px").appendTo(widgetMain);
+
+        var faceLi = $('<li></li>').appendTo(ul);
+        $('<strong></strong>').text("面值:").appendTo(faceLi);
+        $('<span class="blue bigger-110"></span>').text(activityItem.money + "元").appendTo(faceLi);
+
+        var activityLi = $('<li></li>').appendTo(ul);
+        $('<strong></strong>').text("活动:").appendTo(activityLi);
+        $('<span></span>').text(activity.activity.name).appendTo(activityLi);
+
+        var $btn = $('<button type="button" class="btn btn-minier btn-primary" style="float: right; margin-top: 4px;"></button>').appendTo(widgetHeader);
 
         if (coupon == null || coupon.state == 1) {
 
