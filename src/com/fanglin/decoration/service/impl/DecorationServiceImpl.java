@@ -1365,6 +1365,11 @@ public class DecorationServiceImpl implements DecorationService {
 
 		decorationDao.update(decorationPO);
 
+		// 阶梯抽奖活动: 首次录入签单时间视同签约, 结算阶梯券(幂等可重入; 修改时间不改变结算结果)
+		if (timeType == 2) {
+			decorationActivityItemService.settleLadderActivityItemForContract(orderId, userId);
+		}
+
 		serviceRecordDao.save(new ServiceRecordPO().init(ServiceRecordPO.TYPE_CHANGE_DECORATION_INT, userId, orderId, String.format("装修单:%s,类型为:%s,录入时间修改,原录入时间:%s,修改录入时间为:%s.", orderId, timeType == 1 ? "录入时间" : "签单时间", oldTime != null ? oldTime.toString() : "空", dateTime.toString())));
 	}
 

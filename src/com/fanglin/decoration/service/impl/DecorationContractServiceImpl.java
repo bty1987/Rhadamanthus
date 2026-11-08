@@ -799,6 +799,9 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 			decorationPO.setContractTime(DateUtil.getDateToTimestamp(new Date()));
 		}
 
+		// 阶梯抽奖活动: 签约结算(以预占行aid锚定, 原子扣减降级循环; 数量不够保持初始等领取, 幂等可重入)
+		decorationActivityItemService.settleLadderActivityItemForContract(orderId, userId);
+
 		if (decorationVO.getConpany() != null) {
 			decorationPO.setConpany(CompanyServiceImpl.decode(decorationVO.getDompany()));
 		}

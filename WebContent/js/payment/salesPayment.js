@@ -43,6 +43,10 @@ $(function() {
             bankGroup: com.focusPage("#bankGroup", "#salesPayment"),
             checkvGroup: com.focusPage("#checkvGroup", "#salesPayment"),
             couponDiv: com.focusPage("#couponDiv", "#salesPayment"),
+            ladderCouponDiv: com.focusPage("#ladderCouponDiv", "#salesPayment"),
+            ladderCouponObj: com.focusPage("#ladderCouponObj", "#salesPayment"),
+            ladderCouponGroup: com.focusPage("#ladderCouponGroup", "#salesPayment"),
+            ladderScale: com.focusPage("#ladderScale", "#salesPayment"),
             couponInputs: com.focusPage("#couponInputs", "#salesPayment"),
             couponGroup: com.focusPage("#couponGroup", "#salesPayment"),
 
@@ -624,6 +628,9 @@ $(function() {
         if (salesPayment.pageConfig.paytypes.contains("coupon"))
             paymentUtils.initCoupon(salesPayment, 0);
 
+        // 阶梯券选择区: 本单已领阶梯券(批量=同装修单, 同样可用)
+        paymentUtils.initLadderCoupon(salesPayment, payment.sales.orderId);
+
         if (isCollects)
             salesPayment.items.couponCheckbox.parent().addClass("hide");
 
@@ -794,6 +801,11 @@ $(function() {
         var coupon = paymentUtils.paramCoupon(salesPayment, salesPayment.payment.salesReceipt, "salesReceipt", options, type);
 
         realPayment = utils.accAdd(realPayment, parseFloat(coupon));
+
+        // 阶梯券: 金额计入实收凑齐应收 + daiIds/scaleFlags 提交(服务端落配比明细+券行消耗)
+        var ladderCoupon = paymentUtils.paramLadderCoupon(salesPayment, salesPayment.payment.salesReceipt, "salesReceipt", options, type);
+
+        realPayment = utils.accAdd(realPayment, parseFloat(ladderCoupon));
 
         if (referPayment != realPayment) {
             com.showAlert(com.warning, "当前实收款项总数与应收款项不等,请核实再进行提交!");

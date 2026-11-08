@@ -24,6 +24,7 @@ import com.fanglin.core.interceptor.FLException;
 import com.fanglin.decoration.dao.DecorationActivityDao;
 import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.po.DecorationActivityPO;
+import com.fanglin.decoration.service.DecorationActivityItemService;
 import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.decoration.service.DecorationActivityService;
 import com.fanglin.decoration.vo.DecorationActivityItemVO;
@@ -53,6 +54,9 @@ public class DecorationActivityServiceImpl implements DecorationActivityService 
 
 	@Autowired
 	private UserDao userDao;
+
+	@Autowired
+	private DecorationActivityItemService decorationActivityItemService;
 
 	@Autowired
 	private PaymentDao paymentDao;
@@ -111,6 +115,12 @@ public class DecorationActivityServiceImpl implements DecorationActivityService 
 
 		if (activityPO == null) {
 			throw new FLException(160011, "活动信息不存在");
+		}
+
+		// 阶梯抽奖活动(type=30)独立参与通道: 不占"一单一活动"名额(140061 对阶梯不适用)、不落 decorationactivity 关联行
+		// (结算以预占券行 aid 锚定), 参与即预占券(窗口/清零守卫在 settle 内, 失败抛异常整体回滚)
+		if (activityPO.getType() == ActivityPO.TYPE_LADDER_LOTTERY_INT) {
+			return decorationActivityItemService.settleLadderActivityItemForJoin(decorationActivityVO.getOrderId(), activityPO.getAid(), userId);
 		}
 
 		if (decorationActivityDao.countDecorationActivity(decorationPO.getOrderId(), null) >= 1) {

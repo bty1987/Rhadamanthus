@@ -71,4 +71,10 @@ public class AwardStockDaoImpl extends DaoImpl<AwardStockPO> implements AwardSto
 		}
 	}
 
+
+	@Override
+	public int deductAwardStockNum(long asid) {
+		return session().createSQLQuery("UPDATE information.awardstock SET num = num - 1 WHERE asId = :asid AND num > 0").setLong("asid", asid).executeUpdate();
+	}
+
 }

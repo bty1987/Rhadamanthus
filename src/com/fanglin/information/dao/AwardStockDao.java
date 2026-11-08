@@ -17,4 +17,9 @@ public interface AwardStockDao extends Dao<AwardStockPO> {
 
 	public AwardStockPO queryAwardStockByNo(String no, int company);
 
+	/**
+	 * 原子扣减库存(阶梯券发放): num=num-1 WHERE num>0, 返回受影响行数(0=已无货)
+	 */
+	public int deductAwardStockNum(long asid);
+
 }

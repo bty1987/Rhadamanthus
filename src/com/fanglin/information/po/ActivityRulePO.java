@@ -47,6 +47,7 @@ public class ActivityRulePO implements java.io.Serializable {
 	private int sort;
 
 	private short status;
+	private Short grade;
 
 	private Timestamp createTime;
 
@@ -153,5 +154,14 @@ public class ActivityRulePO implements java.io.Serializable {
 
 	public void setCreateTime(Timestamp createTime) {
 		this.createTime = createTime;
+	}
+
+	@Column(name = "grade")
+	public Short getGrade() {
+		return grade;
+	}
+
+	public void setGrade(Short grade) {
+		this.grade = grade;
 	}
 }

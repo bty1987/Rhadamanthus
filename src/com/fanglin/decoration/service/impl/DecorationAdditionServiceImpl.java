@@ -14,6 +14,7 @@ import com.fanglin.data.common.dao.ConstructionNodeDao;
 import com.fanglin.data.po.ConstructionNodePO;
 import com.fanglin.decoration.dao.DecorationAdditionDao;
 import com.fanglin.decoration.dao.DecorationDao;
+import com.fanglin.decoration.dao.DecorationScaleDetailDao;
 import com.fanglin.decoration.dao.DecorationHolonomyDao;
 import com.fanglin.decoration.dao.DecorationMidpackDao;
 import com.fanglin.decoration.po.DecorationAdditionPO;
@@ -44,6 +45,9 @@ public class DecorationAdditionServiceImpl implements DecorationAdditionService 
 	@Autowired
 	private DecorationAdditionDao decorationAdditionDao;
 
+
+	@Autowired
+	private DecorationScaleDetailDao decorationScaleDetailDao;
 	@Autowired
 	private DecorationDao decorationDao;
 
@@ -227,6 +231,9 @@ public class DecorationAdditionServiceImpl implements DecorationAdditionService 
 		saleTotal = Arith.add(saleTotal, advancePaymentPO != null ? advancePaymentPO.getMaterialBalance() : 0);
 
 		saleTotal = Arith.add(saleTotal, oalesDao.amountOales(orderId, OalesPO.ISSCALE_SCALE_INT));
+
+		// 阶梯券收款抵扣计入配比(paymentscaledetail→decorationscaledetail, isScale=计入)
+		saleTotal = Arith.add(saleTotal, decorationScaleDetailDao.amountDecorationScaleDetailForScale(orderId));
 
 		if (decorationPO.getType() == DecorationPO.TYPE_MIDPACK_INT) {
 

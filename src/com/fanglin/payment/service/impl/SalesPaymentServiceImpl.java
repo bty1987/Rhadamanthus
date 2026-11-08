@@ -19,11 +19,18 @@ import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.security.SensitiveDataHelper;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.customer.service.DecorationService;
+import com.fanglin.decoration.dao.DecorationActivityItemDao;
+import com.fanglin.decoration.dao.DecorationActivityRecordDao;
 import com.fanglin.decoration.dao.DecorationDao;
+import com.fanglin.decoration.dao.DecorationScaleDetailDao;
+import com.fanglin.decoration.po.DecorationActivityItemPO;
+import com.fanglin.decoration.po.DecorationActivityRecordPO;
+import com.fanglin.decoration.po.DecorationScaleDetailPO;
 import com.fanglin.decoration.po.DecorationAccountStatusPO;
 import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.decoration.service.DecorationAccountStatusService;
 import com.fanglin.decoration.service.DecorationAdditionService;
+import com.fanglin.decoration.service.DecorationActivityCostService;
 import com.fanglin.decoration.vo.DecorationVO;
 import com.fanglin.payment.dao.AdvancePaymentDao;
 import com.fanglin.payment.dao.PaytranDao;
@@ -103,6 +110,15 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 
 	@Autowired
 	private DecorationAdditionService decorationAdditionService;
+
+	@Autowired
+	private DecorationActivityItemDao decorationActivityItemDao;
+
+	@Autowired
+	private DecorationActivityRecordDao decorationActivityRecordDao;
+
+	@Autowired
+	private DecorationScaleDetailDao decorationScaleDetailDao;
 
 	@Autowired
 	private DecorationAccountStatusService decorationAccountStatusService;
@@ -441,7 +457,7 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int collectSalesPayment(SalesPaymentVO salesPaymentVO, SalesReceiptVO salesReceiptVO, List<Long> ptids, String userId, Integer company) throws FLException {
+	public int collectSalesPayment(SalesPaymentVO salesPaymentVO, SalesReceiptVO salesReceiptVO, List<Long> ptids, List<Long> daiIds, List<Integer> scaleFlags, String userId, Integer company) throws FLException {
 
 		SalesPaymentPO salesPayment = salesPaymentDao.get(salesPaymentVO.getSpid());
 
@@ -568,6 +584,9 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 			paytranDao.updatePaytran(ptids, salesReceiptPO.getSrId(), PaytranPO.STATUS_USED_INT, PaytranPO.TYPE_SALES_INT);
 		}
 
+		// 阶梯券配比明细+券行消耗(在重算销售比例之前落表, 计入的券金额即随本次重算生效)
+		saveScaleDetails(salesPayment, sales, daiIds, scaleFlags, user);
+
 		decorationAdditionService.updateDecorationForSaleScale(new DecorationVO(sales.getOrderId())); // 更新装修单上的销售比例
 
 		decorationService.sendMessage("PAYMENT_SALES_MESSAGE_FLAG", sales.getOrderId(), "主材单", String.format("主材交款金额%.3f元", Arith.div(salesPayment.getReferMoney(), 1000.0)), String.format("pages/payment/receipt/receipt?orderId=%s&rid=%s&paymentType=3", sales.getOrderId(), salesReceiptPO.getSrId()), collecter);
@@ -616,7 +635,7 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int collectSalesPayments(List<Long> spids, SalesPaymentVO salesPaymentVO, SalesReceiptVO salesReceiptVO, List<Long> ptids, String userId, Integer company) throws FLException {
+	public int collectSalesPayments(List<Long> spids, SalesPaymentVO salesPaymentVO, SalesReceiptVO salesReceiptVO, List<Long> ptids, List<Long> daiIds, List<Integer> scaleFlags, String userId, Integer company) throws FLException {
 
 		SalesPO sales = salesDao.get(salesPaymentVO.getSales().getSid());
 
@@ -763,11 +782,83 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 			paytranDao.updatePaytran(ptids, salesReceiptPO.getSrId(), PaytranPO.STATUS_USED_INT, PaytranPO.TYPE_SALES_INT);
 		}
 
+		// 阶梯券配比明细(批量=同一装修单, daiIds 对整批生效, spid 可空; 批内 orderId 一致性服务端兜底)
+		saveScaleDetails(null, sales, daiIds, scaleFlags, user);
+
 		decorationAdditionService.updateDecorationForSaleScale(new DecorationVO(sales.getOrderId())); // 更新装修单上的销售比例
 
 		decorationService.sendMessage("PAYMENT_SALES_MESSAGE_FLAG", sales.getOrderId(), "主材单", String.format("主材交款金额%.3f元", Arith.div(totalMoney, 1000.0)), String.format("pages/payment/receipt/receipt?orderId=%s&rid=%s&paymentType=3", sales.getOrderId(), salesReceiptPO.getSrId()), collecter);
 
 		return 0;
+	}
+
+	/**
+	 * 阶梯券配比明细+券行消耗: 选券(daiIds)逐条校验(本单/已领/type=30/一券一用), 落 decorationscaledetail,
+	 * 券行 state 2→7 消耗(STATUS_CONSUME_INT)+状态流水; scaleFlags 与 daiIds 平行(空=默认计入)。
+	 * 🔴type=30 不参与 makeDecorationPayment 抵扣(券族{0,10,20}天然隔离)——回归红线见阶梯方案决策11。
+	 */
+	private void saveScaleDetails(SalesPaymentPO salesPayment, SalesPO sales, List<Long> daiIds, List<Integer> scaleFlags, UserPO operater) throws FLException {
+
+		if (daiIds == null || daiIds.size() == 0) {
+			return;
+		}
+
+		for (int i = 0; i < daiIds.size(); i++) {
+
+			Long daiId = daiIds.get(i);
+
+			if (daiId == null) {
+				continue;
+			}
+
+			DecorationActivityItemPO couponItem = decorationActivityItemDao.get(daiId.longValue());
+
+			if (couponItem == null || couponItem.getType() != DecorationActivityItemPO.TYPE_LADDER_LOTTERY_ACTIVITY_ITEM) {
+				throw new FLException(140113, "优惠额度券状态不可用");
+			}
+
+			if (!couponItem.getOrderId().equals(sales.getOrderId())) {
+				throw new FLException(140115, "批内收款装修单不一致");
+			}
+
+			if (couponItem.getState() != DecorationActivityItemPO.STATUS_RECEIVE_INT) {
+				throw new FLException(140113, "优惠额度券状态不可用");
+			}
+
+			if (decorationScaleDetailDao.countDecorationScaleDetailByDaiId(daiId.longValue()) > 0) {
+				throw new FLException(140112, "优惠额度券已被其他收款使用");
+			}
+
+			if (couponItem.getMoney() == null || couponItem.getMoney() <= 0) {
+				throw new FLException(140114, "优惠额度券金额无效");
+			}
+
+			short isScale = scaleFlags != null && scaleFlags.size() > i && scaleFlags.get(i) != null ? scaleFlags.get(i).shortValue() : DecorationScaleDetailPO.ISSCALE_IN_INT;
+
+			// 券行消耗: 已领(2) → 消耗(7)
+			couponItem.setState(DecorationActivityItemPO.STATUS_CONSUME_INT);
+			couponItem.setContent((couponItem.getContent() == null ? "" : couponItem.getContent()) + " 收款抵扣:" + sales.getNo());
+			decorationActivityItemDao.update(couponItem);
+
+			decorationActivityRecordDao.save(new DecorationActivityRecordPO().init(couponItem.getAid(), couponItem, DecorationActivityItemPO.STATUS_CONSUME_INT, operater, "阶梯券收款抵扣: " + sales.getNo()));
+
+			DecorationScaleDetailPO scaleDetailPO = new DecorationScaleDetailPO();
+
+			scaleDetailPO.setSpid(salesPayment != null ? salesPayment.getSpid() : null);
+			scaleDetailPO.setOrderId(sales.getOrderId());
+			scaleDetailPO.setSourceType(DecorationScaleDetailPO.SOURCE_LADDER_COUPON_INT);
+			scaleDetailPO.setSourceId(daiId);
+			scaleDetailPO.setDaiId(daiId);
+			scaleDetailPO.setAsid(couponItem.getAsid());
+			scaleDetailPO.setMoney(Long.valueOf(couponItem.getMoney()));
+			scaleDetailPO.setIsScale(Short.valueOf(isScale));
+			scaleDetailPO.setStatus(Short.valueOf(DecorationScaleDetailPO.STATUS_VALID_INT));
+			scaleDetailPO.setCreater(operater);
+			scaleDetailPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
+			scaleDetailPO.setComment("阶梯券收款抵扣");
+
+			decorationScaleDetailDao.save(scaleDetailPO);
+		}
 	}
 
 	// 销售退款收款

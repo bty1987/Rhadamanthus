@@ -14,9 +14,12 @@ package com.fanglin.decoration.service.impl;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -231,6 +234,11 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 			throw new FLException(140101, "装修活动物品不存在");
 		}
 
+		// 阶梯抽奖券: 领取走结算决策(实时判断剩余数量是否变化——有货发放已领/降级换行, 无货拒绝; 签约后领取闭环)
+		if (decorationActivityItemPO.getType() == DecorationActivityItemPO.TYPE_LADDER_LOTTERY_ACTIVITY_ITEM) {
+			return settleLadderActivityItem(null, null, Long.valueOf(decorationActivityItemVO.getDaiId()), LADDER_SCENE_RECEIVE, userId);
+		}
+
 		// 签约/决算装修单额度类奖品锁死(140111)
 		ensureDecorationActivityItemOperable(decorationActivityItemPO.getOrderId(), decorationActivityItemPO.getType());
 
@@ -333,6 +341,11 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 			throw new FLException(140101, "装修活动物品不存在");
 		}
 
+		// 阶梯抽奖券: 领取走结算决策(实时判断剩余数量是否变化——有货发放已领/降级换行, 无货拒绝; 签约后领取闭环)
+		if (decorationActivityItemPO.getType() == DecorationActivityItemPO.TYPE_LADDER_LOTTERY_ACTIVITY_ITEM) {
+			return settleLadderActivityItem(null, null, Long.valueOf(decorationActivityItemVO.getDaiId()), LADDER_SCENE_RECEIVE, userId);
+		}
+
 		// 签约/决算装修单额度类奖品锁死(140111)
 		ensureDecorationActivityItemOperable(decorationActivityItemPO.getOrderId(), decorationActivityItemPO.getType());
 
@@ -387,6 +400,11 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 			throw new FLException(140101, "装修活动物品不存在");
 		}
 
+		// 阶梯抽奖券: 领取走结算决策(实时判断剩余数量是否变化——有货发放已领/降级换行, 无货拒绝; 签约后领取闭环)
+		if (decorationActivityItemPO.getType() == DecorationActivityItemPO.TYPE_LADDER_LOTTERY_ACTIVITY_ITEM) {
+			return settleLadderActivityItem(null, null, Long.valueOf(decorationActivityItemVO.getDaiId()), LADDER_SCENE_RECEIVE, userId);
+		}
+
 		// 签约/决算装修单额度类奖品锁死(140111)
 		ensureDecorationActivityItemOperable(decorationActivityItemPO.getOrderId(), decorationActivityItemPO.getType());
 
@@ -427,6 +445,11 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 
 		if (decorationActivityItemPO == null) {
 			throw new FLException(140101, "装修活动物品不存在");
+		}
+
+		// 阶梯抽奖券: 领取走结算决策(实时判断剩余数量是否变化——有货发放已领/降级换行, 无货拒绝; 签约后领取闭环)
+		if (decorationActivityItemPO.getType() == DecorationActivityItemPO.TYPE_LADDER_LOTTERY_ACTIVITY_ITEM) {
+			return settleLadderActivityItem(null, null, Long.valueOf(decorationActivityItemVO.getDaiId()), LADDER_SCENE_RECEIVE, userId);
 		}
 
 		// 签约/决算装修单额度类奖品锁死(140111)
@@ -493,6 +516,11 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 			throw new FLException(140101, "装修活动物品不存在");
 		}
 
+		// 阶梯抽奖券: 领取走结算决策(实时判断剩余数量是否变化——有货发放已领/降级换行, 无货拒绝; 签约后领取闭环)
+		if (decorationActivityItemPO.getType() == DecorationActivityItemPO.TYPE_LADDER_LOTTERY_ACTIVITY_ITEM) {
+			return settleLadderActivityItem(null, null, Long.valueOf(decorationActivityItemVO.getDaiId()), LADDER_SCENE_RECEIVE, userId);
+		}
+
 		// 签约/决算装修单额度类奖品锁死(140111)
 		ensureDecorationActivityItemOperable(decorationActivityItemPO.getOrderId(), decorationActivityItemPO.getType());
 
@@ -539,6 +567,11 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 			throw new FLException(140101, "装修活动物品不存在");
 		}
 
+		// 阶梯抽奖券: 领取走结算决策(实时判断剩余数量是否变化——有货发放已领/降级换行, 无货拒绝; 签约后领取闭环)
+		if (decorationActivityItemPO.getType() == DecorationActivityItemPO.TYPE_LADDER_LOTTERY_ACTIVITY_ITEM) {
+			return settleLadderActivityItem(null, null, Long.valueOf(decorationActivityItemVO.getDaiId()), LADDER_SCENE_RECEIVE, userId);
+		}
+
 		// 签约/决算装修单额度类奖品锁死(140111)
 		ensureDecorationActivityItemOperable(decorationActivityItemPO.getOrderId(), decorationActivityItemPO.getType());
 
@@ -581,6 +614,11 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 
 		if (decorationActivityItemPO == null) {
 			throw new FLException(140101, "装修活动物品不存在");
+		}
+
+		// 阶梯抽奖券: 领取走结算决策(实时判断剩余数量是否变化——有货发放已领/降级换行, 无货拒绝; 签约后领取闭环)
+		if (decorationActivityItemPO.getType() == DecorationActivityItemPO.TYPE_LADDER_LOTTERY_ACTIVITY_ITEM) {
+			return settleLadderActivityItem(null, null, Long.valueOf(decorationActivityItemVO.getDaiId()), LADDER_SCENE_RECEIVE, userId);
 		}
 
 		// 签约/决算装修单额度类奖品锁死(140111)
@@ -1054,5 +1092,302 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 		}
 
 		paging.setData(decorationActivityItemVOs);
+	}
+
+	// ==================== 阶梯抽奖活动(等级优先级+剩余量降级发放) ====================
+
+	private static final short LADDER_SCENE_JOIN = 0; // 参与: 预占
+	private static final short LADDER_SCENE_CONTRACT = 1; // 签约: 结算
+	private static final short LADDER_SCENE_RECEIVE = 2; // 领取: 结算
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int settleLadderActivityItemForJoin(String orderId, long aid, String userId) throws FLException {
+		return settleLadderActivityItem(orderId, Long.valueOf(aid), null, LADDER_SCENE_JOIN, userId);
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int settleLadderActivityItemForContract(String orderId, String userId) throws FLException {
+		return settleLadderActivityItem(orderId, null, null, LADDER_SCENE_CONTRACT, userId);
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int settleLadderActivityItemForReceive(long daiId, String userId) throws FLException {
+		return settleLadderActivityItem(null, null, Long.valueOf(daiId), LADDER_SCENE_RECEIVE, userId);
+	}
+
+	/**
+	 * 阶梯结算核心: 参与=按水位预占(只读不扣库存); 签约/领取=原子扣减降级循环
+	 * (🔴并发安全: UPDATE num-1 WHERE num>0 失败即降下一级, 原先查后扣两单并发抢最后一张会 num=−1 超发;
+	 *   活动定位: 参与=前端选定活动; 签约/领取=以预占行 aid 锚定——参与在窗内, 签约/领取可在窗外)
+	 */
+	private int settleLadderActivityItem(String orderId, Long joinAid, Long receiveDaiId, short scene, String userId) throws FLException {
+
+		DecorationActivityItemPO preItem = null;
+		long aid = 0;
+
+		List<DecorationActivityItemPO> orderItems = decorationActivityItemDao.queryDecorationActivityItemByOrderId(orderId);
+
+		for (DecorationActivityItemPO item : orderItems) {
+
+			if (item.getType() != DecorationActivityItemPO.TYPE_LADDER_LOTTERY_ACTIVITY_ITEM) {
+				continue;
+			}
+
+			if (scene == LADDER_SCENE_JOIN) {
+				// 参与幂等: 该单该活动已有预占行 → 跳过(复审补防重, 防双预占悬挂)
+				if (item.getAid() == joinAid.longValue() && item.getState() == DecorationActivityItemPO.STATUS_INIT_INT) {
+					return 0;
+				}
+				continue;
+			}
+
+			if (scene == LADDER_SCENE_CONTRACT && item.getState() == DecorationActivityItemPO.STATUS_INIT_INT) {
+				preItem = item;
+				aid = item.getAid();
+				break;
+			}
+
+			if (scene == LADDER_SCENE_RECEIVE && item.getDaiId() == receiveDaiId.longValue()) {
+				preItem = item;
+				aid = item.getAid();
+				break;
+			}
+		}
+
+		if (scene != LADDER_SCENE_JOIN && preItem == null) {
+			return 0; // 无预占(未参与/已发放/已作废) → 无操作
+		}
+
+		ActivityPO activityPO = activityDao.get(scene == LADDER_SCENE_JOIN ? joinAid.longValue() : preItem.getAid());
+
+		if (activityPO == null || activityPO.getType() != ActivityPO.TYPE_LADDER_LOTTERY_INT) {
+			return 0;
+		}
+
+		Date now = DateUtil.getDateToTimestamp(new Date());
+
+		// 参与有效期校验(仅参与; 签约/领取以预占锚定不受窗口限制)
+		if (scene == LADDER_SCENE_JOIN) {
+			if (activityPO.getStartTime() != null && now.before(activityPO.getStartTime())) {
+				throw new FLException(140116, "阶梯活动不在参与有效期");
+			}
+			if (activityPO.getEndTime() != null && now.after(activityPO.getEndTime())) {
+				throw new FLException(140116, "阶梯活动不在参与有效期");
+			}
+		}
+
+		// 阶梯奖品规则行(ruleType=5 启用), 按优先级(sort)升序分组展平, 同优先级随机
+		List<ActivityRulePO> priorityRules = new ArrayList<ActivityRulePO>();
+		Map<Integer, List<ActivityRulePO>> priorityGroups = new TreeMap<Integer, List<ActivityRulePO>>();
+
+		for (ActivityRulePO rule : activityRuleDao.queryActivityRuleForEnabled(aid)) {
+			if (rule.getRuleType() != ActivityRulePO.RULETYPE_LADDER_PRIZE_INT) {
+				continue;
+			}
+			List<ActivityRulePO> group = priorityGroups.get(rule.getSort());
+			if (group == null) {
+				group = new ArrayList<ActivityRulePO>();
+				priorityGroups.put(rule.getSort(), group);
+			}
+			group.add(rule);
+		}
+
+		for (List<ActivityRulePO> group : priorityGroups.values()) {
+			if (group.size() > 1) {
+				Collections.shuffle(group);
+			}
+			priorityRules.addAll(group);
+		}
+
+		if (priorityRules.isEmpty()) {
+			if (scene == LADDER_SCENE_JOIN) {
+				throw new FLException(140117, "活动奖品已清零,不可参与");
+			}
+			return 0;
+		}
+
+		UserPO operater = userDao.queryUserByUserId(userId);
+
+		// 参与: 按水位预占(只读不扣库存, 扣减发生在签约/领取结算)
+		if (scene == LADDER_SCENE_JOIN) {
+
+			for (ActivityRulePO rule : priorityRules) {
+
+				AwardStockPO awardStockPO = awardStockDao.get(rule.getAsid());
+
+				if (awardStockPO == null || awardStockPO.getNum() <= 0) {
+					continue;
+				}
+
+				String summary = "阶梯活动预占: " + activityPO.getName() + " " + gradeDesc(rule.getGrade());
+
+				DecorationActivityItemPO decorationActivityItemPO = new DecorationActivityItemPO();
+
+				decorationActivityItemPO.setAid(activityPO.getAid());
+				decorationActivityItemPO.setOrderId(orderId);
+				decorationActivityItemPO.setAsid(awardStockPO.getAsId());
+				decorationActivityItemPO.setActivityName(activityPO.getName());
+				decorationActivityItemPO.setActivityItemName(awardStockPO.getName());
+				decorationActivityItemPO.setType(DecorationActivityItemPO.TYPE_LADDER_LOTTERY_ACTIVITY_ITEM);
+				decorationActivityItemPO.setState(DecorationActivityItemPO.STATUS_INIT_INT);
+				decorationActivityItemPO.setAtttype(DecorationActivityItemPO.ATTTYPE_OFFLINE_INT);
+				decorationActivityItemPO.setNum(1);
+				decorationActivityItemPO.setMoney(ladderItemMoney(rule.getAsid()));
+				decorationActivityItemPO.setExpendPrice(0);
+				decorationActivityItemPO.setDiscountPrice(0);
+				decorationActivityItemPO.setIsPrefor(DecorationActivityItemPO.ISPREFOR_UNCAL_INT);
+				decorationActivityItemPO.setIsStock(awardStockPO.getIsStock());
+				decorationActivityItemPO.setIsPayment(DecorationActivityItemPO.ISPAYMENT_UNCAL_INT);
+				decorationActivityItemPO.setCreater(operater);
+				decorationActivityItemPO.setCreateTime(now);
+				decorationActivityItemPO.setContent(summary);
+
+				decorationActivityItemDao.save(decorationActivityItemPO);
+
+				decorationActivityItemPO.setNo(String.format("LD%08d", decorationActivityItemPO.getDaiId()));
+
+				decorationActivityItemDao.update(decorationActivityItemPO);
+
+				decorationActivityRecordDao.save(new DecorationActivityRecordPO().init(activityPO.getAid(), decorationActivityItemPO, DecorationActivityItemPO.STATUS_INIT_INT, operater, summary));
+
+				return 1;
+			}
+
+			throw new FLException(140117, "活动奖品已清零,不可参与");
+		}
+
+		// 签约/领取: 原子扣减降级循环
+		for (ActivityRulePO rule : priorityRules) {
+
+			if (awardStockDao.deductAwardStockNum(rule.getAsid()) <= 0) {
+				continue; // 该等级被并发抢空, 降下一级
+			}
+
+			AwardStockPO awardStockPO = awardStockDao.get(rule.getAsid());
+
+			String summary = "阶梯活动" + gradeDesc(rule.getGrade()) + "发放: " + activityPO.getName();
+
+			// 原预占行结算(同等级直转已领/异等级失效换行)
+			if (preItem != null && preItem.getState() == DecorationActivityItemPO.STATUS_INIT_INT) {
+
+				if (preItem.getAsid() == rule.getAsid()) {
+
+					preItem.setState(DecorationActivityItemPO.STATUS_RECEIVE_INT);
+					preItem.setReceiver(operater);
+					preItem.setReceiveTime(now);
+					preItem.setContent(summary);
+
+					decorationActivityItemDao.update(preItem);
+
+					saveLadderRecords(preItem, awardStockPO, operater, summary);
+
+					return 1;
+				}
+
+				preItem.setState(DecorationActivityItemPO.STATUS_UNVALID_INT);
+				preItem.setContent((preItem.getContent() == null ? "" : preItem.getContent()) + "(预占等级清零降级)");
+
+				decorationActivityItemDao.update(preItem);
+
+				decorationActivityRecordDao.save(new DecorationActivityRecordPO().init(preItem.getAid(), preItem, DecorationActivityItemPO.STATUS_UNVALID_INT, operater, "预占等级清零降级"));
+			}
+
+			DecorationActivityItemPO decorationActivityItemPO = new DecorationActivityItemPO();
+
+			decorationActivityItemPO.setAid(activityPO.getAid());
+			decorationActivityItemPO.setOrderId(orderId);
+			decorationActivityItemPO.setAsid(awardStockPO.getAsId());
+			decorationActivityItemPO.setActivityName(activityPO.getName());
+			decorationActivityItemPO.setActivityItemName(awardStockPO.getName());
+			decorationActivityItemPO.setType(DecorationActivityItemPO.TYPE_LADDER_LOTTERY_ACTIVITY_ITEM);
+			decorationActivityItemPO.setState(DecorationActivityItemPO.STATUS_RECEIVE_INT);
+			decorationActivityItemPO.setAtttype(DecorationActivityItemPO.ATTTYPE_OFFLINE_INT);
+			decorationActivityItemPO.setNum(1);
+			decorationActivityItemPO.setMoney(ladderItemMoney(rule.getAsid()));
+			decorationActivityItemPO.setExpendPrice(0);
+			decorationActivityItemPO.setDiscountPrice(0);
+			decorationActivityItemPO.setIsPrefor(DecorationActivityItemPO.ISPREFOR_UNCAL_INT);
+			decorationActivityItemPO.setIsStock(awardStockPO.getIsStock());
+			decorationActivityItemPO.setIsPayment(DecorationActivityItemPO.ISPAYMENT_UNCAL_INT);
+			decorationActivityItemPO.setReceiver(operater);
+			decorationActivityItemPO.setReceiveTime(now);
+			decorationActivityItemPO.setCreater(operater);
+			decorationActivityItemPO.setCreateTime(now);
+			decorationActivityItemPO.setContent(summary);
+
+			decorationActivityItemDao.save(decorationActivityItemPO);
+
+			decorationActivityItemPO.setNo(String.format("LD%08d", decorationActivityItemPO.getDaiId()));
+
+			decorationActivityItemDao.update(decorationActivityItemPO);
+
+			saveLadderRecords(decorationActivityItemPO, awardStockPO, operater, summary);
+
+			return 1;
+		}
+
+		// 全清零: 签约=预占行保持 state=0 等待库存变化后领取; 领取=拒绝
+		if (scene == LADDER_SCENE_RECEIVE) {
+			throw new FLException(160038, "库存不足");
+		}
+
+		return 0;
+	}
+
+	private void saveLadderRecords(DecorationActivityItemPO item, AwardStockPO awardStockPO, UserPO operater, String summary) {
+
+		awardRecordDao.save(new AwardRecordPO().init(awardStockPO, operater, item.getOrderId(), AwardRecordPO.TYPE_XG_INT, AwardRecordPO.SUBTYPE_RECEIVE_INT, AwardRecordPO.ONETYPE_DECORATION_INT, item.getIsStock(), item.getMoney(), item.getNum(), summary));
+
+		decorationActivityRecordDao.save(new DecorationActivityRecordPO().init(item.getAid(), item, item.getState(), operater, summary));
+	}
+
+	private int ladderItemMoney(long asid) {
+
+		List<ActivityItemPO> activityItemPOs = activityItemDao.queryActivityItemByAsid(asid);
+
+		return activityItemPOs != null && !activityItemPOs.isEmpty() ? activityItemPOs.get(0).getMoney() : 0;
+	}
+
+	private String gradeDesc(Short grade) {
+
+		if (grade == null) {
+			return "";
+		}
+		if (grade == 1) {
+			return "一等奖";
+		}
+		if (grade == 2) {
+			return "二等奖";
+		}
+		if (grade == 3) {
+			return "三等奖";
+		}
+
+		return grade + "等奖";
+	}
+
+	@Override
+	public List<DecorationActivityItemVO> queryDecorationActivityItemForScale(DecorationVO decorationVO) {
+
+		List<DecorationActivityItemVO> decorationActivityItemVOs = new ArrayList<DecorationActivityItemVO>();
+
+		// 阶梯券选券数据源: 本装修单 type=30/state=2 已领(收款抵扣用)
+		for (DecorationActivityItemPO decorationActivityItemPO : decorationActivityItemDao.queryDecorationActivityItemByOrderId(decorationVO.getOrderId())) {
+
+			if (decorationActivityItemPO.getType() != DecorationActivityItemPO.TYPE_LADDER_LOTTERY_ACTIVITY_ITEM || decorationActivityItemPO.getState() != DecorationActivityItemPO.STATUS_RECEIVE_INT) {
+				continue;
+			}
+
+			DecorationActivityItemVO decorationActivityItemVO = new DecorationActivityItemVO();
+
+			BeanUtil.copyProperties(decorationActivityItemPO, decorationActivityItemVO, Arrays.asList("creater", "receiver", "refunder"));
+
+			decorationActivityItemVOs.add(decorationActivityItemVO);
+		}
+
+		return decorationActivityItemVOs;
 	}
 }

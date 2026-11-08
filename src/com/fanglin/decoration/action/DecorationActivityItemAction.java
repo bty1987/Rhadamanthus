@@ -253,4 +253,12 @@ public class DecorationActivityItemAction extends BaseListAction {
 
 		return SUCCESS;
 	}
+
+	@Action(value = "queryDecorationActivityItemForScale", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryDecorationActivityItemForScale() {
+
+		decorationActivityItems = decorationActivityItemService.queryDecorationActivityItemForScale(decoration);
+
+		return SUCCESS;
+	}
 }

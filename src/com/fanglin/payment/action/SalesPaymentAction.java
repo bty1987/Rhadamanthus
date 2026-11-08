@@ -39,6 +39,10 @@ public class SalesPaymentAction extends BaseListAction {
 
 	private List<Long> ptids;
 
+	private List<Long> daiIds;
+
+	private List<Integer> scaleFlags;
+
 	private String companyType;
 
 	private Long amount;
@@ -128,7 +132,7 @@ public class SalesPaymentAction extends BaseListAction {
 
 		int company = salesPayment.getBompany() != null ? CompanyServiceImpl.decode(salesPayment.getBompany()) : queryCompany();
 
-		salesPaymentService.collectSalesPayment(salesPayment, salesReceipt, ptids, queryUserId(), company);
+		salesPaymentService.collectSalesPayment(salesPayment, salesReceipt, ptids, daiIds, scaleFlags, queryUserId(), company);
 
 		return SUCCESS;
 	}
@@ -156,7 +160,7 @@ public class SalesPaymentAction extends BaseListAction {
 
 		int company = salesPayment.getBompany() != null ? CompanyServiceImpl.decode(salesPayment.getBompany()) : queryCompany();
 
-		salesPaymentService.collectSalesPayments(spids, salesPayment, salesReceipt, ptids, queryUserId(), company);
+		salesPaymentService.collectSalesPayments(spids, salesPayment, salesReceipt, ptids, daiIds, scaleFlags, queryUserId(), company);
 
 		return SUCCESS;
 	}
@@ -321,4 +325,20 @@ public class SalesPaymentAction extends BaseListAction {
 		this.company = company;
 	}
 
+
+	public List<Long> getDaiIds() {
+		return daiIds;
+	}
+
+	public void setDaiIds(List<Long> daiIds) {
+		this.daiIds = daiIds;
+	}
+
+	public List<Integer> getScaleFlags() {
+		return scaleFlags;
+	}
+
+	public void setScaleFlags(List<Integer> scaleFlags) {
+		this.scaleFlags = scaleFlags;
+	}
 }

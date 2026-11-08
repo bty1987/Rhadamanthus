@@ -46,6 +46,7 @@ public class DecorationActivityItemPO implements java.io.Serializable {
 	public static final short STATUS_DRAW_INT = 11; // 抽奖(参与抽奖, 抽奖系统回写)
 
 	public static final short TYPE_LOTTERY_ACTIVITY_ITEM = 20; // 抽奖券(类型, 与活动 type=20 对应)
+	public static final short TYPE_LADDER_LOTTERY_ACTIVITY_ITEM = 30; // 阶梯抽奖券(类型, 与活动 type=30 对应)
 
 	public static final short TYPE_COUPON_INT = 0; // 卷
 

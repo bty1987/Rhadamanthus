@@ -29,11 +29,11 @@ public interface SalesPaymentService {
 
 	public int addSalesPaymentForRefunds(SalesPaymentVO salesPaymentVO, String userId) throws FLException;
 
-	public int collectSalesPayment(SalesPaymentVO salesPaymentVO, SalesReceiptVO salesReceiptVO, List<Long> ptids, String userId, Integer company) throws FLException;
+	public int collectSalesPayment(SalesPaymentVO salesPaymentVO, SalesReceiptVO salesReceiptVO, List<Long> ptids, List<Long> daiIds, List<Integer> scaleFlags, String userId, Integer company) throws FLException;
 
 	public int settleSalesPayment(SalesPaymentVO salesPaymentVO, String userId, Integer company) throws FLException;
 
-	public int collectSalesPayments(List<Long> spids, SalesPaymentVO salesPaymentVO, SalesReceiptVO salesReceiptVO, List<Long> ptids, String userId, Integer company) throws FLException;
+	public int collectSalesPayments(List<Long> spids, SalesPaymentVO salesPaymentVO, SalesReceiptVO salesReceiptVO, List<Long> ptids, List<Long> daiIds, List<Integer> scaleFlags, String userId, Integer company) throws FLException;
 
 	public int refundSalesPayment(SalesPaymentVO salesPaymentVO, SalesReceiptVO salesReceiptVO, String userId, Integer company) throws FLException;
 

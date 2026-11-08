@@ -49,6 +49,7 @@ public class ActivityPO implements java.io.Serializable {
 	public static final short TYPE_SALES_INT = 3;// 销售
 
 	public static final short TYPE_LOTTERY_INT = 20;// 抽奖券活动(奖励类型, 引擎定位锚点)
+	public static final short TYPE_LADDER_LOTTERY_INT = 30;// 阶梯抽奖活动(按等级优先级+剩余量降级发放, 引擎定位锚点)
 
 	public static final short ATTTYPE_OFFLINE_INT = 0;// 线下
 
