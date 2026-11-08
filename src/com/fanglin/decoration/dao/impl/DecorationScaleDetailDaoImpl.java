@@ -28,11 +28,22 @@ public class DecorationScaleDetailDaoImpl extends DaoImpl<DecorationScaleDetailP
 	@Override
 	public long amountDecorationScaleDetailForScale(String orderId) {
 
-		String sql = "SELECT COALESCE(SUM(money), 0) FROM decoration.decorationscaledetail WHERE orderId = :orderId AND isScale = 0 AND status = 0";
+		// 配比净额调整(双重计修正): 券抵额已随收款行referMoney视同已收——计入(0)净额0不重复加, 不计入(1)净额-money从基数剔除
+		String sql = "SELECT COALESCE(SUM(CASE WHEN isScale = 0 THEN 0 ELSE -money END), 0) FROM decoration.decorationscaledetail WHERE orderId = :orderId AND status = 0";
 
 		BigDecimal amount = (BigDecimal) session().createSQLQuery(sql).setString("orderId", orderId).uniqueResult();
 
 		return amount == null ? 0L : amount.longValue();
+	}
+
+	@Override
+	public int countDecorationScaleDetailBySpid(long spid) {
+
+		String sql = "SELECT COUNT(*) FROM decoration.decorationscaledetail WHERE spid = :spid AND status = 0";
+
+		BigDecimal count = (BigDecimal) session().createSQLQuery(sql).setLong("spid", spid).uniqueResult();
+
+		return count == null ? 0 : count.intValue();
 	}
 
 }

@@ -232,7 +232,7 @@ public class DecorationAdditionServiceImpl implements DecorationAdditionService 
 
 		saleTotal = Arith.add(saleTotal, oalesDao.amountOales(orderId, OalesPO.ISSCALE_SCALE_INT));
 
-		// 阶梯券收款抵扣计入配比(paymentscaledetail→decorationscaledetail, isScale=计入)
+		// 阶梯券收款配比净额调整(计入券已随referMoney视同已收不再加, 不计入券从基数剔除——双重计修正)
 		saleTotal = Arith.add(saleTotal, decorationScaleDetailDao.amountDecorationScaleDetailForScale(orderId));
 
 		if (decorationPO.getType() == DecorationPO.TYPE_MIDPACK_INT) {

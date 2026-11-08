@@ -628,8 +628,11 @@ $(function() {
         if (salesPayment.pageConfig.paytypes.contains("coupon"))
             paymentUtils.initCoupon(salesPayment, 0);
 
-        // 阶梯券选择区: 本单已领阶梯券(批量=同装修单, 同样可用)
-        paymentUtils.initLadderCoupon(salesPayment, payment.sales.orderId);
+        // 阶梯券选择区: 本单已领阶梯券(批量不支持用券——服务端140118拒收, 选区隐藏后paramLadderCoupon按:visible守卫自动不提交)
+        if (isCollects)
+            com.focusPage("#ladderCouponDiv").hide();
+        else
+            paymentUtils.initLadderCoupon(salesPayment, payment.sales.orderId);
 
         if (isCollects)
             salesPayment.items.couponCheckbox.parent().addClass("hide");

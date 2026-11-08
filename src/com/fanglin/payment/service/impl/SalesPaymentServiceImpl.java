@@ -637,6 +637,11 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 	@Transactional(rollbackFor = Exception.class)
 	public int collectSalesPayments(List<Long> spids, SalesPaymentVO salesPaymentVO, SalesReceiptVO salesReceiptVO, List<Long> ptids, List<Long> daiIds, List<Integer> scaleFlags, String userId, Integer company) throws FLException {
 
+		// 批量收款不支持使用优惠额度券(拍板: 保持批量不用券)——批量等式无coupon而saveScaleDetails照常落明细+消耗券行, 显式拒收防静默消耗
+		if (daiIds != null && !daiIds.isEmpty()) {
+			throw new FLException(140118, "批量收款不支持使用优惠额度券");
+		}
+
 		SalesPO sales = salesDao.get(salesPaymentVO.getSales().getSid());
 
 		UserPO collecter = userDao.queryUserByUserId(userId);
@@ -1121,6 +1126,11 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 			throw new FLException(150036, "款项状态不可操作");
 		}
 
+		// 纵深防御(拍板6): 含有效阶梯券配比明细的收款行不可删除(明细仅产生于PAIDFOR, 当前状态机不可达, 防状态松动致配比倒挂)
+		if (decorationScaleDetailDao.countDecorationScaleDetailBySpid(depositSalesPaymentPO.getSpid()) > 0) {
+			throw new FLException(140119, "收款含优惠额度券配比明细,不可删除");
+		}
+
 		SalesPO salesPO = salesDao.get(sid);
 
 		salesPO.setDepositpay(0);
@@ -1152,6 +1162,11 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 
 		if (salesPayment.getStatus() != SalesPaymentPO.STATUS_INITIAL_INT) {
 			throw new FLException(150036, "款项状态不可操作");
+		}
+
+		// 纵深防御(拍板6): 含有效阶梯券配比明细的收款行不可删除(明细仅产生于PAIDFOR, 当前状态机不可达, 防状态松动致配比倒挂)
+		if (decorationScaleDetailDao.countDecorationScaleDetailBySpid(salesPayment.getSpid()) > 0) {
+			throw new FLException(140119, "收款含优惠额度券配比明细,不可删除");
 		}
 
 		SalesPO salesPO = salesDao.get(sid);
