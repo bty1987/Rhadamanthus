@@ -122,6 +122,7 @@ $.extend(api, {
         },
         queryDecorationActivityItemForScale: {
             url: "queryDecorationActivityItemForScale.do",
+            type: "query",
             tranargs: [{
                 result: "decorationActivityItems",
                 args: ["money"]
