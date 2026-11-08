@@ -494,6 +494,10 @@ jQuery(function($) {
 
             var decorationActivity = res.decorationActivity;
             decorationUtils.addDecorationActivityForDiv(decorationActivityItem.items.decorationActivitys, decorationActivity, activityBtnMethod);
+
+            // 阶梯奖品直领面板刷新(新参加的活动可能挂 type=30 物品)
+            if (typeof decorationLadder != "undefined" && decorationLadder.init)
+                decorationLadder.init();
         });
         decorationActivityItem.joinDecorationActivityModal.modal("hide");
     });
@@ -632,6 +636,10 @@ jQuery(function($) {
             res.decorationActivityItem.money = activityItem.money;
 
             decorationUtils.addActivityItemForDiv(decorationActivityItem.items.decorationActivityItems, res.decorationActivityItem, uiBtnMethod, decorationActivity, params.decoration.decorationActivityContent);
+
+            // 阶梯奖品直领面板刷新(type=30 物品预占后状态变化)
+            if (typeof decorationLadder != "undefined" && decorationLadder.init)
+                decorationLadder.init();
 
             decorationActivityItem.addDecorationActivityItemModal.modal("hide");
         }, null, false);

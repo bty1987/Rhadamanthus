@@ -12,7 +12,8 @@
 
 $(function() {
 
-	var decorationLadder = {};
+	// 挂全局(decorationLadder)供 decoration4activity.js 在参加活动/添加物品成功后调 init() 刷新面板
+	decorationLadder = {};
 
 	decorationLadder.states = {
 		0: "已预占(待领取)",
