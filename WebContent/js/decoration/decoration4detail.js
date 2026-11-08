@@ -658,6 +658,12 @@ jQuery(function($) {
         decorationDetail.joinDecorationActivityModal.modal("show");
     });
 
+    // 阶梯奖品直领入口: 以活动物品(activityitem.type=30)为显示, 直接参与预占/领取(免申领审批)
+    com.focusPage("#ladderReceiveBtn").on("click", function() {
+
+        com.popup4page("#decorationLadderPopUp", "/views/decoration/decoration4ladder.html", "阶梯奖品");
+    });
+
     // 申领活动物品
     com.focusPage("#applyActivityItemBtn").on("click", function() {
 
