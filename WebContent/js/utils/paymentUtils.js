@@ -182,18 +182,23 @@ var paymentUtils = {
                 });
             });
 
-            // 直选radio平铺(Ace样式): 每单一张=单选, 勾选即选券; "不使用"占位默认选中=不用券
+            // 直选checkbox平铺(Ace样式, 单选互斥: 勾一个自动取消另一个, 再点取消=不用券); 每行内联不折行
             var $group = com.focusPage("#ladderCouponGroup").html("");
-
-            var $noneLabel = $('<label style="margin-right: 15px;"></label>').appendTo($group);
-            $('<input type="radio" name="ladderCouponRadio" class="ace" checked>').attr("daiId", "").attr("money", 0).attr("typename", "").appendTo($noneLabel);
-            $('<span class="lbl"></span>').text(" 不使用").appendTo($noneLabel);
 
             $.each(ladderItems, function(i, v) {
 
-                var $label = $('<label style="margin-right: 15px;"></label>').appendTo($group);
-                $('<input type="radio" name="ladderCouponRadio" class="ace">').attr("daiId", v.daiId).attr("money", v.money).attr("typename", v.ladderName).appendTo($label);
+                var $label = $('<label style="display: inline-block; margin: 4px 14px 4px 0; white-space: nowrap;"></label>').appendTo($group);
+                $('<input type="checkbox" name="ladderCouponCheck" class="ace">').attr("daiId", v.daiId).attr("money", v.money).attr("typename", v.ladderName).appendTo($label);
                 $('<span class="lbl"></span>').text(" " + v.ladderName).appendTo($label);
+            });
+
+            // 计入配比并入同一行流
+            $group.append(com.focusPage("#ladderScale").closest("label").attr("style", "display: inline-block; margin: 4px 0;").removeClass("hide"));
+            com.focusPage("#ladderCouponInputs").addClass("hide");
+
+            $group.off("change").on("change", "input[name='ladderCouponCheck']", function() {
+                if (this.checked)
+                    $group.find("input[name='ladderCouponCheck']").not(this).prop("checked", false);
             });
 
             com.focusPage("#ladderCouponDiv")[ladderItems.length > 0 ? "show" : "hide"]();
@@ -267,17 +272,17 @@ var paymentUtils = {
             return 0;
         }
 
-        // 勾选radio即选券(每单一张, "不使用"占位); 计入配比取ladderScale勾选
-        var $radio = com.focusPage("input[name='ladderCouponRadio']:checked", "#salesPayment");
+        // 勾选checkbox即用券(单选互斥, 不勾=不用); 计入配比取ladderScale勾选
+        var $check = com.focusPage("input[name='ladderCouponCheck']:checked", "#salesPayment");
 
-        if ($radio.length == 0 || $radio.attr("daiId") == "") {
+        if ($check.length == 0) {
             return 0;
         }
 
-        var ladder = parseFloat($radio.attr("money"));
-        var ladderInfo = "#" + $radio.attr("typename") + "|" + ladder + "#";
+        var ladder = parseFloat($check.attr("money"));
+        var ladderInfo = "#" + $check.attr("typename") + "|" + ladder + "#";
 
-        options["daiIds[0]"] = $radio.attr("daiId");
+        options["daiIds[0]"] = $check.attr("daiId");
         options["scaleFlags[0]"] = com.focusPage("#ladderScale").prop("checked") ? 0 : 1;
 
         // 双写: 阶梯券金额并入收据"券"展示档(字典券+活动券合计, couponInfo 分段可区分)
