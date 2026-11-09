@@ -32,8 +32,10 @@ public class QuotationItemImport extends BaseImportAction{
 				excels = PoiExcelUtil.readExcel(getStrutsUploads(), getStrutsUploadsFileName());
 				quotationItemImportService.importQuotationItem(excels, queryUserId());
 			
+			} catch (FLException e) {
+				throw e;
 			} catch (Exception e) {
-				throw new FLException(110009, "导入文件错误");
+				throw new FLException(110009, "导入文件错误", e);
 			}
 		
 		return SUCCESS;

@@ -1,12 +1,12 @@
 /**
  * @File Name		: UserSalaryImport.java
- * @Package   	: com.fanglin.export.action
+ * @Package   	: com.fanglin.imports.action
  * @Version		: 1.0
  * @Date			: 2016-9-2
  * @Copyright	: Copyright Creators 2014
  * @Author		: baity
  * @Email			: bty1987@163.com
- * @Describing	: 
+ * @Describing	:
  */
 
 package com.fanglin.imports.action;
@@ -17,36 +17,37 @@ import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
 import org.apache.struts2.convention.annotation.ParentPackage;
 import org.apache.struts2.convention.annotation.Result;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
 import com.fanglin.core.action.BaseImportAction;
+import com.fanglin.core.interceptor.FLException;
+import com.fanglin.imports.service.UserSalaryImportService;
 import com.fanglin.utils.PoiExcelUtil;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 @ParentPackage("base")
 @Namespace("/")
 @Controller
 public class UserSalaryImport extends BaseImportAction{
 
-	private static final Logger logger = LoggerFactory.getLogger(UserSalaryImport.class);
-
 	private static final long serialVersionUID = -4713659178659383560L;
-	
+
+	@Autowired
+	private UserSalaryImportService userSalaryImportService;
+
 	@Action(value="importUserSalary", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String importUserSalary(){
-		
+	public String importUserSalary() throws FLException{
+
 		try {
-			List<List<String>> infos = PoiExcelUtil.readExcel(getStrutsUploads(), getStrutsUploadsFileName());
-			
-			for(List<String> info: infos){
-				for(String i: info){
-					System.out.println(i);
-				}
-			}
+
+			List<List<String>> excels = PoiExcelUtil.readExcel(getStrutsUploads(), getStrutsUploadsFileName());
+
+			userSalaryImportService.importUserSalary(excels, queryUserId());
+
+		} catch (FLException e) {
+			throw e;
 		} catch (Exception e) {
-			logger.error("导入用户薪资数据失败", e);
+			throw new FLException(110009, "导入文件错误", e);
 		}
 
 		return SUCCESS;
