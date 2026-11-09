@@ -249,6 +249,11 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 			throw new FLException(260021, "销售单不存在");
 		}
 
+		// 补贴单(type=1)免收款: 款项只能由结算(unpaySales)以确认态生成, 登记待收款行会因无人收款永久悬挂status=0(实证1097笔), 且配比聚合漏算
+		if (sales.getType() == SalesPO.TYPE_PROFIT_INT) {
+			throw new FLException(260097, "补贴单免收款,不可登记款项(请使用结算)");
+		}
+
 		if (salesPaymentVO.getReferMoney() < 0) {
 			throw new FLException(150025, "款项金额不正确");
 		}
@@ -474,6 +479,11 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 			throw new FLException(260021, "销售单不存在");
 		}
 
+		// 补贴单(type=1)免收款: 款项只能由结算(unpaySales)以确认态生成, 登记待收款行会因无人收款永久悬挂status=0(实证1097笔), 且配比聚合漏算
+		if (sales.getType() == SalesPO.TYPE_PROFIT_INT) {
+			throw new FLException(260097, "补贴单免收款,不可登记款项(请使用结算)");
+		}
+
 		UserPO collecter = userDao.queryUserByUserId(userId);
 
 		if (collecter == null) {
@@ -590,8 +600,11 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 
 		decorationService.sendMessage("PAYMENT_SALES_MESSAGE_FLAG", sales.getOrderId(), "主材单", String.format("主材交款金额%.3f元", Arith.div(salesPayment.getReferMoney(), 1000.0)), String.format("pages/payment/receipt/receipt?orderId=%s&rid=%s&paymentType=3", sales.getOrderId(), salesReceiptPO.getSrId()), collecter);
 
-		// 收款成功即自动确认(收款+确认同事务原子完成; confirmSalesPayment 非已收态抛150036, 紧随收款必为已收态); 类型3补款/5补款退款因定金确认前置守卫跳过自动确认, 保持手动
-		if (salesPayment.getType() != SalesPaymentPO.TYPE_REPLENISHMENT_INT && salesPayment.getType() != SalesPaymentPO.TYPE_MAKEAREFUND_INT) {
+		// 收款成功即自动确认(收款+确认同事务原子完成; confirmSalesPayment 非已收态抛150036, 紧随收款必为已收态); 类型3补款/5补款退款因定金确认前置守卫跳过自动确认, 保持手动;
+		// 🔴例外: type=1国补单免真实收款(系统代收), 补款若仍保持手动则长期悬挂status=0(实证1097笔, 配比聚合amountSalesPayment要求status!=0全部漏算), 国补单放开自动确认;
+		// confirm对type=3的定金守卫(depositpayStatus=PAYED拦截)对国补单天然不触发(无定金, 恒-1/CONFIRM)
+		if ((salesPayment.getType() != SalesPaymentPO.TYPE_REPLENISHMENT_INT && salesPayment.getType() != SalesPaymentPO.TYPE_MAKEAREFUND_INT)
+				|| sales.getType() == SalesPO.TYPE_PROFIT_INT) {
 			confirmSalesPayment(Arrays.asList(salesPayment.getSpid()), userId);
 		}
 

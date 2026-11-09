@@ -398,6 +398,12 @@ $(function() {
         com.popup4page("#layerPopUp", "views/sales/salesProfile4detail.html", "满意度")
     }
 
+    function operateSales(v) {
+
+        params.sales.sales = v;
+        com.popup4page("#layerPopUp", "/views/sales/sales4operate.html", "记录")
+    }
+
     var lineprops = (function() {
 
         var propertyMap = {
@@ -840,6 +846,11 @@ $(function() {
                 name: "满意度",
                 clazz: "btn-purple",
                 handle: satisfactionSales
+            },
+            operate: {
+                name: "记录",
+                clazz: "btn-yellow",
+                handle: operateSales
             }
         };
 
