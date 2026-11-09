@@ -21,8 +21,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.transaction.support.TransactionSynchronizationAdapter;
-import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 import com.fanglin.common.po.CountingPO;
 import com.fanglin.common.service.CountingService;
@@ -695,18 +693,10 @@ public class ManifestServiceImpl implements ManifestService {
 			accessoriesManifestDao.save(new AccessoriesManifestPO(accessories, manifestPO));
 		}
 
-		final List<AccessoriesPO> notifiedAccessories = accessoriesPOs;
-		final int companyId = company;
-
-		sendMessageAfterCommit(new Runnable() {
-
-			public void run() {
-				for (AccessoriesPO accessories : notifiedAccessories) {
-					String content = String.format("辅料单:%s,已出库", accessories.getNo());
-					messageService.sendMessage(accessories.getCreater().getUserId(), accessories.getApprover().getUserId(), content, MessagePO.TYPE_SEND_VISIT_INT, MessagePO.SUBTYPE_ACCESSORIES_INT, accessories.getAid(), companyId);
-				}
-			}
-		});
+		for (AccessoriesPO accessories : accessoriesPOs) {
+			String content = String.format("辅料单:%s,已出库", accessories.getNo());
+			messageService.sendMessage(accessories.getCreater().getUserId(), accessories.getApprover().getUserId(), content, MessagePO.TYPE_SEND_VISIT_INT, MessagePO.SUBTYPE_ACCESSORIES_INT, accessories.getAid(), company);
+		}
 
 		return 0;
 	}
@@ -1033,27 +1023,6 @@ public class ManifestServiceImpl implements ManifestService {
 		manifestDao.update(manifestPO);
 
 		return 0;
-	}
-
-	// 钉钉消息延后到事务提交后发送，避免 HTTP 超时拖长事务；发送失败只记日志不回滚业务
-	private void sendMessageAfterCommit(final Runnable task) {
-
-		if (!TransactionSynchronizationManager.isSynchronizationActive()) {
-			task.run();
-			return;
-		}
-
-		TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronizationAdapter() {
-
-			@Override
-			public void afterCommit() {
-				try {
-					task.run();
-				} catch (Exception e) {
-					log.error("manifest message send after commit failed", e);
-				}
-			}
-		});
 	}
 
 }

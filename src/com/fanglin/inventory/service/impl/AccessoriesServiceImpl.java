@@ -11,8 +11,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.transaction.support.TransactionSynchronizationAdapter;
-import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 import com.fanglin.common.po.CountingPO;
 import com.fanglin.common.service.CountingService;
@@ -340,12 +338,7 @@ public class AccessoriesServiceImpl implements AccessoriesService {
 
 			final String content = String.format("装修单号:%s,楼盘:%s,辅料单号:%s,厂商名称:%s,已经分配完厂商", accessoriesPO.getOrderId(), accessoriesPO.getHouse() != null && accessoriesPO.getHouse().getVillage() != null ? accessoriesPO.getHouse().getVillage().getName() : "", accessoriesPO.getNo(), supplier.getUserName());
 
-			sendMessageAfterCommit(new Runnable() {
-
-				public void run() {
-					messageService.sendMessage(supervisor.getUserId(), null, content, MessagePO.TYPE_SEND_CONSTRUCTION_INT, supervisor.getCompany());
-				}
-			});
+			messageService.sendMessage(supervisor.getUserId(), null, content, MessagePO.TYPE_SEND_CONSTRUCTION_INT, supervisor.getCompany());
 		}
 
 		return 0;
@@ -629,26 +622,6 @@ public class AccessoriesServiceImpl implements AccessoriesService {
 		accessoriesDao.update(accessoriesPO);
 
 		return 0;
-	}
-
-	private void sendMessageAfterCommit(final Runnable task) {
-
-		if (!TransactionSynchronizationManager.isSynchronizationActive()) {
-			task.run();
-			return;
-		}
-
-		TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronizationAdapter() {
-
-			@Override
-			public void afterCommit() {
-				try {
-					task.run();
-				} catch (Exception e) {
-					log.error("accessories message send after commit failed", e);
-				}
-			}
-		});
 	}
 
 }

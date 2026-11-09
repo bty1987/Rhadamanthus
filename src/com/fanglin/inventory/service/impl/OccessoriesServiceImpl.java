@@ -10,8 +10,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.transaction.support.TransactionSynchronizationAdapter;
-import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 import com.fanglin.common.po.CountingPO;
 import com.fanglin.common.service.CountingService;
@@ -333,12 +331,7 @@ public class OccessoriesServiceImpl implements OccessoriesService {
 
 			final String content = String.format("装修单号:%s,楼盘:%s,外辅单号:%s,厂商名称:%s,已经分配完厂商", occessoriesPO.getDecoration().getOrderId(), occessoriesPO.getDecoration().getHouse().getVillage().getName(), occessoriesPO.getNo(), occessoriesPO.getSupplier().getUserName());
 
-			sendMessageAfterCommit(new Runnable() {
-
-				public void run() {
-					messageService.sendMessage(supervisor.getUserId(), null, content, MessagePO.TYPE_SEND_CONSTRUCTION_INT, supervisor.getCompany());
-				}
-			});
+			messageService.sendMessage(supervisor.getUserId(), null, content, MessagePO.TYPE_SEND_CONSTRUCTION_INT, supervisor.getCompany());
 		}
 
 		return 0;
@@ -383,15 +376,9 @@ public class OccessoriesServiceImpl implements OccessoriesService {
 		if (supervisor != null) {
 
 			final String content = String.format("装修单号:%s,楼盘:%s,外辅单号:%s,厂商名称:%s,已经送货", occessoriesPO.getDecoration().getOrderId(), occessoriesPO.getDecoration().getHouse().getVillage().getName(), occessoriesPO.getNo(), occessoriesPO.getSupplier().getUserName());
-			final UserPO deliverFinal = deliver;
 			final String messageUrl = buildOccessoriesDeliveMessageUrl(occessoriesPO);
 
-			sendMessageAfterCommit(new Runnable() {
-
-				public void run() {
-					messageService.sendMessageForUrl(supervisor.getUserId(), deliverFinal == null ? null : deliverFinal.getUserId(), content, MessagePO.TYPE_SEND_CONSTRUCTION_INT, messageUrl, supervisor.getCompany());
-				}
-			});
+			messageService.sendMessageForUrl(supervisor.getUserId(), deliver == null ? null : deliver.getUserId(), content, MessagePO.TYPE_SEND_CONSTRUCTION_INT, messageUrl, supervisor.getCompany());
 		}
 
 		return 0;
@@ -644,27 +631,6 @@ public class OccessoriesServiceImpl implements OccessoriesService {
 		String value = messageUrl == null ? OCCESSORIES_DELIVE_MESSAGE_URL_STR : messageUrl.value(OCCESSORIES_DELIVE_MESSAGE_URL_STR);
 
 		return String.format(value, occessoriesPO.getOid());
-	}
-
-	// 钉钉消息延后到事务提交后发送，避免 HTTP 超时拖长事务；发送失败只记日志不回滚业务
-	private void sendMessageAfterCommit(final Runnable task) {
-
-		if (!TransactionSynchronizationManager.isSynchronizationActive()) {
-			task.run();
-			return;
-		}
-
-		TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronizationAdapter() {
-
-			@Override
-			public void afterCommit() {
-				try {
-					task.run();
-				} catch (Exception e) {
-					log.error("occessories message send after commit failed", e);
-				}
-			}
-		});
 	}
 
 }
