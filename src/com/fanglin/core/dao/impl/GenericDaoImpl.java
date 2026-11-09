@@ -11,6 +11,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.hibernate.Criteria;
+import org.hibernate.FetchMode;
 import org.hibernate.Query;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
@@ -162,6 +163,8 @@ public abstract class GenericDaoImpl implements GenericDao {
 
 		List<Criterion> criterions = null;
 
+		List<String> fetchPaths = null;
+
 		List<Order> orders = null;
 
 		Map<String, Alias> aliases = null;
@@ -179,6 +182,17 @@ public abstract class GenericDaoImpl implements GenericDao {
 				criterions = new LinkedList<Criterion>();
 			}
 			criterions.add(c);
+			return this;
+		}
+
+		/**
+		 * 关联 JOIN 预取(N+1 治理): 对 LAZY 多对一关联单 SQL LEFT JOIN 带出, 配合 PO 只读关联(insertable/updatable=false)使用
+		 */
+		public TopQuery<T> setFetchMode(String associationPath) {
+			if (fetchPaths == null) {
+				fetchPaths = new LinkedList<String>();
+			}
+			fetchPaths.add(associationPath);
 			return this;
 		}
 
@@ -270,6 +284,12 @@ public abstract class GenericDaoImpl implements GenericDao {
 
 				for (Criterion criterion : criterions) {
 					criteria.add(criterion);
+				}
+			}
+
+			if (fetchPaths != null) {
+				for (String fetchPath : fetchPaths) {
+					criteria.setFetchMode(fetchPath, FetchMode.JOIN);
 				}
 			}
 

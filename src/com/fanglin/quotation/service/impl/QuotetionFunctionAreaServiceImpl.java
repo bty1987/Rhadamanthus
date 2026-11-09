@@ -2,7 +2,9 @@ package com.fanglin.quotation.service.impl;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -89,13 +91,26 @@ public class QuotetionFunctionAreaServiceImpl implements QuotetionFunctionAreaSe
 
 			List<QuotetionFunctionAreaItemPO> quotetionFunctionAreaItemPOs = quotetionFunctionAreaItemDao.queryQuotetionFunctionAreaItemByFunctionAreaId(QuotetionFunctionAreaItemPO.factoryToClazz(quotetionFunctionAreaPO.getQfaId(), quotetionFunctionAreaPO.getIndex()), quotetionFunctionAreaPO.getQfaId());
 
+			// 批量取行内报价项(分表场景用现成ids查询, 消除逐行 quotationItemDao.get 的 N+1)
+			List<Long> qiids = new ArrayList<Long>();
+			for (QuotetionFunctionAreaItemPO quotetionFunctionAreaItemPO : quotetionFunctionAreaItemPOs) {
+				qiids.add(quotetionFunctionAreaItemPO.getQiid());
+			}
+
+			Map<Long, QuotationItemPO> quotationItemMap = new HashMap<Long, QuotationItemPO>();
+			if (!qiids.isEmpty()) {
+				for (QuotationItemPO quotationItemPO : quotationItemDao.queryQuotationItemByIds(qiids)) {
+					quotationItemMap.put(quotationItemPO.getQiid(), quotationItemPO);
+				}
+			}
+
 			for (QuotetionFunctionAreaItemPO quotetionFunctionAreaItemPO : quotetionFunctionAreaItemPOs) {
 
 				QuotetionFunctionAreaItemVO quotetionFunctionAreaItemVO = new QuotetionFunctionAreaItemVO();
 
 				BeanUtil.copyProperties(quotetionFunctionAreaItemPO, quotetionFunctionAreaItemVO);
 
-				QuotationItemPO quotationItemPO = quotationItemDao.get(quotetionFunctionAreaItemPO.getQiid());
+				QuotationItemPO quotationItemPO = quotationItemMap.get(quotetionFunctionAreaItemPO.getQiid());
 
 				if (quotationItemPO != null) {
 					quotetionFunctionAreaItemVO.setQiid(quotetionFunctionAreaItemPO.getQiid());

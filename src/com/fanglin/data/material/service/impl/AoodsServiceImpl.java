@@ -71,8 +71,8 @@ public class AoodsServiceImpl implements AoodsService {
 
 			AoodsVO aoodsVO = aoodsPO.ptv(new AoodsVO(new GoodsVO(), new AccessoriesTypeVO(), new AccessoriesTypeVO(), new NoodsVO(), new ConstructionNodeVO()));
 
-			if (aoodsPO.getBompany() != 0) {
-				aoodsVO.setBompany(companyDao.get(aoodsPO.getBompany()).getName());
+			if (aoodsPO.getBompany() != 0 && aoodsPO.getCompanyPO() != null) {
+				aoodsVO.setBompany(aoodsPO.getCompanyPO().getName());
 			}
 
 			AoodsVOs.add(aoodsVO);

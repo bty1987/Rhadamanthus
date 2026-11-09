@@ -15,6 +15,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import com.fanglin.data.material.vo.AoodsVO;
+import com.fanglin.system.po.CompanyPO;
 import com.fanglin.utils.BeanUtil;
 
 @Entity
@@ -129,6 +130,18 @@ public class AoodsPO implements Serializable {
 
 	public void setAid(long aid) {
 		this.aid = aid;
+	}
+
+	private CompanyPO companyPO;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "bompany", referencedColumnName = "cid", insertable = false, updatable = false)
+	public CompanyPO getCompanyPO() {
+		return companyPO;
+	}
+
+	public void setCompanyPO(CompanyPO companyPO) {
+		this.companyPO = companyPO;
 	}
 
 	@Column(name = "name")

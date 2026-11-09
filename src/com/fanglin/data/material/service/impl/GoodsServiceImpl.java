@@ -242,9 +242,7 @@ public class GoodsServiceImpl implements GoodsService {
 
 			goodsVO = goodsPO.ptv(goodsVO);
 
-			CompanyPO company = companyDao.get(goodsPO.getCompany());
-
-			goodsVO.setCompany(company.getName());
+			goodsVO.setCompany(goodsPO.getCompanyPO() == null ? null : goodsPO.getCompanyPO().getName());
 
 			goodsVOs.add(goodsVO);
 		}

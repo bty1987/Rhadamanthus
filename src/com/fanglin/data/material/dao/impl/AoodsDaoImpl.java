@@ -28,6 +28,9 @@ public class AoodsDaoImpl extends DaoImpl<AoodsPO> implements AoodsDao {
 
 		PagingQuery<AoodsPO> query = pagingQuery(paging, AoodsPO.class);
 
+		// 关联 JOIN 预取(消除列表装配逐行 get 的 N+1)
+		query.setFetchMode("companyPO");
+
 		if (companyType != null) {
 			query.add(query.getCriterion(companyType, company, "eq"));
 		}

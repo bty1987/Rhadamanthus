@@ -43,6 +43,10 @@ public class GoodsRecordPO implements Serializable {
 
 	private GoodsPO goods;
 
+	private SoodsPO soods;
+
+	private AoodsPO aoods;
+
 	private long sid; // 选材&辅材ID
 
 	private short type; // 0: 商品, 1: 选材 , 2: 辅材
@@ -91,6 +95,26 @@ public class GoodsRecordPO implements Serializable {
 
 	public void setGoods(GoodsPO goods) {
 		this.goods = goods;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "sid", referencedColumnName = "sid", insertable = false, updatable = false)
+	public SoodsPO getSoods() {
+		return soods;
+	}
+
+	public void setSoods(SoodsPO soods) {
+		this.soods = soods;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "sid", referencedColumnName = "aid", insertable = false, updatable = false)
+	public AoodsPO getAoods() {
+		return aoods;
+	}
+
+	public void setAoods(AoodsPO aoods) {
+		this.aoods = aoods;
 	}
 
 	@Column(name = "sid")

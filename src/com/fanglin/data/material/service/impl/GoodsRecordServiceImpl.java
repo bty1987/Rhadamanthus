@@ -67,7 +67,7 @@ public class GoodsRecordServiceImpl implements GoodsRecordService {
 
 			if (goodsRecordPO.getType() == GoodsRecordPO.TYPE_SOODS_SHORT) {
 
-				SoodsPO soodsPO = soodsDao.get(goodsRecordPO.getSid());
+				SoodsPO soodsPO = goodsRecordPO.getSoods();
 
 				SoodsVO soodsVO = new SoodsVO();
 
@@ -77,7 +77,7 @@ public class GoodsRecordServiceImpl implements GoodsRecordService {
 
 			} else if (goodsRecordPO.getType() == GoodsRecordPO.TYPE_AOODS_SHORT) {
 
-				AoodsPO aoodsPO = aoodsDao.get(goodsRecordPO.getSid());
+				AoodsPO aoodsPO = goodsRecordPO.getAoods();
 
 				AoodsVO aoodsVO = new AoodsVO();
 

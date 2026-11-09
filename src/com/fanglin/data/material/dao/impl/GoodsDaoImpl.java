@@ -15,6 +15,7 @@ import java.util.List;
 
 import org.hibernate.SQLQuery;
 import org.hibernate.criterion.MatchMode;
+import org.hibernate.FetchMode;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
@@ -122,7 +123,8 @@ public class GoodsDaoImpl extends DaoImpl<GoodsPO> implements GoodsDao {
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<GoodsPO> queryGoodsByGpid(Long gpid) {
-		return session().createCriteria(GoodsPO.class).add(Restrictions.eq(GoodsPO.COLUMN_GPID_STR, gpid)).list();
+		// 关联 JOIN 预取(消除列表装配逐行 get 的 N+1)
+		return session().createCriteria(GoodsPO.class).add(Restrictions.eq(GoodsPO.COLUMN_GPID_STR, gpid)).setFetchMode("companyPO", FetchMode.JOIN).list();
 	}
 
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {

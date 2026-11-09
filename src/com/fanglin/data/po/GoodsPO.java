@@ -14,6 +14,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import com.fanglin.data.material.vo.GoodsVO;
+import com.fanglin.system.po.CompanyPO;
 import com.fanglin.utils.BeanUtil;
 
 @Entity
@@ -119,6 +120,8 @@ public class GoodsPO implements java.io.Serializable {
 	private short status;
 
 	private int company;
+
+	private CompanyPO companyPO;
 
 	public GoodsPO() {
 		super();
@@ -372,6 +375,16 @@ public class GoodsPO implements java.io.Serializable {
 
 	public void setCompany(int company) {
 		this.company = company;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "company", referencedColumnName = "cid", insertable = false, updatable = false)
+	public CompanyPO getCompanyPO() {
+		return companyPO;
+	}
+
+	public void setCompanyPO(CompanyPO companyPO) {
+		this.companyPO = companyPO;
 	}
 
 	@Column(name = "series")

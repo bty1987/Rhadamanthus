@@ -22,6 +22,9 @@ public class GoodsRecordDaoImpl extends DaoImpl<GoodsRecordPO> implements GoodsR
 
 		PagingQuery<GoodsRecordPO> query = pagingQuery(paging, GoodsRecordPO.class);
 
+		// 关联 JOIN 预取(消除列表装配逐行 get 的 N+1)
+		query.setFetchMode("soods").setFetchMode("aoods").setFetchMode("goods");
+
 		if (gid != null) query.alias("goods", "goods").add(query.getCriterion(GoodsRecordPO.COLUMN_GOODS_STR, gid, "eq"));
 
 		queryFilterExcute(query, filters);
