@@ -571,11 +571,7 @@ public class CustomerServiceImpl implements CustomerService {
 			authPO.setToken(null);
 			authPO.setStatus(ElecsignAuthPO.STATUS_INIT_INT);
 
-			try {
-				elecsignAuthDao.update(authPO);
-			} catch (Exception e) {
-				// 兜底: 行清空失败不阻断
-			}
+			elecsignAuthDao.update(authPO);
 		}
 
 		customerPO.setNo(no);
@@ -742,11 +738,7 @@ public class CustomerServiceImpl implements CustomerService {
 		if (authPO != null) {
 			authPO.setStatus(ElecsignAuthPO.STATUS_AUTH_INT);
 
-			try {
-				elecsignAuthDao.update(authPO);
-			} catch (Exception e) {
-				// 兜底: 行写入失败不阻断
-			}
+			elecsignAuthDao.update(authPO);
 		}
 
 		customerDao.update(customerPO);
@@ -886,40 +878,35 @@ public class CustomerServiceImpl implements CustomerService {
 	}
 
 	/**
-	 * 认证行获取即建（按厂商各一份, UNIQUE cid+provider）。
-	 * 目标厂商无行时: customer 同命名空间存量值迁入建行（懒迁移, 一次）; 异命名空间则全新 INIT 行。
-	 * 行读写全程容错——表未建/查询异常视为无行, 写入失败仅落 customer（等价旧行为, 不阻断认证主流程）。
+	 * 认证行获取即建(按厂商各一份, UNIQUE cid+provider)。
+	 * 目标厂商无行时: customer 同命名空间存量值迁入建行(懒迁移, 一次); 异命名空间则全新 INIT 行。
+	 * 行读写随事务走(elecsignauth 表已建, sqls/elecsign/18), 失败回滚暴露, 不做"新表不可用"降级。
 	 */
 	private ElecsignAuthPO obtainElecsignAuth(CustomerPO customerPO, short provider) {
 
 		int cid = (int) customerPO.getCid();
 
-		try {
-			ElecsignAuthPO authPO = elecsignAuthDao.queryElecsignAuthByCidAndProvider(cid, provider);
-			if (authPO != null) {
-				return authPO;
-			}
-
-			authPO = new ElecsignAuthPO();
-			authPO.setCid(cid);
-			authPO.setProvider(provider);
-
-			if (currentProvider(customerPO) == provider) {
-				authPO.setSignno(customerPO.getSignno());
-				authPO.setAuthurl(customerPO.getAuthurl());
-				authPO.setToken(customerPO.getToken());
-				authPO.setStatus(customerPO.getStatus());
-			} else {
-				authPO.setStatus(ElecsignAuthPO.STATUS_INIT_INT);
-			}
-
-			elecsignAuthDao.save(authPO);
-
+		ElecsignAuthPO authPO = elecsignAuthDao.queryElecsignAuthByCidAndProvider(cid, provider);
+		if (authPO != null) {
 			return authPO;
-		} catch (Exception e) {
-			// 兜底: 新表不可用时认证退化为 customer 单列模式（无行可写, 调用方只双写 customer）
-			return null;
 		}
+
+		authPO = new ElecsignAuthPO();
+		authPO.setCid(cid);
+		authPO.setProvider(provider);
+
+		if (currentProvider(customerPO) == provider) {
+			authPO.setSignno(customerPO.getSignno());
+			authPO.setAuthurl(customerPO.getAuthurl());
+			authPO.setToken(customerPO.getToken());
+			authPO.setStatus(customerPO.getStatus());
+		} else {
+			authPO.setStatus(ElecsignAuthPO.STATUS_INIT_INT);
+		}
+
+		elecsignAuthDao.save(authPO);
+
+		return authPO;
 	}
 
 	/** 认证值双写: 行为主, customer 同步保持"最近一次认证"视图（signateCustomer/报表/前端认证态等旧读取方零感知） */
@@ -931,11 +918,7 @@ public class CustomerServiceImpl implements CustomerService {
 			if (token != null) authPO.setToken(token);
 			if (status != null) authPO.setStatus(status);
 
-			try {
-				elecsignAuthDao.update(authPO);
-			} catch (Exception e) {
-				// 兜底: 行写入失败不阻断, customer 侧照常落值
-			}
+			elecsignAuthDao.update(authPO);
 		}
 
 		if (signno != null) customerPO.setSignno(signno);
@@ -946,7 +929,7 @@ public class CustomerServiceImpl implements CustomerService {
 		if (authPO != null) customerPO.setProvider(authPO.getProvider());
 	}
 
-	/** 按厂商取客户认证账号: elecsignauth 行优先, 无行/新表不可用回退 customer.signno 同命名空间存量值 */
+	/** 按厂商取客户认证账号: elecsignauth 行优先, 无行回退 customer.signno 同命名空间存量值 */
 	private String queryCustomerSignnoForProvider(int cid, short provider) {
 
 		// get(Serializable)装箱规则: 必须Long(PO主键类型), int装箱Integer会报wrong type
@@ -956,15 +939,11 @@ public class CustomerServiceImpl implements CustomerService {
 			return null;
 		}
 
-		// 行优先; 异常/无行回退 customer 同命名空间存量值（兼容存量11万认证客户, 零数据迁移）
-		try {
-			ElecsignAuthPO authPO = elecsignAuthDao.queryElecsignAuthByCidAndProvider(cid, provider);
+		// 行优先; 无行回退 customer 同命名空间存量值(兼容存量认证客户)
+		ElecsignAuthPO authPO = elecsignAuthDao.queryElecsignAuthByCidAndProvider(cid, provider);
 
-			if (authPO != null && authPO.getSignno() != null && !"".equals(authPO.getSignno())) {
-				return authPO.getSignno();
-			}
-		} catch (Exception e) {
-			// 兜底: 新表不可用时走 customer
+		if (authPO != null && authPO.getSignno() != null && !"".equals(authPO.getSignno())) {
+			return authPO.getSignno();
 		}
 
 		if (currentProvider(customerPO) == provider && customerPO.getSignno() != null && !"".equals(customerPO.getSignno())) {
