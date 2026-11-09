@@ -24,7 +24,6 @@ import com.fanglin.core.interceptor.FLException;
 import com.fanglin.decoration.dao.DecorationActivityDao;
 import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.po.DecorationActivityPO;
-import com.fanglin.decoration.service.DecorationActivityItemService;
 import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.decoration.service.DecorationActivityService;
 import com.fanglin.decoration.vo.DecorationActivityItemVO;
@@ -54,9 +53,6 @@ public class DecorationActivityServiceImpl implements DecorationActivityService 
 
 	@Autowired
 	private UserDao userDao;
-
-	@Autowired
-	private DecorationActivityItemService decorationActivityItemService;
 
 	@Autowired
 	private PaymentDao paymentDao;

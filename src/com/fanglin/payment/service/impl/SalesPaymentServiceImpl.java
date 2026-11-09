@@ -23,14 +23,13 @@ import com.fanglin.decoration.dao.DecorationActivityItemDao;
 import com.fanglin.decoration.dao.DecorationActivityRecordDao;
 import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.dao.DecorationScaleDetailDao;
+import com.fanglin.decoration.po.DecorationAccountStatusPO;
 import com.fanglin.decoration.po.DecorationActivityItemPO;
 import com.fanglin.decoration.po.DecorationActivityRecordPO;
-import com.fanglin.decoration.po.DecorationScaleDetailPO;
-import com.fanglin.decoration.po.DecorationAccountStatusPO;
 import com.fanglin.decoration.po.DecorationPO;
+import com.fanglin.decoration.po.DecorationScaleDetailPO;
 import com.fanglin.decoration.service.DecorationAccountStatusService;
 import com.fanglin.decoration.service.DecorationAdditionService;
-import com.fanglin.decoration.service.DecorationActivityCostService;
 import com.fanglin.decoration.vo.DecorationVO;
 import com.fanglin.payment.dao.AdvancePaymentDao;
 import com.fanglin.payment.dao.PaytranDao;
@@ -798,9 +797,7 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 	}
 
 	/**
-	 * 阶梯券配比明细+券行消耗: 选券(daiIds)逐条校验(本单/已领/type=30/一券一用), 落 decorationscaledetail,
-	 * 券行 state 2→7 消耗(STATUS_CONSUME_INT)+状态流水; scaleFlags 与 daiIds 平行(空=默认计入)。
-	 * 🔴type=30 不参与 makeDecorationPayment 抵扣(券族{0,10,20}天然隔离)——回归红线见阶梯方案决策11。
+	 * 阶梯券配比明细+券行消耗: 选券(daiIds)逐条校验(本单/已领/type=30/一券一用), 落 decorationscaledetail, 券行 state 2→7 消耗(STATUS_CONSUME_INT)+状态流水; scaleFlags 与 daiIds 平行(空=默认计入)。 🔴type=30 不参与 makeDecorationPayment 抵扣(券族{0,10,20}天然隔离)——回归红线见阶梯方案决策11。
 	 */
 	private void saveScaleDetails(SalesPaymentPO salesPayment, SalesPO sales, List<Long> daiIds, List<Integer> scaleFlags, UserPO operater) throws FLException {
 
