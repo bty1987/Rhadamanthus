@@ -17,6 +17,10 @@ ACTION_WHITELIST = {
     "FactoryAction", "LoginInfoAction", "SecretAction", "PhoneCallAction",
     "PostarAction", "SwiftpassAction", "UploadAction", "DingTalkCallbackAction",
     "OssConfigAction",
+    # imports 模块导入 Action(2026-11-09 登记: 文件解析失败需专用业务反馈, 分层 catch 全路径 FLException 收尾)
+    "UserSalaryImport", "WorkerSalaryImport", "AccessoriesTypeImport",
+    "ColorImport", "FormatImport", "GoodsImport", "MaterialModuleImport",
+    "PriceImport", "PriceImportDelete", "QuotationItemImport",
 }
 
 def read_text(path):
