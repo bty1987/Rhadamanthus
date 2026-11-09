@@ -174,14 +174,10 @@ public class QuotationAssignTalkServiceImpl implements QuotationAssignTalkServic
 		// 保存消息
 		quotationAssignTalkDao.save(talkPO);
 
-		// 发送钉钉消息通知接收人
+		// 发送钉钉消息通知接收人(sendDing 内部自带失败兜底, 外层不包 try-catch)
 		if (receiver != null && receiver.getUserId() != null) {
-			try {
-				String dingMessage = String.format(DING_MESSAGE_TEMPLATE_STR, senderPO.getCurrentName(), quotationAssignTalkVO.getOrderId(), quotationAssignTalkVO.getContent());
-				dingTalkMessageService.sendDing(receiver.getUserId(), dingMessage, company);
-			} catch (Exception e) {
-				// 钉钉消息发送失败不影响主流程
-			}
+			String dingMessage = String.format(DING_MESSAGE_TEMPLATE_STR, senderPO.getCurrentName(), quotationAssignTalkVO.getOrderId(), quotationAssignTalkVO.getContent());
+			dingTalkMessageService.sendDing(receiver.getUserId(), dingMessage, company);
 		}
 
 		// 返回完整的VO
