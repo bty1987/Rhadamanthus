@@ -467,6 +467,11 @@ $.extend(api, {
             }
         },
 
+        querySalesOperateBySid: {
+            url: "querySalesOperateBySid.do",
+            type: "query"
+        },
+
         querySalesBalance: {
             url: "querySalesBalance.do",
             type: "query",

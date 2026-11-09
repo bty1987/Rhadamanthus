@@ -20,7 +20,10 @@ import com.fanglin.data.po.GoodsPO;
 import com.fanglin.data.po.GoodsPackagePO;
 import com.fanglin.sales.dao.SalesDao;
 import com.fanglin.sales.dao.SalesItemDao;
+import com.fanglin.sales.dao.SalesOperateDao;
+import com.fanglin.personel.dao.UserDao;
 import com.fanglin.sales.po.SalesItemPO;
+import com.fanglin.sales.po.SalesOperatePO;
 import com.fanglin.sales.po.SalesPO;
 import com.fanglin.sales.service.SalesItemService;
 import com.fanglin.sales.vo.SalesItemVO;
@@ -36,7 +39,13 @@ public class SalesItemServiceImpl implements SalesItemService {
 	private SalesDao salesDao;
 
 	@Autowired
+	private UserDao userDao;
+
+	@Autowired
 	private SalesItemDao salesItemDao;
+
+	@Autowired
+	private SalesOperateDao salesOperateDao;
 
 	@Autowired
 	private GoodsDao goodsDao;
@@ -231,7 +240,7 @@ public class SalesItemServiceImpl implements SalesItemService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int updateSalesItemForBalance(SalesItemVO salesItemVO) throws FLException {
+	public int updateSalesItemForBalance(SalesItemVO salesItemVO, String userId) throws FLException {
 
 		SalesItemPO salesItemPO = salesItemDao.get(salesItemVO.getSiid());
 
@@ -254,12 +263,14 @@ public class SalesItemServiceImpl implements SalesItemService {
 
 		salesItemDao.update(salesItemPO);
 
+		salesOperateDao.save(new SalesOperatePO().init(salesPO, SalesOperatePO.TYPE_ITEM_BALANCE_INT, String.format("销售项[%s]结算值修改: %s/%s", salesItemPO.getSiid(), salesItemVO.getCtype(), salesItemVO.getCvalue()), userDao.queryUserByUserId(userId)));
+
 		return 0;
 	}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int deleteSalesItem(SalesVO salesVO, SalesItemVO salesItemVO) throws FLException {
+	public int deleteSalesItem(SalesVO salesVO, SalesItemVO salesItemVO, String userId) throws FLException {
 
 		SalesItemPO salesItemPO = salesItemDao.get(salesItemVO.getSiid());
 
@@ -289,6 +300,8 @@ public class SalesItemServiceImpl implements SalesItemService {
 		salesPO.setAmount(salesVO.getTotal());
 
 		salesDao.update(salesPO);
+
+		salesOperateDao.save(new SalesOperatePO().init(salesPO, SalesOperatePO.TYPE_DELETE_ITEM_INT, String.format("删除销售项[%s]: %s, 数量:%s", salesItemPO.getSiid(), salesItemPO.getGoods() != null ? salesItemPO.getGoods().getName() : "", salesItemPO.getNum()), userDao.queryUserByUserId(userId)));
 
 		return 0;
 	}

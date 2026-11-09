@@ -16,8 +16,8 @@ public interface SalesItemService {
 	
 	public int updateSalesItem(SalesVO salesVO, SalesItemVO salesItemVO) throws FLException;
 	
-	public int updateSalesItemForBalance(SalesItemVO salesItemVO) throws FLException;
+	public int updateSalesItemForBalance(SalesItemVO salesItemVO, String userId) throws FLException;
 	
-	public int deleteSalesItem(SalesVO salesVO, SalesItemVO salesItemVO) throws FLException;
+	public int deleteSalesItem(SalesVO salesVO, SalesItemVO salesItemVO, String userId) throws FLException;
 	
 }

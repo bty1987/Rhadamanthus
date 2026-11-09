@@ -49,9 +49,11 @@ import com.fanglin.personel.po.UserPartnerPO;
 import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.sales.dao.SalesDao;
 import com.fanglin.sales.dao.SalesDeliveryItemDao;
+import com.fanglin.sales.dao.SalesOperateDao;
 import com.fanglin.sales.dao.SalesItemDao;
 import com.fanglin.sales.po.SalesDeliveryItemPO;
 import com.fanglin.sales.po.SalesItemPO;
+import com.fanglin.sales.po.SalesOperatePO;
 import com.fanglin.sales.po.SalesPO;
 import com.fanglin.sales.service.SalesBalanceService;
 import com.fanglin.sales.service.SalesService;
@@ -75,6 +77,9 @@ public class SalesServiceImpl implements SalesService {
 
 	@Autowired
 	private CountingService countingService;
+
+	@Autowired
+	private SalesOperateDao salesOperateDao;
 
 	@Autowired
 	private SalesDao salesDao;
@@ -536,7 +541,7 @@ public class SalesServiceImpl implements SalesService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int updateSalesForActivity(SalesVO salesVO) throws FLException {
+	public int updateSalesForActivity(SalesVO salesVO, String userId) throws FLException {
 
 		SalesPO salesPO = salesDao.get(salesVO.getSid());
 
@@ -552,12 +557,14 @@ public class SalesServiceImpl implements SalesService {
 
 		salesDao.update(salesPO);
 
+		salesOperateDao.save(new SalesOperatePO().init(salesPO, SalesOperatePO.TYPE_ACTIVITY_INT, String.format("活动标记变更为:%s", salesVO.getActivityId()), userDao.queryUserByUserId(userId)));
+
 		return 0;
 	}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int updateSalesForBelong(SalesVO salesVO) throws FLException {
+	public int updateSalesForBelong(SalesVO salesVO, String userId) throws FLException {
 
 		SalesPO salesPO = salesDao.get(salesVO.getSid());
 
@@ -585,12 +592,14 @@ public class SalesServiceImpl implements SalesService {
 
 		salesDao.update(salesPO);
 
+		salesOperateDao.save(new SalesOperatePO().init(salesPO, SalesOperatePO.TYPE_BELONG_INT, String.format("归属变更: 业务员[%s] 导购[%s] 驻店[%s] 厂商[%s]", salesman.getUserName(), guider.getUserName(), instorer.getUserName(), supplier.getUserName()), userDao.queryUserByUserId(userId)));
+
 		return 0;
 	}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int updateSalesForAdvance(SalesVO salesVO) throws FLException {
+	public int updateSalesForAdvance(SalesVO salesVO, String userId) throws FLException {
 
 		SalesPO salesPO = salesDao.get(salesVO.getSid());
 
@@ -598,11 +607,15 @@ public class SalesServiceImpl implements SalesService {
 			throw new FLException(260021, "销售单不存在");
 		}
 
+		short beforeStatus = salesPO.getStatus();
+
 		salesPO.setStatus(SalesPO.STATUS_INIT_SHORT);
 
 		salesDao.update(salesPO);
 
 		decorationAccountStatusService.updateDecorationAccountStatus(salesPO.getOrderId(), DecorationAccountStatusPO.TYPE_SALES_INT);
+
+		salesOperateDao.save(new SalesOperatePO().init(salesPO, SalesOperatePO.TYPE_ADVANCE_INT, String.format("恢复初始, 原状态:%d", beforeStatus), userDao.queryUserByUserId(userId)));
 
 		return 0;
 	}
@@ -682,6 +695,8 @@ public class SalesServiceImpl implements SalesService {
 		salesPaymentPO.setCompany(salesPO.getCompany());
 
 		salesPaymentDao.save(salesPaymentPO);
+
+		salesOperateDao.save(new SalesOperatePO().init(salesPO, SalesOperatePO.TYPE_UNPAY_INT, String.format("免收款全款直接确认(定金/补款转已确认+预结), 金额:%s", Math.abs(salesPO.getTotal())), operater));
 
 		return 0;
 	}
@@ -764,7 +779,7 @@ public class SalesServiceImpl implements SalesService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int terminalSales(SalesVO salesVO) throws FLException {
+	public int terminalSales(SalesVO salesVO, String userId) throws FLException {
 
 		SalesPO salesPO = salesDao.get(salesVO.getSid());
 
@@ -793,6 +808,8 @@ public class SalesServiceImpl implements SalesService {
 		salesDao.update(salesPO);
 
 		decorationAccountStatusService.updateDecorationAccountStatus(salesPO.getOrderId(), DecorationAccountStatusPO.TYPE_SALES_INT);
+
+		salesOperateDao.save(new SalesOperatePO().init(salesPO, SalesOperatePO.TYPE_TERMINAL_INT, "销售单作废(初始→废单)", userDao.queryUserByUserId(userId)));
 
 		return 0;
 	}
@@ -828,6 +845,8 @@ public class SalesServiceImpl implements SalesService {
 		salesDao.update(salesPO);
 
 		decorationAccountStatusService.updateDecorationAccountStatus(salesPO.getOrderId(), DecorationAccountStatusPO.TYPE_SALES_INT);
+
+		salesOperateDao.save(new SalesOperatePO().init(salesPO, SalesOperatePO.TYPE_FINISH_INT, "销售单完结(初始→完结)", finisher));
 
 		return 0;
 	}

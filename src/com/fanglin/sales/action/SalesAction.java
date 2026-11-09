@@ -12,8 +12,10 @@ import org.springframework.stereotype.Controller;
 import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.sales.service.SalesItemService;
+import com.fanglin.sales.service.SalesOperateService;
 import com.fanglin.sales.service.SalesService;
 import com.fanglin.sales.vo.SalesItemVO;
+import com.fanglin.sales.vo.SalesOperateVO;
 import com.fanglin.sales.vo.SalesVO;
 
 @ParentPackage("base")
@@ -29,6 +31,9 @@ public class SalesAction extends BaseListAction {
 	@Autowired
 	private SalesItemService salesItemService;
 
+	@Autowired
+	private SalesOperateService salesOperateService;
+
 	private SalesItemVO salesItem;
 
 	private SalesVO sales;
@@ -38,6 +43,8 @@ public class SalesAction extends BaseListAction {
 	private List<Long> sids;
 
 	private List<SalesItemVO> salesItems;
+
+	private List<SalesOperateVO> salesOperates;
 
 	private Long amount;
 
@@ -228,7 +235,7 @@ public class SalesAction extends BaseListAction {
 	@Action(value = "updateSalesItemForBalance", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String updateSalesItemForBalance() throws FLException {
 
-		salesItemService.updateSalesItemForBalance(salesItem);
+		salesItemService.updateSalesItemForBalance(salesItem, queryUserId());
 
 		return SUCCESS;
 	}
@@ -236,7 +243,15 @@ public class SalesAction extends BaseListAction {
 	@Action(value = "deleteSalesItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String deleteSalesItem() throws FLException {
 
-		salesItemService.deleteSalesItem(sales, salesItem);
+		salesItemService.deleteSalesItem(sales, salesItem, queryUserId());
+
+		return SUCCESS;
+	}
+
+	@Action(value = "querySalesOperateBySid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String querySalesOperateBySid() throws FLException {
+
+		salesOperates = salesOperateService.querySalesOperateBySid(sales);
 
 		return SUCCESS;
 	}
@@ -244,7 +259,7 @@ public class SalesAction extends BaseListAction {
 	@Action(value = "updateSalesForActivity", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String updateSalesForActivity() throws FLException {
 
-		salesService.updateSalesForActivity(sales);
+		salesService.updateSalesForActivity(sales, queryUserId());
 
 		return SUCCESS;
 	}
@@ -252,7 +267,7 @@ public class SalesAction extends BaseListAction {
 	@Action(value = "updateSalesForBelong", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String updateSalesForBelong() throws FLException {
 
-		salesService.updateSalesForBelong(sales);
+		salesService.updateSalesForBelong(sales, queryUserId());
 
 		return SUCCESS;
 	}
@@ -260,7 +275,7 @@ public class SalesAction extends BaseListAction {
 	@Action(value = "updateSalesForAdvance", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String updateSalesForAdvance() throws FLException {
 
-		salesService.updateSalesForAdvance(sales);
+		salesService.updateSalesForAdvance(sales, queryUserId());
 
 		return SUCCESS;
 	}
@@ -292,7 +307,7 @@ public class SalesAction extends BaseListAction {
 	@Action(value = "terminalSales", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String terminalSales() throws FLException {
 
-		salesService.terminalSales(sales);
+		salesService.terminalSales(sales, queryUserId());
 
 		return SUCCESS;
 	}
@@ -311,6 +326,14 @@ public class SalesAction extends BaseListAction {
 
 	public void setSalesItem(SalesItemVO salesItem) {
 		this.salesItem = salesItem;
+	}
+
+	public List<SalesOperateVO> getSalesOperates() {
+		return salesOperates;
+	}
+
+	public void setSalesOperates(List<SalesOperateVO> salesOperates) {
+		this.salesOperates = salesOperates;
 	}
 
 	public SalesVO getSales() {

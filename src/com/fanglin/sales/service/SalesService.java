@@ -49,11 +49,11 @@ public interface SalesService {
 
 	public int updateSalesForMaling(SalesVO salesVO) throws FLException;
 
-	public int updateSalesForActivity(SalesVO salesVO) throws FLException;
+	public int updateSalesForActivity(SalesVO salesVO, String userId) throws FLException;
 
-	public int updateSalesForBelong(SalesVO salesVO) throws FLException;
+	public int updateSalesForBelong(SalesVO salesVO, String userId) throws FLException;
 
-	public int updateSalesForAdvance(SalesVO salesVO) throws FLException;
+	public int updateSalesForAdvance(SalesVO salesVO, String userId) throws FLException;
 
 	public int unpaySales(SalesVO salesVO, String userId) throws FLException;
 
@@ -61,7 +61,7 @@ public interface SalesService {
 
 	public int affirmSales(SalesVO salesVO, String securityCode, String verifyCode, String phoneCode, String company) throws FLException;
 
-	public int terminalSales(SalesVO salesVO) throws FLException;
+	public int terminalSales(SalesVO salesVO, String userId) throws FLException;
 
 	public int finishSales(SalesVO salesVO, String userId) throws FLException;
 

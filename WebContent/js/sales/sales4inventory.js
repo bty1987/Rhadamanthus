@@ -253,4 +253,42 @@ $(function() {
         }
         return "";
     }
+
+    // 高权限操作记录(废单/恢复/完结/反付款/归属/活动标记/删明细/明细结算改, SalesOperatePO.TYPE_*)
+    var salesOperateType = { 1: "废单", 2: "恢复", 3: "完结", 4: "反付款", 5: "归属变更", 6: "活动标记", 7: "删明细", 8: "明细结算改" };
+
+    com.post(api.sales.querySalesOperateBySid, {
+        "sales.sid": salesInventory.sid
+    }, function(res) {
+
+        var $wrap = com.focusPage('#salesOperateList').html('');
+
+        if (!res.salesOperates || !res.salesOperates.length) {
+            $('<li></li>').addClass('item-orange clearfix').append(
+                $('<div></div>').html("暂无操作记录").css({ "text-align": "center", "color": "#999", "padding": "8px" })).appendTo($wrap);
+            return;
+        }
+
+        $.each(res.salesOperates, function(i, v) {
+
+            var $li = $('<li></li>').addClass('item-orange clearfix');
+            var $ul = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix').css('padding-left', '12px').appendTo($li);
+
+            var props = [
+                ["类型:", salesOperateType[v.type] || v.type, "red"],
+                ["操作人:", v.operater ? (v.operater.currentName || v.operater.userName) : "", "grey"],
+                ["操作时间:", v.operateTime, "green"],
+                ["说明:", v.comment, "grey"]
+            ];
+
+            $.each(props, function(j, p) {
+
+                var $liProp = $('<li></li>').appendTo($ul);
+                $('<strong></strong>').text(p[0]).appendTo($liProp);
+                $('<span></span>').text(p[1] == null || p[1] == "" ? "-" : p[1]).addClass(p[2]).appendTo($liProp);
+            });
+
+            $wrap.append($li);
+        });
+    });
 });
