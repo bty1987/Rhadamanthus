@@ -865,6 +865,9 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 		// 生成消息提示数据
 		messageQueuingDao.save(new MessageCueuingPO().init(orderId, "signDecorationContract", "{\"orderId\":\"" + orderId + "\",\"userId\":\"" + userId + "\",\"event\":\"CUSTOMER_SIGNED\"" + (decorationPO.getBusitype() != null ? ",\"busiTypeName\":\"" + decorationPO.getBusitype().getName() + "\"" : "") + buildCcidArgs(orderId) + "}"));
 
+		// 抽奖券引擎插桩: 首次签约 → 签约赠发券(重签链已有插桩, 首签缺失致未签约期收款的单错过签约赠, 2610310484实证); 引擎按应得数对齐幂等, 收款时点已发的每满券不会重复
+		decorationActivityItemService.issueDecorationActivityItemByOrderId(orderId, userId);
+
 		return 0;
 	}
 
