@@ -288,8 +288,11 @@ public class PaymentServiceImpl implements PaymentService {
 
 		paymentVO.setPid(paymentPO.getPid());
 
-		// 抽奖券引擎插桩: 主材预存收款实时同步发券(应得=Σ规则行, diff 补发); 异常上抛由 FLException 接管, 引擎内无活动/无规则等场景已在引擎内识别返回
+		// 抽奖券引擎插桩: 主材预存收款实时同步发券(应得=Σ规则行, diff 补发); 异常上抛由 FLException 接管, 引擎内无活动/无规则等场景已在引擎内识别返回;
+		// 🔴先flush再触发: 引擎净额统计是createSQLQuery原生SQL(Hibernate3不auto-flush原生查询), 不flush则本笔INSERT对引擎不可见——
+		// 单笔恰好跨过门槛的单漏发(2610310484: 唯一流水30000, 引擎net=0, 0张; 多笔单靠前笔已提交流水才偶发正确)
 		if (PaymentPO.PAYMENT_PAYMENTTYPE_MATERIAL_INT == paymentType) {
+			paymentDao.flush();
 			decorationActivityItemService.issueDecorationActivityItemByOrderId(paymentVO.getOrderId(), userId);
 		}
 
@@ -469,7 +472,9 @@ public class PaymentServiceImpl implements PaymentService {
 
 			decorationAdditionService.updateDecorationForSaleScale(new DecorationVO(decorationPO.getOrderId())); // 更新装修单上的销售比例
 
-			// 抽奖券引擎插桩: 主材预存提现(退款)实时同步回收券(应得下降, 未中奖券置失效); 异常上抛由 FLException 接管
+			// 抽奖券引擎插桩: 主材预存提现(退款)实时同步回收券(应得下降, 未中奖券置失效); 异常上抛由 FLException 接管;
+			// 🔴同collect: 先flush再触发, 引擎原生SQL统计须可见本笔提现INSERT(回收方向同理漏算)
+			paymentDao.flush();
 			decorationActivityItemService.issueDecorationActivityItemByOrderId(paymentPO.getOrderId(), userId);
 		}
 
