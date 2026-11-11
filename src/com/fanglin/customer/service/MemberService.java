@@ -28,6 +28,8 @@ public interface MemberService {
 
 	public int makeMemberOrder(MemberOrderVO memberOrderVO, List<MemberOrderItemVO> memberOrderItemVOs, String userId) throws FLException;
 
+	public int makeMemberOrder(List<MemberOrderVO> memberOrders, String userId) throws FLException;
+
 	public int cancelMemberOrder(MemberOrderVO memberOrderVO, String userId) throws FLException;
 
 	public int makeMemberOrderItem(MemberOrderVO memberOrderVO, MemberOrderItemVO memberOrderItemVO, String userId) throws FLException;

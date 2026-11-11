@@ -814,6 +814,29 @@ public class MemberServiceImpl implements MemberService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
+	public int makeMemberOrder(List<MemberOrderVO> memberOrders, String userId) throws FLException {
+
+		// 整批=单事务: 任一单校验失败全部回滚, 调用方整批重发
+		for (MemberOrderVO memberOrderVO : memberOrders) {
+
+			if (memberOrderVO == null || memberOrderVO.getItems() == null || memberOrderVO.getItems().isEmpty()) {
+				throw new FLException(110040, "请求参数格式不正确");
+			}
+
+			// 防重闸: decorationActivityItem.no(=pointOrderId)已存在明细则整批拒绝(对齐makeMemberOrderItem的140104口径)
+			if (decorationActivityItemDao.countDecorationActivityItem(memberOrderVO.getPointOrderId()) > 0) {
+				throw new FLException(140104, "活动物品编号重复");
+			}
+
+			// 同类直调不走代理: 各单落库共用本方法事务; 单笔口径(装修单/活动校验、物品、账户、款项分摊、流水)与旧入口一致
+			makeMemberOrder(memberOrderVO, memberOrderVO.getItems(), userId);
+		}
+
+		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
 	public int makeMemberOrderItem(MemberOrderVO memberOrderVO, MemberOrderItemVO memberOrderItemVO, String userId) throws FLException {
 
 		String orderId = memberOrderVO.getOrderId();

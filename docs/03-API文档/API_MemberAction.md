@@ -255,6 +255,43 @@
 }
 ```
 
+**多单批量形态**（`memberOrders` 非空时优先生效；旧单形态 `memberOrder` + `memberOrderItems` 保留兼容）:
+
+每单自带明细，参数按索引展开（form 编码）：
+
+```
+memberOrders[0].orderId=160001
+memberOrders[0].pointOrderId=PO20261111001
+memberOrders[0].decorationPoint=100
+memberOrders[0].materialPoint=50
+memberOrders[0].operatePoint=30
+memberOrders[0].point=150
+memberOrders[0].surplusPoint=20
+memberOrders[0].uniqueId=12345
+memberOrders[0].items[0].no=G001
+memberOrders[0].items[0].name=电饭煲
+memberOrders[0].items[0].point=100
+memberOrders[0].items[0].num=1
+memberOrders[0].items[1].no=G002
+memberOrders[0].items[1].name=毛巾套装
+memberOrders[0].items[1].point=50
+memberOrders[0].items[1].num=2
+memberOrders[1].orderId=160002
+memberOrders[1].pointOrderId=PO20261111002
+memberOrders[1].items[0].no=G003
+...
+```
+
+| 参数名 | 类型 | 必填 | 说明 |
+|--------|------|------|------|
+| `memberOrders[i].orderId` / `pointOrderId` / `decorationPoint` / `materialPoint` / `operatePoint` / `surplusPoint` / `point` / `uniqueId` | 同单形态 | 各自同 | 订单头字段与单形态一致 |
+| `memberOrders[i].items[j].*` | - | 是 | 该订单的兑换明细，字段同 `memberOrderItems`；每单至少一条，缺失报 110040 |
+
+批量语义：
+- **整批单事务**：任一单校验/落库失败，全批回滚，调用方整批重发
+- **防重闸**：各单 `pointOrderId`（落库为 `decorationactivityitem.no`）命中既有非失效记录即 140104 拒绝整批（对齐 makeMemberOrderItem 口径；旧单形态不加此闸，维持原行为）
+- 每单落库逻辑（装修单/活动校验、物品创建、积分账户、款项分摊、积分流水）与单形态逐单一致
+
 **业务逻辑**:
 1. 校验订单存在性
 2. 校验积分充足性（可用装修积分 + 可用主材积分 >= 扣除积分）
@@ -271,6 +308,8 @@
 | 160011 | 活动信息不存在 |
 | 330049 | 积分不足 |
 | 130006 | 客户支付记录不存在 |
+| 140104 | 活动物品编号重复（批量形态防重闸） |
+| 110040 | 请求参数格式不正确（批量形态缺明细） |
 
 ---
 
@@ -508,6 +547,7 @@
 | 140013 | 订单不存在 | makeMemberOrder, cancelMemberOrder, makeMemberOrderItem, cancelMemberOrderItem |
 | 140057 | 装修活动奖品不可操作 | cancelMemberOrderItem |
 | 160011 | 活动信息不存在 | makeMemberOrder, makeMemberOrderItem |
+| 140104 | 活动物品编号重复 | makeMemberOrderItem, makeMemberOrder(批量形态) |
 | 330047 | 积分不存在 | cancelMemberOrder |
 | 330049 | 积分不足 | makeMemberOrder |
 

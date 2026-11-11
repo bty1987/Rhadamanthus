@@ -49,6 +49,8 @@ public class MemberAction extends BaseListAction {
 
 	private MemberOrderVO memberOrder;
 
+	private List<MemberOrderVO> memberOrders;
+
 	private MemberOrderItemVO memberOrderItem;
 
 	private List<MemberOrderItemVO> memberOrderItems;
@@ -97,7 +99,12 @@ public class MemberAction extends BaseListAction {
 	@Action(value = "makeMemberOrder", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String makeMemberOrder() throws FLException {
 
-		memberService.makeMemberOrder(memberOrder, memberOrderItems, queryUserId());
+		// 多单形态 memberOrders[i].items[j] 优先; 无则回退旧单形态 memberOrder + memberOrderItems
+		if (memberOrders != null && !memberOrders.isEmpty()) {
+			memberService.makeMemberOrder(memberOrders, queryUserId());
+		} else {
+			memberService.makeMemberOrder(memberOrder, memberOrderItems, queryUserId());
+		}
 
 		return SUCCESS;
 	}
@@ -180,6 +187,14 @@ public class MemberAction extends BaseListAction {
 
 	public void setMemberOrder(MemberOrderVO memberOrder) {
 		this.memberOrder = memberOrder;
+	}
+
+	public List<MemberOrderVO> getMemberOrders() {
+		return memberOrders;
+	}
+
+	public void setMemberOrders(List<MemberOrderVO> memberOrders) {
+		this.memberOrders = memberOrders;
 	}
 
 	public MemberOrderItemVO getMemberOrderItem() {

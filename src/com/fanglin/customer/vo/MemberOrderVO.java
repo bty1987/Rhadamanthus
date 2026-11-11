@@ -1,6 +1,7 @@
 package com.fanglin.customer.vo;
 
 import java.io.Serializable;
+import java.util.List;
 
 public class MemberOrderVO implements Serializable {
 
@@ -21,6 +22,8 @@ public class MemberOrderVO implements Serializable {
 	private Integer point; //扣除装修积分+扣除主材积分
 
 	private String uniqueId; // 唯一标识，用于区分不同活动物品对应的被推荐装修单号和推荐装修单号的对应关系
+
+	private List<MemberOrderItemVO> items; // 该积分订单对应的兑换明细(批量下单形态: memberOrders[i].items[j])
 
 	public String getOrderId() {
 		return orderId;
@@ -84,5 +87,13 @@ public class MemberOrderVO implements Serializable {
 
 	public void setUniqueId(String uniqueId) {
 		this.uniqueId = uniqueId;
+	}
+
+	public List<MemberOrderItemVO> getItems() {
+		return items;
+	}
+
+	public void setItems(List<MemberOrderItemVO> items) {
+		this.items = items;
 	}
 }
