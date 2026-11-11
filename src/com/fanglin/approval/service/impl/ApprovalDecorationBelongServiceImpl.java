@@ -478,24 +478,29 @@ public class ApprovalDecorationBelongServiceImpl implements ApprovalDecorationBe
 		}
 
 		// addition姓名快照按物化后该类型全部生效行(保留行+新行)重建; 合尺保留行不可被整体clear
-		if (DecorationBelongPO.BELONGTYPE_DESIGN_INT == belongType) decorationAdditionPO.clearDesign();
-		else if (DecorationBelongPO.BELONGTYPE_SALESMAN_INT == belongType) decorationAdditionPO.clearSales();
+		// 防御: addition行理论每单必有(建单即建), 老数据缺失时跳过快照更新不炸整批(归属核心数据已落)
+		if (decorationAdditionPO != null) {
 
-		for (DecorationBelongPO decorationBelongPO : effectivePOs) {
+			if (DecorationBelongPO.BELONGTYPE_DESIGN_INT == belongType) decorationAdditionPO.clearDesign();
+			else if (DecorationBelongPO.BELONGTYPE_SALESMAN_INT == belongType) decorationAdditionPO.clearSales();
 
-			UserPO belonger = decorationBelongPO.getBelonger();
-			DepartmentPO bDept = decorationBelongPO.getDepartment() != null ? decorationBelongPO.getDepartment() : belonger.getDept();
-			DepartmentPO bRegn = decorationBelongPO.getRegion() != null ? decorationBelongPO.getRegion() : (bDept != null ? bDept.getFatherDept() : null);
+			for (DecorationBelongPO decorationBelongPO : effectivePOs) {
 
-			if (bDept == null || bRegn == null) continue; // 历史断链保留行: 跳过姓名装配不动归属数据
+				UserPO belonger = decorationBelongPO.getBelonger();
+				DepartmentPO bDept = decorationBelongPO.getDepartment() != null ? decorationBelongPO.getDepartment() : belonger.getDept();
+				DepartmentPO bRegn = decorationBelongPO.getRegion() != null ? decorationBelongPO.getRegion() : (bDept != null ? bDept.getFatherDept() : null);
 
-			if (DecorationBelongPO.BELONGTYPE_DESIGN_INT == belongType) decorationAdditionPO.setDesign(belonger.getCurrentName(), bDept.getName(), bRegn.getName());
-			else if (DecorationBelongPO.BELONGTYPE_SALESMAN_INT == belongType) decorationAdditionPO.setSales(belonger.getCurrentName(), bDept.getName(), bRegn.getName());
+				if (bDept == null || bRegn == null) continue; // 历史断链保留行: 跳过姓名装配不动归属数据
+
+				if (DecorationBelongPO.BELONGTYPE_DESIGN_INT == belongType) decorationAdditionPO.setDesign(belonger.getCurrentName(), bDept.getName(), bRegn.getName());
+				else if (DecorationBelongPO.BELONGTYPE_SALESMAN_INT == belongType) decorationAdditionPO.setSales(belonger.getCurrentName(), bDept.getName(), bRegn.getName());
+			}
+
+			decorationAdditionPO.setBelongTime(DateUtil.getDateToTimestamp(new Date()));
+
+			decorationAdditionDao.update(decorationAdditionPO);
 		}
 
-		decorationAdditionPO.setBelongTime(DateUtil.getDateToTimestamp(new Date()));
-
-		decorationAdditionDao.update(decorationAdditionPO);
 		decorationDao.update(decorationPO);
 
 		// 队列事件沿用单票契约(含双写replace行为), targetCcid承接原移交人行ccid
