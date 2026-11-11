@@ -8,4 +8,4 @@
 -- 幂等: NOT EXISTS 守卫(按 field 名)
 -- =====================================================================
 
-INSERT INTO communion.constant (name, module, clazz, type, field, `key`, value) SELECT '离职移交(类型)', 'approval', 'approval', 'type', 'TYPE_BELONG_TRAN_INT', '27', '离职移交' FROM DUAL WHERE NOT EXISTS (SELECT 1 FROM communion.constant WHERE module = 'approval' AND clazz = 'approval' AND type = 'type' AND field = 'TYPE_BELONG_TRAN_INT');
+INSERT INTO communion.constant (name, module, clazz, type, field, `key`, value, status) SELECT '离职移交(类型)', 'approval', 'approval', 'type', 'TYPE_BELONG_TRAN_INT', '27', '离职移交', 0 FROM DUAL WHERE NOT EXISTS (SELECT 1 FROM communion.constant WHERE module = 'approval' AND clazz = 'approval' AND type = 'type' AND field = 'TYPE_BELONG_TRAN_INT');

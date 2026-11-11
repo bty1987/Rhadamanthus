@@ -22,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.alibaba.fastjson.JSONArray;
 import com.fanglin.approval.dao.ApprovalDao;
+import com.fanglin.approval.dao.ApprovalBelongTranItemDao;
 import com.fanglin.approval.dao.ApprovalDecorationBelongDao;
 import com.fanglin.approval.dao.ApprovalDecorationBelongItemDao;
 import com.fanglin.approval.po.ApprovalBelongTranItemPO;
@@ -67,6 +68,9 @@ public class ApprovalDecorationBelongServiceImpl implements ApprovalDecorationBe
 
 	@Autowired
 	private ApprovalDao approvalDao;
+
+	@Autowired
+	private ApprovalBelongTranItemDao approvalBelongTranItemDao;
 
 	@Autowired
 	private ApprovalDecorationBelongDao approvalDecorationBelongDao;
@@ -131,6 +135,11 @@ public class ApprovalDecorationBelongServiceImpl implements ApprovalDecorationBe
 
 		if (approvalPO != null) {
 			throw new FLException(240004, "正在审批中,不能提交新审批");
+		}
+
+		// 反向互斥: 该单该类型存在在途离职移交审批(type=27待审)时禁止单票归属变更, 防两链交叉物化
+		if (approvalBelongTranItemDao.countApprovalBelongTranItemForInit(orderId, belongType) > 0) {
+			throw new FLException(240089, "该装修单已有在途审批不可移交");
 		}
 
 		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(orderId);

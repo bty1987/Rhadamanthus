@@ -230,9 +230,11 @@ jQuery(function($) {
         }
     }
 
-    function tranLoadUsers() {
+    function tranLoadUsers(keyword) {
 
-        com.post(api.decoration.queryDecorationBelongForTran, {}, function(res) {
+        com.post(api.decoration.queryDecorationBelongForTran, keyword ? {
+            "keyword": keyword
+        } : {}, function(res) {
 
             tran.users = res.decorationBelongTranUsers || [];
             tran.usersLoaded = true;
@@ -267,8 +269,14 @@ jQuery(function($) {
         $("#tranUserListWrap").hide();
         $("#tranOrderWrap").show();
 
-        if (u.deptName) $("#tranBelongerInput").val(u.userName);
-        $("#tranBelongerInfo").text(u.userName + "(" + (u.deptName || "") + ") · 设计" + u.designCount + "单/业务" + u.salesCount + "单");
+        $("#tranBelongerInput").val(u.userName);
+        $("#tranBelongerInfo").html(u.userName + "(" + (u.deptName || "") + ") · 设计" + u.designCount + "单/业务" + u.salesCount + "单" + ' <a href="javascript:void(0)" id="tranRepickLink" style="color:#2679b5">[重选移交人]</a>');
+
+        $("#tranRepickLink").on('click', function() {
+
+            $("#tranUserListWrap").show();
+            $("#tranBelongerInput").val("").trigger('focus');
+        });
 
         if (tranGroupDraftCount() > 0) com.showAlert(com.info, "本组存在未提交草稿 " + tranGroupDraftCount() + " 条(24小时内有效),列表中蓝色即草稿");
 
@@ -641,6 +649,23 @@ jQuery(function($) {
             com.showAlert(com.info, "移交审批已提交,审批通过后全批生效");
             tranLoadList();
         });
+    });
+
+    /* ---- 移交人检索(接后端keyword: 姓名/拼音/工号) ---- */
+
+    var tranSearchTimer = null;
+
+    $("#tranBelongerInput").on('input', function() {
+
+        var val = $(this).val();
+
+        if (tranSearchTimer) clearTimeout(tranSearchTimer);
+
+        tranSearchTimer = setTimeout(function() {
+
+            $("#tranUserListWrap").show();
+            tranLoadUsers(val);
+        }, 300);
     });
 
     /* ---- 模式/类型切换 ---- */

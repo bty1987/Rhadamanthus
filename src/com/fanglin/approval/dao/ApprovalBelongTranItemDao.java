@@ -20,4 +20,6 @@ public interface ApprovalBelongTranItemDao extends Dao<ApprovalBelongTranItemPO>
 
 	public List<ApprovalBelongTranItemPO> queryApprovalBelongTranItemByAbtId(int abtId);
 
+	public int countApprovalBelongTranItemForInit(String orderId, short belongType);
+
 }

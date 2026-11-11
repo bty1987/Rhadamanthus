@@ -152,8 +152,8 @@ public class ApprovalBelongTranServiceImpl implements ApprovalBelongTranService 
 				throw new FLException(240088, "装修单状态已变化不可移交");
 			}
 
-			// 该单已有任何待审审批(含单票归属/重提移交)即拒
-			if (approvalDao.countApprovalForInitByOrderId(orderId) > 0) {
+			// 该单该类型在途冲突复验: 单票归属审批待审(0/5/6) 或 移交审批待审(同单同类型), 精确到类型防止同单双类型分批互挡
+			if (approvalDao.queryApprovalByChange(Arrays.asList(ApprovalPO.APPROVAL_STATUS_INIT_INT, ApprovalPO.APPROVAL_STATUS_CONFIRM_INT, ApprovalPO.APPROVAL_STATUS_CONFIRMED_INT), ApprovalPO.APPROVAL_TYPE_DECORATION_BELONG_INT, orderId) != null || approvalBelongTranItemDao.countApprovalBelongTranItemForInit(orderId, belongType.shortValue()) > 0) {
 				throw new FLException(240089, "该装修单已有在途审批不可移交");
 			}
 
@@ -294,7 +294,27 @@ public class ApprovalBelongTranServiceImpl implements ApprovalBelongTranService 
 			throw new FLException(240003, "审批信息不完整");
 		}
 
-		return ptv(approvalBelongTranPO);
+		ApprovalBelongTranVO approvalBelongTranVO = new ApprovalBelongTranVO();
+
+		approvalBelongTranVO.setAbtId(Integer.valueOf(approvalBelongTranPO.getAbtId()));
+		approvalBelongTranVO.setAid(Long.valueOf(approvalBelongTranPO.getAid()));
+		approvalBelongTranVO.setTranType(Short.valueOf(approvalBelongTranPO.getTranType()));
+		approvalBelongTranVO.setReason(approvalBelongTranPO.getReason());
+		approvalBelongTranVO.setCcid(Long.valueOf(approvalBelongTranPO.getCcid()));
+		approvalBelongTranVO.setCompany(Integer.valueOf(approvalBelongTranPO.getCompany()));
+		approvalBelongTranVO.setCreateTime(approvalBelongTranPO.getCreateTime());
+
+		UserPO quitUser = userDao.get(Integer.valueOf(approvalBelongTranPO.getOuid()));
+
+		if (quitUser != null) {
+
+			approvalBelongTranVO.setUserId(quitUser.getUserId());
+			approvalBelongTranVO.setUserName(quitUser.getCurrentName());
+
+			if (quitUser.getDept() != null) approvalBelongTranVO.setDeptName(quitUser.getDept().getName());
+		}
+
+		return approvalBelongTranVO;
 	}
 
 	@Override
@@ -365,31 +385,6 @@ public class ApprovalBelongTranServiceImpl implements ApprovalBelongTranService 
 		}
 
 		return itemVOs;
-	}
-
-	private ApprovalBelongTranVO ptv(ApprovalBelongTranPO approvalBelongTranPO) {
-
-		ApprovalBelongTranVO approvalBelongTranVO = new ApprovalBelongTranVO();
-
-		approvalBelongTranVO.setAbtId(Integer.valueOf(approvalBelongTranPO.getAbtId()));
-		approvalBelongTranVO.setAid(Long.valueOf(approvalBelongTranPO.getAid()));
-		approvalBelongTranVO.setTranType(Short.valueOf(approvalBelongTranPO.getTranType()));
-		approvalBelongTranVO.setReason(approvalBelongTranPO.getReason());
-		approvalBelongTranVO.setCcid(Long.valueOf(approvalBelongTranPO.getCcid()));
-		approvalBelongTranVO.setCompany(Integer.valueOf(approvalBelongTranPO.getCompany()));
-		approvalBelongTranVO.setCreateTime(approvalBelongTranPO.getCreateTime());
-
-		UserPO quitUser = userDao.get(Integer.valueOf(approvalBelongTranPO.getOuid()));
-
-		if (quitUser != null) {
-
-			approvalBelongTranVO.setUserId(quitUser.getUserId());
-			approvalBelongTranVO.setUserName(quitUser.getCurrentName());
-
-			if (quitUser.getDept() != null) approvalBelongTranVO.setDeptName(quitUser.getDept().getName());
-		}
-
-		return approvalBelongTranVO;
 	}
 
 }
