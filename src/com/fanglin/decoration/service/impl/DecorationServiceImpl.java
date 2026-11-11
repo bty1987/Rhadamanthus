@@ -1239,12 +1239,14 @@ public class DecorationServiceImpl implements DecorationService {
 
 		HousePO housePO = decorationPO.getHouse();
 
-		if (decorationVO.getHouse() != null && decorationVO.getHouse().getBuildArea() != null) {
+		// 面积守卫对齐updateHouse(null/0都不覆盖): 装修单信息页输入框出生值"0"(decorationPageUtils createInput),
+		// 用户仅改房类型等其他字段保存时会把0原样提交, 无0守卫则house主数据的真实面积被清零(innerArea突然变0根因, 2026-11-11)
+		if (decorationVO.getHouse() != null && decorationVO.getHouse().getBuildArea() != null && decorationVO.getHouse().getBuildArea() != 0) {
 			housePO.setBuildArea(decorationVO.getHouse().getBuildArea());
 			houseDao.update(housePO);
 		}
 
-		if (decorationVO.getHouse() != null && decorationVO.getHouse().getInnerArea() != null) {
+		if (decorationVO.getHouse() != null && decorationVO.getHouse().getInnerArea() != null && decorationVO.getHouse().getInnerArea() != 0) {
 			housePO.setInnerArea(decorationVO.getHouse().getInnerArea());
 			houseDao.update(housePO);
 		}
