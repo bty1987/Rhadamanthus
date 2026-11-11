@@ -3,6 +3,16 @@
 ## 方法概述
 创建会员订单，处理积分兑换，包含积分验证、订单项目创建、积分扣减和记录保存等功能。
 
+两个入口（2026-11-11 起，提交 fd3d63fb9）：
+- **单形态** `makeMemberOrder(MemberOrderVO, List<MemberOrderItemVO>, userId)` — 原有行为，未改动
+- **批量形态** `makeMemberOrder(List<MemberOrderVO>, userId)` — 多单批量，每单经 `MemberOrderVO.items` 自带明细（报文 `memberOrders[i].items[j]`）；Action 层分派：`memberOrders` 非空走批量，否则回退单形态
+
+批量形态要点：
+1. 批量方法自带 `@Transactional(rollbackFor = Exception.class)`，循环内**同类直调**单形态实现（直调不走 Spring 代理，单形态的注解不另起事务）= 整批共用一个事务，任一单失败全批回滚
+2. 每单落库流程与单形态逐单完全一致（本文后续分析对两种形态同样适用）
+3. 前置闸（仅批量路径，单形态维持原行为）：缺 `items` 报 110040；`pointOrderId` 命中既有非失效 `decorationactivityitem.no` 报 140104 拒整批（批内同号重复同样被拦，auto-flush 生效）
+4. 取消侧不变：`cancelMemberOrder` 仍按单 `pointOrderId` 逐单退
+
 ## 业务流程图
 ```
 开始

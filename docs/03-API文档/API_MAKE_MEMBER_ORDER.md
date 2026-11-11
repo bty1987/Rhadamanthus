@@ -9,8 +9,8 @@
 **内容类型**: `application/x-www-form-urlencoded` 或 `application/json`
 **字符编码**: `UTF-8`
 
-**版本**: v1.0
-**最后更新**: 2025-01-09
+**版本**: v1.1
+**最后更新**: 2026-11-11
 **维护方**: 方林装饰 ERP 团队
 
 ---
@@ -46,6 +46,47 @@
 | `memberOrderItems[0].name` | String | 是 | 商品名称 | `"智能电饭煲"` |
 | `memberOrderItems[0].point` | Integer | 是 | 单件商品积分 | `2000` |
 | `memberOrderItems[0].num` | Integer | 是 | 商品数量 | `1` |
+
+### 多单批量形态（v1.1）
+
+一次请求提交多笔积分订单，每单自带明细，按索引 form 参数展开。`memberOrders` 非空时**优先生效**，与上方单形态（`memberOrder` + `memberOrderItems`）二选一；旧单形态保留兼容、行为不变。
+
+| 参数名 | 类型 | 必填 | 说明 | 示例值 |
+|--------|------|------|------|--------|
+| **memberOrders** | Array | 批量时必填 | 订单数组（多单） | - |
+| `memberOrders[0].orderId` | String | 是 | 装饰订单号（每单独立校验 140013） | `"ZC202501010001"` |
+| `memberOrders[0].pointOrderId` | String | 是 | 积分订单号（本批内及与存量均不得重复，否则 140104 拒整批） | `"JF20250101001001"` |
+| `memberOrders[0].decorationPoint` / `materialPoint` / `operatePoint` / `surplusPoint` / `point` / `uniqueId` | 同单形态 | 同单形态 | 订单头字段与单形态 `memberOrder.*` 完全一致 | - |
+| `memberOrders[0].items` | Array | 是 | 该订单的兑换明细，缺失或为空报 110040 | - |
+| `memberOrders[0].items[0].no` / `name` / `point` / `num` 等 | 同单形态 | 同单形态 | 明细字段与 `memberOrderItems` 完全一致 | - |
+
+批量语义：
+- **整批单事务**：任一单校验/落库失败，全批回滚，调用方整批重发
+- **防重闸（仅批量形态）**：每单 `pointOrderId`（落库为 `decorationactivityitem.no`）命中既有非失效记录即 140104 拒绝整批；若该号此前已由 `/makeMemberOrderItem.do` 落过物品，批量再带同号也会被拒
+- **逐单落库**：每单执行与单形态完全一致的流程（订单/活动校验、物品创建、积分账户、款项分摊、积分流水）
+
+批量形态 cURL 示例（索引 form 参数）：
+
+```bash
+curl -X POST 'http://localhost:8080/Rhadamanthus/makeMemberOrder.do' \
+  -H 'authentication: YOUR_ENCRYPTED_AUTH_STRING' \
+  -H 'Content-Type: application/x-www-form-urlencoded; charset=UTF-8' \
+  --data-urlencode 'memberOrders[0].orderId=ZC202501010001' \
+  --data-urlencode 'memberOrders[0].pointOrderId=JF20250101001001' \
+  --data-urlencode 'memberOrders[0].point=5000' \
+  --data-urlencode 'memberOrders[0].surplusPoint=2000' \
+  --data-urlencode 'memberOrders[0].items[0].no=GOODS001' \
+  --data-urlencode 'memberOrders[0].items[0].name=智能电饭煲' \
+  --data-urlencode 'memberOrders[0].items[0].point=2000' \
+  --data-urlencode 'memberOrders[0].items[0].num=1' \
+  --data-urlencode 'memberOrders[1].orderId=ZC202501010002' \
+  --data-urlencode 'memberOrders[1].pointOrderId=JF20250101001002' \
+  --data-urlencode 'memberOrders[1].point=3000' \
+  --data-urlencode 'memberOrders[1].items[0].no=GOODS002' \
+  --data-urlencode 'memberOrders[1].items[0].name=空气炸锅' \
+  --data-urlencode 'memberOrders[1].items[0].point=3000' \
+  --data-urlencode 'memberOrders[1].items[0].num=1'
+```
 
 ---
 
@@ -416,6 +457,8 @@ $.ajax({
 | 330049 | 积分不足 | 可用积分小于兑换所需积分 | 检查客户积分余额 |
 | 160011 | 活动信息不存在 | 订单未关联有效的促销活动 | 确认订单是否有活动 |
 | 130006 | 客户支付记录不存在 | 订单无有效支付记录 | 确认订单支付状态 |
+| 140104 | 活动物品编号重复 | 批量形态：某单 pointOrderId 命中既有非失效活动物品记录 | 整批重发前先核对/更换 pointOrderId（或先撤销旧单） |
+| 110040 | 请求参数格式不正确 | 批量形态：某单缺 items 明细或明细为空 | 每单至少携带一条 items |
 
 ---
 
@@ -439,6 +482,8 @@ availableDecorationPoint + availableMaterialPoint >= point * 1000000
 
 ### 2. 处理流程
 
+批量形态下先在 Action 层分派（`memberOrders` 非空走批量，否则回退单形态），再对每单执行下列 1-7 步，整批共用一个事务：
+
 1. **验证订单存在性** - 根据 `orderId` 查询装饰订单
 2. **积分余额校验** - 检查装修积分、主材积分、运营积分是否充足
 3. **活动信息验证** - 查询订单关联的促销活动
@@ -459,8 +504,8 @@ availableDecorationPoint + availableMaterialPoint >= point * 1000000
 
 ### ⚠️ 重要提示
 
-1. **幂等性**：相同的 `pointOrderId` 不能重复提交，会导致数据重复
-2. **事务性**：整个接口在事务中执行，失败会自动回滚
+1. **幂等性**：相同的 `pointOrderId` 不能重复提交，会导致数据重复；批量形态已由服务端 140104 防重闸拦截，单形态仍依赖调用方自律
+2. **事务性**：整个接口在事务中执行，失败会自动回滚；批量形态为整批单事务，任一单失败全批回滚，应整批重发而非逐单补发
 3. **积分精度**：内部计算时积分会乘以 1000000 保存
 4. **用户认证**：需要从 Session 中获取当前用户ID
 5. **活动限制**：订单必须关联有效的促销活动才能兑换
@@ -531,6 +576,7 @@ curl ... -d '{"memberOrder":{"orderId":"INVALID_ORDER"}, ...}'
 | 版本 | 日期 | 更新内容 | 作者 |
 |------|------|---------|------|
 | v1.0 | 2025-01-09 | 初始版本，发布接口文档 | ERP 团队 |
+| v1.1 | 2026-11-11 | 新增多单批量形态 `memberOrders[i].items[j]`（整批单事务、140104 防重闸、缺明细 110040），旧单形态保留兼容；补批量 cURL 示例与错误码（提交 fd3d63fb9） | ERP 团队 |
 
 ---
 

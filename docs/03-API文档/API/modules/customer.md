@@ -9858,6 +9858,7 @@
 |------|------|------|
 | `memberOrder` | MemberOrderVO |  |
 | `memberOrderItems` | List<MemberOrderItemVO> |  |
+| `memberOrders` | List<MemberOrderVO> | 多单批量形态(每单经 `items` 携带明细, `memberOrders[i].items[j]` 索引参数); 非空时优先生效, 整批单事务全成全败, 与旧单形态二选一 |
 
 ##### `撤销` cancelMemberOrder
 
