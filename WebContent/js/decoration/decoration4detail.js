@@ -529,8 +529,8 @@ jQuery(function($) {
 
             decorationUtils.addDecorationActivityForDiv(decorationDetail.activitys, decorationActivity, activityBtnMethod);
 
-            // 阶梯奖品直领面板刷新(新参加的活动可能挂 type=30 物品)
-            decorationUtils.initLadderPanel("#activityLadderPanel", decorationDetail.orderId);
+            // 阶梯直领面板已从详情页摘除(2026-11-11): 领取类操作收敛至高权限页面 decoration4activity(入口=装修活动pageBtn dfid=85),
+            // 详情页不再向全体设计师暴露直领入口; 参与预占走申领审批(applyActivityItemBtn)或 activity 页
         });
 
         decorationDetail.joinDecorationActivityModal.modal("hide");
@@ -1808,8 +1808,7 @@ jQuery(function($) {
                 decorationUtils.salesActivityItemInfo(decorationDetail.orderId, decorationDetail.salesActivityItems, salesActivityItem, wizard);
                 decorationUtils.memberActivityItemInfo(decorationDetail.orderId, decorationDetail.memberActivityItems, decorationActivity, wizard);
 
-                // 阶梯奖品直领面板: 装修活动列表下方(activityLadderPanel, 免申领审批)
-                decorationUtils.initLadderPanel("#activityLadderPanel", decorationDetail.orderId);
+                // 阶梯直领面板已从详情页摘除(2026-11-11), 见参加活动回调处说明; 领取操作统一走高权限页面 decoration4activity
 
                 initActivityIntegral(decorationDetail.orderId);
 
