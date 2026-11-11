@@ -15,6 +15,9 @@ import java.util.List;
 
 import com.fanglin.core.dao.Dao;
 import com.fanglin.decoration.po.DecorationBelongPO;
+import com.fanglin.decoration.vo.DecorationBelongTranUserVO;
+import com.fanglin.decoration.vo.DecorationBelongTranVO;
+import com.fanglin.utils.Paging;
 
 public interface DecorationBelongDao extends Dao<DecorationBelongPO> {
 
@@ -27,5 +30,9 @@ public interface DecorationBelongDao extends Dao<DecorationBelongPO> {
 	public int changeDecorationBelongForOrderId(String source, String target);
 
 	public int updateDecorationBelong(String orderId, Short type, Short source, Short target);
+
+	public List<DecorationBelongTranUserVO> queryDecorationBelongForTran(String keyword, int company);
+
+	public List<DecorationBelongTranVO> pageDecorationForTranByBelonger(Paging paging, int buid, short belongType, int company);
 
 }

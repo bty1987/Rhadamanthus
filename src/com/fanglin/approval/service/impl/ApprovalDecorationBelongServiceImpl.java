@@ -24,6 +24,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.fanglin.approval.dao.ApprovalDao;
 import com.fanglin.approval.dao.ApprovalDecorationBelongDao;
 import com.fanglin.approval.dao.ApprovalDecorationBelongItemDao;
+import com.fanglin.approval.po.ApprovalBelongTranItemPO;
 import com.fanglin.approval.po.ApprovalDecorationBelongItemPO;
 import com.fanglin.approval.po.ApprovalDecorationBelongPO;
 import com.fanglin.approval.po.ApprovalPO;
@@ -353,6 +354,147 @@ public class ApprovalDecorationBelongServiceImpl implements ApprovalDecorationBe
 			customerChanceDao.update(customerChancePO);
 			customerSourceRecordDao.save(new CustomerSourceRecordPO().init(customerChancePO.getSource().getCsid(), customerChancePO.getCcid(), String.format("客户机会完成(归属审批通过),装修单号:%s,归属:%s(%s),部门:%s(%s),分区:%s(%s)", orderId, customerChancePO.getBelonger().getCurrentName(), customerChancePO.getBelonger().getUserId(), customerChancePO.getDepartment().getName(), customerChancePO.getDepartment().getNo(), customerChancePO.getRegion().getName(), customerChancePO.getRegion().getNo()), CustomerSourceRecordPO.TYPE_SPECIAL_INT, approvalPO.getReceiver()));
 		}
+
+		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int tranDecorationBelongForQuit(String orderId, Short belongType, int quitUid, List<ApprovalBelongTranItemPO> itemPOs, UserPO operater) throws FLException {
+
+		// 离职移交物化入口: 复用替换模式落库形态, 带四改造——1 只失效移交人本人行(保护合尺在职他人行) 2 不触发关联客源完成 3 部门快照取接手人实时部门链(报表分区INNER JOIN依赖rid非空) 4 rate/默认用modal编辑值不推导
+		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(orderId);
+
+		if (decorationPO == null) {
+			throw new FLException(140013, "装修单不存在");
+		}
+
+		List<Short> tranStatus = Arrays.asList(new Short[] { DecorationPO.STATUS_INIT_INT, DecorationPO.STATUS_DEPOSIT_INT, DecorationPO.STATUS_PROSIGN_INT, DecorationPO.STATUS_SIGNED_INT, DecorationPO.STATUS_RESIGNED_INT });
+
+		if (!tranStatus.contains(decorationPO.getStatus())) {
+			throw new FLException(240088, "装修单状态已变化不可移交");
+		}
+
+		List<DecorationBelongPO> belongPOs = decorationBelongDao.queryDecorationBelong(orderId, belongType, DecorationBelongPO.STATUS_INVALID_INT);
+
+		List<DecorationBelongPO> quitPOs = new ArrayList<DecorationBelongPO>();
+		List<DecorationBelongPO> keepPOs = new ArrayList<DecorationBelongPO>();
+
+		for (DecorationBelongPO decorationBelongPO : belongPOs) {
+
+			if (decorationBelongPO.getBelonger().getUid() == quitUid) quitPOs.add(decorationBelongPO);
+			else keepPOs.add(decorationBelongPO);
+		}
+
+		if (quitPOs.isEmpty()) {
+			throw new FLException(240086, "移交明细为空或单据归属与移交人不符");
+		}
+
+		int othersDefaultCount = 0;
+		int itemsDefaultCount = 0;
+
+		for (DecorationBelongPO decorationBelongPO : keepPOs) {
+			if (DecorationBelongPO.DEFAULTFLAG_TRUE_INT == decorationBelongPO.getDefaultFlag()) othersDefaultCount++;
+		}
+
+		for (ApprovalBelongTranItemPO approvalBelongTranItemPO : itemPOs) {
+			if (DecorationBelongPO.DEFAULTFLAG_TRUE_INT == approvalBelongTranItemPO.getDefaultFlag()) itemsDefaultCount++;
+		}
+
+		if (othersDefaultCount + itemsDefaultCount != 1) {
+			throw new FLException(240091, "移交单据默认人设置不正确");
+		}
+
+		Long invalidCcid = quitPOs.get(0).getCcid();
+
+		for (DecorationBelongPO decorationBelongPO : quitPOs) {
+			decorationBelongPO.setStatus(DecorationBelongPO.STATUS_EFFCTIVE_INT);
+			decorationBelongDao.update(decorationBelongPO);
+		}
+
+		DecorationAdditionPO decorationAdditionPO = decorationAdditionDao.queryDecorationAdditionByOrderId(orderId);
+
+		List<DecorationBelongPO> effectivePOs = new ArrayList<DecorationBelongPO>();
+		effectivePOs.addAll(keepPOs);
+
+		for (ApprovalBelongTranItemPO approvalBelongTranItemPO : itemPOs) {
+
+			UserPO userPO = userDao.get(Integer.valueOf(approvalBelongTranItemPO.getBuid()));
+
+			if (userPO == null) {
+				throw new FLException(190005, "人员不存在");
+			}
+
+			if (userPO.getStatus() != UserPO.STATUS_ONJOB_INT) {
+				throw new FLException(240087, "接手人非在职");
+			}
+
+			// 部门/大区取物化时刻实时部门链(与NERP同步口径一致), 断链直接拒防分区报表整单消失
+			DepartmentPO dept = userPO.getDept();
+			DepartmentPO regn = dept != null ? dept.getFatherDept() : null;
+
+			if (dept == null || regn == null) {
+				throw new FLException(240090, "接手人部门未关联大区不可移交");
+			}
+
+			DecorationBelongPO decorationBelongPO = new DecorationBelongPO();
+
+			decorationBelongPO.setDepartment(dept);
+			decorationBelongPO.setRegion(regn);
+
+			if (dept.getBusitype() != null) decorationBelongPO.setBusitype(dept.getBusitype());
+
+			if (DecorationBelongPO.BELONGTYPE_DESIGN_INT == belongType && DecorationBelongPO.DEFAULTFLAG_TRUE_INT == approvalBelongTranItemPO.getDefaultFlag()) {
+				decorationPO.setDesigner(userPO);
+				decorationPO.setDesignDept(dept);
+			} else if (DecorationBelongPO.BELONGTYPE_SALESMAN_INT == belongType && DecorationBelongPO.DEFAULTFLAG_TRUE_INT == approvalBelongTranItemPO.getDefaultFlag()) {
+				decorationPO.setSalesman(userPO);
+				decorationPO.setSalesDept(dept);
+			}
+
+			decorationBelongPO.setOrderId(orderId);
+			decorationBelongPO.setBelonger(userPO);
+			decorationBelongPO.setRate(approvalBelongTranItemPO.getRate());
+			decorationBelongPO.setDefaultFlag(approvalBelongTranItemPO.getDefaultFlag());
+			decorationBelongPO.setCcid(invalidCcid.longValue());
+			decorationBelongPO.setOperater(operater);
+			decorationBelongPO.setOperateTime(DateUtil.getDateToTimestamp(new Date()));
+			decorationBelongPO.setUpdateTime(DateUtil.getDateToTimestamp(new Date()));
+			decorationBelongPO.setType(belongType);
+			decorationBelongPO.setStatus(DecorationBelongPO.STATUS_INVALID_INT);
+
+			decorationBelongDao.save(decorationBelongPO);
+
+			effectivePOs.add(decorationBelongPO);
+		}
+
+		// addition姓名快照按物化后该类型全部生效行(保留行+新行)重建; 合尺保留行不可被整体clear
+		if (DecorationBelongPO.BELONGTYPE_DESIGN_INT == belongType) decorationAdditionPO.clearDesign();
+		else if (DecorationBelongPO.BELONGTYPE_SALESMAN_INT == belongType) decorationAdditionPO.clearSales();
+
+		for (DecorationBelongPO decorationBelongPO : effectivePOs) {
+
+			UserPO belonger = decorationBelongPO.getBelonger();
+			DepartmentPO bDept = decorationBelongPO.getDepartment() != null ? decorationBelongPO.getDepartment() : belonger.getDept();
+			DepartmentPO bRegn = decorationBelongPO.getRegion() != null ? decorationBelongPO.getRegion() : (bDept != null ? bDept.getFatherDept() : null);
+
+			if (bDept == null || bRegn == null) continue; // 历史断链保留行: 跳过姓名装配不动归属数据
+
+			if (DecorationBelongPO.BELONGTYPE_DESIGN_INT == belongType) decorationAdditionPO.setDesign(belonger.getCurrentName(), bDept.getName(), bRegn.getName());
+			else if (DecorationBelongPO.BELONGTYPE_SALESMAN_INT == belongType) decorationAdditionPO.setSales(belonger.getCurrentName(), bDept.getName(), bRegn.getName());
+		}
+
+		decorationAdditionPO.setBelongTime(DateUtil.getDateToTimestamp(new Date()));
+
+		decorationAdditionDao.update(decorationAdditionPO);
+		decorationDao.update(decorationPO);
+
+		// 队列事件沿用单票契约(含双写replace行为), targetCcid承接原移交人行ccid
+		String approveBelongArgs = buildApproveBelongEventArgs(orderId, operater.getUserId(), belongType, decorationPO, invalidCcid, invalidCcid, (short) 0);
+
+		messageQueuingDao.save(new MessageQueuingPO().init(orderId, "approveForDecorationBelong", approveBelongArgs));
+		messageQueuingDao.save(new MessageQueuingPO().init(orderId, "approveForDecorationBelong", approveBelongArgs.replace("\"event\":\"" + (belongType == DecorationBelongPO.BELONGTYPE_DESIGN_INT ? "TEAM_DESIGNER_CHANGED" : "TEAM_SALESMAN_CHANGED") + "\"", "\"event\":\"TEAM_SALESMAN_CHANGED\"")));
+		messageQueuingDao.save(new MessageCueuingPO().init(orderId, "approveForDecorationBelong", approveBelongArgs));
 
 		return 0;
 	}

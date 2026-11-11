@@ -1,14 +1,134 @@
 <div id="decorationPageContent">
     <div class="row">
         <div class="col-xs-12">
-            <div id="condList" class="fl_search clearfix"></div> <!-- 查询条件-->
-            <div id="resultList" class="clearfix tab-pane active"></div> <!--查询结果-->
-            <div id="pagenation" class="fl-page-wrap clearfix"></div> <!--分页-->
+            <div class="btn-group margin-bottom-10">
+                <button type="button" id="dailyModeBtn" class="btn btn-sm btn-primary"><i class="fa fa-wrench"></i> 日常维护</button>
+                <button type="button" id="tranModeBtn" class="btn btn-sm btn-default"><i class="fa fa-exchange"></i> 离职移交</button>
+            </div>
+            <div id="dailyPanel">
+                <div id="condList" class="fl_search clearfix"></div> <!-- 查询条件-->
+                <div id="resultList" class="clearfix tab-pane active"></div> <!--查询结果-->
+                <div id="pagenation" class="fl-page-wrap clearfix"></div> <!--分页-->
+            </div>
+            <div id="tranPanel" style="display: none">
+                <div class="panel panel-default no-margin-top">
+                    <div class="panel-heading clearfix">
+                        <span class="pull-left" style="line-height:30px">移交人:</span>
+                        <div class="pull-left" style="width:220px;margin-left:8px">
+                            <input type="text" id="tranBelongerInput" class="form-control input-sm" placeholder="输入姓名/拼音检索" autocomplete="off"/>
+                        </div>
+                        <span class="pull-left" id="tranBelongerInfo" style="line-height:30px;margin-left:15px;color:#2679b5"></span>
+                        <div class="btn-group pull-right">
+                            <button type="button" id="tranTypeDesignBtn" class="btn btn-xs btn-primary">设计归属</button>
+                            <button type="button" id="tranTypeSalesBtn" class="btn btn-xs btn-default">业务归属</button>
+                        </div>
+                    </div>
+                    <div id="tranUserListWrap" class="panel-body" style="max-height:220px;overflow:auto">
+                        <table class="table table-hover table-condensed no-margin">
+                            <thead>
+                                <tr><th>姓名</th><th>部门</th><th>设计名下单数</th><th>业务名下单数</th><th></th></tr>
+                            </thead>
+                            <tbody id="tranUserList"></tbody>
+                        </table>
+                    </div>
+                </div>
+                <div id="tranOrderWrap" style="display:none">
+                    <div class="toolbar clearfix" style="margin-bottom:8px">
+                        <div class="btn-group pull-left">
+                            <button type="button" id="tranCheckAllBtn" class="btn btn-xs btn-default">全选本页</button>
+                            <button type="button" id="tranAssignBtn" class="btn btn-xs btn-primary" disabled="disabled">指派接手人</button>
+                            <button type="button" id="tranClearBtn" class="btn btn-xs btn-default">清除本草稿组</button>
+                        </div>
+                        <div class="btn-group pull-right">
+                            <button type="button" id="tranSubmitBtn" class="btn btn-xs btn-success">发起移交审批</button>
+                        </div>
+                        <span class="pull-right" id="tranDraftInfo" style="line-height:26px;margin-right:15px;color:#888"></span>
+                    </div>
+                    <div style="max-height:420px;overflow:auto">
+                        <table class="table table-bordered table-hover table-condensed no-margin">
+                            <thead>
+                                <tr><th style="width:30px"><input type="checkbox" id="tranCheckAllHead"/></th><th>装修单号</th><th>客户</th><th>状态</th><th>现比例</th><th>现默认</th><th>新接手人(草稿)</th><th style="width:60px">操作</th></tr>
+                            </thead>
+                            <tbody id="tranTableBody"></tbody>
+                        </table>
+                    </div>
+                    <div class="fl-page-wrap clearfix" style="margin-top:8px;text-align:center">
+                        <button type="button" id="tranPrevBtn" class="btn btn-xs btn-default">上一页</button>
+                        <span id="tranPageInfo" style="margin:0 12px"></span>
+                        <button type="button" id="tranNextBtn" class="btn btn-xs btn-default">下一页</button>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
 
 <div id="layerPopUp" class="portlet box page-content"></div>
+
+<!-- 指派接手人 modal -->
+<div class="modal fade" id="tranAssignModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">指派接手人(应用到勾选行)</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>接手人(限在职)</label>
+                    <input type="text" id="tranNewUserInput" class="form-control" autocomplete="off"/>
+                </div>
+                <div class="row">
+                    <div class="col-xs-4 form-group"><label>姓名</label><input type="text" id="tranNewUserName" class="form-control" readonly="readonly"/></div>
+                    <div class="col-xs-4 form-group"><label>部门</label><input type="text" id="tranNewUserDept" class="form-control" readonly="readonly"/></div>
+                    <div class="col-xs-4 form-group"><label>分区</label><input type="text" id="tranNewUserRegion" class="form-control" readonly="readonly"/></div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-6 form-group">
+                        <label>归属比例(0~1,合计口径1)</label>
+                        <input type="number" id="tranRateInput" class="form-control" min="0" max="1" step="0.05"/>
+                    </div>
+                    <div class="col-xs-6 form-group" style="padding-top:26px">
+                        <label class="checkbox-inline"><input type="checkbox" id="tranDefaultFlagInput"/> 设为默认归属人</label>
+                    </div>
+                </div>
+                <div class="help-block" style="font-size:12px">比例与默认人按勾选行统一应用;签约/重签单推荐比例0(业绩不随迁),未签单推荐1。需逐单不同配置时单行指派。</div>
+            </div>
+                <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button type="button" id="tranAssignOkBtn" class="btn btn-primary">应用</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 发起审批 modal -->
+<div class="modal fade" id="tranSubmitModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">发起离职移交审批</h4>
+            </div>
+            <div class="modal-body">
+                <div id="tranSubmitSummary" class="well well-sm" style="font-size:12px"></div>
+                <div class="form-group">
+                    <label>移交原因</label>
+                    <textarea id="tranReasonInput" class="form-control" rows="2" placeholder="如: 张三 2026-11 离职,名下单据移交"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>审批人</label>
+                    <div id="tranApproveManSel"></div>
+                    <input type="text" id="tranApproverInput" class="form-control" placeholder="无预置审批人时输入姓名检索" autocomplete="off" style="margin-top:6px"/>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button type="button" id="tranSubmitOkBtn" class="btn btn-success">提交审批</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 <script type="text/javascript">
     $.loadScript(['js/decoration/decoration4belong.js']);

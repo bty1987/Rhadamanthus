@@ -76,6 +76,8 @@ public class ApprovalPO implements java.io.Serializable {
 
 	public static final short APPROVAL_TYPE_PAYMENT_WITHDRAW_INT = 26;
 
+	public static final short APPROVAL_TYPE_BELONG_TRAN_INT = 27; // 人员离职归属移交审批
+
 	public static final short APPROVAL_TYPE_GENERAL_INT = 100; // 通用审批(非业务)
 
 	public static final short APPROVAL_STATUS_INIT_INT = 0;

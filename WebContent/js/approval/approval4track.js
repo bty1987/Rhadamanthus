@@ -59,6 +59,12 @@ jQuery(function($) {
                 "title": "客源信息",
                 "resultname": "approvalCustomerOrigin",
                 "args": [['10', '城市: ', "customerOrigin.house.village.cityProper.city.name"], ['10', '城区: ', "customerOrigin.house.village.cityProper.name"], ['10', '楼盘: ', "customerOrigin.house.village.name"], ['10', '楼号: ', "customerOrigin.house.houseNumber"], ['10', '面积: ', "customerOrigin.house.buildArea"], ['10', '客户: ', "customerOrigin.customer.name"], ['10', '设计师: ', "customerOrigin.designer.currentName"], ['10', '设计部: ', "customerOrigin.designer.dept.name"], ['10', '总面积: ', "customerOrigin.house.totalArea"], ]
+            },
+            "27": {
+                "api": api.approval.queryApprovalBelongTranByAId,
+                "title": "离职移交明细",
+                "resultname": "approvalBelongTranItems",
+                "args": [['15', '装修单号: ', "orderId"], ['15', '客户: ', "customerName"], ['10', '状态: ', "status"], ['10', '归属类型: ', "belongTypeName"], ['15', '接手人: ', "userName"], ['15', '接手部门: ', "deptName"], ['10', '分区: ', "regionName"], ['10', '比例: ', "rateText"], ['10', '默认人: ', "defaultFlagName"]]
             }
         },
 
@@ -157,7 +163,7 @@ jQuery(function($) {
         },
         show: function(v) {
 
-            return [constant.approval().approval.TYPE_MATERIAL_REFUND_INT, constant.approval().approval.TYPE_DECORATION_ACTIVITY_INT, constant.approval().approval.TYPE_SALESREFUND_PAYMENT_INT, constant.approval().approval.TYPE_CUSTOMER_ORIGIN_T_DECORATION_INT, constant.approval().approval.TYPE_CUSTOMER_ORIGIN_INT].indexOf(v.type) != -1;
+            return [constant.approval().approval.TYPE_MATERIAL_REFUND_INT, constant.approval().approval.TYPE_DECORATION_ACTIVITY_INT, constant.approval().approval.TYPE_SALESREFUND_PAYMENT_INT, constant.approval().approval.TYPE_CUSTOMER_ORIGIN_T_DECORATION_INT, constant.approval().approval.TYPE_CUSTOMER_ORIGIN_INT, constant.approval().approval.TYPE_BELONG_TRAN_INT].indexOf(v.type) != -1;
         }
     }, {
         name: "客户确认",
@@ -278,7 +284,9 @@ jQuery(function($) {
                         infoList.append(approvalUtils.addspan(e[0], e[1], constant.decoration().decorationActivityItem.stateType.keys[getElement(v, e[2].split('.'))]));
                     if (e[2] == "typeness")
                         infoList.append(approvalUtils.addspan(e[0], e[1], constant.decoration().decoration.typeness.keys[getElement(v, e[2].split('.'))]));
-                    if (e[2] != "type" && e[2] != "stateType" && e[2] != "typeness")
+                    if (e[2] == "status")
+                        infoList.append(approvalUtils.addspan(e[0], e[1], constant.decoration().decoration.status.keys[getElement(v, e[2].split('.'))]));
+                    if (e[2] != "type" && e[2] != "stateType" && e[2] != "typeness" && e[2] != "status")
                         infoList.append(approvalUtils.addspan(e[0], e[1], getElement(v, e[2].split('.'))));
                 });
 

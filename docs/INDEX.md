@@ -11,6 +11,7 @@
 |------|------|
 | DESIGN_quotation_budget_assignment_v1.5.md | 报价单预算员自动分配功能设计方案 |
 | DESIGN_wallet_withdraw_approval.md | 预付款提现审批流程设计文档 |
+| DESIGN_BELONG_TRAN_APPROVAL.md | 离职移交审批（designer/salesman 批量移交 decorationbelong，实体命名 BelongTran）方案设计稿，六项拍板已落定 |
 | FRONTEND_INTEGRATION_GUIDE.md | 报价单预算员自动分配功能 - 前端集成指南 |
 | INTEGRATION_GUIDE.md | 报价单预算员自动分配功能 - 集成指南 |
 | decoration_searcher_migration_plan.md | Decoration 模块 displayFunc → Searcher 标准化迁移计划 |

@@ -127,4 +127,561 @@ jQuery(function($) {
         com.popup4page("#layerPopUp", api.index.decorationBelongDetailIndex.url, "装修单业务归属: " + orderId);
     }
 
+    /* ====================== 离职移交(BelongTran) ====================== */
+
+    // 草稿=页面变量+sessionStorage 双层(翻页局刷变量存活; 菜单跳页/F5 靠 sessionStorage 恢复), TTL 24h 过期即弃
+    var TRAN_DRAFT_KEY = "belongTranDraft";
+    var TRAN_META_KEY = "belongTranDraftMeta";
+    var TRAN_TTL = 24 * 60 * 60 * 1000;
+
+    var tran = {
+        userId: null,
+        userName: "",
+        belongType: 0, // 0设计 1业务
+        page: 0,
+        rows: 20,
+        totalRecords: 0,
+        list: [],
+        checked: {},
+        newUser: null,
+        approverId: null,
+        usersLoaded: false,
+        users: []
+    };
+
+    var tranDrafts = JSON.parse(sessionStorage.getItem(TRAN_DRAFT_KEY)) || {};
+    var tranMeta = JSON.parse(sessionStorage.getItem(TRAN_META_KEY)) || {};
+
+    function tranGroupKey() {
+
+        return tran.userId + "|" + tran.belongType;
+    }
+
+    function tranDraftKey(orderId) {
+
+        return tranGroupKey() + "|" + orderId;
+    }
+
+    function tranSaveDrafts() {
+
+        sessionStorage.setItem(TRAN_DRAFT_KEY, JSON.stringify(tranDrafts));
+        sessionStorage.setItem(TRAN_META_KEY, JSON.stringify(tranMeta));
+    }
+
+    // 过期组惰性清理: 打开页面与每次存取时剔除超TTL的组条目, 防陈旧草稿跨天误提
+    function tranPurgeExpired() {
+
+        var now = new Date().getTime();
+
+        for (var gk in tranMeta) {
+
+            if (now - tranMeta[gk] > TRAN_TTL) {
+
+                delete tranMeta[gk];
+
+                for (var dk in tranDrafts) {
+
+                    if (dk.indexOf(gk + "|") == 0) delete tranDrafts[dk];
+                }
+            }
+        }
+
+        tranSaveDrafts();
+    }
+
+    function tranGroupDraftCount() {
+
+        var count = 0;
+        var prefix = tranGroupKey() + "|";
+
+        for (var dk in tranDrafts) {
+
+            if (dk.indexOf(prefix) == 0) count++;
+        }
+
+        return count;
+    }
+
+    function tranCheckedOrders() {
+
+        var orders = [];
+
+        for (var orderId in tran.checked) {
+
+            if (tran.checked[orderId]) orders.push(orderId);
+        }
+
+        return orders;
+    }
+
+    function tranSwitchMode(tranMode) {
+
+        $("#dailyPanel").toggle(!tranMode);
+        $("#tranPanel").toggle(tranMode);
+        $("#dailyModeBtn").toggleClass("btn-primary", !tranMode).toggleClass("btn-default", tranMode);
+        $("#tranModeBtn").toggleClass("btn-primary", tranMode).toggleClass("btn-default", !tranMode);
+
+        if (tranMode) {
+
+            tranPurgeExpired();
+
+            if (!tran.usersLoaded) tranLoadUsers();
+            else if (tran.userId) $("#tranUserListWrap").hide();
+        }
+    }
+
+    function tranLoadUsers() {
+
+        com.post(api.decoration.queryDecorationBelongForTran, {}, function(res) {
+
+            tran.users = res.decorationBelongTranUsers || [];
+            tran.usersLoaded = true;
+
+            var $body = $("#tranUserList").empty();
+
+            if (tran.users.length == 0) $body.append('<tr><td colspan="5" class="text-center grey">暂无可移交归属单</td></tr>');
+
+            $.each(tran.users, function(i, v) {
+
+                var $tr = $('<tr></tr>');
+
+                $('<td></td>').text(v.userName).appendTo($tr);
+                $('<td></td>').text(v.deptName || "").appendTo($tr);
+                $('<td></td>').text(v.designCount + " 单").appendTo($tr);
+                $('<td></td>').text(v.salesCount + " 单").appendTo($tr);
+                $('<td></td>').append($('<button type="button" class="btn btn-xs btn-primary">选择</button>').on('click', function() { tranPickBelonger(v); })).appendTo($tr);
+
+                $tr.appendTo($body);
+            });
+        });
+    }
+
+    function tranPickBelonger(u) {
+
+        tran.userId = u.userId;
+        tran.userName = u.userName;
+        tran.page = 0;
+        tran.checked = {};
+        tran.newUser = null;
+
+        $("#tranUserListWrap").hide();
+        $("#tranOrderWrap").show();
+
+        if (u.deptName) $("#tranBelongerInput").val(u.userName);
+        $("#tranBelongerInfo").text(u.userName + "(" + (u.deptName || "") + ") · 设计" + u.designCount + "单/业务" + u.salesCount + "单");
+
+        if (tranGroupDraftCount() > 0) com.showAlert(com.info, "本组存在未提交草稿 " + tranGroupDraftCount() + " 条(24小时内有效),列表中蓝色即草稿");
+
+        tranLoadList();
+    }
+
+    function tranLoadList() {
+
+        if (!tran.userId) return;
+
+        com.post(api.decoration.pageDecorationForTranByBelonger, {
+            "paging.page": tran.page,
+            "paging.rows": tran.rows,
+            "decorationBelong.belonger.userId": tran.userId,
+            "decorationBelong.type": tran.belongType
+        }, function(res) {
+
+            var paging = res.paging || {};
+
+            tran.list = paging.data || [];
+            tran.totalRecords = paging.totalRecords || 0;
+
+            // 翻页后越页回退
+            if (tran.list.length == 0 && tran.page > 0) {
+
+                tran.page = 0;
+                tranLoadList();
+                return;
+            }
+
+            tranRenderTable();
+        });
+    }
+
+    function tranRenderTable() {
+
+        var $body = $("#tranTableBody").empty();
+
+        if (tran.list.length == 0) {
+            $body.append('<tr><td colspan="8" class="text-center grey">无可移交单据(状态不符或已在途移交)</td></tr>');
+            $("#tranAssignBtn").prop("disabled", true);
+            tranUpdateDraftInfo();
+            return;
+        }
+
+        $.each(tran.list, function(i, v) {
+
+            var draft = tranDrafts[tranDraftKey(v.orderId)];
+            var checked = !!tran.checked[v.orderId];
+
+            var $tr = $('<tr></tr>');
+
+            $('<td><input type="checkbox"/></td>').find("input").prop("checked", checked).on('change', function() {
+                tran.checked[v.orderId] = this.checked;
+                $("#tranAssignBtn").prop("disabled", tranCheckedOrders().length == 0);
+            }).end().appendTo($tr);
+
+            $('<td></td>').text(v.orderId).appendTo($tr);
+            $('<td class="grey"></td>').text(v.customerName || "").appendTo($tr);
+            $('<td class="red"></td>').text(decorationBelong.decorationOrderStatus[v.status] || v.status).appendTo($tr);
+            $('<td></td>').text((v.rate / 10) + "%").appendTo($tr);
+            $('<td></td>').text(v.defaultFlag == 1 ? "默认" : "否").appendTo($tr);
+
+            var $draftTd = $('<td></td>');
+
+            if (draft) $draftTd.append($('<span class="label label-primary"></span>').text(draft.userName + " " + Math.round(draft.rate * 100) + "%" + (draft.defaultFlag == 1 ? " 默认" : "")));
+            else $draftTd.addClass("grey").text("-");
+
+            $draftTd.appendTo($tr);
+
+            $('<td></td>').append($('<button type="button" class="btn btn-xs btn-default">撤稿</button>').on('click', function() {
+
+                delete tranDrafts[tranDraftKey(v.orderId)];
+                tranSaveDrafts();
+                tranRenderTable();
+            })).appendTo($tr);
+
+            $tr.appendTo($body);
+        });
+
+        $("#tranCheckAllHead").prop("checked", false);
+        $("#tranAssignBtn").prop("disabled", tranCheckedOrders().length == 0);
+
+        var totalPage = Math.max(Math.ceil(tran.totalRecords / tran.rows), 1);
+
+        $("#tranPageInfo").text((tran.page + 1) + "/" + totalPage + " 页 共" + tran.totalRecords + "单");
+        $("#tranPrevBtn").prop("disabled", tran.page <= 0);
+        $("#tranNextBtn").prop("disabled", (tran.page + 1) >= totalPage);
+
+        tranUpdateDraftInfo();
+    }
+
+    function tranUpdateDraftInfo() {
+
+        $("#tranDraftInfo").text("当前组草稿 " + tranGroupDraftCount() + " 条");
+    }
+
+    $("#tranCheckAllHead").on('change', function() {
+
+        var flag = this.checked;
+
+        tran.checked = {};
+
+        $("#tranTableBody input[type=checkbox]").prop("checked", flag).each(function(i) {
+
+            if (flag) tran.checked[tran.list[i].orderId] = true;
+        });
+
+        $("#tranAssignBtn").prop("disabled", tranCheckedOrders().length == 0);
+    });
+
+    $("#tranPrevBtn").on('click', function() {
+
+        if (tran.page > 0) {
+
+            tran.page -= 1;
+            tran.checked = {};
+            tranLoadList();
+        }
+    });
+
+    $("#tranNextBtn").on('click', function() {
+
+        tran.page += 1;
+        tran.checked = {};
+        tranLoadList();
+    });
+
+    $("#tranClearBtn").on('click', function() {
+
+        var prefix = tranGroupKey() + "|";
+
+        for (var dk in tranDrafts) {
+
+            if (dk.indexOf(prefix) == 0) delete tranDrafts[dk];
+        }
+
+        delete tranMeta[tranGroupKey()];
+
+        tran.checked = {};
+        tranSaveDrafts();
+        tranRenderTable();
+    });
+
+    /* ---- 指派 modal ---- */
+
+    com.initTypeahead('tranNewUserInput', api.personel.queryUserByPinyin, "pinyinName", {
+        "user.status": 0,
+        "departmentType.name": ""
+    }, 'autoFillKeyValue', 'key', 'value', function(list, key, value) {
+
+        if (value == null || value == "") {
+            return false;
+        }
+
+        com.post(api.personel.queryUserByUserId, {
+            "user.userId": key
+        }, function(res) {
+
+            if (res.user.dept == null || res.user.dept.fatherDept == null) {
+
+                com.showAlert(com.error, "接手人部门未关联分区,请先完善部门数据");
+                return;
+            }
+
+            tran.newUser = {
+                userId: res.user.userId,
+                uid: res.user.uid,
+                currentName: res.user.currentName,
+                deptName: res.user.dept.name,
+                regionName: res.user.dept.fatherDept.name
+            };
+
+            $("#tranNewUserName").val(res.user.currentName);
+            $("#tranNewUserDept").val(res.user.dept.name);
+            $("#tranNewUserRegion").val(res.user.dept.fatherDept.name);
+        });
+
+        return value;
+    });
+
+    $("#tranAssignBtn").on('click', function() {
+
+        var orders = tranCheckedOrders();
+
+        if (orders.length == 0) return false;
+
+        // 预填: 以首个勾选行推导推荐比例(签约3/重签4→0; 其余→1), 默认人=首行现行默认态
+        var first = null;
+
+        for (var i = 0; i < tran.list.length; i++) {
+
+            if (tran.checked[tran.list[i].orderId]) {
+
+                first = tran.list[i];
+                break;
+            }
+        }
+
+        if (first) {
+
+            $("#tranRateInput").val(first.status == 3 || first.status == 4 ? 0 : 1);
+            $("#tranDefaultFlagInput").prop("checked", first.defaultFlag == 1);
+        }
+
+        $("#tranAssignModal").modal("show");
+
+        return false;
+    });
+
+    $("#tranAssignOkBtn").on('click', function() {
+
+        if (tran.newUser == null) {
+
+            com.showAlert(com.error, "请先选择接手人");
+            return false;
+        }
+
+        var rate = parseFloat($("#tranRateInput").val());
+        var defaultFlag = $("#tranDefaultFlagInput").prop("checked") ? 1 : 0;
+
+        if (isNaN(rate) || rate < 0 || rate > 1) {
+
+            com.showAlert(com.error, "归属比例须在0~1之间");
+            return false;
+        }
+
+        var groupKey = tranGroupKey();
+        tranMeta[groupKey] = new Date().getTime();
+
+        $.each(tranCheckedOrders(), function(i, orderId) {
+
+            tranDrafts[groupKey + "|" + orderId] = {
+                userId: tran.newUser.userId,
+                userName: tran.newUser.currentName,
+                deptName: tran.newUser.deptName,
+                regionName: tran.newUser.regionName,
+                rate: rate,
+                defaultFlag: defaultFlag
+            };
+        });
+
+        tranSaveDrafts();
+
+        $("#tranAssignModal").modal("hide");
+        tranRenderTable();
+    });
+
+    $("#tranAssignModal").on('hide.bs.modal', function() {
+
+        $("#tranNewUserName,#tranNewUserDept,#tranNewUserRegion").val("");
+        $("#tranNewUserInput").val("");
+        tran.newUser = null;
+    });
+
+    /* ---- 发起审批 modal ---- */
+
+    com.initTypeahead('tranApproverInput', api.personel.queryUserByPinyin, "pinyinName", {
+        "user.status": 0,
+        "departmentType.name": ""
+    }, 'autoFillKeyValue', 'key', 'value', function(list, key, value) {
+
+        if (value == null || value == "") {
+            return false;
+        }
+
+        tran.approverId = key;
+
+        return value;
+    });
+
+    // 提交口径=整组草稿(跨页指派累积), 勾选仅作为指派作用范围
+    $("#tranSubmitBtn").on('click', function() {
+
+        var groupPrefix = tranGroupKey() + "|";
+        var drafted = [];
+
+        for (var dk in tranDrafts) {
+
+            if (dk.indexOf(groupPrefix) == 0) drafted.push(dk.substring(groupPrefix.length));
+        }
+
+        if (drafted.length == 0) {
+
+            com.showAlert(com.error, "本组暂无指派草稿,请先勾选单据并指派接手人");
+            return false;
+        }
+
+        // 整组默认人硬校验(后端240091同源, 前端先拦)
+        var defaultCount = 0;
+
+        $.each(drafted, function(i, orderId) {
+
+            if (tranDrafts[groupPrefix + orderId].defaultFlag == 1) defaultCount++;
+        });
+
+        if (defaultCount != 1) {
+
+            com.showAlert(com.error, "本组草稿需恰含一个默认归属人(当前" + defaultCount + "个),请逐单调整默认勾选");
+            return false;
+        }
+
+        var $sum = $("#tranSubmitSummary").empty();
+
+        $sum.append('<div>移交人:<b>' + tran.userName + '</b> 类型:<b>' + (tran.belongType == 0 ? "设计" : "业务") + '</b> 单据:<b>' + drafted.length + '</b> 张(整组一次提交,通过=全批生效,驳回=零变更)</div>');
+
+        $.each(drafted, function(i, orderId) {
+
+            var d = tranDrafts[groupPrefix + orderId];
+
+            $sum.append('<div style="margin-left:10px">' + orderId + ' → ' + d.userName + '(' + Math.round(d.rate * 100) + '%' + (d.defaultFlag == 1 ? ',默认' : '') + ')</div>');
+        });
+
+        approvalUtils.initqueryApprovalUser("tranApproveManSel", constant.approval().approval.TYPE_BELONG_TRAN_INT);
+
+        $("#tranSubmitModal").modal("show");
+
+        return false;
+    });
+
+    $("#tranSubmitOkBtn").on('click', function() {
+
+        var receiverId = $("#tranApproveManSel").find('input:checked').attr("userid") || tran.approverId;
+
+        if (receiverId == null || receiverId == "") {
+
+            com.showAlert(com.error, "请选择审批人");
+            return false;
+        }
+
+        var options = {};
+
+        options["approval.receiver.userId"] = receiverId;
+        options["approvalBelongTran.userId"] = tran.userId;
+        options["approvalBelongTran.tranType"] = tran.belongType;
+        options["approvalBelongTran.reason"] = $("#tranReasonInput").val() || "";
+
+        var groupPrefix = tranGroupKey() + "|";
+        var i = 0;
+
+        for (var dk in tranDrafts) {
+
+            if (dk.indexOf(groupPrefix) != 0) continue;
+
+            var orderId = dk.substring(groupPrefix.length);
+            var d = tranDrafts[dk];
+
+            options["approvalBelongTranItems[" + i + "].orderId"] = orderId;
+            options["approvalBelongTranItems[" + i + "].belongType"] = tran.belongType;
+            options["approvalBelongTranItems[" + i + "].userId"] = d.userId;
+            options["approvalBelongTranItems[" + i + "].rate"] = d.rate;
+            options["approvalBelongTranItems[" + i + "].defaultFlag"] = d.defaultFlag;
+
+            i++;
+        }
+
+        com.post(api.approval.submitApprovalForBelongTran, options, function() {
+
+            for (var dk in tranDrafts) {
+
+                if (dk.indexOf(groupPrefix) == 0) delete tranDrafts[dk];
+            }
+
+            delete tranMeta[tranGroupKey()];
+
+            tran.checked = {};
+            tranSaveDrafts();
+
+            $("#tranSubmitModal").modal("hide");
+            com.showAlert(com.info, "移交审批已提交,审批通过后全批生效");
+            tranLoadList();
+        });
+    });
+
+    /* ---- 模式/类型切换 ---- */
+
+    $("#dailyModeBtn").on('click', function() {
+
+        tranSwitchMode(false);
+    });
+
+    $("#tranModeBtn").on('click', function() {
+
+        tranSwitchMode(true);
+    });
+
+    $("#tranTypeDesignBtn").on('click', function() {
+
+        tran.belongType = 0;
+        $(this).removeClass("btn-default").addClass("btn-primary");
+        $("#tranTypeSalesBtn").removeClass("btn-primary").addClass("btn-default");
+
+        if (tran.userId) {
+
+            tran.page = 0;
+            tran.checked = {};
+            if (tranGroupDraftCount() > 0) com.showAlert(com.info, "切换类型,原类型组草稿 " + tranGroupDraftCount() + " 条已保留,切回可继续");
+            tranLoadList();
+        }
+    });
+
+    $("#tranTypeSalesBtn").on('click', function() {
+
+        tran.belongType = 1;
+        $(this).removeClass("btn-default").addClass("btn-primary");
+        $("#tranTypeDesignBtn").removeClass("btn-primary").addClass("btn-default");
+
+        if (tran.userId) {
+
+            tran.page = 0;
+            tran.checked = {};
+            tranLoadList();
+        }
+    });
+
 });

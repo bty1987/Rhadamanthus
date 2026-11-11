@@ -13,11 +13,13 @@ package com.fanglin.approval.service;
 
 import java.util.List;
 
+import com.fanglin.approval.po.ApprovalBelongTranItemPO;
 import com.fanglin.approval.po.ApprovalPO;
 import com.fanglin.approval.vo.ApprovalDecorationBelongItemVO;
 import com.fanglin.approval.vo.ApprovalDecorationBelongVO;
 import com.fanglin.approval.vo.ApprovalVO;
 import com.fanglin.core.interceptor.FLException;
+import com.fanglin.personel.po.UserPO;
 
 public interface ApprovalDecorationBelongService {
 
@@ -30,5 +32,7 @@ public interface ApprovalDecorationBelongService {
 	public int tranApprovalForDecorationBelong(String orderId, Short type, String userId, int company, String code, String forms) throws FLException;
 
 	public int tranApprovalForDecorationBelong(String orderId, Short type, String userId, int company, String code, String forms, short mergeFlag) throws FLException;
+
+	public int tranDecorationBelongForQuit(String orderId, Short belongType, int quitUid, List<ApprovalBelongTranItemPO> itemPOs, UserPO operater) throws FLException;
 
 }

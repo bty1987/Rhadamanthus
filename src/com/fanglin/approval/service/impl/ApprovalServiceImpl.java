@@ -38,6 +38,7 @@ import com.fanglin.approval.service.ApprovalDecorationTerminalService;
 import com.fanglin.approval.service.ApprovalManifestDBService;
 import com.fanglin.approval.service.ApprovalMaterialFullPaymentService;
 import com.fanglin.approval.service.ApprovalMaterialRefundService;
+import com.fanglin.approval.service.ApprovalBelongTranService;
 import com.fanglin.approval.service.ApprovalPaymentWithdrawService;
 import com.fanglin.approval.service.ApprovalProtationPreferService;
 import com.fanglin.approval.service.ApprovalQuotationDiscountService;
@@ -134,6 +135,9 @@ public class ApprovalServiceImpl implements ApprovalService {
 
 	@Autowired
 	private ApprovalPaymentWithdrawService approvalPaymentWithdrawService;
+
+	@Autowired
+	private ApprovalBelongTranService approvalBelongTranService;
 
 	@Autowired
 	private UserDao userDao;
@@ -325,6 +329,9 @@ public class ApprovalServiceImpl implements ApprovalService {
 				break;
 			case ApprovalPO.APPROVAL_TYPE_PAYMENT_WITHDRAW_INT:
 				approvalPaymentWithdrawService.approveForPaymentWithdraw(approvalPO);
+				break;
+			case ApprovalPO.APPROVAL_TYPE_BELONG_TRAN_INT:
+				approvalBelongTranService.approveForBelongTran(approvalPO);
 				break;
 			default:
 				break;

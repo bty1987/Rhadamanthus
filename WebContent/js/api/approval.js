@@ -131,6 +131,16 @@ $.extend(api, {
                 args: ["approvalDecorationBelongItems.rate"]
             }
         },
+        submitApprovalForBelongTran: {
+            url: "submitApprovalForBelongTran.do",
+            type: "update",
+            tranargs: {
+                args: ["approvalBelongTranItems.rate"]
+            }
+        },
+        queryApprovalBelongTranByAId: {
+            url: "queryApprovalBelongTranByAId.do"
+        },
         submitApprovalForDecorationContract: {
             url: "submitApprovalForDecorationContract.do",
         },
