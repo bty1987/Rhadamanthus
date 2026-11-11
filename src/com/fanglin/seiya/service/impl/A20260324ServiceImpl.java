@@ -631,17 +631,32 @@ public class A20260324ServiceImpl implements A20260324Service {
 				userPO = userDao.queryUserByUserId(code);
 			}
 
-			// 5.2 工号未命中时，按手机号/身份证查找（任一命中即视为同一用户）
-			if (userPO == null) {
-				List<UserPO> existUsers = userDao.queryUserByPhoneAIdent(phone, identity);
-				if (existUsers != null && existUsers.size() == 1) {
-					userPO = existUsers.get(0);
-					logger.info("手机号/身份证命中既有用户，转为更新: uid={}, userId={}, code={}, phone={}, identity={}", userPO.getUid(), userPO.getUserId(), code, phone, identity);
-				} else if (existUsers != null && existUsers.size() > 1) {
+			// 5.2 工号未命中时，分键匹配: 身份证强键优先、手机号弱键兜底(不再OR合并)
+			// OR合并会把"同手机号的录错/离职遗留档案"也算命中→402014误阻断(2026-11-11 陈庆虎实证:
+			// 真人73司身份证唯一命中, 同手机号另有1司离职录错档, 合并查出2条被拒);
+			// 身份证唯一命中=本人, 多命中仍402014; 身份证缺失时手机号唯一命中=更新
+			if (userPO == null && identity != null && !identity.trim().isEmpty()) {
+				List<UserPO> identUsers = userDao.queryUserByPhoneAIdent(null, identity);
+				if (identUsers != null && identUsers.size() == 1) {
+					userPO = identUsers.get(0);
+					logger.info("身份证唯一命中既有用户，转为更新: uid={}, userId={}, code={}, identity={}", userPO.getUid(), userPO.getUserId(), code, identity);
+				} else if (identUsers != null && identUsers.size() > 1) {
 					throw new FLException(402014, "手机号或身份证命中多个用户");
-				} else if (code != null && !code.trim().isEmpty()) {
-					logger.warn("根据code未找到用户，视为新增: code={}", code);
 				}
+			}
+
+			if (userPO == null && phone != null && !phone.trim().isEmpty()) {
+				List<UserPO> phoneUsers = userDao.queryUserByPhoneAIdent(phone, null);
+				if (phoneUsers != null && phoneUsers.size() == 1) {
+					userPO = phoneUsers.get(0);
+					logger.info("手机号唯一命中既有用户，转为更新: uid={}, userId={}, code={}, phone={}", userPO.getUid(), userPO.getUserId(), code, phone);
+				} else if (phoneUsers != null && phoneUsers.size() > 1) {
+					throw new FLException(402014, "手机号或身份证命中多个用户");
+				}
+			}
+
+			if (userPO == null && code != null && !code.trim().isEmpty()) {
+				logger.warn("根据code未找到用户，视为新增: code={}", code);
 			}
 
 			// 6. 构建或更新 UserPO 对象
@@ -763,8 +778,11 @@ public class A20260324ServiceImpl implements A20260324Service {
 			} else {
 				// ========== 更新场景 ==========
 
-				// 7.0 校验手机号/身份证未被其他用户占用（工号命中的场景下防止更新后产生重复档案）
-				List<UserPO> existUsers = userDao.queryUserByPhoneAIdent(phone, identity);
+				// 7.0 唯一性校验同键收敛(与5.2分键一致): 身份证命中本人时只查身份证冲突,
+				// 同手机号的录错/离职遗留档案不再阻断本人更新; 身份证缺失保持手机号口径
+				List<UserPO> existUsers = (identity != null && !identity.trim().isEmpty())
+					? userDao.queryUserByPhoneAIdent(null, identity)
+					: userDao.queryUserByPhoneAIdent(phone, null);
 				for (UserPO existUser : existUsers) {
 					if (existUser.getUid() != userPO.getUid()) {
 						throw new FLException(402011, "手机号或身份证已被使用");
