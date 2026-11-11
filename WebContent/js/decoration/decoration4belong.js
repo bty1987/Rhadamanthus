@@ -565,19 +565,7 @@ jQuery(function($) {
             return false;
         }
 
-        // 整组默认人硬校验(后端240091同源, 前端先拦)
-        var defaultCount = 0;
-
-        $.each(drafted, function(i, orderId) {
-
-            if (tranDrafts[groupPrefix + orderId].defaultFlag == 1) defaultCount++;
-        });
-
-        if (defaultCount != 1) {
-
-            com.showAlert(com.error, "本组草稿需恰含一个默认归属人(当前" + defaultCount + "个),请逐单调整默认勾选");
-            return false;
-        }
+        // 默认人唯一性按"每单每类型"口径由后端240091校验(前端无从得知各单保留行默认态, 组内求和口径错误会挡死多单全给一人的主流程); modal预填=原移交人行属性, 常规操作天然合法
 
         var $sum = $("#tranSubmitSummary").empty();
 
