@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <title>Information Platform</title>
+
+    <meta charset="utf-8" />
+    <meta content="no-cache"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="shortcut icon" href="fanglin.ico" type="image/x-icon">
+
+    <!-- altogether -->
+    <link rel="stylesheet" href="assets/altogether/css/pace.min.css" />
+    <script type="text/javascript" src='assets/altogether/js/pace.min.js' data-pace-options='{"ajax": false}'></script>
+    <!-- altogether end -->
+
+    <script type="text/javascript">
+
+        window.notOperate = false;
+        window.templateStyle = "ace";
+
+        // part: 无框宿主页 — 仅承载目标页面内容区, 无顶栏/菜单/面包屑; CSS/JS/全局参数与 index.html 同源, 登录校验水位一致
+        var server = './'
+        var versionCode = '';
+        var cookies = document.cookie.split(";");
+
+        for(var i=0;i<cookies.length;i++){
+            var cookie = cookies[i];
+
+            if(cookie.indexOf("versionCode") != -1){
+                versionCode = cookie.split("=")[1];
+            }else if(cookie.indexOf("authentication") != -1){
+                window.authentication = cookie.substr(cookie.indexOf('=') + 1);
+            }else if(cookie.indexOf("loginTime") != -1){
+                window.loginTime = cookie.split("=")[1];
+            }else if(cookie.indexOf("communion") != -1){
+                window.communion = cookie.split("=")[1];
+            }
+        }
+
+        // 登录超时: 无 loginTime cookie 回登录页(与 index.html 同款)
+        if(window.loginTime == undefined){
+            window.location.href = "/";
+        }
+
+        var csses = "";
+
+        /* altogether */
+        csses += '<link rel="stylesheet" href="assets/altogether/css/font-awesome.min.css" />';
+        csses += '<link rel="stylesheet" href="assets/altogether/css/layui.css" />';
+        /* altogether end */
+
+        /* ace */
+        csses += '<link rel="stylesheet" href="assets/ace/css/bootstrap.min.css" />';
+        csses += '<link rel="stylesheet" href="assets/ace/css/font-awesome-fa.min.css" />';
+        csses += '<link rel="stylesheet" href="assets/ace/css/fullcalendar.css" />';
+        csses += '<link rel="stylesheet" href="assets/ace/css/huploadify.css" />';
+        csses += '<link rel="stylesheet" href="assets/ace/css/ace.css" />';
+        /* ace end */
+
+        csses += '<link rel="stylesheet" href="' + server + 'css/main.css" />';
+
+        document.write(csses);
+
+        var jses = "";
+
+        if(!window.jQuery){
+            jses += '<script src="' + server + 'assets/altogether/js/jquery-2.0.3.min.js"><\/script>';
+        }
+
+        document.write(jses);
+    </script>
+
+</head>
+
+<!-- 无顶栏/无菜单: body 不带 navbar-fixed(免顶栏 padding 留白), main-content 置 margin-left:0(免侧栏让位);
+     partPane = com.switchPage 默认装载容器(.flpage.tab-pane.active), com.focusPage 作用域成立, 页面片段功能不受无框影响 -->
+<body>
+    <div class="main-container" id="main-container" style='display:none;'>
+        <div class="main-content" style='margin-left: 0px;'>
+            <div id="fl-container">
+                <div class="flpage tab-content">
+                    <div class="flpage tab-pane in active" id="partPane"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="assets/altogether/js/jquery-2.0.3.min.js"></script>
+    <script src="assets/ace/js/ace.js"></script>
+    <script src="assets/ace/js/bootstrap.min.js"></script>
+    <script src="assets/ace/js/jquery.slimscroll.min.js"></script>
+    <script src="assets/ace/js/jquery.raty.min.js"></script>
+    <script src="assets/ace/js/ace-elements.js"></script>
+    <script src="assets/ace/js/ace-extra.min.js"></script>
+
+    <script src="assets/altogether/js/jquery.huploadify.js"></script> <!-- upload tools -->
+    <script src="assets/altogether/js/aliyun-oss-sdk.min.js"></script> <!-- OSS STS直传SDK(未加载时core.js自动回退本地上传) -->
+    <script src="assets/altogether/js/fullcalendar.min.js"></script> <!-- calendar -->
+    <script src="assets/altogether/js/spin.min.js"></script>
+
+    <script src="assets/altogether/js/layui.js"></script> <!-- layui tools -->
+
+    <script src="assets/altogether/js/typeahead.min.js"></script> <!-- auto fill -->
+    <script src="assets/altogether/js/tag.js"></script>
+    <script src="assets/altogether/js/base64.js"></script>
+    <script src="assets/altogether/js/html2canvas.js"></script> <!-- export tools -->
+
+    <script src="assets/altogether/js/ztree/jquery.ztree.core-3.5.min.js"></script>
+    <script src="assets/altogether/js/ztree/jquery.ztree.excheck-3.5.min.js"></script>
+
+    <script src="assets/altogether/js/fuelux/fuelux.wizard.min.js"></script>
+    <script src="assets/altogether/js/fuelux/fuelux.spinner.min.js"></script>
+    <script src="assets/altogether/js/fuelux/fuelux.tree.js"></script>
+	<script src="assets/altogether/js/jquery.qrcode.min.js"></script>
+
+	<script src="assets/altogether/js/echarts.min.js"></script>
+
+    <script type="text/javascript">
+
+        var jses = "";
+
+        jses += '<script src="js/com/memory.js"><\/script>';
+
+        jses += '<script src="js/com/config.js"><\/script>';
+        jses += '<script src="js/com/server.js"><\/script>';
+        jses += '<script src="js/com/api.js"><\/script>';
+        jses += '<script src="js/com/load.js"><\/script>';
+        jses += '<script src="js/com/version.js"><\/script>';
+        jses += '<script src="js/com/params.js"><\/script>';
+        jses += '<script src="js/com/utils.js"><\/script>';
+        jses += '<script src="js/com/core.js"><\/script>';
+
+        jses += '<script src="js/com/i18n.js"><\/script>';   // i18n 国际化核心(message/page 语言包加载 + t/apply/setLang)
+
+        jses += '<script src="js/com/validator.js"><\/script>';
+        jses += '<script src="js/com/condition.js"><\/script>';
+        jses += '<script src="js/com/searcher.js"><\/script>';
+        jses += '<script src="js/com/exporter.js"><\/script>';
+        jses += '<script src="js/com/printer.js"><\/script>';
+        jses += '<script src="js/com/constant.js"><\/script>';
+
+        jses += '<script src="js/part.js"><\/script>';
+
+        document.write(jses);
+    </script>
+
+</body>
+</html>

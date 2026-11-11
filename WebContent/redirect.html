@@ -75,12 +75,19 @@
 		        
 		        var osstoken = getUrlParams()["osstoken"];
 		
-		        setCookie("authentication", authentication, config.timeout);
-		        setCookie("osstoken", osstoken, config.timeout);
-		        setCookie("loginTime", new Date().getTime(), config.timeout);
-		
-		        window.location.href = getTemplateIndexUrl() + "?timestamp=" + new Date().getTime();
-		    }
+	        setCookie("authentication", authentication, config.timeout);
+	        setCookie("osstoken", osstoken, config.timeout);
+	        setCookie("loginTime", new Date().getTime(), config.timeout);
+
+	        // target分流: 携带target参数时落无框宿主页part.html(仅内容区, 无菜单/顶栏, 功能与主框架同源); 其余保持原有跳主框架行为
+	        var target = getUrlParams()["target"];
+
+	        if (target) {
+	            window.location.href = "part.html?target=" + encodeURIComponent(target) + "&timestamp=" + new Date().getTime();
+	        } else {
+	            window.location.href = getTemplateIndexUrl() + "?timestamp=" + new Date().getTime();
+	        }
+	    }
 		</script>
 	
 	</head>
