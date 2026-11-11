@@ -499,7 +499,7 @@ jQuery(function($) {
         com.selectTypeahead("cashInfo", servicePayment.cashUtil, "key", "value", null); // 现金
 
         // 根据装修单等级获取收据类型等级
-        var grade = ["A", "C"].contains(payment.decoration.grade) ? "A" : "";
+        var grade = payment.decoration.grade == "G" ? "G" : (["A", "C"].contains(payment.decoration.grade) ? "A" : "");
 
         // 根据等级在数组中筛选出符合要求的用于显示
         paymentUtils.initBankGrade(servicePayment, grade); // 刷卡&银行
@@ -543,7 +543,7 @@ jQuery(function($) {
         com.selectTypeahead("cashInfo", servicePayment.cashUtil, "key", "value", null); // 现金
 
         // 根据装修单等级获取收据类型等级
-        var grade = ["A", "C"].contains(v.decoration.grade) ? "A" : "";
+        var grade = v.decoration.grade == "G" ? "G" : (["A", "C"].contains(v.decoration.grade) ? "A" : "");
 
         // 根据等级在数组中筛选出符合要求的用于显示
         paymentUtils.initBankGrade(servicePayment, grade);

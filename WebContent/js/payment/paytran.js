@@ -78,9 +78,9 @@ jQuery(function($) {
         var atttype = paytran.items.atttype.val();
 
         if (atttype == constant.payment().paytran.ATTTYPE_DECORATION_INT) {
-            grade = ["A", "C"].contains(paytran.decoration.grade) ? "A" : "";
+            grade = paytran.decoration.grade == "G" ? "G" : (["A", "C"].contains(paytran.decoration.grade) ? "A" : "");
         } else if (atttype == constant.payment().paytran.ATTTYPE_MATERIAL_INT) {
-            grade = paytran.decoration.grade == "C" ? "B" : "";
+            grade = paytran.decoration.grade == "C" ? "B" : (paytran.decoration.grade == "G" ? "G" : "");
         }
 
         com.selectTypeahead(paytran.items.bankName, paytran.bankGrade, "key", "value", null);

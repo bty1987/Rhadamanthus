@@ -844,7 +844,7 @@ jQuery(function($) {
         com.selectTypeahead("couponType", decorationPayment.couponType, 'no', 'name');
 
         // 根据装修单等级获取收据类型等级
-        var grade = ["A", "C"].contains(payment.decoration.grade) ? "A" : "";
+        var grade = payment.decoration.grade == "G" ? "G" : (["A", "C"].contains(payment.decoration.grade) ? "A" : "");
 
         // 根据等级在数组中筛选出符合要求的用于显示 刷卡&银行
         paymentUtils.initBankGrade(decorationPayment, grade);
@@ -908,7 +908,7 @@ jQuery(function($) {
         // 优惠券方式
         com.selectTypeahead("couponType", decorationPayment.couponType, 'no', 'name');
 
-        var grade = ["A", "C"].contains(payment.decoration.grade) ? "A" : "";
+        var grade = payment.decoration.grade == "G" ? "G" : (["A", "C"].contains(payment.decoration.grade) ? "A" : "");
 
         paymentUtils.initBankGrade(decorationPayment, grade);
 

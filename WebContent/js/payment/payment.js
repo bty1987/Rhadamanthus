@@ -1085,12 +1085,16 @@ jQuery(function($) {
             if (paymentType == constant.payment().advancePayment.PAYMENTTYPE_BALANCE_INT) {
                 if (decorationGrade == "A" || decorationGrade == "C") {
                     gradeParam = "A";
+                } else if (decorationGrade == "G") {
+                    gradeParam = "G";
                 } else {
                     gradeParam = "";
                 }
             } else if (paymentType == constant.payment().advancePayment.PAYMENTTYPE_MATERIAL_INT) {
                 if (decorationGrade == "C") {
                     gradeParam = "B";
+                } else if (decorationGrade == "G") {
+                    gradeParam = "G";
                 } else {
                     gradeParam = "";
                 }
