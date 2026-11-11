@@ -168,7 +168,7 @@ decoration4belong「离职移交」页签 ──► 筛原移交人(归属表聚
 | 后端新增 | 11 文件 | approval 模块：Action、Service接口+Impl、主/明细 PO(+AO)、主/明细 Dao+Impl、VO×2 |
 | 后端修改 | 6~8 文件 | `ApprovalPO`常量、`ApprovalServiceImpl` approve switch(+1 case)；decoration 模块：`DecorationBelongDao/Service` 新增"按归属人分页查询"+ `ApprovalDecorationBelongServiceImpl` 单票落库段提公共物化入口（含状态豁免参数 + rate 按状态推导） |
 | 前端 | 1 新对 + 6 改 | 新 `decorationBelongTranDetail.html/js`（审批只读详情）；改 `decoration4belong.html`（页签+modal 容器+checkbox 列）、`decoration4belong.js`（移交模式全套交互+草稿缓存——前端主要工作量）、`api/approval.js`、`api/decoration.js`、`approval4track.js`(详情路由)、字典两处。**共享弹层 decorationBelong.js 与人员页 user.js 零改动（无回归面）** |
-| SQL | 3 张 | 60_approvalbelongtran(两表DDL)/61_belong_tran_operation(4端点 through=0 中文名直插)/62_constant_approval_type(审批类型27字典行)；approver 各公司审批人配置留管理员维护（前端提交弹窗对空列表有 typeahead 手选兜底）；菜单与钉钉均取消 |
+| SQL | 4 张 | 60_approvalbelongtran(两表DDL)/61_belong_tran_operation(4端点 through=0)/62_constant_approval_type(类型27字典)/🔴38_roleoperation_belong_tran_grant(communion目录·授权投放——61登记强权限后必须配授权行否则全员被拦功能不可用；默认名单86/168/117/272×4oid×103在营公司，rid名单参数待业务圈定)；approver 各公司审批人配置留管理员维护（前端对空列表有 typeahead 手选兜底）；菜单与钉钉均取消 |
 | jar | **2 个同批** | approval + decoration（跨模块新签名，须 `rm -rf target/classes` 全量编译，见提现批教训 c675c02bc）。personel 不出包。部署序：SQL→jar→前端 |
 | 工作量 | 后端≈3-4 人日，前端≈2 人日，联调+test 冒烟≈1-2 人日 | 不含生产 SQL 执行窗口；渠道已收敛为系统 Web 审批，无钉钉配置量 |
 
