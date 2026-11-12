@@ -24,6 +24,9 @@ $.extend(api.index, {
     quotationPartIndex: {
         url: "/views/quotation/quotationPart.html"
     },
+    auotationPartIndex: {
+        url: "/views/quotation/auotationPart.html"
+    },
     quotationWholeIndex: {
         url: "/views/quotation/quotationWhole.html"
     },

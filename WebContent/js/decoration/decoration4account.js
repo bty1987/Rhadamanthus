@@ -125,6 +125,7 @@ $(function() {
             btnBack: com.focusPage('#btnBack', "#decorationAccountContent"),
             accountCalculatorBtn: com.focusPage("#accountCalculatorBtn", "#decorationAccountContent"),
             calculateBtn: com.focusPage("#calculateBtn", "#decorationAccountContent"),
+            auotationPartBtn: com.focusPage("#auotationPartBtn", "#decorationAccountContent"),
             noticeQRCodeBtn: com.focusPage("#noticeQRCodeBtn", "#decorationAccountContent"),
             addReduceItemsBtn: com.focusPage("#addReduceItemsBtn", "#decorationAccountContent"),
             addConstructionItemsBtn: com.focusPage("#addConstructionItemsBtn", "#decorationAccountContent"),
@@ -1174,6 +1175,12 @@ $(function() {
 
             queryAddReduce();
         });
+    });
+
+    // 决算报价: 报价+扩展+增减按功能区归组的决算明细弹窗(零后台, 归档走 decorationaccount/decorationaccountitem)
+    decorationDetail.btns.auotationPartBtn.click(function() {
+
+        com.popup4page("#layerPopUp", api.index.auotationPartIndex.url, "决算报价");
     });
 
     function queryAddReduce() {
