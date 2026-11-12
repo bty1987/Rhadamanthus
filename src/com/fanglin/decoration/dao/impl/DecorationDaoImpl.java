@@ -16,7 +16,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.hibernate.Criteria;
-import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
@@ -514,24 +513,14 @@ public class DecorationDaoImpl extends DaoImpl<DecorationPO> implements Decorati
 		}
 	}
 
-
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<DecorationPO> queryDecorationForLottery(int company, Timestamp start, Timestamp end) {
 
 		// 补发遍历源: 已签约单(contractTime在活动截止前) + 未签约但窗口内有主材收款的单
 		// (未签约单被contractTime条件排除会漏"预存每满"应得, 2610310484实证: 未签约期收款30000, 批量补发跳过致漏发)
-		StringBuffer sql = new StringBuffer("SELECT DISTINCT d.* FROM decoration.decoration d WHERE d.company = :company AND d.status NOT IN (4, 6) AND (")
-				.append("(d.contractTime IS NOT NULL AND d.contractTime <= :end) ")
-				.append("OR EXISTS (SELECT 1 FROM payment.payment p WHERE p.orderId = d.orderId AND p.paymentType = 2 AND p.status IN (1, 2) ")
-				.append("AND p.createTime >= COALESCE(:start, '1970-01-01') AND p.createTime <= :end)) ")
-				.append("ORDER BY d.contractTime");
+		StringBuffer sql = new StringBuffer("SELECT DISTINCT d.* FROM decoration.decoration d WHERE d.company = :company AND d.status NOT IN (4, 6) AND (").append("(d.contractTime IS NOT NULL AND d.contractTime <= :end) ").append("OR EXISTS (SELECT 1 FROM payment.payment p WHERE p.orderId = d.orderId AND p.paymentType = 2 AND p.status IN (1, 2) ").append("AND p.createTime >= COALESCE(:start, '1970-01-01') AND p.createTime <= :end)) ").append("ORDER BY d.contractTime");
 
-		return session().createSQLQuery(sql.toString())
-				.addEntity(DecorationPO.class)
-				.setInteger("company", company)
-				.setTimestamp("start", start)
-				.setTimestamp("end", end)
-				.list();
+		return session().createSQLQuery(sql.toString()).addEntity(DecorationPO.class).setInteger("company", company).setTimestamp("start", start).setTimestamp("end", end).list();
 	}
 }

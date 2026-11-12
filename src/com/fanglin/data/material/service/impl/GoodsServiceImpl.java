@@ -54,8 +54,6 @@ import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.right.dao.BrandUserRightDao;
 import com.fanglin.right.po.BrandUserRightPO;
-import com.fanglin.system.dao.CompanyDao;
-import com.fanglin.system.po.CompanyPO;
 import com.fanglin.system.service.impl.CompanyServiceImpl;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.Paging;
@@ -82,9 +80,6 @@ public class GoodsServiceImpl implements GoodsService {
 
 	@Autowired
 	private BrandDao brandDao;
-
-	@Autowired
-	private CompanyDao companyDao;
 
 	@Autowired
 	private GoodsPoolDao goodsPoolDao;
@@ -416,8 +411,7 @@ public class GoodsServiceImpl implements GoodsService {
 	}
 
 	/**
-	 * 商品创建规格范围校验:品类已维护规格(communion.categoryformat)时,规格必须取自品类规格集合;
-	 * 品类未维护规格时不约束(兼容自由录入)。
+	 * 商品创建规格范围校验:品类已维护规格(communion.categoryformat)时,规格必须取自品类规格集合; 品类未维护规格时不约束(兼容自由录入)。
 	 */
 	private void checkFormatInCategoryScope(GoodsVO goodsVO) throws FLException {
 

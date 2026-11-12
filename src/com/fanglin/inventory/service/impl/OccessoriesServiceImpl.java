@@ -5,8 +5,6 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -49,8 +47,6 @@ import com.fanglin.utils.Paging;
 @Service("occessoriesService")
 @Transactional(readOnly = true)
 public class OccessoriesServiceImpl implements OccessoriesService {
-
-	private static final Logger log = LoggerFactory.getLogger(OccessoriesServiceImpl.class);
 
 	private static final String OCCESSORIES_DELIVE_MESSAGE_URL_STR = "https://service-erp.fanglin.vip/dingding/vue/index.html?agent=4921021#/manifest/occessories-detail?oid=%s";
 

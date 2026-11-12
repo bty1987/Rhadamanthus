@@ -15,7 +15,6 @@ import java.util.List;
 
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.decoration.vo.DecorationBelongTranUserVO;
-import com.fanglin.decoration.vo.DecorationBelongTranVO;
 import com.fanglin.decoration.vo.DecorationBelongVO;
 import com.fanglin.decoration.vo.DecorationVO;
 import com.fanglin.utils.Paging;

@@ -13,10 +13,8 @@ import com.fanglin.communion.vo.DutyVO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.data.common.vo.GoodsKindVO;
-import com.fanglin.data.material.dao.AoodsDao;
 import com.fanglin.data.material.dao.GoodsDao;
 import com.fanglin.data.material.dao.GoodsRecordDao;
-import com.fanglin.data.material.dao.SoodsDao;
 import com.fanglin.data.material.service.GoodsRecordService;
 import com.fanglin.data.material.vo.AccessoriesTypeVO;
 import com.fanglin.data.material.vo.AoodsVO;
@@ -40,12 +38,6 @@ public class GoodsRecordServiceImpl implements GoodsRecordService {
 
 	@Autowired
 	private GoodsRecordDao goodsRecordDao;
-
-	@Autowired
-	private SoodsDao soodsDao;
-
-	@Autowired
-	private AoodsDao aoodsDao;
 
 	@Autowired
 	private UserDao userDao;

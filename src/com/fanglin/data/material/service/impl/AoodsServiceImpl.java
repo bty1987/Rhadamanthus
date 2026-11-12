@@ -28,7 +28,6 @@ import com.fanglin.data.po.GoodsPO;
 import com.fanglin.data.po.NoodsPO;
 import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.po.DecorationPO;
-import com.fanglin.system.dao.CompanyDao;
 import com.fanglin.system.dao.OrganizationDao;
 import com.fanglin.system.po.OrganizationPO;
 import com.fanglin.system.service.impl.CompanyServiceImpl;
@@ -42,9 +41,6 @@ public class AoodsServiceImpl implements AoodsService {
 
 	@Autowired
 	private AoodsDao aoodsDao;
-
-	@Autowired
-	private CompanyDao companyDao;
 
 	@Autowired
 	private DecorationDao decorationDao;
