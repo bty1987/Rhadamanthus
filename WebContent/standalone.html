@@ -20,7 +20,7 @@
         window.notOperate = false;
         window.templateStyle = "ace";
 
-        // part: 无框宿主页 — 仅承载目标页面内容区, 无顶栏/菜单/面包屑; CSS/JS/全局参数与 index.html 同源, 登录校验水位一致
+        // standalone: 无框宿主页 — 仅承载目标页面内容区, 无顶栏/菜单/面包屑; CSS/JS/全局参数与 index.html 同源, 登录校验水位一致
         var server = './'
         var versionCode = '';
         var cookies = document.cookie.split(";");
@@ -75,13 +75,13 @@
 </head>
 
 <!-- 无顶栏/无菜单: body 不带 navbar-fixed(免顶栏 padding 留白), main-content 置 margin-left:0(免侧栏让位);
-     partPane = com.switchPage 默认装载容器(.flpage.tab-pane.active), com.focusPage 作用域成立, 页面片段功能不受无框影响 -->
+     standalonePane = com.switchPage 默认装载容器(.flpage.tab-pane.active), com.focusPage 作用域成立, 页面片段功能不受无框影响 -->
 <body>
     <div class="main-container" id="main-container" style='display:none;'>
         <div class="main-content" style='margin-left: 0px;'>
             <div id="fl-container">
                 <div class="flpage tab-content">
-                    <div class="flpage tab-pane in active" id="partPane"></div>
+                    <div class="flpage tab-pane in active" id="standalonePane"></div>
                 </div>
             </div>
         </div>
@@ -141,7 +141,7 @@
         jses += '<script src="js/com/printer.js"><\/script>';
         jses += '<script src="js/com/constant.js"><\/script>';
 
-        jses += '<script src="js/part.js"><\/script>';
+        jses += '<script src="js/standalone.js"><\/script>';
 
         document.write(jses);
     </script>

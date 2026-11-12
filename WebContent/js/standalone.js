@@ -1,6 +1,6 @@
 $(function() {
 
-    // part: 无框宿主初始化 — index.js 裁剪版
+    // standalone: 无框宿主初始化 — index.js 裁剪版
     // 保留: 登录验证(queryUserForSelfByUserId+平台权限位)/服务器配置/用户偏好/常量/条件组件/i18n/目标页面装载
     // 摘除: 动态菜单/通知轮询/消息badge/锁屏/单点升级校验/公司切换等框架级功能; 页面内部导航走 com.switchPage 原生支持
     Api().init('js/api/');
