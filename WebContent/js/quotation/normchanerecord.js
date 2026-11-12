@@ -5,7 +5,7 @@ jQuery(function($) {
     utils = parent.utils;
     params = parent.params;
 
-    // 变更记录查询条件: 入口传参 orderId(增减单)或 qid(定额单), 只读时间线
+    // 变更记录查询条件: 定额单入口传参 qid, 只读时间线
     var query = params.quotation.normChangeRecord || {};
 
     var page = 1;
@@ -42,7 +42,6 @@ jQuery(function($) {
             "paging.rows": rows
         };
 
-        if (query.orderId) options["normChangeRecord.orderId"] = query.orderId;
         if (query.qid) options["normChangeRecord.qid"] = query.qid;
 
         return options;
