@@ -93,9 +93,15 @@ $(function() {
     }, {
         field: "status",
         name: "状态",
-        prop: "status",
+        // 配送单按配送流程显示: 需配送(0/1)→已发货(2)→已配送(9,字典), 其余走状态字典; 自配单全走字典
+        prop: function (v) {
+            if (v.deliveryStatus == 1) {
+                if (v.status == 0 || v.status == 1) return "需配送";
+                if (v.status == 2) return "已发货";
+            }
+            return accessories.status[v.status];
+        },
         clazz: "red",
-        dataset: constant.inventory().accessories.status.keys,
     }, {
         field: "type",
         name: "类型",
@@ -128,7 +134,7 @@ $(function() {
             return false;
         },
         show: function (v) {
-            return (v.status == constant.inventory().accessories.STATUS_RETURN_INT || v.status == constant.inventory().accessories.STATUS_DELIVER_INT || (accessories.pageType == "advance" && v.status == constant.inventory().accessories.STATUS_BATCHOUT_INT))
+            return (v.status == constant.inventory().accessories.STATUS_RETURN_INT || v.status == constant.inventory().accessories.STATUS_DELIVER_INT || v.status == constant.inventory().accessories.STATUS_DELIVERED_INT || (accessories.pageType == "advance" && v.status == constant.inventory().accessories.STATUS_BATCHOUT_INT))
         }
     }, {
         name: "预出",
@@ -189,7 +195,7 @@ $(function() {
             return false;
         },
         show: function (v) {
-            return (v.status != constant.inventory().accessories.STATUS_DELIVER_INT)
+            return (v.status != constant.inventory().accessories.STATUS_DELIVER_INT && v.status != constant.inventory().accessories.STATUS_DELIVERED_INT)
         }
     }, {
         name: "拒绝",
@@ -226,7 +232,7 @@ $(function() {
             return false;
         },
         show: function (v) {
-            return (v.status == constant.inventory().accessories.STATUS_DELIVER_INT ||(accessories.pageType != "advance" && v.status == constant.inventory().accessories.STATUS_DELIVER_INT) )
+            return (v.status == constant.inventory().accessories.STATUS_DELIVER_INT || v.status == constant.inventory().accessories.STATUS_DELIVERED_INT || (accessories.pageType != "advance" && v.status == constant.inventory().accessories.STATUS_DELIVER_INT))
         }
     }, {
         name: "打印",
@@ -237,17 +243,20 @@ $(function() {
             return false;
         },
         show: function (v) {
-            return (v.status == constant.inventory().accessories.STATUS_ADVANCE_INT || v.status == constant.inventory().accessories.STATUS_BATCHOUT_INT || v.status == constant.inventory().accessories.STATUS_DELIVER_INT)
+            return (v.status == constant.inventory().accessories.STATUS_ADVANCE_INT || v.status == constant.inventory().accessories.STATUS_BATCHOUT_INT || v.status == constant.inventory().accessories.STATUS_DELIVER_INT || v.status == constant.inventory().accessories.STATUS_DELIVERED_INT)
         }
     }, {
-        name: "到货",
+        // 配送单=确认配送(置9已配送), 自配单=到货确认(置6); 服务端deliveAccessories按deliveryStatus分支
+        name: function (v) {
+            return v.deliveryStatus == 1 ? "确认配送" : "到货";
+        },
         clazz: "btn-pink",
         handle: function (v) {
             if (v.status != constant.inventory().accessories.STATUS_BATCHOUT_INT) {
                 com.showAlert(com.warning, "辅料单状态不可操作");
                 return false;
             }
-            com.showConfirm("确认到货?", function() {
+            com.showConfirm(v.deliveryStatus == 1 ? "确认配送?" : "确认到货?", function() {
 
                 com.post(api.inventory.deliveAccessories, {
                     "accessories.aid": v.aid
@@ -327,7 +336,7 @@ $(function() {
         name: "结算",
         clazz: "btn-success",
         handle: function (v) {
-            if (v.status != constant.inventory().accessories.STATUS_DELIVER_INT) {
+            if (v.status != constant.inventory().accessories.STATUS_DELIVER_INT && v.status != constant.inventory().accessories.STATUS_DELIVERED_INT) {
                 com.showAlert(com.warning, "辅料单状态不可操作");
                 return false;
             }
@@ -344,7 +353,7 @@ $(function() {
             return false;
         },
         show: function (v) {
-            return (accessories.pageType != "supplier" && v.status == constant.inventory().accessories.STATUS_DELIVER_INT)
+            return (accessories.pageType != "supplier" && (v.status == constant.inventory().accessories.STATUS_DELIVER_INT || v.status == constant.inventory().accessories.STATUS_DELIVERED_INT))
         }
     }, {
         // 费用明细查看(只读): 整单费用行按项展示, 到货/结算后亦可查(照外辅费用查看形态)

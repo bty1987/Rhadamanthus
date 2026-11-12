@@ -409,7 +409,8 @@ $.extend(api, {
             url: "queryAccessoriesBalance.do",
             type: "query",
             tranargs: [{
-                result: "accessoriess",
+                // Action字段是单数accessories(AccessoriesAction.queryAccessoriesBalance), 复数键名转换落空致结算预览显示厘原值
+                result: "accessories",
                 args: ["balance"]
             }]
         },
