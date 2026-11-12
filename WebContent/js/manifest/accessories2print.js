@@ -30,6 +30,32 @@ jQuery(function($) {
         accessoriesInfo["phone"] = data.decoration.supervisor.phone == null ? "---" : data.decoration.supervisor.phone;
     }, null, false);
 
+    // 费用明细(照外辅打印: 按项aiid分组挂子行, tranargs已折元)
+    var chargeMap = {};
+    var chargeTotalAmount = 0;
+
+    com.post(api.inventory.queryAccessoriesCharge, {
+        "accessoriesCharge.accessories.aid": accessoriesInfo["aid"]
+    }, function(chargeRes) {
+
+        if (chargeRes.accessoriesCharges && chargeRes.accessoriesCharges.length > 0) {
+            $.each(chargeRes.accessoriesCharges, function(i, charge) {
+
+                var aiid = charge.accessoriesItem && charge.accessoriesItem.aiid ? charge.accessoriesItem.aiid : charge.aiid;
+
+                if (aiid) {
+                    var aiidKey = String(aiid);
+                    if (!chargeMap[aiidKey]) chargeMap[aiidKey] = [];
+                    chargeMap[aiidKey].push(charge);
+                }
+
+                var price = charge.price || 0;
+                var surplus = charge.surplus || 0;
+                chargeTotalAmount += utils.accAdd(price, surplus) * (charge.num || 0);
+            });
+        }
+    }, null, false);
+
     if (isAdvance) {
         com.post(api.inventory.queryAccessoriesItemByAid, {
             "accessoriesItem.aid": params.manifest.accessories.aid
@@ -67,10 +93,18 @@ jQuery(function($) {
         var noTd = $('<td colspan="12"></td>').appendTo(noTr);
 
         var receiptTable = $('<table border="1" style="width: 100%; border-collapse:collapse;" cellpadding="0" cellspacing="0">').appendTo(center);
+        // 表头标题行+二维码(照外辅打印, 扫码打开微信端辅料单信息页)
         var headReceiptTr = $('<tr style="border:1px solid #fff; background:white; border-bottom-color:#000;"></tr>').appendTo(receiptTable);
-        var headReceiptTd = $('<td colspan="12"></td>').appendTo(headReceiptTr);
+        var headReceiptTd = $('<td colspan="10"></td>').appendTo(headReceiptTr);
         var headReceiptDiv = $('<div style="text-align: center;"></div>').appendTo(headReceiptTd);
         var headReceiptH2 = $('<h2></h2>').text(params.company.name + "辅料单信息").appendTo(headReceiptDiv);
+        var qrcodeTd = $('<td colspan="2" style="width:85px;"></td>').appendTo(headReceiptTr);
+        qrcodeTd.qrcode({
+            render: "canvas",
+            width: 75,
+            height: 75,
+            text: "http://www.fanglin.vip/wx/accessories?aid=" + accessoriesInfo["aid"]
+        });
 
         var orderReceiptTr = $('<tr></tr>').appendTo(receiptTable);
         var anoTd = $('<td colspan="4" style="padding-left: 10px;font"></td>').text('辅料单号: ' + accessoriesInfo["no"]);
@@ -121,7 +155,25 @@ jQuery(function($) {
             var goodsNameTd = $('<td style="text-align: center;" colspan="4"></td>').html(v.goods.name).appendTo(receReceiptTr);
             var measurementUnitTd = $('<td style="text-align: center;" colspan="2"></td>').html(v.goods.measurementUnit).appendTo(receReceiptTr);
             var numTd = $('<td style="text-align: center;" colspan="2"></td>').html(v.surplus).appendTo(receReceiptTr);
+
+            // 费用子行(照外辅: 按 aiid 挂在明细行下, tranargs已折元)
+            var charges = chargeMap[String(v.aiid)] || [];
+            $.each(charges, function(j, charge) {
+
+                var price = charge.price || 0;
+                var surplus = charge.surplus || 0;
+
+                var chargeTr = $('<tr style="text-align: center;background-color:#f9f9f9;"></tr>').appendTo(receiptTable);
+                $('<td colspan="6" style="padding-left:30px;"></td>').html("　└ " + charge.name).appendTo(chargeTr);
+                $('<td colspan="4"></td>').html("单价" + price.toFixed(3) + "元 浮动" + surplus.toFixed(3) + "元").appendTo(chargeTr);
+                $('<td colspan="2"></td>').html(charge.num).appendTo(chargeTr);
+            });
         });
+
+        // 费用合计行
+        var chargeTotalTr = $('<tr></tr>').appendTo(receiptTable);
+        var chargeTotalTd = $('<td colspan="8" style="text-align: right;padding-right:10px;"></td>').html('<strong>费用合计（元）</strong>').appendTo(chargeTotalTr);
+        var chargeTotalTd2 = $('<td colspan="4" style="text-align: center;"></td>').html('<strong>' + chargeTotalAmount.toFixed(3) + '</strong>').appendTo(chargeTotalTr);
 
         var tableInfo = $('<tr></tr>').appendTo(receiptTable);
         var printer = $('<td colspan="4" style="padding-left: 10px;font"></td>').text('打印人: ' + params.userInfo.user.currentName);
