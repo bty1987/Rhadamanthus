@@ -681,7 +681,7 @@
 | 200067 | reserved |
 | 200068 | reserved |
 | 200069 | reserved |
-| 200070 | reserved |
+| 200070 | 报价规格不存在 |
 | 200071 | 报价定额不存在 |
 | 200072 | deprecated:存在定额关联信息 |
 | 200073 | reserved |
