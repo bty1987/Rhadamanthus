@@ -45,9 +45,11 @@ $(function() {
         return value;
     });
 
+    // 分类展示映射走constant; 级联层级(twoType/thrType/forType含oneType/twoType/thrType属性)仍走json
+    salary.oneType = constant.salary().salary.onetype.keys;
+
     com.post(api.ds.salary, {}, function(data) {
 
-        salary.oneType = data.oneType.split("id", "name");
         salary.twoType = data.twoType.split("id", "name");
         salary.thrType = data.thrType.split("id", "name");
         salary.forType = data.forType.split("id", "name");
@@ -183,9 +185,9 @@ $(function() {
 
         com.post(api.ds.salary, {}, function(res) {
 
-            $.each(res.type, function(i, v) {
+            $.each(constant.salary().salary.type.datas, function(i, v) {
 
-                salary.items.type.append($('<option value="' + v['id'] + '">' + v['name'] + '</option>'));
+                salary.items.type.append($('<option value="' + v.key + '">' + v.value + '</option>'));
             });
             salary.items.type.change(function() {
 

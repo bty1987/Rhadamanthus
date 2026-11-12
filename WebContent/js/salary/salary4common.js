@@ -44,22 +44,14 @@ $(function() {
 
     com.focusPage('#fl-statement').statement("薪资", "汇总").show();
 
+    salary4common.salaryStatus = constant.salary().salary.status.keys;
+    salary4common.salaryType = constant.salary().salary.type.keys;
+    salary4common.withholdStatus = constant.salary().withhold.status.keys;
+    salary4common.withholdType = constant.salary().withhold.type.keys;
+
     com.post(api.ds.salary, {}, function(data) {
 
-        salary4common.salaryStatus = data.status.split("key", "value");
-        salary4common.salaryType = data.type.split("id", "name");
         salary4common.twoType = data.twoType.split("id", "name");
-
-    }, null, false);
-
-    com.post(api.ds.salary, {}, function(res) {
-
-        salary4common.withholdStatus = res.withholdStatus.split("key", "value");
-    }, null, false);
-
-    com.post(api.ds.salary, {}, function(res) {
-
-        salary4common.withholdType = res.withholdType.split("key", "value");
     }, null, false);
 
     com.post(api.ds.salary, {}, function(data) {
@@ -73,9 +65,7 @@ $(function() {
             twotypes.push(v);
         });
 
-        salary4common.salaryStatus = data.status.split("key", "value");
-        salary4common.salaryType = data.type.split("id", "name");
-        salary4common.salaryOneType = data.oneType.split("id", "name");
+        salary4common.salaryOneType = constant.salary().salary.onetype.keys;
         salary4common.salaryTwoType = data.SalaryTwoType.split("key", "oneType");
         salary4common.salaryTwotype = data.SalaryTwoType.split("key", "name");
 

@@ -71,6 +71,10 @@ jQuery(function($) {
         return value;
     });
 
+    salary.salaryStatus = constant.salary().salary.status.keys;
+    salary.type = constant.salary().salary.type.keys;
+    salary.oneType = constant.salary().salary.onetype.keys;
+
     com.post(api.ds.salary, {}, function(data) {
 
         var twotypes = [];
@@ -82,9 +86,6 @@ jQuery(function($) {
             twotypes.push(v);
         });
 
-        salary.salaryStatus = data.status.split("key", "value");
-        salary.type = data.type.split("id", "name");
-        salary.oneType = data.oneType.split("id", "name");
         salary.twoType = data.SalaryTwoType.split("key", "oneType");
         salary.twotype = data.SalaryTwoType.split("key", "name");
         salary.items.workersalarySubtype.bindData(twotypes, "key", "name");

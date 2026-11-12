@@ -21,10 +21,11 @@ jQuery(function($) {
 
     $.extend(com.validator, workerSalary4detail.validator);
 
-    // 加载薪资枚举 (状态/类型)
+    // 加载薪资枚举 (状态/类型): 状态走constant, SalaryTwoType多字段结构走json
+    workerSalary4detail.salaryStatus = constant.salary().salary.status.keys;
+
     com.post(api.ds.salary, {}, function(res) {
 
-        workerSalary4detail.salaryStatus = res.status.split("key", "value");
         workerSalary4detail.oneTypeMap = res.SalaryTwoType.split("key", "oneType");
         workerSalary4detail.twoTypeMap = res.SalaryTwoType.split("key", "name");
         workerSalary4detail.twoTypes = res.SalaryTwoType;

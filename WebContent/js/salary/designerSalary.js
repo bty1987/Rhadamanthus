@@ -294,16 +294,7 @@ jQuery(function ($) {
 
     });
 
-    com.post(api.ds.salaryType, {}, function (data) {
-        var SalaryType = data.SalaryType;
-
-        if (SalaryType && SalaryType.length) {
-            $.each(SalaryType, function (i, v) {
-                $('<option></option>').attr("value", v.key).html(v.name).appendTo("#workersalarySubtype");
-            })
-        }
-    }, null, false);
-
+    // 薪资子类型下拉由workerSalary.js统一绑定(SalaryTwoType status过滤), 此处原api.ds.salaryType死引用(api中从无此条目, com.post(undefined)静默跳过)已清理
 
     function saveData() {
         com.post(api.personel.queryUserByUserId,{"user.userId": com.focusPage("#designersalaryuser").val()},

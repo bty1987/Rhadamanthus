@@ -7,11 +7,7 @@ $(function(){
         status:{}
     }
 
-    com.post(api.ds.salary, {}, function (data) {
-
-        salary.status=data.status.split("key", "value");
-
-    }, null, false);
+    salary.status = constant.salary().salary.status.keys;
 
     var displayFunc = (function () {
 

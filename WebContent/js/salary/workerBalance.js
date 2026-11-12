@@ -74,9 +74,7 @@ $(function () {
 
     com.initTypeahead("workerUserName", api.personel.queryUserByPinyin, "pinyinName", {"user.status": "0"}, "autoFillKeyValue", "key", "value",function(list,key,value){return value;});
 
-    com.post(api.ds.salary, {}, function (data) {
-        deposit.statusBalance=data.statusBalance.split("key", "value");
-    }, null, false);
+    deposit.statusBalance = constant.salary().workerBalance.status.keys;
 
     var lineprops = (function() {
 

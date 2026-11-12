@@ -433,9 +433,9 @@ Condition.addupRule("salary", {
             validate: null
         },
         dataSource: {
-            url: api.ds.salary,
+            url: null,
             postData: {},
-            listPath: "stage",
+            listPath: constant.salary().materialSalary.stage.datas,
             keyPath: "key",
             valuePath: "value"
         }

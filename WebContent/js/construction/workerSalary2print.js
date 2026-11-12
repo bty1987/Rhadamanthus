@@ -22,6 +22,10 @@ $(function() {
 
     }, 500);
 
+    salaryStatus = constant.salary().salary.status.keys;
+    type = constant.salary().salary.type.keys;
+    oneType = constant.salary().salary.onetype.keys;
+
     com.post(api.ds.salary, {}, function(data) {
 
         var twotypes = [];
@@ -33,11 +37,7 @@ $(function() {
             twotypes.push(v);
         });
 
-        salaryStatus = data.status.split("key", "value");
-        type = data.type.split("id", "name");
-        oneType = data.oneType.split("id", "name");
         twoType = data.SalaryTwoType.split("key", "name");
-       
 
     }, null, false);
 

@@ -152,13 +152,7 @@ jQuery(function($) {
 
     decorationPayment.items.posway.bindData(constant.payment().receiptType.posway.datas, "key", "value");
 
-    com.post(api.ds.salary, {}, function(res) {
-
-        $.each(res.withholdType, function(i, v) {
-
-            decorationPayment.withholdType[v.key] = v.value;
-        });
-    }, null, false);
+    decorationPayment.withholdType = constant.salary().withhold.type.keys;
 
     com.focusPage("#collectModal :checkbox", "#decorationPayment").on("change", function() {
 
