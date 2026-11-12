@@ -221,7 +221,10 @@ jQuery(function($) {
             arAccountName: com.focusPage("#auArAccountName", "#auotationPartContent"),
             arAccountDiscount: com.focusPage("#auArAccountDiscount", "#auotationPartContent"),
             arAccountManageDiscount: com.focusPage("#auArAccountManageDiscount", "#auotationPartContent"),
-            arAccountTaxDiscount: com.focusPage("#auArAccountTaxDiscount", "#auotationPartContent")
+            arAccountTaxDiscount: com.focusPage("#auArAccountTaxDiscount", "#auotationPartContent"),
+
+            calcTraceZone: com.focusPage("#auCalcTraceZone", "#auotationPartContent"),
+            calcTraceList: com.focusPage("#auCalcTraceList", "#auotationPartContent")
         },
 
         btns: {
@@ -229,7 +232,8 @@ jQuery(function($) {
             refreshBtn: com.focusPage("#auRefreshBtn", "#auotationPartContent"),
             calculateBtn: com.focusPage("#auCalculateBtn", "#auotationPartContent"),
             summaryToggleBtn: com.focusPage("#auSummaryToggleBtn", "#auotationPartContent"),
-            arSaveAccountBtn: com.focusPage("#auArSaveAccountBtn", "#auotationPartContent")
+            arSaveAccountBtn: com.focusPage("#auArSaveAccountBtn", "#auotationPartContent"),
+            calcTraceToggleBtn: com.focusPage("#auCalcTraceToggleBtn", "#auotationPartContent")
         }
     };
 
@@ -890,7 +894,179 @@ jQuery(function($) {
         basic.fulldel = auotation.items.fulldel.val() ? auotation.items.fulldel.val() : 0;
         basic.cashback = auotation.items.cashback.val() ? auotation.items.cashback.val() : 0;
 
+        // 计算过程推导串(拍板 2026-11-12: 折叠面板展示公式+参与数值, 纯展示, 不参与落库)
+        buildCalcTrace(flag, _managePrice, _taxPrice, beforeTotal);
+
         renderAccountOutputs();
+    }
+
+    function fmtMoney(v) {
+        return Math.round(parseFloat(v) || 0);
+    }
+
+    /**
+     * 计算过程面板 —— 每个决算指标一行: 公式(代入实际数值) | 结果 | 落库字段
+     * 差值计算按拍板体现主材金额与优惠值的参与: 差额行含优惠四项, 金额差行含主材金额
+     */
+    function buildCalcTrace(flag, _managePrice, _taxPrice, beforeTotal) {
+
+        var basic = auotation.basic;
+        var trace = [];
+
+        var _branchType = auotation.decoration ? auotation.decoration.type : -1;
+        var _branchName = (_branchType == 2 ? "满减式" : "折扣式") + "(装修单类型" + (_branchType == -1 ? "-" : _branchType) + (_branchType == 2 ? ", 基数" + fmtMoney(basic.base) : "") + ")";
+
+        trace.push({
+            name: "决算直接费",
+            formula: "打折项 " + fmtMoney(basic.disPrice) + " + 不打折项 " + fmtMoney(basic.undisPrice) + " + 车运费 " + fmtMoney(basic.trafficPrice)
+                + " + 增项配比 " + fmtMoney(basic.addCalPrice) + "×flag(" + flag + ") − 减项配比 " + fmtMoney(basic.reduceCalPrice) + "×flag(" + flag + ")",
+            result: basic.beforeTotal,
+            field: "projectBase"
+        });
+
+        trace.push({
+            name: "决算折前总额",
+            formula: "打折项 " + fmtMoney(basic.disPrice) + " + 不打折项 " + fmtMoney(basic.undisPrice) + " + 车运费 " + fmtMoney(basic.trafficPrice)
+                + " + 增项配比 " + fmtMoney(basic.addCalPrice) + "×flag(" + flag + ") − 减项配比 " + fmtMoney(basic.reduceCalPrice) + "×flag(" + flag + ")"
+                + " + 管理费 " + fmtMoney(basic.managePrice) + " + 增项管理费 " + fmtMoney(basic.addPredisManagePrice) + "×flag(" + flag + ") − 减项管理费 " + fmtMoney(basic.reducePredisManagePrice) + "×flag(" + flag + ")"
+                + " + 税金 " + fmtMoney(basic.taxPrice) + " + 增项税金 " + fmtMoney(basic.addPredisTaxPrice) + "×flag(" + flag + ") − 减项税金 " + fmtMoney(basic.reducePredisTaxPrice) + "×flag(" + flag + ")",
+            result: basic.direct,
+            field: "projectPrice(保存时)"
+        });
+
+        trace.push({
+            name: "决算管理费",
+            formula: "管理费折算 " + fmtMoney(_managePrice) + "(管理费 " + fmtMoney(basic.managePrice) + (basic.manageDiscount == 1 ? "×折扣/10" : ", 不参与折扣") + ")"
+                + " + 增项管理费 " + fmtMoney(basic.addManagePrice) + "×flag(" + flag + ") − 减项管理费 " + fmtMoney(basic.reduceManagePrice) + "×flag(" + flag + ")",
+            result: basic.management,
+            field: "—(仅展示)"
+        });
+
+        trace.push({
+            name: "决算税金",
+            formula: "税金折算 " + fmtMoney(_taxPrice) + "(税金 " + fmtMoney(basic.taxPrice) + (basic.taxDiscount == 1 || basic.taxDiscount == 2 ? "×折扣/10" : ", 不参与折扣") + ")"
+                + " + 增项税金 " + fmtMoney(basic.addTaxPrice) + "×flag(" + flag + ") − 减项税金 " + fmtMoney(basic.reduceTaxPrice) + "×flag(" + flag + ")",
+            result: basic.taxment,
+            field: "—(仅展示)"
+        });
+
+        if (_branchType == 2 && basic.base > 0) {
+
+            trace.push({
+                name: "决算合同额(" + _branchName + ")",
+                formula: "(决算直接费 " + fmtMoney(beforeTotal) + " − 直接费%基数 " + fmtMoney(beforeTotal % basic.base) + ")×折扣 " + basic.discount + "/10 + 直接费%基数 " + fmtMoney(beforeTotal % basic.base)
+                    + " + 管理费折算 " + fmtMoney(_managePrice) + " + 增项管理费 " + fmtMoney(basic.addManagePrice) + "×flag(" + flag + ") − 减项管理费 " + fmtMoney(basic.reduceManagePrice) + "×flag(" + flag + ")"
+                    + " + 税金折算 " + fmtMoney(_taxPrice) + " + 增项税金 " + fmtMoney(basic.addTaxPrice) + "×flag(" + flag + ") − 减项税金 " + fmtMoney(basic.reduceTaxPrice) + "×flag(" + flag + ")",
+                result: basic.accountForehead,
+                field: "—(仅展示)"
+            });
+
+        } else {
+
+            trace.push({
+                name: "决算合同额(" + _branchName + ")",
+                formula: "(打折项 " + fmtMoney(basic.disPrice) + " + 增项打折配比 " + fmtMoney(basic.addDisCalPrice) + "×flag(" + flag + ") − 减项打折配比 " + fmtMoney(basic.reduceDisCalPrice) + "×flag(" + flag + "))×折扣 " + basic.dd + "/10"
+                    + " + 不打折项 " + fmtMoney(basic.undisPrice) + " + 增项不打折配比 " + fmtMoney(basic.addUndisCalPrice) + "×flag(" + flag + ") − 减项不打折配比 " + fmtMoney(basic.reduceUndisCalPrice) + "×flag(" + flag + ")"
+                    + " + 车运费 " + fmtMoney(basic.trafficPrice)
+                    + " + 管理费折算 " + fmtMoney(_managePrice) + " + 增项管理费 " + fmtMoney(basic.addManagePrice) + "×flag(" + flag + ") − 减项管理费 " + fmtMoney(basic.reduceManagePrice) + "×flag(" + flag + ")"
+                    + " + 税金折算 " + fmtMoney(_taxPrice) + " + 增项税金 " + fmtMoney(basic.addTaxPrice) + "×flag(" + flag + ") − 减项税金 " + fmtMoney(basic.reduceTaxPrice) + "×flag(" + flag + ")",
+                result: basic.accountForehead,
+                field: "—(仅展示)"
+            });
+        }
+
+        trace.push({
+            name: "决算服务费",
+            formula: "(决算直接费 " + fmtMoney(beforeTotal)
+                + " + 管理费 " + fmtMoney(basic.managePrice) + " + 增项管理费 " + fmtMoney(basic.addPredisManagePrice) + "×flag(" + flag + ") − 减项管理费 " + fmtMoney(basic.reducePredisManagePrice) + "×flag(" + flag + ")"
+                + " + 税金 " + fmtMoney(basic.taxPrice) + " + 增项税金 " + fmtMoney(basic.addPredisTaxPrice) + "×flag(" + flag + ") − 减项税金 " + fmtMoney(basic.reducePredisTaxPrice) + "×flag(" + flag + ")"
+                + ")×主材配比 " + basic.material + "×服务费比例 " + basic.service,
+            result: basic.accountServicePrice,
+            field: "servicePrice"
+        });
+
+        var _materialAccountCalc = Math.round(basic.direct * basic.material);
+
+        trace.push({
+            name: "决算主材额" + ((basic.daid || basic.materialAccountManual) ? "(手动输入)" : ""),
+            formula: (basic.daid || basic.materialAccountManual)
+                ? "手动输入 " + fmtMoney(basic.materialAccount) + "(公式值: 决算折前总额 " + fmtMoney(basic.direct) + "×主材配比 " + basic.material + " = " + _materialAccountCalc + ", 不采用)"
+                : "决算折前总额 " + fmtMoney(basic.direct) + "×主材配比 " + basic.material,
+            result: basic.materialAccount,
+            field: "materialPrice"
+        });
+
+        trace.push({
+            name: "差额(不含预付款)",
+            formula: "决算合同额 " + fmtMoney(basic.accountForehead) + " + 决算服务费 " + fmtMoney(basic.accountServicePrice)
+                + " − 合同实收 " + fmtMoney(basic.factPrice) + " − 已收服务费 " + fmtMoney(basic.servicePaidup)
+                + " − 增项总额 " + fmtMoney(basic.addTotalPrice) + "×flag(" + flag + ") + 减项总额 " + fmtMoney(basic.reduceTotalPrice) + "×flag(" + flag + ") + 增项非配比 " + fmtMoney(basic.addUncalPrice) + "×flag(" + flag + ")"
+                + " − 优惠券 " + fmtMoney(basic.preferences) + " − 内部优惠券 " + fmtMoney(basic.internalCoupon) + " − 满送 " + fmtMoney(basic.fulldel) + " − 返现 " + fmtMoney(basic.cashback),
+            result: basic.balanceSum,
+            field: "difference"
+        });
+
+        trace.push({
+            name: "金额差",
+            formula: "主材实收额 " + fmtMoney(basic.materialFactPrice) + " − 决算主材额 " + fmtMoney(basic.materialAccount),
+            result: basic.difference,
+            field: "—(仅展示)"
+        });
+
+        trace.push({
+            name: "超配比",
+            formula: "金额差 " + fmtMoney(basic.difference) + " ÷ 决算主材额 " + fmtMoney(basic.materialAccount),
+            result: basic.superRatio,
+            field: "—(仅展示)"
+        });
+
+        trace.push({
+            name: "决算实花配比",
+            formula: "主材实收合计 " + fmtMoney(auotation.materialTotal) + " ÷ 决算折前总额 " + fmtMoney(basic.direct),
+            result: basic.flowerRatio,
+            field: "paidupMatching"
+        });
+
+        trace.push({
+            name: "实花配比含外销",
+            formula: "(外销配比总额 " + fmtMoney(basic.oalesScaleTotal) + " + 主材实收合计 " + fmtMoney(auotation.materialTotal) + ") ÷ 决算折前总额 " + fmtMoney(basic.direct),
+            result: basic.flowerOalesRatio,
+            field: "—(仅展示)"
+        });
+
+        trace.push({
+            name: "折前总额全",
+            formula: "报价折前总价 " + fmtMoney(basic.foldFrontTotal) + " + 增项折前(扩展) " + fmtMoney(basic.addFoldFrontTotal) + " − 减项折前(扩展) " + fmtMoney(basic.minusFoldFrontTotal)
+                + " + 增项折前(增减) " + fmtMoney(basic.addPredisPrice) + " − 减项折前(增减) " + fmtMoney(basic.reducePredisPrice),
+            result: basic.directC,
+            field: "—(仅展示)"
+        });
+
+        trace.push({
+            name: "应补款",
+            formula: "合同未收 " + fmtMoney(basic.signFactOwing) + " + 增项未收 " + fmtMoney(basic.addOwing) + " − 减项未收 " + fmtMoney(basic.reduceOwing),
+            result: basic.fullPayment,
+            field: "—(仅展示)"
+        });
+
+        renderCalcTrace(trace);
+    }
+
+    function renderCalcTrace(trace) {
+
+        var $tbody = auotation.items.calcTraceList.html("");
+
+        $.each(trace || [], function(i, t) {
+
+            var $tr = $('<tr></tr>');
+
+            $('<td></td>').html(t.name).appendTo($tr);
+            $('<td></td>').html('<small>' + t.formula + '</small>').appendTo($tr);
+            $('<td></td>').html('<b class="blue">' + t.result + '</b>').appendTo($tr);
+            $('<td></td>').html('<small>' + t.field + '</small>').appendTo($tr);
+
+            $tbody.append($tr);
+        });
     }
 
     function renderAccountOutputs() {
@@ -1578,6 +1754,16 @@ jQuery(function($) {
         var _show = auotation.items.summaryZone.is(":visible");
 
         $(this).html(_show ? "收起汇总" : "展开汇总");
+    });
+
+    // 计算过程折叠
+    auotation.btns.calcTraceToggleBtn.click(function() {
+
+        auotation.items.calcTraceZone.toggle(200);
+
+        var _show = auotation.items.calcTraceZone.is(":visible");
+
+        $(this).html(_show ? "收起计算过程" : "展开计算过程");
     });
 
     // ==================== 增减单决算折扣维护 ====================
