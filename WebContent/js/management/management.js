@@ -380,6 +380,9 @@ jQuery(function($) {
 
     com.focusPage("#changeDecorationForGrade").click(function() {
 
+        // 等级下拉走constant字典(装修单创建页/信息页同源), 第四参'无'=保留清空项; 字典增减等级(如G公积金)只动DB零代码
+        com.focusPage("#decorationGrade").bindData(constant.decoration().decoration.grade.datas, 'key', 'value', '无');
+
         management.changeDecorationForGradeModal.modal("show");
     });
 
