@@ -723,7 +723,8 @@ public class ManifestServiceImpl implements ManifestService {
 				throw new FLException(260023, "辅料单不存在");
 			}
 
-			if (accessoriesPO.getStatus() != AccessoriesPO.STATUS_BATCHOUT_INT && accessoriesPO.getStatus() != AccessoriesPO.STATUS_DELIVER_INT) {
+			// 出货/到货(自配)/已配送(配送)均可退货
+			if (accessoriesPO.getStatus() != AccessoriesPO.STATUS_BATCHOUT_INT && accessoriesPO.getStatus() != AccessoriesPO.STATUS_DELIVER_INT && accessoriesPO.getStatus() != AccessoriesPO.STATUS_DELIVERED_INT) {
 				throw new FLException(260024, "辅料单状态不可操作");
 			}
 

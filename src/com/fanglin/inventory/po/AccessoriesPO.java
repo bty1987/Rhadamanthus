@@ -71,6 +71,8 @@ public class AccessoriesPO implements Serializable {
 
 	public static final short STATUS_BALANCED_INT = 8; // 已结算
 
+	public static final short STATUS_DELIVERED_INT = 9; // 已配送（配送单确认配送后, 自配单走6到货）
+
 	public static final short ASSIGNFLAG_INIT_INT = 0; // 未标记
 
 	public static final short ASSIGNFLAG_MARKED_INT = 1; // 需分配（分配厂商/出库闸依据）

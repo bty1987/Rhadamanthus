@@ -29,7 +29,9 @@
         {"key":"4","value":"拒绝"},
         {"key":"5","value":"退回"},
         {"key":"6","value":"到货"},
-        {"key":"7","value":"审核"}
+        {"key":"7","value":"审核"},
+        {"key":"8","value":"已结算"},
+        {"key":"9","value":"已配送"}
     ],
     "purchaseStatus": [
         {"key":"0","value":"初始"},

@@ -556,7 +556,12 @@ public class AccessoriesServiceImpl implements AccessoriesService {
 			throw new FLException(260024, "辅料单状态不可操作");
 		}
 
-		accessoriesPO.setStatus(AccessoriesPO.STATUS_DELIVER_INT);
+		// 配送单出货后确认配送=已配送(需配送→已发货→已配送), 自配单保持到货链路
+		if (accessoriesPO.getDeliveryStatus() == AccessoriesPO.DELIVERY_YES_INT) {
+			accessoriesPO.setStatus(AccessoriesPO.STATUS_DELIVERED_INT);
+		} else {
+			accessoriesPO.setStatus(AccessoriesPO.STATUS_DELIVER_INT);
+		}
 		accessoriesPO.setDeliver(userPO);
 		accessoriesPO.setDeliverTime(DateUtil.getDateToTimestamp(new Date()));
 
@@ -565,7 +570,7 @@ public class AccessoriesServiceImpl implements AccessoriesService {
 		return 0;
 	}
 
-	// 结算（到货态终态化：写结算额/结算人/结算时间，推已结算）
+	// 结算（到货/已配送态终态化：写结算额/结算人/结算时间，推已结算）
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public int balanceAccessories(AccessoriesVO accessoriesVO, String userId) throws FLException {
@@ -578,7 +583,8 @@ public class AccessoriesServiceImpl implements AccessoriesService {
 			throw new FLException(260023, "辅料单不存在");
 		}
 
-		if (accessoriesPO.getStatus() != AccessoriesPO.STATUS_DELIVER_INT) {
+		// 到货(自配)与已配送(配送)均可结算
+		if (accessoriesPO.getStatus() != AccessoriesPO.STATUS_DELIVER_INT && accessoriesPO.getStatus() != AccessoriesPO.STATUS_DELIVERED_INT) {
 			throw new FLException(260024, "辅料单状态不可操作");
 		}
 
