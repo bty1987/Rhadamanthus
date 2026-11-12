@@ -37,7 +37,8 @@ class Exporter(Util):
             q.workTime '制作时长',
             q.auditTime '审核时长',
             TIMESTAMPDIFF(SECOND, q.createTime, q.finishTime) '总时长',
-            co.name '公司'
+            co.name '公司',
+            communion.kv('decoration', 'decoration', 'status', d.status) '装修单状态'
         """
 
         self.SQL_QUERY_STR = """
@@ -98,7 +99,7 @@ class Exporter(Util):
 
         tableHead = [
             "装修单号", "楼盘", "楼号", "计价面积", "设计分区", "设计部", "设计师", "房屋类型", "预算员", "报价总价", 
-            "报价名称", "状态", "提交时间", "完成时间", "制作时长", "审核时长", "总时长", "公司"
+            "报价名称", "状态", "提交时间", "完成时间", "制作时长", "审核时长", "总时长", "公司", "装修单状态"
         ]
         sql = self.sqler(args, int(company))
 
