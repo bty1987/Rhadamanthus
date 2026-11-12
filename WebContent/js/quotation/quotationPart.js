@@ -1189,7 +1189,7 @@ var QuotationDetail = (function() {
             _manageDiscount = _manageDiscount < 0 ? 0 : _manageDiscount > 1 ? 1 : _manageDiscount;
             _manageDiscountValue = _manageDiscountValue < 0 ? 0 : _manageDiscountValue > 1 ? 1 : _manageDiscountValue;
 
-            if (!prefer.prompt && (_discount < _discountValue || _managePrice < managePrefer || utils.accAdd(managePrefer || 0, advancePrefer || 0) > _managePrice || _manageDiscount < _manageDiscountValue)) {
+            if (!prefer.prompt && (_discount < _discountValue || _managePrice < managePrefer || _manageDiscount < _manageDiscountValue)) {
                 return false;
             }
 
@@ -1200,11 +1200,6 @@ var QuotationDetail = (function() {
 
             if (_managePrice < managePrefer) {
                 com.showAlert(com.warning, "管理优惠不能大于管理费");
-                return false;
-            }
-
-            if (utils.accAdd(managePrefer || 0, advancePrefer || 0) > _managePrice) {
-                com.showAlert(com.warning, "管理优惠与特批优惠合计不能大于管理费");
                 return false;
             }
 
