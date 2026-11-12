@@ -19,6 +19,7 @@ import com.aliyun.oss.common.utils.BinaryUtil;
 import com.aliyun.oss.model.GeneratePresignedUrlRequest;
 import com.aliyun.oss.model.MatchMode;
 import com.aliyun.oss.model.PolicyConditions;
+import com.aliyun.oss.model.ResponseHeaderOverrides;
 import com.fanglin.aliyun.config.OssProperties;
 import com.fanglin.aliyun.dao.OssConfigDao;
 import com.fanglin.aliyun.po.OssConfigPO;
@@ -57,7 +58,7 @@ public class OssConfigServiceImpl implements OssConfigService {
 
 			try {
 
-				ossClient = new OSSClientBuilder().build(ossConfigPO.getEndpoint(), ossConfigPO.getAccessKeyId(), ossConfigPO.getAccessKeySecret());
+				ossClient = new OSSClientBuilder().build("https://" + ossConfigPO.getEndpoint(), ossConfigPO.getAccessKeyId(), ossConfigPO.getAccessKeySecret());
 
 				long expireEndTime = System.currentTimeMillis() + ossConfigPO.getExpireTime() * 1000;
 				Date expiration = new Date(expireEndTime);
@@ -125,17 +126,29 @@ public class OssConfigServiceImpl implements OssConfigService {
 
 				try {
 
-					ossClient = new OSSClientBuilder().build(ossProperties.getEndpoint(), sts.getAccessKeyId(), sts.getAccessKeySecret(), sts.getSecurityToken());
+					// endpoint带https前缀: 预签名URL协议跟随endpoint scheme, 页面https下http链接会被浏览器按混合内容拦截
+					ossClient = new OSSClientBuilder().build("https://" + ossProperties.getEndpoint(), sts.getAccessKeyId(), sts.getAccessKeySecret(), sts.getSecurityToken());
 
 					String objectName = String.format("%s%s", ossConfig.getDir() == null ? "" : ossConfig.getDir(), ossConfig.getKey());
 					String bucket = ossConfig.getBucket() != null ? ossConfig.getBucket() : sts.getBucket();
 
-					if (ossClient.doesObjectExist(bucket, objectName)) {
+					// 存在性检查可关(oss.presign.checkExistence=false,默认关): HEAD请求是图片墙批量显示的主要开销,
+					// 预签名本身不依赖存在性,不存在的对象由浏览器404兜底;开启时行为同旧版(缺失对象不回URL)
+					if (!ossProperties.isPresignCheckExistence() || ossClient.doesObjectExist(bucket, objectName)) {
 
 						Date expiration = new Date(System.currentTimeMillis() + ossProperties.getPresignExpireSeconds() * 1000);
 
 						GeneratePresignedUrlRequest req = new GeneratePresignedUrlRequest(bucket, objectName, HttpMethod.GET);
 						req.setExpiration(expiration);
+	
+						// 下载模式: 附attachment下载头, 文件名取key末段(UTF-8编码兼容中文名)
+						if (Boolean.TRUE.equals(ossConfig.getDownload())) {
+							ResponseHeaderOverrides overrides = new ResponseHeaderOverrides();
+							String baseName = objectName.substring(objectName.lastIndexOf('/') + 1);
+							overrides.setContentDisposition("attachment; filename*=UTF-8''" + java.net.URLEncoder.encode(baseName, "UTF-8"));
+							req.setResponseHeaders(overrides);
+						}
+
 						ossConfig.setUrl(ossClient.generatePresignedUrl(req).toString());
 
 						if (ossConfig.getWidth() != null && ossConfig.getHeight() != null) {
@@ -169,7 +182,7 @@ public class OssConfigServiceImpl implements OssConfigService {
 
 		try {
 
-			ossClient = new OSSClientBuilder().build(ossConfigPO.getEndpoint(), ossConfigPO.getAccessKeyId(), ossConfigPO.getAccessKeySecret());
+			ossClient = new OSSClientBuilder().build("https://" + ossConfigPO.getEndpoint(), ossConfigPO.getAccessKeyId(), ossConfigPO.getAccessKeySecret());
 
 			String objectName = String.format("%s%s", ossConfig.getDir(), ossConfig.getKey());
 

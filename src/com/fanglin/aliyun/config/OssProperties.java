@@ -47,6 +47,10 @@ public class OssProperties {
 	@Value("${oss.presign.expireSeconds:1800}")
 	private long presignExpireSeconds;
 
+	/** 预签名前是否检查对象存在性(HEAD请求)。图片墙批量显示建议关闭(false): 预签名不依赖存在性,不存在的对象由浏览器404兜底 */
+	@Value("${oss.presign.checkExistence:false}")
+	private boolean presignCheckExistence;
+
 	/** 单文件大小上限（字节），默认 5MB */
 	@Value("${oss.upload.maxFileSize:5242880}")
 	private long maxFileSize;
@@ -132,6 +136,14 @@ public class OssProperties {
 
 	public void setPresignExpireSeconds(long presignExpireSeconds) {
 		this.presignExpireSeconds = presignExpireSeconds;
+	}
+
+	public boolean isPresignCheckExistence() {
+		return presignCheckExistence;
+	}
+
+	public void setPresignCheckExistence(boolean presignCheckExistence) {
+		this.presignCheckExistence = presignCheckExistence;
 	}
 
 	public long getMaxFileSize() {

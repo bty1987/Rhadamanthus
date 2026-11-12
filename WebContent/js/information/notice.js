@@ -292,29 +292,13 @@ $(function(){
     }
 
     function bindUploadfiy() {
-        com.focusPage("#attachment").Huploadify({
-            fileTypeExts: '*.pdf',
-            fileSizeLimit: '5MB',
-            auto: true,
-            successTimeout: 99999,
-            formData: {
-                username: "用户名",
-                rnd: "加密密文",
-                uploadType: 3
-            },
-            buttonText: "上传附件",
-            buttonClass: "btn btn-sm btn-primary lineheight0",
-            overrideEvents: ["onDialogClose"],
-            fileObjName: "strutsUploads",
-            uploader: config.media + api.common.uploadOther.url,
-            width: "78",
-            'multi': false,
-            onUploadSuccess: function(a, b, c) {
-                a = eval("(" + b + ")");
-                0 == a.errorCode ? com.focusPage("#filePath").val(a.resUrl) : alert(b);
-                0 == a.errorCode ? com.focusPage("#fileName").val(a.strutsUploadsFileName) : alert(b);
-            },
-            itemTemplate: '<div id="${fileID}" class="uploadify-queue-item"><div class="uploadify-progress" style="width: 75px;"><div class="uploadify-progress-bar"></div></div><span class="up_filename">${fileName}</span><br/><span class="uploadbtn">上传</span><span class="delfilebtn">删除</span></div>'
+        // 2026-11-03 切换OSS STS直传: 原直调Huploadify写FDFS格式路径, 改走com.uploadify由isAliOss开关分流
+        com.uploadify("#attachment", "上传附件", api.common.uploadOther, "btn btn-sm btn-primary lineheight0", '*.pdf', {
+            'uploadType': 3
+        }, 1, function(data) {
+
+            com.focusPage("#filePath").val(data.resUrl);
+            com.focusPage("#fileName").val(data.strutsUploadsFileName);
         });
     };
 

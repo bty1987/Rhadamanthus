@@ -36,6 +36,9 @@ public class OssConfigVO {
 
 	private String thumbUrl;
 
+	/** 下载标记: true时预签名带attachment下载头(文件名取key末段) */
+	private Boolean download;
+
 	public OssConfigVO() {
 		super();
 	}
@@ -159,5 +162,13 @@ public class OssConfigVO {
 
 	public void setThumbUrl(String thumbUrl) {
 		this.thumbUrl = thumbUrl;
+	}
+
+	public Boolean getDownload() {
+		return download;
+	}
+
+	public void setDownload(Boolean download) {
+		this.download = download;
 	}
 }

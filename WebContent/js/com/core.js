@@ -1088,6 +1088,10 @@ var com = {
                 if (presigned.url) {
                     $e.attr('layer-src', presigned.url).attr('alt', alt || '');
                 }
+                // 对象缺失(404)时隐藏,对齐旧版存在性检查的视觉行为
+                $e.off('error.oss').on('error.oss', function() {
+                    $(this).hide();
+                });
             };
 
             var cached = com._ossPresignCache && com._ossPresignCache[ossKey + '_' + (width || 0) + 'x' + (height || 0)];
@@ -1105,6 +1109,23 @@ var com = {
                 }
             });
             return url; // 同步返回原始URL保持调用方兼容,预签名地址异步回填
+        }
+
+        if (/^group\d+\//.test(url || '') && config.ossRead) {
+            // FDFS格式读层双通道(框架级,替代DB改写): config.ossRead=true时走OSS预签名直连,
+            // false(默认)走下方原有showImg.do分支——两种方式框架都支持,由开关选择,迁移期零行为变化;
+            // 全量迁移完成后置ossRead=true即全OSS读,文件服务器可下线,全程不碰DB
+            com.post(api.upgrade.getProgressiveImage, { 'ossConfig.key': url, 'ossConfig.width': width, 'ossConfig.height': height }, function(data) {
+
+                if (data.ossConfig && data.ossConfig.url) {
+                    $e.attr('src', data.ossConfig.thumbUrl || data.ossConfig.url)
+                      .attr('layer-src', data.ossConfig.url).attr('alt', alt)
+                      .off('error.ossfb').on('error.ossfb', function() {
+                          $(this).hide(); // 未迁移对象404兜底,对齐showImg.error既有语义
+                      });
+                }
+            });
+            return url; // 返回原始路径保持调用方兼容
         }
 
         if (type == 1) {
@@ -1184,6 +1205,29 @@ var com = {
         return url;
     },
     downloadFile: function($e, url, name) {
+
+        if (/^group\d+\//.test(url || '') && config.ossRead) {
+            // FDFS格式下载双通道(与showImg同由config.ossRead分流): OSS预签名带attachment下载头
+            com.post(api.upgrade.getProgressiveImage, { 'ossConfig.key': url, 'ossConfig.download': true }, function(data) {
+
+                if (data.ossConfig && data.ossConfig.url) {
+                    $e.attr('href', data.ossConfig.url).attr('target', '_blank');
+                }
+            });
+            return;
+        }
+
+        if (url && url.indexOf('aliyuncs.com/') > -1) {
+            // OSS直传对象: 预签名(带attachment下载头)直下,不经文件服务器downloadFile.do
+            var ossKey = url.slice(url.indexOf('aliyuncs.com/') + 'aliyuncs.com/'.length);
+            com.post(api.upgrade.getProgressiveImage, { 'ossConfig.key': ossKey, 'ossConfig.download': true }, function(data) {
+
+                if (data.ossConfig && data.ossConfig.url) {
+                    $e.attr('href', data.ossConfig.url).attr('target', '_blank');
+                }
+            });
+            return;
+        }
 
         $e.attr('href', config.media + api.common.downloadFile.url + "?downloadFilePath=" + url + "&fileName=" + name).attr('target', '_blank');
     },
