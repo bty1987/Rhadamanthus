@@ -20,11 +20,11 @@ public interface AoodsService {
 
 	public int addAoods(AoodsVO aoodsVO, int company) throws FLException;
 
-	public int updateAoods(AoodsVO aoodsVO) throws FLException;
+	public int updateAoods(AoodsVO aoodsVO, String userId) throws FLException;
 
 	public int updateAoodsForStatus(AoodsVO aoodsVO) throws FLException;
 
-	public int updateAoodsForNorm(AoodsVO aoodsVO) throws FLException;
+	public int updateAoodsForNorm(AoodsVO aoodsVO, String userId) throws FLException;
 
 	public int updateAoodsForAdvance(AoodsVO aoodsVO) throws FLException;
 

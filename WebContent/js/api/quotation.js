@@ -33,6 +33,9 @@ $.extend(api.index, {
     normriceItemIndex: {
         url: "/views/quotation/normriceItem.html"
     },
+    normChangeRecordIndex: {
+        url: "/views/quotation/normchanerecord.html"
+    },
 
     ruotationIndex: {
         url: "/views/quotation/ruotationIndex.html"
@@ -559,6 +562,10 @@ $.extend(api, {
 
         pageQuotationRecord: {
             url: "pageQuotationRecord.do",
+        },
+        pageNormChangeRecord: {
+            url: "pageNormChangeRecord.do",
+            type: "query"
         },
         addQuotationRecord: {
             url: "addQuotationRecord.do",

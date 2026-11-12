@@ -42,7 +42,7 @@ public class NormoodItemAction extends BaseListAction {
 	@Action(value = "addNormoodItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addNormoodItem() throws FLException {
 
-		normoodItems = normoodItemService.addNormoodItem(quotation, normoodItems);
+		normoodItems = normoodItemService.addNormoodItem(quotation, normoodItems, queryUserId());
 
 		return SUCCESS;
 	}
@@ -50,7 +50,7 @@ public class NormoodItemAction extends BaseListAction {
 	@Action(value = "deleteNormoodItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String deleteNormoodItem() throws FLException {
 
-		normoodItemService.deleteNormoodItem(normoodItem);
+		normoodItemService.deleteNormoodItem(normoodItem, queryUserId());
 
 		return SUCCESS;
 	}

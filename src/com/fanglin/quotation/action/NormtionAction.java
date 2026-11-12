@@ -267,7 +267,7 @@ public class NormtionAction extends BaseListAction {
 	@Action(value = "updateNormtionForStatus", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String updateNormtionForStatus() throws FLException {
 
-		normtionService.updateNormtionForStatus(normtion);
+		normtionService.updateNormtionForStatus(normtion, queryUserId());
 
 		return SUCCESS;
 	}

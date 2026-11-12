@@ -12,8 +12,8 @@ public interface CormtimeService {
 
 	public List<CormtimeVO> queryCormtimeByQfid(Long qfid);
 
-	public int addCormtime(CormtimeVO cormtimeVO);
+	public int addCormtime(CormtimeVO cormtimeVO, String userId);
 
-	public int deleteCormtime(CormtimeVO cormtimeVO);
+	public int deleteCormtime(CormtimeVO cormtimeVO, String userId);
 
 }

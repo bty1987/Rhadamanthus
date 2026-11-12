@@ -47,7 +47,7 @@ public class CormtimeAction extends BaseListAction {
 	@Action(value = "addCormtime", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addCormtime() throws FLException {
 
-		cormtimeService.addCormtime(cormtime);
+		cormtimeService.addCormtime(cormtime, queryUserId());
 
 		return SUCCESS;
 	}
@@ -55,7 +55,7 @@ public class CormtimeAction extends BaseListAction {
 	@Action(value = "deleteCormtime", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String deleteCormtime() throws FLException {
 
-		cormtimeService.deleteCormtime(cormtime);
+		cormtimeService.deleteCormtime(cormtime, queryUserId());
 
 		return SUCCESS;
 	}

@@ -15,8 +15,8 @@ public interface CormriceService {
 
 	public List<CormriceVO> queryCormriceByQfid(Long qfid);
 
-	public int addCormrice(CormriceVO cormriceVO) throws FLException;
+	public int addCormrice(CormriceVO cormriceVO, String userId) throws FLException;
 
-	public int deleteCormrice(CormriceVO cormriceVO);
+	public int deleteCormrice(CormriceVO cormriceVO, String userId);
 
 }

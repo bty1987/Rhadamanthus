@@ -20,6 +20,8 @@ import com.fanglin.construction.po.ConstructionSchedulePO;
 import com.fanglin.construction.po.MaterialPlanPO;
 import com.fanglin.construction.service.ConstructionScheduleService;
 import com.fanglin.construction.service.MaterialPlanService;
+import com.fanglin.quotation.dao.NormChangeRecordDao;
+import com.fanglin.quotation.po.NormChangeRecordPO;
 import com.fanglin.construction.vo.ConstructionScheduleVO;
 import com.fanglin.construction.vo.ConstructionVO;
 import com.fanglin.construction.vo.MaterialPlanVO;
@@ -64,6 +66,9 @@ public class ConstructionScheduleServiceImpl implements ConstructionScheduleServ
 
 	@Autowired
 	private ConstructionInfoDao constructionInfoDao;
+
+	@Autowired
+	private com.fanglin.quotation.dao.NormChangeRecordDao normChangeRecordDao;
 
 	@Autowired
 	private DecorationService decorationService;
@@ -201,7 +206,7 @@ public class ConstructionScheduleServiceImpl implements ConstructionScheduleServ
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void updateConstructionScheduleForNorm(ConstructionScheduleVO constructionScheduleVO) throws FLException {
+	public void updateConstructionScheduleForNorm(ConstructionScheduleVO constructionScheduleVO, String userId) throws FLException {
 
 		ConstructionSchedulePO constructionSchedulePO = constructionScheduleDao.get(constructionScheduleVO.getCsid());
 
@@ -213,12 +218,23 @@ public class ConstructionScheduleServiceImpl implements ConstructionScheduleServ
 			throw new FLException(120035, "工费浮动已达上限");
 		}
 
+		// 变更记录: 节点工费浮动(先读旧值)
+		int oldSalaryLimit = constructionSchedulePO.getSalaryLimit();
+		int oldSalaryLimitTotal = constructionSchedulePO.getSalaryLimitTotal();
+
 		constructionSchedulePO.setAccessoryLimit(constructionScheduleVO.getAccessoryLimit());
 		constructionSchedulePO.setSalaryLimit(constructionScheduleVO.getSalaryLimit());
 		constructionSchedulePO.setAccessoryTotal(constructionScheduleVO.getAccessoryTotal());
 		constructionSchedulePO.setSalaryTotal(constructionScheduleVO.getSalaryTotal());
 
 		constructionScheduleDao.saveOrUpdate(constructionSchedulePO);
+
+		if (oldSalaryLimit != constructionScheduleVO.getSalaryLimit() || oldSalaryLimitTotal != constructionScheduleVO.getSalaryLimitTotal()) {
+			normChangeRecordDao.save(new NormChangeRecordPO().init(NormChangeRecordPO.TYPE_SCHEDULE_NORM_INT, NormChangeRecordPO.CHANGETYPE_UPDATE_INT, userId)
+					.orderId(constructionSchedulePO.getOrderId()).refId(constructionSchedulePO.getCsid()).refNo(constructionSchedulePO.getName())
+					.before(String.format("工费浮动: %d, 增量上限: %d", oldSalaryLimit, oldSalaryLimitTotal))
+					.after(String.format("工费浮动: %d, 增量上限: %d", constructionScheduleVO.getSalaryLimit(), constructionScheduleVO.getSalaryLimitTotal())));
+		}
 	}
 
 	@Override

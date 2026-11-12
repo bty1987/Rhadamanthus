@@ -47,7 +47,7 @@ public class CormoodAction extends BaseListAction {
 	@Action(value = "addCormood", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addCormood() throws FLException {
 
-		cormoodService.addCormood(cormood);
+		cormoodService.addCormood(cormood, queryUserId());
 
 		return SUCCESS;
 	}
@@ -55,7 +55,7 @@ public class CormoodAction extends BaseListAction {
 	@Action(value = "deleteCormood", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String deleteCormood() throws FLException {
 
-		cormoodService.deleteCormood(cormood);
+		cormoodService.deleteCormood(cormood, queryUserId());
 
 		return SUCCESS;
 	}

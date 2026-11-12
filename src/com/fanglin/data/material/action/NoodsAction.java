@@ -71,7 +71,7 @@ public class NoodsAction extends BaseListAction {
 	@Action(value = "updateNoods", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String updateNoods() throws FLException {
 
-		noodsService.updateNoods(noods);
+		noodsService.updateNoods(noods, queryUserId());
 
 		return SUCCESS;
 	}

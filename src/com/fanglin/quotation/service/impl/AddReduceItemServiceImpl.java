@@ -34,6 +34,7 @@ import com.fanglin.quotation.dao.AddReduceDao;
 import com.fanglin.quotation.dao.AddReduceItemDao;
 import com.fanglin.quotation.dao.ExtensionItemDao;
 import com.fanglin.quotation.dao.NormoodItemDao;
+import com.fanglin.quotation.dao.NormChangeRecordDao;
 import com.fanglin.quotation.dao.QuotationDao;
 import com.fanglin.quotation.dao.QuotationFunctionAreaDao;
 import com.fanglin.quotation.dao.QuotationFunctionAreaItemDao;
@@ -42,6 +43,7 @@ import com.fanglin.quotation.dao.SelectionItemDao;
 import com.fanglin.quotation.po.AddReduceItemPO;
 import com.fanglin.quotation.po.AddReducePO;
 import com.fanglin.quotation.po.ExtensionItemPO;
+import com.fanglin.quotation.po.NormChangeRecordPO;
 import com.fanglin.quotation.po.NormoodItemPO;
 import com.fanglin.quotation.po.QuotationFunctionAreaItemPO;
 import com.fanglin.quotation.po.QuotationFunctionAreaPO;
@@ -70,6 +72,9 @@ public class AddReduceItemServiceImpl implements AddReduceItemService {
 
 	@Autowired
 	private SystemDefineItemDao systemDefineItemDao;
+
+	@Autowired
+	private NormChangeRecordDao normChangeRecordDao;
 
 	@Autowired
 	private QuotationDao quotationDao;
@@ -279,7 +284,7 @@ public class AddReduceItemServiceImpl implements AddReduceItemService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int deleteAddReduceItem(AddReduceVO addReduceVO, AddReduceItemVO addReduceItemVO) throws FLException {
+	public int deleteAddReduceItem(AddReduceVO addReduceVO, AddReduceItemVO addReduceItemVO, String userId) throws FLException {
 
 		AddReducePO addReducePO = addReduceDao.get(addReduceVO.getArId());
 
@@ -329,6 +334,12 @@ public class AddReduceItemServiceImpl implements AddReduceItemService {
 
 		addReduceItemDao.delete(addReduceItemPO);
 		addReduceDao.update(addReducePO);
+
+		// 变更记录: 增减明细删除(连带删下定材行+回滚数量+重算款项)
+		normChangeRecordDao.save(new NormChangeRecordPO().init(NormChangeRecordPO.TYPE_ADDREDUCE_DELETE_INT, NormChangeRecordPO.CHANGETYPE_DELETE_INT, userId)
+				.orderId(addReducePO.getOrderId()).qid(quotationPO.getQid()).refId(addReduceItemPO.getAriId()).refNo(addReduceItemPO.getItemName())
+				.before(String.format("项目: %s, 数量: %s", addReduceItemPO.getItemName(), addReduceItemPO.getNum()))
+				.comment("连带: 回滚数量+删下定材(TYPE_ADDCUT)+重算款项"));
 
 		return 0;
 	}

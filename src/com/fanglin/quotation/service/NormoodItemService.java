@@ -10,9 +10,9 @@ public interface NormoodItemService {
 
 	public List<NormoodItemVO> queryNormoodItem(NormoodItemVO normoodItem);
 
-	public List<NormoodItemVO> addNormoodItem(QuotationVO quotationVO, List<NormoodItemVO> normoodItemVOs) throws FLException;
+	public List<NormoodItemVO> addNormoodItem(QuotationVO quotationVO, List<NormoodItemVO> normoodItemVOs, String userId) throws FLException;
 
-	public int deleteNormoodItem(NormoodItemVO normoodItemVO) throws FLException;
+	public int deleteNormoodItem(NormoodItemVO normoodItemVO, String userId) throws FLException;
 
 	public int amountNormoodItem(NormoodItemVO normoodItemVO);
 

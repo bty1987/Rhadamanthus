@@ -19,7 +19,7 @@ public interface ConstructionScheduleService {
 
 	public ConstructionScheduleVO queryConstructionScheduleByOrderIdASchedule(ConstructionScheduleVO constructionScheduleVO) throws FLException;
 
-	public void updateConstructionScheduleForNorm(ConstructionScheduleVO constructionScheduleVO) throws FLException;
+	public void updateConstructionScheduleForNorm(ConstructionScheduleVO constructionScheduleVO, String userId) throws FLException;
 
 	public void updateConstructionScheduleForScal(ConstructionScheduleVO constructionScheduleVO) throws FLException;
 

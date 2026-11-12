@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+    <script src="../../assets/altogether/js/jquery-2.0.3.min.js"></script>
+    <script src="../../assets/ace/js/jquery.mobile.custom.min.js"></script>
+    <script src="../../assets/ace/js/bootstrap.min.js"></script>
+    <script src="../../assets/ace/js/ace-elements.js"></script>
+    <script src="../../assets/ace/js/ace.js"></script>
+
+    <style type="text/css">
+        .page-content {
+            padding: 10px;
+        }
+        .table {
+            font-size: 12px;
+        }
+        .record-time {
+            white-space: nowrap;
+        }
+        .record-opertype {
+            white-space: nowrap;
+        }
+    </style>
+</head>
+<body>
+
+<div class="page-content">
+    <table class="table table-striped table-bordered table-hover">
+        <thead>
+            <tr>
+                <th width="14%">时间</th>
+                <th width="9%">类型</th>
+                <th width="7%">动作</th>
+                <th width="20%">标识</th>
+                <th width="20%">变更前</th>
+                <th width="20%">变更后</th>
+                <th width="10%">操作人</th>
+            </tr>
+        </thead>
+        <tbody id="normChangeRecordBody">
+            <tr>
+                <td colspan="7" class="text-center">加载中...</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="row">
+        <div class="col-xs-12 text-center">
+            <button type="button" class="btn btn-primary btn-sm" id="prevPageBtn">上一页</button>
+            <span id="pageInfo" style="margin: 0 10px;"></span>
+            <button type="button" class="btn btn-primary btn-sm" id="nextPageBtn">下一页</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    parent.$.loadScript(['js/quotation/normchanerecord.js'], "../../", window.frameElement, $);
+</script>
+</body>
+</html>

@@ -13,8 +13,8 @@ public interface CormoodService {
 
 	public List<CormoodVO> queryCormoodByQfid(Long qfid);
 
-	public int addCormood(CormoodVO cormoodVO) throws FLException;
+	public int addCormood(CormoodVO cormoodVO, String userId) throws FLException;
 
-	public int deleteCormood(CormoodVO cormoodVO);
+	public int deleteCormood(CormoodVO cormoodVO, String userId);
 
 }

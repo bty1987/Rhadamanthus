@@ -38,6 +38,7 @@ import com.fanglin.quotation.dao.AddReduceDao;
 import com.fanglin.quotation.dao.AddReduceItemDao;
 import com.fanglin.quotation.dao.ExtensionItemDao;
 import com.fanglin.quotation.dao.NormoodItemDao;
+import com.fanglin.quotation.dao.NormChangeRecordDao;
 import com.fanglin.quotation.dao.QuotationDao;
 import com.fanglin.quotation.dao.QuotationFunctionAreaDao;
 import com.fanglin.quotation.dao.QuotationFunctionAreaItemDao;
@@ -46,6 +47,7 @@ import com.fanglin.quotation.po.AddReduceDO;
 import com.fanglin.quotation.po.AddReduceItemPO;
 import com.fanglin.quotation.po.AddReducePO;
 import com.fanglin.quotation.po.ExtensionItemPO;
+import com.fanglin.quotation.po.NormChangeRecordPO;
 import com.fanglin.quotation.po.NormoodItemPO;
 import com.fanglin.quotation.po.QuotationFunctionAreaItemPO;
 import com.fanglin.quotation.po.QuotationFunctionAreaPO;
@@ -98,6 +100,9 @@ public class AddReduceServiceImpl implements AddReduceService {
 
 	@Autowired
 	private SelectionItemDao selectionItemDao;
+
+	@Autowired
+	private NormChangeRecordDao normChangeRecordDao;
 
 	@Autowired
 	private AddReduceItemServiceImpl addReduceItemService;
@@ -250,6 +255,11 @@ public class AddReduceServiceImpl implements AddReduceService {
 			addReducePO.setSendTime(DateUtil.getDateToTimestamp(new Date()));
 
 			addReduceDao.update(addReducePO);
+
+			// 变更记录: 增减项制作发送
+			normChangeRecordDao.save(new NormChangeRecordPO().init(NormChangeRecordPO.TYPE_ADDREDUCE_MAKE_INT, NormChangeRecordPO.CHANGETYPE_UPDATE_INT, userId)
+					.orderId(orderId).refId(addReducePO.getArId())
+					.after("状态: 已发送(客户确认请求)").comment(String.format("明细: %s", addReducePO.getContent())));
 		}
 
 		return 0;
@@ -307,6 +317,11 @@ public class AddReduceServiceImpl implements AddReduceService {
 		addReduceDao.save(addReducePO);
 
 		addReduceVO.setArId(addReducePO.getArId());
+
+		// 变更记录: 增减项制作
+		normChangeRecordDao.save(new NormChangeRecordPO().init(NormChangeRecordPO.TYPE_ADDREDUCE_MAKE_INT, NormChangeRecordPO.CHANGETYPE_ADD_INT, userId)
+				.orderId(addReducePO.getOrderId()).refId(addReducePO.getArId()).refNo(addReducePO.getOrderId())
+				.after(String.format("类型: %s, 状态: 未提交", addReducePO.getType() == AddReducePO.TYPE_ADD_INT ? "增项" : (addReducePO.getType() == AddReducePO.TYPE_REDUCE_INT ? "减项" : "漏量"))));
 
 		return 0;
 	}
@@ -719,7 +734,7 @@ public class AddReduceServiceImpl implements AddReduceService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int deleteAddReduceByArId(AddReduceVO addReduceVO) throws FLException {
+	public int deleteAddReduceByArId(AddReduceVO addReduceVO, String userId) throws FLException {
 
 		long arId = addReduceVO.getArId();
 
@@ -809,6 +824,12 @@ public class AddReduceServiceImpl implements AddReduceService {
 		normoodItemDao.deleteNormoodItem(quotationPO.getQid(), arId, NormoodItemPO.TYPE_ADDCUT_INT);
 
 		addReduceDao.delete(addReducePO);
+
+		// 变更记录: 增减单删除(含连带影响: 回滚报价项数量+删款项+删下定材)
+		normChangeRecordDao.save(new NormChangeRecordPO().init(NormChangeRecordPO.TYPE_ADDREDUCE_DELETE_INT, NormChangeRecordPO.CHANGETYPE_DELETE_INT, userId)
+				.orderId(addReducePO.getOrderId()).qid(quotationPO.getQid()).refId(arId)
+				.before(String.format("类型: %s, 明细: %d行, 金额: %d", addReducePO.getType() == AddReducePO.TYPE_ADD_INT ? "增项" : (addReducePO.getType() == AddReducePO.TYPE_REDUCE_INT ? "减项" : "漏量"), addReduceItemPOs.size(), addReducePO.getTotal()))
+				.comment("连带: 回滚报价项数量+删款项+删下定材(TYPE_ADDCUT)"));
 
 		return 0;
 	}

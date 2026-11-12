@@ -55,7 +55,7 @@ public class CormriceAction extends BaseListAction {
 	@Action(value = "addCormrice", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addCormrice() throws FLException {
 
-		cormriceService.addCormrice(cormrice);
+		cormriceService.addCormrice(cormrice, queryUserId());
 
 		return SUCCESS;
 	}
@@ -63,7 +63,7 @@ public class CormriceAction extends BaseListAction {
 	@Action(value = "deleteCormrice", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String deleteCormrice() throws FLException {
 
-		cormriceService.deleteCormrice(cormrice);
+		cormriceService.deleteCormrice(cormrice, queryUserId());
 
 		return SUCCESS;
 	}

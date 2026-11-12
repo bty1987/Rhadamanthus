@@ -19,7 +19,7 @@ public interface NoodsService {
 
 	public int addNoods(NoodsVO noodsVO, int company) throws FLException;
 
-	public int updateNoods(NoodsVO noodsVO) throws FLException;
+	public int updateNoods(NoodsVO noodsVO, String userId) throws FLException;
 
 	public int updateNoodsForStatus(NoodsVO noodsVO) throws FLException;
 

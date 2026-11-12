@@ -13,6 +13,8 @@ import com.fanglin.data.common.vo.ConstructionNodeVO;
 import com.fanglin.data.po.CormtimePO;
 import com.fanglin.data.po.ConstructionNodePO;
 import com.fanglin.data.quotation.dao.CormtimeDao;
+import com.fanglin.quotation.dao.NormChangeRecordDao;
+import com.fanglin.quotation.po.NormChangeRecordPO;
 import com.fanglin.data.quotation.service.CormtimeService;
 import com.fanglin.data.quotation.vo.CormtimeVO;
 import com.fanglin.utils.BeanUtil;
@@ -24,6 +26,9 @@ public class CormtimeServiceImpl implements CormtimeService {
 
 	@Autowired
 	public CormtimeDao cormtimeDao;
+
+	@Autowired
+	private NormChangeRecordDao normChangeRecordDao;
 
 	@Override
 	public void pageCormtime(Paging paging, List<Filter> filters) {
@@ -66,7 +71,7 @@ public class CormtimeServiceImpl implements CormtimeService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int addCormtime(CormtimeVO cormtimeVO) {
+	public int addCormtime(CormtimeVO cormtimeVO, String userId) {
 
 		CormtimePO cormtimePO = new CormtimePO(new ConstructionNodePO());
 
@@ -77,12 +82,22 @@ public class CormtimeServiceImpl implements CormtimeService {
 
 		cormtimeDao.save(cormtimePO);
 
+		// 变更记录: 定额工时镜像添加(按规格qfid关联)
+		normChangeRecordDao.save(new NormChangeRecordPO().init(NormChangeRecordPO.TYPE_QUOTATIONITEM_QFID_INT, NormChangeRecordPO.CHANGETYPE_ADD_INT, userId)
+				.refId(cormtimeVO.getQfid()).refNo(cormtimePO.getConstructionNode() != null ? cormtimePO.getConstructionNode().getName() : "定额工时镜像")
+				.after(String.format("定额工时镜像: qfid=%d, 节点: %s, 工时天数: %s", cormtimeVO.getQfid(), cormtimePO.getConstructionNode() != null ? cormtimePO.getConstructionNode().getName() : "---", cormtimePO.getWorkdays())));
+
 		return 0;
 	}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int deleteCormtime(CormtimeVO cormtimeVO) {
+	public int deleteCormtime(CormtimeVO cormtimeVO, String userId) {
+
+		// 变更记录: 定额工时镜像删除
+		normChangeRecordDao.save(new NormChangeRecordPO().init(NormChangeRecordPO.TYPE_QUOTATIONITEM_QFID_INT, NormChangeRecordPO.CHANGETYPE_DELETE_INT, userId)
+				.refId(cormtimeVO.getCtid()).refNo("定额工时镜像")
+				.before(String.format("定额工时镜像行: ctid=%d", cormtimeVO.getCtid())));
 
 		cormtimeDao.deleteById(cormtimeVO.getCtid());
 

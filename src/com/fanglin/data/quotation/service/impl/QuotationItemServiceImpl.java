@@ -34,9 +34,13 @@ import com.fanglin.communion.vo.WorkTypeVO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.data.po.QuotationCtemPO;
+import com.fanglin.data.po.QuotationFormatPO;
 import com.fanglin.data.po.QuotationItemPO;
+import com.fanglin.quotation.dao.NormChangeRecordDao;
+import com.fanglin.quotation.po.NormChangeRecordPO;
 import com.fanglin.data.po.QuotationPricePO;
 import com.fanglin.data.po.QuotationVersionPO;
+import com.fanglin.data.quotation.dao.QuotationFormatDao;
 import com.fanglin.data.quotation.dao.QuotationItemDao;
 import com.fanglin.data.quotation.dao.QuotationPriceDao;
 import com.fanglin.data.quotation.dao.QuotationVersionDao;
@@ -55,6 +59,12 @@ public class QuotationItemServiceImpl implements QuotationItemService {
 
 	@Autowired
 	private QuotationItemDao quotationItemDao;
+
+	@Autowired
+	private QuotationFormatDao quotationFormatDao;
+
+	@Autowired
+	private NormChangeRecordDao normChangeRecordDao;
 
 	@Autowired
 	private QuotationVersionDao quotationVersionDao;
@@ -211,6 +221,37 @@ public class QuotationItemServiceImpl implements QuotationItemService {
 		quotationItemPO.setQuotationCtem(new QuotationCtemPO(quotationItemVO.getQuotationCtem().getQcid()));
 
 		quotationItemDao.update(quotationItemPO);
+
+		return 0;
+	}
+
+	// 变更记录受控接口: 报价项关联规格换绑(原仅运维SQL, 通道=updateQuotationItem明确排除qfid)
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int updateQuotationItemForQfid(QuotationItemVO quotationItemVO, String userId) throws FLException {
+
+		QuotationItemPO quotationItemPO = quotationItemDao.get(quotationItemVO.getQiid());
+
+		if (quotationItemPO == null) {
+			throw new FLException(200013, "报价项不存在");
+		}
+
+		if (quotationItemVO.getQfid() == null || quotationFormatDao.get(quotationItemVO.getQfid()) == null) {
+			throw new FLException(200070, "报价规格不存在");
+		}
+
+		int oldQfid = quotationItemPO.getQfid();
+
+		if (oldQfid == quotationItemVO.getQfid()) return 0;
+
+		quotationItemPO.setQfid(quotationItemVO.getQfid());
+
+		quotationItemDao.update(quotationItemPO);
+
+		// 变更记录: 报价项关联规格换绑
+		normChangeRecordDao.save(new NormChangeRecordPO().init(NormChangeRecordPO.TYPE_QUOTATIONITEM_QFID_INT, NormChangeRecordPO.CHANGETYPE_UPDATE_INT, userId)
+				.refId(quotationItemPO.getQiid()).refNo(quotationItemPO.getName())
+				.before(String.format("关联规格: qfid=%d", oldQfid)).after(String.format("关联规格: qfid=%d", quotationItemVO.getQfid())));
 
 		return 0;
 	}

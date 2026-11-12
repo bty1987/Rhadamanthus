@@ -82,7 +82,7 @@ public class ConstructionScheduleAction extends BaseListAction {
 	@Action(value = "updateConstructionScheduleForNorm", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String updateConstructionScheduleForNorm() throws FLException {
 
-		constructionScheduleService.updateConstructionScheduleForNorm(constructionSchedule);
+		constructionScheduleService.updateConstructionScheduleForNorm(constructionSchedule, queryUserId());
 
 		return SUCCESS;
 	}

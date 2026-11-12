@@ -199,7 +199,7 @@ public class AddReduceAction extends BaseListAction {
 	@Action(value = "deleteAddReduce", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String deleteAddReduce() throws FLException {
 
-		addReduceService.deleteAddReduceByArId(addReduce);
+		addReduceService.deleteAddReduceByArId(addReduce, queryUserId());
 
 		return SUCCESS;
 	}

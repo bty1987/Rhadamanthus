@@ -16,6 +16,8 @@ import com.fanglin.data.common.vo.ConstructionNodeVO;
 import com.fanglin.data.material.dao.AoodsDao;
 import com.fanglin.data.material.dao.GoodsDao;
 import com.fanglin.data.material.dao.NoodsDao;
+import com.fanglin.quotation.dao.NormChangeRecordDao;
+import com.fanglin.quotation.po.NormChangeRecordPO;
 import com.fanglin.data.material.service.AoodsService;
 import com.fanglin.data.material.vo.AccessoriesTypeVO;
 import com.fanglin.data.material.vo.AoodsVO;
@@ -47,6 +49,9 @@ public class AoodsServiceImpl implements AoodsService {
 
 	@Autowired
 	private NoodsDao noodsDao;
+
+	@Autowired
+	private NormChangeRecordDao normChangeRecordDao;
 
 	@Autowired
 	private GoodsDao goodsDao;
@@ -158,13 +163,17 @@ public class AoodsServiceImpl implements AoodsService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int updateAoods(AoodsVO aoodsVO) throws FLException {
+	public int updateAoods(AoodsVO aoodsVO, String userId) throws FLException {
 
 		AoodsPO aoodsPO = aoodsDao.get(aoodsVO.getAid());
 
 		if (aoodsPO == null) {
 			throw new FLException(260056, "辅材不存在");
 		}
+
+		// 变更记录: 辅材绑定定材(旧值快照, 解绑/换绑分支落记录)
+		Long oldNid = aoodsPO.getNoods() != null ? aoodsPO.getNoods().getNid() : null;
+		String oldNoodsName = aoodsPO.getNoods() != null ? aoodsPO.getNoods().getName() : null;
 
 		aoodsPO.setName(aoodsVO.getName());
 
@@ -193,15 +202,31 @@ public class AoodsServiceImpl implements AoodsService {
 			aoodsPO.setConstructionNode(new ConstructionNodePO(aoodsVO.getConstructionNode().getCnid()));
 		}
 
+		Long newNid = null;
+
 		if (aoodsVO.getNoods() != null && aoodsVO.getNoods().getNid() == null) {
 			aoodsPO.setNoods(null);
 		}
 
 		if (aoodsVO.getNoods() != null && aoodsVO.getNoods().getNid() != null) {
-			aoodsPO.setNoods(new NoodsPO(aoodsVO.getNoods().getNid()));
+			newNid = aoodsVO.getNoods().getNid();
+			aoodsPO.setNoods(new NoodsPO(newNid));
 		}
 
 		aoodsDao.update(aoodsPO);
+
+		// 变更记录: 绑定关系变化才记(解绑/换绑)
+		if (aoodsVO.getNoods() != null && newNid == null && oldNid != null) {
+			normChangeRecordDao.save(new NormChangeRecordPO().init(NormChangeRecordPO.TYPE_AOODS_NORM_INT, NormChangeRecordPO.CHANGETYPE_UNBIND_INT, userId)
+					.refId(aoodsPO.getAid()).refNo(aoodsPO.getName())
+					.before(String.format("绑定定材: %s(%d)", oldNoodsName, oldNid)));
+		} else if (aoodsVO.getNoods() != null && newNid != null && (oldNid == null || oldNid.longValue() != newNid.longValue())) {
+			String newNoodsName = noodsDao.get(newNid) != null ? noodsDao.get(newNid).getName() : String.valueOf(newNid);
+			normChangeRecordDao.save(new NormChangeRecordPO().init(NormChangeRecordPO.TYPE_AOODS_NORM_INT, NormChangeRecordPO.CHANGETYPE_BIND_INT, userId)
+					.refId(aoodsPO.getAid()).refNo(aoodsPO.getName())
+					.before(oldNid != null ? String.format("绑定定材: %s(%d)", oldNoodsName, oldNid) : "绑定定材: 无")
+					.after(String.format("绑定定材: %s(%d)", newNoodsName, newNid)));
+		}
 
 		return 0;
 	}
@@ -225,7 +250,7 @@ public class AoodsServiceImpl implements AoodsService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int updateAoodsForNorm(AoodsVO aoodsVO) throws FLException {
+	public int updateAoodsForNorm(AoodsVO aoodsVO, String userId) throws FLException {
 
 		AoodsPO aoodsPO = aoodsDao.get(aoodsVO.getAid());
 
@@ -239,9 +264,20 @@ public class AoodsServiceImpl implements AoodsService {
 			throw new FLException(130118, "定材不存在");
 		}
 
+		Long oldNid = aoodsPO.getNoods() != null ? aoodsPO.getNoods().getNid() : null;
+		String oldNoodsName = aoodsPO.getNoods() != null ? aoodsPO.getNoods().getName() : null;
+
 		aoodsPO.setNoods(noodsPO);
 
 		aoodsDao.update(aoodsPO);
+
+		// 变更记录: 辅材绑定定材(专用绑定入口, 值变才记)
+		if (oldNid == null || oldNid.longValue() != noodsPO.getNid()) {
+			normChangeRecordDao.save(new NormChangeRecordPO().init(NormChangeRecordPO.TYPE_AOODS_NORM_INT, NormChangeRecordPO.CHANGETYPE_BIND_INT, userId)
+					.refId(aoodsPO.getAid()).refNo(aoodsPO.getName())
+					.before(oldNid != null ? String.format("绑定定材: %s(%d)", oldNoodsName, oldNid) : "绑定定材: 无")
+					.after(String.format("绑定定材: %s(%d)", noodsPO.getName(), noodsPO.getNid())));
+		}
 
 		return 0;
 	}

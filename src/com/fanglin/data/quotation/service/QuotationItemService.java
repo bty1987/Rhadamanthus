@@ -35,6 +35,8 @@ public interface QuotationItemService {
 
 	public int updateQuotationItem(QuotationItemVO quotationItemVO) throws FLException;
 
+	public int updateQuotationItemForQfid(QuotationItemVO quotationItemVO, String userId) throws FLException;
+
 	public int updateQuotationItemForStatus(QuotationItemVO quotationItemVO) throws FLException;
 
 	public int updateQuotationItemForDiscount(QuotationItemVO quotationItemVO) throws FLException;

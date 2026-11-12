@@ -243,6 +243,24 @@
         }
     };
 
+    // 变更记录按钮: 按装修单号查询定额变更记录时间线(工费/材料验证相关变更)
+    var changeRecordBtn = {
+        name: "变更记录",
+        clazz: "btn-inverse",
+        handle: function(v) {
+
+            var orderId = v.orderId || (v.decoration && v.decoration.orderId);
+
+            params.quotation.normChangeRecord = {
+                orderId: orderId
+            };
+
+            com.popup4page("#layerPopUp", api.index.normChangeRecordIndex.url, "变更记录 : " + orderId);
+
+            return false;
+        }
+    };
+
     // 增减标签按钮: 以 addreduce.arId 作为 qid, type=5 进入 quotationProfile
     var tagbtn = {
         name: "标签",
@@ -344,7 +362,7 @@
 
     if (addReduce.pageType == null) {
 
-        var linebtns = [btnMake, viewbtn, submitbtn, cancelbtn, allocationbtn, specialbtn, norefundbtn, affirmbtn, tagbtn, salaryOpenbtn, salaryRejectbtn, salaryPrintbtn, deletebtn, ];
+        var linebtns = [btnMake, viewbtn, submitbtn, cancelbtn, allocationbtn, specialbtn, norefundbtn, affirmbtn, tagbtn, changeRecordBtn, salaryOpenbtn, salaryRejectbtn, salaryPrintbtn, deletebtn, ];
 
         com.focusPage('#fl-statement').statement("报价", "增减单").show();
         com.focusPage('#decorationInfo').show();

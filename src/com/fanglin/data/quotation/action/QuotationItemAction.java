@@ -86,6 +86,15 @@ public class QuotationItemAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	// 变更记录受控接口: 报价项关联规格换绑(授权走operation登记through=0, 61号SQL)
+	@Action(value = "updateQuotationItemForQfid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateQuotationItemForQfid() throws FLException {
+
+		quotationItemService.updateQuotationItemForQfid(quotationItem, queryUserId());
+
+		return SUCCESS;
+	}
+
 	@Action(value = "updateQuotationItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String updateQuotationItem() throws FLException {
 

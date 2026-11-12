@@ -57,10 +57,27 @@ $(function() {
         }
     };
 
+    // 变更记录按钮: 按报价单qid查定额变更记录时间线(工费/材料验证相关变更)
+    var changeRecordBtn = {
+        name: "变更记录",
+        clazz: "btn-inverse",
+        handle: function(v) {
+
+            params.quotation.normChangeRecord = {
+                qid: v.quotation ? v.quotation.qid : v.qid
+            };
+
+            com.popup4page("#layerPopUp", api.index.normChangeRecordIndex.url, "变更记录");
+
+            return false;
+        }
+    };
+
     if (norm.pageConfig.pageBtn.contains("btnStatus"))
         cardbtns.push(btnStatus);
     if (norm.pageConfig.pageBtn.contains("view"))
         cardbtns.push(btnView);
+    cardbtns.push(changeRecordBtn);
 
     var searcher = new Searcher();
 

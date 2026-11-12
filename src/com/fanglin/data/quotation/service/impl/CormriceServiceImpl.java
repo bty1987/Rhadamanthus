@@ -18,6 +18,8 @@ import com.fanglin.data.po.CormricePO;
 import com.fanglin.data.po.QuotationCtemPO;
 import com.fanglin.data.po.QuotationFormatPO;
 import com.fanglin.data.quotation.dao.CormriceDao;
+import com.fanglin.quotation.dao.NormChangeRecordDao;
+import com.fanglin.quotation.po.NormChangeRecordPO;
 import com.fanglin.data.quotation.dao.QuotationFormatDao;
 import com.fanglin.data.quotation.service.CormriceService;
 import com.fanglin.data.quotation.vo.CormriceVO;
@@ -34,6 +36,9 @@ public class CormriceServiceImpl implements CormriceService {
 
 	@Autowired
 	public QuotationFormatDao quotationFormatDao;
+
+	@Autowired
+	private NormChangeRecordDao normChangeRecordDao;
 
 	@Override
 	public void pageCormrice(Paging paging, List<Filter> filters, Integer company) {
@@ -101,7 +106,7 @@ public class CormriceServiceImpl implements CormriceService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int addCormrice(CormriceVO cormriceVO) throws FLException {
+	public int addCormrice(CormriceVO cormriceVO, String userId) throws FLException {
 
 		CormricePO cormricePO = new CormricePO(new QuotationCtemPO(), new ConstructionNodePO());
 
@@ -126,12 +131,22 @@ public class CormriceServiceImpl implements CormriceService {
 
 		cormriceDao.save(cormricePO);
 
+		// 变更记录: 定额工费镜像添加(按规格qfid关联)
+		normChangeRecordDao.save(new NormChangeRecordPO().init(NormChangeRecordPO.TYPE_QUOTATIONITEM_QFID_INT, NormChangeRecordPO.CHANGETYPE_ADD_INT, userId)
+				.refId(cormriceVO.getQfid()).refNo(cormricePO.getConstructionNode() != null ? cormricePO.getConstructionNode().getName() : "定额工费镜像")
+				.after(String.format("定额工费镜像: qfid=%d, 节点: %s, 工费: %s", cormriceVO.getQfid(), cormricePO.getConstructionNode() != null ? cormricePO.getConstructionNode().getName() : "---", cormricePO.getSalary())));
+
 		return 0;
 	}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int deleteCormrice(CormriceVO cormriceVO) {
+	public int deleteCormrice(CormriceVO cormriceVO, String userId) {
+
+		// 变更记录: 定额工费镜像删除
+		normChangeRecordDao.save(new NormChangeRecordPO().init(NormChangeRecordPO.TYPE_QUOTATIONITEM_QFID_INT, NormChangeRecordPO.CHANGETYPE_DELETE_INT, userId)
+				.refId(cormriceVO.getCpid()).refNo("定额工费镜像")
+				.before(String.format("定额工费镜像行: cpid=%d", cormriceVO.getCpid())));
 
 		cormriceDao.deleteById(cormriceVO.getCpid());
 

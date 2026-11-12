@@ -87,7 +87,7 @@ public class AddReduceItemAction extends BaseListAction {
 	@Action(value = "deleteAddReduceItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String deleteAddReduceItem() throws FLException {
 
-		addReduceItemService.deleteAddReduceItem(addReduce, addReduceItem);
+		addReduceItemService.deleteAddReduceItem(addReduce, addReduceItem, queryUserId());
 
 		return SUCCESS;
 	}

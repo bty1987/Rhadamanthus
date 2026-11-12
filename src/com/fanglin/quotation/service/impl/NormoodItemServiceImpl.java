@@ -15,7 +15,9 @@ import com.fanglin.data.po.NoodsPO;
 import com.fanglin.data.po.NormpackItemPO;
 import com.fanglin.data.quotation.dao.impl.NormpackItemDaoImpl;
 import com.fanglin.quotation.dao.NormoodItemDao;
+import com.fanglin.quotation.dao.NormChangeRecordDao;
 import com.fanglin.quotation.dao.QuotationDao;
+import com.fanglin.quotation.po.NormChangeRecordPO;
 import com.fanglin.quotation.po.NormoodItemPO;
 import com.fanglin.quotation.po.QuotationPO;
 import com.fanglin.quotation.service.NormoodItemService;
@@ -38,6 +40,9 @@ public class NormoodItemServiceImpl implements NormoodItemService {
 
 	@Autowired
 	private NoodsDao noodsDao;
+
+	@Autowired
+	private NormChangeRecordDao normChangeRecordDao;
 
 	@Override
 	public List<NormoodItemVO> queryNormoodItem(NormoodItemVO normoodItem) {
@@ -70,7 +75,7 @@ public class NormoodItemServiceImpl implements NormoodItemService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public List<NormoodItemVO> addNormoodItem(QuotationVO quotationVO, List<NormoodItemVO> normoodItemVOs) throws FLException {
+	public List<NormoodItemVO> addNormoodItem(QuotationVO quotationVO, List<NormoodItemVO> normoodItemVOs, String userId) throws FLException {
 
 		QuotationPO quotationPO = quotationDao.get(quotationVO.getQid());
 
@@ -122,7 +127,13 @@ public class NormoodItemServiceImpl implements NormoodItemService {
 			}
 		}
 
-		if (normpackItems == null || normpackItems.size() == 0) return normoodItemVOs;
+		if (normpackItems == null || normpackItems.size() == 0) {
+			// 变更记录: 下定材添加(单条/自定)
+			normChangeRecordDao.save(new NormChangeRecordPO().init(NormChangeRecordPO.TYPE_NORMOODITEM_INT, NormChangeRecordPO.CHANGETYPE_ADD_INT, userId)
+					.qid(quotationPO.getQid()).refId(quotationPO.getQid()).refNo(quotationPO.getOrderId())
+					.after(String.format("添加下定材 %d 行", normoodItemVOs.size())));
+			return normoodItemVOs;
+		}
 
 		normoodItemVOs = new ArrayList<NormoodItemVO>();
 
@@ -157,18 +168,31 @@ public class NormoodItemServiceImpl implements NormoodItemService {
 			normoodItemVOs.add(normoodItemVO);
 		}
 
+		// 变更记录: 下定材添加(套餐展开)
+		normChangeRecordDao.save(new NormChangeRecordPO().init(NormChangeRecordPO.TYPE_NORMOODITEM_INT, NormChangeRecordPO.CHANGETYPE_ADD_INT, userId)
+				.qid(quotationPO.getQid()).refId(quotationPO.getQid()).refNo(quotationPO.getOrderId())
+				.after(String.format("添加下定材(套餐展开) %d 行", normoodItemVOs.size())));
+
 		return normoodItemVOs;
 	}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int deleteNormoodItem(NormoodItemVO normoodItemVO) throws FLException {
+	public int deleteNormoodItem(NormoodItemVO normoodItemVO, String userId) throws FLException {
 
 		NormoodItemPO normoodItemPO = normoodItemDao.get(normoodItemVO.getNgiid());
 
+		// 守卫: 不存在幂等返回(原实现此处为空 if 体直接硬删)
 		if (normoodItemPO == null) {
-
+			return 0;
 		}
+
+		// 变更记录: 下定材删除(行快照)
+		String noodsName = normoodItemPO.getNoods() != null ? normoodItemPO.getNoods().getName() : "---";
+
+		normChangeRecordDao.save(new NormChangeRecordPO().init(NormChangeRecordPO.TYPE_NORMOODITEM_INT, NormChangeRecordPO.CHANGETYPE_DELETE_INT, userId)
+				.qid(normoodItemPO.getQid()).refId(normoodItemPO.getNgiid()).refNo(noodsName)
+				.before(String.format("定材: %s, 定额数量: %s, 库房数量: %s", noodsName, normoodItemPO.getNormnum(), normoodItemPO.getStorenum())));
 
 		normoodItemDao.delete(normoodItemPO);
 

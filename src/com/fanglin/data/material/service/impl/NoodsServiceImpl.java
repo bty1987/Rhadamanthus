@@ -13,6 +13,8 @@ import com.fanglin.data.material.dao.NoodsDao;
 import com.fanglin.data.material.service.NoodsService;
 import com.fanglin.data.material.vo.NoodsVO;
 import com.fanglin.data.po.NoodsPO;
+import com.fanglin.quotation.dao.NormChangeRecordDao;
+import com.fanglin.quotation.po.NormChangeRecordPO;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.Paging;
 
@@ -22,6 +24,9 @@ public class NoodsServiceImpl implements NoodsService {
 
 	@Autowired
 	private NoodsDao noodsDao;
+
+	@Autowired
+	private NormChangeRecordDao normChangeRecordDao;
 
 	@Override
 	public void pageNoods(Paging paging, List<Filter> filters, int company) throws FLException {
@@ -110,7 +115,7 @@ public class NoodsServiceImpl implements NoodsService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int updateNoods(NoodsVO noodsVO) throws FLException {
+	public int updateNoods(NoodsVO noodsVO, String userId) throws FLException {
 
 		NoodsPO noodsPO = noodsDao.get(noodsVO.getNid());
 
@@ -118,9 +123,18 @@ public class NoodsServiceImpl implements NoodsService {
 			throw new FLException(130118, "定材不存在");
 		}
 
+		// 变更记录: 定材浮动额(先读旧值, surplus 变了才记)
+		int oldSurplus = noodsPO.getSurplus();
+
 		BeanUtil.copyProperties(noodsVO, noodsPO);
 
 		noodsDao.update(noodsPO);
+
+		if (noodsVO.getSurplus() != null && noodsVO.getSurplus() != oldSurplus) {
+			normChangeRecordDao.save(new NormChangeRecordPO().init(NormChangeRecordPO.TYPE_NOODS_SURPLUS_INT, NormChangeRecordPO.CHANGETYPE_UPDATE_INT, userId)
+					.refId(noodsPO.getNid()).refNo(noodsPO.getName())
+					.before(String.format("浮动量: %d", oldSurplus)).after(String.format("浮动量: %d", noodsPO.getSurplus())));
+		}
 
 		return 0;
 	}

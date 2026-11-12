@@ -38,6 +38,8 @@ import com.fanglin.construction.po.ConstructionCostPO;
 import com.fanglin.construction.po.ConstructionInfoPO;
 import com.fanglin.construction.po.ConstructionPO;
 import com.fanglin.construction.po.ConstructionSchedulePO;
+import com.fanglin.quotation.dao.NormChangeRecordDao;
+import com.fanglin.quotation.po.NormChangeRecordPO;
 import com.fanglin.construction.service.ConstructionService;
 import com.fanglin.construction.service.ConstructionScheduleService;
 import com.fanglin.construction.vo.AcceptanceVO;
@@ -93,6 +95,9 @@ public class A20251208ServiceImpl implements A20251208Service {
 
 	@Autowired
 	private UserDao userDao;
+
+	@Autowired
+	private NormChangeRecordDao normChangeRecordDao;
 
 	@Autowired
 	private UserInfoDao userInfoDao;
@@ -819,6 +824,15 @@ public class A20251208ServiceImpl implements A20251208Service {
 
 			if (constructionScheduleVO.getSalaryLimit() > Arith.add(constructionSchedulePO.getSalaryLimit(), salaryLimitTotal)) {
 				throw new FLException(120035, "工费浮动已达上限");
+			}
+
+			// 变更记录: 节点工费浮动(平台同步旁路, 与 ConstructionScheduleServiceImpl 同口径)
+			if (constructionSchedulePO.getSalaryLimit() != constructionScheduleVO.getSalaryLimit()) {
+				normChangeRecordDao.save(new NormChangeRecordPO().init(NormChangeRecordPO.TYPE_SCHEDULE_NORM_INT, NormChangeRecordPO.CHANGETYPE_UPDATE_INT, "seiya-platforPm")
+						.orderId(constructionSchedulePO.getOrderId()).refId(constructionSchedulePO.getCsid()).refNo(constructionSchedulePO.getName())
+						.before(String.format("工费浮动: %d", constructionSchedulePO.getSalaryLimit()))
+						.after(String.format("工费浮动: %d", constructionScheduleVO.getSalaryLimit()))
+						.comment("平台同步(NERP)"));
 			}
 
 			constructionSchedulePO.setSalaryLimit(constructionScheduleVO.getSalaryLimit());

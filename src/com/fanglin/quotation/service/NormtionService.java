@@ -79,6 +79,6 @@ public interface NormtionService {
 
 	public int addNormtion(NormtionVO normtionVO, String userId) throws FLException;
 
-	public int updateNormtionForStatus(NormtionVO normtionVO) throws FLException;
+	public int updateNormtionForStatus(NormtionVO normtionVO, String userId) throws FLException;
 
 }
