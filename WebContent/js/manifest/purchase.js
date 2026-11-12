@@ -8,16 +8,13 @@ $(function () {
 		balanceStatus: {}
 	};
 	
-	com.post(api.ds.manifest, {}, function(res){
-    	
-    	$.each(res.purchaseStatus, function(i, v){
+	$.each(constant.inventory().purchase.status.datas, function(i, v){
     		purchase.status[v.key] = v.value;
     	});
-    	
-    	$.each(res.purchaseBalanceStatus, function(i, v){
+
+    	$.each(constant.inventory().purchaseBalance.status.datas, function(i, v){
     		purchase.balanceStatus[v.key] = v.value;
     	});
-    }, null, false);
 
     var displayFunc = (function () {
 

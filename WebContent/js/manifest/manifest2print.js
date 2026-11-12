@@ -12,11 +12,9 @@ jQuery(function($) {
     var manifestTypes = [''];
     var commonInfo = {};
 
-    com.post(api.ds.manifest, {}, function(res) {
-        $.each(res.manifestType, function(i, e) {
-            manifestTypes.push(e.value);
-        });
-    }, null, false);
+    $.each(constant.inventory().manifest.type.datas, function(i, e) {
+        manifestTypes.push(e.value);
+    });
 
     com.post(api.inventory.queryManifestByMid, {
         "manifest.mid": mid

@@ -111,9 +111,9 @@ Condition.addupRule("inventory", {
             validate: null
         },
         dataSource: {
-            url: api.ds.manifest,
+            url: null,
             postData: {},
-            listPath: "accessoriesStatus",
+            listPath: constant.inventory().accessories.status.datas,
             keyPath: "key",
             valuePath: "value"
         }
@@ -143,9 +143,9 @@ Condition.addupRule("inventory", {
             validate: null
         },
         dataSource: {
-            url: api.ds.manifest,
+            url: null,
             postData: {},
-            listPath: "accessoriesType",
+            listPath: constant.inventory().accessories.type.datas,
             keyPath: "key",
             valuePath: "value"
         }
@@ -170,9 +170,9 @@ Condition.addupRule("inventory", {
             validate: null
         },
         dataSource: {
-            url: api.ds.manifest,
+            url: null,
             postData: {},
-            listPath: "occessoriesStatus",
+            listPath: constant.inventory().occessories.status.datas,
             keyPath: "key",
             valuePath: "value"
         }
@@ -186,9 +186,9 @@ Condition.addupRule("inventory", {
             validate: null
         },
         dataSource: {
-            url: api.ds.manifest,
+            url: null,
             postData: {},
-            listPath: "occessoriesisEnter",
+            listPath: constant.inventory().occessories.isEnter.datas,
             keyPath: "key",
             valuePath: "value"
         }
@@ -202,9 +202,9 @@ Condition.addupRule("inventory", {
             validate: null
         },
         dataSource: {
-            url: api.ds.manifest,
+            url: null,
             postData: {},
-            listPath: "occessoriesisLift",
+            listPath: constant.inventory().occessories.isLift.datas,
             keyPath: "key",
             valuePath: "value"
         }
@@ -275,9 +275,9 @@ Condition.addupRule("inventory", {
             validate: null
         },
         dataSource: {
-            url: api.ds.manifest,
+            url: null,
             postData: {},
-            listPath: "purchaseStatus",
+            listPath: constant.inventory().purchase.status.datas,
             keyPath: "key",
             valuePath: "value"
         }
@@ -291,9 +291,9 @@ Condition.addupRule("inventory", {
             validate: null
         },
         dataSource: {
-            url: api.ds.manifest,
+            url: null,
             postData: {},
-            listPath: "purchaseBalanceStatus",
+            listPath: constant.inventory().purchaseBalance.status.datas,
             keyPath: "key",
             valuePath: "value"
         }
@@ -336,9 +336,9 @@ Condition.addupRule("inventory", {
             validate: null
         },
         dataSource: {
-            url: api.ds.manifest,
+            url: null,
             postData: {},
-            listPath: "manifestType",
+            listPath: constant.inventory().manifest.type.datas,
             keyPath: "key",
             valuePath: "value"
         }
@@ -352,9 +352,9 @@ Condition.addupRule("inventory", {
             validate: null
         },
         dataSource: {
-            url: api.ds.manifest,
+            url: null,
             postData: {},
-            listPath: "manifestStatus",
+            listPath: constant.inventory().manifest.status.datas,
             keyPath: "key",
             valuePath: "value"
         }

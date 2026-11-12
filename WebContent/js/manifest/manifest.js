@@ -6,15 +6,13 @@ $(function() {
         status: {}
     };
 
-    com.post(api.ds.manifest, {}, function(res) {
-        $.each(res.manifestType, function(i, v) {
-            manifest.manifestType.push(v.value);
-        });
+    $.each(constant.inventory().manifest.type.datas, function(i, v) {
+        manifest.manifestType.push(v.value);
+    });
 
-        $.each(res.manifestStatus, function(i, v) {
-            manifest.status[v.key] = v.value;
-        });
-    }, null, false);
+    $.each(constant.inventory().manifest.status.datas, function(i, v) {
+        manifest.status[v.key] = v.value;
+    });
 
     var displayFunc = (function() {
 

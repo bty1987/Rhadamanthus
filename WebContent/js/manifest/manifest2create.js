@@ -22,9 +22,7 @@ jQuery(function ($) {
         manifest.storehouses = res.storehouses;
     }, null, false);
 
-    com.post(api.ds.manifest, {}, function (res) {
-        manifest.items.manifestType.bindData(res.createManifestTypes, "key", "value");
-    }, null, false);
+    manifest.items.manifestType.bindData(constant.inventory().manifest.createType.datas, "key", "value");
 
     com.post(api.inventory.queryManifestTemplate, {}, function (res) {
         manifest.items.manifestTemplate.bindData(res.manifestTemplates, 'mtid', 'name');

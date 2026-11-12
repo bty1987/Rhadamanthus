@@ -73,10 +73,7 @@ $(function() {
                         'margin-right': '5px'
                     }).addClass('hide');
 
-                    com.post(api.ds.manifest, {}, function(res) {
-
-                        $selectCtype.bindData(res.priceTypes, 'key', 'value');
-                    });
+                    $selectCtype.bindData(constant.data().price.ctype.datas, 'key', 'value');
 
                     var $btnInput = $('<input></input>').css({
                         'width': '100px',

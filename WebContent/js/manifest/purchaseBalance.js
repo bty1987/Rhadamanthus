@@ -7,16 +7,13 @@
         balanceStatus: {},
     };
 
-    com.post(api.ds.manifest, {}, function(res) {
+    $.each(constant.inventory().purchase.status.datas, function(i, v) {
+        purchaseBalance.status[v.key] = v.value;
+    });
 
-        $.each(res.purchaseStatus, function(i, v) {
-            purchaseBalance.status[v.key] = v.value;
-        });
-
-        $.each(res.purchaseBalanceStatus, function(i, v) {
-            purchaseBalance.balanceStatus[v.key] = v.value;
-        });
-    }, null, false);
+    $.each(constant.inventory().purchaseBalance.status.datas, function(i, v) {
+        purchaseBalance.balanceStatus[v.key] = v.value;
+    });
 
     var displayFunc = (function() {
 

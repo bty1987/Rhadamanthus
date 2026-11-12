@@ -632,9 +632,9 @@ Condition.addupRule("data", {
             validate: null
         },
         dataSource: {// 从后台取数据的各种配置
-            url: api.ds.manifest,
+            url: null,
             postData: {},
-            listPath: "statusType",
+            listPath: constant.data().goods.status.datas,
             keyPath: "key",
             valuePath: "value"
         }

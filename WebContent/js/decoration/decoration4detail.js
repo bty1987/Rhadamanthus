@@ -433,10 +433,7 @@ jQuery(function($) {
     decorationActivity.types = constant.information().awardStock.type.keys;
     salesActivityItem.salesActivityItemType = constant.sales().salesActivityItem.type.keys;
 
-    com.post(api.ds.manifest, {}, function(res) {
-
-        salesActivityItem.salesActivityItemState = res.salesActivityItemType.split("key", "value");
-    }, null, false);
+    salesActivityItem.salesActivityItemState = constant.sales().salesActivityItem.state.keys;
 
     com.post(api.data.queryConstructionNode, {}, function(res) {
 

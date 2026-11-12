@@ -50,11 +50,6 @@ $.extend(api, {
             demo: true,
             cache: "jsondata"
         },
-        manifest: {
-            url: "ds/manifest.json",
-            demo: true,
-            cache: "jsonmanifest"
-        },
         quotation: {
             url: "ds/quotation.json",
             demo: true,

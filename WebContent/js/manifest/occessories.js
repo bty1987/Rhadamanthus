@@ -40,15 +40,14 @@ $(function() {
         pageType: params.urlLoadParams.type,
     };
 
-    com.post(api.ds.manifest, {}, function(res) {
+    var occcessoriesConstant = constant.inventory().occessories;
 
-        occessories.status = res.occessoriesStatus.split("key", "value");
-        occessories.isEnter = res.occessoriesisEnter.split("key", "value");
-        occessories.isLift = res.occessoriesisLift.split("key", "value");
-        occessories.isExceed = res.occessoriesisExceed.split("key", "value");
-        occessories.isAttic = res.occessoriesisAttic.split("key", "value");
-        occessories.loadFloor = res.occessoriesloadFloor.split("key", "value");
-    }, null, false);
+    occessories.status = occcessoriesConstant.status.keys;
+    occessories.isEnter = occcessoriesConstant.isEnter.keys;
+    occessories.isLift = occcessoriesConstant.isLift.keys;
+    occessories.isExceed = occcessoriesConstant.isExceed.keys;
+    occessories.isAttic = occcessoriesConstant.isAttic.keys;
+    occessories.loadFloor = occcessoriesConstant.loadFloor.keys;
 
     var url = api.inventory.pageOccessories;
     var conditions = ['inventory-accessories-orderId', 'inventory-occessories-no', 'inventory-accessories-createrName', 'inventory-occessories-status', 'inventory-occessories-isEnter', 'inventory-occessories-isLift', 'inventory-occessories-supplier', 'inventory-accessories-createTime', ];

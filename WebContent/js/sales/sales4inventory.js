@@ -31,12 +31,9 @@ $(function() {
     var _option = {};
     salesInventory.items.items.empty();
 
-    com.post(api.ds.manifest, {}, function(res) {
-
-        salesInventory.manifestType = res.manifestType.split("key", "value");
-        salesInventory.manifestStatus = res.manifestStatus.split("key", "value");
-        salesInventory.purchaseStatus = res.purchaseStatus.split("key", "value");
-    }, null, false);
+    salesInventory.manifestType = constant.inventory().manifest.type.keys;
+    salesInventory.manifestStatus = constant.inventory().manifest.status.keys;
+    salesInventory.purchaseStatus = constant.inventory().purchase.status.keys;
 
     var displayFuncSalesManifest = (function() {
 

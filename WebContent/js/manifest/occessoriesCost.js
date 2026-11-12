@@ -34,10 +34,8 @@ jQuery(function($) {
         com.popup4mini("#miniPopUp", "#addOccessoriesCost", "添加");
     });
 
-    com.post(api.ds.manifest, {}, function(res) {
-        occessories.items.type.bindData(res.occessoriesisCostType, "key", "value", false);
-        occessories.types = res.occessoriesisCostType.split("key", "value");
-    }, null, false);
+    occessories.items.type.bindData(constant.inventory().occessories.isCostType.datas, "key", "value", false);
+    occessories.types = constant.inventory().occessories.isCostType.keys;
 
     showlist();
 
