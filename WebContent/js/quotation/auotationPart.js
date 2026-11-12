@@ -215,14 +215,21 @@ jQuery(function($) {
             materialAccount: com.focusPage("#auMaterialAccount", "#auotationPartContent"),
             comment: com.focusPage("#auComment", "#auotationPartContent"),
 
-            functionAreaList: com.focusPage("#auFunctionAreaList", "#auotationPartContent")
+            functionAreaList: com.focusPage("#auFunctionAreaList", "#auotationPartContent"),
+
+            addReduceAccountModal: com.focusPage("#auAddReduceAccountModal", "#auotationPartContent"),
+            arAccountName: com.focusPage("#auArAccountName", "#auotationPartContent"),
+            arAccountDiscount: com.focusPage("#auArAccountDiscount", "#auotationPartContent"),
+            arAccountManageDiscount: com.focusPage("#auArAccountManageDiscount", "#auotationPartContent"),
+            arAccountTaxDiscount: com.focusPage("#auArAccountTaxDiscount", "#auotationPartContent")
         },
 
         btns: {
             updateBtn: com.focusPage("#auUpdateBtn", "#auotationPartContent"),
             refreshBtn: com.focusPage("#auRefreshBtn", "#auotationPartContent"),
             calculateBtn: com.focusPage("#auCalculateBtn", "#auotationPartContent"),
-            summaryToggleBtn: com.focusPage("#auSummaryToggleBtn", "#auotationPartContent")
+            summaryToggleBtn: com.focusPage("#auSummaryToggleBtn", "#auotationPartContent"),
+            arSaveAccountBtn: com.focusPage("#auArSaveAccountBtn", "#auotationPartContent")
         }
     };
 
@@ -819,14 +826,17 @@ jQuery(function($) {
             _taxPrice = basic.taxPrice * (basic.manageDiscount == 1 ? basic.discount / 10 : 1);
         }
 
-        if ([0, 1].indexOf(basic.type) != -1) { // 半包/整装
+        // 公式分支按装修单类型判断(拍板 2026-11-12: 不走决算记录 type): {0,1}=折扣式, 2=满减基数取模式
+        var _decorationType = auotation.decoration ? auotation.decoration.type : -1;
+
+        if ([0, 1].indexOf(_decorationType) != -1) { // 半包/整装
             contartval = (basic.disPrice + basic.addDisCalPrice * flag - basic.reduceDisCalPrice * flag) * basic.dd / 10
                 + (basic.undisPrice + basic.addUndisCalPrice * flag - basic.reduceUndisCalPrice * flag)
                 + basic.trafficPrice + _managePrice + basic.addManagePrice * flag - basic.reduceManagePrice * flag
                 + _taxPrice + basic.addTaxPrice * flag - basic.reduceTaxPrice * flag;
         }
 
-        if (basic.type == 2) { // 满减
+        if (_decorationType == 2 && basic.base > 0) { // 满减(折扣基数须已维护, 未维护时合同额按0展示)
             contartval = (beforeTotal - (beforeTotal) % basic.base) * (basic.discount / 10) + (beforeTotal) % basic.base
                 + _managePrice + basic.addManagePrice * flag - basic.reduceManagePrice * flag
                 + _taxPrice + basic.addTaxPrice * flag - basic.reduceTaxPrice * flag;
@@ -1062,6 +1072,7 @@ jQuery(function($) {
                     discountLabel: item.discount == 1 ? "打折" : (item.discount == 0 ? "不打折" : "-"),
                     source: v.type == 0 ? "增减-增" : (v.type == 1 ? "增减-减" : "增减-漏"),
                     state: stateName,
+                    arId: v.arId,
                     content: "增减单#" + v.arId
                 });
             });
@@ -1142,7 +1153,21 @@ jQuery(function($) {
             $('<td></td>').html(Math.round(_total)).addClass('blue').appendTo($tr);
             $('<td></td>').html(r.discountLabel).appendTo($tr);
             $('<td></td>').html(r.source).appendTo($tr);
-            $('<td></td>').html(r.state ? (r.source + ' ' + r.state + ' ' + r.content) : com.checkNull(r.content, '-')).appendTo($tr);
+
+            var $stateTd = $('<td></td>').html(r.state ? (r.source + ' ' + r.state + ' ' + r.content) : com.checkNull(r.content, '-'));
+
+            // 增减行维护入口: 单级决算折扣(accountDiscount/accountManageDiscount/accountTaxDiscount)
+            if (r.subtype == 2 && r.arId != null) {
+
+                $('<button></button>').addClass('btn btn-minier btn-yellow pull-right').html('折扣')
+                    .click(function() {
+
+                        openArAccountModal(r.arId);
+                    })
+                    .appendTo($stateTd);
+            }
+
+            $stateTd.appendTo($tr);
 
             $tbody.append($tr);
         });
@@ -1553,6 +1578,72 @@ jQuery(function($) {
         var _show = auotation.items.summaryZone.is(":visible");
 
         $(this).html(_show ? "收起汇总" : "展开汇总");
+    });
+
+    // ==================== 增减单决算折扣维护 ====================
+    // 入口=增减行"折扣"按钮, 走既有 updateAddReduceForAccount(增减单明细弹窗"决算"按钮同款接口);
+    // accountDiscount 存 0 表示未维护(计算时回退单级/全单折扣), 开关勾选=1(参与决算折扣折算)
+
+    var arAccount = {
+        arid: null
+    };
+
+    function openArAccountModal(arid) {
+
+        var _target = null;
+
+        $.each(auotation.addReduces, function(i, v) {
+
+            if (v.arId == arid) {
+                _target = v;
+                return false;
+            }
+        });
+
+        if (!_target) {
+            com.showAlert(com.warning, "增减单数据不存在");
+            return false;
+        }
+
+        arAccount.arid = arid;
+
+        auotation.items.arAccountName.html("增减单#" + arid + " " + (_target.type == 0 ? "增项" : _target.type == 1 ? "减项" : "漏项"));
+        auotation.items.arAccountDiscount.val(com.checkNull(_target.accountDiscount, 0));
+        auotation.items.arAccountManageDiscount.prop("checked", _target.accountManageDiscount == 1);
+        auotation.items.arAccountTaxDiscount.prop("checked", _target.accountTaxDiscount == 1);
+
+        auotation.items.addReduceAccountModal.modal("show");
+
+        return true;
+    }
+
+    auotation.btns.arSaveAccountBtn.click(function() {
+
+        if (com.validate("auAddReduceAccountModal"))
+            return false;
+
+        com.showConfirm("确定更新该增减单的决算折扣吗?", function() {
+
+            var options = {
+                "addReduce.arId": arAccount.arid,
+                "addReduce.orderId": auotation.orderId,
+                "addReduce.accountDiscount": auotation.items.arAccountDiscount.val(),
+                "addReduce.accountManageDiscount": auotation.items.arAccountManageDiscount.prop("checked") ? 1 : 0,
+                "addReduce.accountTaxDiscount": auotation.items.arAccountTaxDiscount.prop("checked") ? 1 : 0
+            };
+
+            com.post(api.quotation.updateAddReduceForAccount, options, function(res) {
+
+                com.showAlert(com.info, "操作成功");
+                auotation.items.addReduceAccountModal.modal("hide");
+
+                // 单级折扣已变: 重算增减汇总并联动刷新
+                queryAddReduce();
+                renderSummary();
+                accountSuper();
+                renderFunctionAreas();
+            });
+        });
     });
 
 });

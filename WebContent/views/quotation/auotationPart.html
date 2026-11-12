@@ -123,12 +123,62 @@
     <div class="widget-container-span col-md-12">
         <div class="widget-box transparent">
             <div class="widget-header">
-                <h4><strong>决算报价明细</strong><small style="padding-left: 10px;">(报价 + 扩展 + 增减 按功能区归组; 行小计 = 单价×量, 区合计为展示口径, 公式输入以汇总区为准; 保存决算时随主记录写入决算明细快照)</small></h4>
+                <h4><strong>决算报价明细</strong><small style="padding-left: 10px;">(报价 + 扩展 + 增减 按功能区归组; 行小计 = 单价×量, 区合计为展示口径, 公式输入以汇总区为准; 增减行"折扣"按钮维护该单决算折扣; 保存决算时随主记录写入决算明细快照)</small></h4>
             </div>
             <div class="widget-body">
                 <div class="widget-body-inner" style="padding: 10px;">
                     <div id="auFunctionAreaList"></div>
                 </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 增减单决算折扣维护弹窗 -->
+<div class="modal fade" id="auAddReduceAccountModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content col-md-12">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">
+                    <span>&times;</span><span class="sr-only">Close</span>
+                </button>
+                <h4 class="modal-title">决算折扣 <b id="auArAccountName" class="blue"></b></h4>
+            </div>
+
+            <div class="modal-body">
+                <form class="form-horizontal">
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right" for="auArAccountDiscount">决算折扣</label>
+                        <div class="col-sm-9">
+                            <input type="text" id="auArAccountDiscount" class="col-xs-10 col-sm-5 v_float_3"/>
+                            <small class="grey">0 = 未维护(计算时回退单级/全单折扣)</small>
+                        </div>
+                    </div>
+                    <div class="space-4"></div>
+
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right" for="auArAccountManageDiscount">管理费折扣</label>
+                        <div class="col-sm-9" style="padding-top: 7px;">
+                            <input type="checkbox" id="auArAccountManageDiscount" class="ace ace-switch ace-switch-5">
+                            <span class="lbl">勾选 = 管理费参与决算折扣折算</span>
+                        </div>
+                    </div>
+                    <div class="space-4"></div>
+
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right" for="auArAccountTaxDiscount">税金折扣</label>
+                        <div class="col-sm-9" style="padding-top: 7px;">
+                            <input type="checkbox" id="auArAccountTaxDiscount" class="ace ace-switch ace-switch-5">
+                            <span class="lbl">勾选 = 税金参与决算折扣折算</span>
+                        </div>
+                    </div>
+                    <div class="space-4"></div>
+                </form>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" id="auArSaveAccountBtn" class="btn btn-primary">保存</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
             </div>
         </div>
     </div>
