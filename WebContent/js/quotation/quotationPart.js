@@ -1189,7 +1189,7 @@ var QuotationDetail = (function() {
             _manageDiscount = _manageDiscount < 0 ? 0 : _manageDiscount > 1 ? 1 : _manageDiscount;
             _manageDiscountValue = _manageDiscountValue < 0 ? 0 : _manageDiscountValue > 1 ? 1 : _manageDiscountValue;
 
-            if (!prefer.prompt && (_discount < _discountValue || _managePrice < managePrefer || _manageDiscount < _manageDiscountValue)) {
+            if (!prefer.prompt && (_discount < _discountValue || _managePrice < managePrefer || utils.accAdd(managePrefer || 0, advancePrefer || 0) > _managePrice || _manageDiscount < _manageDiscountValue)) {
                 return false;
             }
 
@@ -1200,6 +1200,11 @@ var QuotationDetail = (function() {
 
             if (_managePrice < managePrefer) {
                 com.showAlert(com.warning, "管理优惠不能大于管理费");
+                return false;
+            }
+
+            if (utils.accAdd(managePrefer || 0, advancePrefer || 0) > _managePrice) {
+                com.showAlert(com.warning, "管理优惠与特批优惠合计不能大于管理费");
                 return false;
             }
 
@@ -2099,10 +2104,12 @@ var QuotationDetail = (function() {
                 }
 
                 if (!quo.quotationPreferControl(presignProduce, perfer)) {
+                    quo.oldQuotationPreferData();
                     return false;
                 }
 
-                if (parseFloat(advancePrefer) > quo.oldPrefer.advancePrefer && parseFloat(advancePrefer) > quo.protation.advanceProfit) {
+                // 审批条件：特批优惠较预签库存原值或本次提交前旧值增加，需要走审批流程（锚定库存原值，防止校验失败后的中间状态绕过审批）
+                if (parseFloat(advancePrefer) > parseFloat(quo.protation.advanceProfit) || parseFloat(advancePrefer) > parseFloat(quo.oldPrefer.advancePrefer)) {
 
                     quo.currentSubmitType = 0;
 

@@ -363,6 +363,19 @@ public class ProtationServiceImpl implements ProtationService {
 			throw new FLException(200046, "预签不存在");
 		}
 
+		// 管理优惠与特批优惠合计不能大于管理费(管理费取本次提交与库内值孰高,兜住直存通道)
+		long manageProfit = protationVO.getManageProfit() == null ? 0 : protationVO.getManageProfit();
+		long advanceProfit = protationVO.getAdvanceProfit() == null ? 0 : protationVO.getAdvanceProfit();
+		long managePrice = protationPO.getManagePrice();
+
+		if (protationVO.getManagePrice() != null && protationVO.getManagePrice() > managePrice) {
+			managePrice = protationVO.getManagePrice();
+		}
+
+		if (manageProfit + advanceProfit > managePrice) {
+			throw new FLException(200051, "管理优惠与特批优惠合计不能大于管理费");
+		}
+
 		DecorationPO decorationPO = checkDecoration(protationPO.getOrderId());
 
 		protationPO.setTotalCost(protationVO.getTotalCost());

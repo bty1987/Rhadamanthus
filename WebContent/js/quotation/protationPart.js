@@ -832,6 +832,7 @@ var protationPart = (function() {
             // 校验管理优惠不能大于管理费
             if (quo.basicParams["protation.manageProfit"] > quo.basicParams["protation.managePrice"]) {
                 com.showAlert(com.warning, "管理优惠不能大于管理费");
+                quote.oldProtationData();
                 return false;
             }
 
@@ -841,8 +842,15 @@ var protationPart = (function() {
                 return false;
             }
 
-            // 审批条件：只检查特殊优惠（advanceProfit）是否增加
-            if (parseFloat(quo.basicParams["protation.advanceProfit"]) > parseFloat(quo.oldProtation.advanceProfit)) {
+            // 校验管理优惠与特批优惠合计不能大于管理费
+            if (utils.accAdd(parseFloat(quo.basicParams["protation.manageProfit"] || 0), parseFloat(quo.basicParams["protation.advanceProfit"] || 0)) > parseFloat(quo.basicParams["protation.managePrice"])) {
+                com.showAlert(com.warning, "管理优惠与特批优惠合计不能大于管理费");
+                quote.oldProtationData();
+                return false;
+            }
+
+            // 审批条件：特殊优惠（advanceProfit）较预签库存原值或本次提交前旧值增加，需要走审批流程
+            if (parseFloat(quo.basicParams["protation.advanceProfit"]) > parseFloat(quo.protation.advanceProfit) || parseFloat(quo.basicParams["protation.advanceProfit"]) > parseFloat(quo.oldProtation.advanceProfit)) {
                 // 特殊优惠增加，加载审批人后需要审批
                 quote.loadApprovers(0, function() {
                     com.focusPage("#approveModal").modal("show");
@@ -883,6 +891,13 @@ var protationPart = (function() {
 
             // 重新计算费用，验证优惠金额是否合理
             if (!quo.calculateQuoFees()) {
+                quote.oldProtationData();
+                return false;
+            }
+
+            // 校验管理优惠与特批优惠合计不能大于管理费
+            if (utils.accAdd(parseFloat(quo.basicParams["protation.manageProfit"] || 0), parseFloat(quo.basicParams["protation.advanceProfit"] || 0)) > parseFloat(quo.basicParams["protation.managePrice"])) {
+                com.showAlert(com.warning, "管理优惠与特批优惠合计不能大于管理费");
                 quote.oldProtationData();
                 return false;
             }
