@@ -21,6 +21,7 @@ ACTION_WHITELIST = {
     "UserSalaryImport", "WorkerSalaryImport", "AccessoriesTypeImport",
     "ColorImport", "FormatImport", "GoodsImport", "MaterialModuleImport",
     "PriceImport", "PriceImportDelete", "QuotationItemImport",
+    "A20260303Action",  # NERP 外部同步接口(2026-11-09 登记: 参数解析需专用业务反馈)
 }
 
 def read_text(path):

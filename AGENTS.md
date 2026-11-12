@@ -112,7 +112,7 @@ LogUtils.log(userId, "操作描述", "操作模块", 对象ID);
   - 业务异常一律上抛,由拦截器(`CommonInterceptor`/`AccessInterceptor`/`LoginInterceptor`)统一捕获并转 JSON
   - Action 方法体内**禁止 `catch (Exception)`**,异常一律上抛由拦截器接管
 - **豁免:仅登录/认证/第三方回调类 Action 允许本地 catch**
-  - 当前豁免清单:`LoginAction`/`DoginAction`/`VerifyCodeAction`/`WMCodeAction`/`FactoryAction`/`LoginInfoAction`/`SecretAction`/`PhoneCallAction`/`PostarAction`/`SwiftpassAction`/`UploadAction`/`DingTalkCallbackAction`/`OssConfigAction`/`imports` 模块导入 Action(`UserSalaryImport`/`WorkerSalaryImport`/`AccessoriesTypeImport`/`ColorImport`/`FormatImport`/`GoodsImport`/`MaterialModuleImport`/`PriceImport`/`PriceImportDelete`/`QuotationItemImport`)
+  - 当前豁免清单:`LoginAction`/`DoginAction`/`VerifyCodeAction`/`WMCodeAction`/`FactoryAction`/`LoginInfoAction`/`SecretAction`/`PhoneCallAction`/`PostarAction`/`SwiftpassAction`/`UploadAction`/`DingTalkCallbackAction`/`OssConfigAction`/`imports` 模块导入 Action(`UserSalaryImport`/`WorkerSalaryImport`/`AccessoriesTypeImport`/`ColorImport`/`FormatImport`/`GoodsImport`/`MaterialModuleImport`/`PriceImport`/`PriceImportDelete`/`QuotationItemImport`)/`A20260303Action`(NERP 外部同步接口)
   - 豁免理由:登录接口无 authentication、第三方回调不走标准拦截器栈,需本地精细控制错误响应;导入类 Action 文件解析失败需专用业务反馈("导入文件错误"而非系统通用提示),本地 catch 必须分层——`catch (FLException)` 透传保留业务错误码 + `catch (Exception)` 包装 `FLException(110009, "导入文件错误", e)` 带 cause,所有路径以 FLException 收尾,禁止吞异常/return 兜底
   - 本地 catch 时兜底消息统一用 `setErrorMsg("系统繁忙,请稍后重试")`(码 `110000`),禁止用"系统处理问题"等旧文案
 - **新增普通业务 Action 一律走 `throws FLException` 风格**,如需本地 catch 须在 Code Review 时说明理由
