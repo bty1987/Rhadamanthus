@@ -640,8 +640,8 @@ public class ManifestServiceImpl implements ManifestService {
 				throw new FLException(260024, "辅料单状态不可操作");
 			}
 
-			// 出库闸: 配送单已标记需分配但未分配厂商的不可出库(自配单豁免, 存量默认自配行为不变)
-			if (accessoriesPO.getDeliveryStatus() == AccessoriesPO.DELIVERY_YES_INT && accessoriesPO.getAssignFlag() == AccessoriesPO.ASSIGNFLAG_MARKED_INT && accessoriesPO.getSupplier() == null) {
+			// 出库闸: 需配送单未分配厂商不可出库(0自配送天然豁免, 2已分配必有厂商)
+			if (accessoriesPO.getAssignFlag() == AccessoriesPO.ASSIGNFLAG_MARKED_INT && accessoriesPO.getSupplier() == null) {
 				throw new FLException(260094, "辅料单需分配厂商后方可出库");
 			}
 
@@ -723,8 +723,7 @@ public class ManifestServiceImpl implements ManifestService {
 				throw new FLException(260023, "辅料单不存在");
 			}
 
-			// 出货/到货(自配)/已配送(配送)均可退货
-			if (accessoriesPO.getStatus() != AccessoriesPO.STATUS_BATCHOUT_INT && accessoriesPO.getStatus() != AccessoriesPO.STATUS_DELIVER_INT && accessoriesPO.getStatus() != AccessoriesPO.STATUS_DELIVERED_INT) {
+			if (accessoriesPO.getStatus() != AccessoriesPO.STATUS_BATCHOUT_INT && accessoriesPO.getStatus() != AccessoriesPO.STATUS_DELIVER_INT) {
 				throw new FLException(260024, "辅料单状态不可操作");
 			}
 

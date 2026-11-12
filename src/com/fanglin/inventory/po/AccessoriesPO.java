@@ -71,17 +71,14 @@ public class AccessoriesPO implements Serializable {
 
 	public static final short STATUS_BALANCED_INT = 8; // 已结算
 
-	public static final short STATUS_DELIVERED_INT = 9; // 已配送（配送单确认配送后, 自配单走6到货）
+	// 配送执行线(与status单据流两条线): 0自配送 → 1需配送 → 2已分配 → 3已到货(扫码确认, 不推status)
+	public static final short ASSIGNFLAG_INIT_INT = 0; // 自配送
 
-	public static final short ASSIGNFLAG_INIT_INT = 0; // 未标记
-
-	public static final short ASSIGNFLAG_MARKED_INT = 1; // 需分配（分配厂商/出库闸依据）
+	public static final short ASSIGNFLAG_MARKED_INT = 1; // 需配送（配送单, 待分配厂商, 出库闸依据）
 
 	public static final short ASSIGNFLAG_ASSIGNED_INT = 2; // 已分配（分配厂商后写入）
 
-	public static final short DELIVERY_NO_INT = 0; // 自配
-
-	public static final short DELIVERY_YES_INT = 1; // 配送
+	public static final short ASSIGNFLAG_RECEIVED_INT = 3; // 已到货（扫码确认收货, 配送执行线终点）
 
 	private long aid;
 
@@ -123,7 +120,7 @@ public class AccessoriesPO implements Serializable {
 
 	private short assignFlag; // 分配标记: 0未标记 1需分配
 
-	private short deliveryStatus; // 配送状态: 0自配 1配送
+	private short deliveryStatus; // 已废弃(语义并入assignFlag配送执行线), 列保留免DDL, 代码不再读写
 
 	private long total;
 

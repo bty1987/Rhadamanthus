@@ -123,11 +123,12 @@ public class AccessoriesItemServiceImpl implements AccessoriesItemService {
 	@Override
 	public short queryAoodsDeliveryByCaid(Long caid) {
 
-		if (caid == null || caid == 0) return AccessoriesPO.DELIVERY_NO_INT;
+		// 辅材档案配送标识快照(0自配/1需配送), 与主单assignFlag前两态同构
+		if (caid == null || caid == 0) return AccessoriesPO.ASSIGNFLAG_INIT_INT;
 
 		AoodsPO aoodsPO = aoodsDao.get(caid.longValue());
 
-		return aoodsPO == null ? AccessoriesPO.DELIVERY_NO_INT : aoodsPO.getDeliveryFlag();
+		return aoodsPO == null ? AccessoriesPO.ASSIGNFLAG_INIT_INT : aoodsPO.getDeliveryFlag();
 	}
 
 	@Override

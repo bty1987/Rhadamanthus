@@ -44,7 +44,7 @@ public class AccessoriesVO implements Serializable {
 
 	private Short assignFlag; // 分配标记: 0未标记 1需分配
 
-	private Short deliveryStatus; // 配送状态: 0自配 1配送
+	private Short deliveryStatus; // 已废弃(语义并入assignFlag配送执行线), 兼容老调用方传参(服务端忽略)
 
 	private Long total;
 

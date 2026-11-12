@@ -233,7 +233,7 @@ public class AccessoriesServiceImpl implements AccessoriesService {
 			// 项配送标识: 按关联辅材档案快照(data.aoods.deliveryFlag)
 			accessoriesItemPO.setDeliveryFlag(accessoriesItemService.queryAoodsDeliveryByCaid(accessoriesItemVO.getCaid()));
 
-			if (accessoriesItemPO.getDeliveryFlag() == AccessoriesPO.DELIVERY_YES_INT) {
+			if (accessoriesItemPO.getDeliveryFlag() == AccessoriesPO.ASSIGNFLAG_MARKED_INT) {
 				hasDeliveryItem = true;
 			}
 
@@ -257,8 +257,8 @@ public class AccessoriesServiceImpl implements AccessoriesService {
 			}
 		}
 
-		// 主单配送状态: 创建弹窗值优先, 未传(老调用方/app)按项推导兜底(存在需配送项即配送)
-		accessoriesPO.setDeliveryStatus(accessoriesVO.getDeliveryStatus() != null ? accessoriesVO.getDeliveryStatus() : (hasDeliveryItem ? AccessoriesPO.DELIVERY_YES_INT : AccessoriesPO.DELIVERY_NO_INT));
+		// 主单配送执行线: 创建弹窗值优先, 未传(老调用方/app)按项推导兜底(存在需配送项即需配送)
+		accessoriesPO.setAssignFlag(accessoriesVO.getAssignFlag() != null ? accessoriesVO.getAssignFlag() : (hasDeliveryItem ? AccessoriesPO.ASSIGNFLAG_MARKED_INT : AccessoriesPO.ASSIGNFLAG_INIT_INT));
 
 		accessoriesPO.setCharge(accessoriesItemService.refreshAccessoriesCharge(accessoriesPO));
 
@@ -494,7 +494,7 @@ public class AccessoriesServiceImpl implements AccessoriesService {
 		return 0;
 	}
 
-	// 标记/取消需分配（属性行为; 已结算单不可标）
+	// 配送执行线标记（属性行为, 与status单据流两条线）: target=0/1 自配送↔需配送切换(仅初始/预出, 已分配/已到货不可切); target=3 扫码确认收货(出货后可用, 不推status)
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public int updateAccessoriesForAssign(AccessoriesVO accessoriesVO) throws FLException {
@@ -505,35 +505,26 @@ public class AccessoriesServiceImpl implements AccessoriesService {
 			throw new FLException(260023, "辅料单不存在");
 		}
 
-		if (accessoriesPO.getStatus() == AccessoriesPO.STATUS_BALANCED_INT) {
-			throw new FLException(260024, "辅料单状态不可操作");
+		Short target = accessoriesVO.getAssignFlag();
+
+		if (target != null && target == AccessoriesPO.ASSIGNFLAG_RECEIVED_INT) {
+
+			// 已到货: 出货(status=2)后才谈得上收货, 且不可重复标记
+			if (accessoriesPO.getStatus() != AccessoriesPO.STATUS_BATCHOUT_INT || accessoriesPO.getAssignFlag() == AccessoriesPO.ASSIGNFLAG_RECEIVED_INT) {
+				throw new FLException(260024, "辅料单状态不可操作");
+			}
+
+			accessoriesPO.setAssignFlag(AccessoriesPO.ASSIGNFLAG_RECEIVED_INT);
+		} else {
+
+			// 自配送/需配送切换: 出库后不可改, 已分配/已到货态不可切
+			if ((accessoriesPO.getStatus() != AccessoriesPO.STATUS_INIT_INT && accessoriesPO.getStatus() != AccessoriesPO.STATUS_ADVANCE_INT)
+					|| accessoriesPO.getAssignFlag() == AccessoriesPO.ASSIGNFLAG_ASSIGNED_INT || accessoriesPO.getAssignFlag() == AccessoriesPO.ASSIGNFLAG_RECEIVED_INT) {
+				throw new FLException(260024, "辅料单状态不可操作");
+			}
+
+			accessoriesPO.setAssignFlag(target != null && target == AccessoriesPO.ASSIGNFLAG_MARKED_INT ? AccessoriesPO.ASSIGNFLAG_MARKED_INT : AccessoriesPO.ASSIGNFLAG_INIT_INT);
 		}
-
-		accessoriesPO.setAssignFlag(accessoriesVO.getAssignFlag() != null && accessoriesVO.getAssignFlag() == AccessoriesPO.ASSIGNFLAG_MARKED_INT ? AccessoriesPO.ASSIGNFLAG_MARKED_INT : AccessoriesPO.ASSIGNFLAG_INIT_INT);
-
-		accessoriesDao.update(accessoriesPO);
-
-		return 0;
-	}
-
-	// 配送/自配切换（属性行为; 出库后不可改: 仅初始/预出可操作）
-	@Override
-	@Transactional(rollbackFor = Exception.class)
-	public int updateAccessoriesForDelivery(AccessoriesVO accessoriesVO) throws FLException {
-
-		AccessoriesPO accessoriesPO = accessoriesDao.get(accessoriesVO.getAid());
-
-		if (accessoriesPO == null) {
-			throw new FLException(260023, "辅料单不存在");
-		}
-
-		List<Short> status = Arrays.asList(AccessoriesPO.STATUS_INIT_INT, AccessoriesPO.STATUS_ADVANCE_INT);
-
-		if (!status.contains(accessoriesPO.getStatus())) {
-			throw new FLException(260024, "辅料单状态不可操作");
-		}
-
-		accessoriesPO.setDeliveryStatus(accessoriesVO.getDeliveryStatus() != null && accessoriesVO.getDeliveryStatus() == AccessoriesPO.DELIVERY_YES_INT ? AccessoriesPO.DELIVERY_YES_INT : AccessoriesPO.DELIVERY_NO_INT);
 
 		accessoriesDao.update(accessoriesPO);
 
@@ -556,12 +547,7 @@ public class AccessoriesServiceImpl implements AccessoriesService {
 			throw new FLException(260024, "辅料单状态不可操作");
 		}
 
-		// 配送单出货后确认配送=已配送(需配送→已发货→已配送), 自配单保持到货链路
-		if (accessoriesPO.getDeliveryStatus() == AccessoriesPO.DELIVERY_YES_INT) {
-			accessoriesPO.setStatus(AccessoriesPO.STATUS_DELIVERED_INT);
-		} else {
-			accessoriesPO.setStatus(AccessoriesPO.STATUS_DELIVER_INT);
-		}
+		accessoriesPO.setStatus(AccessoriesPO.STATUS_DELIVER_INT);
 		accessoriesPO.setDeliver(userPO);
 		accessoriesPO.setDeliverTime(DateUtil.getDateToTimestamp(new Date()));
 
@@ -570,7 +556,7 @@ public class AccessoriesServiceImpl implements AccessoriesService {
 		return 0;
 	}
 
-	// 结算（到货/已配送态终态化：写结算额/结算人/结算时间，推已结算）
+	// 结算（到货态终态化：写结算额/结算人/结算时间，推已结算）
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public int balanceAccessories(AccessoriesVO accessoriesVO, String userId) throws FLException {
@@ -583,8 +569,7 @@ public class AccessoriesServiceImpl implements AccessoriesService {
 			throw new FLException(260023, "辅料单不存在");
 		}
 
-		// 到货(自配)与已配送(配送)均可结算
-		if (accessoriesPO.getStatus() != AccessoriesPO.STATUS_DELIVER_INT && accessoriesPO.getStatus() != AccessoriesPO.STATUS_DELIVERED_INT) {
+		if (accessoriesPO.getStatus() != AccessoriesPO.STATUS_DELIVER_INT) {
 			throw new FLException(260024, "辅料单状态不可操作");
 		}
 

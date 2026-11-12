@@ -68,10 +68,11 @@ $(function() {
         prop: "supplier.userName",
         clazz: "grey"
     }, {
-        field: "deliveryStatus",
+        field: "assignFlag",
         name: "配送",
+        // 配送执行线四态: 0自配送/1需配送/2已分配/3已到货(扫码确认, 与status单据流两条线)
         prop: function (v) {
-            return v.deliveryStatus == 1 ? "配送" : "自配";
+            return v.assignFlag == 1 ? "需配送" : (v.assignFlag == 2 ? "已分配" : (v.assignFlag == 3 ? "已到货" : "自配"));
         },
         clazz: "grey"
     }, {
@@ -93,15 +94,9 @@ $(function() {
     }, {
         field: "status",
         name: "状态",
-        // 配送单按配送流程显示: 需配送(0/1)→已发货(2)→已配送(9,字典), 其余走状态字典; 自配单全走字典
-        prop: function (v) {
-            if (v.deliveryStatus == 1) {
-                if (v.status == 0 || v.status == 1) return "需配送";
-                if (v.status == 2) return "已发货";
-            }
-            return accessories.status[v.status];
-        },
+        prop: "status",
         clazz: "red",
+        dataset: constant.inventory().accessories.status.keys,
     }, {
         field: "type",
         name: "类型",
@@ -134,7 +129,7 @@ $(function() {
             return false;
         },
         show: function (v) {
-            return (v.status == constant.inventory().accessories.STATUS_RETURN_INT || v.status == constant.inventory().accessories.STATUS_DELIVER_INT || v.status == constant.inventory().accessories.STATUS_DELIVERED_INT || (accessories.pageType == "advance" && v.status == constant.inventory().accessories.STATUS_BATCHOUT_INT))
+            return (v.status == constant.inventory().accessories.STATUS_RETURN_INT || v.status == constant.inventory().accessories.STATUS_DELIVER_INT || (accessories.pageType == "advance" && v.status == constant.inventory().accessories.STATUS_BATCHOUT_INT))
         }
     }, {
         name: "预出",
@@ -195,7 +190,7 @@ $(function() {
             return false;
         },
         show: function (v) {
-            return (v.status != constant.inventory().accessories.STATUS_DELIVER_INT && v.status != constant.inventory().accessories.STATUS_DELIVERED_INT)
+            return (v.status != constant.inventory().accessories.STATUS_DELIVER_INT)
         }
     }, {
         name: "拒绝",
@@ -232,7 +227,7 @@ $(function() {
             return false;
         },
         show: function (v) {
-            return (v.status == constant.inventory().accessories.STATUS_DELIVER_INT || v.status == constant.inventory().accessories.STATUS_DELIVERED_INT || (accessories.pageType != "advance" && v.status == constant.inventory().accessories.STATUS_DELIVER_INT))
+            return (v.status == constant.inventory().accessories.STATUS_DELIVER_INT || (accessories.pageType != "advance" && v.status == constant.inventory().accessories.STATUS_DELIVER_INT))
         }
     }, {
         name: "打印",
@@ -243,20 +238,17 @@ $(function() {
             return false;
         },
         show: function (v) {
-            return (v.status == constant.inventory().accessories.STATUS_ADVANCE_INT || v.status == constant.inventory().accessories.STATUS_BATCHOUT_INT || v.status == constant.inventory().accessories.STATUS_DELIVER_INT || v.status == constant.inventory().accessories.STATUS_DELIVERED_INT)
+            return (v.status == constant.inventory().accessories.STATUS_ADVANCE_INT || v.status == constant.inventory().accessories.STATUS_BATCHOUT_INT || v.status == constant.inventory().accessories.STATUS_DELIVER_INT)
         }
     }, {
-        // 配送单=确认配送(置9已配送), 自配单=到货确认(置6); 服务端deliveAccessories按deliveryStatus分支
-        name: function (v) {
-            return v.deliveryStatus == 1 ? "确认配送" : "到货";
-        },
+        name: "到货",
         clazz: "btn-pink",
         handle: function (v) {
             if (v.status != constant.inventory().accessories.STATUS_BATCHOUT_INT) {
                 com.showAlert(com.warning, "辅料单状态不可操作");
                 return false;
             }
-            com.showConfirm(v.deliveryStatus == 1 ? "确认配送?" : "确认到货?", function() {
+            com.showConfirm("确认到货?", function() {
 
                 com.post(api.inventory.deliveAccessories, {
                     "accessories.aid": v.aid
@@ -272,30 +264,6 @@ $(function() {
             return (accessories.pageType != "advance" && v.status == constant.inventory().accessories.STATUS_BATCHOUT_INT)
         }
     }, {
-        // 需分配标记(按钮): 标记后开放分配厂商功能, 配送单标记未分配不可出库(后端闸); 已标记点击取消
-        name: "需分配",
-        clazz: "btn-success",
-        handle: function (v) {
-
-            com.post(api.inventory.updateAccessoriesForAssign, {
-                "accessories.aid": v.aid,
-                // 按钮式切换: 按当前标记取反(searcher普通按钮handle第二参为$(this)恒truthy, 不可用作状态)
-                "accessories.assignFlag": v.assignFlag == 1 ? 0 : 1
-            }, function() {
-
-                com.showAlert(com.info, "操作成功");
-                searcher.doSearch();
-            });
-            return false;
-        },
-        init: function (v) {
-            return v.assignFlag == 1;
-        },
-        show: function (v) {
-            // 已分配(2)不显示开关: 开关只管0/1互切, 对已分配行切换会 regress 分配态
-            return (accessories.pageType != "supplier" && v.status != constant.inventory().accessories.STATUS_BALANCED_INT && v.assignFlag != 2)
-        }
-    }, {
         name: "分配厂商",
         clazz: "btn-info",
         handle: function (v) {
@@ -308,20 +276,20 @@ $(function() {
             return false;
         },
         show: function (v) {
-            // 分配闸: 标记需分配(1)或已分配(2,改派)的单开放; 后端260093兜底
+            // 分配闸: 需配送(1)或已分配(2,改派)的单开放; 后端260093兜底
             return (accessories.pageType != "supplier" && (v.assignFlag == 1 || v.assignFlag == 2) && (v.status == 0 || v.status == 1 || v.status == 2))
         }
     }, {
-        // 配送/自配切换: 按钮名显示目标态; 出库后不可改(后端260024同口径守卫)
+        // 自配送/需配送切换: 按钮名显示目标态; 出库后不可改(后端260024同口径守卫), 已分配(2)/已到货(3)不可切
         name: function (v) {
-            return v.deliveryStatus == 1 ? "改自配" : "改配送";
+            return v.assignFlag == 1 ? "改自配" : "改配送";
         },
         clazz: "btn-warning",
         handle: function (v) {
 
-            com.post(api.inventory.updateAccessoriesForDelivery, {
+            com.post(api.inventory.updateAccessoriesForAssign, {
                 "accessories.aid": v.aid,
-                "accessories.deliveryStatus": v.deliveryStatus == 1 ? 0 : 1
+                "accessories.assignFlag": v.assignFlag == 1 ? 0 : 1
             }, function() {
 
                 com.showAlert(com.info, "操作成功");
@@ -330,13 +298,13 @@ $(function() {
             return false;
         },
         show: function (v) {
-            return (accessories.pageType != "supplier" && (v.status == 0 || v.status == 1))
+            return (accessories.pageType != "supplier" && (v.status == 0 || v.status == 1) && v.assignFlag != 2 && v.assignFlag != 3)
         }
     }, {
         name: "结算",
         clazz: "btn-success",
         handle: function (v) {
-            if (v.status != constant.inventory().accessories.STATUS_DELIVER_INT && v.status != constant.inventory().accessories.STATUS_DELIVERED_INT) {
+            if (v.status != constant.inventory().accessories.STATUS_DELIVER_INT) {
                 com.showAlert(com.warning, "辅料单状态不可操作");
                 return false;
             }
@@ -353,7 +321,7 @@ $(function() {
             return false;
         },
         show: function (v) {
-            return (accessories.pageType != "supplier" && (v.status == constant.inventory().accessories.STATUS_DELIVER_INT || v.status == constant.inventory().accessories.STATUS_DELIVERED_INT))
+            return (accessories.pageType != "supplier" && v.status == constant.inventory().accessories.STATUS_DELIVER_INT)
         }
     }, {
         // 费用明细查看(只读): 整单费用行按项展示, 到货/结算后亦可查(照外辅费用查看形态)

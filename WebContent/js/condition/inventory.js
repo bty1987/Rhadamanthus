@@ -119,7 +119,7 @@ Condition.addupRule("inventory", {
         }
     },
     "accessories-assignFlag": {
-        label: "分配状态",
+        label: "配送状态",
         type: "select",
         submitConfig: {
             name: "assignFlag",
@@ -127,8 +127,8 @@ Condition.addupRule("inventory", {
             validate: null
         },
         dataSource: {
-            // 字面量选项: 规避条件装载期常量组依赖(condition-loadtime-constant-ref教训)
-            listPath: [{key: "0", value: "未标记"}, {key: "1", value: "需分配"}, {key: "2", value: "已分配"}],
+            // 字面量选项: 规避条件装载期常量组依赖(condition-loadtime-constant-ref教训); 配送执行线四态
+            listPath: [{key: "0", value: "自配送"}, {key: "1", value: "需配送"}, {key: "2", value: "已分配"}, {key: "3", value: "已到货"}],
             postData: {},
             keyPath: "key",
             valuePath: "value"
