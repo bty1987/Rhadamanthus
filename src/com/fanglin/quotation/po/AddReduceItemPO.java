@@ -8,6 +8,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.util.Arrays;
 import com.fanglin.quotation.vo.AddReduceItemVO;
 import com.fanglin.utils.BeanUtil;
 
@@ -245,7 +246,7 @@ public class AddReduceItemPO implements java.io.Serializable {
 
 	public AddReduceItemVO ptv(AddReduceItemVO addReduceItemVO) {
 
-		BeanUtil.copyProperties(this, addReduceItemVO);
+		BeanUtil.copyProperties(this, addReduceItemVO, Arrays.asList("quotationFunctionArea"));
 
 		if (getQuotationFunctionArea() != null) {
 			addReduceItemVO.setQuotationFunctionAreaType(getQuotationFunctionArea().getType());

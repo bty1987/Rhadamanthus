@@ -15,6 +15,7 @@ import static javax.persistence.GenerationType.IDENTITY;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.Arrays;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -216,7 +217,7 @@ public class ActionLogPO implements Serializable {
 
 	public LogVO ptv(LogVO logVO){
 
-		BeanUtil.copyProperties(this, logVO);
+		BeanUtil.copyProperties(this, logVO, Arrays.asList("createUserPO"));
 
 		// createUserPO 在归档表场景或用户被删除后可能为 null, 原实现裸解引用会 NPE
 		if (getCreateUserPO() != null){

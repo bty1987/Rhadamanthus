@@ -191,7 +191,7 @@ public class DecorationMeasurePO implements Serializable {
 
 	public DecorationMeasureVO ptv(DecorationMeasureVO decorationMeasureVO) {
 
-		BeanUtil.copyProperties(this, decorationMeasureVO, Arrays.asList("decoration", "appler", "group", "drawer"));
+		BeanUtil.copyProperties(this, decorationMeasureVO, Arrays.asList("decoration", "appler", "measurer", "group", "drawer"));
 
 		if (getDecoration() != null) {
 
