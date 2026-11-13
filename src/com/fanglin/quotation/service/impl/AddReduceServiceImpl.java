@@ -13,6 +13,7 @@ package com.fanglin.quotation.service.impl;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -216,7 +217,7 @@ public class AddReduceServiceImpl implements AddReduceService {
 
 		BeanUtil.copyProperties(addReducePO, addReduceVO, Arrays.asList("creater", "constructionNode"));
 
-		addReduceVO.setAddReduceItems(handleAddReduceItem(addReducePO.getArId()));
+		addReduceVO.setAddReduceItems(addReduceItemService.queryAddReduceItemByAddReduceIds(Collections.singletonList(addReducePO.getArId())));
 
 		return addReduceVO;
 	}
@@ -844,24 +845,12 @@ public class AddReduceServiceImpl implements AddReduceService {
 
 			BeanUtil.copyProperties(addReducePO, addReduceVO, Arrays.asList("creater", "constructionNode"));
 
-			addReduceVO.setAddReduceItems(handleAddReduceItem(addReducePO.getArId()));
+			addReduceVO.setAddReduceItems(addReduceItemService.queryAddReduceItemByAddReduceIds(Collections.singletonList(addReducePO.getArId())));
 
 			addReduceVOs.add(addReduceVO);
 		}
 
 		return addReduceVOs;
-	}
-
-	private List<AddReduceItemVO> handleAddReduceItem(long arid) throws FLException {
-
-		List<AddReduceItemPO> addReduceItemPOs = addReduceItemDao.queryAddReduceItem(arid);
-		List<AddReduceItemVO> addReduceItemVOs = new ArrayList<AddReduceItemVO>();
-
-		for (AddReduceItemPO addReduceItemPO : addReduceItemPOs) {
-			addReduceItemVOs.add(addReduceItemService.ptv(addReduceItemPO));
-		}
-
-		return addReduceItemVOs;
 	}
 
 }

@@ -2,6 +2,7 @@ package com.fanglin.quotation.service.impl;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -114,7 +115,7 @@ public class ExtensionServiceImpl implements ExtensionService {
 
 		BeanUtil.copyProperties(extensionPO, extensionVO, Arrays.asList("decoration", "quotation", "creater"));
 
-		extensionVO.setExtensionItems(handleExtensionItem(extensionPO.getEid()));
+		extensionVO.setExtensionItems(extensionItemService.queryExtensionItemByEids(Collections.singletonList(extensionPO.getEid())));
 
 		return extensionVO;
 	}
@@ -199,7 +200,7 @@ public class ExtensionServiceImpl implements ExtensionService {
 
 			BeanUtil.copyProperties(extensionPO, extensionVO, Arrays.asList("decoration", "quotation", "creater"));
 
-			extensionVO.setExtensionItems(handleExtensionItem(extensionPO.getEid()));
+			extensionVO.setExtensionItems(extensionItemService.queryExtensionItemByEids(Collections.singletonList(extensionPO.getEid())));
 
 			extensionVOs.add(extensionVO);
 		}
@@ -207,17 +208,6 @@ public class ExtensionServiceImpl implements ExtensionService {
 		return extensionVOs;
 	}
 
-	private List<ExtensionItemVO> handleExtensionItem(long eid) {
-
-		List<ExtensionItemPO> extensionItemPOs = extensionItemDao.queryExtensionItem(eid);
-		List<ExtensionItemVO> extensionItemVOs = new ArrayList<ExtensionItemVO>();
-
-		for (ExtensionItemPO extensionItemPO : extensionItemPOs) {
-			extensionItemVOs.add(extensionItemService.ptv(extensionItemPO));
-		}
-
-		return extensionItemVOs;
-	}
 
 	private void checkExtension(ExtensionPO extensionPO) throws FLException {
 
