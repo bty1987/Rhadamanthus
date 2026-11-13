@@ -902,11 +902,6 @@ public class NormtionServiceImpl implements NormtionService {
 			}
 		}
 
-		// 变更记录: 定额单重算汇总(先禁用旧行再重建, 不逐行记录防噪音)
-		normChangeRecordDao.save(new NormChangeRecordPO().init(NormChangeRecordPO.TYPE_NORMOODITEM_INT, NormChangeRecordPO.CHANGETYPE_UPDATE_INT, userId)
-				.orderId(normtionVO.getOrderId()).qid(normtionPO.getQid()).refId(normtionPO.getNid()).refNo(normtionPO.getOrderId())
-				.after("定额单重算(disable旧行+重建)"));
-
 		return 0;
 	}
 
@@ -1101,11 +1096,6 @@ public class NormtionServiceImpl implements NormtionService {
 			normtimeItemDao.save(normtimeItemPO);
 		}
 
-		// 变更记录: 定额单重算汇总(先禁用旧行再重建, 不逐行记录防噪音)
-		normChangeRecordDao.save(new NormChangeRecordPO().init(NormChangeRecordPO.TYPE_NORMOODITEM_INT, NormChangeRecordPO.CHANGETYPE_UPDATE_INT, userId)
-				.orderId(normtionVO.getOrderId()).qid(normtionPO.getQid()).refId(normtionPO.getNid()).refNo(normtionPO.getOrderId())
-				.after("定额单重算(disable旧行+重建)"));
-
 		return 0;
 	}
 
@@ -1299,11 +1289,6 @@ public class NormtionServiceImpl implements NormtionService {
 
 			normtimeItemDao.save(normtimeItemPO);
 		}
-
-		// 变更记录: 定额单重算汇总(先禁用旧行再重建, 不逐行记录防噪音)
-		normChangeRecordDao.save(new NormChangeRecordPO().init(NormChangeRecordPO.TYPE_NORMOODITEM_INT, NormChangeRecordPO.CHANGETYPE_UPDATE_INT, userId)
-				.orderId(normtionVO.getOrderId()).qid(normtionPO.getQid()).refId(normtionPO.getNid()).refNo(normtionPO.getOrderId())
-				.after("定额单重算(disable旧行+重建)"));
 
 		return 0;
 	}
