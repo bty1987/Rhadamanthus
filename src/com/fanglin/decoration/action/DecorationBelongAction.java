@@ -23,8 +23,6 @@ import org.springframework.stereotype.Controller;
 import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.decoration.service.DecorationBelongService;
-import com.fanglin.decoration.vo.DecorationBelongTranUserVO;
-import com.fanglin.decoration.vo.DecorationBelongTranVO;
 import com.fanglin.decoration.vo.DecorationBelongVO;
 import com.fanglin.decoration.vo.DecorationVO;
 
@@ -42,12 +40,6 @@ public class DecorationBelongAction extends BaseListAction {
 
 	private List<DecorationBelongVO> decorationBelongs;
 
-	private List<DecorationBelongTranUserVO> decorationBelongTranUsers;
-
-	private List<DecorationBelongTranVO> decorationBelongTrans;
-
-	private String keyword;
-
 	private DecorationVO decoration;
 
 	private String securityCode;
@@ -62,22 +54,6 @@ public class DecorationBelongAction extends BaseListAction {
 	public String queryDecorationBelong() {
 
 		decorationBelongs = decorationBelongService.queryDecorationBelong(decorationBelong);
-
-		return SUCCESS;
-	}
-
-	@Action(value = "queryDecorationBelongForTran", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryDecorationBelongForTran() {
-
-		decorationBelongTranUsers = decorationBelongService.queryDecorationBelongForTran(keyword, queryCompany());
-
-		return SUCCESS;
-	}
-
-	@Action(value = "pageDecorationForTranByBelonger", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String pageDecorationForTranByBelonger() throws FLException {
-
-		decorationBelongService.pageDecorationForTranByBelonger(getPaging(), decorationBelong, queryCompany());
 
 		return SUCCESS;
 	}
@@ -144,30 +120,6 @@ public class DecorationBelongAction extends BaseListAction {
 
 	public void setDecorationBelongs(List<DecorationBelongVO> decorationBelongs) {
 		this.decorationBelongs = decorationBelongs;
-	}
-
-	public List<DecorationBelongTranUserVO> getDecorationBelongTranUsers() {
-		return decorationBelongTranUsers;
-	}
-
-	public void setDecorationBelongTranUsers(List<DecorationBelongTranUserVO> decorationBelongTranUsers) {
-		this.decorationBelongTranUsers = decorationBelongTranUsers;
-	}
-
-	public List<DecorationBelongTranVO> getDecorationBelongTrans() {
-		return decorationBelongTrans;
-	}
-
-	public void setDecorationBelongTrans(List<DecorationBelongTranVO> decorationBelongTrans) {
-		this.decorationBelongTrans = decorationBelongTrans;
-	}
-
-	public String getKeyword() {
-		return keyword;
-	}
-
-	public void setKeyword(String keyword) {
-		this.keyword = keyword;
 	}
 
 	public DecorationVO getDecoration() {

@@ -794,9 +794,8 @@ public class DecorationServiceImpl implements DecorationService {
 
 		if (userPO == null) return;
 
-		List<Short> statuses = Arrays.asList(DecorationPO.STATUS_INIT_INT, DecorationPO.STATUS_DEPOSIT_INT, DecorationPO.STATUS_PROSIGN_INT, DecorationPO.STATUS_RESIGNED_INT);
-
-		List<DecorationPO> decorationPOs = decorationDao.pageDecoration(paging, filters, null, statuses, authentication.getCompany());
+		// 归属维护页不限制装修单状态(离职移交需覆盖签约等全状态单); 移交提交端按单复验可移交状态(240088)
+		List<DecorationPO> decorationPOs = decorationDao.pageDecoration(paging, filters, null, null, authentication.getCompany());
 		List<DecorationVO> decorationVOs = new ArrayList<DecorationVO>();
 
 		for (DecorationPO decorationPO : decorationPOs) {

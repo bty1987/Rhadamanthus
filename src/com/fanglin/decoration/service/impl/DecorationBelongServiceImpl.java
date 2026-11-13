@@ -38,8 +38,6 @@ import com.fanglin.decoration.po.DecorationAdditionPO;
 import com.fanglin.decoration.po.DecorationBelongPO;
 import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.decoration.service.DecorationBelongService;
-import com.fanglin.decoration.vo.DecorationBelongTranUserVO;
-import com.fanglin.decoration.vo.DecorationBelongTranVO;
 import com.fanglin.decoration.vo.DecorationBelongVO;
 import com.fanglin.decoration.vo.DecorationVO;
 import com.fanglin.information.dao.MessageQueuingDao;
@@ -49,7 +47,6 @@ import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.FormatUtil;
-import com.fanglin.utils.Paging;
 import com.fanglin.wechat.service.WeChatAppService;
 import com.fanglin.wechat.vo.WeChatPhoneInfoVO;
 
@@ -97,33 +94,6 @@ public class DecorationBelongServiceImpl implements DecorationBelongService {
 		}
 
 		return decorationBelongVOs;
-	}
-
-	@Override
-	public List<DecorationBelongTranUserVO> queryDecorationBelongForTran(String keyword, int company) {
-
-		return decorationBelongDao.queryDecorationBelongForTran(keyword, company);
-	}
-
-	@Override
-	public int pageDecorationForTranByBelonger(Paging paging, DecorationBelongVO decorationBelongVO, int company) throws FLException {
-
-		if (decorationBelongVO == null || decorationBelongVO.getBelonger() == null || decorationBelongVO.getBelonger().getUserId() == null || decorationBelongVO.getType() == null) {
-			throw new FLException(110040, "请求参数格式不正确");
-		}
-
-		UserPO belonger = userDao.queryUserByUserId(decorationBelongVO.getBelonger().getUserId());
-
-		if (belonger == null) {
-			paging.setData(new ArrayList<DecorationBelongTranVO>());
-			return 0;
-		}
-
-		List<DecorationBelongTranVO> vos = decorationBelongDao.pageDecorationForTranByBelonger(paging, belonger.getUid(), decorationBelongVO.getType().shortValue(), company);
-
-		paging.setData(vos);
-
-		return 0;
 	}
 
 	@Override

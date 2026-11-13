@@ -9,14 +9,119 @@ jQuery(function($) {
     decorationBelong.decorationOrderStatus = constant.decoration().decoration.status.keys;
     decorationBelong.decorationType = constant.decoration().decoration.typeness.keys;
 
-    function getBelongPropertyArr(v) {
+    // 可移交装修单状态: 0初始/1定金/2预签/3签约/4重签 (废单5/终止6/决算7/完工8等排除), 与后端提交端240088口径一致
+    var TRAN_DECORATION_STATUS = [0, 1, 2, 3, 4];
 
-        return [["楼盘地址:", v.house.village.name + " " + v.house.houseNumber, "grey"], ["客户名:", v.customer.name, "grey"], ["设计部:", v.designer.dept.name, "grey"], ["设计师:", v.designer.currentName, "grey"], ["业务部:", v.salesman.dept.name, "grey"], ["业务员:", v.salesman.currentName, "grey"], ["面积:", v.house.buildArea, "blue"], ["合同报价:", v.orderTotalPrice, "blue"], ["量房时间:", v.measureTime, "green"], ["类型:", decorationBelong.decorationType[v.type], "red"], ["状态:", decorationBelong.decorationOrderStatus[v.status], "red"]];
+    /* ====================== 离职移交配置缓存(BelongTran) ====================== */
+
+    // 配置直接挂在装修单上: 按单号单键, 每单同时容纳设计段+业务段(接手人/比例‰/默认标识);
+    // 移交人=单数据自带的原设计师/原业务员快照; sessionStorage TTL 24h 过期即弃
+    var TRAN_CONFIG_KEY = "belongTranConfigs";
+    var TRAN_TTL = 24 * 60 * 60 * 1000;
+
+    var tranConfigs = JSON.parse(sessionStorage.getItem(TRAN_CONFIG_KEY)) || {};
+
+    var tranConfigModal = {
+        mode: null, // single | batch
+        orders: [], // single为1条行快照, batch为勾选快照
+        design: null, // typeahead选中的接手设计师
+        sales: null // typeahead选中的接手业务员
+    };
+
+    var tranSubmitState = null;
+
+    // 勾选map(批量作用域, 跨页保存): orderId -> 单快照(designer/salesman/status), 供批量配置取各单现归属
+    var tranChecked = {};
+
+    function tranSaveConfigs() {
+
+        sessionStorage.setItem(TRAN_CONFIG_KEY, JSON.stringify(tranConfigs));
     }
+
+    // 过期条目惰性清理: 打开页面与每次存取时剔除超TTL的单条目, 防陈旧配置跨天误提
+    function tranPurgeExpired() {
+
+        var now = new Date().getTime();
+
+        $.each(tranConfigs, function(orderId, config) {
+
+            if (!config.time || now - config.time > TRAN_TTL) delete tranConfigs[orderId];
+        });
+
+        tranSaveConfigs();
+    }
+
+    function tranConfigCount() {
+
+        var count = 0;
+
+        $.each(tranConfigs, function() {
+            count++;
+        });
+
+        return count;
+    }
+
+    // ‰ → "85%" / "85.5%"
+    function tranRatePercentText(rate) {
+
+        return (Math.round(rate / 10 * 10) / 10) + "%";
+    }
+
+    function tranSnapshotOrder(v) {
+
+        return {
+            orderId: v.orderId,
+            status: v.status,
+            customerName: v.customer && v.customer.name ? v.customer.name : "",
+            designer: v.designer ? {
+                userId: v.designer.userId || "",
+                userName: v.designer.currentName || ""
+            } : {
+                userId: "",
+                userName: ""
+            },
+            salesman: v.salesman ? {
+                userId: v.salesman.userId || "",
+                userName: v.salesman.currentName || ""
+            } : {
+                userId: "",
+                userName: ""
+            }
+        };
+    }
+
+    function tranConfigText(v) {
+
+        var config = tranConfigs[v.orderId];
+
+        if (!config || (!config.design && !config.sales)) return "-";
+
+        var parts = [];
+
+        if (config.design) parts.push("设计→" + config.design.userName + " " + tranRatePercentText(config.design.rate) + (config.design.defaultFlag == 1 ? "默认" : ""));
+        if (config.sales) parts.push("业务→" + config.sales.userName + " " + tranRatePercentText(config.sales.rate) + (config.sales.defaultFlag == 1 ? "默认" : ""));
+
+        return parts.join(" / ");
+    }
+
+    /* ====================== 日常列表(查看/设计/业务/移交+勾选批量) ====================== */
 
     var lineprops = (function() {
 
         return [{
+            type: "checkbox",
+            name: "belongTranCheck",
+            prop: "orderId",
+            checked: function(v) {
+                return !!tranChecked[v.orderId];
+            },
+            change: function($input, v) {
+
+                if ($input.prop("checked")) tranChecked[v.orderId] = tranSnapshotOrder(v);
+                else delete tranChecked[v.orderId];
+            }
+        }, {
             field: "address",
             name: "楼盘地址",
             prop: function(v) {
@@ -80,6 +185,14 @@ jQuery(function($) {
                 return decorationBelong.decorationOrderStatus[v.status];
             },
             clazz: "red"
+        }, {
+            field: "tranConfig",
+            name: "移交配置",
+            prop: function(v) {
+
+                return tranConfigText(v);
+            },
+            clazz: "blue"
         }];
     })();
 
@@ -88,7 +201,8 @@ jQuery(function($) {
         return {
             look: {name: "查看", clazz: "btn-success", handle: function(v) { viewDecorationBelongDetail(v.orderId); }},
             design: {name: "设计", clazz: "btn-yellow", handle: function(v) { changeDecorationBelongDesigner(v.orderId); }},
-            salesman: {name: "业务", clazz: "btn-primary", handle: function(v) { changeDecorationBelongBussiness(v.orderId); }}
+            salesman: {name: "业务", clazz: "btn-primary", handle: function(v) { changeDecorationBelongBussiness(v.orderId); }},
+            tran: {name: "移交", clazz: "btn-warning", handle: function(v) { tranOpenConfigModal("single", [tranSnapshotOrder(v)]); }}
         };
     })();
 
@@ -97,6 +211,24 @@ jQuery(function($) {
     var searcher = new Searcher();
 
     searcher.set("condList", "pagenation", "resultList", api.decoration.pageDecorationForBelong, null, _condArr, "decorationBelongPostData");
+
+    searcher.button([{
+        id: "belongTranConfigBatchBtn",
+        name: "移交配置",
+        clazz: "btn-warning",
+        icon: "icon-exchange bigger-110"
+    }, {
+        id: "belongTranSubmitBtn",
+        name: "发起移交审批",
+        clazz: "btn-success",
+        icon: "icon-ok bigger-110"
+    }, {
+        id: "belongTranClearBtn",
+        name: "清空移交配置",
+        clazz: "btn-white",
+        icon: "icon-trash bigger-110"
+    }]);
+
     searcher.line(function(v) {
         return ' ' + v.orderId;
     }, lineprops, linebtns).render();
@@ -127,303 +259,562 @@ jQuery(function($) {
         com.popup4page("#layerPopUp", api.index.decorationBelongDetailIndex.url, "装修单业务归属: " + orderId);
     }
 
-    /* ====================== 离职移交(BelongTran) ====================== */
+    /* ====================== 移交配置 modal(单条/批量共用) ====================== */
 
-    // 草稿=页面变量+sessionStorage 双层(翻页局刷变量存活; 菜单跳页/F5 靠 sessionStorage 恢复), TTL 24h 过期即弃
-    var TRAN_DRAFT_KEY = "belongTranDraft";
-    var TRAN_META_KEY = "belongTranDraftMeta";
-    var TRAN_TTL = 24 * 60 * 60 * 1000;
+    function tranResetConfigModal() {
 
-    var tran = {
-        userId: null,
-        userName: "",
-        belongType: 0, // 0设计 1业务
-        page: 0,
-        rows: 20,
-        totalRecords: 0,
-        list: [],
-        checked: {},
-        newUser: null,
-        approverId: null,
-        usersLoaded: false,
-        users: []
-    };
+        $("#belongTranDesignUserInput,#belongTranSalesUserInput").val("");
+        $("#belongTranDesignUserName,#belongTranDesignUserDept,#belongTranDesignUserRegion").val("");
+        $("#belongTranSalesUserName,#belongTranSalesUserDept,#belongTranSalesUserRegion").val("");
+        $("#belongTranDesignRate,#belongTranSalesRate").val("");
+        $("#belongTranDesignDefault,#belongTranSalesDefault").prop("checked", false);
+        $("#belongTranDesignClear,#belongTranSalesClear").hide();
+        $("#belongTranDesignCurrent,#belongTranSalesCurrent").empty().hide();
 
-    var tranDrafts = JSON.parse(sessionStorage.getItem(TRAN_DRAFT_KEY)) || {};
-    var tranMeta = JSON.parse(sessionStorage.getItem(TRAN_META_KEY)) || {};
-
-    function tranGroupKey() {
-
-        return tran.userId + "|" + tran.belongType;
+        tranConfigModal.design = null;
+        tranConfigModal.sales = null;
     }
 
-    function tranDraftKey(orderId) {
+    function tranOpenConfigModal(mode, orders) {
 
-        return tranGroupKey() + "|" + orderId;
+        tranConfigModal.mode = mode;
+        tranConfigModal.orders = orders;
+
+        tranResetConfigModal();
+
+        var orderId = orders[0].orderId;
+        var config = tranConfigs[orderId];
+
+        if (mode == "single") {
+
+            var v = orders[0];
+
+            $("#belongTranScopeInfo").html('<b>' + v.orderId + '</b> · ' + (v.customerName || "") + ' · ' + (decorationBelong.decorationOrderStatus[v.status] || v.status) + ' · 设计师 ' + v.designer.userName + ' · 业务员 ' + v.salesman.userName);
+
+            tranLoadCurrentBelongs(orderId);
+
+            if (config && config.design) tranFillSection("belongTranDesignUser", "design", config.design);
+            if (config && config.sales) tranFillSection("belongTranSalesUser", "sales", config.sales);
+
+            $("#belongTranDesignClear").toggle(!!(config && config.design));
+            $("#belongTranSalesClear").toggle(!!(config && config.sales));
+
+        } else {
+
+            $("#belongTranScopeInfo").html('批量应用到勾选的 <b>' + orders.length + '</b> 单: 设计段移交各单现设计师, 业务段移交各单现业务员; 比例与默认人对勾选单统一生效');
+        }
+
+        $("#belongTranConfigModal").modal("show");
     }
 
-    function tranSaveDrafts() {
+    // 预填一段(缓存回显): 同步设置typeahead state, 否则不改直接保存会被"请选择接手人"误拦
+    function tranFillSection(base, stateKey, section) {
 
-        sessionStorage.setItem(TRAN_DRAFT_KEY, JSON.stringify(tranDrafts));
-        sessionStorage.setItem(TRAN_META_KEY, JSON.stringify(tranMeta));
+        tranConfigModal[stateKey] = {
+            userId: section.userId,
+            currentName: section.userName,
+            deptName: section.deptName,
+            regionName: section.regionName
+        };
+
+        $("#" + base + "Input").val(section.userName);
+        $("#" + base + "Name").val(section.userName);
+        $("#" + base + "Dept").val(section.deptName || "");
+        $("#" + base + "Region").val(section.regionName || "");
+        $("#" + base + "Rate").val(Math.round(section.rate / 10 * 10) / 10);
+        $("#" + base + "Default").prop("checked", section.defaultFlag == 1);
     }
 
-    // 过期组惰性清理: 打开页面与每次存取时剔除超TTL的组条目, 防陈旧草稿跨天误提
-    function tranPurgeExpired() {
+    // 现归属行展示: 供默认标识/比例决策参考(queryDecorationBelong的rate经tranargs已÷1000, 此处×1000还原‰展示)
+    function tranLoadCurrentBelongs(orderId) {
+
+        com.post(api.decoration.queryDecorationBelong, {
+            "decorationBelong.orderId": orderId
+        }, function(res) {
+
+            tranRenderCurrentBelongs("#belongTranDesignCurrent", 0, res.decorationBelongs || []);
+            tranRenderCurrentBelongs("#belongTranSalesCurrent", 1, res.decorationBelongs || []);
+        });
+    }
+
+    function tranRenderCurrentBelongs(selector, type, belongs) {
+
+        var rows = $.grep(belongs || [], function(b) {
+            return b.type == type && b.status == 0;
+        });
+
+        var $box = $(selector).empty().show();
+
+        if (rows.length == 0) {
+            $box.text("现归属: 无生效行");
+            return;
+        }
+
+        var texts = $.map(rows, function(b) {
+
+            return (b.belonger ? b.belonger.currentName : "?") + "(" + (b.department ? b.department.name : "") + ") " + tranRatePercentText(b.rate != null ? Math.round(b.rate * 1000) : 0) + (b.defaultFlag == 1 ? " 默认" : "");
+        });
+
+        $box.text("现归属: " + texts.join(" | "));
+    }
+
+    function tranBindReceiverTypeahead(base, stateKey) {
+
+        com.initTypeahead(base + "Input", api.personel.queryUserByPinyin, "pinyinName", {
+            "user.status": 0,
+            "departmentType.name": ""
+        }, 'autoFillKeyValue', 'key', 'value', function(list, key, value) {
+
+            if (value == null || value == "") {
+                return false;
+            }
+
+            com.post(api.personel.queryUserByUserId, {
+                "user.userId": key
+            }, function(res) {
+
+                if (res.user.dept == null || res.user.dept.fatherDept == null) {
+
+                    com.showAlert(com.error, "接手人部门未关联分区,请先完善部门数据");
+                    tranConfigModal[stateKey] = null;
+                    return;
+                }
+
+                tranConfigModal[stateKey] = {
+                    userId: res.user.userId,
+                    currentName: res.user.currentName,
+                    deptName: res.user.dept.name,
+                    regionName: res.user.dept.fatherDept.name
+                };
+
+                $("#" + base + "Name").val(res.user.currentName);
+                $("#" + base + "Dept").val(res.user.dept.name);
+                $("#" + base + "Region").val(res.user.dept.fatherDept.name);
+            });
+
+            return value;
+        });
+    }
+
+    tranBindReceiverTypeahead("belongTranDesignUser", "design");
+    tranBindReceiverTypeahead("belongTranSalesUser", "sales");
+
+    // 读一段配置: 输入框空=该段不变更; 有文字但未选中下拉=报错; 选中则比例必填
+    function tranReadSection(base, stateKey) {
+
+        var $input = $("#" + base + "Input");
+        var inputText = $.trim($input.val());
+
+        if (inputText == "") return {
+            section: null
+        };
+
+        var receiver = tranConfigModal[stateKey];
+
+        if (receiver == null) return {
+            error: "请从下拉列表中选择接手人"
+        };
+
+        var rate = tranParseRatePercent($("#" + base + "Rate"));
+
+        if (isNaN(rate)) return {
+            error: "归属比例须在0~100之间(可一位小数)"
+        };
+
+        return {
+            section: {
+                userId: receiver.userId,
+                userName: receiver.currentName,
+                deptName: receiver.deptName,
+                regionName: receiver.regionName,
+                rate: rate,
+                defaultFlag: $("#" + base + "Default").prop("checked") ? 1 : 0
+            }
+        };
+    }
+
+    // % → ‰整数(空/非法返NaN)
+    function tranParseRatePercent($input) {
+
+        var val = $.trim($input.val());
+
+        if (val == "") return NaN;
+
+        var num = parseFloat(val);
+
+        if (isNaN(num) || num < 0 || num > 100) return NaN;
+
+        return Math.round(num * 10);
+    }
+
+    $("#belongTranConfigBatchBtn").on('click', function() {
+
+        var orders = $.map(tranChecked, function(snapshot) {
+            return snapshot;
+        });
+
+        if (orders.length == 0) {
+            com.showAlert(com.warning, "请先勾选需要移交配置的装修单");
+            return false;
+        }
+
+        tranOpenConfigModal("batch", orders);
+
+        return false;
+    });
+
+    $("#belongTranConfigOkBtn").on('click', function() {
+
+        var design = tranReadSection("belongTranDesignUser", "design");
+
+        if (design.error) {
+            com.showAlert(com.error, design.error);
+            return false;
+        }
+
+        var sales = tranReadSection("belongTranSalesUser", "sales");
+
+        if (sales.error) {
+            com.showAlert(com.error, sales.error);
+            return false;
+        }
+
+        if (tranConfigModal.mode == "single") tranSaveSingle(design.section, sales.section);
+        else tranSaveBatch(design.section, sales.section);
+
+        return false;
+    });
+
+    function tranSaveSingle(design, sales) {
+
+        var v = tranConfigModal.orders[0];
+        var orderId = v.orderId;
+
+        if (TRAN_DECORATION_STATUS.indexOf(v.status) == -1) {
+            com.showAlert(com.error, "该单状态不可移交(仅初始/定金/预签/签约/重签单可移交)");
+            return false;
+        }
+
+        var config = tranConfigs[orderId] || {
+            designer: $.extend({}, v.designer),
+            salesman: $.extend({}, v.salesman),
+            time: 0,
+            design: null,
+            sales: null
+        };
+
+        if (design) {
+
+            if (!v.designer.userId) {
+                com.showAlert(com.error, "该单现设计师数据缺失,不可配置设计移交");
+                return false;
+            }
+
+            if (design.userId == v.designer.userId) {
+                com.showAlert(com.error, "接手设计师与现设计师相同");
+                return false;
+            }
+
+            config.design = design;
+        }
+
+        if (sales) {
+
+            if (!v.salesman.userId) {
+                com.showAlert(com.error, "该单现业务员数据缺失,不可配置业务移交");
+                return false;
+            }
+
+            if (sales.userId == v.salesman.userId) {
+                com.showAlert(com.error, "接手业务员与现业务员相同");
+                return false;
+            }
+
+            config.sales = sales;
+        }
+
+        if (!config.design && !config.sales) {
+            com.showAlert(com.error, "请至少配置一个接手人");
+            return false;
+        }
+
+        config.time = new Date().getTime();
+
+        tranConfigs[orderId] = config;
+        tranSaveConfigs();
+
+        $("#belongTranConfigModal").modal("hide");
+        com.showAlert(com.info, "移交配置已缓存: " + orderId);
+        searcher.doSearch();
+    }
+
+    function tranSaveBatch(design, sales) {
+
+        if (!design && !sales) {
+            com.showAlert(com.error, "请至少配置一个接手人");
+            return false;
+        }
 
         var now = new Date().getTime();
+        var saved = 0;
+        var skipMap = {};
 
-        for (var gk in tranMeta) {
+        $.each(tranConfigModal.orders, function(i, v) {
 
-            if (now - tranMeta[gk] > TRAN_TTL) {
+            if (TRAN_DECORATION_STATUS.indexOf(v.status) == -1) {
+                skipMap[v.orderId] = v.orderId + "(状态不可移交)";
+                return true;
+            }
 
-                delete tranMeta[gk];
+            var config = tranConfigs[v.orderId] || {
+                designer: $.extend({}, v.designer),
+                salesman: $.extend({}, v.salesman),
+                time: 0,
+                design: null,
+                sales: null
+            };
 
-                for (var dk in tranDrafts) {
+            var touched = false;
+            var reasons = [];
 
-                    if (dk.indexOf(gk + "|") == 0) delete tranDrafts[dk];
+            if (design) {
+
+                if (!v.designer.userId) reasons.push("现设计师数据缺失");
+                else if (design.userId == v.designer.userId) reasons.push("接手人与现设计师相同");
+                else {
+                    config.design = $.extend({}, design);
+                    touched = true;
                 }
+            }
+
+            if (sales) {
+
+                if (!v.salesman.userId) reasons.push("现业务员数据缺失");
+                else if (sales.userId == v.salesman.userId) reasons.push("接手人与现业务员相同");
+                else {
+                    config.sales = $.extend({}, sales);
+                    touched = true;
+                }
+            }
+
+            if (touched) {
+
+                config.time = now;
+                tranConfigs[v.orderId] = config;
+                saved++;
+
+            } else if (reasons.length > 0) {
+                skipMap[v.orderId] = v.orderId + "(" + reasons.join(";") + ")";
+            }
+        });
+
+        var skipped = $.map(skipMap, function(reason) {
+            return reason;
+        });
+
+        $("#belongTranConfigModal").modal("hide");
+
+        if (saved > 0) {
+
+            com.showAlert(skipped.length > 0 ? com.warning : com.info, "已缓存移交配置 " + saved + " 单" + (skipped.length > 0 ? "; 跳过 " + skipped.length + " 单: " + skipped.join("、") : ""));
+            searcher.doSearch();
+
+        } else {
+            com.showAlert(com.error, "没有可保存的勾选单" + (skipped.length > 0 ? ": " + skipped.join("、") : ""));
+        }
+    }
+
+    // 清除单条模式已存段配置(立即生效于缓存)
+    function tranClearSection(base, key) {
+
+        var orderId = tranConfigModal.orders.length > 0 ? tranConfigModal.orders[0].orderId : null;
+
+        if (!orderId || !tranConfigs[orderId]) return false;
+
+        var config = tranConfigs[orderId];
+
+        config[key] = null;
+
+        if (!config.design && !config.sales) delete tranConfigs[orderId];
+
+        tranSaveConfigs();
+
+        tranResetConfigModal();
+
+        if (tranConfigs[orderId]) {
+
+            if (tranConfigs[orderId].design) {
+                tranFillSection("belongTranDesignUser", "design", tranConfigs[orderId].design);
+                $("#belongTranDesignClear").show();
+            }
+
+            if (tranConfigs[orderId].sales) {
+                tranFillSection("belongTranSalesUser", "sales", tranConfigs[orderId].sales);
+                $("#belongTranSalesClear").show();
             }
         }
 
-        tranSaveDrafts();
+        com.showAlert(com.info, "已清除该段移交配置");
+        searcher.doSearch();
+
+        return false;
     }
 
-    function tranGroupDraftCount() {
+    $("#belongTranDesignClear").on('click', function() {
+        return tranClearSection("belongTranDesignUser", "design");
+    });
 
-        var count = 0;
-        var prefix = tranGroupKey() + "|";
+    $("#belongTranSalesClear").on('click', function() {
+        return tranClearSection("belongTranSalesUser", "sales");
+    });
 
-        for (var dk in tranDrafts) {
+    $("#belongTranConfigModal").on('hide.bs.modal', function() {
 
-            if (dk.indexOf(prefix) == 0) count++;
+        tranResetConfigModal();
+        tranConfigModal.mode = null;
+        tranConfigModal.orders = [];
+    });
+
+    $("#belongTranClearBtn").on('click', function() {
+
+        tranPurgeExpired();
+
+        var count = tranConfigCount();
+
+        if (count == 0) {
+            com.showAlert(com.info, "暂无移交配置");
+            return false;
         }
 
-        return count;
-    }
+        com.showConfirm("确定清空全部 " + count + " 条移交配置?", function() {
 
-    function tranCheckedOrders() {
+            tranConfigs = {};
+            tranSaveConfigs();
+            searcher.doSearch();
+        });
 
-        var orders = [];
+        return false;
+    });
 
-        for (var orderId in tran.checked) {
+    /* ====================== 发起移交审批 modal ====================== */
 
-            if (tran.checked[orderId]) orders.push(orderId);
+    // 按"移交人"分组: 设计段归各单现设计师, 业务段归各单现业务员, 同一人两类合并;
+    // 一人一张审批(后端审批机制不变), 组内 tranType 按段型推导 0设计/1业务/2混合
+    function tranGroupConfigs() {
+
+        var groupMap = {};
+
+        function groupOf(userId, userName) {
+
+            if (!groupMap[userId]) groupMap[userId] = {
+                userId: userId,
+                userName: userName,
+                designCount: 0,
+                salesCount: 0,
+                items: []
+            };
+
+            return groupMap[userId];
         }
 
-        return orders;
+        $.each(tranConfigs, function(orderId, config) {
+
+            if (config.design && config.designer.userId) {
+
+                var g = groupOf(config.designer.userId, config.designer.userName);
+
+                g.designCount++;
+                g.items.push(tranBuildItem(orderId, 0, config.design));
+            }
+
+            if (config.sales && config.salesman.userId) {
+
+                var g = groupOf(config.salesman.userId, config.salesman.userName);
+
+                g.salesCount++;
+                g.items.push(tranBuildItem(orderId, 1, config.sales));
+            }
+        });
+
+        var groups = $.map(groupMap, function(g) {
+
+            g.tranType = g.designCount > 0 && g.salesCount > 0 ? 2 : (g.salesCount > 0 ? 1 : 0);
+
+            g.items.sort(function(a, b) {
+                return a.orderId < b.orderId ? -1 : 1;
+            });
+
+            return g;
+        });
+
+        groups.sort(function(a, b) {
+            return a.userId < b.userId ? -1 : 1;
+        });
+
+        return groups;
     }
 
-    function tranSwitchMode(tranMode) {
+    function tranBuildItem(orderId, belongType, section) {
 
-        $("#dailyPanel").toggle(!tranMode);
-        $("#tranPanel").toggle(tranMode);
-        $("#dailyModeBtn").toggleClass("btn-primary", !tranMode).toggleClass("btn-default", tranMode);
-        $("#tranModeBtn").toggleClass("btn-primary", tranMode).toggleClass("btn-default", !tranMode);
-
-        if (tranMode) {
-
-            tranPurgeExpired();
-
-            if (!tran.usersLoaded) tranLoadUsers();
-            else if (tran.userId) $("#tranUserListWrap").hide();
-        }
+        return {
+            orderId: orderId,
+            belongType: belongType,
+            userId: section.userId,
+            userName: section.userName,
+            rate: section.rate,
+            defaultFlag: section.defaultFlag
+        };
     }
 
-    function tranLoadUsers(keyword) {
+    function tranRenderSubmitSummary(groups) {
 
-        com.post(api.decoration.queryDecorationBelongForTran, keyword ? {
-            "keyword": keyword
-        } : {}, function(res) {
+        var itemCount = 0;
 
-            tran.users = res.decorationBelongTranUsers || [];
-            tran.usersLoaded = true;
+        $.each(groups, function(i, g) {
+            itemCount += g.items.length;
+        });
 
-            var $body = $("#tranUserList").empty();
+        var $sum = $("#belongTranSubmitSummary").empty();
 
-            if (tran.users.length == 0) $body.append('<tr><td colspan="5" class="text-center grey">暂无可移交归属单</td></tr>');
+        $sum.append('<div>共 <b>' + groups.length + '</b> 位移交人 / <b>' + itemCount + '</b> 条归属, 每位移交人一张审批, 通过后整批生效, 驳回零变更</div>');
 
-            $.each(tran.users, function(i, v) {
+        $.each(groups, function(i, g) {
 
-                var $tr = $('<tr></tr>');
+            $sum.append('<div style="margin-top:6px"><b>' + g.userName + '</b> (' + (g.tranType == 0 ? "设计" : g.tranType == 1 ? "业务" : "设计+业务") + ' ' + g.items.length + ' 条)</div>');
 
-                $('<td></td>').text(v.userName).appendTo($tr);
-                $('<td></td>').text(v.deptName || "").appendTo($tr);
-                $('<td></td>').text(v.designCount + " 单").appendTo($tr);
-                $('<td></td>').text(v.salesCount + " 单").appendTo($tr);
-                $('<td></td>').append($('<button type="button" class="btn btn-xs btn-primary">选择</button>').on('click', function() { tranPickBelonger(v); })).appendTo($tr);
+            $.each(g.items, function(j, item) {
 
-                $tr.appendTo($body);
+                $sum.append('<div style="margin-left:12px">' + item.orderId + ' ' + (item.belongType == 0 ? "设计" : "业务") + '→' + item.userName + '(' + tranRatePercentText(item.rate) + (item.defaultFlag == 1 ? ',默认' : '') + ')</div>');
             });
         });
     }
 
-    function tranPickBelonger(u) {
+    $("#belongTranSubmitBtn").on('click', function() {
 
-        tran.userId = u.userId;
-        tran.userName = u.userName;
-        tran.page = 0;
-        tran.checked = {};
-        tran.newUser = null;
+        tranPurgeExpired();
 
-        $("#tranUserListWrap").hide();
-        $("#tranOrderWrap").show();
+        var groups = tranGroupConfigs();
 
-        $("#tranBelongerInput").val(u.userName);
-        $("#tranBelongerInfo").html(u.userName + "(" + (u.deptName || "") + ") · 设计" + u.designCount + "单/业务" + u.salesCount + "单" + ' <a href="javascript:void(0)" id="tranRepickLink" style="color:#2679b5">[重选移交人]</a>');
-
-        $("#tranRepickLink").on('click', function() {
-
-            $("#tranUserListWrap").show();
-            $("#tranBelongerInput").val("").trigger('focus');
-        });
-
-        if (tranGroupDraftCount() > 0) com.showAlert(com.info, "本组存在未提交草稿 " + tranGroupDraftCount() + " 条(24小时内有效),列表中蓝色即草稿");
-
-        tranLoadList();
-    }
-
-    function tranLoadList() {
-
-        if (!tran.userId) return;
-
-        com.post(api.decoration.pageDecorationForTranByBelonger, {
-            "paging.page": tran.page,
-            "paging.rows": tran.rows,
-            "decorationBelong.belonger.userId": tran.userId,
-            "decorationBelong.type": tran.belongType
-        }, function(res) {
-
-            var paging = res.paging || {};
-
-            tran.list = paging.data || [];
-            tran.totalRecords = paging.totalRecords || 0;
-
-            // 翻页后越页回退
-            if (tran.list.length == 0 && tran.page > 0) {
-
-                tran.page = 0;
-                tranLoadList();
-                return;
-            }
-
-            tranRenderTable();
-        });
-    }
-
-    function tranRenderTable() {
-
-        var $body = $("#tranTableBody").empty();
-
-        if (tran.list.length == 0) {
-            $body.append('<tr><td colspan="8" class="text-center grey">无可移交单据(状态不符或已在途移交)</td></tr>');
-            $("#tranAssignBtn").prop("disabled", true);
-            tranUpdateDraftInfo();
-            return;
+        if (groups.length == 0) {
+            com.showAlert(com.error, "暂无移交配置,请先在列表行[移交]或勾选后[移交配置]中配置接手人");
+            return false;
         }
 
-        $.each(tran.list, function(i, v) {
+        tranRenderSubmitSummary(groups);
 
-            var draft = tranDrafts[tranDraftKey(v.orderId)];
-            var checked = !!tran.checked[v.orderId];
+        approvalUtils.initqueryApprovalUser("belongTranApproveManSel", constant.approval().approval.TYPE_BELONG_TRAN_INT);
 
-            var $tr = $('<tr></tr>');
+        tranSubmitState = {
+            groups: groups,
+            approverId: null
+        };
 
-            $('<td><input type="checkbox"/></td>').find("input").prop("checked", checked).on('change', function() {
-                tran.checked[v.orderId] = this.checked;
-                $("#tranAssignBtn").prop("disabled", tranCheckedOrders().length == 0);
-            }).end().appendTo($tr);
+        $("#belongTranSubmitModal").modal("show");
 
-            $('<td></td>').text(v.orderId).appendTo($tr);
-            $('<td class="grey"></td>').text(v.customerName || "").appendTo($tr);
-            $('<td class="red"></td>').text(decorationBelong.decorationOrderStatus[v.status] || v.status).appendTo($tr);
-            $('<td></td>').text((v.rate / 10) + "%").appendTo($tr);
-            $('<td></td>').text(v.defaultFlag == 1 ? "默认" : "否").appendTo($tr);
-
-            var $draftTd = $('<td></td>');
-
-            if (draft) $draftTd.append($('<span class="label label-primary"></span>').text(draft.userName + " " + Math.round(draft.rate * 100) + "%" + (draft.defaultFlag == 1 ? " 默认" : "")));
-            else $draftTd.addClass("grey").text("-");
-
-            $draftTd.appendTo($tr);
-
-            $('<td></td>').append($('<button type="button" class="btn btn-xs btn-default">撤稿</button>').on('click', function() {
-
-                delete tranDrafts[tranDraftKey(v.orderId)];
-                tranSaveDrafts();
-                tranRenderTable();
-            })).appendTo($tr);
-
-            $tr.appendTo($body);
-        });
-
-        $("#tranCheckAllHead").prop("checked", false);
-        $("#tranAssignBtn").prop("disabled", tranCheckedOrders().length == 0);
-
-        var totalPage = Math.max(Math.ceil(tran.totalRecords / tran.rows), 1);
-
-        $("#tranPageInfo").text((tran.page + 1) + "/" + totalPage + " 页 共" + tran.totalRecords + "单");
-        $("#tranPrevBtn").prop("disabled", tran.page <= 0);
-        $("#tranNextBtn").prop("disabled", (tran.page + 1) >= totalPage);
-
-        tranUpdateDraftInfo();
-    }
-
-    function tranUpdateDraftInfo() {
-
-        $("#tranDraftInfo").text("当前组草稿 " + tranGroupDraftCount() + " 条");
-    }
-
-    $("#tranCheckAllHead").on('change', function() {
-
-        var flag = this.checked;
-
-        tran.checked = {};
-
-        $("#tranTableBody input[type=checkbox]").prop("checked", flag).each(function(i) {
-
-            if (flag) tran.checked[tran.list[i].orderId] = true;
-        });
-
-        $("#tranAssignBtn").prop("disabled", tranCheckedOrders().length == 0);
+        return false;
     });
 
-    $("#tranPrevBtn").on('click', function() {
-
-        if (tran.page > 0) {
-
-            tran.page -= 1;
-            tran.checked = {};
-            tranLoadList();
-        }
-    });
-
-    $("#tranNextBtn").on('click', function() {
-
-        tran.page += 1;
-        tran.checked = {};
-        tranLoadList();
-    });
-
-    $("#tranClearBtn").on('click', function() {
-
-        var prefix = tranGroupKey() + "|";
-
-        for (var dk in tranDrafts) {
-
-            if (dk.indexOf(prefix) == 0) delete tranDrafts[dk];
-        }
-
-        delete tranMeta[tranGroupKey()];
-
-        tran.checked = {};
-        tranSaveDrafts();
-        tranRenderTable();
-    });
-
-    /* ---- 指派 modal ---- */
-
-    com.initTypeahead('tranNewUserInput', api.personel.queryUserByPinyin, "pinyinName", {
+    com.initTypeahead('belongTranApproverInput', api.personel.queryUserByPinyin, "pinyinName", {
         "user.status": 0,
         "departmentType.name": ""
     }, 'autoFillKeyValue', 'key', 'value', function(list, key, value) {
@@ -432,269 +823,103 @@ jQuery(function($) {
             return false;
         }
 
-        com.post(api.personel.queryUserByUserId, {
-            "user.userId": key
-        }, function(res) {
-
-            if (res.user.dept == null || res.user.dept.fatherDept == null) {
-
-                com.showAlert(com.error, "接手人部门未关联分区,请先完善部门数据");
-                return;
-            }
-
-            tran.newUser = {
-                userId: res.user.userId,
-                uid: res.user.uid,
-                currentName: res.user.currentName,
-                deptName: res.user.dept.name,
-                regionName: res.user.dept.fatherDept.name
-            };
-
-            $("#tranNewUserName").val(res.user.currentName);
-            $("#tranNewUserDept").val(res.user.dept.name);
-            $("#tranNewUserRegion").val(res.user.dept.fatherDept.name);
-        });
+        if (tranSubmitState) tranSubmitState.approverId = key;
 
         return value;
     });
 
-    $("#tranAssignBtn").on('click', function() {
+    // 逐组串行提交(api已配intercept绕过同端点5秒节流); 成功组即从缓存摘除, 失败组保留并逐组报错
+    $("#belongTranSubmitOkBtn").on('click', function() {
 
-        var orders = tranCheckedOrders();
-
-        if (orders.length == 0) return false;
-
-        // 预填: 以首个勾选行推导推荐比例(签约3/重签4→0; 其余→1), 默认人=首行现行默认态
-        var first = null;
-
-        for (var i = 0; i < tran.list.length; i++) {
-
-            if (tran.checked[tran.list[i].orderId]) {
-
-                first = tran.list[i];
-                break;
-            }
-        }
-
-        if (first) {
-
-            $("#tranRateInput").val(first.status == 3 || first.status == 4 ? 0 : 1);
-            $("#tranDefaultFlagInput").prop("checked", first.defaultFlag == 1);
-        }
-
-        $("#tranAssignModal").modal("show");
-
-        return false;
-    });
-
-    $("#tranAssignOkBtn").on('click', function() {
-
-        if (tran.newUser == null) {
-
-            com.showAlert(com.error, "请先选择接手人");
-            return false;
-        }
-
-        var rate = parseFloat($("#tranRateInput").val());
-        var defaultFlag = $("#tranDefaultFlagInput").prop("checked") ? 1 : 0;
-
-        if (isNaN(rate) || rate < 0 || rate > 1) {
-
-            com.showAlert(com.error, "归属比例须在0~1之间");
-            return false;
-        }
-
-        var groupKey = tranGroupKey();
-        tranMeta[groupKey] = new Date().getTime();
-
-        $.each(tranCheckedOrders(), function(i, orderId) {
-
-            tranDrafts[groupKey + "|" + orderId] = {
-                userId: tran.newUser.userId,
-                userName: tran.newUser.currentName,
-                deptName: tran.newUser.deptName,
-                regionName: tran.newUser.regionName,
-                rate: rate,
-                defaultFlag: defaultFlag
-            };
-        });
-
-        tranSaveDrafts();
-
-        $("#tranAssignModal").modal("hide");
-        tranRenderTable();
-    });
-
-    $("#tranAssignModal").on('hide.bs.modal', function() {
-
-        $("#tranNewUserName,#tranNewUserDept,#tranNewUserRegion").val("");
-        $("#tranNewUserInput").val("");
-        tran.newUser = null;
-    });
-
-    /* ---- 发起审批 modal ---- */
-
-    com.initTypeahead('tranApproverInput', api.personel.queryUserByPinyin, "pinyinName", {
-        "user.status": 0,
-        "departmentType.name": ""
-    }, 'autoFillKeyValue', 'key', 'value', function(list, key, value) {
-
-        if (value == null || value == "") {
-            return false;
-        }
-
-        tran.approverId = key;
-
-        return value;
-    });
-
-    // 提交口径=整组草稿(跨页指派累积), 勾选仅作为指派作用范围
-    $("#tranSubmitBtn").on('click', function() {
-
-        var groupPrefix = tranGroupKey() + "|";
-        var drafted = [];
-
-        for (var dk in tranDrafts) {
-
-            if (dk.indexOf(groupPrefix) == 0) drafted.push(dk.substring(groupPrefix.length));
-        }
-
-        if (drafted.length == 0) {
-
-            com.showAlert(com.error, "本组暂无指派草稿,请先勾选单据并指派接手人");
-            return false;
-        }
-
-        // 默认人唯一性按"每单每类型"口径由后端240091校验(前端无从得知各单保留行默认态, 组内求和口径错误会挡死多单全给一人的主流程); modal预填=原移交人行属性, 常规操作天然合法
-
-        var $sum = $("#tranSubmitSummary").empty();
-
-        $sum.append('<div>移交人:<b>' + tran.userName + '</b> 类型:<b>' + (tran.belongType == 0 ? "设计" : "业务") + '</b> 单据:<b>' + drafted.length + '</b> 张(整组一次提交,通过=全批生效,驳回=零变更)</div>');
-
-        $.each(drafted, function(i, orderId) {
-
-            var d = tranDrafts[groupPrefix + orderId];
-
-            $sum.append('<div style="margin-left:10px">' + orderId + ' → ' + d.userName + '(' + Math.round(d.rate * 100) + '%' + (d.defaultFlag == 1 ? ',默认' : '') + ')</div>');
-        });
-
-        approvalUtils.initqueryApprovalUser("tranApproveManSel", constant.approval().approval.TYPE_BELONG_TRAN_INT);
-
-        $("#tranSubmitModal").modal("show");
-
-        return false;
-    });
-
-    $("#tranSubmitOkBtn").on('click', function() {
-
-        var receiverId = $("#tranApproveManSel").find('input:checked').attr("userid") || tran.approverId;
+        var receiverId = $("#belongTranApproveManSel").find('input:checked').attr("userid") || (tranSubmitState ? tranSubmitState.approverId : null);
 
         if (receiverId == null || receiverId == "") {
-
             com.showAlert(com.error, "请选择审批人");
             return false;
         }
 
-        var options = {};
+        var groups = tranSubmitState.groups;
+        var reason = $("#belongTranReasonInput").val() || "";
+        var successCount = 0;
+        var failMessages = [];
 
-        options["approval.receiver.userId"] = receiverId;
-        options["approvalBelongTran.userId"] = tran.userId;
-        options["approvalBelongTran.tranType"] = tran.belongType;
-        options["approvalBelongTran.reason"] = $("#tranReasonInput").val() || "";
+        $("#belongTranSubmitOkBtn").prop("disabled", true);
 
-        var groupPrefix = tranGroupKey() + "|";
-        var i = 0;
+        function submitAt(index) {
 
-        for (var dk in tranDrafts) {
+            if (index >= groups.length) {
 
-            if (dk.indexOf(groupPrefix) != 0) continue;
+                $("#belongTranSubmitOkBtn").prop("disabled", false);
 
-            var orderId = dk.substring(groupPrefix.length);
-            var d = tranDrafts[dk];
+                tranPurgeExpired();
+                tranSaveConfigs();
 
-            options["approvalBelongTranItems[" + i + "].orderId"] = orderId;
-            options["approvalBelongTranItems[" + i + "].belongType"] = tran.belongType;
-            options["approvalBelongTranItems[" + i + "].userId"] = d.userId;
-            options["approvalBelongTranItems[" + i + "].rate"] = d.rate;
-            options["approvalBelongTranItems[" + i + "].defaultFlag"] = d.defaultFlag;
+                $("#belongTranSubmitModal").modal("hide");
 
-            i++;
-        }
+                if (failMessages.length == 0) {
+                    com.showAlert(com.info, "移交审批已全部提交: " + successCount + " 张, 审批通过后生效");
+                } else {
+                    com.showAlert(com.error, "移交审批提交完成: 成功 " + successCount + " 张, 失败 " + failMessages.length + " 张(失败组配置已保留)<br>" + failMessages.join("<br>"));
+                }
 
-        com.post(api.approval.submitApprovalForBelongTran, options, function() {
-
-            for (var dk in tranDrafts) {
-
-                if (dk.indexOf(groupPrefix) == 0) delete tranDrafts[dk];
+                searcher.doSearch();
+                return;
             }
 
-            delete tranMeta[tranGroupKey()];
+            var g = groups[index];
 
-            tran.checked = {};
-            tranSaveDrafts();
+            var options = {
+                "approval.receiver.userId": receiverId,
+                "approvalBelongTran.userId": g.userId,
+                "approvalBelongTran.tranType": g.tranType,
+                "approvalBelongTran.reason": reason
+            };
 
-            $("#tranSubmitModal").modal("hide");
-            com.showAlert(com.info, "移交审批已提交,审批通过后全批生效");
-            tranLoadList();
-        });
-    });
+            $.each(g.items, function(j, item) {
 
-    /* ---- 移交人检索(接后端keyword: 姓名/拼音/工号) ---- */
+                options["approvalBelongTranItems[" + j + "].orderId"] = item.orderId;
+                options["approvalBelongTranItems[" + j + "].belongType"] = item.belongType;
+                options["approvalBelongTranItems[" + j + "].userId"] = item.userId;
+                options["approvalBelongTranItems[" + j + "].rate"] = item.rate;
+                options["approvalBelongTranItems[" + j + "].defaultFlag"] = item.defaultFlag;
+            });
 
-    var tranSearchTimer = null;
+            com.post(api.approval.submitApprovalForBelongTran, options, function() {
 
-    $("#tranBelongerInput").on('input', function() {
+                successCount++;
 
-        var val = $(this).val();
+                $.each(g.items, function(j, item) {
 
-        if (tranSearchTimer) clearTimeout(tranSearchTimer);
+                    var config = tranConfigs[item.orderId];
 
-        tranSearchTimer = setTimeout(function() {
+                    if (!config) return true;
 
-            $("#tranUserListWrap").show();
-            tranLoadUsers(val);
-        }, 300);
-    });
+                    if (item.belongType == 0) config.design = null;
+                    else config.sales = null;
 
-    /* ---- 模式/类型切换 ---- */
+                    if (!config.design && !config.sales) delete tranConfigs[item.orderId];
+                });
 
-    $("#dailyModeBtn").on('click', function() {
+                submitAt(index + 1);
 
-        tranSwitchMode(false);
-    });
+            }, function(res) {
 
-    $("#tranModeBtn").on('click', function() {
+                failMessages.push(g.userName + ": " + (res && res.errorCode != null ? (com.errorMap[res.errorCode] || res.errorMsg) : "提交失败"));
 
-        tranSwitchMode(true);
-    });
-
-    $("#tranTypeDesignBtn").on('click', function() {
-
-        tran.belongType = 0;
-        $(this).removeClass("btn-default").addClass("btn-primary");
-        $("#tranTypeSalesBtn").removeClass("btn-primary").addClass("btn-default");
-
-        if (tran.userId) {
-
-            tran.page = 0;
-            tran.checked = {};
-            if (tranGroupDraftCount() > 0) com.showAlert(com.info, "切换类型,原类型组草稿 " + tranGroupDraftCount() + " 条已保留,切回可继续");
-            tranLoadList();
+                submitAt(index + 1);
+            });
         }
+
+        submitAt(0);
+
+        return false;
     });
 
-    $("#tranTypeSalesBtn").on('click', function() {
+    $("#belongTranSubmitModal").on('hide.bs.modal', function() {
 
-        tran.belongType = 1;
-        $(this).removeClass("btn-default").addClass("btn-primary");
-        $("#tranTypeDesignBtn").removeClass("btn-primary").addClass("btn-default");
-
-        if (tran.userId) {
-
-            tran.page = 0;
-            tran.checked = {};
-            tranLoadList();
-        }
+        tranSubmitState = null;
+        $("#belongTranReasonInput").val("");
+        $("#belongTranApproverInput").val("");
     });
 
 });

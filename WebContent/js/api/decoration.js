@@ -706,13 +706,6 @@ $.extend(api, {
                 args: ["rate"]
             }]
         },
-        queryDecorationBelongForTran: {
-            url: "queryDecorationBelongForTran.do"
-        },
-        pageDecorationForTranByBelonger: {
-            url: "pageDecorationForTranByBelonger.do",
-            type: "query"
-        },
         tranDecorationBelong: {
             url: "tranDecorationBelong.do",
             type: "update",

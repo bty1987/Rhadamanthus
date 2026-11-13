@@ -131,12 +131,11 @@ $.extend(api, {
                 args: ["approvalDecorationBelongItems.rate"]
             }
         },
+        // 多组串行连发需绕过com.post同端点5秒节流(intercept); rate按‰整数直传(配置弹窗%×10落缓存), 不再走tranargs×1000(旧0~1口径随旧页废弃), 防双击由提交按钮禁用兜底
         submitApprovalForBelongTran: {
             url: "submitApprovalForBelongTran.do",
             type: "update",
-            tranargs: {
-                args: ["approvalBelongTranItems.rate"]
-            }
+            intercept: true
         },
         queryApprovalBelongTranByAId: {
             url: "queryApprovalBelongTranByAId.do"
