@@ -292,7 +292,7 @@ jQuery(function($) {
 
             com.showConfirm("是否启用人员规则", function() {
 
-                updateUserRule($disable, $enable);
+                updateUserRule($disable, $enable, 2);
             });
         });
         var $enableI = $('<i></i>').addClass('icon-ok-circle bigger-230');
@@ -305,7 +305,7 @@ jQuery(function($) {
 
             com.showConfirm("是否禁用人员规则", function() {
 
-                updateUserRule($enable, $disable);
+                updateUserRule($enable, $disable, 1);
             });
         });
         $('<i></i>').addClass('icon-ban-circle bigger-230');
@@ -316,7 +316,23 @@ jQuery(function($) {
         if (customerChance.depage == "user" || customerChance.depage == "designer")
             $disable.append($disableI).append($disableS).appendTo(customerChance.items.infolist);
 
-        customerChance.userRule.status == constant.customer().customerUserRule.STATUS_ENABLE_INT ? $enable.hide() : $disable.hide();
+        // 接单状态显示矩阵(2026-11-13, 对齐七态+翻转垫): 启用类(0启用/6管理启用)=接单中显示停止钮; 仅1个人失效可恢复(发1翻转垫落0);
+        // 2/3/4/5个人侧恢复无效或被拒(330082/330122), 按钮全隐; 6态个人停用被330123拒, 不显示停止钮
+        var ruleStatus = customerChance.userRule.status;
+        var statusDict = constant.customer().customerUserRule;
+
+        if (ruleStatus == statusDict.STATUS_ENABLE_INT || ruleStatus == statusDict.STATUS_ADVANCE_ENABLE_INT) {
+
+            $disable.hide();
+            if (ruleStatus == statusDict.STATUS_ADVANCE_ENABLE_INT) $enable.hide(); // 管理启用: 个人不可停, 只读展示
+        } else if (ruleStatus == statusDict.STATUS_USER_INVALID_INT) {
+
+            $enable.hide();
+        } else {
+
+            $enable.hide();
+            $disable.hide();
+        }
     }
 
     // if (customerChance.depage != "source")
@@ -1538,7 +1554,7 @@ jQuery(function($) {
     }
 
     // 启用禁用个人规则
-    function updateUserRule(btn1, btn2) {
+    function updateUserRule(btn1, btn2, targetStatus) {
 
         if (customerChance.userRule.curid == null) {
             com.showAlert(com.error, "无人员规则信息");
@@ -1547,7 +1563,7 @@ jQuery(function($) {
 
         com.post(api.customer.updateCustomerUserRuleForStatus, {
             "customerUserRule.curid": customerChance.userRule.curid,
-            "customerUserRule.status": 2,
+            "customerUserRule.status": targetStatus,
         }, function(res) {
 
             com.showAlert(com.info, "操作成功");
