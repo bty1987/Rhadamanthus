@@ -1,10 +1,5 @@
 jQuery(function($) {
 
-    api = parent.api;
-    com = parent.com;
-    utils = parent.utils;
-    params = parent.params;
-
     // 变更记录查询条件: 定额单入口传参 qid, 只读时间线
     var query = params.quotation.normChangeRecord || {};
 
