@@ -1145,12 +1145,13 @@ jQuery(function($) {
         var areaOrder = [];
         var areaMap = {};
 
-        function getArea(key, name) {
+        function getArea(key, name, order) {
 
             if (!areaMap[key]) {
                 areaMap[key] = {
                     key: key,
                     name: name,
+                    order: order || "",
                     rows: [],
                     total: 0
                 };
@@ -1163,7 +1164,7 @@ jQuery(function($) {
         // 报价项(量=initNum, 与 quotationUtils 明细口径一致)
         $.each(auotation.functionAreas, function(i, fa) {
 
-            var area = getArea(fa.qfaId + '-' + fa.functionAreaName, fa.functionAreaName);
+            var area = getArea(fa.qfaId + '-' + fa.functionAreaName, fa.functionAreaName, fa.functionAreaOrder);
 
             $.each(fa.quotationFunctionAreaItems || [], function(j, item) {
 
@@ -1279,21 +1280,28 @@ jQuery(function($) {
 
         $.each(areas, function(i, area) {
 
-            var $wrap = $('<div></div>').addClass('widget-container-span col-md-12');
-            var $box = $('<div></div>').addClass('widget-box transparent');
+            // 区头结构对齐 quotationPart painter.createdomain: h5(em序号 + strong区名) + widget-toolbar 右侧信息
+            var $box = $('<div></div>').addClass('widget-box transparent').css('margin-bottom', '20px');
 
             var $header = $('<div></div>').addClass('widget-header').append(
-                $('<h4></h4>')
+                $('<h5></h5>')
+                    .append($('<em></em>').text(area.order))
+                    .append('  ')
                     .append($('<strong></strong>').html(area.name))
-                    .append($('<small class="grey" style="padding-left: 10px;"></small>').html('区折前合计: ' + Math.round(area.total)))
             );
+
+            var $toolbar = $('<div></div>').addClass('widget-toolbar no-border');
+
+            // 区折前合计为展示口径(公式输入以左栏汇总区为准)
+            $toolbar.append($('<span></span>').addClass('bigger-110')
+                .html('区折前合计: <b class="blue">' + Math.round(area.total) + '</b>'));
 
             var $body = $('<div></div>').addClass('widget-body').append(
                 $('<div></div>').addClass('widget-body-inner').css('padding', '5px 10px').append(renderAreaTable(area))
             );
 
-            $box.append($header).append($body).appendTo($wrap);
-            $wrap.appendTo($list);
+            $header.append($toolbar);
+            $box.append($header).append($body).appendTo($list);
         });
 
         if (areas.length == 0) {
@@ -1322,18 +1330,38 @@ jQuery(function($) {
             var $tr = $('<tr></tr>');
             var _total = utils.accMul(r.unitPrice, r.num);
 
+            // ACE label 底色区分来源: 报价灰/扩展蓝/增减-增绿/增减-减橙/增减-漏红
+            var _sourceLabels = {
+                "报价": "",
+                "扩展": "label-info",
+                "增减-增": "label-success",
+                "增减-减": "label-warning",
+                "增减-漏": "label-danger"
+            };
+
             $('<td></td>').html(r.name).appendTo($tr);
             $('<td></td>').html(com.checkNull(r.unit, '-')).appendTo($tr);
             $('<td></td>').html(r.num).appendTo($tr);
             $('<td></td>').html(r.unitPrice).appendTo($tr);
             $('<td></td>').html(Math.round(_total)).addClass('blue').appendTo($tr);
             $('<td></td>').html(r.discountLabel).appendTo($tr);
-            $('<td></td>').html(r.source).appendTo($tr);
 
-            var $stateTd = $('<td></td>').html(r.state ? (r.source + ' ' + r.state + ' ' + r.content) : com.checkNull(r.content, '-'));
+            if (_sourceLabels[r.source] == "") {
+                $('<td></td>').html(r.source).appendTo($tr);
+            } else {
+                $('<td></td>').html('<span class="label ' + _sourceLabels[r.source] + '">' + r.source + '</span>').appendTo($tr);
+            }
 
-            // 增减行维护入口: 单级决算折扣(accountDiscount/accountManageDiscount/accountTaxDiscount)
-            if (r.subtype == 2 && r.arId != null) {
+            var $stateTd = $('<td></td>');
+
+            // 增减行: 计入/不计入状态 + 单号 + 折扣维护入口
+            if (r.subtype == 2) {
+
+                var _stateLabel = r.state.indexOf("不计入") == 0
+                    ? '<span class="label label-danger">不计入</span>'
+                    : '<span class="label label-success">计入</span>';
+
+                $stateTd.append($(_stateLabel)).append($('<span class="grey" style="padding-left: 5px;"></span>').html(com.checkNull(r.content, '')));
 
                 $('<button></button>').addClass('btn btn-minier btn-yellow pull-right').html('折扣')
                     .click(function() {
@@ -1341,6 +1369,9 @@ jQuery(function($) {
                         openArAccountModal(r.arId);
                     })
                     .appendTo($stateTd);
+
+            } else {
+                $stateTd.html(com.checkNull(r.content, '-'));
             }
 
             $stateTd.appendTo($tr);
