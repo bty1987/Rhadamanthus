@@ -600,13 +600,8 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 
 		decorationService.sendMessage("PAYMENT_SALES_MESSAGE_FLAG", sales.getOrderId(), "主材单", String.format("主材交款金额%.3f元", Arith.div(salesPayment.getReferMoney(), 1000.0)), String.format("pages/payment/receipt/receipt?orderId=%s&rid=%s&paymentType=3", sales.getOrderId(), salesReceiptPO.getSrId()), collecter);
 
-		// 收款成功即自动确认(收款+确认同事务原子完成; confirmSalesPayment 非已收态抛150036, 紧随收款必为已收态)——落款即确认(2026-11-13需求);
-		// 3补款/5补款退款: 仅定金停在"已收未确认"(depositpayStatus=PAYED, confirm守卫150036会拦)时保持手动, 定金已确认(CONFIRM)/无定金(INIT)即自动确认;
-		// 国补单(TYPE_PROFIT)无定金恒INIT, 天然走自动确认(免真实收款, 手动则长期悬挂status=0, 实证1097笔)
-		if ((salesPayment.getType() != SalesPaymentPO.TYPE_REPLENISHMENT_INT && salesPayment.getType() != SalesPaymentPO.TYPE_MAKEAREFUND_INT)
-				|| sales.getDepositpayStatus() != SalesPO.DESPOSITPAYSTATUS_PAYED_SHORT) {
-			confirmSalesPayment(Arrays.asList(salesPayment.getSpid()), userId);
-		}
+		// 落款之后执行一步确认(2026-11-13需求): 收款+确认同事务原子完成, 全类型无条件自动确认
+		confirmSalesPayment(Arrays.asList(salesPayment.getSpid()), userId);
 
 		return 0;
 	}
@@ -750,8 +745,6 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 
 		long totalMoney = 0;
 
-		List<Long> confirmSpids = new ArrayList<Long>();
-
 		for (Long spid : spids) {
 
 			SalesPaymentPO salesPayment = salesPaymentDao.get(spid);
@@ -789,13 +782,6 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 				salesDao.update(salesPO);
 			}
 
-			// 落款即确认收集(2026-11-13, 与单笔 collectSalesPayment 同矩阵): 3补款/5补款退款在定金停在PAYED时保持手动
-			// (confirm守卫150036会拦, 含"批内先定金后补款"序——depositpayStatus 实时读已含前置行更新), 其余收集批量确认
-			if ((salesPayment.getType() != SalesPaymentPO.TYPE_REPLENISHMENT_INT && salesPayment.getType() != SalesPaymentPO.TYPE_MAKEAREFUND_INT)
-					|| salesPO.getDepositpayStatus() != SalesPO.DESPOSITPAYSTATUS_PAYED_SHORT) {
-				confirmSpids.add(salesPayment.getSpid());
-			}
-
 			totalMoney = Arith.add(totalMoney, salesPayment.getReferMoney());
 		}
 
@@ -815,10 +801,8 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 
 		decorationService.sendMessage("PAYMENT_SALES_MESSAGE_FLAG", sales.getOrderId(), "主材单", String.format("主材交款金额%.3f元", Arith.div(totalMoney, 1000.0)), String.format("pages/payment/receipt/receipt?orderId=%s&rid=%s&paymentType=3", sales.getOrderId(), salesReceiptPO.getSrId()), collecter);
 
-		// 批量落款即确认(2026-11-13需求, 与单笔同矩阵): confirmSalesPayment 逐笔守卫, 已按实时 depositpayStatus 过滤不会150036
-		if (!confirmSpids.isEmpty()) {
-			confirmSalesPayment(confirmSpids, userId);
-		}
+		// 批量落款之后执行一步确认(2026-11-13需求, 与单笔同口径): 全类型无条件自动确认
+		confirmSalesPayment(spids, userId);
 
 		return 0;
 	}
@@ -1016,13 +1000,6 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 
 			if (salesPayment.getStatus() != SalesPaymentPO.STATUS_PAIDFOR_INT) {
 				throw new FLException(150036, "款项状态不可操作");
-			}
-
-			// 补款(3)和补款退款(5)的时候 , 补款确认时定金必须是已确认的状态
-			if (salesPayment.getType() == SalesPaymentPO.TYPE_REPLENISHMENT_INT || salesPayment.getType() == SalesPaymentPO.TYPE_MAKEAREFUND_INT) {
-				if (salesPayment.getSales().getDepositpayStatus() == SalesPO.DESPOSITPAYSTATUS_PAYED_SHORT) {
-					throw new FLException(150036, "款项状态不可操作");
-				}
 			}
 
 			// 不可退定金(后增加的8)也会生成预结算信息
