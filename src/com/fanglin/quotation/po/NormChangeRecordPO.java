@@ -128,8 +128,12 @@ public class NormChangeRecordPO implements Serializable {
 		return orderId;
 	}
 
-	public NormChangeRecordPO orderId(String orderId) {
+	public void setOrderId(String orderId) {
 		this.orderId = orderId;
+	}
+
+	public NormChangeRecordPO orderId(String orderId) {
+		setOrderId(orderId);
 		return this;
 	}
 
@@ -138,8 +142,12 @@ public class NormChangeRecordPO implements Serializable {
 		return qid;
 	}
 
-	public NormChangeRecordPO qid(Long qid) {
+	public void setQid(Long qid) {
 		this.qid = qid;
+	}
+
+	public NormChangeRecordPO qid(Long qid) {
+		setQid(qid);
 		return this;
 	}
 
@@ -148,8 +156,12 @@ public class NormChangeRecordPO implements Serializable {
 		return refId;
 	}
 
-	public NormChangeRecordPO refId(Long refId) {
+	public void setRefId(Long refId) {
 		this.refId = refId;
+	}
+
+	public NormChangeRecordPO refId(Long refId) {
+		setRefId(refId);
 		return this;
 	}
 
@@ -158,8 +170,12 @@ public class NormChangeRecordPO implements Serializable {
 		return refNo;
 	}
 
-	public NormChangeRecordPO refNo(String refNo) {
+	public void setRefNo(String refNo) {
 		this.refNo = refNo;
+	}
+
+	public NormChangeRecordPO refNo(String refNo) {
+		setRefNo(refNo);
 		return this;
 	}
 
@@ -168,8 +184,12 @@ public class NormChangeRecordPO implements Serializable {
 		return beforeValue;
 	}
 
-	public NormChangeRecordPO before(String beforeValue) {
+	public void setBeforeValue(String beforeValue) {
 		this.beforeValue = beforeValue;
+	}
+
+	public NormChangeRecordPO before(String beforeValue) {
+		setBeforeValue(beforeValue);
 		return this;
 	}
 
@@ -178,8 +198,12 @@ public class NormChangeRecordPO implements Serializable {
 		return afterValue;
 	}
 
-	public NormChangeRecordPO after(String afterValue) {
+	public void setAfterValue(String afterValue) {
 		this.afterValue = afterValue;
+	}
+
+	public NormChangeRecordPO after(String afterValue) {
+		setAfterValue(afterValue);
 		return this;
 	}
 
@@ -188,8 +212,12 @@ public class NormChangeRecordPO implements Serializable {
 		return comment;
 	}
 
-	public NormChangeRecordPO comment(String comment) {
+	public void setComment(String comment) {
 		this.comment = comment;
+	}
+
+	public NormChangeRecordPO comment(String comment) {
+		setComment(comment);
 		return this;
 	}
 
