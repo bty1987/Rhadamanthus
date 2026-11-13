@@ -1311,48 +1311,47 @@ jQuery(function($) {
 
     function renderAreaTable(area) {
 
-        var $table = $('<table></table>').addClass('table table-striped table-bordered table-hover table-condensed');
+        // fl-quo flex 网格(与 quotationPart 明细同构, 全局 clear.css), 列宽补充见页面 <style>
+        var $list = $('<ul></ul>').addClass('fl-quo-list');
 
-        var $thead = $('<thead></thead>').append($('<tr></tr>')
-            .append($('<th></th>').html('名称'))
-            .append($('<th></th>').html('单位'))
-            .append($('<th></th>').html('量'))
-            .append($('<th></th>').html('单价'))
-            .append($('<th></th>').html('小计'))
-            .append($('<th></th>').html('折扣'))
-            .append($('<th></th>').html('来源'))
-            .append($('<th></th>').html('状态/单号')));
+        var _headerSet = [["name", "名称"], ["unit", "单位"], ["num", "量"], ["price", "单价"], ["au-subtotal", "小计"], ["au-discount", "折扣"], ["au-source", "来源"], ["au-state", "状态/单号"]];
 
-        var $tbody = $('<tbody></tbody>');
+        var $headerItem = $('<li></li>').addClass('fl-quo-item au-header');
+
+        $.each(_headerSet, function(i, v) {
+
+            $('<div></div>').addClass('cell ' + v[0]).append($('<span></span>').addClass('cell-wrap').text(v[1])).appendTo($headerItem);
+        });
+
+        $list.append($headerItem);
+
+        // ACE label 底色区分来源: 报价灰/扩展蓝/增减-增绿/增减-减橙/增减-漏红
+        var _sourceLabels = {
+            "报价": "",
+            "扩展": "label-info",
+            "增减-增": "label-success",
+            "增减-减": "label-warning",
+            "增减-漏": "label-danger"
+        };
 
         $.each(area.rows, function(i, r) {
 
-            var $tr = $('<tr></tr>');
             var _total = utils.accMul(r.unitPrice, r.num);
 
-            // ACE label 底色区分来源: 报价灰/扩展蓝/增减-增绿/增减-减橙/增减-漏红
-            var _sourceLabels = {
-                "报价": "",
-                "扩展": "label-info",
-                "增减-增": "label-success",
-                "增减-减": "label-warning",
-                "增减-漏": "label-danger"
-            };
-
-            $('<td></td>').html(r.name).appendTo($tr);
-            $('<td></td>').html(com.checkNull(r.unit, '-')).appendTo($tr);
-            $('<td></td>').html(r.num).appendTo($tr);
-            $('<td></td>').html(r.unitPrice).appendTo($tr);
-            $('<td></td>').html(Math.round(_total)).addClass('blue').appendTo($tr);
-            $('<td></td>').html(r.discountLabel).appendTo($tr);
+            var _cells = [
+                ["name", com.checkNull(r.name, '-')],
+                ["unit", com.checkNull(r.unit, '-')],
+                ["num", r.num],
+                ["price", r.unitPrice],
+                ["au-subtotal", '<b class="blue">' + Math.round(_total) + '</b>'],
+                ["au-discount", r.discountLabel]
+            ];
 
             if (_sourceLabels[r.source] == "") {
-                $('<td></td>').html(r.source).appendTo($tr);
+                _cells.push(["au-source", r.source]);
             } else {
-                $('<td></td>').html('<span class="label ' + _sourceLabels[r.source] + '">' + r.source + '</span>').appendTo($tr);
+                _cells.push(["au-source", '<span class="label ' + _sourceLabels[r.source] + '">' + r.source + '</span>']);
             }
-
-            var $stateTd = $('<td></td>');
 
             // 增减行: 计入/不计入状态 + 单号 + 折扣维护入口
             if (r.subtype == 2) {
@@ -1361,27 +1360,47 @@ jQuery(function($) {
                     ? '<span class="label label-danger">不计入</span>'
                     : '<span class="label label-success">计入</span>';
 
-                $stateTd.append($(_stateLabel)).append($('<span class="grey" style="padding-left: 5px;"></span>').html(com.checkNull(r.content, '')));
+                var $stateWrap = $('<span></span>').addClass('cell-wrap')
+                    .append($(_stateLabel))
+                    .append($('<span class="grey" style="padding-left: 5px;"></span>').html(com.checkNull(r.content, '')));
 
-                $('<button></button>').addClass('btn btn-minier btn-yellow pull-right').html('折扣')
+                var $arBtn = $('<button></button>').addClass('btn btn-minier btn-yellow').html('折扣').css('margin-left', '5px')
                     .click(function() {
 
                         openArAccountModal(r.arId);
-                    })
-                    .appendTo($stateTd);
+                    });
+
+                var $stateCell = $('<div></div>').addClass('cell au-state').append($stateWrap).append($arBtn);
+
+                var $li = $('<li></li>').addClass('fl-quo-item');
+
+                $.each(_cells, function(j, c) {
+
+                    var $cell = $('<div></div>').addClass('cell ' + c[0]).append($('<span></span>').addClass('cell-wrap').html(c[1]));
+
+                    $li.append($cell);
+                });
+
+                $li.append($stateCell).appendTo($list);
 
             } else {
-                $stateTd.html(com.checkNull(r.content, '-'));
+
+                _cells.push(["au-state", com.checkNull(r.content, '-')]);
+
+                var $li = $('<li></li>').addClass('fl-quo-item');
+
+                $.each(_cells, function(j, c) {
+
+                    var $cell = $('<div></div>').addClass('cell ' + c[0]).append($('<span></span>').addClass('cell-wrap').html(c[1]));
+
+                    $li.append($cell);
+                });
+
+                $li.appendTo($list);
             }
-
-            $stateTd.appendTo($tr);
-
-            $tbody.append($tr);
         });
 
-        $table.append($thead).append($tbody);
-
-        return $table;
+        return $list;
     }
 
     /**

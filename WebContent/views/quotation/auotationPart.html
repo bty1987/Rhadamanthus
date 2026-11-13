@@ -406,6 +406,49 @@
 	</div>
 </div>
 
+<style>
+	/* 决算报价明细行: 复用全局 fl-quo flex 网格(clear.css), 本页特有列的宽度补充
+	   style随fragment注入宿主iframe文档全局生效, 必须带#auotationPartContent容器前缀防误伤同文档其他fl-quo列表
+	   弹窗80%宽×1440屏时右栏内容区约736px, 列宽总和615+padding128内不换行 */
+	#auotationPartContent .fl-quo-list .cell.name .cell-wrap {
+		width: 160px;
+	}
+
+	#auotationPartContent .fl-quo-list .cell.unit .cell-wrap {
+		width: 40px;
+	}
+
+	#auotationPartContent .fl-quo-list .cell.num .cell-wrap {
+		width: 55px;
+	}
+
+	#auotationPartContent .fl-quo-list .cell.price .cell-wrap {
+		width: 55px;
+	}
+
+	#auotationPartContent .fl-quo-list .cell.au-subtotal .cell-wrap {
+		width: 60px;
+	}
+
+	#auotationPartContent .fl-quo-list .cell.au-discount .cell-wrap {
+		width: 40px;
+	}
+
+	#auotationPartContent .fl-quo-list .cell.au-source .cell-wrap {
+		width: 65px;
+	}
+
+	#auotationPartContent .fl-quo-list .cell.au-state .cell-wrap {
+		width: 200px;
+	}
+
+	#auotationPartContent .fl-quo-item.au-header {
+		background: #F7F7F7;
+		font-weight: bold;
+		color: #555;
+	}
+</style>
+
 <script type="text/javascript">
 	$.loadScript(['js/quotation/auotationPart.js']);
 </script>
