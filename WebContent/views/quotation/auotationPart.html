@@ -1,210 +1,399 @@
 <div id="auotationPartContent" class="page-content">
+	<div class="row">
+		<!-- 左栏: 基本信息 / 计算内容 / 功能控件 -->
+		<div class="col-xs-12 col-md-3">
+			<div class="widget-box transparent">
+				<div class="widget-header">
+					<h4>决算报价 <small id="auOrderNo" class="blue"></small></h4>
+				</div>
 
-    <!-- ①信息条 -->
-    <div class="row">
-        <div class="col-md-12" style="border-bottom: 1px solid #e3e3e3; padding-bottom: 10px; margin-bottom: 10px;">
-            <div class="col-md-3">
-                <h5 class="bigger-110">单号: <b class="blue" id="auOrderNo"></b></h5>
-                <h5 class="bigger-110">地址: <b class="blue" id="auAddress"></b></h5>
-            </div>
-            <div class="col-md-3">
-                <h5 class="bigger-110">报价版本: <b class="blue" id="auVersionName"></b></h5>
-                <h5 class="bigger-110">计价面积: <b class="blue" id="auBuildArea"></b> 折扣: <b class="blue" id="auOrderDiscount"></b></h5>
-            </div>
-            <div class="col-md-3">
-                <h5 class="bigger-110">业务类型: <b class="blue" id="auTypenessName"></b></h5>
-                <h5 class="bigger-110">预签: 起报价 <b class="blue" id="auQuotePrice">0</b> 优惠价 <b class="blue" id="auPreferPrice">0</b></h5>
-            </div>
-            <div class="col-md-3">
-                <h5 class="bigger-110">决算记录: <b class="red" id="auAccountStatus">未建档</b></h5>
-                <h5 class="bigger-110">决算名称: <b class="blue" id="auAccountName">-</b></h5>
-            </div>
-        </div>
-    </div>
+				<div class="widget-body">
+					<div class="widget-main">
+						<div class="row">
+							<!-- 基本信息 -->
+							<div class="col-md-12">
+								<div class="form-group">
+									<label class="col-md-4 no-padding-right">楼盘地址</label>
+									<label id="auAddress" class="col-md-8 no-padding-left">-</label>
+								</div>
+								<div class="form-group">
+									<label class="col-md-4 no-padding-right">报价版本</label>
+									<label id="auVersionName" class="col-md-8 no-padding-left">-</label>
+								</div>
+								<div class="form-group">
+									<label class="col-md-4 no-padding-right">计价面积</label>
+									<label id="auBuildArea" class="col-md-8 no-padding-left">0</label>
+								</div>
+								<div class="form-group">
+									<label class="col-md-4 no-padding-right">订单折扣</label>
+									<label id="auOrderDiscount" class="col-md-8 no-padding-left">0</label>
+								</div>
+								<div class="form-group">
+									<label class="col-md-4 no-padding-right">业务类型</label>
+									<label id="auTypenessName" class="col-md-8 no-padding-left">-</label>
+								</div>
+								<div class="form-group">
+									<label class="col-md-4 no-padding-right">预签起报价</label>
+									<label id="auQuotePrice" class="col-md-8 no-padding-left">0</label>
+								</div>
+								<div class="form-group">
+									<label class="col-md-4 no-padding-right">预签优惠价</label>
+									<label id="auPreferPrice" class="col-md-8 no-padding-left">0</label>
+								</div>
+								<div class="form-group">
+									<label class="col-md-4 no-padding-right">决算记录</label>
+									<label id="auAccountStatus" class="col-md-8 no-padding-left red">未建档</label>
+								</div>
+								<div class="form-group">
+									<label class="col-md-4 no-padding-right">决算名称</label>
+									<label id="auAccountName" class="col-md-8 no-padding-left">-</label>
+								</div>
+							</div>
 
-    <!-- ②决算核心金额条(常显) -->
-    <div class="row">
-        <div class="col-md-12" style="border-bottom: 1px solid #e3e3e3; padding: 5px 0 10px 0;">
-            <div class="col-md-2"><h5 class="bigger-110">直接费: <b class="blue" id="auBeforeTotal">0</b></h5></div>
-            <div class="col-md-2"><h5 class="bigger-110">折前总额: <b class="blue" id="auDirect">0</b></h5></div>
-            <div class="col-md-2"><h5 class="bigger-110">决算合同额: <b class="blue" id="auAccountForehead">0</b></h5></div>
-            <div class="col-md-2"><h5 class="bigger-110">决算服务费: <b class="blue" id="auAccountServicePrice">0</b></h5></div>
-            <div class="col-md-2"><h5 class="bigger-110">决算主材额: <b class="blue" id="auMaterialAccountShow">0</b></h5></div>
-            <div class="col-md-1"><h5 class="bigger-110">金额差: <b class="blue" id="auDifference">0</b></h5></div>
-            <div class="col-md-1">
-                <button type="button" id="auSummaryToggleBtn" class="btn btn-minier btn-yellow pull-right">收起汇总</button>
-            </div>
-            <div class="col-md-2" style="text-align: right;">
-                <button type="button" id="auUpdateBtn" class="btn btn-danger btn-sm" disabled="disabled">保存决算</button>
-                <button type="button" id="auRefreshBtn" class="btn btn-info btn-sm">刷新</button>
-            </div>
-            <div class="col-md-12">
-                <h5 class="bigger-110">差额(不含预付款): <b class="blue" id="auBalanceSum">0</b> 应补款: <b class="blue" id="auFullPayment">0</b> 折前总额全: <b class="blue" id="auDirectC">0</b></h5>
-            </div>
-        </div>
-    </div>
+							<div class="col-md-12 hr hr-14"></div>
 
-    <!-- ③完整汇总区(可折叠) -->
-    <div id="auSummaryZone" class="row">
-        <div class="col-md-12" style="border-bottom: 1px solid #e3e3e3; padding: 10px 0;">
-            <div class="col-md-4">
-                <h5 class="bigger-110"><strong>报价(公式输入, 不由明细行求和)</strong></h5>
-                <h5 class="bigger-110">报价总额: <b class="blue" id="auFoldFrontTotalPrice">0</b> 折前总价: <b class="blue" id="auFoldFrontTotal">0</b> 折前直接费: <b class="blue" id="auFoldFrontFee">0</b></h5>
-                <h5 class="bigger-110">打折项总额: <b class="blue" id="auDisPrice">0</b> 不打折项总额: <b class="blue" id="auUndisPrice">0</b> 车运费: <b class="blue" id="auTrafficPrice">0</b></h5>
-                <h5 class="bigger-110">管理费(折算): <b class="blue" id="auManagePrice">0</b> 税金(折算): <b class="blue" id="auTaxPriceB">0</b></h5>
-            </div>
-            <div class="col-md-4">
-                <h5 class="bigger-110"><strong>扩展(仅展示+折前总额全)</strong></h5>
-                <h5 class="bigger-110">增: 折前 <b class="blue" id="auAddExtensionItemFoldFrontTotal">0</b> 管理费 <b class="blue" id="auAddExtensionItemManagePrice">0</b> 总额 <b class="blue" id="auAddExtensionItemTotalPrice">0</b></h5>
-                <h5 class="bigger-110">减: 折前 <b class="blue" id="auMinusExtensionItemFoldFrontTotal">0</b> 管理费 <b class="blue" id="auMinusExtensionItemManagePrice">0</b> 总额 <b class="blue" id="auMinusExtensionItemTotalPrice">0</b></h5>
-                <h5 class="bigger-110">决算管理费: <b class="blue" id="auManagement">0</b> 税金: <b class="blue" id="auTaxPriceA">0</b></h5>
-                <h5 class="bigger-110">实花配比: <b class="blue" id="auFlowerRatio">0</b> 含外销: <b class="blue" id="auFlowerOalesRatio">0</b> 超配比: <b class="blue" id="auSuperRatio">0</b></h5>
-            </div>
-            <div class="col-md-4">
-                <h5 class="bigger-110"><strong>增减(决算口径: 现金付款 且 已付款/已确认)</strong></h5>
-                <h5 class="bigger-110">增: 折前 <b class="blue" id="auAddFoldFrontTotal">0</b> 管理费 <b class="blue" id="auAddManagePrice">0</b> 配比 <b class="blue" id="auAddMatch">0</b> 非配比 <b class="blue" id="auAddUncalPrice">0</b></h5>
-                <h5 class="bigger-110">增: 税金 <b class="blue" id="auAddTaxPrice">0</b> 总额 <b class="blue" id="auAddTotal">0</b> 已收 <b class="blue" id="auAddDone">0</b> 未收 <b class="red" id="auAddOwing">0</b></h5>
-                <h5 class="bigger-110">减: 折前 <b class="blue" id="auMinusFoldFrontTotal">0</b> 管理费 <b class="blue" id="auMinusManagePrice">0</b> 配比 <b class="blue" id="auMinusMatch">0</b> 非配比 <b class="blue" id="auMinusUncalPrice">0</b></h5>
-                <h5 class="bigger-110">减: 税金 <b class="blue" id="auMinusTaxPrice">0</b> 总额 <b class="blue" id="auMinusTotal">0</b> 已收 <b class="blue" id="auMinusDone">0</b> 未收 <b class="red" id="auMinusOwing">0</b></h5>
-                <h5 class="bigger-110">增减项差额: <b class="blue" id="auAsDifference">0</b></h5>
-            </div>
-        </div>
-    </div>
+							<!-- 决算金额 -->
+							<div class="col-md-12">
+								<div class="form-group">
+									<label class="col-md-6 no-padding-right">决算直接费</label>
+									<label id="auBeforeTotal" class="col-md-6 no-padding-left blue">0</label>
+								</div>
+								<div class="form-group">
+									<label class="col-md-6 no-padding-right">决算折前总额</label>
+									<label id="auDirect" class="col-md-6 no-padding-left blue">0</label>
+								</div>
+								<div class="form-group">
+									<label class="col-md-6 no-padding-right">决算合同额</label>
+									<label id="auAccountForehead" class="col-md-6 no-padding-left blue">0</label>
+								</div>
+								<div class="form-group">
+									<label class="col-md-6 no-padding-right">决算服务费</label>
+									<label id="auAccountServicePrice" class="col-md-6 no-padding-left blue">0</label>
+								</div>
+								<div class="form-group">
+									<label class="col-md-6 no-padding-right">决算主材额</label>
+									<label id="auMaterialAccountShow" class="col-md-6 no-padding-left blue">0</label>
+								</div>
+								<div class="form-group">
+									<label class="col-md-6 no-padding-right">决算管理费</label>
+									<label id="auManagement" class="col-md-6 no-padding-left">0</label>
+								</div>
+								<div class="form-group">
+									<label class="col-md-6 no-padding-right">税金</label>
+									<label id="auTaxPriceA" class="col-md-6 no-padding-left">0</label>
+								</div>
+								<div class="form-group">
+									<label class="col-md-6 no-padding-right">金额差</label>
+									<label id="auDifference" class="col-md-6 no-padding-left">0</label>
+								</div>
+								<div class="form-group">
+									<label class="col-md-6 no-padding-right">差额(不含预付)</label>
+									<label id="auBalanceSum" class="col-md-6 no-padding-left">0</label>
+								</div>
+								<div class="form-group">
+									<label class="col-md-6 no-padding-right">应补款</label>
+									<label id="auFullPayment" class="col-md-6 no-padding-left">0</label>
+								</div>
+								<div class="form-group">
+									<label class="col-md-6 no-padding-right">折前总额全</label>
+									<label id="auDirectC" class="col-md-6 no-padding-left">0</label>
+								</div>
+								<div class="form-group">
+									<label class="col-md-6 no-padding-right">决算实花配比</label>
+									<label id="auFlowerRatio" class="col-md-6 no-padding-left">0</label>
+								</div>
+								<div class="form-group">
+									<label class="col-md-6 no-padding-right">实花配比含外销</label>
+									<label id="auFlowerOalesRatio" class="col-md-6 no-padding-left">0</label>
+								</div>
+								<div class="form-group">
+									<label class="col-md-6 no-padding-right">超配比</label>
+									<label id="auSuperRatio" class="col-md-6 no-padding-left">0</label>
+								</div>
+							</div>
 
-    <!-- ③b 计算过程(可折叠, 默认收起, 每次重算自动刷新) -->
-    <div class="row">
-        <div class="col-md-12" style="border-bottom: 1px solid #e3e3e3; padding: 8px 0;">
-            <button type="button" id="auCalcTraceToggleBtn" class="btn btn-minier btn-yellow">展开计算过程</button>
-            <small class="grey" style="padding-left: 10px;">决算各指标的公式与参与数值(纯展示, 每次重算自动刷新)</small>
-            <div id="auCalcTraceZone" style="display: none; padding: 10px 0;">
-                <table class="table table-striped table-bordered table-hover table-condensed">
-                    <thead>
-                        <tr>
-                            <th style="width: 13%;">决算指标</th>
-                            <th>计算公式(代入实际数值)</th>
-                            <th style="width: 9%;">结果</th>
-                            <th style="width: 13%;">落库字段(decorationaccount)</th>
-                        </tr>
-                    </thead>
-                    <tbody id="auCalcTraceList"></tbody>
-                </table>
-            </div>
-        </div>
-    </div>
+							<!-- 折叠区: 报价/扩展/增减 公式输入汇总 -->
+							<div class="col-md-12">
+								<button type="button" id="auSummaryToggleBtn" class="btn btn-minier btn-yellow">收起汇总</button>
+							</div>
+							<div id="auSummaryZone" class="col-md-12">
+								<div class="col-md-12 hr hr-14"></div>
 
-    <!-- ④重算控制条(常显) -->
-    <div class="row">
-        <div class="col-md-12" style="border-bottom: 1px solid #e3e3e3; padding: 10px 0;">
-            <div class="col-md-2">
-                <label class="control-label no-padding-right">重算折扣</label>
-                <input type="text" id="auCalDiscountPrice" class="col-xs-12" maxlength="5" style="text-align: center" value="">
-            </div>
-            <div class="col-md-1">
-                <label class="control-label no-padding-right">&nbsp;</label>
-                <button type="button" id="auCalculateBtn" class="btn btn-success col-xs-12">计算</button>
-            </div>
-            <div class="col-md-2">
-                <label class="control-label no-padding-right">增减计配比</label>
-                <input type="checkbox" id="auMatching" class="ace ace-switch ace-switch-5">
-                <span class="lbl"></span>
-            </div>
-            <div class="col-md-3">
-                <label class="control-label no-padding-right">业务类型(配比方案)</label>
-                <select id="auOtherPaymentType" class="col-xs-12"></select>
-            </div>
-            <div class="col-md-1">
-                <label class="control-label no-padding-right">优惠券</label>
-                <input type="text" id="auPreferences" class="col-xs-12" maxlength="11" style="text-align: center" value="0">
-            </div>
-            <div class="col-md-1">
-                <label class="control-label no-padding-right">内部券</label>
-                <input type="text" id="auInternalCoupon" class="col-xs-12" maxlength="11" style="text-align: center" value="0">
-            </div>
-            <div class="col-md-1">
-                <label class="control-label no-padding-right">满送</label>
-                <input type="text" id="auFulldel" class="col-xs-12" maxlength="11" style="text-align: center" value="0">
-            </div>
-            <div class="col-md-1">
-                <label class="control-label no-padding-right">返现</label>
-                <input type="text" id="auCashback" class="col-xs-12" maxlength="11" style="text-align: center" value="0">
-            </div>
-            <div class="col-md-2">
-                <label class="control-label no-padding-right">决算主材额</label>
-                <input type="text" id="auMaterialAccount" class="col-xs-12" maxlength="11" style="text-align: center" value="0">
-            </div>
-            <div class="col-md-8" style="padding-top: 5px;">
-                <label class="control-label no-padding-right">备注</label>
-                <input type="text" id="auComment" class="col-xs-10" maxlength="200">
-                <small class="grey" style="padding-left: 10px;">未建档订单仅展示与重算预览, 保存决算前请先在决算计算页生成决算记录</small>
-            </div>
-        </div>
-    </div>
+								<div class="col-md-12">
+									<h5 class="bigger-110"><strong>报价(公式输入)</strong></h5>
+									<div class="form-group">
+										<label class="col-md-6 no-padding-right">报价总额</label>
+										<label id="auFoldFrontTotalPrice" class="col-md-6 no-padding-left">0</label>
+									</div>
+									<div class="form-group">
+										<label class="col-md-6 no-padding-right">折前总价</label>
+										<label id="auFoldFrontTotal" class="col-md-6 no-padding-left">0</label>
+									</div>
+									<div class="form-group">
+										<label class="col-md-6 no-padding-right">折前直接费</label>
+										<label id="auFoldFrontFee" class="col-md-6 no-padding-left">0</label>
+									</div>
+									<div class="form-group">
+										<label class="col-md-6 no-padding-right">打折项总额</label>
+										<label id="auDisPrice" class="col-md-6 no-padding-left">0</label>
+									</div>
+									<div class="form-group">
+										<label class="col-md-6 no-padding-right">不打折项总额</label>
+										<label id="auUndisPrice" class="col-md-6 no-padding-left">0</label>
+									</div>
+									<div class="form-group">
+										<label class="col-md-6 no-padding-right">车运费</label>
+										<label id="auTrafficPrice" class="col-md-6 no-padding-left">0</label>
+									</div>
+									<div class="form-group">
+										<label class="col-md-6 no-padding-right">管理费(折算)</label>
+										<label id="auManagePrice" class="col-md-6 no-padding-left">0</label>
+									</div>
+									<div class="form-group">
+										<label class="col-md-6 no-padding-right">税金(折算)</label>
+										<label id="auTaxPriceB" class="col-md-6 no-padding-left">0</label>
+									</div>
+								</div>
 
-    <!-- ⑤功能区块流 -->
-    <div class="widget-container-span col-md-12">
-        <div class="widget-box transparent">
-            <div class="widget-header">
-                <h4><strong>决算报价明细</strong><small style="padding-left: 10px;">(报价 + 扩展 + 增减 按功能区归组; 行小计 = 单价×量, 区合计为展示口径, 公式输入以汇总区为准; 增减行"折扣"按钮维护该单决算折扣; 保存决算时随主记录写入决算明细快照)</small></h4>
-            </div>
-            <div class="widget-body">
-                <div class="widget-body-inner" style="padding: 10px;">
-                    <div id="auFunctionAreaList"></div>
-                </div>
-            </div>
-        </div>
-    </div>
+								<div class="col-md-12 hr hr-14"></div>
+
+								<div class="col-md-12">
+									<h5 class="bigger-110"><strong>扩展(仅展示+折前总额全)</strong></h5>
+									<div class="form-group">
+										<label class="col-md-6 no-padding-right">增项折前总价</label>
+										<label id="auAddExtensionItemFoldFrontTotal" class="col-md-6 no-padding-left">0</label>
+									</div>
+									<div class="form-group">
+										<label class="col-md-6 no-padding-right">增项管理费</label>
+										<label id="auAddExtensionItemManagePrice" class="col-md-6 no-padding-left">0</label>
+									</div>
+									<div class="form-group">
+										<label class="col-md-6 no-padding-right">增项总额</label>
+										<label id="auAddExtensionItemTotalPrice" class="col-md-6 no-padding-left">0</label>
+									</div>
+									<div class="form-group">
+										<label class="col-md-6 no-padding-right">减项折前总价</label>
+										<label id="auMinusExtensionItemFoldFrontTotal" class="col-md-6 no-padding-left">0</label>
+									</div>
+									<div class="form-group">
+										<label class="col-md-6 no-padding-right">减项管理费</label>
+										<label id="auMinusExtensionItemManagePrice" class="col-md-6 no-padding-left">0</label>
+									</div>
+									<div class="form-group">
+										<label class="col-md-6 no-padding-right">减项总额</label>
+										<label id="auMinusExtensionItemTotalPrice" class="col-md-6 no-padding-left">0</label>
+									</div>
+								</div>
+
+								<div class="col-md-12 hr hr-14"></div>
+
+								<div class="col-md-12">
+									<h5 class="bigger-110"><strong>增减(决算口径)</strong></h5>
+									<div class="form-group">
+										<label class="col-md-6 no-padding-right">增项折前总价</label>
+										<label id="auAddFoldFrontTotal" class="col-md-6 no-padding-left">0</label>
+									</div>
+									<div class="form-group">
+										<label class="col-md-6 no-padding-right">增项管理费</label>
+										<label id="auAddManagePrice" class="col-md-6 no-padding-left">0</label>
+									</div>
+									<div class="form-group">
+										<label class="col-md-6 no-padding-right">增项配比总额</label>
+										<label id="auAddMatch" class="col-md-6 no-padding-left">0</label>
+									</div>
+									<div class="form-group">
+										<label class="col-md-6 no-padding-right">增项非配比总额</label>
+										<label id="auAddUncalPrice" class="col-md-6 no-padding-left">0</label>
+									</div>
+									<div class="form-group">
+										<label class="col-md-6 no-padding-right">增项税金总额</label>
+										<label id="auAddTaxPrice" class="col-md-6 no-padding-left">0</label>
+									</div>
+									<div class="form-group">
+										<label class="col-md-6 no-padding-right">增项总额</label>
+										<label id="auAddTotal" class="col-md-6 no-padding-left">0</label>
+									</div>
+									<div class="form-group">
+										<label class="col-md-6 no-padding-right">增项已收 / 未收</label>
+										<label class="col-md-6 no-padding-left"><span id="auAddDone" class="blue">0</span> / <span id="auAddOwing" class="red">0</span></label>
+									</div>
+									<div class="form-group">
+										<label class="col-md-6 no-padding-right">减项折前总价</label>
+										<label id="auMinusFoldFrontTotal" class="col-md-6 no-padding-left">0</label>
+									</div>
+									<div class="form-group">
+										<label class="col-md-6 no-padding-right">减项管理费</label>
+										<label id="auMinusManagePrice" class="col-md-6 no-padding-left">0</label>
+									</div>
+									<div class="form-group">
+										<label class="col-md-6 no-padding-right">减项配比总额</label>
+										<label id="auMinusMatch" class="col-md-6 no-padding-left">0</label>
+									</div>
+									<div class="form-group">
+										<label class="col-md-6 no-padding-right">减项非配比总额</label>
+										<label id="auMinusUncalPrice" class="col-md-6 no-padding-left">0</label>
+									</div>
+									<div class="form-group">
+										<label class="col-md-6 no-padding-right">减项税金总额</label>
+										<label id="auMinusTaxPrice" class="col-md-6 no-padding-left">0</label>
+									</div>
+									<div class="form-group">
+										<label class="col-md-6 no-padding-right">减项总额</label>
+										<label id="auMinusTotal" class="col-md-6 no-padding-left">0</label>
+									</div>
+									<div class="form-group">
+										<label class="col-md-6 no-padding-right">减项已收 / 未收</label>
+										<label class="col-md-6 no-padding-left"><span id="auMinusDone" class="blue">0</span> / <span id="auMinusOwing" class="red">0</span></label>
+									</div>
+									<div class="form-group">
+										<label class="col-md-6 no-padding-right">增减项差额</label>
+										<label id="auAsDifference" class="col-md-6 no-padding-left">0</label>
+									</div>
+								</div>
+							</div>
+
+							<div class="col-md-12 hr hr-14"></div>
+
+							<!-- 重算控件 -->
+							<div class="col-md-12">
+								<div class="form-group">
+									<label class="col-md-6 no-padding-right">重算折扣</label>
+									<input type="text" id="auCalDiscountPrice" class="col-md-4 no-padding-left" maxlength="5" value="">
+									<button type="button" id="auCalculateBtn" class="btn btn-minier btn-success col-md-2">计算</button>
+								</div>
+								<div class="form-group">
+									<label class="col-md-6 no-padding-right">增减计配比</label>
+									<input type="checkbox" id="auMatching" class="ace ace-switch ace-switch-5">
+									<span class="lbl"></span>
+								</div>
+								<div class="form-group">
+									<label class="col-md-4 no-padding-right">配比方案</label>
+									<select id="auOtherPaymentType" class="col-md-8"></select>
+								</div>
+								<div class="form-group">
+									<label class="col-md-6 no-padding-right">优惠券</label>
+									<input type="text" id="auPreferences" class="col-md-6 no-padding-left" maxlength="11" value="0">
+								</div>
+								<div class="form-group">
+									<label class="col-md-6 no-padding-right">内部优惠券</label>
+									<input type="text" id="auInternalCoupon" class="col-md-6 no-padding-left" maxlength="11" value="0">
+								</div>
+								<div class="form-group">
+									<label class="col-md-6 no-padding-right">满送</label>
+									<input type="text" id="auFulldel" class="col-md-6 no-padding-left" maxlength="11" value="0">
+								</div>
+								<div class="form-group">
+									<label class="col-md-6 no-padding-right">返现</label>
+									<input type="text" id="auCashback" class="col-md-6 no-padding-left" maxlength="11" value="0">
+								</div>
+								<div class="form-group">
+									<label class="col-md-6 no-padding-right">决算主材额</label>
+									<input type="text" id="auMaterialAccount" class="col-md-6 no-padding-left" maxlength="11" value="0">
+								</div>
+								<div class="form-group">
+									<label class="col-md-4 no-padding-right">备注</label>
+									<input type="text" id="auComment" class="col-md-8 no-padding-left" maxlength="200">
+								</div>
+								<small class="grey">未建档订单仅展示与重算预览, 保存决算前请先在决算计算页生成决算记录</small>
+							</div>
+
+							<!-- 功能按钮 -->
+							<div class="col-md-12">
+								<div class="col-md-12 space-8"></div>
+								<div class="col-md-12">
+									<button type="button" id="auUpdateBtn" class="btn btn-minier btn-danger col-md-5" disabled="disabled">
+										<i class="icon-save"></i>保存决算
+									</button>
+									<button type="button" id="auRefreshBtn" class="btn btn-minier btn-info col-md-5" style="margin-left: 2px;">
+										<i class="icon-refresh"></i>刷新
+									</button>
+								</div>
+								<div class="col-md-12 space-8"></div>
+								<div class="col-md-12">
+									<button type="button" id="auCalcTraceToggleBtn" class="btn btn-minier btn-yellow col-md-10">
+										展开计算过程
+									</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- 右栏: 计算过程 + 各功能区项目 -->
+		<div class="col-xs-12 col-md-9" style="border-width: 0 0 0 1px; border-style: solid; border-color: #c1c1c1;">
+			<div class="row clearfix">
+				<div class="col-xs-12" id="auCalcTraceZone" style="display: none; padding: 10px;">
+					<table class="table table-striped table-bordered table-hover table-condensed">
+						<thead>
+							<tr>
+								<th style="width: 14%;">决算指标</th>
+								<th>计算公式(代入实际数值)</th>
+								<th style="width: 9%;">结果</th>
+								<th style="width: 14%;">落库字段(decorationaccount)</th>
+							</tr>
+						</thead>
+						<tbody id="auCalcTraceList"></tbody>
+					</table>
+				</div>
+
+				<div class="col-xs-12" id="auFunctionAreaList"></div>
+			</div>
+		</div>
+	</div>
 </div>
 
 <!-- 增减单决算折扣维护弹窗 -->
 <div class="modal fade" id="auAddReduceAccountModal" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content col-md-12">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">
-                    <span>&times;</span><span class="sr-only">Close</span>
-                </button>
-                <h4 class="modal-title">决算折扣 <b id="auArAccountName" class="blue"></b></h4>
-            </div>
+	<div class="modal-dialog">
+		<div class="modal-content col-md-12">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">
+					<span>&times;</span><span class="sr-only">Close</span>
+				</button>
+				<h4 class="modal-title">决算折扣 <b id="auArAccountName" class="blue"></b></h4>
+			</div>
 
-            <div class="modal-body">
-                <form class="form-horizontal">
-                    <div class="form-group">
-                        <label class="col-sm-3 control-label no-padding-right" for="auArAccountDiscount">决算折扣</label>
-                        <div class="col-sm-9">
-                            <input type="text" id="auArAccountDiscount" class="col-xs-10 col-sm-5 v_float_3"/>
-                            <small class="grey">0 = 未维护(计算时回退单级/全单折扣)</small>
-                        </div>
-                    </div>
-                    <div class="space-4"></div>
+			<div class="modal-body">
+				<form class="form-horizontal">
+					<div class="form-group">
+						<label class="col-sm-3 control-label no-padding-right" for="auArAccountDiscount">决算折扣</label>
+						<div class="col-sm-9">
+							<input type="text" id="auArAccountDiscount" class="col-xs-10 col-sm-5 v_float_3"/>
+							<small class="grey">0 = 未维护(计算时回退单级/全单折扣)</small>
+						</div>
+					</div>
+					<div class="space-4"></div>
 
-                    <div class="form-group">
-                        <label class="col-sm-3 control-label no-padding-right" for="auArAccountManageDiscount">管理费折扣</label>
-                        <div class="col-sm-9" style="padding-top: 7px;">
-                            <input type="checkbox" id="auArAccountManageDiscount" class="ace ace-switch ace-switch-5">
-                            <span class="lbl">勾选 = 管理费参与决算折扣折算</span>
-                        </div>
-                    </div>
-                    <div class="space-4"></div>
+					<div class="form-group">
+						<label class="col-sm-3 control-label no-padding-right" for="auArAccountManageDiscount">管理费折扣</label>
+						<div class="col-sm-9" style="padding-top: 7px;">
+							<input type="checkbox" id="auArAccountManageDiscount" class="ace ace-switch ace-switch-5">
+							<span class="lbl">勾选 = 管理费参与决算折扣折算</span>
+						</div>
+					</div>
+					<div class="space-4"></div>
 
-                    <div class="form-group">
-                        <label class="col-sm-3 control-label no-padding-right" for="auArAccountTaxDiscount">税金折扣</label>
-                        <div class="col-sm-9" style="padding-top: 7px;">
-                            <input type="checkbox" id="auArAccountTaxDiscount" class="ace ace-switch ace-switch-5">
-                            <span class="lbl">勾选 = 税金参与决算折扣折算</span>
-                        </div>
-                    </div>
-                    <div class="space-4"></div>
-                </form>
-            </div>
+					<div class="form-group">
+						<label class="col-sm-3 control-label no-padding-right" for="auArAccountTaxDiscount">税金折扣</label>
+						<div class="col-sm-9" style="padding-top: 7px;">
+							<input type="checkbox" id="auArAccountTaxDiscount" class="ace ace-switch ace-switch-5">
+							<span class="lbl">勾选 = 税金参与决算折扣折算</span>
+						</div>
+					</div>
+					<div class="space-4"></div>
+				</form>
+			</div>
 
-            <div class="modal-footer">
-                <button type="button" id="auArSaveAccountBtn" class="btn btn-primary">保存</button>
-                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-            </div>
-        </div>
-    </div>
+			<div class="modal-footer">
+				<button type="button" id="auArSaveAccountBtn" class="btn btn-primary">保存</button>
+				<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+			</div>
+		</div>
+	</div>
 </div>
 
 <script type="text/javascript">
-    $.loadScript(['js/quotation/auotationPart.js']);
+	$.loadScript(['js/quotation/auotationPart.js']);
 </script>
