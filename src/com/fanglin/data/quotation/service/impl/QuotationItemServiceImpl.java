@@ -34,10 +34,7 @@ import com.fanglin.communion.vo.WorkTypeVO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.data.po.QuotationCtemPO;
-import com.fanglin.data.po.QuotationFormatPO;
 import com.fanglin.data.po.QuotationItemPO;
-import com.fanglin.quotation.dao.NormChangeRecordDao;
-import com.fanglin.quotation.po.NormChangeRecordPO;
 import com.fanglin.data.po.QuotationPricePO;
 import com.fanglin.data.po.QuotationVersionPO;
 import com.fanglin.data.quotation.dao.QuotationFormatDao;
@@ -49,6 +46,8 @@ import com.fanglin.data.quotation.vo.QuotationCtemVO;
 import com.fanglin.data.quotation.vo.QuotationItemVO;
 import com.fanglin.data.quotation.vo.QuotationPriceVO;
 import com.fanglin.data.quotation.vo.QuotationVersionVO;
+import com.fanglin.quotation.dao.NormChangeRecordDao;
+import com.fanglin.quotation.po.NormChangeRecordPO;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.Paging;
@@ -249,9 +248,7 @@ public class QuotationItemServiceImpl implements QuotationItemService {
 		quotationItemDao.update(quotationItemPO);
 
 		// 变更记录: 报价项关联规格换绑
-		normChangeRecordDao.save(new NormChangeRecordPO().init(NormChangeRecordPO.TYPE_QUOTATIONITEM_QFID_INT, NormChangeRecordPO.CHANGETYPE_UPDATE_INT, userId)
-				.refId(quotationItemPO.getQiid()).refNo(quotationItemPO.getName())
-				.before(String.format("关联规格: qfid=%d", oldQfid)).after(String.format("关联规格: qfid=%d", quotationItemVO.getQfid())));
+		normChangeRecordDao.save(new NormChangeRecordPO().init(NormChangeRecordPO.TYPE_QUOTATIONITEM_QFID_INT, NormChangeRecordPO.CHANGETYPE_UPDATE_INT, userId).refId(quotationItemPO.getQiid()).refNo(quotationItemPO.getName()).before(String.format("关联规格: qfid=%d", oldQfid)).after(String.format("关联规格: qfid=%d", quotationItemVO.getQfid())));
 
 		return 0;
 	}

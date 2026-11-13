@@ -20,8 +20,6 @@ import com.fanglin.construction.po.ConstructionSchedulePO;
 import com.fanglin.construction.po.MaterialPlanPO;
 import com.fanglin.construction.service.ConstructionScheduleService;
 import com.fanglin.construction.service.MaterialPlanService;
-import com.fanglin.quotation.dao.NormChangeRecordDao;
-import com.fanglin.quotation.po.NormChangeRecordPO;
 import com.fanglin.construction.vo.ConstructionScheduleVO;
 import com.fanglin.construction.vo.ConstructionVO;
 import com.fanglin.construction.vo.MaterialPlanVO;
@@ -44,6 +42,7 @@ import com.fanglin.information.po.MessagePO;
 import com.fanglin.information.po.MessageQueuingPO;
 import com.fanglin.information.service.MessageService;
 import com.fanglin.personel.vo.UserBaseVO;
+import com.fanglin.quotation.po.NormChangeRecordPO;
 import com.fanglin.utils.Arith;
 import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.Paging;
@@ -230,10 +229,7 @@ public class ConstructionScheduleServiceImpl implements ConstructionScheduleServ
 		constructionScheduleDao.saveOrUpdate(constructionSchedulePO);
 
 		if (oldSalaryLimit != constructionScheduleVO.getSalaryLimit() || oldSalaryLimitTotal != constructionScheduleVO.getSalaryLimitTotal()) {
-			normChangeRecordDao.save(new NormChangeRecordPO().init(NormChangeRecordPO.TYPE_SCHEDULE_NORM_INT, NormChangeRecordPO.CHANGETYPE_UPDATE_INT, userId)
-					.orderId(constructionSchedulePO.getOrderId()).refId(constructionSchedulePO.getCsid()).refNo(constructionSchedulePO.getName())
-					.before(String.format("工费浮动: %d, 增量上限: %d", oldSalaryLimit, oldSalaryLimitTotal))
-					.after(String.format("工费浮动: %d, 增量上限: %d", constructionScheduleVO.getSalaryLimit(), constructionScheduleVO.getSalaryLimitTotal())));
+			normChangeRecordDao.save(new NormChangeRecordPO().init(NormChangeRecordPO.TYPE_SCHEDULE_NORM_INT, NormChangeRecordPO.CHANGETYPE_UPDATE_INT, userId).orderId(constructionSchedulePO.getOrderId()).refId(constructionSchedulePO.getCsid()).refNo(constructionSchedulePO.getName()).before(String.format("工费浮动: %d, 增量上限: %d", oldSalaryLimit, oldSalaryLimitTotal)).after(String.format("工费浮动: %d, 增量上限: %d", constructionScheduleVO.getSalaryLimit(), constructionScheduleVO.getSalaryLimitTotal())));
 		}
 	}
 

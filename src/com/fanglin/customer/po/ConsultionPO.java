@@ -1,6 +1,7 @@
 package com.fanglin.customer.po;
 
 import java.io.Serializable;
+import java.util.Arrays;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -10,13 +11,10 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import java.util.Arrays;
 
+import com.fanglin.customer.vo.ConsultionVO;
 import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.personel.po.UserPO;
-import com.fanglin.customer.vo.ConsultionVO;
-import com.fanglin.decoration.vo.DecorationVO;
-import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.utils.BeanUtil;
 
 @Entity

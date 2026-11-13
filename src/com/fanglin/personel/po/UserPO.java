@@ -10,6 +10,7 @@
 package com.fanglin.personel.po;
 
 import java.io.Serializable;
+import java.util.Arrays;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -19,19 +20,15 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import java.util.Arrays;
-
 import javax.persistence.Table;
 
 import com.fanglin.communion.po.DepartmentPO;
 import com.fanglin.communion.po.DutyPO;
-import com.fanglin.personel.vo.UserVO;
-import com.fanglin.system.po.RolePO;
 import com.fanglin.communion.vo.DepartmentTypeVO;
 import com.fanglin.communion.vo.DepartmentVO;
-import com.fanglin.communion.vo.DutyVO;
 import com.fanglin.core.security.SensitiveDataHelper;
-import com.fanglin.system.vo.RoleVO;
+import com.fanglin.personel.vo.UserVO;
+import com.fanglin.system.po.RolePO;
 import com.fanglin.utils.BeanUtil;
 
 @Entity

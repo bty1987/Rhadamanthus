@@ -13,6 +13,7 @@ package com.fanglin.decoration.po;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.Arrays;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -22,11 +23,9 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import java.util.Arrays;
 
-import com.fanglin.personel.po.UserPO;
 import com.fanglin.decoration.vo.DecorationMeasureVO;
-import com.fanglin.decoration.vo.DecorationVO;
+import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.utils.BeanUtil;
 

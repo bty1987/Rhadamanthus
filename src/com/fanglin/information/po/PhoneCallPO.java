@@ -3,6 +3,7 @@ package com.fanglin.information.po;
 import static javax.persistence.GenerationType.IDENTITY;
 
 import java.sql.Timestamp;
+import java.util.Arrays;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -12,11 +13,9 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import java.util.Arrays;
 
-import com.fanglin.personel.po.UserPO;
 import com.fanglin.information.vo.PhoneCallVO;
-import com.fanglin.personel.vo.UserVO;
+import com.fanglin.personel.po.UserPO;
 import com.fanglin.utils.BeanUtil;
 
 @Entity

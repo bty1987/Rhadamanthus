@@ -22,11 +22,9 @@ import com.fanglin.quotation.dao.ExtensionItemDao;
 import com.fanglin.quotation.dao.QuotationDao;
 import com.fanglin.quotation.dao.SelectionItemDao;
 import com.fanglin.quotation.po.ExtensionDO;
-import com.fanglin.quotation.po.ExtensionItemPO;
 import com.fanglin.quotation.po.ExtensionPO;
 import com.fanglin.quotation.po.QuotationPO;
 import com.fanglin.quotation.service.ExtensionService;
-import com.fanglin.quotation.vo.ExtensionItemVO;
 import com.fanglin.quotation.vo.ExtensionVO;
 import com.fanglin.quotation.vo.QuotationVO;
 import com.fanglin.utils.BeanUtil;
@@ -207,7 +205,6 @@ public class ExtensionServiceImpl implements ExtensionService {
 
 		return extensionVOs;
 	}
-
 
 	private void checkExtension(ExtensionPO extensionPO) throws FLException {
 

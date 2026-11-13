@@ -16,16 +16,10 @@ import com.fanglin.building.po.BuildingCustomerPO;
 import com.fanglin.building.po.BuildingHousePO;
 import com.fanglin.building.po.BuildingRecordPO;
 import com.fanglin.building.service.BuildingRecordService;
-import com.fanglin.building.vo.BuildingCustomerVO;
-import com.fanglin.building.vo.BuildingHouseVO;
 import com.fanglin.building.vo.BuildingRecordVO;
-import com.fanglin.communion.vo.CustomerVO;
-import com.fanglin.communion.vo.HouseVO;
-import com.fanglin.communion.vo.VillageVO;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
-import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.utils.BeanUtil;
 
 @Service("buildingRecordService")

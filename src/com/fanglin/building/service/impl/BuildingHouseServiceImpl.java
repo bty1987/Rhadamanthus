@@ -28,10 +28,6 @@ import com.fanglin.communion.po.CustomerPO;
 import com.fanglin.communion.po.CustomerPhonePO;
 import com.fanglin.communion.po.DepartmentPO;
 import com.fanglin.communion.po.HousePO;
-import com.fanglin.communion.vo.CustomerVO;
-import com.fanglin.communion.vo.DepartmentVO;
-import com.fanglin.communion.vo.HouseVO;
-import com.fanglin.communion.vo.VillageVO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.personel.dao.UserDao;
@@ -41,7 +37,6 @@ import com.fanglin.right.dao.BuildingHouseRightDao;
 import com.fanglin.right.po.BuildingHouseDepartmentRightPO;
 import com.fanglin.system.dao.CompanyDao;
 import com.fanglin.system.po.CompanyPO;
-import com.fanglin.system.vo.CityProperVO;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.FormatUtil;
@@ -397,7 +392,6 @@ public class BuildingHouseServiceImpl implements BuildingHouseService {
 
 		buildingRecordService.addBuildingRecord(buildingRecordVO, keyerId);
 	}
-
 
 	/** 房源PO转VO并补齐客户初始联系手机号（6处调用共用）。 */
 	private BuildingHouseVO fetchBuildingHouseVO(BuildingHousePO buildingHousePO) {

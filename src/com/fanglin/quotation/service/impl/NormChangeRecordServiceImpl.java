@@ -11,7 +11,6 @@ import com.fanglin.quotation.dao.NormChangeRecordDao;
 import com.fanglin.quotation.po.NormChangeRecordPO;
 import com.fanglin.quotation.service.NormChangeRecordService;
 import com.fanglin.quotation.vo.NormChangeRecordVO;
-import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.Paging;
 
 @Service("normChangeRecordService")

@@ -1,7 +1,6 @@
 package com.fanglin.personel.service.impl;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +15,6 @@ import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.service.UserLabelService;
 import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.personel.vo.UserLabelVO;
-import com.fanglin.utils.BeanUtil;
 
 @Service("userlabelService")
 @Transactional(readOnly = true)

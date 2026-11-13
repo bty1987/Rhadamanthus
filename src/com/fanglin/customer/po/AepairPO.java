@@ -4,6 +4,7 @@ import static javax.persistence.GenerationType.IDENTITY;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.Arrays;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -14,15 +15,12 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import java.util.Arrays;
 
+import com.fanglin.customer.vo.AepairVO;
 import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.personel.po.UserPO;
-import com.fanglin.utils.DateUtil;
-import com.fanglin.customer.vo.AepairVO;
-import com.fanglin.decoration.vo.DecorationVO;
-import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.utils.BeanUtil;
+import com.fanglin.utils.DateUtil;
 
 @Entity
 @Table(name = "aepair", catalog = "customer")

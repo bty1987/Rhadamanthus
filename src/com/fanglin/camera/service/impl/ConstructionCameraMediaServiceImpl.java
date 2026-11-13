@@ -18,13 +18,12 @@ import com.fanglin.camera.dao.ConstructionCameraMediaDao;
 import com.fanglin.camera.po.ConstructionCameraAccessPO;
 import com.fanglin.camera.po.ConstructionCameraMediaPO;
 import com.fanglin.camera.po.ConstructionCameraPO;
-import com.fanglin.camera.service.ConstructionCameraMediaService;
 import com.fanglin.camera.provider.CameraProviderService;
+import com.fanglin.camera.service.ConstructionCameraMediaService;
 import com.fanglin.camera.vo.ConstructionCameraMediaVO;
 import com.fanglin.camera.vo.ConstructionCameraPlayVO;
 import com.fanglin.camera.vo.ConstructionCameraVO;
 import com.fanglin.core.interceptor.FLException;
-import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
 
 @Service("constructionCameraMediaService")
