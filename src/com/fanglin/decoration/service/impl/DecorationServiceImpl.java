@@ -1778,6 +1778,35 @@ public class DecorationServiceImpl implements DecorationService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
+	public void updateDecorationForGrade(DecorationVO decorationVO, String userId) throws FLException {
+
+		String orderId = decorationVO.getOrderId();
+
+		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(orderId);
+
+		List<Short> status = Arrays.asList(new Short[] { DecorationPO.STATUS_INIT_INT, DecorationPO.STATUS_DEPOSIT_INT, DecorationPO.STATUS_PROSIGN_INT, DecorationPO.STATUS_RESIGNED_INT, DecorationPO.STATUS_SIGNED_INT }); // 咨询,
+
+		if (decorationPO == null) {
+			throw new FLException(140013, "装修单不存在");
+		}
+
+		if (!status.contains(decorationPO.getStatus())) {
+			throw new FLException(140004, "装修单状态不可操作");
+		}
+
+		if (decorationVO.getGrade() == null) {
+			throw new FLException(140120, "装修单等级不可为空");
+		}
+
+		serviceRecordDao.save(new ServiceRecordPO().init(ServiceRecordPO.TYPE_CHANGE_DECORATION_INT, userId, orderId, String.format("装修单: %s, 原等级: %s, 现等级: %s.", orderId, decorationPO.getGrade(), decorationVO.getGrade())));
+
+		decorationPO.setGrade(decorationVO.getGrade());
+
+		decorationDao.update(decorationPO);
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
 	public void updateDecorationForPayScale(DecorationVO decorationVO) throws FLException {
 
 		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(decorationVO.getOrderId());

@@ -165,7 +165,7 @@ $(function() {
         var rightgroup1 = createDiv("control-group").appendTo(right1);
         var rightitems1 = [];
 
-        rightitems1.push(createDiv("form-group").append(createLabel("col-sm-3 control-label no-padding-right", "等级", "grade"), createDiv("col-sm-9").append(createSelect("grade", "col-xs-10 col-sm-5", [], null, null, "popover", "manual"))));
+        rightitems1.push(createDiv("form-group").append(createLabel("col-sm-3 control-label no-padding-right", "等级", "grade"), createDiv("col-sm-9").append(createSelect("grade", "col-xs-10 col-sm-5", [], null, null, "popover", "manual"), $('<button></button>').attr("id", "gradeChangeBtn").attr("class", "btn btn-xs btn-info").text("更新").attr("type", "button").css("margin", "2px 5px"))));
         rightitems1.push(createDiv("form-group").append(createLabel("col-sm-3 control-label no-padding-right", "订单类型", "orderType"), createDiv("col-sm-9").append(createSelect("orderType", "col-xs-10 col-sm-5", [], null, null, "popover", "manual"), $('<button></button>').attr("id", "typeChangeBtn").attr("class", "btn btn-xs btn-info").text("更新").attr("type", "button").css("margin", "2px 5px"))));
         rightitems1.push(createDiv("form-group").append(createLabel("col-sm-3 control-label no-padding-right", "房屋类别", "houseType"), createDiv("col-sm-9").append(createSelect("houseType", "col-xs-10 col-sm-5", [], null, null, "popover", "manual"))));
         rightitems1.push(createDiv("form-group").append(createLabel("col-sm-3 control-label no-padding-right", "房屋类型", "houseClass"), createDiv("col-sm-9").append(createSelect("houseClass", "col-xs-10 col-sm-5", [], null, null, "popover", "manual"))));

@@ -768,6 +768,32 @@ jQuery(function($) {
         updateBaseDecorationInfo(com.focusPage("#typeChangeBtn"), "typeness");
     });
 
+    // 装修单等级更新(专用强权限接口 updateDecorationForGrade, 按钮显隐按 operation 授权)
+    com.focusPage('#gradeChangeBtn').on("click", function() {
+
+        com.clearValidator();
+
+        var btn = com.focusPage("#gradeChangeBtn");
+
+        com.showConfirm("确认更新装修单等级为: " + decorationDetail.items.grade.find("option:selected").text(), function() {
+
+            com.post(api.decoration.updateDecorationForGrade, {
+                "decoration.orderId": decorationDetail.orderId,
+                "decoration.grade": decorationDetail.items.grade.val()
+            }, function() {
+
+                com.showAlert(com.info, "操作成功");
+                btn.button('reset');
+            }, function() {
+
+                btn.button('reset');
+            });
+        }, function() {
+
+            btn.button('reset');
+        });
+    });
+
     com.focusPage('#notSalesmanRateChangeBtn').on("click", function() {
 
         com.clearValidator();
@@ -1557,6 +1583,27 @@ jQuery(function($) {
         if ([0, 1, 4].indexOf(decoration.status) == -1) {
             decorationDetail.items.orderType.prop("disabled", true);
             com.focusPage("#typeChangeBtn").hide();
+        }
+
+        // 等级更新按钮: 仅持有 updateDecorationForGrade 操作授权(强权限接口, roleoperation 白名单)且装修单处于可操作状态(初始/定金/预签/重签/签约)时显示(2026-11-13)
+        if ([0, 1, 2, 3, 4].indexOf(decoration.status) == -1) {
+            com.focusPage("#gradeChangeBtn").hide();
+        } else {
+            com.post(api.system.queryOperationForLogin, {}, function(res) {
+
+                var owned = false;
+
+                $.each(res.operations || [], function(i, v) {
+
+                    if (v.operation == "updateDecorationForGrade") {
+                        owned = true;
+                    }
+                });
+
+                if (!owned) {
+                    com.focusPage("#gradeChangeBtn").hide();
+                }
+            }, null, false);
         }
 
         if ([2, 3, 4, 6, 7].indexOf(decoration.status) == -1) {

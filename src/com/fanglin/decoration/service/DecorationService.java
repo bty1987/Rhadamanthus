@@ -110,6 +110,8 @@ public interface DecorationService {
 
 	public void updateDecorationForAdvance(DecorationVO decorationVO, String userId) throws FLException;
 
+	public void updateDecorationForGrade(DecorationVO decorationVO, String userId) throws FLException;
+
 	public void updateDecorationForPayScale(DecorationVO decorationVO) throws FLException;
 
 	public void updateDecorationForSaleScale(DecorationVO decorationVO) throws FLException;

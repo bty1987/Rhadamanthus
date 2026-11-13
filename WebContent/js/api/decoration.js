@@ -661,6 +661,10 @@ $.extend(api, {
                 args: ["decoration.notSalesmanRate"]
             }
         },
+        updateDecorationForGrade: {
+            url: "updateDecorationForGrade.do",
+            type: "update"
+        },
         updateDecorationForPayScale: {
             url: "updateDecorationForPayScale.do"
         },

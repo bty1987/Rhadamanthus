@@ -643,33 +643,16 @@ jQuery(function($) {
             return false;
         }
 
-        var options = {
+        // 切换专用强权限接口 updateDecorationForGrade(2026-11-13): 后端五态闸+变更留痕, 授权角色方可操作
+        com.post(api.decoration.updateDecorationForGrade, {
             "decoration.orderId": com.focusPage("#orderIdOfDecorationGrade").val(),
             "decoration.grade": com.focusPage("#decorationGrade").val()
-        }
+        }, function(res) {
 
-        var decoration = null;
+            com.showAlert(com.info, "操作成功");
 
-        com.post(api.decoration.queryDecorationForCommonByOrderId, options, function(res) {
-
-            decoration = res.decoration;
+            management.changeDecorationForGradeModal.modal("hide");
         }, null, false);
-
-        if (decoration != null) {
-
-            options["decoration.houseType"] = decoration.houseType;
-            options["decoration.houseClass"] = decoration.houseClass;
-            options["decoration.type"] = decoration.type;
-
-            com.post(api.decoration.changeDecorationForAdvance, options, function(res) {
-
-                com.showAlert(com.info, "操作成功");
-            }, null, false);
-        } else {
-            com.showAlert(com.warning, "装修单不存在");
-        }
-
-        management.changeDecorationForGradeModal.modal("hide");
     });
 
     com.focusPage("#saveBtn", "#amountDecorationActivityItemModal").click(function() {
