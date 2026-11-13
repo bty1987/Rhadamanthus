@@ -26,7 +26,7 @@ jQuery(function($) {
 
     var searcher = new Searcher();
 
-    searcher.base("condList", "pagenation", "resultList", api.quotation.pageNormChangeRecord);
+    searcher.base("normChangeRecordCondList", "normChangeRecordPagenation", "normChangeRecordResultList", api.quotation.pageNormChangeRecord);
 
     var _param = {};
 
