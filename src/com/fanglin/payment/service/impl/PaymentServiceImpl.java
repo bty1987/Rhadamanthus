@@ -557,6 +557,9 @@ public class PaymentServiceImpl implements PaymentService {
 
 		paymentVO.setPid(paymentPO.getPid());
 
+		// 落款完成即确认(2026-11-13需求补全, 与collectPayment充值口径一致): confirmPayment幂等(非已确认态静默跳过), 同步置款项+预付款收据确认态/确认人/确认时间
+		confirmPayment(Arrays.asList(paymentPO.getPid()), userId);
+
 		return 0;
 	}
 
