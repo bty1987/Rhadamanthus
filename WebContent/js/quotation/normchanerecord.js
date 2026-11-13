@@ -8,10 +8,6 @@ jQuery(function($) {
     // 变更记录查询条件: 定额单入口传参 qid, 只读时间线
     var query = params.quotation.normChangeRecord || {};
 
-    var page = 1;
-    var rows = 20;
-    var totalPage = 1;
-
     var typeText = {
         1: "增减项制作",
         2: "增减项删除",
@@ -33,71 +29,55 @@ jQuery(function($) {
         7: "禁用"
     };
 
-    var operaterNames = {};
+    var searcher = new Searcher();
 
-    function buildOptions() {
+    searcher.base("condList", "pagenation", "resultList", api.quotation.pageNormChangeRecord);
 
-        var options = {
-            "paging.page": page,
-            "paging.rows": rows
-        };
+    var _param = {};
 
-        if (query.qid) options["normChangeRecord.qid"] = query.qid;
+    if (query.qid) _param["normChangeRecord.qid"] = query.qid;
 
-        return options;
-    }
+    searcher.param(_param);
 
-    function loadData() {
+    var lineprops = [{
+        "field": "operateTime",
+        "name": "时间",
+        prop: "operateTime",
+        width: 200,
+        style: "color: green;"
+    }, {
+        "field": "type",
+        "name": "类型",
+        prop: "type",
+        dataset: typeText
+    }, {
+        "field": "changeType",
+        "name": "动作",
+        prop: "changeType",
+        dataset: changeTypeText
+    }, {
+        "field": "refNo",
+        "name": "标识",
+        prop: "refNo",
+        width: 200
+    }, {
+        "field": "beforeValue",
+        "name": "变更前",
+        prop: "beforeValue",
+        width: 300
+    }, {
+        "field": "afterValue",
+        "name": "变更后",
+        prop: "afterValue",
+        width: 300
+    }, {
+        "field": "operater",
+        "name": "操作人",
+        prop: "operater"
+    }];
 
-        com.post(api.quotation.pageNormChangeRecord, buildOptions(), function(res) {
+    searcher.table(lineprops, {})
 
-            var records = res.paging.data || [];
+    searcher.render();
 
-            totalPage = res.paging.totalPage || 1;
-
-            var $body = $("#normChangeRecordBody").html('');
-
-            if (records.length == 0) {
-                $body.append($('<tr></tr>').append($('<td></td>').attr('colspan', 7).addClass('text-center').text('暂无变更记录')));
-            } else {
-
-                $.each(records, function(i, record) {
-
-                    var operater = operaterNames[record.operater] || record.operater || "---";
-
-                    var $row = $('<tr></tr>');
-                    $row.append($('<td class="record-time"></td>').text(record.operateTime || ''));
-                    $row.append($('<td></td>').text(typeText[record.type] || record.type));
-                    $row.append($('<td class="record-opertype"></td>').text(changeTypeText[record.changeType] || record.changeType));
-                    $row.append($('<td></td>').text(record.refNo || (record.orderId || '---')));
-                    $row.append($('<td></td>').text(record.beforeValue || '---'));
-                    $row.append($('<td></td>').text(record.afterValue || '---'));
-                    $row.append($('<td></td>').text(operater));
-
-                    $body.append($row);
-                });
-            }
-
-            $("#pageInfo").text("第 " + (totalPage == 0 ? 0 : page) + " / " + totalPage + " 页");
-
-            $("#prevPageBtn").prop('disabled', page <= 1);
-            $("#nextPageBtn").prop('disabled', page >= totalPage);
-        });
-    }
-
-    $("#prevPageBtn").on("click", function() {
-        if (page > 1) {
-            page--;
-            loadData();
-        }
-    });
-
-    $("#nextPageBtn").on("click", function() {
-        if (page < totalPage) {
-            page++;
-            loadData();
-        }
-    });
-
-    loadData();
 });
