@@ -54,7 +54,7 @@ public class VustomerServiceImpl implements VustomerService {
 		List<VustomerVO> vustomerVOs = new ArrayList<VustomerVO>();
 
 		for (VustomerPO vustomerPO : vustomerPOs) {
-			vustomerVOs.add(vustomerVOToPO(vustomerPO));
+			vustomerVOs.add(vustomerPO.ptv(new VustomerVO(new UserBaseVO())));
 		}
 
 		paging.setData(vustomerVOs);
@@ -67,7 +67,7 @@ public class VustomerServiceImpl implements VustomerService {
 		List<VustomerVO> vustomerVOs = new ArrayList<VustomerVO>();
 
 		for (VustomerPO vustomerPO : vustomerPOs) {
-			vustomerVOs.add(vustomerVOToPO(vustomerPO));
+			vustomerVOs.add(vustomerPO.ptv(new VustomerVO(new UserBaseVO())));
 		}
 
 		paging.setData(vustomerVOs);
@@ -80,7 +80,7 @@ public class VustomerServiceImpl implements VustomerService {
 		List<VustomerVO> vustomerVOs = new ArrayList<VustomerVO>();
 
 		for (VustomerPO vustomerPO : vustomerPOs) {
-			vustomerVOs.add(vustomerVOToPO(vustomerPO));
+			vustomerVOs.add(vustomerPO.ptv(new VustomerVO(new UserBaseVO())));
 		}
 
 		paging.setData(vustomerVOs);
@@ -196,7 +196,7 @@ public class VustomerServiceImpl implements VustomerService {
 		List<VustomerVO> vustomerVOs = new ArrayList<VustomerVO>();
 
 		for (VustomerPO vustomerPO : vustomerPOs) {
-			vustomerVOs.add(vustomerVOToPO(vustomerPO));
+			vustomerVOs.add(vustomerPO.ptv(new VustomerVO(new UserBaseVO())));
 		}
 
 		paging.setData(vustomerVOs);
@@ -265,16 +265,6 @@ public class VustomerServiceImpl implements VustomerService {
 		vustomerPO.setBelonger(belonger);
 
 		vustomerDao.update(vustomerPO);
-	}
-
-	public VustomerVO vustomerVOToPO(VustomerPO vustomerPO) {
-
-		VustomerVO vustomerVO = new VustomerVO(new UserBaseVO());
-
-		BeanUtil.copyProperties(vustomerPO, vustomerVO, Arrays.asList("belonger"));
-		BeanUtil.copyProperties(vustomerPO.getBelonger(), vustomerVO.getBelonger(), Arrays.asList("dept", "duty", "role"));
-
-		return vustomerVO;
 	}
 
 }

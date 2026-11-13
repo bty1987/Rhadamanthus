@@ -80,7 +80,7 @@ public class ComplainServiceImpl implements ComplainService {
 
 		for (ComplainPO complainPO : complainPOs) {
 
-			complainVOs.add(complainPOToVO(complainPO));
+			complainVOs.add(complainPO.ptv(new ComplainVO(new DecorationVO(), new UserBaseVO(), new UserBaseVO())));
 		}
 
 		paging.setData(complainVOs);
@@ -96,7 +96,7 @@ public class ComplainServiceImpl implements ComplainService {
 
 		for (ComplainPO complainPO : complainPOs) {
 
-			complainVOs.add(complainPOToVO(complainPO));
+			complainVOs.add(complainPO.ptv(new ComplainVO(new DecorationVO(), new UserBaseVO(), new UserBaseVO())));
 		}
 
 		return complainVOs;
@@ -111,7 +111,7 @@ public class ComplainServiceImpl implements ComplainService {
 
 		for (ComplainPO complainPO : complainPOs) {
 
-			complainVOs.add(complainPOToVO(complainPO));
+			complainVOs.add(complainPO.ptv(new ComplainVO(new DecorationVO(), new UserBaseVO(), new UserBaseVO())));
 		}
 
 		return complainVOs;
@@ -239,21 +239,6 @@ public class ComplainServiceImpl implements ComplainService {
 		complainDao.update(complainPO);
 
 		return 0;
-	}
-
-	public ComplainVO complainPOToVO(ComplainPO complainPO) {
-
-		ComplainVO complainVO = new ComplainVO(new DecorationVO(), new UserBaseVO(), new UserBaseVO());
-
-		BeanUtil.copyProperties(complainPO, complainVO, Arrays.asList("decoration", "creater", "updater"));
-		BeanUtil.copyProperties(complainPO.getCreater(), complainVO.getCreater(), Arrays.asList("duty", "dept"));
-		BeanUtil.copyProperties(complainPO.getUpdater(), complainVO.getUpdater(), Arrays.asList("duty", "dept"));
-
-		if (complainPO.getDecoration() != null) {
-			complainPO.getDecoration().ptvcascade(complainVO.getDecoration());
-		}
-
-		return complainVO;
 	}
 
 }

@@ -54,7 +54,7 @@ public class ConstructionCameraServiceImpl implements ConstructionCameraService 
 		List<ConstructionCameraVO> constructionCameraVOs = new ArrayList<ConstructionCameraVO>();
 
 		for (ConstructionCameraPO constructionCameraPO : constructionCameraPOs) {
-			constructionCameraVOs.add(vo(constructionCameraPO));
+			constructionCameraVOs.add(constructionCameraPO.ptv(new ConstructionCameraVO()));
 		}
 
 		paging.setData(constructionCameraVOs);
@@ -69,7 +69,7 @@ public class ConstructionCameraServiceImpl implements ConstructionCameraService 
 		List<ConstructionCameraVO> constructionCameraVOs = new ArrayList<ConstructionCameraVO>();
 
 		for (ConstructionCameraPO constructionCameraPO : constructionCameraPOs) {
-			constructionCameraVOs.add(vo(constructionCameraPO));
+			constructionCameraVOs.add(constructionCameraPO.ptv(new ConstructionCameraVO()));
 		}
 
 		return constructionCameraVOs;
@@ -229,15 +229,6 @@ public class ConstructionCameraServiceImpl implements ConstructionCameraService 
 		if (constructionCameraPO == null || constructionCameraPO.getStatus() == ConstructionCameraPO.STATUS_DISABLE_INT) throw new FLException(120044, "摄像头设备信息不存在");
 
 		return constructionCameraPO;
-	}
-
-	private ConstructionCameraVO vo(ConstructionCameraPO constructionCameraPO) {
-
-		ConstructionCameraVO constructionCameraVO = new ConstructionCameraVO();
-
-		BeanUtil.copyProperties(constructionCameraPO, constructionCameraVO, Arrays.asList("verifyCode"));
-
-		return constructionCameraVO;
 	}
 
 	private CameraProviderService provider(ConstructionCameraPO constructionCameraPO) throws FLException {

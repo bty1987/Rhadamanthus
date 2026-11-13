@@ -67,7 +67,7 @@ public class CustomerAfterSalesServiceImpl implements CustomerAfterSalesService 
 		List<CustomerAfterSalesVO> customerAfterSalesVOs = new ArrayList<CustomerAfterSalesVO>();
 
 		for (CustomerAfterSalesPO customerAfterSalesPO : customerAfterSalesPOs) {
-			customerAfterSalesVOs.add(POtoVO(customerAfterSalesPO));
+			customerAfterSalesVOs.add(customerAfterSalesPO.ptv(new CustomerAfterSalesVO(new UserBaseVO(), new UserBaseVO())));
 		}
 
 		paging.setData(customerAfterSalesVOs);
@@ -82,7 +82,7 @@ public class CustomerAfterSalesServiceImpl implements CustomerAfterSalesService 
 			throw new FLException(330114, "售后单不存在");
 		}
 
-		return POtoVO(customerAfterSalesPO);
+		return customerAfterSalesPO.ptv(new CustomerAfterSalesVO(new UserBaseVO(), new UserBaseVO()));
 	}
 
 	@Override
@@ -92,7 +92,7 @@ public class CustomerAfterSalesServiceImpl implements CustomerAfterSalesService 
 		List<CustomerAfterSalesVO> customerAfterSalesVOs = new ArrayList<CustomerAfterSalesVO>();
 
 		for (CustomerAfterSalesPO customerAfterSalesPO : customerAfterSalesPOs) {
-			customerAfterSalesVOs.add(POtoVO(customerAfterSalesPO));
+			customerAfterSalesVOs.add(customerAfterSalesPO.ptv(new CustomerAfterSalesVO(new UserBaseVO(), new UserBaseVO())));
 		}
 
 		return customerAfterSalesVOs;
@@ -105,7 +105,7 @@ public class CustomerAfterSalesServiceImpl implements CustomerAfterSalesService 
 		List<CustomerAfterSalesVO> customerAfterSalesVOs = new ArrayList<CustomerAfterSalesVO>();
 
 		for (CustomerAfterSalesPO customerAfterSalesPO : customerAfterSalesPOs) {
-			customerAfterSalesVOs.add(POtoVO(customerAfterSalesPO));
+			customerAfterSalesVOs.add(customerAfterSalesPO.ptv(new CustomerAfterSalesVO(new UserBaseVO(), new UserBaseVO())));
 		}
 
 		return customerAfterSalesVOs;
@@ -477,8 +477,5 @@ public class CustomerAfterSalesServiceImpl implements CustomerAfterSalesService 
 		return prefix + currentDate + FormatUtil.fillZero(FormatUtil.offset(count), "0000");
 	}
 
-	private CustomerAfterSalesVO POtoVO(CustomerAfterSalesPO customerAfterSalesPO) {
-		return customerAfterSalesPO.ptv(new CustomerAfterSalesVO(new UserBaseVO(), new UserBaseVO()));
-	}
 
 }

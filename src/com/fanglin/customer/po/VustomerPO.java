@@ -11,8 +11,11 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import java.util.Arrays;
 
 import com.fanglin.personel.po.UserPO;
+import com.fanglin.customer.vo.VustomerVO;
+import com.fanglin.utils.BeanUtil;
 
 @Entity
 @Table(name = "vustomer", catalog = "customer")
@@ -186,4 +189,11 @@ public class VustomerPO implements Serializable {
 		this.comment = comment;
 	}
 
+	public VustomerVO ptv(VustomerVO vustomerVO) {
+
+		BeanUtil.copyProperties(this, vustomerVO, Arrays.asList("belonger"));
+		BeanUtil.copyProperties(getBelonger(), vustomerVO.getBelonger(), Arrays.asList("dept", "duty", "role"));
+
+		return vustomerVO;
+	}
 }

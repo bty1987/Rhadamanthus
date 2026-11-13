@@ -10,8 +10,14 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import java.util.Arrays;
 
 import com.fanglin.personel.po.UserPO;
+import com.fanglin.building.vo.BuildingNodeVO;
+import com.fanglin.building.vo.BuildingScheduleVO;
+import com.fanglin.building.vo.BuildingVO;
+import com.fanglin.personel.vo.UserBaseVO;
+import com.fanglin.utils.BeanUtil;
 
 @Entity
 @Table(name = "buildingschedule", catalog = "building")
@@ -144,4 +150,16 @@ public class BuildingSchedulePO implements java.io.Serializable {
 		this.comment = comment;
 	}
 
+	public BuildingScheduleVO ptv() {
+
+		BuildingScheduleVO buildingScheduleVO = new BuildingScheduleVO(new BuildingNodeVO(), new BuildingVO(), new UserBaseVO());
+
+		BeanUtil.copyProperties(this, buildingScheduleVO, Arrays.asList("building", "buildingNode", "operater"));
+
+		BeanUtil.copyProperties(getBuildingNode(), buildingScheduleVO.getBuildingNode());
+
+		BeanUtil.copyProperties(getOperater(), buildingScheduleVO.getOperater(), Arrays.asList("dept", "duty"));
+
+		return buildingScheduleVO;
+	}
 }

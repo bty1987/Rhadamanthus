@@ -90,7 +90,7 @@ public class BuildingHouseServiceImpl implements BuildingHouseService {
 		List<BuildingHouseVO> buildingHouseVOs = new ArrayList<BuildingHouseVO>();
 
 		for (BuildingHousePO buildingHousePO : buildingHousePOs) {
-			BuildingHouseVO buildingHouseVO = buildingHousePOToVO(buildingHousePO);
+			BuildingHouseVO buildingHouseVO = fetchBuildingHouseVO(buildingHousePO);
 			buildingHouseVOs.add(buildingHouseVO);
 		}
 
@@ -115,7 +115,7 @@ public class BuildingHouseServiceImpl implements BuildingHouseService {
 		List<BuildingHouseVO> buildingHouseVOs = new ArrayList<BuildingHouseVO>();
 
 		for (BuildingHousePO buildingHousePO : buildingHousePOs) {
-			BuildingHouseVO buildingHouseVO = buildingHousePOToVO(buildingHousePO);
+			BuildingHouseVO buildingHouseVO = fetchBuildingHouseVO(buildingHousePO);
 			buildingHouseVOs.add(buildingHouseVO);
 		}
 
@@ -146,7 +146,7 @@ public class BuildingHouseServiceImpl implements BuildingHouseService {
 		List<BuildingHouseVO> buildingHouseVOs = new ArrayList<BuildingHouseVO>();
 
 		for (BuildingHousePO buildingHousePO : buildingHousePOs) {
-			BuildingHouseVO buildingHouseVO = buildingHousePOToVO(buildingHousePO);
+			BuildingHouseVO buildingHouseVO = fetchBuildingHouseVO(buildingHousePO);
 			buildingHouseVOs.add(buildingHouseVO);
 		}
 
@@ -158,7 +158,7 @@ public class BuildingHouseServiceImpl implements BuildingHouseService {
 	public BuildingHouseVO queryBuildingHouseByHsid(BuildingHouseVO buildingHouse) {
 
 		BuildingHousePO buildingHousePO = buildingHouseDao.get(buildingHouse.getHsid());
-		BuildingHouseVO buildingHouseVO = buildingHousePOToVO(buildingHousePO);
+		BuildingHouseVO buildingHouseVO = fetchBuildingHouseVO(buildingHousePO);
 
 		return buildingHouseVO;
 	}
@@ -172,7 +172,7 @@ public class BuildingHouseServiceImpl implements BuildingHouseService {
 			throw new FLException(320005, "房源不存在");
 		}
 
-		BuildingHouseVO buildingHouseVO = buildingHousePOToVO(buildingHousePO);
+		BuildingHouseVO buildingHouseVO = fetchBuildingHouseVO(buildingHousePO);
 
 		return buildingHouseVO;
 	}
@@ -186,7 +186,7 @@ public class BuildingHouseServiceImpl implements BuildingHouseService {
 			throw new FLException(320005, "房源不存在");
 		}
 
-		BuildingHouseVO buildingHouseVO = buildingHousePOToVO(buildingHousePO);
+		BuildingHouseVO buildingHouseVO = fetchBuildingHouseVO(buildingHousePO);
 
 		return buildingHouseVO;
 	}
@@ -382,48 +382,6 @@ public class BuildingHouseServiceImpl implements BuildingHouseService {
 
 	}
 
-	public BuildingHouseVO buildingHousePOToVO(BuildingHousePO buildingHousePO) {
-
-		VillageVO villageVO = new VillageVO(new CityProperVO());
-
-		BuildingHouseVO buildingHouseVO = new BuildingHouseVO(new HouseVO(villageVO), new CustomerVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new DepartmentVO(), new DepartmentVO());
-
-		BeanUtil.copyProperties(buildingHousePO, buildingHouseVO, Arrays.asList("house", "customer", "create", "followUser", "keyer", "department", "region"));
-
-		BeanUtil.copyProperties(buildingHousePO.getCustomer(), buildingHouseVO.getCustomer());
-
-		if (buildingHousePO.getHouse() != null) buildingHousePO.getHouse().ptv(buildingHouseVO.getHouse());
-
-		if (buildingHousePO.getCreate() != null) {
-			BeanUtil.copyProperties(buildingHousePO.getCreate(), buildingHouseVO.getCreate(), Arrays.asList("dept", "duty"));
-		}
-
-		if (buildingHousePO.getFollowUser() != null) {
-			BeanUtil.copyProperties(buildingHousePO.getFollowUser(), buildingHouseVO.getFollowUser(), Arrays.asList("dept", "duty"));
-		}
-
-		if (buildingHousePO.getKeyer() != null) {
-			BeanUtil.copyProperties(buildingHousePO.getKeyer(), buildingHouseVO.getKeyer(), Arrays.asList("dept", "duty"));
-		}
-
-		if (buildingHousePO.getDepartment() != null) {
-			BeanUtil.copyProperties(buildingHousePO.getDepartment(), buildingHouseVO.getDepartment(), Arrays.asList("type", "fatherDept", "manager"));
-		}
-
-		if (buildingHousePO.getRegion() != null) {
-			BeanUtil.copyProperties(buildingHousePO.getRegion(), buildingHouseVO.getRegion(), Arrays.asList("type", "fatherDept", "manager"));
-		}
-
-		BeanUtil.copyProperties(buildingHousePO.getCustomer(), buildingHouseVO.getCustomer());
-		List<CustomerPhonePO> customerPhones = customerPhoneDao.queryCustomerPhoneByCid(buildingHousePO.getCustomer().getCid(), BuildingCustomerPO.STATUS_INIT_SHORT);
-
-		if (customerPhones.size() > 0) {
-			buildingHouseVO.getCustomer().setPhone(customerPhones.get(0).getPhone());
-		}
-
-		return buildingHouseVO;
-	}
-
 	// 生成钥匙记录
 	public void keyerRecord(BuildingHousePO buildingHousePO, String keyerId) {
 
@@ -440,4 +398,19 @@ public class BuildingHouseServiceImpl implements BuildingHouseService {
 		buildingRecordService.addBuildingRecord(buildingRecordVO, keyerId);
 	}
 
+
+	/** 房源PO转VO并补齐客户初始联系手机号（6处调用共用）。 */
+	private BuildingHouseVO fetchBuildingHouseVO(BuildingHousePO buildingHousePO) {
+
+		BuildingHouseVO buildingHouseVO = buildingHousePO.ptv();
+
+		if (buildingHousePO.getCustomer() != null) {
+			List<CustomerPhonePO> customerPhones = customerPhoneDao.queryCustomerPhoneByCid(buildingHousePO.getCustomer().getCid(), BuildingCustomerPO.STATUS_INIT_SHORT);
+			if (customerPhones.size() > 0) {
+				buildingHouseVO.getCustomer().setPhone(customerPhones.get(0).getPhone());
+			}
+		}
+
+		return buildingHouseVO;
+	}
 }

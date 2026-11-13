@@ -18,6 +18,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import com.fanglin.approval.vo.ApprovalFlowVO;
+import com.fanglin.utils.BeanUtil;
 
 @Entity
 @Table(name = "approvalFlow", catalog = "approval")
@@ -136,4 +138,10 @@ public class ApprovalFlowPO implements Serializable {
 		this.createTime = createTime;
 	}
 
+	public ApprovalFlowVO ptv(ApprovalFlowVO approvalFlowVO) {
+
+		BeanUtil.copyProperties(this, approvalFlowVO);
+
+		return approvalFlowVO;
+	}
 }

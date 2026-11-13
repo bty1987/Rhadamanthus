@@ -67,7 +67,7 @@ public class VpaymentServiceImpl implements VpaymentService {
 
 		for (VpaymentPO vpaymentPO : vpaymentPOs) {
 
-			vpaymentVOs.add(VpaymentPOtoVO(vpaymentPO));
+			vpaymentVOs.add(vpaymentPO.ptv(new VpaymentVO(new UserBaseVO(), new UserBaseVO(), new VreceiptVO(new UserBaseVO()))));
 		}
 
 		paging.setData(vpaymentVOs);
@@ -255,22 +255,6 @@ public class VpaymentServiceImpl implements VpaymentService {
 		vpaymentDao.delete(vpaymentPO);
 
 		return 0;
-	}
-
-	public VpaymentVO VpaymentPOtoVO(VpaymentPO vpaymentPO) {
-
-		VpaymentVO vpaymentVO = new VpaymentVO(new UserBaseVO(), new UserBaseVO(), new VreceiptVO(new UserBaseVO()));
-
-		BeanUtil.copyProperties(vpaymentPO, vpaymentVO, Arrays.asList("creater", "vreceipt"));
-		BeanUtil.copyProperties(vpaymentPO.getCreater(), vpaymentVO.getCreater(), Arrays.asList("duty", "dept"));
-
-		if (vpaymentPO.getVreceipt() != null) {
-
-			BeanUtil.copyProperties(vpaymentPO.getVreceipt(), vpaymentVO, Arrays.asList("collecter"));
-			BeanUtil.copyProperties(vpaymentPO.getVreceipt().getCollecter(), vpaymentVO.getCollecter(), Arrays.asList("dept", "duty"));
-		}
-
-		return vpaymentVO;
 	}
 
 }

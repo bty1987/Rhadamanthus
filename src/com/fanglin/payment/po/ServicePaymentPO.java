@@ -12,9 +12,12 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import java.util.Arrays;
 
 import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.personel.po.UserPO;
+import com.fanglin.payment.vo.ServicePaymentVO;
+import com.fanglin.utils.BeanUtil;
 
 @Entity
 @Table(name = "servicepayment", catalog = "payment")
@@ -196,4 +199,19 @@ public class ServicePaymentPO implements java.io.Serializable {
 		this.company = company;
 	}
 
+	public ServicePaymentVO ptv(ServicePaymentVO servicePaymentVO) {
+
+		BeanUtil.copyProperties(this, servicePaymentVO, Arrays.asList("creater", "collecter", "confirmer", "decoration", "serviceReceipt"));
+		servicePaymentVO.getCreater().setBaseInfo(getCreater());
+
+		if (getDecoration() != null) getDecoration().ptvcascade(servicePaymentVO.getDecoration());
+
+		if (getServiceReceipt() != null) {
+			BeanUtil.copyProperties(getServiceReceipt(), servicePaymentVO.getServiceReceipt(), Arrays.asList("collecter", "confirmer"));
+			BeanUtil.copyProperties(getServiceReceipt().getCollecter(), servicePaymentVO.getServiceReceipt().getCollecter(), Arrays.asList("dept", "duty"));
+			BeanUtil.copyProperties(getServiceReceipt().getConfirmer(), servicePaymentVO.getServiceReceipt().getConfirmer(), Arrays.asList("dept", "duty"));
+		}
+
+		return servicePaymentVO;
+	}
 }

@@ -1,7 +1,6 @@
 package com.fanglin.payment.service.impl;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +35,7 @@ public class WalletServiceImpl implements WalletService {
 		List<WalletVO> walletVOs = new ArrayList<WalletVO>();
 
 		for (WalletPO walletPO : walletPOs) {
-			walletVOs.add(walletPOToVO(walletPO));
+			walletVOs.add(walletPO.ptv(new WalletVO(new UserBaseVO())));
 		}
 
 		paging.setData(walletVOs);
@@ -48,7 +47,7 @@ public class WalletServiceImpl implements WalletService {
 	public WalletVO queryWallet(WalletVO wallet) {
 
 		WalletPO walletPO = walletDao.get(wallet.getWid());
-		WalletVO walletVO = walletPOToVO(walletPO);
+		WalletVO walletVO = walletPO.ptv(new WalletVO(new UserBaseVO()));
 
 		// TODO 或许需要更新些数据
 
@@ -344,17 +343,6 @@ public class WalletServiceImpl implements WalletService {
 		walletranPO.setComment(comment);
 
 		walletranDao.save(walletranPO);
-
-	}
-
-	public WalletVO walletPOToVO(WalletPO walletPO) {
-
-		WalletVO walletVO = new WalletVO(new UserBaseVO());
-
-		BeanUtil.copyProperties(walletPO, walletVO, Arrays.asList("belonger"));
-		BeanUtil.copyProperties(walletPO.getBelonger(), walletVO.getBelonger(), Arrays.asList("duty", "dept"));
-
-		return walletVO;
 
 	}
 

@@ -9,8 +9,12 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.util.Arrays;
 
 import com.fanglin.personel.po.UserPO;
+import com.fanglin.information.vo.MessageVO;
+import com.fanglin.personel.vo.UserVO;
+import com.fanglin.utils.BeanUtil;
 
 @Entity
 @Table(name = "message", catalog = "information")
@@ -194,4 +198,13 @@ public class MessagePO implements Serializable {
 		this.dresult = dresult;
 	}
 
+	public MessageVO ptv(MessageVO messageVO) {
+
+		BeanUtil.copyProperties(this, messageVO, Arrays.asList("receiver", "sender"));
+
+		messageVO.setReceiver(new UserVO().setBaseInfo(getReceiver()));
+		messageVO.setSender(new UserVO().setBaseInfo(getSender()));
+
+		return messageVO;
+	}
 }

@@ -37,7 +37,7 @@ public class MbrandServiceImpl implements MbrandService {
 		List<MbrandVO> mbrandVOs = new ArrayList<MbrandVO>();
 
 		for (MbrandPO mbrandPO : mbrandPOs) {
-			mbrandVOs.add(mbrandPOToVO(mbrandPO));
+			mbrandVOs.add(mbrandPO.ptv(new MbrandVO(new McategoryVO())));
 		}
 
 		paging.setData(mbrandVOs);
@@ -50,7 +50,7 @@ public class MbrandServiceImpl implements MbrandService {
 		List<MbrandVO> mbrandVOs = new ArrayList<MbrandVO>();
 
 		for (MbrandPO mbrandPO : mbrandPOs) {
-			mbrandVOs.add(mbrandPOToVO(mbrandPO));
+			mbrandVOs.add(mbrandPO.ptv(new MbrandVO(new McategoryVO())));
 		}
 
 		return mbrandVOs;
@@ -65,7 +65,7 @@ public class MbrandServiceImpl implements MbrandService {
 		List<MbrandVO> mbrandVOs = new ArrayList<MbrandVO>();
 
 		for (MbrandPO mbrandPO : mbrandPOs) {
-			mbrandVOs.add(mbrandPOToVO(mbrandPO));
+			mbrandVOs.add(mbrandPO.ptv(new MbrandVO(new McategoryVO())));
 		}
 
 		return mbrandVOs;
@@ -125,17 +125,6 @@ public class MbrandServiceImpl implements MbrandService {
 		mbrandDao.update(mbrandPO);
 
 		return 0;
-	}
-
-	public MbrandVO mbrandPOToVO(MbrandPO mbrandPO) {
-
-		MbrandVO mbrandVO = new MbrandVO(new McategoryVO());
-
-		BeanUtil.copyProperties(mbrandPO, mbrandVO, Arrays.asList("mcategory"));
-
-		BeanUtil.copyProperties(mbrandPO.getMcategory(), mbrandVO.getMcategory());
-
-		return mbrandVO;
 	}
 
 }

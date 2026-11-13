@@ -10,9 +10,14 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import java.util.Arrays;
 
 import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.personel.po.UserPO;
+import com.fanglin.customer.vo.ConsultionVO;
+import com.fanglin.decoration.vo.DecorationVO;
+import com.fanglin.personel.vo.UserBaseVO;
+import com.fanglin.utils.BeanUtil;
 
 @Entity
 @Table(name = "consultion", catalog = "customer")
@@ -104,4 +109,15 @@ public class ConsultionPO implements Serializable {
 		this.company = company;
 	}
 
+	public ConsultionVO ptv(ConsultionVO consultionVO) {
+
+		BeanUtil.copyProperties(this, consultionVO, Arrays.asList("decoration", "creater"));
+		BeanUtil.copyProperties(getCreater(), consultionVO.getCreater(), Arrays.asList("duty", "dept"));
+
+		if (getDecoration() != null) {
+			getDecoration().ptvcascade(consultionVO.getDecoration());
+		}
+
+		return consultionVO;
+	}
 }

@@ -9,6 +9,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import com.fanglin.approval.vo.ProcessVO;
+import com.fanglin.utils.BeanUtil;
 
 @Entity
 @Table(name = "process", catalog = "approval")
@@ -90,5 +92,12 @@ public class ProcessPO implements Serializable {
 
 	public void setCompany(int company) {
 		this.company = company;
+	}
+
+	public ProcessVO ptv(ProcessVO processVO) {
+
+		BeanUtil.copyProperties(this, processVO);
+
+		return processVO;
 	}
 }

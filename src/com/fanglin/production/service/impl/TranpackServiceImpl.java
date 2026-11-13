@@ -63,7 +63,7 @@ public class TranpackServiceImpl implements TranpackService {
 
 		for (TranpackPO tranpackPO : tranpackPOs) {
 
-			tranpackVOs.add(copyTranpck(tranpackPO));
+			tranpackVOs.add(tranpackPO.ptv());
 		}
 
 		paging.setData(tranpackVOs);
@@ -77,7 +77,7 @@ public class TranpackServiceImpl implements TranpackService {
 
 		for (TranpackPO tranpackPO : tranpackPOs) {
 
-			tranpackVOs.add(copyTranpck(tranpackPO));
+			tranpackVOs.add(tranpackPO.ptv());
 		}
 
 		return tranpackVOs;
@@ -342,22 +342,4 @@ public class TranpackServiceImpl implements TranpackService {
 	}
 
 	// Copy赋值
-	private TranpackVO copyTranpck(TranpackPO tranpackPO) {
-
-		TranpackVO tranpackVO = new TranpackVO(new ProductionVO(new HouseVO(new VillageVO()), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO()), new UserBaseVO(), new UserBaseVO(), new UserBaseVO());
-
-		BeanUtil.copyPropertie(tranpackPO, tranpackVO, Arrays.asList("production", "creater", "sender", "mounter"));
-		BeanUtil.copyProperties(tranpackPO.getProduction(), tranpackVO.getProduction(), Arrays.asList("house", "creater", "brand", "salesman", "designer", "spliter"));
-		BeanUtil.copyProperties(tranpackPO.getCreater(), tranpackVO.getCreater(), Arrays.asList("duty", "dept"));
-		BeanUtil.copyProperties(tranpackPO.getSender(), tranpackVO.getSender(), Arrays.asList("duty", "dept"));
-		BeanUtil.copyProperties(tranpackPO.getMounter(), tranpackVO.getMounter(), Arrays.asList("duty", "dept"));
-		BeanUtil.copyProperties(tranpackPO.getProduction().getCreater(), tranpackVO.getProduction().getCreater(), Arrays.asList("duty", "dept"));
-		BeanUtil.copyProperties(tranpackPO.getProduction().getSalesman(), tranpackVO.getProduction().getSalesman(), Arrays.asList("duty", "dept"));
-		BeanUtil.copyProperties(tranpackPO.getProduction().getDesigner(), tranpackVO.getProduction().getDesigner(), Arrays.asList("duty", "dept"));
-		BeanUtil.copyProperties(tranpackPO.getProduction().getSpliter(), tranpackVO.getProduction().getSpliter(), Arrays.asList("duty", "dept"));
-
-		if (tranpackPO.getProduction().getHouse() != null) tranpackPO.getProduction().getHouse().ptv(tranpackVO.getProduction().getHouse());
-
-		return tranpackVO;
-	}
 }

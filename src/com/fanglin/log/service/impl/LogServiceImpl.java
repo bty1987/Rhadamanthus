@@ -138,8 +138,7 @@ public class LogServiceImpl implements LogService {
 		List<ActionLogPO> actionLogPOs = actionLogDao.getPageActionLogPOs(paging, filters);
 
 		for(ActionLogPO actionLogPO: actionLogPOs){
-			LogVO logVO = changeActionLogPOToVO(actionLogPO);
-			logVOs.add(logVO);
+			logVOs.add(actionLogPO.ptv(new LogVO()));
 		}
 
 		paging.setData(logVOs);
@@ -177,7 +176,12 @@ public class LogServiceImpl implements LogService {
 
 		List<LogVO> logVOs = new ArrayList<LogVO>();
 		for (ActionLogPO po : actionLogPOs){
-			logVOs.add(changeActionLogPOToVOWithHistory(po));
+			LogVO logVO = po.ptv(new LogVO());
+			if (po.getCreateUserPO() == null){
+				// 归档表用户已被删除的兜底：仅展示 createUserId（PO 里已有）
+				logVO.setCreateUserName("[用户已删除]");
+			}
+			logVOs.add(logVO);
 		}
 		paging.setData(logVOs);
 	}
@@ -253,71 +257,16 @@ public class LogServiceImpl implements LogService {
 		return c;
 	}
 
-	/** 历史查询时 PO->VO 转换，createUserPO 可能为 null（归档表关联用户已删）。 */
-	private LogVO changeActionLogPOToVOWithHistory(ActionLogPO po){
-		LogVO vo = new LogVO();
-		BeanUtil.copyProperties(po, vo);
-		if (po.getCreateUserPO() != null){
-			vo.setCreateUserId(po.getCreateUserPO().getUserId());
-			vo.setCreateUserName(po.getCreateUserPO().getCurrentName());
-			if (po.getCreateUserPO().getDuty() != null) vo.setDuty(po.getCreateUserPO().getDuty().getName());
-			if (po.getCreateUserPO().getRole() != null){
-				vo.setRoleId(po.getCreateUserPO().getRole().getNo());
-				vo.setRoleName(po.getCreateUserPO().getRole().getName());
-			}
-		} else {
-			// 归档表用户已被删除的兜底：仅展示 createUserId（PO 里已有）
-			vo.setCreateUserName("[用户已删除]");
-		}
-		vo.setIp(po.getIp());
-		vo.setCompanyId(po.getCompanyId());
-		vo.setModuleId(po.getModuleId());
-		vo.setOperateType(po.getOperateType());
-		vo.setBusinessId(po.getBusinessId());
-		vo.setParams(po.getParams());
-		vo.setResultState(po.getResultState());
-		vo.setErrorCode(po.getErrorCode());
-		vo.setErrorMsg(po.getErrorMsg());
-		vo.setTraceId(po.getTraceId());
-		return vo;
-	}
-
 	@Override
 	public List<LogVO> getAllPageActionLogs(List<Filter> filters){
-		
+
 		List<LogVO> logVOs = new ArrayList<LogVO>();
 		List<ActionLogPO> actionLogPOs = actionLogDao.getAllPageActionLogPOs(filters);
-		
+
 		for(ActionLogPO actionLogPO: actionLogPOs){
-			LogVO logVO = changeActionLogPOToVO(actionLogPO);
-			logVOs.add(logVO);
+			logVOs.add(actionLogPO.ptv(new LogVO()));
 		}
 		return logVOs;
-	}
-	
-	private LogVO changeActionLogPOToVO(ActionLogPO actionLogPO){
-		LogVO logVO = new LogVO();
-
-		BeanUtil.copyProperties(actionLogPO, logVO);
-		logVO.setCreateUserId(actionLogPO.getCreateUserPO().getUserId());
-		logVO.setCreateUserName(actionLogPO.getCreateUserPO().getCurrentName());
-		logVO.setDuty(actionLogPO.getCreateUserPO().getDuty().getName());
-		logVO.setRoleId(actionLogPO.getCreateUserPO().getRole().getNo());
-		logVO.setRoleName(actionLogPO.getCreateUserPO().getRole().getName());
-
-		// Phase 1 扩展字段（BeanUtil 已能按同名拷贝，这里显式补以防 BeanUtil 配置差异）
-		logVO.setIp(actionLogPO.getIp());
-		logVO.setCompanyId(actionLogPO.getCompanyId());
-		logVO.setModuleId(actionLogPO.getModuleId());
-		logVO.setOperateType(actionLogPO.getOperateType());
-		logVO.setBusinessId(actionLogPO.getBusinessId());
-		logVO.setParams(actionLogPO.getParams());
-		logVO.setResultState(actionLogPO.getResultState());
-		logVO.setErrorCode(actionLogPO.getErrorCode());
-		logVO.setErrorMsg(actionLogPO.getErrorMsg());
-		logVO.setTraceId(actionLogPO.getTraceId());
-
-		return logVO;
 	}
 
 }

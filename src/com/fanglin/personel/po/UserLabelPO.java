@@ -10,8 +10,11 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import java.util.Arrays;
 
 import com.fanglin.data.po.LabelPO;
+import com.fanglin.personel.vo.UserLabelVO;
+import com.fanglin.utils.BeanUtil;
 
 @Entity
 @Table(name = "userlabel", schema = "communion")
@@ -81,4 +84,12 @@ public class UserLabelPO implements Serializable {
 		this.scope = scope;
 	}
 
+	public UserLabelVO ptv(UserLabelVO userLabelVO) {
+
+		BeanUtil.copyProperties(this, userLabelVO, Arrays.asList("user", "label"));
+		BeanUtil.copyProperties(getUser(), userLabelVO.getUser(), Arrays.asList("duty", "dept"));
+		BeanUtil.copyProperties(getLabel(), userLabelVO.getLabel());
+
+		return userLabelVO;
+	}
 }

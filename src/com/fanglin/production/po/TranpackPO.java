@@ -13,8 +13,15 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import java.util.Arrays;
 
 import com.fanglin.personel.po.UserPO;
+import com.fanglin.communion.vo.HouseVO;
+import com.fanglin.communion.vo.VillageVO;
+import com.fanglin.personel.vo.UserBaseVO;
+import com.fanglin.production.vo.ProductionVO;
+import com.fanglin.utils.BeanUtil;
+import com.fanglin.production.vo.TranpackVO;
 
 @Entity
 @Table(name = "tranpack", catalog = "production")
@@ -226,5 +233,24 @@ public class TranpackPO implements Serializable {
 	public void setStatus(short status) {
 		this.status = status;
 	}
-}
 
+	public TranpackVO ptv() {
+
+		TranpackVO tranpackVO = new TranpackVO(new ProductionVO(new HouseVO(new VillageVO()), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO()), new UserBaseVO(), new UserBaseVO(), new UserBaseVO());
+
+		BeanUtil.copyProperties(this, tranpackVO, Arrays.asList("production", "creater", "sender", "mounter"));
+		if (getProduction() != null) {
+			BeanUtil.copyProperties(getProduction(), tranpackVO.getProduction(), Arrays.asList("house", "creater", "brand", "salesman", "designer", "spliter"));
+			BeanUtil.copyProperties(getProduction().getCreater(), tranpackVO.getProduction().getCreater(), Arrays.asList("duty", "dept"));
+			BeanUtil.copyProperties(getProduction().getSalesman(), tranpackVO.getProduction().getSalesman(), Arrays.asList("duty", "dept"));
+			BeanUtil.copyProperties(getProduction().getDesigner(), tranpackVO.getProduction().getDesigner(), Arrays.asList("duty", "dept"));
+			BeanUtil.copyProperties(getProduction().getSpliter(), tranpackVO.getProduction().getSpliter(), Arrays.asList("duty", "dept"));
+			if (getProduction().getHouse() != null) getProduction().getHouse().ptv(tranpackVO.getProduction().getHouse());
+		}
+		BeanUtil.copyProperties(getCreater(), tranpackVO.getCreater(), Arrays.asList("duty", "dept"));
+		BeanUtil.copyProperties(getSender(), tranpackVO.getSender(), Arrays.asList("duty", "dept"));
+		BeanUtil.copyProperties(getMounter(), tranpackVO.getMounter(), Arrays.asList("duty", "dept"));
+
+		return tranpackVO;
+	}
+}

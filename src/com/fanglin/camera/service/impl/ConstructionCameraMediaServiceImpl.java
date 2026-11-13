@@ -54,7 +54,7 @@ public class ConstructionCameraMediaServiceImpl implements ConstructionCameraMed
 		List<ConstructionCameraMediaVO> constructionCameraMediaVOs = new ArrayList<ConstructionCameraMediaVO>();
 
 		for (ConstructionCameraMediaPO constructionCameraMediaPO : constructionCameraMediaPOs) {
-			constructionCameraMediaVOs.add(vo(constructionCameraMediaPO));
+			constructionCameraMediaVOs.add(constructionCameraMediaPO.ptv(new ConstructionCameraMediaVO()));
 		}
 
 		return constructionCameraMediaVOs;
@@ -82,7 +82,7 @@ public class ConstructionCameraMediaServiceImpl implements ConstructionCameraMed
 			List<ConstructionCameraMediaPO> selected = sample(albumMedias(medias, orderId, company), constructionCameraPlayVO == null || constructionCameraPlayVO.getCount() == null ? 20 : constructionCameraPlayVO.getCount());
 
 			for (ConstructionCameraMediaPO media : selected) {
-				constructionCameraMediaVOs.add(vo(media));
+				constructionCameraMediaVOs.add(media.ptv(new ConstructionCameraMediaVO()));
 			}
 
 			access(orderId, cameraId == null ? 0 : cameraId, ConstructionCameraAccessPO.ACTION_ALBUM_STR, ConstructionCameraAccessPO.RESULT_SUCCESS_INT, viewerId, null);
@@ -127,7 +127,7 @@ public class ConstructionCameraMediaServiceImpl implements ConstructionCameraMed
 
 			access(constructionCameraPO, ConstructionCameraAccessPO.ACTION_CAPTURE_STR, ConstructionCameraAccessPO.RESULT_SUCCESS_INT, viewerId, null);
 
-			return vo(mediaPO);
+			return mediaPO.ptv(new ConstructionCameraMediaVO());
 		} catch (FLException e) {
 			access(constructionCameraPO, ConstructionCameraAccessPO.ACTION_CAPTURE_STR, ConstructionCameraAccessPO.RESULT_FAIL_INT, viewerId, e.getErrorMessage());
 			throw e;
@@ -148,15 +148,6 @@ public class ConstructionCameraMediaServiceImpl implements ConstructionCameraMed
 		if (constructionCameraPO == null || constructionCameraPO.getStatus() == ConstructionCameraPO.STATUS_DISABLE_INT) throw new FLException(120044, "摄像头设备信息不存在");
 
 		return constructionCameraPO;
-	}
-
-	private ConstructionCameraMediaVO vo(ConstructionCameraMediaPO constructionCameraMediaPO) {
-
-		ConstructionCameraMediaVO constructionCameraMediaVO = new ConstructionCameraMediaVO();
-
-		BeanUtil.copyProperties(constructionCameraMediaPO, constructionCameraMediaVO);
-
-		return constructionCameraMediaVO;
 	}
 
 	private CameraProviderService provider(ConstructionCameraPO constructionCameraPO) throws FLException {

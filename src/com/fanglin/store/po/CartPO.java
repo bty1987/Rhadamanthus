@@ -3,6 +3,7 @@ package com.fanglin.store.po;
 import static javax.persistence.GenerationType.IDENTITY;
 
 import java.io.Serializable;
+import java.util.Arrays;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -12,6 +13,9 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+import com.fanglin.store.vo.CartVO;
+import com.fanglin.utils.BeanUtil;
 
 @Entity
 @Table(name = "cart", catalog = "store")
@@ -77,4 +81,17 @@ public class CartPO implements Serializable {
 		this.num = num;
 	}
 
+	public CartVO ptv(CartVO cartVO){
+
+		BeanUtil.copyProperties(this, cartVO, Arrays.asList("mprice"));
+
+		if (getMprice() != null){
+			BeanUtil.copyProperties(getMprice(), cartVO.getMprice(), Arrays.asList("mgoods", "mcolor", "mformat"));
+			if (getMprice().getMgoods() != null) BeanUtil.copyProperties(getMprice().getMgoods(), cartVO.getMprice().getMgoods(), Arrays.asList("mbrand"));
+			if (getMprice().getMcolor() != null) BeanUtil.copyProperties(getMprice().getMcolor(), cartVO.getMprice().getMcolor());
+			if (getMprice().getMformat() != null) BeanUtil.copyProperties(getMprice().getMformat(), cartVO.getMprice().getMformat());
+		}
+
+		return cartVO;
+	}
 }

@@ -13,8 +13,15 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import java.util.Arrays;
 
 import com.fanglin.personel.po.UserPO;
+import com.fanglin.communion.vo.HouseVO;
+import com.fanglin.communion.vo.VillageVO;
+import com.fanglin.personel.vo.UserBaseVO;
+import com.fanglin.production.vo.ProductionVO;
+import com.fanglin.utils.BeanUtil;
+import com.fanglin.production.vo.HardwareVO;
 
 @Entity
 @Table(name = "hardware", catalog = "production")
@@ -188,4 +195,21 @@ public class HardwarePO implements Serializable {
 		this.company = company;
 	}
 
+	public HardwareVO ptv() {
+
+		HardwareVO hardwareVO = new HardwareVO(new ProductionVO(new HouseVO(new VillageVO()), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO()), new UserBaseVO());
+
+		BeanUtil.copyProperties(this, hardwareVO, Arrays.asList("production", "creater"));
+		if (getProduction() != null) {
+			BeanUtil.copyProperties(getProduction(), hardwareVO.getProduction(), Arrays.asList("house", "creater", "brand", "salesman", "designer", "spliter"));
+			BeanUtil.copyProperties(getProduction().getCreater(), hardwareVO.getProduction().getCreater(), Arrays.asList("duty", "dept"));
+			BeanUtil.copyProperties(getProduction().getSalesman(), hardwareVO.getProduction().getSalesman(), Arrays.asList("duty", "dept"));
+			BeanUtil.copyProperties(getProduction().getDesigner(), hardwareVO.getProduction().getDesigner(), Arrays.asList("duty", "dept"));
+			BeanUtil.copyProperties(getProduction().getSpliter(), hardwareVO.getProduction().getSpliter(), Arrays.asList("duty", "dept"));
+			if (getProduction().getHouse() != null) getProduction().getHouse().ptv(hardwareVO.getProduction().getHouse());
+		}
+		BeanUtil.copyProperties(getCreater(), hardwareVO.getCreater(), Arrays.asList("duty", "dept"));
+
+		return hardwareVO;
+	}
 }

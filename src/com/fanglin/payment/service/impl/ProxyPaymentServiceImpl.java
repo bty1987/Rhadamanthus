@@ -61,7 +61,7 @@ public class ProxyPaymentServiceImpl implements ProxyPaymentService {
 
 			ProxyPaymentVO proxyPaymentVO = new ProxyPaymentVO(new ProxyReceiptVO(new UserBaseVO(), new UserBaseVO()), new UserBaseVO());
 
-			proxyPaymentPOToVO(proxyPaymentPO, proxyPaymentVO);
+			proxyPaymentPO.ptv(proxyPaymentVO);
 
 			proxyPaymentVOs.add(proxyPaymentVO);
 		}
@@ -81,7 +81,7 @@ public class ProxyPaymentServiceImpl implements ProxyPaymentService {
 
 		ProxyPaymentVO proxyPaymentVO = new ProxyPaymentVO(new ProxyReceiptVO(), new UserBaseVO());
 
-		proxyPaymentPOToVO(proxyPaymentPO, proxyPaymentVO);
+		proxyPaymentPO.ptv(proxyPaymentVO);
 
 		return proxyPaymentVO;
 	}
@@ -230,22 +230,6 @@ public class ProxyPaymentServiceImpl implements ProxyPaymentService {
 
 		proxyPaymentDao.update(proxyPaymentPO);
 
-	}
-
-	public ProxyPaymentVO proxyPaymentPOToVO(ProxyPaymentPO proxyPaymentPO, ProxyPaymentVO proxyPaymentVO) {
-
-		BeanUtil.copyProperties(proxyPaymentPO, proxyPaymentVO, Arrays.asList("proxyReceipt", "creater"));
-		BeanUtil.copyProperties(proxyPaymentPO.getCreater(), proxyPaymentVO.getCreater(), Arrays.asList("role", "dept", "duty"));
-
-		ProxyReceiptPO proxyReceiptPO = proxyPaymentPO.getProxyReceipt();
-
-		if (proxyReceiptPO != null) {
-			BeanUtil.copyProperties(proxyReceiptPO, proxyPaymentVO.getProxyReceipt(), Arrays.asList("collecter", "confirmer"));
-			BeanUtil.copyProperties(proxyReceiptPO.getCollecter(), proxyPaymentVO.getProxyReceipt().getCollecter(), Arrays.asList("role", "dept", "duty"));
-			BeanUtil.copyProperties(proxyReceiptPO.getConfirmer(), proxyPaymentVO.getProxyReceipt().getConfirmer(), Arrays.asList("role", "dept", "duty"));
-		}
-
-		return proxyPaymentVO;
 	}
 
 }

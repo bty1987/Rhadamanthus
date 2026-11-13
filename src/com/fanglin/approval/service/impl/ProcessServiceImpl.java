@@ -40,7 +40,7 @@ public class ProcessServiceImpl implements ProcessService {
 		List<ProcessVO> processVOs = new ArrayList<ProcessVO>();
 
 		for(ProcessPO processPO: processPOs){
-			processVOs.add(processPOToVO(processPO));
+			processVOs.add(processPO.ptv(new ProcessVO()));
 		}
 
 		paging.setData(processVOs);
@@ -55,7 +55,7 @@ public class ProcessServiceImpl implements ProcessService {
 		List<ProcessVO> processVOs = new ArrayList<ProcessVO>();
 
 		for(ProcessPO processPO: processPOs){
-			processVOs.add(processPOToVO(processPO));
+			processVOs.add(processPO.ptv(new ProcessVO()));
 		}
 		
 		return processVOs;
@@ -67,7 +67,7 @@ public class ProcessServiceImpl implements ProcessService {
 		
 		ProcessPO processPO = processDao.get(process.getPid());
 		
-		ProcessVO processVO = processPOToVO(processPO);
+		ProcessVO processVO = processPO.ptv(new ProcessVO());
 		
 		return processVO;
 		
@@ -198,14 +198,4 @@ public class ProcessServiceImpl implements ProcessService {
 		
 	}
 	
-	public ProcessVO processPOToVO(ProcessPO processPO){
-		
-		ProcessVO processVO = new ProcessVO();
-
-		BeanUtil.copyProperties(processPO, processVO);
-		
-		return processVO;
-		
-	}
-
 }

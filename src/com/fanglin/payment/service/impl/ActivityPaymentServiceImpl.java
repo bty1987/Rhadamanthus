@@ -67,7 +67,7 @@ public class ActivityPaymentServiceImpl implements ActivityPaymentService {
 
 		for (ActivityPaymentPO activityPaymentPO : activityPaymentPOs) {
 
-			activityPaymentVOs.add(activityPaymentPOtoVO(activityPaymentPO));
+			activityPaymentVOs.add(activityPaymentPO.ptv(new ActivityPaymentVO(new UserBaseVO(), new UserBaseVO(), new ActivityReceiptVO(new UserBaseVO()))));
 		}
 
 		paging.setData(activityPaymentVOs);
@@ -80,7 +80,7 @@ public class ActivityPaymentServiceImpl implements ActivityPaymentService {
 		List<ActivityPaymentVO> activityPayments = new ArrayList<ActivityPaymentVO>();
 
 		for (ActivityPaymentPO activityPaymentPO : activityPaymentPOs) {
-			activityPayments.add(activityPaymentPOtoVO(activityPaymentPO));
+			activityPayments.add(activityPaymentPO.ptv(new ActivityPaymentVO(new UserBaseVO(), new UserBaseVO(), new ActivityReceiptVO(new UserBaseVO()))));
 		}
 		return activityPayments;
 	}
@@ -92,7 +92,7 @@ public class ActivityPaymentServiceImpl implements ActivityPaymentService {
 		List<ActivityPaymentVO> activityPaymentVOs = new ArrayList<ActivityPaymentVO>();
 
 		for (ActivityPaymentPO activityPaymentPO : activityPaymentPOs) {
-			activityPaymentVOs.add(activityPaymentPOtoVO(activityPaymentPO));
+			activityPaymentVOs.add(activityPaymentPO.ptv(new ActivityPaymentVO(new UserBaseVO(), new UserBaseVO(), new ActivityReceiptVO(new UserBaseVO()))));
 		}
 
 		return activityPaymentVOs;
@@ -233,22 +233,6 @@ public class ActivityPaymentServiceImpl implements ActivityPaymentService {
 		List<List<String>> countList = activityPaymentDao.countActivityPayment();
 
 		return countList;
-	}
-
-	public ActivityPaymentVO activityPaymentPOtoVO(ActivityPaymentPO activityPaymentPO) {
-
-		ActivityPaymentVO activityPaymentVO = new ActivityPaymentVO(new UserBaseVO(), new UserBaseVO(), new ActivityReceiptVO(new UserBaseVO()));
-
-		BeanUtil.copyProperties(activityPaymentPO, activityPaymentVO, Arrays.asList("creater", "activityReceipt"));
-		BeanUtil.copyProperties(activityPaymentPO.getCreater(), activityPaymentVO.getCreater(), Arrays.asList("duty", "dept"));
-
-		if (activityPaymentPO.getActivityReceipt() != null) {
-
-			BeanUtil.copyProperties(activityPaymentPO.getActivityReceipt(), activityPaymentVO, Arrays.asList("collecter"));
-			BeanUtil.copyProperties(activityPaymentPO.getActivityReceipt().getCollecter(), activityPaymentVO.getCollecter(), Arrays.asList("dept", "duty"));
-		}
-
-		return activityPaymentVO;
 	}
 
 }

@@ -12,8 +12,12 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import java.util.Arrays;
 
 import com.fanglin.personel.po.UserPO;
+import com.fanglin.information.vo.PhoneCallVO;
+import com.fanglin.personel.vo.UserVO;
+import com.fanglin.utils.BeanUtil;
 
 @Entity
 @Table(name = "phonecall", catalog = "information")
@@ -186,4 +190,11 @@ public class PhoneCallPO implements java.io.Serializable {
 		this.duration = duration;
 	}
 
+	public PhoneCallVO ptv(PhoneCallVO phoneCallVO) {
+
+		BeanUtil.copyProperties(this, phoneCallVO, Arrays.asList("operater"));
+		BeanUtil.copyProperties(getOperater(), phoneCallVO.getOperater(), Arrays.asList("role", "dept", "duty"));
+
+		return phoneCallVO;
+	}
 }

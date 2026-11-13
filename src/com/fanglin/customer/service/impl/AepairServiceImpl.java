@@ -72,7 +72,7 @@ public class AepairServiceImpl implements AepairService {
 
 		for (AepairPO aepairPO : aepairPOs) {
 
-			aepairVOs.add(POtoVO(aepairPO));
+			aepairVOs.add(aepairPO.ptv(new AepairVO(new DecorationVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO())));
 
 		}
 
@@ -87,7 +87,7 @@ public class AepairServiceImpl implements AepairService {
 
 		for (AepairPO aepairPO : aepairPOs) {
 
-			aepairVOs.add(POtoVO(aepairPO));
+			aepairVOs.add(aepairPO.ptv(new AepairVO(new DecorationVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO())));
 
 		}
 
@@ -102,7 +102,7 @@ public class AepairServiceImpl implements AepairService {
 
 		for (AepairPO aepairPO : aepairPOs) {
 
-			aepairVOs.add(POtoVO(aepairPO));
+			aepairVOs.add(aepairPO.ptv(new AepairVO(new DecorationVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO())));
 
 		}
 
@@ -343,23 +343,6 @@ public class AepairServiceImpl implements AepairService {
 		aepairDao.update(aepairPO);
 
 		return 0;
-	}
-
-	public AepairVO POtoVO(AepairPO aepairPO) {
-
-		AepairVO aepairVO = new AepairVO(new DecorationVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO());
-
-		BeanUtil.copyProperties(aepairPO, aepairVO, Arrays.asList("decoration", "creater", "updater", "repaier"));
-
-		if (aepairPO.getDecoration() != null) {
-			aepairPO.getDecoration().ptvcascade(aepairVO.getDecoration());
-		}
-
-		aepairVO.getCreater().setBaseInfo(aepairPO.getCreater());
-		aepairVO.getUpdater().setBaseInfo(aepairPO.getUpdater());
-		aepairVO.getRepaier().setBaseInfo(aepairPO.getRepaier());
-
-		return aepairVO;
 	}
 
 	@Override

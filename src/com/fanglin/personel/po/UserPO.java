@@ -19,12 +19,20 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import java.util.Arrays;
+
 import javax.persistence.Table;
 
 import com.fanglin.communion.po.DepartmentPO;
 import com.fanglin.communion.po.DutyPO;
 import com.fanglin.personel.vo.UserVO;
 import com.fanglin.system.po.RolePO;
+import com.fanglin.communion.vo.DepartmentTypeVO;
+import com.fanglin.communion.vo.DepartmentVO;
+import com.fanglin.communion.vo.DutyVO;
+import com.fanglin.core.security.SensitiveDataHelper;
+import com.fanglin.system.vo.RoleVO;
+import com.fanglin.utils.BeanUtil;
 
 @Entity
 @Table(name = "user", catalog = "communion")
@@ -426,9 +434,40 @@ public class UserPO implements Serializable {
 		this.token = token;
 	}
 
-	public UserPO ptv(UserVO userVO) {
+	public UserVO ptv(UserVO userVO) {
 
-		return this;
+		BeanUtil.copyProperties(this, userVO, Arrays.asList("role", "dept", "duty", "password", "company", "phone", "identity"));
+		userVO.setPhone(SensitiveDataHelper.decrypt(getPhone()));
+		userVO.setIdentity(SensitiveDataHelper.decrypt(getIdentity()));
+
+		if (getDuty() != null) {
+			BeanUtil.copyProperties(getDuty(), userVO.getDuty(), Arrays.asList("departmentType"));
+
+			if (getDuty().getDepartmentType() != null) {
+				userVO.getDuty().setDepartmentType(new DepartmentTypeVO());
+				BeanUtil.copyProperties(getDuty().getDepartmentType(), userVO.getDuty().getDepartmentType());
+			}
+		}
+
+		BeanUtil.copyProperties(getRole(), userVO.getRole(), Arrays.asList("creater"));
+
+		BeanUtil.copyProperties(getDept(), userVO.getDept(), Arrays.asList("fatherDept", "type", "manager"));
+
+		if (getDept() != null) {
+			if (getDept().getFatherDept() != null) {
+				userVO.getDept().setFatherDept(new DepartmentVO());
+
+				BeanUtil.copyProperties(getDept().getFatherDept(), userVO.getDept().getFatherDept(), Arrays.asList("fatherDept", "type", "manager"));
+			}
+
+			if (getDept().getType() != null) {
+				userVO.getDept().setType(new DepartmentTypeVO());
+
+				BeanUtil.copyProperties(getDept().getType(), userVO.getDept().getType());
+			}
+		}
+
+		return userVO;
 	}
 
 }

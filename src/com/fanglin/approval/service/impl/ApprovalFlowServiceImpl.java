@@ -47,7 +47,7 @@ public class ApprovalFlowServiceImpl implements ApprovalFlowService {
 		List<ApprovalFlowVO> flowVOs = new ArrayList<ApprovalFlowVO>();
 
 		for (ApprovalFlowPO flowPO : flowPOs) {
-			flowVOs.add(flowPOToVO(flowPO));
+			flowVOs.add(flowPO.ptv(new ApprovalFlowVO()));
 		}
 
 		paging.setData(flowVOs);
@@ -62,7 +62,7 @@ public class ApprovalFlowServiceImpl implements ApprovalFlowService {
 			throw new FLException(240050, "流程定义不存在");
 		}
 
-		return flowPOToVO(flowPO);
+		return flowPO.ptv(new ApprovalFlowVO());
 	}
 
 	@Override
@@ -165,12 +165,6 @@ public class ApprovalFlowServiceImpl implements ApprovalFlowService {
 
 		approvalFlowNodeDao.deleteApprovalFlowNodeByFlowId(flowPO.getFlowId());
 		approvalFlowDao.delete(flowPO);
-	}
-
-	private ApprovalFlowVO flowPOToVO(ApprovalFlowPO flowPO) {
-		ApprovalFlowVO vo = new ApprovalFlowVO();
-		BeanUtil.copyProperties(flowPO, vo);
-		return vo;
 	}
 
 }

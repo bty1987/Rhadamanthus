@@ -13,8 +13,15 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import java.util.Arrays;
 
 import com.fanglin.personel.po.UserPO;
+import com.fanglin.communion.vo.HouseVO;
+import com.fanglin.communion.vo.VillageVO;
+import com.fanglin.personel.vo.UserBaseVO;
+import com.fanglin.production.vo.ProductionVO;
+import com.fanglin.utils.BeanUtil;
+import com.fanglin.production.vo.OutsourceVO;
 
 @Entity
 @Table(name = "outsource", catalog = "production")
@@ -195,5 +202,24 @@ public class OutsourcePO implements Serializable{
 
 	public void setCompany(int company) {
 		this.company = company;
+	}
+
+	public OutsourceVO ptv() {
+
+		OutsourceVO outsourceVO = new OutsourceVO(new ProductionVO(new HouseVO(new VillageVO()), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO()), new UserBaseVO(), new UserBaseVO());
+
+		BeanUtil.copyProperties(this, outsourceVO, Arrays.asList("production", "creater", "supplier"));
+		if (getProduction() != null) {
+			BeanUtil.copyProperties(getProduction(), outsourceVO.getProduction(), Arrays.asList("house", "creater", "brand", "salesman", "designer", "spliter"));
+			BeanUtil.copyProperties(getProduction().getCreater(), outsourceVO.getProduction().getCreater(), Arrays.asList("duty", "dept"));
+			BeanUtil.copyProperties(getProduction().getSalesman(), outsourceVO.getProduction().getSalesman(), Arrays.asList("duty", "dept"));
+			BeanUtil.copyProperties(getProduction().getDesigner(), outsourceVO.getProduction().getDesigner(), Arrays.asList("duty", "dept"));
+			BeanUtil.copyProperties(getProduction().getSpliter(), outsourceVO.getProduction().getSpliter(), Arrays.asList("duty", "dept"));
+			if (getProduction().getHouse() != null) getProduction().getHouse().ptv(outsourceVO.getProduction().getHouse());
+		}
+		BeanUtil.copyProperties(getCreater(), outsourceVO.getCreater(), Arrays.asList("duty", "dept"));
+		BeanUtil.copyProperties(getSupplier(), outsourceVO.getSupplier(), Arrays.asList("duty", "dept"));
+
+		return outsourceVO;
 	}
 }

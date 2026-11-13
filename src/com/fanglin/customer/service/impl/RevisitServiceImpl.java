@@ -51,7 +51,10 @@ public class RevisitServiceImpl implements RevisitService {
 
 			BeanUtil.copyProperties(revisitPO, revisitVO, Arrays.asList("decoration", "creater"));
 			BeanUtil.copyProperties(revisitPO.getCreater(), revisitVO.getCreater(), Arrays.asList("dept", "duty", "role"));
-			BeanUtil.copyProperties(ptv(revisitPO.getDecoration()), revisitVO.getDecoration());
+			if (revisitPO.getDecoration() != null) {
+				revisitVO.getDecoration().setSupervisor(new UserBaseVO());
+				revisitPO.getDecoration().ptvcascade(revisitVO.getDecoration());
+			}
 
 			revisitVOs.add(revisitVO);
 		}
@@ -71,7 +74,10 @@ public class RevisitServiceImpl implements RevisitService {
 
 			BeanUtil.copyProperties(revisitPO, revisitVO, Arrays.asList("decoration", "creater"));
 			BeanUtil.copyProperties(revisitPO.getCreater(), revisitVO.getCreater(), Arrays.asList("dept", "duty", "role"));
-			BeanUtil.copyProperties(ptv(revisitPO.getDecoration()), revisitVO.getDecoration());
+			if (revisitPO.getDecoration() != null) {
+				revisitVO.getDecoration().setSupervisor(new UserBaseVO());
+				revisitPO.getDecoration().ptvcascade(revisitVO.getDecoration());
+			}
 
 			revisitVOs.add(revisitVO);
 		}
@@ -91,7 +97,10 @@ public class RevisitServiceImpl implements RevisitService {
 
 			BeanUtil.copyProperties(revisitPO, revisitVO, Arrays.asList("decoration", "creater"));
 			BeanUtil.copyProperties(revisitPO.getCreater(), revisitVO.getCreater(), Arrays.asList("dept", "duty", "role"));
-			BeanUtil.copyProperties(ptv(revisitPO.getDecoration()), revisitVO.getDecoration());
+			if (revisitPO.getDecoration() != null) {
+				revisitVO.getDecoration().setSupervisor(new UserBaseVO());
+				revisitPO.getDecoration().ptvcascade(revisitVO.getDecoration());
+			}
 
 			revisitVOs.add(revisitVO);
 		}
@@ -111,7 +120,10 @@ public class RevisitServiceImpl implements RevisitService {
 
 			BeanUtil.copyProperties(revisitPO, revisitVO, Arrays.asList("decoration", "creater"));
 			BeanUtil.copyProperties(revisitPO.getCreater(), revisitVO.getCreater(), Arrays.asList("dept", "duty", "role"));
-			BeanUtil.copyProperties(ptv(revisitPO.getDecoration()), revisitVO.getDecoration());
+			if (revisitPO.getDecoration() != null) {
+				revisitVO.getDecoration().setSupervisor(new UserBaseVO());
+				revisitPO.getDecoration().ptvcascade(revisitVO.getDecoration());
+			}
 
 			revisitVOs.add(revisitVO);
 		}
@@ -138,15 +150,5 @@ public class RevisitServiceImpl implements RevisitService {
 		revisitDao.save(revisitPO);
 	}
 
-	private DecorationVO ptv(DecorationPO decorationPO) {
-
-		DecorationVO decorationVO = new DecorationVO();
-
-		decorationVO.setSupervisor(new UserBaseVO());
-
-		decorationPO.ptvcascade(decorationVO);
-
-		return decorationVO;
-	}
 
 }

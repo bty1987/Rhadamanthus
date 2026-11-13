@@ -52,7 +52,7 @@ public class BuildingRecordServiceImpl implements BuildingRecordService {
 
 		for (BuildingRecordPO buildingRecordPO : buildingRecordPOs) {
 
-			BuildingRecordVO buildingRecord = buildingRecordPOToVO(buildingRecordPO);
+			BuildingRecordVO buildingRecord = buildingRecordPO.ptv();
 
 			buildingRecordVOs.add(buildingRecord);
 
@@ -92,32 +92,4 @@ public class BuildingRecordServiceImpl implements BuildingRecordService {
 
 	}
 
-	public BuildingRecordVO buildingRecordPOToVO(BuildingRecordPO buildingRecordPO) {
-
-		BuildingHouseVO buildingHouseVO = new BuildingHouseVO(new HouseVO(new VillageVO()));
-
-		BuildingCustomerVO buildingCustomerVO = new BuildingCustomerVO(new CustomerVO(), new UserBaseVO());
-
-		BuildingRecordVO buildingRecordVO = new BuildingRecordVO(buildingHouseVO, buildingCustomerVO, new UserBaseVO());
-
-		BeanUtil.copyProperties(buildingRecordPO, buildingRecordVO, Arrays.asList("buildingHouse", "buildingCustomer", "operater"));
-
-		BuildingHousePO buildingHousePO = buildingRecordPO.getBuildingHouse();
-		if (buildingHousePO != null) {
-			BeanUtil.copyProperties(buildingHousePO, buildingHouseVO, Arrays.asList("house", "customer", "create", "followUser", "keyer", "department", "region"));
-			if (buildingHousePO.getHouse() != null) buildingHousePO.getHouse().ptv(buildingHouseVO.getHouse());
-		}
-
-		BuildingCustomerPO buildingCustomerPO = buildingRecordPO.getBuildingCustomer();
-		if (buildingCustomerPO != null) {
-			BeanUtil.copyProperties(buildingCustomerPO, buildingCustomerVO, Arrays.asList("customer", "create"));
-			BeanUtil.copyProperties(buildingCustomerPO.getCustomer(), buildingCustomerVO.getCustomer());
-		}
-
-		// operater
-		BeanUtil.copyProperties(buildingRecordPO.getOperater(), buildingRecordVO.getOperater(), Arrays.asList("dept", "duty"));
-
-		return buildingRecordVO;
-
-	}
 }

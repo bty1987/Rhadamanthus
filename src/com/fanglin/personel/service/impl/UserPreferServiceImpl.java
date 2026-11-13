@@ -30,7 +30,7 @@ public class UserPreferServiceImpl implements UserPreferService {
 
         if (userPreferPO == null) return null;
 
-        return convert(userPreferPO);
+        return userPreferPO.ptv(new UserPreferVO());
     }
 
     @Override
@@ -41,7 +41,7 @@ public class UserPreferServiceImpl implements UserPreferService {
         List<UserPreferVO> userPreferVOs = new ArrayList<UserPreferVO>();
 
         for (UserPreferPO userPreferPO : userPreferDao.queryUserPrefers(userId, module, company)) {
-            userPreferVOs.add(convert(userPreferPO));
+            userPreferVOs.add(userPreferPO.ptv(new UserPreferVO()));
         }
 
         return userPreferVOs;
@@ -103,23 +103,6 @@ public class UserPreferServiceImpl implements UserPreferService {
 
     private boolean empty(String value) {
         return value == null || "".equals(value.trim());
-    }
-
-    private UserPreferVO convert(UserPreferPO userPreferPO) {
-
-        UserPreferVO userPreferVO = new UserPreferVO();
-
-        userPreferVO.setUpid(userPreferPO.getUpid());
-        userPreferVO.setUserId(userPreferPO.getUserId());
-        userPreferVO.setModule(userPreferPO.getModule());
-        userPreferVO.setPage(userPreferPO.getPage());
-        userPreferVO.setPkey(userPreferPO.getPkey());
-        userPreferVO.setPvalue(userPreferPO.getPvalue());
-        userPreferVO.setCompany(userPreferPO.getCompany());
-        userPreferVO.setCreateTime(userPreferPO.getCreateTime());
-        userPreferVO.setUpdateTime(userPreferPO.getUpdateTime());
-
-        return userPreferVO;
     }
 
 }

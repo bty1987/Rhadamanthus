@@ -25,7 +25,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fanglin.log.vo.LogVO;
 import com.fanglin.personel.po.UserPO;
+import com.fanglin.utils.BeanUtil;
 
 @Entity
 @Table(name = "actionLog", catalog = "log")
@@ -210,5 +212,35 @@ public class ActionLogPO implements Serializable {
 
 	public void setTraceId(String traceId){
 		this.traceId = traceId;
+	}
+
+	public LogVO ptv(LogVO logVO){
+
+		BeanUtil.copyProperties(this, logVO);
+
+		// createUserPO 在归档表场景或用户被删除后可能为 null, 原实现裸解引用会 NPE
+		if (getCreateUserPO() != null){
+			logVO.setCreateUserId(getCreateUserPO().getUserId());
+			logVO.setCreateUserName(getCreateUserPO().getCurrentName());
+			if (getCreateUserPO().getDuty() != null) logVO.setDuty(getCreateUserPO().getDuty().getName());
+			if (getCreateUserPO().getRole() != null){
+				logVO.setRoleId(getCreateUserPO().getRole().getNo());
+				logVO.setRoleName(getCreateUserPO().getRole().getName());
+			}
+		}
+
+		// Phase 1 扩展字段（BeanUtil 已能按同名拷贝, 这里显式补以防 BeanUtil 配置差异）
+		logVO.setIp(getIp());
+		logVO.setCompanyId(getCompanyId());
+		logVO.setModuleId(getModuleId());
+		logVO.setOperateType(getOperateType());
+		logVO.setBusinessId(getBusinessId());
+		logVO.setParams(getParams());
+		logVO.setResultState(getResultState());
+		logVO.setErrorCode(getErrorCode());
+		logVO.setErrorMsg(getErrorMsg());
+		logVO.setTraceId(getTraceId());
+
+		return logVO;
 	}
 }

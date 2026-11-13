@@ -10,8 +10,11 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import java.util.Arrays;
 
 import com.fanglin.personel.po.UserPO;
+import com.fanglin.payment.vo.WalletVO;
+import com.fanglin.utils.BeanUtil;
 
 @Entity
 @Table(name = "wallet", catalog = "payment")
@@ -133,4 +136,12 @@ public class WalletPO implements java.io.Serializable {
 		this.status = status;
 	}
 
+	public WalletVO ptv(WalletVO walletVO) {
+
+		BeanUtil.copyProperties(this, walletVO, Arrays.asList("belonger"));
+
+		if (getBelonger() != null) BeanUtil.copyProperties(getBelonger(), walletVO.getBelonger(), Arrays.asList("duty", "dept"));
+
+		return walletVO;
+	}
 }

@@ -1,7 +1,6 @@
 package com.fanglin.payment.service.impl;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +14,6 @@ import com.fanglin.payment.service.WalletranService;
 import com.fanglin.payment.vo.WalletVO;
 import com.fanglin.payment.vo.WalletranVO;
 import com.fanglin.personel.vo.UserBaseVO;
-import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.Paging;
 
 @Service("walletranService")
@@ -31,7 +29,7 @@ public class WalletranServiceImpl implements WalletranService {
 		List<WalletranVO> walletranVOs = new ArrayList<WalletranVO>();
 		
 		for (WalletranPO walletranPO : walletranPOs) {
-			walletranVOs.add(walletranPOToVO(walletranPO));
+			walletranVOs.add(walletranPO.ptv(new WalletranVO(new WalletVO(new UserBaseVO()), new WalletVO(new UserBaseVO()))));
 		}
 		
 		paging.setData(walletranVOs);
@@ -44,26 +42,10 @@ public class WalletranServiceImpl implements WalletranService {
 		List<WalletranVO> walletranVOs = new ArrayList<WalletranVO>();
 		
 		for (WalletranPO walletranPO : walletranPOs) {
-			walletranVOs.add(walletranPOToVO(walletranPO));
+			walletranVOs.add(walletranPO.ptv(new WalletranVO(new WalletVO(new UserBaseVO()), new WalletVO(new UserBaseVO()))));
 		}
 		
 		return walletranVOs;
 	}
 	
-	public WalletranVO walletranPOToVO(WalletranPO walletranPO) {
-		
-		WalletranVO walletranVO = new WalletranVO(new WalletVO(new UserBaseVO()), new WalletVO(new UserBaseVO()));
-		
-		BeanUtil.copyProperties(walletranPO, walletranVO, Arrays.asList("wallet", "tallet"));
-		BeanUtil.copyProperties(walletranPO.getWallet(), walletranVO.getWallet(), Arrays.asList("belonger"));
-		BeanUtil.copyProperties(walletranPO.getWallet().getBelonger(), walletranVO.getWallet().getBelonger(), Arrays.asList("duty", "dept"));
-		if(walletranPO.getTallet() != null){
-			BeanUtil.copyProperties(walletranPO.getTallet(), walletranVO.getTallet(), Arrays.asList("belonger"));
-			BeanUtil.copyProperties(walletranPO.getTallet().getBelonger(), walletranVO.getTallet().getBelonger(), Arrays.asList("duty", "dept"));
-		}
-		
-		return walletranVO;
-		
-	}
-
 }

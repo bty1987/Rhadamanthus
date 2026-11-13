@@ -11,11 +11,20 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import java.util.Arrays;
 
 import com.fanglin.communion.po.CustomerPO;
 import com.fanglin.communion.po.DepartmentPO;
 import com.fanglin.communion.po.HousePO;
 import com.fanglin.personel.po.UserPO;
+import com.fanglin.building.vo.BuildingHouseVO;
+import com.fanglin.communion.vo.CustomerVO;
+import com.fanglin.communion.vo.DepartmentVO;
+import com.fanglin.communion.vo.HouseVO;
+import com.fanglin.communion.vo.VillageVO;
+import com.fanglin.personel.vo.UserBaseVO;
+import com.fanglin.system.vo.CityProperVO;
+import com.fanglin.utils.BeanUtil;
 
 @Entity
 @Table(name = "buildingHouse", catalog = "building")
@@ -431,4 +440,36 @@ public class BuildingHousePO implements Serializable {
 		this.comment = comment;
 	}
 
+	public BuildingHouseVO ptv() {
+
+		BuildingHouseVO buildingHouseVO = new BuildingHouseVO(new HouseVO(new VillageVO(new CityProperVO())), new CustomerVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new DepartmentVO(), new DepartmentVO());
+
+		BeanUtil.copyProperties(this, buildingHouseVO, Arrays.asList("house", "customer", "create", "followUser", "keyer", "department", "region"));
+
+		BeanUtil.copyProperties(getCustomer(), buildingHouseVO.getCustomer());
+
+		if (getHouse() != null) getHouse().ptv(buildingHouseVO.getHouse());
+
+		if (getCreate() != null) {
+			BeanUtil.copyProperties(getCreate(), buildingHouseVO.getCreate(), Arrays.asList("dept", "duty"));
+		}
+
+		if (getFollowUser() != null) {
+			BeanUtil.copyProperties(getFollowUser(), buildingHouseVO.getFollowUser(), Arrays.asList("dept", "duty"));
+		}
+
+		if (getKeyer() != null) {
+			BeanUtil.copyProperties(getKeyer(), buildingHouseVO.getKeyer(), Arrays.asList("dept", "duty"));
+		}
+
+		if (getDepartment() != null) {
+			BeanUtil.copyProperties(getDepartment(), buildingHouseVO.getDepartment(), Arrays.asList("type", "fatherDept", "manager"));
+		}
+
+		if (getRegion() != null) {
+			BeanUtil.copyProperties(getRegion(), buildingHouseVO.getRegion(), Arrays.asList("type", "fatherDept", "manager"));
+		}
+
+		return buildingHouseVO;
+	}
 }

@@ -51,7 +51,15 @@ public class PhoneCallServiceImpl implements PhoneCallService {
 		List<PhoneCallVO> phoneCallVOs = new ArrayList<PhoneCallVO>();
 
 		for (PhoneCallPO phoneCallPO : phoneCallPOs) {
-			phoneCallVOs.add(convertBean(phoneCallPO));
+			PhoneCallVO phoneCallVO = phoneCallPO.ptv(new PhoneCallVO(new UserVO()));
+
+			PhoneCallRecordPO phoneCallRecordPO = phoneCallRecordDao.queryPhoneCallRecord(phoneCallPO.getPcid());
+			if (phoneCallRecordPO != null) {
+				phoneCallVO.setRecordType(phoneCallRecordPO.getRecordType());
+				phoneCallVO.setRecordUrl(phoneCallRecordPO.getRecordUrl());
+			}
+
+			phoneCallVOs.add(phoneCallVO);
 		}
 
 		paging.setData(phoneCallVOs);
@@ -152,21 +160,6 @@ public class PhoneCallServiceImpl implements PhoneCallService {
 		phoneCallRecordDao.update(phoneCallRecordPO);
 
 		return 0;
-	}
-
-	private PhoneCallVO convertBean(PhoneCallPO phoneCallPO) throws FLException {
-
-		PhoneCallVO phoneCallVO = new PhoneCallVO(new UserVO());
-
-		BeanUtil.copyProperties(phoneCallPO, phoneCallVO, Arrays.asList("operater"));
-		BeanUtil.copyProperties(phoneCallPO.getOperater(), phoneCallVO.getOperater(), Arrays.asList("role", "dept", "duty"));
-
-		PhoneCallRecordPO phoneCallRecordPO = phoneCallRecordDao.queryPhoneCallRecord(phoneCallPO.getPcid());
-
-		phoneCallVO.setRecordType(phoneCallRecordPO.getRecordType());
-		phoneCallVO.setRecordUrl(phoneCallRecordPO.getRecordUrl());
-
-		return phoneCallVO;
 	}
 
 }

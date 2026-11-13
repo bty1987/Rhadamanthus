@@ -59,7 +59,7 @@ public class ConsultionServiceImpl implements ConsultionService {
 		List<ConsultionVO> consultionVOs = new ArrayList<ConsultionVO>();
 
 		for (ConsultionPO consultionPO : consultionPOs) {
-			consultionVOs.add(consultionPOToVO(consultionPO));
+			consultionVOs.add(consultionPO.ptv(new ConsultionVO(new DecorationVO(), new UserBaseVO())));
 		}
 
 		paging.setData(consultionVOs);
@@ -74,7 +74,7 @@ public class ConsultionServiceImpl implements ConsultionService {
 		List<ConsultionVO> consultionVOs = new ArrayList<ConsultionVO>();
 
 		for (ConsultionPO consultionPO : consultionPOs) {
-			consultionVOs.add(consultionPOToVO(consultionPO));
+			consultionVOs.add(consultionPO.ptv(new ConsultionVO(new DecorationVO(), new UserBaseVO())));
 		}
 		return consultionVOs;
 	}
@@ -114,19 +114,6 @@ public class ConsultionServiceImpl implements ConsultionService {
 
 		consultionDao.save(consultionPO);
 
-	}
-
-	public ConsultionVO consultionPOToVO(ConsultionPO consultionPO) {
-
-		ConsultionVO consultionVO = new ConsultionVO(new DecorationVO(), new UserBaseVO());
-		BeanUtil.copyProperties(consultionPO, consultionVO, Arrays.asList("decoration", "creater"));
-		BeanUtil.copyProperties(consultionPO.getCreater(), consultionVO.getCreater(), Arrays.asList("duty", "dept"));
-
-		if (consultionPO.getDecoration() != null) {
-			consultionPO.getDecoration().ptvcascade(consultionVO.getDecoration());
-		}
-
-		return consultionVO;
 	}
 
 }

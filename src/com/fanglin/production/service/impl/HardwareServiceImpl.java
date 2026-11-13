@@ -68,7 +68,7 @@ public class HardwareServiceImpl implements HardwareService {
 		List<HardwareVO> hardwareVOs = new ArrayList<HardwareVO>();
 
 		for (HardwarePO hardwarePO : hardwarePOs) {
-			hardwareVOs.add(copyHardwarePO(hardwarePO));
+			hardwareVOs.add(hardwarePO.ptv());
 		}
 
 		paging.setData(hardwareVOs);
@@ -80,7 +80,7 @@ public class HardwareServiceImpl implements HardwareService {
 		List<HardwareVO> hardwareVOs = new ArrayList<HardwareVO>();
 
 		for (HardwarePO hardwarePO : hardwarePOs) {
-			hardwareVOs.add(copyHardwarePO(hardwarePO));
+			hardwareVOs.add(hardwarePO.ptv());
 		}
 
 		return hardwareVOs;
@@ -233,20 +233,4 @@ public class HardwareServiceImpl implements HardwareService {
 	}
 
 	// PO赋值
-	private HardwareVO copyHardwarePO(HardwarePO hardwarePO) {
-
-		HardwareVO hardwareVO = new HardwareVO(new ProductionVO(new HouseVO(new VillageVO()), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO()), new UserBaseVO());
-
-		BeanUtil.copyProperties(hardwarePO, hardwareVO, Arrays.asList("production", "creater"));
-		BeanUtil.copyProperties(hardwarePO.getProduction(), hardwareVO.getProduction(), Arrays.asList("house", "creater", "brand", "salesman", "designer", "spliter"));
-		BeanUtil.copyProperties(hardwarePO.getProduction().getCreater(), hardwareVO.getProduction().getCreater(), Arrays.asList("duty", "dept"));
-		BeanUtil.copyProperties(hardwarePO.getProduction().getSalesman(), hardwareVO.getProduction().getSalesman(), Arrays.asList("duty", "dept"));
-		BeanUtil.copyProperties(hardwarePO.getProduction().getDesigner(), hardwareVO.getProduction().getDesigner(), Arrays.asList("duty", "dept"));
-		BeanUtil.copyProperties(hardwarePO.getProduction().getSpliter(), hardwareVO.getProduction().getSpliter(), Arrays.asList("duty", "dept"));
-		BeanUtil.copyProperties(hardwarePO.getCreater(), hardwareVO.getCreater(), Arrays.asList("duty", "dept"));
-
-		if (hardwarePO.getProduction().getHouse() != null) hardwarePO.getProduction().getHouse().ptv(hardwareVO.getProduction().getHouse());
-
-		return hardwareVO;
-	}
 }

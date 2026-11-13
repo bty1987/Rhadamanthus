@@ -10,8 +10,17 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import java.util.Arrays;
 
 import com.fanglin.personel.po.UserPO;
+import com.fanglin.building.vo.BuildingHouseVO;
+import com.fanglin.building.vo.BuildingCustomerVO;
+import com.fanglin.building.vo.BuildingRecordVO;
+import com.fanglin.communion.vo.CustomerVO;
+import com.fanglin.communion.vo.HouseVO;
+import com.fanglin.communion.vo.VillageVO;
+import com.fanglin.personel.vo.UserBaseVO;
+import com.fanglin.utils.BeanUtil;
 
 @Entity
 @Table(name = "buildingrecord", catalog = "building")
@@ -133,4 +142,31 @@ public class BuildingRecordPO implements java.io.Serializable {
 		this.operatTime = operatTime;
 	}
 
+	public BuildingRecordVO ptv() {
+
+		BuildingHouseVO buildingHouseVO = new BuildingHouseVO(new HouseVO(new VillageVO()));
+
+		BuildingCustomerVO buildingCustomerVO = new BuildingCustomerVO(new CustomerVO(), new UserBaseVO());
+
+		BuildingRecordVO buildingRecordVO = new BuildingRecordVO(buildingHouseVO, buildingCustomerVO, new UserBaseVO());
+
+		BeanUtil.copyProperties(this, buildingRecordVO, Arrays.asList("buildingHouse", "buildingCustomer", "operater"));
+
+		BuildingHousePO buildingHousePO = getBuildingHouse();
+		if (buildingHousePO != null) {
+			BeanUtil.copyProperties(buildingHousePO, buildingHouseVO, Arrays.asList("house", "customer", "create", "followUser", "keyer", "department", "region"));
+			if (buildingHousePO.getHouse() != null) buildingHousePO.getHouse().ptv(buildingHouseVO.getHouse());
+		}
+
+		BuildingCustomerPO buildingCustomerPO = getBuildingCustomer();
+		if (buildingCustomerPO != null) {
+			BeanUtil.copyProperties(buildingCustomerPO, buildingCustomerVO, Arrays.asList("customer", "create"));
+			BeanUtil.copyProperties(buildingCustomerPO.getCustomer(), buildingCustomerVO.getCustomer());
+		}
+
+		// operater
+		BeanUtil.copyProperties(getOperater(), buildingRecordVO.getOperater(), Arrays.asList("dept", "duty"));
+
+		return buildingRecordVO;
+	}
 }

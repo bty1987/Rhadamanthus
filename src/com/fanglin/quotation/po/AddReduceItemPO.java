@@ -8,6 +8,8 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import com.fanglin.quotation.vo.AddReduceItemVO;
+import com.fanglin.utils.BeanUtil;
 
 @Entity
 @Table(name = "addreduceitem", catalog = "quotation")
@@ -241,4 +243,16 @@ public class AddReduceItemPO implements java.io.Serializable {
 		this.index = index;
 	}
 
+	public AddReduceItemVO ptv(AddReduceItemVO addReduceItemVO) {
+
+		BeanUtil.copyProperties(this, addReduceItemVO);
+
+		if (getQuotationFunctionArea() != null) {
+			addReduceItemVO.setQuotationFunctionAreaType(getQuotationFunctionArea().getType());
+			addReduceItemVO.setQuotationFunctionAreaId(getQuotationFunctionArea().getQfaId());
+			addReduceItemVO.setQuotationFunctionAreaName(getQuotationFunctionArea().getFunctionAreaName());
+		}
+
+		return addReduceItemVO;
+	}
 }

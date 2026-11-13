@@ -1,7 +1,6 @@
 package com.fanglin.store.service.impl;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +23,6 @@ import com.fanglin.store.vo.MgoodsVO;
 import com.fanglin.store.vo.MpriceVO;
 import com.fanglin.store.vo.MuserVO;
 import com.fanglin.utils.Arith;
-import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.Paging;
 
 @Service("cartService")
@@ -52,7 +50,7 @@ public class CartServiceImpl implements CartService {
 		List<CartVO> cartVOs = new ArrayList<CartVO>();
 
 		for (CartPO cartPO : cartPOs) {
-			cartVOs.add(cartPOToVO(cartPO));
+			cartVOs.add(cartPO.ptv(new CartVO(new MpriceVO(new MgoodsVO(), new McolorVO(), new MformatVO()))));
 		}
 
 		paging.setData(cartVOs);
@@ -72,7 +70,7 @@ public class CartServiceImpl implements CartService {
 		List<CartVO> cartVOs = new ArrayList<CartVO>();
 
 		for (CartPO cartPO : cartPOs) {
-			cartVOs.add(cartPOToVO(cartPO));
+			cartVOs.add(cartPO.ptv(new CartVO(new MpriceVO(new MgoodsVO(), new McolorVO(), new MformatVO()))));
 		}
 
 		return cartVOs;
@@ -177,19 +175,6 @@ public class CartServiceImpl implements CartService {
 		cartDao.clearCart(cids);
 
 		return 0;
-	}
-
-	public CartVO cartPOToVO(CartPO cartPO) {
-
-		CartVO cartVO = new CartVO(new MpriceVO(new MgoodsVO(), new McolorVO(), new MformatVO()));
-
-		BeanUtil.copyProperties(cartPO, cartVO, Arrays.asList("mprice"));
-		BeanUtil.copyProperties(cartPO.getMprice(), cartVO.getMprice(), Arrays.asList("mgoods", "mcolor", "mformat"));
-		BeanUtil.copyProperties(cartPO.getMprice().getMgoods(), cartVO.getMprice().getMgoods(), Arrays.asList("mbrand"));
-		BeanUtil.copyProperties(cartPO.getMprice().getMcolor(), cartVO.getMprice().getMcolor());
-		BeanUtil.copyProperties(cartPO.getMprice().getMformat(), cartVO.getMprice().getMformat());
-
-		return cartVO;
 	}
 
 }

@@ -47,7 +47,7 @@ public class MpriceServiceImpl implements MpriceService {
 		List<MpriceVO> mpriceVOs = new ArrayList<MpriceVO>();
 
 		for (MpricePO mpricePO : mpricePOs) {
-			mpriceVOs.add(mpricePOToVO(mpricePO));
+			mpriceVOs.add(mpricePO.ptv(new MpriceVO(new MgoodsVO(), new McolorVO(), new MformatVO())));
 		}
 
 		return mpriceVOs;
@@ -60,7 +60,7 @@ public class MpriceServiceImpl implements MpriceService {
 		List<MpriceVO> mpriceVOs = new ArrayList<MpriceVO>();
 
 		for (MpricePO mpricePO : mpricePOs) {
-			mpriceVOs.add(mpricePOToVO(mpricePO));
+			mpriceVOs.add(mpricePO.ptv(new MpriceVO(new MgoodsVO(), new McolorVO(), new MformatVO())));
 		}
 
 		return mpriceVOs;
@@ -73,7 +73,7 @@ public class MpriceServiceImpl implements MpriceService {
 		List<MpriceVO> mpriceVOs = new ArrayList<MpriceVO>();
 
 		for (MpricePO mpricePO : mpricePOs) {
-			mpriceVOs.add(mpricePOToVO(mpricePO));
+			mpriceVOs.add(mpricePO.ptv(new MpriceVO(new MgoodsVO(), new McolorVO(), new MformatVO())));
 		}
 
 		return mpriceVOs;
@@ -89,7 +89,7 @@ public class MpriceServiceImpl implements MpriceService {
 			List<MpricePO> mpricePOs = mpriceDao.queryMpriceForShow(mpriceVO.getStatus());
 
 			for (MpricePO mpricePO : mpricePOs) {
-				mpriceVOs.add(mpricePOToVO(mpricePO));
+				mpriceVOs.add(mpricePO.ptv(new MpriceVO(new MgoodsVO(), new McolorVO(), new MformatVO())));
 			}
 		}
 
@@ -137,15 +137,4 @@ public class MpriceServiceImpl implements MpriceService {
 		return 0;
 	}
 
-	public MpriceVO mpricePOToVO(MpricePO mpricePO) {
-
-		MpriceVO mpriceVO = new MpriceVO(new MgoodsVO(), new McolorVO(), new MformatVO());
-
-		BeanUtil.copyProperties(mpricePO, mpriceVO, Arrays.asList("mgoods", "mcolor", "mformat"));
-		BeanUtil.copyProperties(mpricePO.getMgoods(), mpriceVO.getMgoods(), Arrays.asList("mbrand"));
-		BeanUtil.copyProperties(mpricePO.getMcolor(), mpriceVO.getMcolor());
-		BeanUtil.copyProperties(mpricePO.getMformat(), mpriceVO.getMformat());
-
-		return mpriceVO;
-	}
 }

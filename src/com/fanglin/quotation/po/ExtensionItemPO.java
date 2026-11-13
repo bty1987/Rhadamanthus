@@ -10,6 +10,9 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.util.Arrays;
+import com.fanglin.quotation.vo.ExtensionItemVO;
+import com.fanglin.utils.BeanUtil;
 
 @Entity
 @Table(name = "extensionitem", catalog = "quotation")
@@ -221,4 +224,15 @@ public class ExtensionItemPO implements Serializable {
 		this.discount = discount;
 	}
 
+	public ExtensionItemVO ptv(ExtensionItemVO extensionItemVO) {
+
+		BeanUtil.copyProperties(this, extensionItemVO, Arrays.asList("quotationFunctionArea"));
+
+		if (getQuotationFunctionArea() != null) {
+			extensionItemVO.setQuotationFunctionAreaId(getQuotationFunctionArea().getQfaId());
+			extensionItemVO.setQuotationFunctionAreaName(getQuotationFunctionArea().getFunctionAreaName());
+		}
+
+		return extensionItemVO;
+	}
 }

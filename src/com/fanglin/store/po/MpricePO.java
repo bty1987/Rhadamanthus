@@ -3,6 +3,7 @@ package com.fanglin.store.po;
 import static javax.persistence.GenerationType.IDENTITY;
 
 import java.io.Serializable;
+import java.util.Arrays;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -12,6 +13,9 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+import com.fanglin.store.vo.MpriceVO;
+import com.fanglin.utils.BeanUtil;
 
 @Entity
 @Table(name = "mprice", catalog = "store")
@@ -141,4 +145,14 @@ public class MpricePO implements Serializable {
 		this.status = status;
 	}
 
+	public MpriceVO ptv(MpriceVO mpriceVO){
+
+		BeanUtil.copyProperties(this, mpriceVO, Arrays.asList("mgoods", "mcolor", "mformat"));
+
+		if (getMgoods() != null) BeanUtil.copyProperties(getMgoods(), mpriceVO.getMgoods(), Arrays.asList("mbrand"));
+		if (getMcolor() != null) BeanUtil.copyProperties(getMcolor(), mpriceVO.getMcolor());
+		if (getMformat() != null) BeanUtil.copyProperties(getMformat(), mpriceVO.getMformat());
+
+		return mpriceVO;
+	}
 }

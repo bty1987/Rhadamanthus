@@ -14,10 +14,15 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import java.util.Arrays;
 
 import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.utils.DateUtil;
+import com.fanglin.customer.vo.AepairVO;
+import com.fanglin.decoration.vo.DecorationVO;
+import com.fanglin.personel.vo.UserBaseVO;
+import com.fanglin.utils.BeanUtil;
 
 @Entity
 @Table(name = "aepair", catalog = "customer")
@@ -308,4 +313,18 @@ public class AepairPO implements Serializable {
 		return this;
 	}
 
+	public AepairVO ptv(AepairVO aepairVO) {
+
+		BeanUtil.copyProperties(this, aepairVO, Arrays.asList("decoration", "creater", "updater", "repaier"));
+
+		if (getDecoration() != null) {
+			getDecoration().ptvcascade(aepairVO.getDecoration());
+		}
+
+		aepairVO.getCreater().setBaseInfo(getCreater());
+		aepairVO.getUpdater().setBaseInfo(getUpdater());
+		aepairVO.getRepaier().setBaseInfo(getRepaier());
+
+		return aepairVO;
+	}
 }

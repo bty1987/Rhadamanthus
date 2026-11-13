@@ -10,6 +10,9 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.util.Arrays;
+import com.fanglin.camera.vo.ConstructionCameraVO;
+import com.fanglin.utils.BeanUtil;
 
 @Entity
 @Table(name = "camera", catalog = "construction")
@@ -254,4 +257,10 @@ public class ConstructionCameraPO implements Serializable {
 		this.updateTime = updateTime;
 	}
 
+	public ConstructionCameraVO ptv(ConstructionCameraVO constructionCameraVO) {
+
+		BeanUtil.copyProperties(this, constructionCameraVO, Arrays.asList("verifyCode"));
+
+		return constructionCameraVO;
+	}
 }

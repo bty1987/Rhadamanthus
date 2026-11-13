@@ -9,6 +9,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import com.fanglin.personel.vo.UserPreferVO;
+import com.fanglin.utils.BeanUtil;
 
 @Entity
 @Table(name = "userprefer", catalog = "communion")
@@ -127,4 +129,10 @@ public class UserPreferPO implements Serializable {
         this.updateTime = updateTime;
     }
 
+    public UserPreferVO ptv(UserPreferVO userPreferVO) {
+
+        BeanUtil.copyProperties(this, userPreferVO);
+
+        return userPreferVO;
+    }
 }

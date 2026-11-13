@@ -83,7 +83,7 @@ public class BuildingServiceImpl implements BuildingService {
 		List<BuildingVO> buildingVOs = new ArrayList<BuildingVO>();
 
 		for (BuildingPO buildingPO : buildingPOs) {
-			buildingVOs.add(buildingPOToVO(buildingPO));
+			buildingVOs.add(buildingPO.ptv());
 		}
 
 		paging.setData(buildingVOs);
@@ -95,7 +95,7 @@ public class BuildingServiceImpl implements BuildingService {
 
 		BuildingPO buildingPO = buildingDao.get(building.getBid());
 
-		BuildingVO buildingVO = buildingPOToVO(buildingPO);
+		BuildingVO buildingVO = buildingPO.ptv();
 
 		return buildingVO;
 	}
@@ -221,64 +221,6 @@ public class BuildingServiceImpl implements BuildingService {
 
 		buildingDao.update(buildingPO);
 
-	}
-
-	public BuildingVO buildingPOToVO(BuildingPO buildingPO) {
-
-		HouseVO houseVO = new HouseVO(new VillageVO(new CityProperVO()));
-
-		BuildingHouseVO buildingHouseVO = new BuildingHouseVO(houseVO, new CustomerVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new DepartmentVO(), new DepartmentVO());
-		BuildingCustomerVO buildingCustomerVO = new BuildingCustomerVO(new CustomerVO(), new UserBaseVO());
-
-		BuildingHousePO buildingHousePO = buildingPO.getBuildingHouse();
-		BeanUtil.copyProperties(buildingHousePO, buildingHouseVO, Arrays.asList("house", "customer", "create", "followUser", "keyer", "department", "region"));
-		BeanUtil.copyProperties(buildingHousePO.getCustomer(), buildingHouseVO.getCustomer());
-		BeanUtil.copyProperties(buildingHousePO.getCreate(), buildingHouseVO.getCreate(), Arrays.asList("dept", "duty"));
-
-		if (buildingHousePO.getHouse() != null) buildingHousePO.getHouse().ptv(buildingHouseVO.getHouse());
-
-		if (buildingHousePO.getFollowUser() != null) {
-			BeanUtil.copyProperties(buildingHousePO.getFollowUser(), buildingHouseVO.getFollowUser(), Arrays.asList("dept", "duty"));
-		}
-
-		if (buildingHousePO.getKeyer() != null) {
-			BeanUtil.copyProperties(buildingHousePO.getKeyer(), buildingHouseVO.getKeyer(), Arrays.asList("dept", "duty"));
-		}
-
-		if (buildingHousePO.getDepartment() != null) {
-			BeanUtil.copyProperties(buildingHousePO.getDepartment(), buildingHouseVO.getDepartment(), Arrays.asList("type", "fatherDept", "cityProper"));
-		}
-
-		if (buildingHousePO.getRegion() != null) {
-			BeanUtil.copyProperties(buildingHousePO.getRegion(), buildingHouseVO.getRegion(), Arrays.asList("type", "fatherDept", "cityProper"));
-		}
-
-		// buildingCustomer
-		BuildingCustomerPO buildingCustomerPO = buildingPO.getBuildingCustomer();
-		BeanUtil.copyProperties(buildingCustomerPO, buildingCustomerVO, Arrays.asList("customer", "create"));
-		BeanUtil.copyProperties(buildingCustomerPO.getCustomer(), buildingCustomerVO.getCustomer());
-		BeanUtil.copyProperties(buildingCustomerPO.getCreater(), buildingCustomerVO.getCreater(), Arrays.asList("dept", "duty"));
-
-		BuildingVO buildingVO = new BuildingVO(buildingHouseVO, buildingCustomerVO, new CustomerVO(), new CustomerVO(), new UserBaseVO(), new BuildingNodeVO());
-		BeanUtil.copyProperties(buildingPO, buildingVO, Arrays.asList("buildingHouse", "buildingCustomer", "buildingHouseAgent", "buildingCustomerAgent", "creater", "buildingNode"));
-
-		// buildingHouseAgent
-		if (buildingPO.getBuildingHouseAgent() != null) {
-			BeanUtil.copyProperties(buildingPO.getBuildingHouseAgent(), buildingVO.getBuildingHouseAgent());
-		}
-
-		// buildingCustomerAgent
-		if (buildingPO.getBuildingCustomer() != null) {
-			BeanUtil.copyProperties(buildingPO.getBuildingCustomerAgent(), buildingVO.getBuildingCustomerAgent());
-		}
-
-		// creater
-		BeanUtil.copyProperties(buildingPO.getCreater(), buildingVO.getCreater(), Arrays.asList("dept", "duty"));
-
-		// buildingNode
-		BeanUtil.copyProperties(buildingPO.getBuildingNode(), buildingVO.getBuildingNode());
-
-		return buildingVO;
 	}
 
 }

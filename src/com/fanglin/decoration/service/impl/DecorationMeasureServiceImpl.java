@@ -83,7 +83,7 @@ public class DecorationMeasureServiceImpl implements DecorationMeasureService {
 
 		for (DecorationMeasurePO decorationMeasurePO : decorationMeasurePOs) {
 
-			decorationMeasureVOs.add(convertBean(decorationMeasurePO));
+			decorationMeasureVOs.add(decorationMeasurePO.ptv(new DecorationMeasureVO(new DecorationVO(), new UserBaseVO(), new UserBaseVO())));
 
 		}
 
@@ -103,7 +103,7 @@ public class DecorationMeasureServiceImpl implements DecorationMeasureService {
 
 		for (DecorationMeasurePO decorationMeasurePO : decorationMeasurePOs) {
 
-			decorationMeasureVOs.add(convertBean(decorationMeasurePO));
+			decorationMeasureVOs.add(decorationMeasurePO.ptv(new DecorationMeasureVO(new DecorationVO(), new UserBaseVO(), new UserBaseVO())));
 
 		}
 
@@ -311,31 +311,4 @@ public class DecorationMeasureServiceImpl implements DecorationMeasureService {
 		return 1;
 	}
 
-	public DecorationMeasureVO convertBean(DecorationMeasurePO decorationMeasurePO) {
-
-		DecorationMeasureVO decorationMeasureVO = new DecorationMeasureVO(new DecorationVO(), new UserBaseVO(), new UserBaseVO());
-
-		BeanUtil.copyProperties(decorationMeasurePO, decorationMeasureVO, Arrays.asList("decoration", "appler", "group", "drawer"));
-
-		if (decorationMeasurePO.getDecoration() != null) {
-
-			decorationMeasurePO.getDecoration().ptvcascade(decorationMeasureVO.getDecoration());
-
-			if (decorationMeasurePO.getDecoration().getSupervisor() != null) {
-				decorationMeasureVO.getDecoration().setSupervisor(new UserBaseVO());
-				decorationMeasureVO.getDecoration().getSupervisor().setBaseInfo(decorationMeasurePO.getDecoration().getSupervisor());
-			}
-		}
-
-		if (decorationMeasurePO.getAppler() != null) {
-			decorationMeasureVO.getAppler().setBaseInfo(decorationMeasurePO.getAppler());
-		}
-
-		if (decorationMeasurePO.getMeasurer() != null) {
-			decorationMeasureVO.getMeasurer().setBaseInfo(decorationMeasurePO.getMeasurer());
-		}
-
-		return decorationMeasureVO;
-
-	}
 }

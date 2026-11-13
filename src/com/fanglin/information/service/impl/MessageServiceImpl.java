@@ -41,7 +41,7 @@ public class MessageServiceImpl implements MessageService {
 		List<MessageVO> messageVOs = new ArrayList<MessageVO>();
 
 		for (MessagePO messagePO : messagePOs) {
-			messageVOs.add(convertBean(messagePO));
+			messageVOs.add(messagePO.ptv(new MessageVO()));
 		}
 
 		paging.setData(messageVOs);
@@ -65,7 +65,7 @@ public class MessageServiceImpl implements MessageService {
 		List<MessageVO> messageVOs = new ArrayList<MessageVO>();
 
 		for (MessagePO messagePO : messagePOs) {
-			messageVOs.add(convertBean(messagePO));
+			messageVOs.add(messagePO.ptv(new MessageVO()));
 		}
 
 		return messageVOs;
@@ -75,7 +75,7 @@ public class MessageServiceImpl implements MessageService {
 	public MessageVO queryMessageByMid(MessageVO message) {
 
 		MessagePO messagePO = messageDao.get(message.getMid());
-		MessageVO messageVO = convertBean(messagePO);
+		MessageVO messageVO = messagePO.ptv(new MessageVO());
 
 		return messageVO;
 	}
@@ -168,15 +168,4 @@ public class MessageServiceImpl implements MessageService {
 		return messagePO.getSender() == null ? "" : messagePO.getSender().getUserName();
 	}
 
-	private MessageVO convertBean(MessagePO messagePO) {
-
-		MessageVO messageVO = new MessageVO();
-
-		BeanUtil.copyProperties(messagePO, messageVO, Arrays.asList("receiver", "sender"));
-
-		messageVO.setReceiver(new UserVO().setBaseInfo(messagePO.getReceiver()));
-		messageVO.setSender(new UserVO().setBaseInfo(messagePO.getSender()));
-
-		return messageVO;
-	}
 }

@@ -11,8 +11,15 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import java.util.Arrays;
 
 import com.fanglin.personel.po.UserPO;
+import com.fanglin.communion.vo.HouseVO;
+import com.fanglin.communion.vo.VillageVO;
+import com.fanglin.personel.vo.UserBaseVO;
+import com.fanglin.production.vo.ProductionVO;
+import com.fanglin.utils.BeanUtil;
+import com.fanglin.production.vo.ProductionPlanVO;
 
 @Entity
 @Table(name = "productionplan", catalog = "production")
@@ -180,5 +187,19 @@ public class ProductionPlanPO implements Serializable {
 
 	public void setComment(String comment) {
 		this.comment = comment;
+	}
+
+	public ProductionPlanVO ptv() {
+
+		ProductionPlanVO productionPlanVO = new ProductionPlanVO(new ProductionVO(new HouseVO(new VillageVO())), new UserBaseVO());
+
+		BeanUtil.copyProperties(this, productionPlanVO, Arrays.asList("creater", "production"));
+		BeanUtil.copyProperties(getCreater(), productionPlanVO.getCreater(), Arrays.asList("duty", "dept"));
+		if (getProduction() != null) {
+			BeanUtil.copyProperties(getProduction(), productionPlanVO.getProduction(), Arrays.asList("house", "creater", "brand", "salesman", "designer", "spliter"));
+			if (getProduction().getHouse() != null) getProduction().getHouse().ptv(productionPlanVO.getProduction().getHouse());
+		}
+
+		return productionPlanVO;
 	}
 }

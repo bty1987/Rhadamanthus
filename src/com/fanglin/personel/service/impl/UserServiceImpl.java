@@ -151,7 +151,7 @@ public class UserServiceImpl implements UserService {
 		List<UserVO> userVOs = new ArrayList<UserVO>();
 
 		for (UserPO userPO : userPOs) {
-			userVOs.add(convertBean(userPO));
+			userVOs.add(userPO.ptv(new UserVO(new RoleVO(), new DepartmentVO(), new DutyVO())));
 		}
 
 		paging.setData(userVOs);
@@ -171,12 +171,12 @@ public class UserServiceImpl implements UserService {
 
 			BeanUtil.copyProperties(userInfoPO, userInfoVO, Arrays.asList("user", "fangliner"));
 
-			UserVO userVO = convertBean(userInfoPO.getUser());
+			UserVO userVO = userInfoPO.getUser().ptv(new UserVO(new RoleVO(), new DepartmentVO(), new DutyVO()));
 			userVO.setIdentity(SensitiveDataHelper.decrypt(userInfoPO.getUser().getIdentity()));
 			userInfoVO.setUser(userVO);
 
 			if (userInfoPO.getFangliner() != null) {
-				userInfoVO.setFangliner(convertBean(userInfoPO.getFangliner()));
+				userInfoVO.setFangliner(userInfoPO.getFangliner().ptv(new UserVO(new RoleVO(), new DepartmentVO(), new DutyVO())));
 			}
 
 			userInfoVOs.add(userInfoVO);
@@ -192,7 +192,7 @@ public class UserServiceImpl implements UserService {
 		List<UserVO> userVOs = new ArrayList<UserVO>();
 
 		for (UserPO userPO : userPOs) {
-			userVOs.add(convertBean(userPO));
+			userVOs.add(userPO.ptv(new UserVO(new RoleVO(), new DepartmentVO(), new DutyVO())));
 		}
 
 		paging.setData(userVOs);
@@ -208,7 +208,7 @@ public class UserServiceImpl implements UserService {
 		}
 
 		if (userPO != null && !userPO.getRole().getNo().equals(RolePO.SUPER_NO_STR)) {
-			userVO = convertBean(userPO);
+			userVO = userPO.ptv(new UserVO(new RoleVO(), new DepartmentVO(), new DutyVO()));
 		}
 
 		return userVO;
@@ -229,7 +229,7 @@ public class UserServiceImpl implements UserService {
 			throw new FLException(230015, "公司不存在");
 		}
 
-		userVO = convertBean(userPO);
+		userVO = userPO.ptv(new UserVO(new RoleVO(), new DepartmentVO(), new DutyVO()));
 
 		userVO.setCompanys(companyPO.getName());
 		userVO.setCompanyNo(CompanyServiceImpl.encode(companyPO.getCid()));
@@ -256,10 +256,10 @@ public class UserServiceImpl implements UserService {
 		BeanUtil.copyProperties(userInfoPO, userInfoVO, Arrays.asList("user", "fangliner"));
 
 		if (userInfoPO.getFangliner() != null) {
-			userInfoVO.setFangliner(convertBean(userInfoPO.getFangliner()));
+			userInfoVO.setFangliner(userInfoPO.getFangliner().ptv(new UserVO(new RoleVO(), new DepartmentVO(), new DutyVO())));
 		}
 
-		userInfoVO.setUser(convertBean(userInfoPO.getUser()));
+		userInfoVO.setUser(userInfoPO.getUser().ptv(new UserVO(new RoleVO(), new DepartmentVO(), new DutyVO())));
 		userInfoVO.getUser().setCompanys(companyPO.getName());
 		userInfoVO.getUser().setIdentity(SensitiveDataHelper.decrypt(userInfoPO.getUser().getIdentity()));
 
@@ -281,10 +281,10 @@ public class UserServiceImpl implements UserService {
 
 		UserPO userPO = userInfoPO.getUser();
 
-		userInfoVO.setUser(convertBean(userPO));
+		userInfoVO.setUser(userPO.ptv(new UserVO(new RoleVO(), new DepartmentVO(), new DutyVO())));
 
 		if (userInfoPO.getFangliner() != null) {
-			userInfoVO.setFangliner(convertBean(userInfoPO.getFangliner()));
+			userInfoVO.setFangliner(userInfoPO.getFangliner().ptv(new UserVO(new RoleVO(), new DepartmentVO(), new DutyVO())));
 		}
 
 		try {
@@ -313,7 +313,7 @@ public class UserServiceImpl implements UserService {
 			throw new FLException(190005, "人员不存在");
 		}
 
-		userVO = convertBean(userPO);
+		userVO = userPO.ptv(new UserVO(new RoleVO(), new DepartmentVO(), new DutyVO()));
 
 		return userVO;
 	}
@@ -1066,42 +1066,6 @@ public class UserServiceImpl implements UserService {
 		}
 
 		userInfoDao.update(userInfoPO);
-	}
-
-	private UserVO convertBean(UserPO userPO) throws FLException {
-
-		UserVO userVO = new UserVO(new RoleVO(), new DepartmentVO(), new DutyVO());
-
-		BeanUtil.copyProperties(userPO, userVO, Arrays.asList("role", "dept", "duty", "password", "company", "phone", "identity"));
-		userVO.setPhone(SensitiveDataHelper.decrypt(userPO.getPhone()));
-		userVO.setIdentity(SensitiveDataHelper.decrypt(userPO.getIdentity()));
-
-		if (userPO.getDuty() != null) {
-			BeanUtil.copyProperties(userPO.getDuty(), userVO.getDuty(), Arrays.asList("departmentType"));
-		}
-
-		if (userPO.getDuty().getDepartmentType() != null) {
-			userVO.getDuty().setDepartmentType(new DepartmentTypeVO());
-			BeanUtil.copyProperties(userPO.getDuty().getDepartmentType(), userVO.getDuty().getDepartmentType());
-		}
-
-		BeanUtil.copyProperties(userPO.getRole(), userVO.getRole(), Arrays.asList("creater"));
-
-		BeanUtil.copyProperties(userPO.getDept(), userVO.getDept(), Arrays.asList("fatherDept", "type", "manager"));
-
-		if (userPO.getDept().getFatherDept() != null) {
-			userVO.getDept().setFatherDept(new DepartmentVO());
-
-			BeanUtil.copyProperties(userPO.getDept().getFatherDept(), userVO.getDept().getFatherDept(), Arrays.asList("fatherDept", "type", "manager"));
-		}
-
-		if (userPO.getDept().getType() != null) {
-			userVO.getDept().setType(new DepartmentTypeVO());
-
-			BeanUtil.copyProperties(userPO.getDept().getType(), userVO.getDept().getType());
-		}
-
-		return userVO;
 	}
 
 	@Override

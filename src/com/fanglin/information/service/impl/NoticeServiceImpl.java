@@ -54,7 +54,7 @@ public class NoticeServiceImpl implements NoticeService {
 		List<NoticePO> noticePOs = noticeDao.pageNotice(paging, filters, authentication.getUserId(), authentication.getCompany());
 
 		for (NoticePO noticePO : noticePOs) {
-			noticeVOs.add(convertBean(noticePO));
+			noticeVOs.add(noticePO.ptv(new NoticeVO(new UserVO())));
 		}
 
 		paging.setData(noticeVOs);
@@ -70,7 +70,7 @@ public class NoticeServiceImpl implements NoticeService {
 		}
 
 		if (noticePO != null) {
-			noticeVO = convertBean(noticePO);
+			noticeVO = noticePO.ptv(new NoticeVO(new UserVO()));
 		}
 
 		return noticeVO;
@@ -96,7 +96,7 @@ public class NoticeServiceImpl implements NoticeService {
 		List<NoticeVO> noticeVOs = new ArrayList<NoticeVO>();
 
 		for (NoticePO noticePO : noticePOs) {
-			noticeVOs.add(convertBean(noticePO));
+			noticeVOs.add(noticePO.ptv(new NoticeVO(new UserVO())));
 		}
 
 		paging.setData(noticeVOs);
@@ -171,17 +171,6 @@ public class NoticeServiceImpl implements NoticeService {
 		noticeDepartmentDao.deleteNoticeDepartment(nid);
 
 		return 0;
-	}
-
-	private NoticeVO convertBean(NoticePO noticePO) {
-
-		NoticeVO noticeVO = new NoticeVO(new UserVO());
-
-		BeanUtil.copyProperties(noticePO, noticeVO, Arrays.asList("creater"));
-
-		noticeVO.setCreater(new UserVO().setBaseInfo(noticePO.getCreater()));
-
-		return noticeVO;
 	}
 
 }

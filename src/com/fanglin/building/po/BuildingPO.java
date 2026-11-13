@@ -11,9 +11,21 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import java.util.Arrays;
 
 import com.fanglin.communion.po.CustomerPO;
 import com.fanglin.personel.po.UserPO;
+import com.fanglin.building.vo.BuildingHouseVO;
+import com.fanglin.building.vo.BuildingCustomerVO;
+import com.fanglin.building.vo.BuildingNodeVO;
+import com.fanglin.building.vo.BuildingVO;
+import com.fanglin.communion.vo.CustomerVO;
+import com.fanglin.communion.vo.DepartmentVO;
+import com.fanglin.communion.vo.HouseVO;
+import com.fanglin.communion.vo.VillageVO;
+import com.fanglin.personel.vo.UserBaseVO;
+import com.fanglin.system.vo.CityProperVO;
+import com.fanglin.utils.BeanUtil;
 
 @Entity
 @Table(name = "building", catalog = "building")
@@ -231,4 +243,61 @@ public class BuildingPO implements Serializable {
 		this.balanceStatus = balanceStatus;
 	}
 
+	public BuildingVO ptv() {
+
+		BuildingHouseVO buildingHouseVO = new BuildingHouseVO(new HouseVO(new VillageVO(new CityProperVO())), new CustomerVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new DepartmentVO(), new DepartmentVO());
+		BuildingCustomerVO buildingCustomerVO = new BuildingCustomerVO(new CustomerVO(), new UserBaseVO());
+
+		// buildingHouse
+		BuildingHousePO buildingHousePO = getBuildingHouse();
+		if (buildingHousePO != null) {
+			BeanUtil.copyProperties(buildingHousePO, buildingHouseVO, Arrays.asList("house", "customer", "create", "followUser", "keyer", "department", "region"));
+			BeanUtil.copyProperties(buildingHousePO.getCustomer(), buildingHouseVO.getCustomer());
+			if (buildingHousePO.getCreate() != null) {
+				BeanUtil.copyProperties(buildingHousePO.getCreate(), buildingHouseVO.getCreate(), Arrays.asList("dept", "duty"));
+			}
+			if (buildingHousePO.getHouse() != null) buildingHousePO.getHouse().ptv(buildingHouseVO.getHouse());
+			if (buildingHousePO.getFollowUser() != null) {
+				BeanUtil.copyProperties(buildingHousePO.getFollowUser(), buildingHouseVO.getFollowUser(), Arrays.asList("dept", "duty"));
+			}
+			if (buildingHousePO.getKeyer() != null) {
+				BeanUtil.copyProperties(buildingHousePO.getKeyer(), buildingHouseVO.getKeyer(), Arrays.asList("dept", "duty"));
+			}
+			if (buildingHousePO.getDepartment() != null) {
+				BeanUtil.copyProperties(buildingHousePO.getDepartment(), buildingHouseVO.getDepartment(), Arrays.asList("type", "fatherDept", "cityProper"));
+			}
+			if (buildingHousePO.getRegion() != null) {
+				BeanUtil.copyProperties(buildingHousePO.getRegion(), buildingHouseVO.getRegion(), Arrays.asList("type", "fatherDept", "cityProper"));
+			}
+		}
+
+		// buildingCustomer
+		BuildingCustomerPO buildingCustomerPO = getBuildingCustomer();
+		if (buildingCustomerPO != null) {
+			BeanUtil.copyProperties(buildingCustomerPO, buildingCustomerVO, Arrays.asList("customer", "create"));
+			BeanUtil.copyProperties(buildingCustomerPO.getCustomer(), buildingCustomerVO.getCustomer());
+			BeanUtil.copyProperties(buildingCustomerPO.getCreater(), buildingCustomerVO.getCreater(), Arrays.asList("dept", "duty"));
+		}
+
+		BuildingVO buildingVO = new BuildingVO(buildingHouseVO, buildingCustomerVO, new CustomerVO(), new CustomerVO(), new UserBaseVO(), new BuildingNodeVO());
+		BeanUtil.copyProperties(this, buildingVO, Arrays.asList("buildingHouse", "buildingCustomer", "buildingHouseAgent", "buildingCustomerAgent", "creater", "buildingNode"));
+
+		// buildingHouseAgent
+		if (getBuildingHouseAgent() != null) {
+			BeanUtil.copyProperties(getBuildingHouseAgent(), buildingVO.getBuildingHouseAgent());
+		}
+
+		// buildingCustomerAgent
+		if (getBuildingCustomerAgent() != null) {
+			BeanUtil.copyProperties(getBuildingCustomerAgent(), buildingVO.getBuildingCustomerAgent());
+		}
+
+		// creater
+		BeanUtil.copyProperties(getCreater(), buildingVO.getCreater(), Arrays.asList("dept", "duty"));
+
+		// buildingNode
+		BeanUtil.copyProperties(getBuildingNode(), buildingVO.getBuildingNode());
+
+		return buildingVO;
+	}
 }

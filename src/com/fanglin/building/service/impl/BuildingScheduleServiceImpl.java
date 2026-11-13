@@ -2,7 +2,6 @@ package com.fanglin.building.service.impl;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +22,6 @@ import com.fanglin.core.interceptor.FLException;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserBaseVO;
-import com.fanglin.utils.BeanUtil;
 
 @Service("buildingScheduleService")
 @Transactional(readOnly = true)
@@ -49,7 +47,7 @@ public class BuildingScheduleServiceImpl implements BuildingScheduleService{
 		
 		for (BuildingSchedulePO buildingSchedulePO : buildingSchedulePOs) {
 			
-			BuildingScheduleVO buildingSchedule = buildingSchedulePOToVO(buildingSchedulePO);
+			BuildingScheduleVO buildingSchedule = buildingSchedulePO.ptv();
 			
 			buildingScheduleVOs.add(buildingSchedule);
 			
@@ -104,7 +102,7 @@ public class BuildingScheduleServiceImpl implements BuildingScheduleService{
 		
 		buildingScheduleDao.save(nextBuildingSchedulePO);
 		
-		BuildingScheduleVO nextBuildingScheduleVO = buildingSchedulePOToVO(nextBuildingSchedulePO);
+		BuildingScheduleVO nextBuildingScheduleVO = nextBuildingSchedulePO.ptv();
 		
 		return nextBuildingScheduleVO;
 		
@@ -124,7 +122,7 @@ public class BuildingScheduleServiceImpl implements BuildingScheduleService{
 		
 		buildingScheduleDao.update(buildingSchedulePO);
 		
-		BuildingScheduleVO newBuildingScheduleVO = buildingSchedulePOToVO(buildingSchedulePO);
+		BuildingScheduleVO newBuildingScheduleVO = buildingSchedulePO.ptv();
 		
 		return newBuildingScheduleVO;
 		
@@ -140,7 +138,7 @@ public class BuildingScheduleServiceImpl implements BuildingScheduleService{
 		
 		buildingScheduleDao.update(buildingSchedulePO);
 		
-		BuildingScheduleVO newBuildingScheduleVO = buildingSchedulePOToVO(buildingSchedulePO);
+		BuildingScheduleVO newBuildingScheduleVO = buildingSchedulePO.ptv();
 		
 		return newBuildingScheduleVO;
 		
@@ -184,16 +182,4 @@ public class BuildingScheduleServiceImpl implements BuildingScheduleService{
 		
 	}
 	
-	public BuildingScheduleVO buildingSchedulePOToVO(BuildingSchedulePO buildingSchedulePO){
-		
-		BuildingScheduleVO buildingScheduleVO = new BuildingScheduleVO(new BuildingNodeVO(), new BuildingVO(), new UserBaseVO());
-		
-		BeanUtil.copyProperties(buildingSchedulePO, buildingScheduleVO, Arrays.asList("building", "buildingNode", "operater"));
-		
-		BeanUtil.copyProperties(buildingSchedulePO.getBuildingNode(), buildingScheduleVO.getBuildingNode());
-		
-		BeanUtil.copyProperties(buildingSchedulePO.getOperater(), buildingScheduleVO.getOperater(), Arrays.asList("dept", "duty"));
-		
-		return buildingScheduleVO;
-	}
 }

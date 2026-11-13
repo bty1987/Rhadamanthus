@@ -233,30 +233,21 @@ public class ExtensionItemServiceImpl implements ExtensionItemService {
 		List<ExtensionItemVO> extensionItemVOs = new ArrayList<ExtensionItemVO>();
 
 		for (ExtensionItemPO extensionItemPO : extensionItemPOs) {
-			extensionItemVOs.add(ptv(extensionItemPO));
+
+			ExtensionItemVO extensionItemVO = extensionItemPO.ptv(new ExtensionItemVO());
+
+			if (extensionItemPO.getQuoteItemId() != 0) {
+
+				QuotationItemPO quotationItemPO = quotationItemDao.get(extensionItemPO.getQuoteItemId());
+
+				if (quotationItemPO != null) {
+					extensionItemVO.setContent(quotationItemPO.getComment());
+				}
+			}
+
+			extensionItemVOs.add(extensionItemVO);
 		}
 		return extensionItemVOs;
-	}
-
-	public ExtensionItemVO ptv(ExtensionItemPO extensionItemPO) {
-
-		ExtensionItemVO extensionItemVO = new ExtensionItemVO();
-
-		BeanUtil.copyProperties(extensionItemPO, extensionItemVO, Arrays.asList("quotationFunctionArea"));
-
-		extensionItemVO.setQuotationFunctionAreaId(extensionItemPO.getQuotationFunctionArea().getQfaId());
-		extensionItemVO.setQuotationFunctionAreaName(extensionItemPO.getQuotationFunctionArea().getFunctionAreaName());
-
-		if (extensionItemPO.getQuoteItemId() != 0) {
-
-			QuotationItemPO quotationItemPO = quotationItemDao.get(extensionItemPO.getQuoteItemId());
-
-			if (quotationItemPO != null) {
-				extensionItemVO.setContent(quotationItemPO.getComment());
-			}
-		}
-
-		return extensionItemVO;
 	}
 
 	private void checkExtension(ExtensionPO extensionPO) throws FLException {

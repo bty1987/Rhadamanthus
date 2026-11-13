@@ -33,7 +33,7 @@ public class UserLabelServiceImpl implements UserLabelService {
 
 		for (UserLabelPO userlabelPO : userlabelPOs) {
 
-			userlabelVOs.add(UserlabelPOToVO(userlabelPO));
+			userlabelVOs.add(userlabelPO.ptv(new UserLabelVO(new UserBaseVO(), new LabelVO())));
 		}
 
 		return userlabelVOs;
@@ -68,21 +68,10 @@ public class UserLabelServiceImpl implements UserLabelService {
 
 		for (UserLabelPO userlabelPO : userlabelPOs) {
 
-			userlabelVOs.add(UserlabelPOToVO(userlabelPO));
+			userlabelVOs.add(userlabelPO.ptv(new UserLabelVO(new UserBaseVO(), new LabelVO())));
 
 		}
 		return userlabelVOs;
-	}
-
-	private UserLabelVO UserlabelPOToVO(UserLabelPO userlabelPO) {
-
-		UserLabelVO userlabel = new UserLabelVO(new UserBaseVO(), new LabelVO());
-
-		BeanUtil.copyPropertie(userlabelPO, userlabel, Arrays.asList("user", "label"));
-		BeanUtil.copyPropertie(userlabelPO.getUser(), userlabel.getUser(), Arrays.asList("duty", "dept"));
-		BeanUtil.copyPropertie(userlabelPO.getLabel(), userlabel.getLabel());
-
-		return userlabel;
 	}
 
 }

@@ -58,7 +58,7 @@ public class OutsourceServiceImpl implements OutsourceService {
 		List<OutsourceVO> outsourceVOs = new ArrayList<OutsourceVO>();
 
 		for (OutsourcePO outsourcePO : outsourcePOs) {
-			outsourceVOs.add(copyOutsourceVO(outsourcePO));
+			outsourceVOs.add(outsourcePO.ptv());
 		}
 
 		paging.setData(outsourceVOs);
@@ -73,7 +73,7 @@ public class OutsourceServiceImpl implements OutsourceService {
 		List<OutsourceVO> outsourceVOs = new ArrayList<OutsourceVO>();
 
 		for (OutsourcePO outsourcePO : outsourcePOs) {
-			outsourceVOs.add(copyOutsourceVO(outsourcePO));
+			outsourceVOs.add(outsourcePO.ptv());
 		}
 
 		paging.setData(outsourceVOs);
@@ -86,7 +86,7 @@ public class OutsourceServiceImpl implements OutsourceService {
 		List<OutsourceVO> outsourceVOs = new ArrayList<OutsourceVO>();
 
 		for (OutsourcePO outsourcePO : outsourcePOs) {
-			outsourceVOs.add(copyOutsourceVO(outsourcePO));
+			outsourceVOs.add(outsourcePO.ptv());
 		}
 
 		return outsourceVOs;
@@ -266,22 +266,4 @@ public class OutsourceServiceImpl implements OutsourceService {
 	}
 
 	// copy赋值
-	private OutsourceVO copyOutsourceVO(OutsourcePO outsourcePO) {
-
-		OutsourceVO outsourceVO = new OutsourceVO(new ProductionVO(new HouseVO(new VillageVO()), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO()), new UserBaseVO(), new UserBaseVO());
-
-		BeanUtil.copyProperties(outsourcePO, outsourceVO, Arrays.asList("production", "creater", "supplier"));
-		BeanUtil.copyProperties(outsourcePO.getProduction(), outsourceVO.getProduction(), Arrays.asList("house", "creater", "brand", "salesman", "designer", "spliter"));
-		BeanUtil.copyProperties(outsourcePO.getCreater(), outsourceVO.getCreater(), Arrays.asList("duty", "dept"));
-		BeanUtil.copyProperties(outsourcePO.getSupplier(), outsourceVO.getSupplier(), Arrays.asList("duty", "dept"));
-		BeanUtil.copyProperties(outsourcePO.getProduction().getCreater(), outsourceVO.getProduction().getCreater(), Arrays.asList("duty", "dept"));
-		BeanUtil.copyProperties(outsourcePO.getProduction().getSalesman(), outsourceVO.getProduction().getSalesman(), Arrays.asList("duty", "dept"));
-		BeanUtil.copyProperties(outsourcePO.getProduction().getDesigner(), outsourceVO.getProduction().getDesigner(), Arrays.asList("duty", "dept"));
-		BeanUtil.copyProperties(outsourcePO.getProduction().getSpliter(), outsourceVO.getProduction().getSpliter(), Arrays.asList("duty", "dept"));
-
-		if (outsourcePO.getProduction().getHouse() != null) outsourcePO.getProduction().getHouse().ptv(outsourceVO.getProduction().getHouse());
-
-		return outsourceVO;
-	}
-
 }

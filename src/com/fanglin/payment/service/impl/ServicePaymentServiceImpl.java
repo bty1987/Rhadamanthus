@@ -108,7 +108,7 @@ public class ServicePaymentServiceImpl implements ServicePaymentService {
 		List<ServicePaymentVO> servicePaymentVOs = new ArrayList<ServicePaymentVO>();
 
 		for (ServicePaymentPO servicePaymentPO : servicePaymentPOs) {
-			servicePaymentVOs.add(servicePaymentPOToVO(servicePaymentPO));
+			servicePaymentVOs.add(servicePaymentPO.ptv(new ServicePaymentVO(new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new DecorationVO(), new ServiceReceiptVO(new UserBaseVO(), new UserBaseVO()))));
 		}
 
 		paging.setData(servicePaymentVOs);
@@ -140,7 +140,7 @@ public class ServicePaymentServiceImpl implements ServicePaymentService {
 		List<ServicePaymentPO> servicePaymentPOs = servicePaymentDao.queryServicePaymentForNotInitBySrId(serviceReceiptVO.getSrId());
 
 		for (ServicePaymentPO servicePaymentPO : servicePaymentPOs) {
-			servicePaymentVOs.add(servicePaymentPOToVO(servicePaymentPO));
+			servicePaymentVOs.add(servicePaymentPO.ptv(new ServicePaymentVO(new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new DecorationVO(), new ServiceReceiptVO(new UserBaseVO(), new UserBaseVO()))));
 		}
 
 		return servicePaymentVOs;
@@ -610,23 +610,6 @@ public class ServicePaymentServiceImpl implements ServicePaymentService {
 		servicePaymentDao.update(servicePayment);
 
 		return serviceReceiptPO;
-	}
-
-	public ServicePaymentVO servicePaymentPOToVO(ServicePaymentPO servicePaymentPO) {
-		ServicePaymentVO servicePaymentVO = new ServicePaymentVO(new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new DecorationVO(), new ServiceReceiptVO(new UserBaseVO(), new UserBaseVO()));
-		BeanUtil.copyProperties(servicePaymentPO, servicePaymentVO, Arrays.asList("creater", "collecter", "confirmer", "decoration", "serviceReceipt"));
-		servicePaymentVO.getCreater().setBaseInfo(servicePaymentPO.getCreater());
-		servicePaymentPO.getDecoration().ptvcascade(servicePaymentVO.getDecoration());
-
-		if (servicePaymentPO.getServiceReceipt() != null) {
-
-			BeanUtil.copyProperties(servicePaymentPO.getServiceReceipt(), servicePaymentVO.getServiceReceipt(), Arrays.asList("collecter", "confirmer"));
-			BeanUtil.copyProperties(servicePaymentPO.getServiceReceipt().getCollecter(), servicePaymentVO.getServiceReceipt().getCollecter(), Arrays.asList("dept", "duty"));
-			BeanUtil.copyProperties(servicePaymentPO.getServiceReceipt().getConfirmer(), servicePaymentVO.getServiceReceipt().getConfirmer(), Arrays.asList("dept", "duty"));
-
-		}
-
-		return servicePaymentVO;
 	}
 
 	public PaymentVO getPaymentVO(ServicePaymentPO servicePaymentPO, ServiceReceiptPO serviceReceiptPO) {

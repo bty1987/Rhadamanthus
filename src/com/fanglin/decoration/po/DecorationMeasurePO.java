@@ -22,8 +22,13 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import java.util.Arrays;
 
 import com.fanglin.personel.po.UserPO;
+import com.fanglin.decoration.vo.DecorationMeasureVO;
+import com.fanglin.decoration.vo.DecorationVO;
+import com.fanglin.personel.vo.UserBaseVO;
+import com.fanglin.utils.BeanUtil;
 
 @Entity
 @Table(name = "decorationmeasure", catalog = "decoration")
@@ -184,4 +189,28 @@ public class DecorationMeasurePO implements Serializable {
 		this.company = company;
 	}
 
+	public DecorationMeasureVO ptv(DecorationMeasureVO decorationMeasureVO) {
+
+		BeanUtil.copyProperties(this, decorationMeasureVO, Arrays.asList("decoration", "appler", "group", "drawer"));
+
+		if (getDecoration() != null) {
+
+			getDecoration().ptvcascade(decorationMeasureVO.getDecoration());
+
+			if (getDecoration().getSupervisor() != null) {
+				decorationMeasureVO.getDecoration().setSupervisor(new UserBaseVO());
+				decorationMeasureVO.getDecoration().getSupervisor().setBaseInfo(getDecoration().getSupervisor());
+			}
+		}
+
+		if (getAppler() != null) {
+			decorationMeasureVO.getAppler().setBaseInfo(getAppler());
+		}
+
+		if (getMeasurer() != null) {
+			decorationMeasureVO.getMeasurer().setBaseInfo(getMeasurer());
+		}
+
+		return decorationMeasureVO;
+	}
 }

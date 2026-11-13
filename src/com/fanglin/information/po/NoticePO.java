@@ -19,8 +19,12 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import java.util.Arrays;
 
 import com.fanglin.personel.po.UserPO;
+import com.fanglin.information.vo.NoticeVO;
+import com.fanglin.personel.vo.UserVO;
+import com.fanglin.utils.BeanUtil;
 
 @Entity
 @Table(name = "notice", catalog = "information")
@@ -230,4 +234,12 @@ public class NoticePO implements Serializable {
 		this.fileName = fileName;
 	}
 
+	public NoticeVO ptv(NoticeVO noticeVO) {
+
+		BeanUtil.copyProperties(this, noticeVO, Arrays.asList("creater"));
+
+		noticeVO.setCreater(new UserVO().setBaseInfo(getCreater()));
+
+		return noticeVO;
+	}
 }

@@ -46,7 +46,7 @@ public class ApprovalFormServiceImpl implements ApprovalFormService {
 		List<ApprovalFormVO> formVOs = new ArrayList<ApprovalFormVO>();
 
 		for (ApprovalFormPO formPO : formPOs) {
-			formVOs.add(formPOToVO(formPO));
+			formVOs.add(formPO.ptv(new ApprovalFormVO()));
 		}
 
 		paging.setData(formVOs);
@@ -61,7 +61,7 @@ public class ApprovalFormServiceImpl implements ApprovalFormService {
 			throw new FLException(240070, "表单不存在");
 		}
 
-		return formPOToVO(formPO);
+		return formPO.ptv(new ApprovalFormVO());
 	}
 
 	@Override
@@ -73,7 +73,7 @@ public class ApprovalFormServiceImpl implements ApprovalFormService {
 
 		ApprovalFormPO formPO = approvalFormDao.queryApprovalFormByFlowId(flowId);
 
-		return formPO == null ? null : formPOToVO(formPO);
+		return formPO == null ? null : formPO.ptv(new ApprovalFormVO());
 	}
 
 	@Override
@@ -169,12 +169,6 @@ public class ApprovalFormServiceImpl implements ApprovalFormService {
 			fieldPO.setStatus(ApprovalFormFieldPO.STATUS_ENABLED_INT);
 			approvalFormFieldDao.save(fieldPO);
 		}
-	}
-
-	private ApprovalFormVO formPOToVO(ApprovalFormPO formPO) {
-		ApprovalFormVO vo = new ApprovalFormVO();
-		BeanUtil.copyProperties(formPO, vo);
-		return vo;
 	}
 
 }

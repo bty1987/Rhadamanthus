@@ -64,7 +64,7 @@ public class ProductionPlanServiceImpl implements ProductionPlanService {
 
 		for (ProductionPlanPO productionPlanPO : productionPlanPOs) {
 
-			productionPlanVOs.add(copyProductionPlanVO(productionPlanPO));
+			productionPlanVOs.add(productionPlanPO.ptv());
 		}
 
 		paging.setData(productionPlanVOs);
@@ -78,7 +78,7 @@ public class ProductionPlanServiceImpl implements ProductionPlanService {
 		List<ProductionPlanVO> productionPlanVOs = new ArrayList<ProductionPlanVO>();
 
 		for (ProductionPlanPO productionPlanPO : productionPlanPOs) {
-			productionPlanVOs.add(copyProductionPlanVO(productionPlanPO));
+			productionPlanVOs.add(productionPlanPO.ptv());
 		}
 
 		return productionPlanVOs;
@@ -185,16 +185,4 @@ public class ProductionPlanServiceImpl implements ProductionPlanService {
 		return 0;
 	}
 
-	private ProductionPlanVO copyProductionPlanVO(ProductionPlanPO productionPlanPO) {
-
-		ProductionPlanVO productionPlanVO = new ProductionPlanVO(new ProductionVO(new HouseVO(new VillageVO())), new UserBaseVO());
-
-		BeanUtil.copyProperties(productionPlanPO, productionPlanVO, Arrays.asList("creater", "production"));
-		BeanUtil.copyProperties(productionPlanPO.getCreater(), productionPlanVO.getCreater(), Arrays.asList("duty", "dept"));
-		BeanUtil.copyProperties(productionPlanPO.getProduction(), productionPlanVO.getProduction(), Arrays.asList("house", "creater", "brand", "salesman", "designer", "spliter"));
-
-		if (productionPlanPO.getProduction().getHouse() != null) productionPlanPO.getProduction().getHouse().ptv(productionPlanVO.getProduction().getHouse());
-
-		return productionPlanVO;
-	}
 }

@@ -39,7 +39,7 @@ public class MgoodsServiceImpl implements MgoodsService {
 		List<MgoodsVO> mgoodsVOs = new ArrayList<MgoodsVO>();
 
 		for (MgoodsPO mgoodsPO : mgoodsPOs) {
-			mgoodsVOs.add(mgoodsPOToVO(mgoodsPO));
+			mgoodsVOs.add(mgoodsPO.ptv(new MgoodsVO(new MbrandVO(new McategoryVO()))));
 		}
 
 		paging.setData(mgoodsVOs);
@@ -54,7 +54,7 @@ public class MgoodsServiceImpl implements MgoodsService {
 		List<MgoodsVO> mgoodsVOs = new ArrayList<MgoodsVO>();
 
 		for (MgoodsPO mgoodsPO : mgoodsPOs) {
-			mgoodsVOs.add(mgoodsPOToVO(mgoodsPO));
+			mgoodsVOs.add(mgoodsPO.ptv(new MgoodsVO(new MbrandVO(new McategoryVO()))));
 		}
 
 		return mgoodsVOs;
@@ -110,17 +110,6 @@ public class MgoodsServiceImpl implements MgoodsService {
 		mgoodsDao.update(mgoodsPO);
 
 		return 0;
-	}
-
-	public MgoodsVO mgoodsPOToVO(MgoodsPO mgoodsPO) {
-
-		MgoodsVO mgoodsVO = new MgoodsVO(new MbrandVO(new McategoryVO()));
-
-		BeanUtil.copyProperties(mgoodsPO, mgoodsVO, Arrays.asList("mbrand"));
-		BeanUtil.copyProperties(mgoodsPO.getMbrand(), mgoodsVO.getMbrand(), Arrays.asList("mcategory"));
-		BeanUtil.copyProperties(mgoodsPO.getMbrand().getMcategory(), mgoodsVO.getMbrand().getMcategory());
-
-		return mgoodsVO;
 	}
 
 }

@@ -1,6 +1,7 @@
 package com.fanglin.store.po;
 
 import java.io.Serializable;
+import java.util.Arrays;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -10,6 +11,9 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+import com.fanglin.store.vo.MbrandVO;
+import com.fanglin.utils.BeanUtil;
 
 @Entity
 @Table(name = "mbrand", catalog = "store")
@@ -94,4 +98,12 @@ public class MbrandPO implements Serializable {
 		this.status = status;
 	}
 
+	public MbrandVO ptv(MbrandVO mbrandVO){
+
+		BeanUtil.copyProperties(this, mbrandVO, Arrays.asList("mcategory"));
+
+		if (getMcategory() != null) BeanUtil.copyProperties(getMcategory(), mbrandVO.getMcategory());
+
+		return mbrandVO;
+	}
 }
