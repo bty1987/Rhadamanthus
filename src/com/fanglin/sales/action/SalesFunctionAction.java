@@ -23,27 +23,59 @@ public class SalesFunctionAction extends BaseListAction{
 
 	@Autowired
 	private SalesFunctionService salesFunctionService;
-	
+
 	private List<SalesFunctionVO> salesFunctions;
-	
+
 	private SalesFunctionVO salesFunction;
-	
+
+	@Action(value = "pageSalesFunction", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String pageSalesFunction() throws FLException{
+
+		salesFunctions = salesFunctionService.pageSalesFunction(getPaging(), getFilters());
+
+		return SUCCESS;
+	}
+
 	@Action(value = "querySalesFunction", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String querySalesFunction() throws FLException{
-		
+
 		salesFunctions = salesFunctionService.querySalesFunction(salesFunction);
-		
+
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "querySalesFunctionByName", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String querySalesFunctionByName() throws FLException{
-		
+
 		salesFunctions = salesFunctionService.querySalesFunctionByName(salesFunction);
-		
+
 		return SUCCESS;
 	}
-	
+
+	@Action(value = "addSalesFunction", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String addSalesFunction() throws FLException{
+
+		salesFunctionService.addSalesFunction(salesFunction);
+
+		return SUCCESS;
+	}
+
+	@Action(value = "updateSalesFunction", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateSalesFunction() throws FLException{
+
+		salesFunctionService.updateSalesFunction(salesFunction);
+
+		return SUCCESS;
+	}
+
+	@Action(value = "deleteSalesFunction", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String deleteSalesFunction() throws FLException{
+
+		salesFunctionService.deleteSalesFunction(salesFunction);
+
+		return SUCCESS;
+	}
+
 	public List<SalesFunctionVO> getSalesFunctions() {
 		return salesFunctions;
 	}

@@ -726,6 +726,18 @@ $.extend(api, {
         querySalesFunctionByName: {
             url: "querySalesFunctionByName.do"
         },
+        pageSalesFunction: {
+            url: "pageSalesFunction.do"
+        },
+        addSalesFunction: {
+            url: "addSalesFunction.do"
+        },
+        updateSalesFunction: {
+            url: "updateSalesFunction.do"
+        },
+        deleteSalesFunction: {
+            url: "deleteSalesFunction.do"
+        },
 
         pageSalesDeliveryItem: {
             url: "pageSalesDeliveryItem.do",
