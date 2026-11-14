@@ -13,8 +13,12 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import java.util.Arrays;
 
 import com.fanglin.personel.po.UserPO;
+import com.fanglin.payment.vo.ServiceReceiptVO;
+import com.fanglin.personel.vo.UserBaseVO;
+import com.fanglin.utils.BeanUtil;
 
 @Entity
 @Table(name = "servicereceipt", catalog = "payment")
@@ -290,4 +294,13 @@ public class ServiceReceiptPO implements Serializable {
 		this.comment = comment;
 	}
 
+	public ServiceReceiptVO ptv(ServiceReceiptVO serviceReceiptVO) {
+
+		BeanUtil.copyProperties(this, serviceReceiptVO, Arrays.asList("collecter", "confirmer"));
+
+		if (getCollecter() != null && serviceReceiptVO.getCollecter() != null) serviceReceiptVO.getCollecter().setBaseInfo(getCollecter());
+		if (getConfirmer() != null && serviceReceiptVO.getConfirmer() != null) serviceReceiptVO.getConfirmer().setBaseInfo(getConfirmer());
+
+		return serviceReceiptVO;
+	}
 }

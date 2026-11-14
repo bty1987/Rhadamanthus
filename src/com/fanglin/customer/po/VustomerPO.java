@@ -192,7 +192,7 @@ public class VustomerPO implements Serializable {
 	public VustomerVO ptv(VustomerVO vustomerVO) {
 
 		BeanUtil.copyProperties(this, vustomerVO, Arrays.asList("belonger"));
-		BeanUtil.copyProperties(getBelonger(), vustomerVO.getBelonger(), Arrays.asList("dept", "duty", "role"));
+		if (getBelonger() != null && vustomerVO.getBelonger() != null) vustomerVO.getBelonger().setBaseInfo(getBelonger());
 
 		return vustomerVO;
 	}

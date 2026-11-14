@@ -149,9 +149,9 @@ public class MpricePO implements Serializable {
 
 		BeanUtil.copyProperties(this, mpriceVO, Arrays.asList("mgoods", "mcolor", "mformat"));
 
-		if (getMgoods() != null) BeanUtil.copyProperties(getMgoods(), mpriceVO.getMgoods(), Arrays.asList("mbrand"));
-		if (getMcolor() != null) BeanUtil.copyProperties(getMcolor(), mpriceVO.getMcolor());
-		if (getMformat() != null) BeanUtil.copyProperties(getMformat(), mpriceVO.getMformat());
+		if (getMgoods() != null) getMgoods().ptv(mpriceVO.getMgoods());
+		if (getMcolor() != null && mpriceVO.getMcolor() != null) getMcolor().ptv(mpriceVO.getMcolor());
+		if (getMformat() != null && mpriceVO.getMformat() != null) getMformat().ptv(mpriceVO.getMformat());
 
 		return mpriceVO;
 	}

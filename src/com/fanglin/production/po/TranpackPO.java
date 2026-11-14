@@ -239,17 +239,10 @@ public class TranpackPO implements Serializable {
 		TranpackVO tranpackVO = new TranpackVO(new ProductionVO(new HouseVO(new VillageVO()), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO()), new UserBaseVO(), new UserBaseVO(), new UserBaseVO());
 
 		BeanUtil.copyProperties(this, tranpackVO, Arrays.asList("production", "creater", "sender", "mounter"));
-		if (getProduction() != null) {
-			BeanUtil.copyProperties(getProduction(), tranpackVO.getProduction(), Arrays.asList("house", "creater", "brand", "salesman", "designer", "spliter"));
-			BeanUtil.copyProperties(getProduction().getCreater(), tranpackVO.getProduction().getCreater(), Arrays.asList("duty", "dept"));
-			BeanUtil.copyProperties(getProduction().getSalesman(), tranpackVO.getProduction().getSalesman(), Arrays.asList("duty", "dept"));
-			BeanUtil.copyProperties(getProduction().getDesigner(), tranpackVO.getProduction().getDesigner(), Arrays.asList("duty", "dept"));
-			BeanUtil.copyProperties(getProduction().getSpliter(), tranpackVO.getProduction().getSpliter(), Arrays.asList("duty", "dept"));
-			if (getProduction().getHouse() != null) getProduction().getHouse().ptv(tranpackVO.getProduction().getHouse());
-		}
-		BeanUtil.copyProperties(getCreater(), tranpackVO.getCreater(), Arrays.asList("duty", "dept"));
-		BeanUtil.copyProperties(getSender(), tranpackVO.getSender(), Arrays.asList("duty", "dept"));
-		BeanUtil.copyProperties(getMounter(), tranpackVO.getMounter(), Arrays.asList("duty", "dept"));
+		if (getProduction() != null) getProduction().ptv(tranpackVO.getProduction());
+		if (getCreater() != null && tranpackVO.getCreater() != null) tranpackVO.getCreater().setBaseInfo(getCreater());
+		if (getSender() != null && tranpackVO.getSender() != null) tranpackVO.getSender().setBaseInfo(getSender());
+		if (getMounter() != null && tranpackVO.getMounter() != null) tranpackVO.getMounter().setBaseInfo(getMounter());
 
 		return tranpackVO;
 	}

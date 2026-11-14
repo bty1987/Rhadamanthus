@@ -442,33 +442,20 @@ public class BuildingHousePO implements Serializable {
 
 	public BuildingHouseVO ptv() {
 
-		BuildingHouseVO buildingHouseVO = new BuildingHouseVO(new HouseVO(new VillageVO(new CityProperVO())), new CustomerVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new DepartmentVO(), new DepartmentVO());
+		return ptv(new BuildingHouseVO(new HouseVO(new VillageVO(new CityProperVO())), new CustomerVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new DepartmentVO(), new DepartmentVO()));
+	}
+
+	public BuildingHouseVO ptv(BuildingHouseVO buildingHouseVO) {
 
 		BeanUtil.copyProperties(this, buildingHouseVO, Arrays.asList("house", "customer", "create", "followUser", "keyer", "department", "region"));
 
-		BeanUtil.copyProperties(getCustomer(), buildingHouseVO.getCustomer());
-
-		if (getHouse() != null) getHouse().ptv(buildingHouseVO.getHouse());
-
-		if (getCreate() != null) {
-			BeanUtil.copyProperties(getCreate(), buildingHouseVO.getCreate(), Arrays.asList("dept", "duty"));
-		}
-
-		if (getFollowUser() != null) {
-			BeanUtil.copyProperties(getFollowUser(), buildingHouseVO.getFollowUser(), Arrays.asList("dept", "duty"));
-		}
-
-		if (getKeyer() != null) {
-			BeanUtil.copyProperties(getKeyer(), buildingHouseVO.getKeyer(), Arrays.asList("dept", "duty"));
-		}
-
-		if (getDepartment() != null) {
-			BeanUtil.copyProperties(getDepartment(), buildingHouseVO.getDepartment(), Arrays.asList("type", "fatherDept", "manager"));
-		}
-
-		if (getRegion() != null) {
-			BeanUtil.copyProperties(getRegion(), buildingHouseVO.getRegion(), Arrays.asList("type", "fatherDept", "manager"));
-		}
+		if (getCustomer() != null && buildingHouseVO.getCustomer() != null) getCustomer().ptv(buildingHouseVO.getCustomer());
+		if (getHouse() != null && buildingHouseVO.getHouse() != null) getHouse().ptv(buildingHouseVO.getHouse());
+		if (getCreate() != null && buildingHouseVO.getCreate() != null) buildingHouseVO.getCreate().setBaseInfo(getCreate());
+		if (getFollowUser() != null && buildingHouseVO.getFollowUser() != null) buildingHouseVO.getFollowUser().setBaseInfo(getFollowUser());
+		if (getKeyer() != null && buildingHouseVO.getKeyer() != null) buildingHouseVO.getKeyer().setBaseInfo(getKeyer());
+		if (getDepartment() != null && buildingHouseVO.getDepartment() != null) getDepartment().ptv(buildingHouseVO.getDepartment());
+		if (getRegion() != null && buildingHouseVO.getRegion() != null) getRegion().ptv(buildingHouseVO.getRegion());
 
 		return buildingHouseVO;
 	}

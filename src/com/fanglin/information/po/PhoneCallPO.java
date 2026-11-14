@@ -192,7 +192,7 @@ public class PhoneCallPO implements java.io.Serializable {
 	public PhoneCallVO ptv(PhoneCallVO phoneCallVO) {
 
 		BeanUtil.copyProperties(this, phoneCallVO, Arrays.asList("operater"));
-		BeanUtil.copyProperties(getOperater(), phoneCallVO.getOperater(), Arrays.asList("role", "dept", "duty"));
+		if (getOperater() != null && phoneCallVO.getOperater() != null) phoneCallVO.getOperater().setBaseInfo(getOperater());
 
 		return phoneCallVO;
 	}

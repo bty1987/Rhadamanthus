@@ -209,16 +209,9 @@ public class OutsourcePO implements Serializable{
 		OutsourceVO outsourceVO = new OutsourceVO(new ProductionVO(new HouseVO(new VillageVO()), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO()), new UserBaseVO(), new UserBaseVO());
 
 		BeanUtil.copyProperties(this, outsourceVO, Arrays.asList("production", "creater", "supplier"));
-		if (getProduction() != null) {
-			BeanUtil.copyProperties(getProduction(), outsourceVO.getProduction(), Arrays.asList("house", "creater", "brand", "salesman", "designer", "spliter"));
-			BeanUtil.copyProperties(getProduction().getCreater(), outsourceVO.getProduction().getCreater(), Arrays.asList("duty", "dept"));
-			BeanUtil.copyProperties(getProduction().getSalesman(), outsourceVO.getProduction().getSalesman(), Arrays.asList("duty", "dept"));
-			BeanUtil.copyProperties(getProduction().getDesigner(), outsourceVO.getProduction().getDesigner(), Arrays.asList("duty", "dept"));
-			BeanUtil.copyProperties(getProduction().getSpliter(), outsourceVO.getProduction().getSpliter(), Arrays.asList("duty", "dept"));
-			if (getProduction().getHouse() != null) getProduction().getHouse().ptv(outsourceVO.getProduction().getHouse());
-		}
-		BeanUtil.copyProperties(getCreater(), outsourceVO.getCreater(), Arrays.asList("duty", "dept"));
-		BeanUtil.copyProperties(getSupplier(), outsourceVO.getSupplier(), Arrays.asList("duty", "dept"));
+		if (getProduction() != null) getProduction().ptv(outsourceVO.getProduction());
+		if (getCreater() != null && outsourceVO.getCreater() != null) outsourceVO.getCreater().setBaseInfo(getCreater());
+		if (getSupplier() != null && outsourceVO.getSupplier() != null) outsourceVO.getSupplier().setBaseInfo(getSupplier());
 
 		return outsourceVO;
 	}

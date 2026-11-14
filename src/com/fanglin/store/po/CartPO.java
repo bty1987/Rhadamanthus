@@ -85,12 +85,7 @@ public class CartPO implements Serializable {
 
 		BeanUtil.copyProperties(this, cartVO, Arrays.asList("mprice"));
 
-		if (getMprice() != null){
-			BeanUtil.copyProperties(getMprice(), cartVO.getMprice(), Arrays.asList("mgoods", "mcolor", "mformat"));
-			if (getMprice().getMgoods() != null) BeanUtil.copyProperties(getMprice().getMgoods(), cartVO.getMprice().getMgoods(), Arrays.asList("mbrand"));
-			if (getMprice().getMcolor() != null) BeanUtil.copyProperties(getMprice().getMcolor(), cartVO.getMprice().getMcolor());
-			if (getMprice().getMformat() != null) BeanUtil.copyProperties(getMprice().getMformat(), cartVO.getMprice().getMformat());
-		}
+		if (getMprice() != null) getMprice().ptv(cartVO.getMprice());
 
 		return cartVO;
 	}

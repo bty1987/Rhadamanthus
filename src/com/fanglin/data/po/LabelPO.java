@@ -8,6 +8,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import com.fanglin.data.common.vo.LabelVO;
+import com.fanglin.utils.BeanUtil;
 
 @Entity
 @Table(name = "label", catalog = "communion")
@@ -99,4 +101,10 @@ public class LabelPO implements Serializable {
 		this.isShow = isShow;
 	}
 
+	public LabelVO ptv(LabelVO labelVO) {
+
+		BeanUtil.copyProperties(this, labelVO);
+
+		return labelVO;
+	}
 }

@@ -13,10 +13,14 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import java.util.Arrays;
 
 import com.fanglin.communion.po.BrandPO;
 import com.fanglin.communion.po.HousePO;
 import com.fanglin.personel.po.UserPO;
+import com.fanglin.personel.vo.UserBaseVO;
+import com.fanglin.production.vo.ProductionVO;
+import com.fanglin.utils.BeanUtil;
 
 @Entity
 @Table(name = "production", catalog = "production")
@@ -376,5 +380,18 @@ public class ProductionPO implements Serializable {
 	public void setCompany(int company) {
 		this.company = company;
 	}
-    
+
+	public ProductionVO ptv(ProductionVO productionVO) {
+
+		BeanUtil.copyProperties(this, productionVO, Arrays.asList("house", "brand", "creater", "salesman", "designer", "spliter"));
+
+		if (getHouse() != null && productionVO.getHouse() != null) getHouse().ptv(productionVO.getHouse());
+		if (getBrand() != null && productionVO.getBrand() != null) getBrand().ptv(productionVO.getBrand());
+		if (getCreater() != null && productionVO.getCreater() != null) productionVO.getCreater().setBaseInfo(getCreater());
+		if (getSalesman() != null && productionVO.getSalesman() != null) productionVO.getSalesman().setBaseInfo(getSalesman());
+		if (getDesigner() != null && productionVO.getDesigner() != null) productionVO.getDesigner().setBaseInfo(getDesigner());
+		if (getSpliter() != null && productionVO.getSpliter() != null) productionVO.getSpliter().setBaseInfo(getSpliter());
+
+		return productionVO;
+	}
 }

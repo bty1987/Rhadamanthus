@@ -248,11 +248,9 @@ public class AddReduceItemPO implements java.io.Serializable {
 
 		BeanUtil.copyProperties(this, addReduceItemVO, Arrays.asList("quotationFunctionArea"));
 
-		if (getQuotationFunctionArea() != null) {
-			addReduceItemVO.setQuotationFunctionAreaType(getQuotationFunctionArea().getType());
-			addReduceItemVO.setQuotationFunctionAreaId(getQuotationFunctionArea().getQfaId());
-			addReduceItemVO.setQuotationFunctionAreaName(getQuotationFunctionArea().getFunctionAreaName());
-		}
+		if (getQuotationFunctionArea() != null) addReduceItemVO.setQuotationFunctionAreaType(getQuotationFunctionArea().getType());
+		if (getQuotationFunctionArea() != null) addReduceItemVO.setQuotationFunctionAreaId(getQuotationFunctionArea().getQfaId());
+		if (getQuotationFunctionArea() != null) addReduceItemVO.setQuotationFunctionAreaName(getQuotationFunctionArea().getFunctionAreaName());
 
 		return addReduceItemVO;
 	}

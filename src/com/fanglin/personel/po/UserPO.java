@@ -434,34 +434,20 @@ public class UserPO implements Serializable {
 	public UserVO ptv(UserVO userVO) {
 
 		BeanUtil.copyProperties(this, userVO, Arrays.asList("role", "dept", "duty", "password", "company", "phone", "identity"));
-		userVO.setPhone(SensitiveDataHelper.decrypt(getPhone()));
-		userVO.setIdentity(SensitiveDataHelper.decrypt(getIdentity()));
+		if (getPhone() != null) userVO.setPhone(SensitiveDataHelper.decrypt(getPhone()));
+		if (getIdentity() != null) userVO.setIdentity(SensitiveDataHelper.decrypt(getIdentity()));
 
-		if (getDuty() != null) {
-			BeanUtil.copyProperties(getDuty(), userVO.getDuty(), Arrays.asList("departmentType"));
-
-			if (getDuty().getDepartmentType() != null) {
-				userVO.getDuty().setDepartmentType(new DepartmentTypeVO());
-				BeanUtil.copyProperties(getDuty().getDepartmentType(), userVO.getDuty().getDepartmentType());
-			}
+		if (getDuty() != null && userVO.getDuty() != null) {
+			if (getDuty().getDepartmentType() != null) userVO.getDuty().setDepartmentType(new DepartmentTypeVO());
+			getDuty().ptv(userVO.getDuty());
 		}
 
-		BeanUtil.copyProperties(getRole(), userVO.getRole(), Arrays.asList("creater"));
+		if (getRole() != null && userVO.getRole() != null) getRole().ptv(userVO.getRole());
 
-		BeanUtil.copyProperties(getDept(), userVO.getDept(), Arrays.asList("fatherDept", "type", "manager"));
-
-		if (getDept() != null) {
-			if (getDept().getFatherDept() != null) {
-				userVO.getDept().setFatherDept(new DepartmentVO());
-
-				BeanUtil.copyProperties(getDept().getFatherDept(), userVO.getDept().getFatherDept(), Arrays.asList("fatherDept", "type", "manager"));
-			}
-
-			if (getDept().getType() != null) {
-				userVO.getDept().setType(new DepartmentTypeVO());
-
-				BeanUtil.copyProperties(getDept().getType(), userVO.getDept().getType());
-			}
+		if (getDept() != null && userVO.getDept() != null) {
+			if (getDept().getFatherDept() != null) userVO.getDept().setFatherDept(new DepartmentVO());
+			if (getDept().getType() != null) userVO.getDept().setType(new DepartmentTypeVO());
+			getDept().ptv(userVO.getDept());
 		}
 
 		return userVO;

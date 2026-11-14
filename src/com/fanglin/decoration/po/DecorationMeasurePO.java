@@ -192,23 +192,12 @@ public class DecorationMeasurePO implements Serializable {
 
 		BeanUtil.copyProperties(this, decorationMeasureVO, Arrays.asList("decoration", "appler", "measurer", "group", "drawer"));
 
-		if (getDecoration() != null) {
+		if (getDecoration() != null) getDecoration().ptvcascade(decorationMeasureVO.getDecoration());
+		if (getDecoration() != null && getDecoration().getSupervisor() != null && decorationMeasureVO.getDecoration().getSupervisor() != null) decorationMeasureVO.getDecoration().getSupervisor().setBaseInfo(getDecoration().getSupervisor());
 
-			getDecoration().ptvcascade(decorationMeasureVO.getDecoration());
+		if (getAppler() != null && decorationMeasureVO.getAppler() != null) decorationMeasureVO.getAppler().setBaseInfo(getAppler());
 
-			if (getDecoration().getSupervisor() != null) {
-				decorationMeasureVO.getDecoration().setSupervisor(new UserBaseVO());
-				decorationMeasureVO.getDecoration().getSupervisor().setBaseInfo(getDecoration().getSupervisor());
-			}
-		}
-
-		if (getAppler() != null) {
-			decorationMeasureVO.getAppler().setBaseInfo(getAppler());
-		}
-
-		if (getMeasurer() != null) {
-			decorationMeasureVO.getMeasurer().setBaseInfo(getMeasurer());
-		}
+		if (getMeasurer() != null && decorationMeasureVO.getMeasurer() != null) decorationMeasureVO.getMeasurer().setBaseInfo(getMeasurer());
 
 		return decorationMeasureVO;
 	}

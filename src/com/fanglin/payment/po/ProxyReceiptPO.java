@@ -13,8 +13,12 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import java.util.Arrays;
 
 import com.fanglin.personel.po.UserPO;
+import com.fanglin.payment.vo.ProxyReceiptVO;
+import com.fanglin.personel.vo.UserBaseVO;
+import com.fanglin.utils.BeanUtil;
 
 @Entity
 @Table(name = "proxyreceipt", catalog = "payment")
@@ -187,4 +191,13 @@ public class ProxyReceiptPO implements Serializable {
 		this.comment = comment;
 	}
 
+	public ProxyReceiptVO ptv(ProxyReceiptVO proxyReceiptVO) {
+
+		BeanUtil.copyProperties(this, proxyReceiptVO, Arrays.asList("collecter", "confirmer"));
+
+		if (getCollecter() != null && proxyReceiptVO.getCollecter() != null) proxyReceiptVO.getCollecter().setBaseInfo(getCollecter());
+		if (getConfirmer() != null && proxyReceiptVO.getConfirmer() != null) proxyReceiptVO.getConfirmer().setBaseInfo(getConfirmer());
+
+		return proxyReceiptVO;
+	}
 }

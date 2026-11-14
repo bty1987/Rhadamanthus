@@ -199,12 +199,10 @@ public class ComplainPO implements Serializable {
 	public ComplainVO ptv(ComplainVO complainVO) {
 
 		BeanUtil.copyProperties(this, complainVO, Arrays.asList("decoration", "creater", "updater"));
-		BeanUtil.copyProperties(getCreater(), complainVO.getCreater(), Arrays.asList("duty", "dept"));
-		BeanUtil.copyProperties(getUpdater(), complainVO.getUpdater(), Arrays.asList("duty", "dept"));
+		if (getCreater() != null && complainVO.getCreater() != null) complainVO.getCreater().setBaseInfo(getCreater());
+		if (getUpdater() != null && complainVO.getUpdater() != null) complainVO.getUpdater().setBaseInfo(getUpdater());
 
-		if (getDecoration() != null) {
-			getDecoration().ptvcascade(complainVO.getDecoration());
-		}
+		if (getDecoration() != null) getDecoration().ptvcascade(complainVO.getDecoration());
 
 		return complainVO;
 	}

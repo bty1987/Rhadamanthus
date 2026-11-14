@@ -5,6 +5,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import com.fanglin.building.vo.BuildingNodeVO;
+import com.fanglin.utils.BeanUtil;
 
 @Entity
 @Table(name = "buildingnode", catalog = "building")
@@ -87,7 +89,11 @@ public class BuildingNodePO implements java.io.Serializable {
 	public void setStatus(short status) {
 		this.status = status;
 	}
-	
-	
 
+	public BuildingNodeVO ptv(BuildingNodeVO buildingNodeVO) {
+
+		BeanUtil.copyProperties(this, buildingNodeVO);
+
+		return buildingNodeVO;
+	}
 }

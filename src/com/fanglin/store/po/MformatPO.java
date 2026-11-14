@@ -7,6 +7,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import com.fanglin.store.vo.MformatVO;
+import com.fanglin.utils.BeanUtil;
 
 @Entity
 @Table(name = "mformat", catalog = "store")
@@ -70,4 +72,10 @@ public class MformatPO implements Serializable {
 		this.status = status;
 	}
 
+	public MformatVO ptv(MformatVO mformatVO) {
+
+		BeanUtil.copyProperties(this, mformatVO);
+
+		return mformatVO;
+	}
 }

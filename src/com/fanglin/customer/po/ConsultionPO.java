@@ -110,11 +110,9 @@ public class ConsultionPO implements Serializable {
 	public ConsultionVO ptv(ConsultionVO consultionVO) {
 
 		BeanUtil.copyProperties(this, consultionVO, Arrays.asList("decoration", "creater"));
-		BeanUtil.copyProperties(getCreater(), consultionVO.getCreater(), Arrays.asList("duty", "dept"));
+		if (getCreater() != null && consultionVO.getCreater() != null) consultionVO.getCreater().setBaseInfo(getCreater());
 
-		if (getDecoration() != null) {
-			getDecoration().ptvcascade(consultionVO.getDecoration());
-		}
+		if (getDecoration() != null) getDecoration().ptvcascade(consultionVO.getDecoration());
 
 		return consultionVO;
 	}

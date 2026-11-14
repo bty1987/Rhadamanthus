@@ -87,8 +87,8 @@ public class UserLabelPO implements Serializable {
 	public UserLabelVO ptv(UserLabelVO userLabelVO) {
 
 		BeanUtil.copyProperties(this, userLabelVO, Arrays.asList("user", "label"));
-		BeanUtil.copyProperties(getUser(), userLabelVO.getUser(), Arrays.asList("duty", "dept"));
-		BeanUtil.copyProperties(getLabel(), userLabelVO.getLabel());
+		if (getUser() != null && userLabelVO.getUser() != null) userLabelVO.getUser().setBaseInfo(getUser());
+		if (getLabel() != null && userLabelVO.getLabel() != null) getLabel().ptv(userLabelVO.getLabel());
 
 		return userLabelVO;
 	}

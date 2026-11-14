@@ -315,13 +315,11 @@ public class AepairPO implements Serializable {
 
 		BeanUtil.copyProperties(this, aepairVO, Arrays.asList("decoration", "creater", "updater", "repaier"));
 
-		if (getDecoration() != null) {
-			getDecoration().ptvcascade(aepairVO.getDecoration());
-		}
+		if (getDecoration() != null) getDecoration().ptvcascade(aepairVO.getDecoration());
 
-		aepairVO.getCreater().setBaseInfo(getCreater());
-		aepairVO.getUpdater().setBaseInfo(getUpdater());
-		aepairVO.getRepaier().setBaseInfo(getRepaier());
+		if (getCreater() != null) aepairVO.getCreater().setBaseInfo(getCreater());
+		if (getUpdater() != null) aepairVO.getUpdater().setBaseInfo(getUpdater());
+		if (getRepaier() != null) aepairVO.getRepaier().setBaseInfo(getRepaier());
 
 		return aepairVO;
 	}

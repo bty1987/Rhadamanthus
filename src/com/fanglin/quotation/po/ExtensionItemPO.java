@@ -228,10 +228,8 @@ public class ExtensionItemPO implements Serializable {
 
 		BeanUtil.copyProperties(this, extensionItemVO, Arrays.asList("quotationFunctionArea"));
 
-		if (getQuotationFunctionArea() != null) {
-			extensionItemVO.setQuotationFunctionAreaId(getQuotationFunctionArea().getQfaId());
-			extensionItemVO.setQuotationFunctionAreaName(getQuotationFunctionArea().getFunctionAreaName());
-		}
+		if (getQuotationFunctionArea() != null) extensionItemVO.setQuotationFunctionAreaId(getQuotationFunctionArea().getQfaId());
+		if (getQuotationFunctionArea() != null) extensionItemVO.setQuotationFunctionAreaName(getQuotationFunctionArea().getFunctionAreaName());
 
 		return extensionItemVO;
 	}

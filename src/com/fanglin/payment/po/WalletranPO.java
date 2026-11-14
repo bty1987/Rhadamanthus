@@ -136,14 +136,8 @@ public class WalletranPO implements java.io.Serializable {
 
 		BeanUtil.copyProperties(this, walletranVO, Arrays.asList("wallet", "tallet"));
 
-		if (getWallet() != null){
-			BeanUtil.copyProperties(getWallet(), walletranVO.getWallet(), Arrays.asList("belonger"));
-			BeanUtil.copyProperties(getWallet().getBelonger(), walletranVO.getWallet().getBelonger(), Arrays.asList("duty", "dept"));
-		}
-		if (getTallet() != null){
-			BeanUtil.copyProperties(getTallet(), walletranVO.getTallet(), Arrays.asList("belonger"));
-			BeanUtil.copyProperties(getTallet().getBelonger(), walletranVO.getTallet().getBelonger(), Arrays.asList("duty", "dept"));
-		}
+		if (getWallet() != null) getWallet().ptv(walletranVO.getWallet());
+		if (getTallet() != null) getTallet().ptv(walletranVO.getTallet());
 
 		return walletranVO;
 	}

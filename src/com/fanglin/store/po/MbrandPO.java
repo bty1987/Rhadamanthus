@@ -102,7 +102,7 @@ public class MbrandPO implements Serializable {
 
 		BeanUtil.copyProperties(this, mbrandVO, Arrays.asList("mcategory"));
 
-		if (getMcategory() != null) BeanUtil.copyProperties(getMcategory(), mbrandVO.getMcategory());
+		if (getMcategory() != null && mbrandVO.getMcategory() != null) getMcategory().ptv(mbrandVO.getMcategory());
 
 		return mbrandVO;
 	}

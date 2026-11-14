@@ -222,12 +222,10 @@ public class VpaymentPO implements Serializable {
 	public VpaymentVO ptv(VpaymentVO vpaymentVO) {
 
 		BeanUtil.copyProperties(this, vpaymentVO, Arrays.asList("creater", "vreceipt"));
-		BeanUtil.copyProperties(getCreater(), vpaymentVO.getCreater(), Arrays.asList("duty", "dept"));
+		if (getCreater() != null && vpaymentVO.getCreater() != null) vpaymentVO.getCreater().setBaseInfo(getCreater());
 
-		if (getVreceipt() != null) {
-			BeanUtil.copyProperties(getVreceipt(), vpaymentVO, Arrays.asList("collecter"));
-			BeanUtil.copyProperties(getVreceipt().getCollecter(), vpaymentVO.getCollecter(), Arrays.asList("dept", "duty"));
-		}
+		if (getVreceipt() != null) BeanUtil.copyProperties(getVreceipt(), vpaymentVO, Arrays.asList("collecter"));
+		if (getVreceipt() != null && getVreceipt().getCollecter() != null && vpaymentVO.getCollecter() != null) vpaymentVO.getCollecter().setBaseInfo(getVreceipt().getCollecter());
 
 		return vpaymentVO;
 	}

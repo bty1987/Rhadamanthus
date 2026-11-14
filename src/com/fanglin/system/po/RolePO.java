@@ -12,8 +12,12 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import java.util.Arrays;
 
 import com.fanglin.personel.po.UserPO;
+import com.fanglin.personel.vo.UserBaseVO;
+import com.fanglin.system.vo.RoleVO;
+import com.fanglin.utils.BeanUtil;
 
 @Entity
 @Table(name = "role", catalog = "communion")
@@ -144,4 +148,12 @@ public class RolePO implements Serializable {
 		this.createTime = createTime;
 	}
 
+	public RoleVO ptv(RoleVO roleVO) {
+
+		BeanUtil.copyProperties(this, roleVO, Arrays.asList("creater"));
+
+		if (getCreater() != null && roleVO.getCreater() != null) roleVO.getCreater().setBaseInfo(getCreater());
+
+		return roleVO;
+	}
 }

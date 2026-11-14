@@ -202,15 +202,11 @@ public class ServicePaymentPO implements java.io.Serializable {
 	public ServicePaymentVO ptv(ServicePaymentVO servicePaymentVO) {
 
 		BeanUtil.copyProperties(this, servicePaymentVO, Arrays.asList("creater", "collecter", "confirmer", "decoration", "serviceReceipt"));
-		servicePaymentVO.getCreater().setBaseInfo(getCreater());
+		if (getCreater() != null) servicePaymentVO.getCreater().setBaseInfo(getCreater());
 
 		if (getDecoration() != null) getDecoration().ptvcascade(servicePaymentVO.getDecoration());
 
-		if (getServiceReceipt() != null) {
-			BeanUtil.copyProperties(getServiceReceipt(), servicePaymentVO.getServiceReceipt(), Arrays.asList("collecter", "confirmer"));
-			BeanUtil.copyProperties(getServiceReceipt().getCollecter(), servicePaymentVO.getServiceReceipt().getCollecter(), Arrays.asList("dept", "duty"));
-			BeanUtil.copyProperties(getServiceReceipt().getConfirmer(), servicePaymentVO.getServiceReceipt().getConfirmer(), Arrays.asList("dept", "duty"));
-		}
+		if (getServiceReceipt() != null) getServiceReceipt().ptv(servicePaymentVO.getServiceReceipt());
 
 		return servicePaymentVO;
 	}

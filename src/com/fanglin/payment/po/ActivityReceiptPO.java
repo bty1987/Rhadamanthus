@@ -13,8 +13,12 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import java.util.Arrays;
 
 import com.fanglin.personel.po.UserPO;
+import com.fanglin.payment.vo.ActivityReceiptVO;
+import com.fanglin.personel.vo.UserBaseVO;
+import com.fanglin.utils.BeanUtil;
 
 @Entity
 @Table(name = "activityreceipt", catalog = "payment")
@@ -139,4 +143,12 @@ public class ActivityReceiptPO implements Serializable {
 		this.comment = comment;
 	}
 
+	public ActivityReceiptVO ptv(ActivityReceiptVO activityReceiptVO) {
+
+		BeanUtil.copyProperties(this, activityReceiptVO, Arrays.asList("collecter"));
+
+		if (getCollecter() != null && activityReceiptVO.getCollecter() != null) activityReceiptVO.getCollecter().setBaseInfo(getCollecter());
+
+		return activityReceiptVO;
+	}
 }

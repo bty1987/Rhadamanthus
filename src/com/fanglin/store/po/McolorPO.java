@@ -7,6 +7,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import com.fanglin.store.vo.McolorVO;
+import com.fanglin.utils.BeanUtil;
 
 @Entity
 @Table(name = "mcolor", catalog = "store")
@@ -68,5 +70,12 @@ public class McolorPO implements Serializable {
 
 	public void setStatus(short status) {
 		this.status = status;
+	}
+
+	public McolorVO ptv(McolorVO mcolorVO) {
+
+		BeanUtil.copyProperties(this, mcolorVO);
+
+		return mcolorVO;
 	}
 }

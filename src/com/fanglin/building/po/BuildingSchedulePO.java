@@ -156,9 +156,9 @@ public class BuildingSchedulePO implements java.io.Serializable {
 
 		BeanUtil.copyProperties(this, buildingScheduleVO, Arrays.asList("building", "buildingNode", "operater"));
 
-		BeanUtil.copyProperties(getBuildingNode(), buildingScheduleVO.getBuildingNode());
+		if (getBuildingNode() != null && buildingScheduleVO.getBuildingNode() != null) getBuildingNode().ptv(buildingScheduleVO.getBuildingNode());
 
-		BeanUtil.copyProperties(getOperater(), buildingScheduleVO.getOperater(), Arrays.asList("dept", "duty"));
+		if (getOperater() != null && buildingScheduleVO.getOperater() != null) buildingScheduleVO.getOperater().setBaseInfo(getOperater());
 
 		return buildingScheduleVO;
 	}

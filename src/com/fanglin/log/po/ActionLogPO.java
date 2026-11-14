@@ -220,15 +220,11 @@ public class ActionLogPO implements Serializable {
 		BeanUtil.copyProperties(this, logVO, Arrays.asList("createUserPO"));
 
 		// createUserPO 在归档表场景或用户被删除后可能为 null, 原实现裸解引用会 NPE
-		if (getCreateUserPO() != null){
-			logVO.setCreateUserId(getCreateUserPO().getUserId());
-			logVO.setCreateUserName(getCreateUserPO().getCurrentName());
-			if (getCreateUserPO().getDuty() != null) logVO.setDuty(getCreateUserPO().getDuty().getName());
-			if (getCreateUserPO().getRole() != null){
-				logVO.setRoleId(getCreateUserPO().getRole().getNo());
-				logVO.setRoleName(getCreateUserPO().getRole().getName());
-			}
-		}
+		if (getCreateUserPO() != null) logVO.setCreateUserId(getCreateUserPO().getUserId());
+		if (getCreateUserPO() != null) logVO.setCreateUserName(getCreateUserPO().getCurrentName());
+		if (getCreateUserPO() != null && getCreateUserPO().getDuty() != null) logVO.setDuty(getCreateUserPO().getDuty().getName());
+		if (getCreateUserPO() != null && getCreateUserPO().getRole() != null) logVO.setRoleId(getCreateUserPO().getRole().getNo());
+		if (getCreateUserPO() != null && getCreateUserPO().getRole() != null) logVO.setRoleName(getCreateUserPO().getRole().getName());
 
 		// Phase 1 扩展字段（BeanUtil 已能按同名拷贝, 这里显式补以防 BeanUtil 配置差异）
 		logVO.setIp(getIp());

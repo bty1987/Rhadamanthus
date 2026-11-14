@@ -254,13 +254,9 @@ public class ProxyPaymentPO implements Serializable {
 	public ProxyPaymentVO ptv(ProxyPaymentVO proxyPaymentVO) {
 
 		BeanUtil.copyProperties(this, proxyPaymentVO, Arrays.asList("proxyReceipt", "creater"));
-		BeanUtil.copyProperties(getCreater(), proxyPaymentVO.getCreater(), Arrays.asList("role", "dept", "duty"));
+		if (getCreater() != null && proxyPaymentVO.getCreater() != null) proxyPaymentVO.getCreater().setBaseInfo(getCreater());
 
-		if (getProxyReceipt() != null) {
-			BeanUtil.copyProperties(getProxyReceipt(), proxyPaymentVO.getProxyReceipt(), Arrays.asList("collecter", "confirmer"));
-			BeanUtil.copyProperties(getProxyReceipt().getCollecter(), proxyPaymentVO.getProxyReceipt().getCollecter(), Arrays.asList("role", "dept", "duty"));
-			BeanUtil.copyProperties(getProxyReceipt().getConfirmer(), proxyPaymentVO.getProxyReceipt().getConfirmer(), Arrays.asList("role", "dept", "duty"));
-		}
+		if (getProxyReceipt() != null) getProxyReceipt().ptv(proxyPaymentVO.getProxyReceipt());
 
 		return proxyPaymentVO;
 	}

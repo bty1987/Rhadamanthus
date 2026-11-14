@@ -194,11 +194,8 @@ public class ProductionPlanPO implements Serializable {
 		ProductionPlanVO productionPlanVO = new ProductionPlanVO(new ProductionVO(new HouseVO(new VillageVO())), new UserBaseVO());
 
 		BeanUtil.copyProperties(this, productionPlanVO, Arrays.asList("creater", "production"));
-		BeanUtil.copyProperties(getCreater(), productionPlanVO.getCreater(), Arrays.asList("duty", "dept"));
-		if (getProduction() != null) {
-			BeanUtil.copyProperties(getProduction(), productionPlanVO.getProduction(), Arrays.asList("house", "creater", "brand", "salesman", "designer", "spliter"));
-			if (getProduction().getHouse() != null) getProduction().getHouse().ptv(productionPlanVO.getProduction().getHouse());
-		}
+		if (getCreater() != null && productionPlanVO.getCreater() != null) productionPlanVO.getCreater().setBaseInfo(getCreater());
+		if (getProduction() != null) getProduction().ptv(productionPlanVO.getProduction());
 
 		return productionPlanVO;
 	}

@@ -7,6 +7,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import com.fanglin.store.vo.McategoryVO;
+import com.fanglin.utils.BeanUtil;
 
 @Entity
 @Table(name = "mcategory", catalog = "store")
@@ -70,4 +72,10 @@ public class McategoryPO implements Serializable {
 		this.isShow = isShow;
 	}
 
+	public McategoryVO ptv(McategoryVO mcategoryVO) {
+
+		BeanUtil.copyProperties(this, mcategoryVO);
+
+		return mcategoryVO;
+	}
 }

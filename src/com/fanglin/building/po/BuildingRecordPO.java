@@ -145,27 +145,16 @@ public class BuildingRecordPO implements java.io.Serializable {
 	public BuildingRecordVO ptv() {
 
 		BuildingHouseVO buildingHouseVO = new BuildingHouseVO(new HouseVO(new VillageVO()));
+		if (getBuildingHouse() != null) getBuildingHouse().ptv(buildingHouseVO);
 
 		BuildingCustomerVO buildingCustomerVO = new BuildingCustomerVO(new CustomerVO(), new UserBaseVO());
+		if (getBuildingCustomer() != null) getBuildingCustomer().ptv(buildingCustomerVO);
 
 		BuildingRecordVO buildingRecordVO = new BuildingRecordVO(buildingHouseVO, buildingCustomerVO, new UserBaseVO());
 
 		BeanUtil.copyProperties(this, buildingRecordVO, Arrays.asList("buildingHouse", "buildingCustomer", "operater"));
 
-		BuildingHousePO buildingHousePO = getBuildingHouse();
-		if (buildingHousePO != null) {
-			BeanUtil.copyProperties(buildingHousePO, buildingHouseVO, Arrays.asList("house", "customer", "create", "followUser", "keyer", "department", "region"));
-			if (buildingHousePO.getHouse() != null) buildingHousePO.getHouse().ptv(buildingHouseVO.getHouse());
-		}
-
-		BuildingCustomerPO buildingCustomerPO = getBuildingCustomer();
-		if (buildingCustomerPO != null) {
-			BeanUtil.copyProperties(buildingCustomerPO, buildingCustomerVO, Arrays.asList("customer", "create"));
-			BeanUtil.copyProperties(buildingCustomerPO.getCustomer(), buildingCustomerVO.getCustomer());
-		}
-
-		// operater
-		BeanUtil.copyProperties(getOperater(), buildingRecordVO.getOperater(), Arrays.asList("dept", "duty"));
+		if (getOperater() != null && buildingRecordVO.getOperater() != null) buildingRecordVO.getOperater().setBaseInfo(getOperater());
 
 		return buildingRecordVO;
 	}

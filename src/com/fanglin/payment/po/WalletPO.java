@@ -140,7 +140,7 @@ public class WalletPO implements java.io.Serializable {
 
 		BeanUtil.copyProperties(this, walletVO, Arrays.asList("belonger"));
 
-		if (getBelonger() != null) BeanUtil.copyProperties(getBelonger(), walletVO.getBelonger(), Arrays.asList("duty", "dept"));
+		if (getBelonger() != null && walletVO.getBelonger() != null) walletVO.getBelonger().setBaseInfo(getBelonger());
 
 		return walletVO;
 	}
