@@ -1198,6 +1198,7 @@ jQuery(function($) {
 
                 area.rows.push({
                     subtype: 0,
+                    sourceId: item.qfaiId, // 来源行主键 → 决算明细sourceId
                     name: item.itemName,
                     unit: item.measurementUnit,
                     num: item.initNum,
@@ -1233,6 +1234,7 @@ jQuery(function($) {
 
                 area.rows.push({
                     subtype: 1,
+                    sourceId: item.eiid, // 来源行主键 → 决算明细sourceId
                     name: item.itemName,
                     unit: item.measurementUnit,
                     num: item.num,
@@ -1260,6 +1262,7 @@ jQuery(function($) {
 
                 area.rows.push({
                     subtype: 2,
+                    sourceId: item.ariId, // 来源行主键 → 决算明细sourceId(备注列#arId为单级展示, 此处行级)
                     name: item.itemName,
                     unit: item.measurementUnit,
                     num: item.num,
@@ -1581,7 +1584,7 @@ jQuery(function($) {
 
     /**
      * 明细快照 —— type 0-8 与决算计算页 buildDecorationAccountItems(L861-938) 同款,
-     * 新增 type=9 功能区明细行(subtype 0报价/1扩展/2增减, content=功能区名|来源|状态|单号)
+     * 新增 type=9 功能区明细行(subtype 0报价/1扩展/2增减, content=功能区名|来源|状态|单号, sourceId=来源行主键qfaiId/eiid/ariId)
      */
     function buildAccountItems() {
 
@@ -1589,14 +1592,14 @@ jQuery(function($) {
         var items = [];
         var sort = 0;
 
-        function addItem(type, subtype, name, money, rate, content) {
+        function addItem(type, subtype, name, money, rate, content, sourceId) {
 
             items.push({
                 type: type,
                 subtype: subtype,
                 name: name,
                 sourceType: type,
-                sourceId: 0,
+                sourceId: sourceId || 0, // type=9行=来源行主键(报价qfaiId/扩展eiid/增减ariId, selectionitem.quoteId家法), 汇总行恒0
                 money: parseFloat(money) || 0,
                 rate: parseFloat(rate) || 0,
                 sort: sort++,
@@ -1692,7 +1695,7 @@ jQuery(function($) {
                 var _total = utils.accMul(r.unitPrice, r.num);
                 var _state = r.source.indexOf("增减") == 0 ? ("|" + r.state) : "";
 
-                addItem(9, r.subtype, r.name, Math.round(_total), 0, area.name + "|" + r.source + _state + (r.content ? "|" + r.content : ""));
+                addItem(9, r.subtype, r.name, Math.round(_total), 0, area.name + "|" + r.source + _state + (r.content ? "|" + r.content : ""), r.sourceId);
             });
         });
 
