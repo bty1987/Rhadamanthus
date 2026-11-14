@@ -563,6 +563,9 @@ jQuery(function($) {
         auotation.materialTotal = 0;
         auotation.materialCoupon = 0;
 
+        // 页面级增减计入配比选择(arId -> true/false, 默认计入; 仅重算模拟不写库)
+        auotation.arFlagMap = {};
+
         auotation.items.calDiscountPrice.val("").removeAttr("readonly");
         auotation.items.matching.prop("checked", false);
         auotation.items.preferences.val(0);
@@ -692,43 +695,58 @@ jQuery(function($) {
                 var taxPrice = accountTaxDiscount == 1 ? utils.accMul(v.taxPrice, utils.accDiv(accountDiscount, 10)) : v.taxPrice;
                 var totalPrice = utils.accAdd(utils.accAdd(utils.accAdd(utils.accMul(v.calPrice, utils.accDiv(accountDiscount, 10)), v.uncalPrice), managePrice), taxPrice);
 
+                // 页面级"计入配比"选择(拍板 2026-11-14: 仅页面重算模拟, 不修改任何数据, 刷新/重开恢复默认计入)
+                var _inFlag = auotation.arFlagMap[v.arId] !== false;
+
                 if (v.type == 0) { // 增项
 
-                    addPredisPrice = utils.accAdd(addPredisPrice, utils.accAdd(v.undisPrice, utils.accAdd(v.disPrice, utils.accAdd(v.managePrice, v.taxPrice))));
-                    addPredisManagePrice = utils.accAdd(addPredisManagePrice, v.managePrice);
-                    addManagePrice = utils.accAdd(addManagePrice, managePrice);
-                    addCalPrice = utils.accAdd(addCalPrice, v.calPrice);
-                    addUncalPrice = utils.accAdd(addUncalPrice, v.uncalPrice);
-                    addTotalPrice = utils.accAdd(addTotalPrice, v.total);
-                    addDisPrice = utils.accAdd(addDisPrice, v.disPrice);
-                    addUndisPrice = utils.accAdd(addUndisPrice, v.undisPrice);
-                    addPredisTaxPrice = utils.accAdd(addPredisTaxPrice, v.taxPrice);
-                    addTaxPrice = utils.accAdd(addTaxPrice, taxPrice);
+                    // 已收/未收是收付事实, 不受页面配比选择影响
                     addDone = utils.accAdd(addDone, v.status == constant.quotation().addreduce.STATUS_PAYED_INT || v.status == constant.quotation().addreduce.STATUS_CONFIRMED_INT ? v.total : 0);
                     addOwing = utils.accAdd(addOwing, v.status == constant.quotation().addreduce.STATUS_UNSUBMIT_INT || v.status == constant.quotation().addreduce.STATUS_SUBMIT_INT ? v.total : 0);
 
-                    asDifference = utils.accAdd(asDifference, addDisPrice * (basic.dd / 10) + addUndisPrice + Math.round(addManagePrice) - Math.round(addTotalPrice));
+                    if (_inFlag) {
+
+                        addPredisPrice = utils.accAdd(addPredisPrice, utils.accAdd(v.undisPrice, utils.accAdd(v.disPrice, utils.accAdd(v.managePrice, v.taxPrice))));
+                        addPredisManagePrice = utils.accAdd(addPredisManagePrice, v.managePrice);
+                        addManagePrice = utils.accAdd(addManagePrice, managePrice);
+                        addCalPrice = utils.accAdd(addCalPrice, v.calPrice);
+                        addUncalPrice = utils.accAdd(addUncalPrice, v.uncalPrice);
+                        addTotalPrice = utils.accAdd(addTotalPrice, v.total);
+                        addDisPrice = utils.accAdd(addDisPrice, v.disPrice);
+                        addUndisPrice = utils.accAdd(addUndisPrice, v.undisPrice);
+                        addPredisTaxPrice = utils.accAdd(addPredisTaxPrice, v.taxPrice);
+                        addTaxPrice = utils.accAdd(addTaxPrice, taxPrice);
+
+                        asDifference = utils.accAdd(asDifference, addDisPrice * (basic.dd / 10) + addUndisPrice + Math.round(addManagePrice) - Math.round(addTotalPrice));
+                    }
 
                 } else if (v.type == 1) { // 减项
 
-                    reducePredisPrice = utils.accAdd(reducePredisPrice, utils.accAdd(v.undisPrice, utils.accAdd(v.disPrice, utils.accAdd(v.managePrice, v.taxPrice))));
-                    reducePredisManagePrice = utils.accAdd(reducePredisManagePrice, v.managePrice);
-                    reduceManagePrice = utils.accAdd(reduceManagePrice, managePrice);
-                    reduceCalPrice = utils.accAdd(reduceCalPrice, v.calPrice);
-                    reduceUncalPrice = utils.accAdd(reduceUncalPrice, v.uncalPrice);
-                    reduceTotalPrice = utils.accAdd(reduceTotalPrice, v.total);
-                    reduceDisPrice = utils.accAdd(reduceDisPrice, v.disPrice);
-                    reduceUndisPrice = utils.accAdd(reduceUndisPrice, v.undisPrice);
-                    reducePredisTaxPrice = utils.accAdd(reducePredisTaxPrice, v.taxPrice);
-                    reduceTaxPrice = utils.accAdd(reduceTaxPrice, taxPrice);
                     reduceDone = utils.accAdd(reduceDone, v.status == constant.quotation().addreduce.STATUS_PAYED_INT || v.status == constant.quotation().addreduce.STATUS_CONFIRMED_INT ? v.total : 0);
                     reduceOwing = utils.accAdd(reduceOwing, v.status == constant.quotation().addreduce.STATUS_UNSUBMIT_INT || v.status == constant.quotation().addreduce.STATUS_SUBMIT_INT ? v.total : 0);
 
-                    asDifference = utils.accAdd(asDifference, reduceDisPrice * (basic.dd / 10) + reduceUndisPrice + Math.round(reduceManagePrice) - Math.round(reduceTotalPrice));
+                    if (_inFlag) {
+
+                        reducePredisPrice = utils.accAdd(reducePredisPrice, utils.accAdd(v.undisPrice, utils.accAdd(v.disPrice, utils.accAdd(v.managePrice, v.taxPrice))));
+                        reducePredisManagePrice = utils.accAdd(reducePredisManagePrice, v.managePrice);
+                        reduceManagePrice = utils.accAdd(reduceManagePrice, managePrice);
+                        reduceCalPrice = utils.accAdd(reduceCalPrice, v.calPrice);
+                        reduceUncalPrice = utils.accAdd(reduceUncalPrice, v.uncalPrice);
+                        reduceTotalPrice = utils.accAdd(reduceTotalPrice, v.total);
+                        reduceDisPrice = utils.accAdd(reduceDisPrice, v.disPrice);
+                        reduceUndisPrice = utils.accAdd(reduceUndisPrice, v.undisPrice);
+                        reducePredisTaxPrice = utils.accAdd(reducePredisTaxPrice, v.taxPrice);
+                        reduceTaxPrice = utils.accAdd(reduceTaxPrice, taxPrice);
+
+                        asDifference = utils.accAdd(asDifference, reduceDisPrice * (basic.dd / 10) + reduceUndisPrice + Math.round(reduceManagePrice) - Math.round(reduceTotalPrice));
+                    }
                 }
 
-                // item 级折扣归属(打折/不打折配比)
+                // item 级折扣归属(打折/不打折配比, 不计配比的单不进池)
                 $.each(v.addReduceItems, function(i, aritem) {
+
+                    if (!_inFlag)
+                        return true;
 
                     if (v.type == 0 && aritem.discount == 1) {
                         addDisCalPrice = utils.accAdd(addDisCalPrice, utils.accMul(aritem.unitPrice, aritem.num));
@@ -1353,16 +1371,34 @@ jQuery(function($) {
                 _cells.push(["au-source", '<span class="label ' + _sourceLabels[r.source] + '">' + r.source + '</span>']);
             }
 
-            // 增减行: 计入/不计入状态 + 单号 + 折扣维护入口
+            // 增减行: 计入配比标签(口径内可点击, 页面级重算模拟不写库) + 单号(短格式防串行) + 折扣维护入口
             if (r.subtype == 2) {
 
-                var _stateLabel = r.state.indexOf("不计入") == 0
-                    ? '<span class="label label-danger">不计入</span>'
-                    : '<span class="label label-success">计入</span>';
+                var _outOfScope = r.state.indexOf("不计入") == 0;
+                var _inFlag = auotation.arFlagMap[r.arId] !== false;
+
+                var _stateHtml = _outOfScope
+                    ? '<span class="label label-default">不计入</span>'
+                    : (_inFlag ? '<span class="label label-success">计入配比</span>' : '<span class="label label-warning">不计配比</span>');
+
+                var $stateLabel = $(_stateHtml);
+
+                if (!_outOfScope) {
+
+                    $stateLabel.css('cursor', 'pointer').attr('title', '点击切换是否计入配比(仅页面重算模拟, 不修改增减单数据; 刷新后恢复)').click(function() {
+
+                        auotation.arFlagMap[r.arId] = _inFlag ? false : true;
+
+                        queryAddReduce();
+                        renderSummary();
+                        accountSuper();
+                        renderFunctionAreas();
+                    });
+                }
 
                 var $stateWrap = $('<span></span>').addClass('cell-wrap')
-                    .append($(_stateLabel))
-                    .append($('<span class="grey" style="padding-left: 5px;"></span>').html(com.checkNull(r.content, '')));
+                    .append($stateLabel)
+                    .append($('<span class="grey" style="padding-left: 5px;"></span>').html('#' + r.arId));
 
                 var $arBtn = $('<button></button>').addClass('btn btn-minier btn-yellow').html('折扣').css('margin-left', '5px')
                     .click(function() {

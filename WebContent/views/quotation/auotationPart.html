@@ -289,6 +289,7 @@
 
 							<div class="col-md-12">
 								<small class="grey bolder">增减(决算口径)</small>
+								<small class="grey">行标签"计入配比"可点选, 仅页面重算模拟不改数据</small>
 								<div class="form-group">
 									<label class="col-md-6 no-padding-right">增项折前总价</label>
 									<label id="auAddFoldFrontTotal" class="col-md-6 no-padding-left">0</label>
@@ -474,10 +475,29 @@
 		width: 200px;
 	}
 
+	#auotationPartContent .fl-quo-list .cell.au-state .cell-wrap {
+		width: 200px;
+	}
+
 	#auotationPartContent .fl-quo-item.au-header {
 		background: #F7F7F7;
 		font-weight: bold;
 		color: #555;
+	}
+
+	/* 防串行: 单元格默认禁折行(数字/标签列), 名称列豁免(长项目名折行), 状态列定宽溢出省略 */
+	#auotationPartContent .fl-quo-list .cell .cell-wrap {
+		white-space: nowrap;
+	}
+
+	#auotationPartContent .fl-quo-list .cell.name .cell-wrap {
+		white-space: normal;
+		word-break: break-all;
+	}
+
+	#auotationPartContent .fl-quo-list .cell.au-state .cell-wrap {
+		overflow: hidden;
+		text-overflow: ellipsis;
 	}
 </style>
 
