@@ -84,7 +84,7 @@ public class DecorationBelongPO implements Serializable {
 
 	private short defaultFlag;
 
-	private Long ccid; // 包装型: decorationbelong.ccid 列可空(dev存量99%行为NULL), 基本型加载即PropertyAccessException
+	private long ccid;
 
 	public DecorationBelongPO() {
 		super();
@@ -222,11 +222,11 @@ public class DecorationBelongPO implements Serializable {
 	}
 
 	@Column(name = "ccid")
-	public Long getCcid() {
+	public long getCcid() {
 		return ccid;
 	}
 
-	public void setCcid(Long ccid) {
+	public void setCcid(long ccid) {
 		this.ccid = ccid;
 	}
 

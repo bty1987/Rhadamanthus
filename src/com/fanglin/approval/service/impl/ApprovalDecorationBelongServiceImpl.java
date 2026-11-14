@@ -465,8 +465,7 @@ public class ApprovalDecorationBelongServiceImpl implements ApprovalDecorationBe
 			decorationBelongPO.setBelonger(userPO);
 			decorationBelongPO.setRate(approvalBelongTranItemPO.getRate());
 			decorationBelongPO.setDefaultFlag(approvalBelongTranItemPO.getDefaultFlag());
-			// ccid改包装型后invalidCcid可为null(存量行ccid列可空), 直接透传落NULL, 读取侧已判空兼容
-			decorationBelongPO.setCcid(invalidCcid);
+			decorationBelongPO.setCcid(invalidCcid.longValue());
 			decorationBelongPO.setOperater(operater);
 			decorationBelongPO.setOperateTime(DateUtil.getDateToTimestamp(new Date()));
 			decorationBelongPO.setUpdateTime(DateUtil.getDateToTimestamp(new Date()));
