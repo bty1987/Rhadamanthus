@@ -165,7 +165,6 @@
 								<div class="form-group au-field">
 									<label class="au-label">重算折扣</label>
 									<input type="text" id="auCalDiscountPrice" class="au-input" maxlength="5" value="">
-									<button type="button" id="auCalculateBtn" class="btn btn-minier btn-success au-btn">计算</button>
 								</div>
 								<div class="form-group au-field au-switch-row">
 									<label class="au-label">增减计配比</label>
@@ -198,7 +197,8 @@
 								</div>
 								<div class="form-group au-field">
 									<label class="au-label">备注</label>
-									<input type="text" id="auComment" class="au-input au-input-wide" maxlength="200">
+									<textarea id="auComment" class="au-input au-textarea" rows="1" wrap="off" maxlength="200"></textarea>
+									<button type="button" id="auCalculateBtn" class="btn btn-minier btn-success au-btn">计算</button>
 								</div>
 								<div class="space-8"></div>
 								<small class="grey">未建档订单仅展示与重算预览, 保存决算前请先在决算计算页生成决算记录</small>
@@ -551,7 +551,23 @@
 	}
 
 	#auotationPartContent .au-field.au-switch-row {
-		margin-top: 12px;
+		margin-top: 10px;
+	}
+
+	/* 行距压缩(form-group默认15px过宽)与textarea(多行组件单行高, wrap=off输入不折行, 横向滚动) */
+	#auotationPartContent .au-field {
+		margin-bottom: 8px;
+	}
+
+	#auotationPartContent .au-field .au-textarea {
+		width: 120px;
+		height: 28px;
+		min-height: 28px;
+		resize: none;
+		overflow-x: auto;
+		overflow-y: hidden;
+		line-height: 26px;
+		white-space: nowrap;
 	}
 </style>
 
