@@ -189,6 +189,11 @@ public class AccessoriesServiceImpl implements AccessoriesService {
 			throw new FLException(120024, "工程环节不存在");
 		}
 
+		// 施工节点未开工(status初始)不可创建辅料单, 开工/工费开放/完工(1/3/2)均可
+		if (constructionSchedulePO.getStatus() == ConstructionSchedulePO.STATUS_INIT_INT) {
+			throw new FLException(260098, "施工节点未开工,不可创建辅料单");
+		}
+
 		if (accessoriesVO.getType() == AccessoriesPO.TYPE_COMMON_INT && constructionPO.getAccessory() != ConstructionPO.ACCESSORY_OPEN_SHORT) {
 			throw new FLException(120028, "工程辅料已锁定");
 		}
