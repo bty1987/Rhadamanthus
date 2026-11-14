@@ -518,10 +518,11 @@
 		text-overflow: ellipsis;
 	}
 
-	/* 重算区控件: label半宽左对齐与金额组一致, 输入/下拉固定宽度紧跟label(栅格col会拉满贴右缘), switch行与上行拉开间距 */
+	/* 重算区控件(v2.4): 标签定宽90px+控件110px定高26px, 全部vertical-align:middle同行居中——
+	   旧半宽50%标签在窄容器挤掉控件换行, 旧控件未设middle按基线沉底与标签错位; 窄容器280px也单行(90+110+间距<280) */
 	#auotationPartContent .au-field .au-label {
 		display: inline-block;
-		width: 50%;
+		width: 90px;
 		vertical-align: middle;
 		margin: 0;
 		font-weight: normal;
@@ -530,44 +531,53 @@
 
 	#auotationPartContent .au-field .au-input {
 		display: inline-block;
-		width: 90px;
+		width: 110px;
+		height: 26px;
 		padding: 0 5px;
 		margin: 0;
 		text-align: left;
-	}
-
-	#auotationPartContent .au-field .au-input-wide {
-		width: 150px;
+		vertical-align: middle;
 	}
 
 	#auotationPartContent .au-field .au-select {
 		display: inline-block;
 		width: 110px;
+		height: 26px;
 		margin: 0;
+		vertical-align: middle;
+	}
+
+	#auotationPartContent .au-field .au-textarea {
+		display: inline-block;
+		width: 110px;
+		height: 26px;
+		min-height: 26px;
+		padding: 0 5px;
+		margin: 0;
+		resize: none;
+		overflow-x: auto;
+		overflow-y: hidden;
+		line-height: 24px;
+		white-space: nowrap;
+		vertical-align: middle;
+	}
+
+	#auotationPartContent .au-field input[type="checkbox"] {
+		vertical-align: middle;
 	}
 
 	#auotationPartContent .au-field .au-btn {
 		vertical-align: middle;
+		margin-left: 5px;
 	}
 
 	#auotationPartContent .au-field.au-switch-row {
 		margin-top: 10px;
 	}
 
-	/* 行距压缩(form-group默认15px过宽)与textarea(多行组件单行高, wrap=off输入不折行, 横向滚动) */
+	/* 行距压缩(form-group默认15px过宽) */
 	#auotationPartContent .au-field {
 		margin-bottom: 8px;
-	}
-
-	#auotationPartContent .au-field .au-textarea {
-		width: 120px;
-		height: 28px;
-		min-height: 28px;
-		resize: none;
-		overflow-x: auto;
-		overflow-y: hidden;
-		line-height: 26px;
-		white-space: nowrap;
 	}
 </style>
 
