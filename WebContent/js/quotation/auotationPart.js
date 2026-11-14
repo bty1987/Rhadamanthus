@@ -1332,7 +1332,7 @@ jQuery(function($) {
         // fl-quo flex 网格(与 quotationPart 明细同构, 全局 clear.css), 列宽补充见页面 <style>
         var $list = $('<ul></ul>').addClass('fl-quo-list');
 
-        var _headerSet = [["name", "名称"], ["unit", "单位"], ["num", "量"], ["price", "单价"], ["au-subtotal", "小计"], ["au-discount", "折扣"], ["au-source", "来源"], ["au-state", "状态/单号"]];
+        var _headerSet = [["name", "名称"], ["unit", "单位"], ["num", "量"], ["price", "单价"], ["au-subtotal", "小计"], ["au-discount", "折扣"], ["au-source", "来源"], ["au-note", "备注"], ["au-fn", "功能"]];
 
         var $headerItem = $('<li></li>').addClass('fl-quo-item au-header');
 
@@ -1371,21 +1371,35 @@ jQuery(function($) {
                 _cells.push(["au-source", '<span class="label ' + _sourceLabels[r.source] + '">' + r.source + '</span>']);
             }
 
-            // 增减行: 计入配比标签(口径内可点击, 页面级重算模拟不写库) + 单号(短格式防串行) + 折扣维护入口
+            // 备注列: 增减行=单号短格式, 报价/扩展行=来源单号(无则-)
+            var _note = r.subtype == 2 ? ('#' + r.arId) : com.checkNull(r.content, '-');
+
+            _cells.push(["au-note", _note]);
+
+            var $li = $('<li></li>').addClass('fl-quo-item');
+
+            $.each(_cells, function(j, c) {
+
+                var $cell = $('<div></div>').addClass('cell ' + c[0]).append($('<span></span>').addClass('cell-wrap').html(c[1]));
+
+                $li.append($cell);
+            });
+
+            // 功能列: 报价项/扩展项无功能; 增减项有 配比切换(页面模拟)+折扣配置(写库维护弹窗)
             if (r.subtype == 2) {
 
                 var _outOfScope = r.state.indexOf("不计入") == 0;
                 var _inFlag = auotation.arFlagMap[r.arId] !== false;
 
-                var _stateHtml = _outOfScope
+                var _flagHtml = _outOfScope
                     ? '<span class="label label-default">不计入</span>'
                     : (_inFlag ? '<span class="label label-success">计入配比</span>' : '<span class="label label-warning">不计配比</span>');
 
-                var $stateLabel = $(_stateHtml);
+                var $flagLabel = $(_flagHtml);
 
                 if (!_outOfScope) {
 
-                    $stateLabel.css('cursor', 'pointer').attr('title', '点击切换是否计入配比(仅页面重算模拟, 不修改增减单数据; 刷新后恢复)').click(function() {
+                    $flagLabel.css('cursor', 'pointer').attr('title', '点击切换是否计入配比(仅页面重算模拟, 不修改增减单数据; 刷新后恢复)').click(function() {
 
                         auotation.arFlagMap[r.arId] = _inFlag ? false : true;
 
@@ -1396,43 +1410,20 @@ jQuery(function($) {
                     });
                 }
 
-                var $stateWrap = $('<span></span>').addClass('cell-wrap')
-                    .append($stateLabel)
-                    .append($('<span class="grey" style="padding-left: 5px;"></span>').html('#' + r.arId));
-
-                var $arBtn = $('<button></button>').addClass('btn btn-minier btn-yellow').html('折扣').css('margin-left', '5px')
+                var $discountBtn = $('<button></button>').addClass('btn btn-minier btn-yellow').html('折扣配置').css('margin-left', '5px')
+                    .attr('title', '维护该增减单决算折扣数值(写库): 决算折扣/管理费折扣/税金折扣')
                     .click(function() {
 
                         openArAccountModal(r.arId);
                     });
 
-                var $stateCell = $('<div></div>').addClass('cell au-state').append($stateWrap).append($arBtn);
+                var $fnCell = $('<div></div>').addClass('cell au-fn').append($flagLabel).append($discountBtn);
 
-                var $li = $('<li></li>').addClass('fl-quo-item');
-
-                $.each(_cells, function(j, c) {
-
-                    var $cell = $('<div></div>').addClass('cell ' + c[0]).append($('<span></span>').addClass('cell-wrap').html(c[1]));
-
-                    $li.append($cell);
-                });
-
-                $li.append($stateCell).appendTo($list);
+                $li.append($fnCell).appendTo($list);
 
             } else {
 
-                _cells.push(["au-state", com.checkNull(r.content, '-')]);
-
-                var $li = $('<li></li>').addClass('fl-quo-item');
-
-                $.each(_cells, function(j, c) {
-
-                    var $cell = $('<div></div>').addClass('cell ' + c[0]).append($('<span></span>').addClass('cell-wrap').html(c[1]));
-
-                    $li.append($cell);
-                });
-
-                $li.appendTo($list);
+                $li.append($('<div></div>').addClass('cell au-fn').append($('<span></span>').addClass('cell-wrap grey').html('-'))).appendTo($list);
             }
         });
 

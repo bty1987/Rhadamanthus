@@ -387,10 +387,9 @@
 			</div>
 		</div>
 	</div>
-</div>
 
-<!-- 增减单决算折扣维护弹窗 -->
-<div class="modal fade" id="auAddReduceAccountModal" tabindex="-1">
+	<!-- 增减单决算折扣维护弹窗(须在#auotationPartContent容器内: items绑定带容器参数, 容器外查不到导致弹窗无法打开) -->
+	<div class="modal fade" id="auAddReduceAccountModal" tabindex="-1">
 	<div class="modal-dialog">
 		<div class="modal-content col-md-12">
 			<div class="modal-header">
@@ -401,6 +400,7 @@
 			</div>
 
 			<div class="modal-body">
+				<small class="red">本操作修改该增减单的决算折扣数值并保存入库, 保存后全单重算(与行内"计入配比"的页面模拟不同)</small>
 				<form class="form-horizontal">
 					<div class="form-group">
 						<label class="col-sm-3 control-label no-padding-right" for="auArAccountDiscount">决算折扣</label>
@@ -438,45 +438,40 @@
 		</div>
 	</div>
 </div>
+</div>
 
 <style>
 	/* 决算报价明细行: 复用全局 fl-quo flex 网格(clear.css), 本页特有列的宽度补充
 	   style随fragment注入宿主iframe文档全局生效, 必须带#auotationPartContent容器前缀防误伤同文档其他fl-quo列表
-	   弹窗80%宽×1440屏时右栏内容区约736px, 列宽总和615+padding128内不换行 */
-	#auotationPartContent .fl-quo-list .cell.name .cell-wrap {
-		width: 160px;
-	}
-
+	   列: 名称(弹性, 不定宽吸收剩余) | 单位35|量50|单价50|小计55|折扣35|来源60|备注90|功能135(定宽) */
 	#auotationPartContent .fl-quo-list .cell.unit .cell-wrap {
-		width: 40px;
+		width: 35px;
 	}
 
 	#auotationPartContent .fl-quo-list .cell.num .cell-wrap {
-		width: 55px;
+		width: 50px;
 	}
 
 	#auotationPartContent .fl-quo-list .cell.price .cell-wrap {
-		width: 55px;
+		width: 50px;
 	}
 
 	#auotationPartContent .fl-quo-list .cell.au-subtotal .cell-wrap {
-		width: 60px;
+		width: 55px;
 	}
 
 	#auotationPartContent .fl-quo-list .cell.au-discount .cell-wrap {
-		width: 40px;
+		width: 35px;
 	}
 
 	#auotationPartContent .fl-quo-list .cell.au-source .cell-wrap {
-		width: 65px;
+		width: 60px;
 	}
 
-	#auotationPartContent .fl-quo-list .cell.au-state .cell-wrap {
-		width: 200px;
-	}
-
-	#auotationPartContent .fl-quo-list .cell.au-state .cell-wrap {
-		width: 200px;
+	#auotationPartContent .fl-quo-list .cell.au-note .cell-wrap {
+		width: 90px;
+		overflow: hidden;
+		text-overflow: ellipsis;
 	}
 
 	#auotationPartContent .fl-quo-item.au-header {
@@ -485,7 +480,7 @@
 		color: #555;
 	}
 
-	/* 防串行: 单元格默认禁折行(数字/标签列), 名称列豁免(长项目名折行), 状态列定宽溢出省略 */
+	/* 防串行: 单元格默认禁折行(数字/标签列), 名称列豁免(长项目名折行) */
 	#auotationPartContent .fl-quo-list .cell .cell-wrap {
 		white-space: nowrap;
 	}
@@ -493,11 +488,6 @@
 	#auotationPartContent .fl-quo-list .cell.name .cell-wrap {
 		white-space: normal;
 		word-break: break-all;
-	}
-
-	#auotationPartContent .fl-quo-list .cell.au-state .cell-wrap {
-		overflow: hidden;
-		text-overflow: ellipsis;
 	}
 </style>
 
