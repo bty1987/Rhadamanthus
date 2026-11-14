@@ -26,7 +26,6 @@ import javax.persistence.Table;
 
 import com.fanglin.decoration.vo.DecorationMeasureVO;
 import com.fanglin.personel.po.UserPO;
-import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.utils.BeanUtil;
 
 @Entity

@@ -4,6 +4,7 @@ import static javax.persistence.GenerationType.IDENTITY;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.Arrays;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -13,11 +14,9 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import java.util.Arrays;
 
-import com.fanglin.personel.po.UserPO;
 import com.fanglin.payment.vo.ActivityReceiptVO;
-import com.fanglin.personel.vo.UserBaseVO;
+import com.fanglin.personel.po.UserPO;
 import com.fanglin.utils.BeanUtil;
 
 @Entity
@@ -25,7 +24,7 @@ import com.fanglin.utils.BeanUtil;
 public class ActivityReceiptPO implements Serializable {
 
 	private static final long serialVersionUID = 5361587646141009841L;
-	
+
 	public static final String COLUMN_ORDERID_STR = "orderId";
 
 	public static final String COLUMN_BANKINFO_STR = "bankInfo";

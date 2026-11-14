@@ -2,6 +2,7 @@ package com.fanglin.system.po;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.Arrays;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -12,10 +13,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import java.util.Arrays;
 
 import com.fanglin.personel.po.UserPO;
-import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.system.vo.RoleVO;
 import com.fanglin.utils.BeanUtil;
 
@@ -40,15 +39,15 @@ public class RolePO implements Serializable {
 	private int company;
 
 	private String pinyin;
-	
+
 	private UserPO creater;
-	
+
 	private Timestamp createTime;
 
 	public RolePO() {
 		super();
 	}
-	
+
 	public RolePO(UserPO creater) {
 		super();
 		this.creater = creater;
@@ -138,7 +137,7 @@ public class RolePO implements Serializable {
 	public void setCreater(UserPO creater) {
 		this.creater = creater;
 	}
-	
+
 	@Column(name = "createTime")
 	public Timestamp getCreateTime() {
 		return createTime;
