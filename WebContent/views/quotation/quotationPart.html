@@ -646,6 +646,44 @@
 			</div>
 		</div>					
 
+		<!--更换规格弹窗-->
+		<div class="modal fade" id="formatModal" tabindex="-1">
+			<div class="modal-dialog">
+				<div class="modal-content col-md-12">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal">
+							<span>&times;</span>
+						</button>
+						<h4 class="modal-title" id="formatDialog">更换规格</h4>
+					</div>
+					<div class="modal-body">
+						<form class="form-horizontal">
+							<div class="form-group">
+								<label class="col-md-3 control-label no-padding-right" for="formatCurrent">当前规格</label>
+								<div class="col-md-9" style="padding-top: 7px;">
+									<span id="formatCurrent" class="blue"></span>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-md-3 control-label no-padding-right" for="formatSelect">其他规格</label>
+								<div class="col-md-9">
+									<select id="formatSelect" class="col-xs-10 col-sm-8 v_required">
+										<option value=""></option>
+									</select>
+								</div>
+							</div>
+							<div class="space-4"></div>
+						</form>
+					</div>
+
+					<div class="modal-footer">
+						<button type="button" id="saveFormatBtn" class="btn btn-primary">确定</button>
+						<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
 		<div class="modal fade" id="quotationStatisticalModal" tabindex="-1">
 			<div class="modal-dialog" style="width:70%;">
 				<div class="modal-content col-md-12">

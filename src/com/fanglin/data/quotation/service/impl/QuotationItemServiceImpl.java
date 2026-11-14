@@ -34,6 +34,7 @@ import com.fanglin.communion.vo.WorkTypeVO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.data.po.QuotationCtemPO;
+import com.fanglin.data.po.QuotationFormatPO;
 import com.fanglin.data.po.QuotationItemPO;
 import com.fanglin.data.po.QuotationPricePO;
 import com.fanglin.data.po.QuotationVersionPO;
@@ -145,6 +146,37 @@ public class QuotationItemServiceImpl implements QuotationItemService {
 		}
 
 		return quotationItemVO;
+	}
+
+	@Override
+	public List<QuotationItemVO> queryQuotationItemForFormatByQiid(QuotationItemVO quotationItemVO) throws FLException {
+
+		QuotationItemPO quotationItemPO = quotationItemDao.get(quotationItemVO.getQiid());
+
+		if (quotationItemPO == null) {
+			throw new FLException(200013, "报价项不存在");
+		}
+
+		List<QuotationItemVO> formatVOs = new ArrayList<QuotationItemVO>();
+
+		for (QuotationItemPO formatPO : quotationItemDao.queryQuotationItemForFormatByQiid(quotationItemVO.getQiid())) {
+
+			QuotationItemVO formatVO = formatPO.ptv(new QuotationItemVO(new QuotationVersionVO(), new QuotationTypeVO(), new QuotationClassificationVO(), new QuotationBigCategoryVO(), new QuotationSmallCategoryVO(), new WorkTypeVO(), new MeasurementUnitVO(), new QuotationCtemVO(null, null, null, null, null, null)));
+
+			if (formatPO.getQfid() > 0) {
+
+				// 候选个位数规模, 明细组装非统计; get须long强转(DaoImpl.get(Serializable)装箱陷阱)
+				QuotationFormatPO quotationFormatPO = quotationFormatDao.get((long) formatPO.getQfid());
+
+				if (quotationFormatPO != null) {
+					formatVO.setFormatName(quotationFormatPO.getName());
+				}
+			}
+
+			formatVOs.add(formatVO);
+		}
+
+		return formatVOs;
 	}
 
 	@Override

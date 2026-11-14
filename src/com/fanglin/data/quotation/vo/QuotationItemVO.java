@@ -52,6 +52,8 @@ public class QuotationItemVO implements Serializable {
 
 	private Integer qfid;
 
+	private String formatName;
+
 	private Integer addPrice;
 
 	private Integer unitPrice;
@@ -211,6 +213,14 @@ public class QuotationItemVO implements Serializable {
 
 	public void setQfid(Integer qfid) {
 		this.qfid = qfid;
+	}
+
+	public String getFormatName() {
+		return formatName;
+	}
+
+	public void setFormatName(String formatName) {
+		this.formatName = formatName;
 	}
 
 	public Integer getAddPrice() {

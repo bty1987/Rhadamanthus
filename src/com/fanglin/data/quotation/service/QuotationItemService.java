@@ -31,6 +31,8 @@ public interface QuotationItemService {
 
 	public QuotationItemVO queryQuotationItemByQiid(QuotationItemVO quotationItemVO) throws FLException;
 
+	public List<QuotationItemVO> queryQuotationItemForFormatByQiid(QuotationItemVO quotationItemVO) throws FLException;
+
 	public int addQuotationItem(QuotationItemVO quotationItemVO) throws FLException;
 
 	public int updateQuotationItem(QuotationItemVO quotationItemVO) throws FLException;

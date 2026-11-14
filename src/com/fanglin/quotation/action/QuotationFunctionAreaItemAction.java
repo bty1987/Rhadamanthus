@@ -71,6 +71,15 @@ public class QuotationFunctionAreaItemAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	// 变更记录受控接口: 报价明细行换绑报价项(换规格), 授权走operation登记through=0(40号SQL)
+	@Action(value = "updateQuotationFunctionAreaItemForFormat", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateQuotationFunctionAreaItemForFormat() throws FLException {
+
+		quotationFunctionAreaItemService.updateQuotationFunctionAreaItemForFormat(quotation, quotationFunctionAreaItem, queryUserId());
+
+		return SUCCESS;
+	}
+
 	@Action(value = "updateQuotationFunctionAreaItemByQuotationIdAType", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String updateQuotationFunctionAreaItemByQuotationIdAType() throws FLException {
 

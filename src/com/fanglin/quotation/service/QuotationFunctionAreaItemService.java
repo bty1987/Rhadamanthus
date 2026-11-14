@@ -26,6 +26,8 @@ public interface QuotationFunctionAreaItemService {
 
 	public int updateQuotationFunctionAreaItemForSpec(QuotationVO quotationVO, QuotationFunctionAreaItemVO quotationFunctionAreaItemVO) throws FLException;
 
+	public int updateQuotationFunctionAreaItemForFormat(QuotationVO quotationVO, QuotationFunctionAreaItemVO quotationFunctionAreaItemVO, String userId) throws FLException;
+
 	public int updateQuotationFunctionAreaItemByQuotationIdAType(QuotationVO quotationVO, QuotationFunctionAreaItemVO quotationFunctionAreaItemVO) throws FLException;
 
 	public int updateQuotationFunctionAreaItemForIndex(List<QuotationFunctionAreaItemVO> QuotationFunctionAreaItemVOs, QuotationFunctionAreaVO quotationFunctionAreaVO) throws FLException;

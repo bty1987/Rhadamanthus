@@ -11,8 +11,10 @@
 
 package com.fanglin.data.quotation.dao.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
@@ -50,6 +52,20 @@ public class QuotationItemDaoImpl extends DaoImpl<QuotationItemPO> implements Qu
 	@Override
 	public QuotationItemPO queryQuotationItemByIdAVersionId(String itemId, String versionId) {
 		return (QuotationItemPO) session().createCriteria(QuotationItemPO.class).add(Restrictions.eq("no", itemId)).add(Restrictions.eq("quotationVersion.no", versionId)).add(Restrictions.eq("status", QuotationItemPO.STATUS_ENABLE_INT)).uniqueResult();
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<QuotationItemPO> queryQuotationItemForFormatByQiid(long qiid) {
+
+		QuotationItemPO quotationItemPO = get(qiid);
+
+		if (quotationItemPO == null || quotationItemPO.getQuotationCtem() == null || quotationItemPO.getQuotationVersion() == null) {
+			return new ArrayList<QuotationItemPO>();
+		}
+
+		// 同版本+同项目的兄弟报价项(不同qfid规格), 版本过滤口径与queryQuotationItemByIdAVersionId同款
+		return session().createCriteria(QuotationItemPO.class).add(Restrictions.eq("quotationVersion.no", quotationItemPO.getQuotationVersion().getNo())).add(Restrictions.eq("quotationCtem.qcid", quotationItemPO.getQuotationCtem().getQcid())).add(Restrictions.eq("status", QuotationItemPO.STATUS_ENABLE_INT)).addOrder(Order.asc("qfid")).list();
 	}
 
 	@Override

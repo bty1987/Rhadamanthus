@@ -11,6 +11,8 @@
 
 package com.fanglin.data.quotation.action;
 
+import java.util.List;
+
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
 import org.apache.struts2.convention.annotation.ParentPackage;
@@ -37,6 +39,16 @@ public class QuotationItemAction extends BaseListAction {
 	private QuotationItemVO quotationItem;
 
 	private QuotationPriceVO quotationPrice;
+
+	private List<QuotationItemVO> quotationItems;
+
+	public List<QuotationItemVO> getQuotationItems() {
+		return quotationItems;
+	}
+
+	public void setQuotationItems(List<QuotationItemVO> quotationItems) {
+		this.quotationItems = quotationItems;
+	}
 
 	@Action(value = "pageQuotationItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageQuotationItem() throws FLException {
@@ -74,6 +86,14 @@ public class QuotationItemAction extends BaseListAction {
 	public String queryQuotationItemByQiid() throws FLException {
 
 		quotationItem = quotationItemService.queryQuotationItemByQiid(quotationItem);
+
+		return SUCCESS;
+	}
+
+	@Action(value = "queryQuotationItemForFormatByQiid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryQuotationItemForFormatByQiid() throws FLException {
+
+		quotationItems = quotationItemService.queryQuotationItemForFormatByQiid(quotationItem);
 
 		return SUCCESS;
 	}

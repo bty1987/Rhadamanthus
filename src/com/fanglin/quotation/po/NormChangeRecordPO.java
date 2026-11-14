@@ -25,7 +25,7 @@ public class NormChangeRecordPO implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	/** 变更类型: 1增减项制作 2增减项删除 3定材浮动额 4节点工费浮动 5下定材增删 6定额单开关 7辅材绑定额 8报价项定额关联 */
+	/** 变更类型: 1增减项制作 2增减项删除 3定材浮动额 4节点工费浮动 5下定材增删 6定额单开关 7辅材绑定额 8报价项定额关联 9报价明细行换绑报价项(换规格) */
 	public static final short TYPE_ADDREDUCE_MAKE_INT = 1;
 
 	public static final short TYPE_ADDREDUCE_DELETE_INT = 2;
@@ -41,6 +41,8 @@ public class NormChangeRecordPO implements Serializable {
 	public static final short TYPE_AOODS_NORM_INT = 7;
 
 	public static final short TYPE_QUOTATIONITEM_QFID_INT = 8;
+
+	public static final short TYPE_QUOTATIONFUNCTIONAREAITEM_QIID_INT = 9;
 
 	/** 动作: 1添加 2修改 3删除 4绑定 5解绑 6启用 7禁用 */
 	public static final short CHANGETYPE_ADD_INT = 1;

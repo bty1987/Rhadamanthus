@@ -270,6 +270,8 @@ var QuotationDetail = (function() {
                 $calculateTotalModal: com.focusPage('#calculateTotalFeeModal'),
                 // 更新价格
                 $updatePriceModal: com.focusPage('#updatePriceModal'),
+                // 更换规格
+                $formatModal: com.focusPage('#formatModal'),
                 // 添加默认报价项
                 $quoteModal: com.focusPage("#quotationItemModal").on("show.bs.modal", function(a) {
 
@@ -3994,6 +3996,133 @@ var QuotationDetail = (function() {
             }
         },
 
+        // 更换规格: 按当前行qiid圈同版本同项目兄弟报价项(qcid关联), 选中后换绑qfai行(就地, qfaiId不变, 工程量/公式/位置不动)
+        showQuotationItemFormat: function($item) {
+
+            var qfaiId = $item.attr('data-qfaiid');
+
+            if (!qfaiId) {
+                com.showAlert(com.info, "请先保存报价项");
+                return;
+            }
+
+            com.post(api.quotation.queryQuotationItemForFormatByQiid, {
+                "quotationItem.qiid": $item.attr('data-qiid')
+            }, function(res) {
+
+                var _current = null, _others = [];
+
+                $.each(res.quotationItems || [], function(i, v) {
+
+                    if (String(v.qiid) == String($item.attr('data-qiid'))) {
+                        _current = v;
+                    } else {
+                        _others.push(v);
+                    }
+                });
+
+                if (!_current) {
+                    com.showAlert(com.info, "报价项不存在");
+                    return;
+                }
+
+                if (_others.length == 0) {
+                    com.showAlert(com.info, "该项目当前版本下无其他规格");
+                    return;
+                }
+
+                // 规格⽰标签: 名称 | 规格 | 单位 | 单价(元, tranargs已换算)
+                var _label = function(v) {
+
+                    return v.name + (v.formatName ? " | " + v.formatName : "") + " | " + (v.unit ? v.unit.name : "-") + " | 单价" + v.unitPrice;
+                };
+
+                com.focusPage('#formatCurrent').text(_label(_current));
+
+                com.focusPage('#formatSelect').bindData($.map(_others, function(v) {
+
+                    return $.extend({}, v, { "label": _label(v) });
+                }), "qiid", "label", "请选择");
+
+                com.focusPage('#saveFormatBtn').off('click').on('click', function() {
+
+                    var _targetQiid = com.focusPage('#formatSelect').val();
+
+                    if (!_targetQiid) {
+                        com.showAlert(com.info, "请选择规格");
+                        return;
+                    }
+
+                    var _target = null;
+
+                    $.each(_others, function(i, v) {
+
+                        if (String(v.qiid) == String(_targetQiid)) _target = v;
+                    });
+
+                    com.post(api.quotation.updateQuotationFunctionAreaItemForFormat, $.extend({
+                        "quotation.qid": quo.quotationid,
+                        "quotationFunctionAreaItem.quotationFunctionAreaId": $item.find('.name').attr('data-qfaId'),
+                        "quotationFunctionAreaItem.qfaiId": qfaiId,
+                        "quotationFunctionAreaItem.quotationItemId": _targetQiid
+                    }, quo.basicParams), function() {
+
+                        com.focusPage('#formatModal').modal("hide");
+
+                        quote.refreshQuotationItemForFormat($item, _target);
+                    }, function(res) {
+
+                        com.showAlert(com.error, res.errorMsg);
+                    });
+                });
+
+                com.focusPage('#formatModal').modal("show");
+            });
+        },
+
+        // 换绑成功后就地重建行(createQuote口径重挂价格attr/图标/事件), 刷新功能区合计与整单金额(换规格不改num, rtem联动数字不变不触发)
+        refreshQuotationItemForFormat: function($item, target) {
+
+            var newQv = {
+                "itemName": target.name,
+                "measurementUnit": target.unit ? target.unit.name : "-",
+                "workType": target.workType ? target.workType.name : "-",
+                "num": parseFloat($item.find('.num .cell-wrap .number').text()) || 0,
+                "formula": $item.find('.formula .cell-wrap span').text(),
+                "unitPrice": target.unitPrice,
+                "addPrice": target.addPrice,
+                "subPrice": target.subPrice,
+                "discount": target.discount,
+                "type": target.type,
+                "subtype": parseInt($item.find('.num').attr('data-subtype')),
+                "areaType": parseInt($item.find('.line').attr('data-areaType')),
+                "qfaiId": $item.attr('data-qfaiid'),
+                "quotationFunctionAreaId": $item.find('.name').attr('data-qfaId'),
+                "quotationItemId": target.qiid,
+                "isRtem": target.isRtem,
+                "isImportant": target.isImportant,
+                "quotationRtemId": target.rtemFlag,
+                "expres": $item.attr('data-expres') || ""
+            };
+
+            var _linenum = $item.find('.line .cell-wrap').text();
+
+            var _fee = null;
+            var $newItem = painter.createQuote(_linenum, newQv);
+
+            $item.replaceWith($newItem);
+
+            _fee = quo.calculateNowQuoteItem(newQv.num, newQv.areaType, $newItem);
+
+            var $domain = $newItem.parents('.widget-box');
+
+            com.focusPage('[data-qfaid="' + $domain.attr('data-qfaid') + '"]', '#functionAreaSumList').find('label.no-padding-left').text(_fee);
+
+            quo.calculateQuoFeesPost();
+
+            com.showAlert(com.info, "操作成功");
+        },
+
         updateQuotationForTime: function() {
 
             com.post(api.quotation.updateQuotationForTime, {
@@ -4624,6 +4753,25 @@ var QuotationDetail = (function() {
 
                     com.showTip(this, "向下", "top");
                 });
+
+                // 更换规格: 仅绑定报价项的行(自定义/车运/管理/税金无qiid不显示)
+                if (qv.quotationItemId) {
+
+                    var $btnFormat = $('<a></a>').attr({
+                        "href": "javascript:void(0)"
+                    }).css({
+                        "padding-left": "5px"
+                    }).append('<i class="bigger-125 icon-exchange"></i>').mouseenter(function() {
+
+                        com.showTip(this, "更换规格", "top");
+                    }).click(function(e) {
+
+                        quote.showQuotationItemFormat($item);
+                        return false;
+                    });
+
+                    $btnCellWrap.append($btnFormat);
+                }
 
                 $btnCellWrap.append($btnDel).append($btnInfo).append($up).append($down);
 

@@ -25,7 +25,9 @@ public interface QuotationItemDao extends Dao<QuotationItemPO> {
 	public List<QuotationItemPO> queryQuotationItemByIds(List<Long> ids);
 
 	public QuotationItemPO queryQuotationItemByIdAVersionId(String itemId, String versionId);
-	
+
+	public List<QuotationItemPO> queryQuotationItemForFormatByQiid(long qiid);
+
 	public void copyQuotaitonItem(String sourceVersionId, String newVersionId);
 	
 }

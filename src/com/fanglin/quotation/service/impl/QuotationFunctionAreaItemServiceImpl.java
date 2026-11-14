@@ -21,11 +21,14 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.data.po.QuotationItemPO;
+import com.fanglin.data.quotation.dao.QuotationItemDao;
 import com.fanglin.quotation.dao.ExtensionItemDao;
+import com.fanglin.quotation.dao.NormChangeRecordDao;
 import com.fanglin.quotation.dao.QuotationDao;
 import com.fanglin.quotation.dao.QuotationFunctionAreaDao;
 import com.fanglin.quotation.dao.QuotationFunctionAreaItemDao;
 import com.fanglin.quotation.dao.SelectionItemDao;
+import com.fanglin.quotation.po.NormChangeRecordPO;
 import com.fanglin.quotation.po.QuotationFunctionAreaItemPO;
 import com.fanglin.quotation.po.QuotationFunctionAreaPO;
 import com.fanglin.quotation.po.QuotationPO;
@@ -54,6 +57,12 @@ public class QuotationFunctionAreaItemServiceImpl implements QuotationFunctionAr
 
 	@Autowired
 	private SelectionItemDao selectionItemDao;
+
+	@Autowired
+	private QuotationItemDao quotationItemDao;
+
+	@Autowired
+	private NormChangeRecordDao normChangeRecordDao;
 
 	@Override
 	public List<QuotationFunctionAreaItemVO> queryQuotationFunctionAreaItemByQuotationFunctionAreaId(QuotationFunctionAreaItemVO quotationFunctionAreaItemVO) throws FLException {
@@ -215,6 +224,92 @@ public class QuotationFunctionAreaItemServiceImpl implements QuotationFunctionAr
 
 			quotationFunctionAreaItemDao.update(quotationFunctionAreaItemPO);
 		}
+
+		QuotationServiceImpl.convertQuotationVOToPOForAdvance(quotationVO, quotationPO);
+
+		quotationDao.update(quotationPO);
+
+		return 0;
+	}
+
+	// 换绑报价明细行关联报价项(换规格): 同版本+同项目兄弟项, 工程量/公式/位置不动, 价格随新规格刷新; 选材/扩展关联按拍板拦截
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int updateQuotationFunctionAreaItemForFormat(QuotationVO quotationVO, QuotationFunctionAreaItemVO quotationFunctionAreaItemVO, String userId) throws FLException {
+
+		QuotationPO quotationPO = checkQuotationForStatusByEnabled(quotationVO.getQid(), null);
+
+		QuotationFunctionAreaPO quotationFunctionAreaPO = quotationFunctionAreaDao.get(quotationFunctionAreaItemVO.getQuotationFunctionAreaId());
+
+		if (quotationFunctionAreaPO == null) {
+			throw new FLException(200012, "功能区不存在");
+		}
+
+		QuotationFunctionAreaItemPO quotationFunctionAreaItemPO = quotationFunctionAreaItemDao.queryQuotationFunctionAreaItemByQfaiId(QuotationFunctionAreaItemPO.factoryToClazz(quotationFunctionAreaPO.getQfaId(), quotationFunctionAreaPO.getIndex()), quotationFunctionAreaItemVO.getQfaiId());
+
+		if (quotationFunctionAreaItemPO == null || quotationFunctionAreaItemPO.getQuotationItem() == null) {
+			throw new FLException(200013, "报价项不存在");
+		}
+
+		QuotationItemPO oldItemPO = quotationItemDao.get(quotationFunctionAreaItemPO.getQuotationItem().getQiid());
+		QuotationItemPO targetItemPO = quotationItemDao.get(quotationFunctionAreaItemVO.getQuotationItemId());
+
+		if (oldItemPO == null || targetItemPO == null || targetItemPO.getStatus() != QuotationItemPO.STATUS_ENABLE_INT) {
+			throw new FLException(200013, "报价项不存在");
+		}
+
+		if (targetItemPO.getQiid() == oldItemPO.getQiid()) {
+			return 0;
+		}
+
+		// 同项目(quotationCtem关联, 任一侧未挂项目按不一致拦截)
+		if (oldItemPO.getQuotationCtem() == null || targetItemPO.getQuotationCtem() == null || oldItemPO.getQuotationCtem().getQcid() != targetItemPO.getQuotationCtem().getQcid()) {
+			throw new FLException(200073, "报价项与原项目不一致");
+		}
+
+		// 同版本(目标项须属于报价单当前版本)
+		if (targetItemPO.getQuotationVersion() == null || quotationPO.getVersion() == null || !targetItemPO.getQuotationVersion().getNo().equals(quotationPO.getVersion().getNo())) {
+			throw new FLException(200074, "报价项版本与报价单版本不一致");
+		}
+
+		// 标准类兜底(与新增分支同清单)
+		if (!Arrays.asList(QuotationFunctionAreaItemPO.TYPE_COMMON_INT, QuotationFunctionAreaItemPO.TYPE_COST_INT, QuotationFunctionAreaItemPO.TYPE_IGNORE_INT, QuotationFunctionAreaItemPO.TYPE_UNACHE_INT, QuotationFunctionAreaItemPO.TYPE_CMPREH_INT).contains(targetItemPO.getType())) {
+			throw new FLException(200013, "报价项不存在");
+		}
+
+		if (extensionItemDao.countExtensionItem(quotationFunctionAreaPO.getQfaId(), quotationFunctionAreaItemPO.getQfaiId()) > 0) {
+			throw new FLException(200043, "存在关联扩展项");
+		}
+
+		SelectionItemPO selectionItemPO = selectionItemDao.querySelectionItem(quotationPO.getOrderId(), quotationFunctionAreaPO.getQfaId(), quotationFunctionAreaItemPO.getQfaiId(), SelectionItemPO.TYPE_QUOTATION_SHORT);
+
+		if (selectionItemPO != null && selectionItemPO.getStatus() != SelectionItemPO.STATUS_INIT_SHORT) {
+			throw new FLException(200075, "报价项已进选材流程,不可更换规格");
+		}
+
+		// 换绑报价项+冗余字段随新规格刷新(formula/num/initNum/index/subtype不动)
+		quotationFunctionAreaItemPO.setQuotationItem(targetItemPO);
+		quotationFunctionAreaItemPO.setItemName(targetItemPO.getName());
+		quotationFunctionAreaItemPO.setMeasurementUnit(targetItemPO.getMeasurementUnit().getName());
+		quotationFunctionAreaItemPO.setWorkType(targetItemPO.getWorkType().getName());
+		quotationFunctionAreaItemPO.setUnitPrice(targetItemPO.getUnitPrice());
+		quotationFunctionAreaItemPO.setAddPrice(targetItemPO.getAddPrice());
+		quotationFunctionAreaItemPO.setSubPrice(targetItemPO.getSubPrice());
+		quotationFunctionAreaItemPO.setDiscount(targetItemPO.getDiscount());
+		quotationFunctionAreaItemPO.setType(targetItemPO.getType());
+		quotationFunctionAreaItemPO.setContent(null);
+
+		quotationFunctionAreaItemDao.update(quotationFunctionAreaItemPO);
+
+		// 初始态选材项同步引用与预算单价(preprice=单价口径)
+		if (selectionItemPO != null) {
+			selectionItemPO.setQiid(targetItemPO.getQiid());
+			selectionItemPO.setPreprice(targetItemPO.getUnitPrice());
+			selectionItemDao.update(selectionItemPO);
+		}
+
+		// 变更记录: 报价明细行换绑报价项(换规格)
+		normChangeRecordDao.save(new NormChangeRecordPO().init(NormChangeRecordPO.TYPE_QUOTATIONFUNCTIONAREAITEM_QIID_INT, NormChangeRecordPO.CHANGETYPE_UPDATE_INT, userId).refId(quotationFunctionAreaItemPO.getQfaiId()).refNo(targetItemPO.getName()).before(String.format("规格: qfid=%d %s 单价%d", oldItemPO.getQfid(), oldItemPO.getName(), oldItemPO.getUnitPrice())).after(String.format("规格: qfid=%d %s 单价%d", targetItemPO.getQfid(), targetItemPO.getName(), targetItemPO.getUnitPrice())));
 
 		QuotationServiceImpl.convertQuotationVOToPOForAdvance(quotationVO, quotationPO);
 

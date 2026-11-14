@@ -449,6 +449,14 @@ $.extend(api, {
                 args: ["addPrice", "unitPrice", "subPrice", "cost", "achePrice"]
             }]
         },
+        queryQuotationItemForFormatByQiid: {
+            url: "queryQuotationItemForFormatByQiid.do",
+            type: "query",
+            tranargs: [{
+                result: "quotationItems",
+                args: ["addPrice", "unitPrice", "subPrice", "cost", "achePrice"]
+            }]
+        },
         addQuotationItem: {
             url: "addQuotationItem.do",
             type: "update",
@@ -1168,6 +1176,13 @@ $.extend(api, {
         },
         updateQuotationFunctionAreaItemForSpec: {
             url: "updateQuotationFunctionAreaItemForSpec.do",
+            type: "update",
+            tranargs: {
+                args: ["quotation.discount", "quotation.totalPrice", "quotation.undisPrice", "quotation.disPrice", "quotation.manageRate", "quotation.managePrice", "quotation.trafficRate", "quotation.trafficPrice", "quotation.basePrice", "quotation.costPrice", "quotation.unachePrice", "quotation.consPrice", "quotation.comsPrice", "quotation.undisComPrice", "quotation.disComPrice", "quotation.taxPrice", "quotation.taxRate", "quotationFunctionAreaItem.addPrice", "quotationFunctionAreaItem.unitPrice", "quotationFunctionAreaItem.subPrice"]
+            }
+        },
+        updateQuotationFunctionAreaItemForFormat: {
+            url: "updateQuotationFunctionAreaItemForFormat.do",
             type: "update",
             tranargs: {
                 args: ["quotation.discount", "quotation.totalPrice", "quotation.undisPrice", "quotation.disPrice", "quotation.manageRate", "quotation.managePrice", "quotation.trafficRate", "quotation.trafficPrice", "quotation.basePrice", "quotation.costPrice", "quotation.unachePrice", "quotation.consPrice", "quotation.comsPrice", "quotation.undisComPrice", "quotation.disComPrice", "quotation.taxPrice", "quotation.taxRate", "quotationFunctionAreaItem.addPrice", "quotationFunctionAreaItem.unitPrice", "quotationFunctionAreaItem.subPrice"]
