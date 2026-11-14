@@ -162,44 +162,45 @@
 					<div class="widget-main">
 						<div class="row">
 							<div class="col-md-12">
-								<div class="form-group">
-									<label class="col-md-6 no-padding-right">重算折扣</label>
-									<input type="text" id="auCalDiscountPrice" class="col-md-4 no-padding-left" maxlength="5" value="">
-									<button type="button" id="auCalculateBtn" class="btn btn-minier btn-success col-md-2">计算</button>
+								<div class="form-group au-field">
+									<label class="au-label">重算折扣</label>
+									<input type="text" id="auCalDiscountPrice" class="au-input" maxlength="5" value="">
+									<button type="button" id="auCalculateBtn" class="btn btn-minier btn-success au-btn">计算</button>
 								</div>
-								<div class="form-group">
-									<label class="col-md-6 no-padding-right">增减计配比</label>
+								<div class="form-group au-field au-switch-row">
+									<label class="au-label">增减计配比</label>
 									<input type="checkbox" id="auMatching" class="ace ace-switch ace-switch-5">
 									<span class="lbl"></span>
 								</div>
-								<div class="form-group">
-									<label class="col-md-6 no-padding-right">配比方案</label>
-									<select id="auOtherPaymentType" class="col-md-6 no-padding-left"></select>
+								<div class="form-group au-field">
+									<label class="au-label">配比方案</label>
+									<select id="auOtherPaymentType" class="au-select"></select>
 								</div>
-								<div class="form-group">
-									<label class="col-md-6 no-padding-right">优惠券</label>
-									<input type="text" id="auPreferences" class="col-md-6 no-padding-left" maxlength="11" value="0">
+								<div class="form-group au-field">
+									<label class="au-label">优惠券</label>
+									<input type="text" id="auPreferences" class="au-input" maxlength="11" value="0">
 								</div>
-								<div class="form-group">
-									<label class="col-md-6 no-padding-right">内部优惠券</label>
-									<input type="text" id="auInternalCoupon" class="col-md-6 no-padding-left" maxlength="11" value="0">
+								<div class="form-group au-field">
+									<label class="au-label">内部优惠券</label>
+									<input type="text" id="auInternalCoupon" class="au-input" maxlength="11" value="0">
 								</div>
-								<div class="form-group">
-									<label class="col-md-6 no-padding-right">满送</label>
-									<input type="text" id="auFulldel" class="col-md-6 no-padding-left" maxlength="11" value="0">
+								<div class="form-group au-field">
+									<label class="au-label">满送</label>
+									<input type="text" id="auFulldel" class="au-input" maxlength="11" value="0">
 								</div>
-								<div class="form-group">
-									<label class="col-md-6 no-padding-right">返现</label>
-									<input type="text" id="auCashback" class="col-md-6 no-padding-left" maxlength="11" value="0">
+								<div class="form-group au-field">
+									<label class="au-label">返现</label>
+									<input type="text" id="auCashback" class="au-input" maxlength="11" value="0">
 								</div>
-								<div class="form-group">
-									<label class="col-md-6 no-padding-right">决算主材额</label>
-									<input type="text" id="auMaterialAccount" class="col-md-6 no-padding-left" maxlength="11" value="0">
+								<div class="form-group au-field">
+									<label class="au-label">决算主材额</label>
+									<input type="text" id="auMaterialAccount" class="au-input" maxlength="11" value="0">
 								</div>
-								<div class="form-group">
-									<label class="col-md-6 no-padding-right">备注</label>
-									<input type="text" id="auComment" class="col-md-6 no-padding-left" maxlength="200">
+								<div class="form-group au-field">
+									<label class="au-label">备注</label>
+									<input type="text" id="auComment" class="au-input au-input-wide" maxlength="200">
 								</div>
+								<div class="space-8"></div>
 								<small class="grey">未建档订单仅展示与重算预览, 保存决算前请先在决算计算页生成决算记录</small>
 							</div>
 						</div>
@@ -515,6 +516,42 @@
 		max-width: 100%;
 		overflow: hidden;
 		text-overflow: ellipsis;
+	}
+
+	/* 重算区控件: label半宽左对齐与金额组一致, 输入/下拉固定宽度紧跟label(栅格col会拉满贴右缘), switch行与上行拉开间距 */
+	#auotationPartContent .au-field .au-label {
+		display: inline-block;
+		width: 50%;
+		vertical-align: middle;
+		margin: 0;
+		font-weight: normal;
+		color: #555;
+	}
+
+	#auotationPartContent .au-field .au-input {
+		display: inline-block;
+		width: 90px;
+		padding: 0 5px;
+		margin: 0;
+		text-align: left;
+	}
+
+	#auotationPartContent .au-field .au-input-wide {
+		width: 150px;
+	}
+
+	#auotationPartContent .au-field .au-select {
+		display: inline-block;
+		width: 110px;
+		margin: 0;
+	}
+
+	#auotationPartContent .au-field .au-btn {
+		vertical-align: middle;
+	}
+
+	#auotationPartContent .au-field.au-switch-row {
+		margin-top: 12px;
 	}
 </style>
 
