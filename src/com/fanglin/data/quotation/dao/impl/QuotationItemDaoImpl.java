@@ -60,11 +60,13 @@ public class QuotationItemDaoImpl extends DaoImpl<QuotationItemPO> implements Qu
 
 		QuotationItemPO quotationItemPO = get(qiid);
 
-		if (quotationItemPO == null || quotationItemPO.getQuotationCtem() == null || quotationItemPO.getQuotationVersion() == null) {
+		if (quotationItemPO == null || quotationItemPO.getQuotationCtem() == null || quotationItemPO.getQuotationCtem().getQcid() <= 0 || quotationItemPO.getQuotationVersion() == null) {
+			// qcid=0/未挂=无关联数据(拍板口径): 忽略, 返回空候选
 			return new ArrayList<QuotationItemPO>();
 		}
 
-		// 同版本+同项目的兄弟报价项(不同qfid规格), 版本过滤口径与queryQuotationItemByIdAVersionId同款
+		// 同版本+同项目(quotationCtem关联)的兄弟报价项(不同qfid规格), 版本过滤口径与queryQuotationItemByIdAVersionId同款
+		// 🔴 数据前置: 生产78%报价项quotationCtemId未挂/qcid=1(地砖铺设,已禁用)误挂1.5万条——挂接数据治理完成前, 误挂桶的候选列表无意义
 		return session().createCriteria(QuotationItemPO.class).add(Restrictions.eq("quotationVersion.no", quotationItemPO.getQuotationVersion().getNo())).add(Restrictions.eq("quotationCtem.qcid", quotationItemPO.getQuotationCtem().getQcid())).add(Restrictions.eq("status", QuotationItemPO.STATUS_ENABLE_INT)).addOrder(Order.asc("qfid")).list();
 	}
 

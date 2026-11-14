@@ -262,8 +262,8 @@ public class QuotationFunctionAreaItemServiceImpl implements QuotationFunctionAr
 			return 0;
 		}
 
-		// 同项目(quotationCtem关联, 任一侧未挂项目按不一致拦截)
-		if (oldItemPO.getQuotationCtem() == null || targetItemPO.getQuotationCtem() == null || oldItemPO.getQuotationCtem().getQcid() != targetItemPO.getQuotationCtem().getQcid()) {
+		// 同项目校验(quotationCtem关联, 任一侧未挂项目/qcid<=0 无关联数据按不一致拦截)
+		if (oldItemPO.getQuotationCtem() == null || targetItemPO.getQuotationCtem() == null || oldItemPO.getQuotationCtem().getQcid() <= 0 || targetItemPO.getQuotationCtem().getQcid() <= 0 || oldItemPO.getQuotationCtem().getQcid() != targetItemPO.getQuotationCtem().getQcid()) {
 			throw new FLException(200073, "报价项与原项目不一致");
 		}
 
