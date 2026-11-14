@@ -85,6 +85,8 @@ public class UserPO implements Serializable {
 
 	public static final short TYPE_INSTORER_INT = 4;
 
+	public static final short TYPE_WORKER_INT = 5;
+
 	public static final short AUTH_STATUS_INIT_INT = 0;
 
 	public static final short AUTH_STATUS_AUTH_INT = 1;

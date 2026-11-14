@@ -532,6 +532,18 @@ $.extend(api, {
             server: "communion"
         },
 
+        pageWorker: {
+            url: "pageWorker.do"
+        },
+        addWorker: {
+            url: "addWorker.do",
+            server: "communion"
+        },
+        updateWorker: {
+            url: "updateWorker.do",
+            server: "communion"
+        },
+
         queryMacontrol: {
             url: "queryMacontrol.do"
         },
