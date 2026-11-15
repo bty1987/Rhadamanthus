@@ -221,7 +221,7 @@ public class A20260324ServiceImpl implements A20260324Service {
 			// 2. 解析父部门（可选）：did优先、no兼容；不传=新增挂顶级/更新保持原父级，解析失败降级不阻断同步，待平台补传修正
 			DepartmentPO fatherDept = resolveFatherDept(parentCode);
 
-			// 3. 查询部门经理（如果提供）
+			// 3. 查询部门经理（可选）：非空且命中=设置；显式传空串=管理人员为空(新增置空/更新清空)；不传=更新保持原经理；非空未命中=511003阻断
 			UserPO manager = null;
 			if (leaderCode != null && !leaderCode.trim().isEmpty()) {
 				manager = userDao.queryUserByUserId(leaderCode);
@@ -355,7 +355,10 @@ public class A20260324ServiceImpl implements A20260324Service {
 					deptPO.setFatherDept(fatherDept);
 				}
 
-				if (manager != null) {
+				// 管理人员支持为空：显式传空串=平台侧无管理人员, 清空原经理; 不传=保持原经理(照status"未传不动"契约)
+				if (leaderCode != null && leaderCode.trim().isEmpty()) {
+					deptPO.setManager(null);
+				} else if (manager != null) {
 					deptPO.setManager(manager);
 				}
 

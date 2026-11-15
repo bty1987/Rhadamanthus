@@ -152,7 +152,7 @@ name=高级司机&code=POST9526&type=1&status=1&leader_flag=1
 | parent_code | String | 否 | 父部门did或编号(纯数字优先按did查,否则按编号no查);不传=新增挂公司顶级/更新保持原父级;解析失败降级不报错 |
 | org_code | String | 是 | 组织编码(即公司ID，如"1") |
 | status | Integer | 否 | 状态：1=启用，2=禁用 |
-| leader_code | String | 否 | 部门经理工号(如FL-09527) |
+| leader_code | String | 否 | 部门经理工号(如FL-09527);传空串=清空管理人员,不传=更新时保持原值 |
 | posts | String | 否 | 定岗数据JSON(如{"1":10,"2":20}) |
 | order_value | Integer | 否 | 排序值 |
 
@@ -196,7 +196,7 @@ posts字段为JSON字符串，key为职位ID，value为人员上限值:
 1. 校验 name、org_code、type 必填
 2. 查询部门类型(DepartmentTypePO)，不存在则报错
 3. 解析父部门(如提供parent_code):纯数字先按did查再按编号no兜底,非数字按编号no查;解析不到时降级(warn日志,新增挂顶级/更新保持原父级),不报错
-4. 查询部门经理(如提供leader_code)，不存在则报错
+4. 查询部门经理(如提供leader_code)，不存在则报错;显式传空串=清空管理人员(新增置空/更新清空原经理),不传=更新时保持原经理
 5. 状态转换: 外部1=启用 → 内部STATUS_ENABLE，其他 → STATUS_DISABLE
 6. org_code转为Integer作为公司ID
 7. 根据 code 查找已有部门:

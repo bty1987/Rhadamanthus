@@ -122,7 +122,7 @@ public class A20260324Action extends BaseListAction {
 	/**
 	 * 同步部门信息接口
 	 * 
-	 * 请求参数示例： { "dept_id": 123, // 部门主键ID（更新时提供，优先级高于code） "name": "设计一部", // 部门名称 "code": "DEPT9526", // 信息平台部门ID或编码：更新时提供 "type": 1, // 部门类型ID "parent_code": "DEPT9525", // 信息平台父级编码：创建/更新时提供 "org_code": "1", // 公司ID（对应 company.cid）：创建时提供 "status": 1, // 状态：1启用，2禁用 "order_value": 1, // 排序值 "leader_code": "FL-09527", // 部门经理工号 "posts": "{\"1\": 10, \"2\": 20}" // 定岗映射信息：岗位码 => 人员上限值（JSON字符串） }
+	 * 请求参数示例： { "dept_id": 123, // 部门主键ID（更新时提供，优先级高于code） "name": "设计一部", // 部门名称 "code": "DEPT9526", // 信息平台部门ID或编码：更新时提供 "type": 1, // 部门类型ID "parent_code": "DEPT9525", // 信息平台父级编码：创建/更新时提供 "org_code": "1", // 公司ID（对应 company.cid）：创建时提供 "status": 1, // 状态：1启用，2禁用 "order_value": 1, // 排序值 "leader_code": "FL-09527", // 部门经理工号（传空串=清空管理人员；不传=更新时保持原值） "posts": "{\"1\": 10, \"2\": 20}" // 定岗映射信息：岗位码 => 人员上限值（JSON字符串） }
 	 * 
 	 * 更新定位优先级：dept_id（主键）→ code（编码）；两者均为空时视为新增。
 	 * 

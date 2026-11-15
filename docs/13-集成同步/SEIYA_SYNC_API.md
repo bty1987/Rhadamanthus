@@ -179,7 +179,7 @@ curl -X POST "http://localhost:8080/Rhadamanthus/syncDuty.do" \
 | `org_code` | String | ✅ | 公司ID（对应 company.cid） | "1" |
 | `status` | Integer | ❌ | 状态：1启用，2禁用 | 1 |
 | `order_value` | Integer | ❌ | 排序值 | 1 |
-| `leader_code` | String | ❌ | 部门经理工号 | "FL-09527" |
+| `leader_code` | String | ❌ | 部门经理工号（传空串=清空管理人员；不传=更新时保持原值） | "FL-09527" |
 | `posts` | String | ❌ | 定岗数据（JSON字符串） | "{\"1\": 10, \"2\": 20}" |
 
 ### 业务规则
@@ -188,7 +188,7 @@ curl -X POST "http://localhost:8080/Rhadamanthus/syncDuty.do" \
 2. **更新部门**：提供 `code` 参数时，系统查找并更新对应部门
 3. **唯一性校验**：同一公司下部门名称不能重复
 4. **父部门校验**：如果提供 `parent_code`，必须存在
-5. **经理校验**：如果提供 `leader_code`，用户必须存在
+5. **经理校验**：如果提供 `leader_code`，用户必须存在；传空串=清空管理人员（新增置空/更新清空原经理），不传=更新时保持原经理
 6. **公司ID格式**：`org_code` 必须是纯数字字符串
 7. **自动生成**：部门拼音自动生成
 
