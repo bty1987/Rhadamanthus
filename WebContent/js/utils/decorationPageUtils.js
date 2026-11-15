@@ -458,10 +458,11 @@ $(function() {
         leftli.push(createLi().append($("<a></a>").attr("data-toggle", "tab").attr("href", "#oalesResultList" + conf).css("color", "#4383b4").append($("<strong></strong>").text("外销单"))));
         leftli.push(createLi().append($("<a></a>").attr("data-toggle", "tab").attr("href", "#salesMaterialPayments" + conf).css("color", "#4383b4").append($("<strong></strong>").text("销售款项"))));
         leftli.push(createLi().append($("<a></a>").attr("data-toggle", "tab").attr("href", "#fanglinMaterialPayments" + conf).css("color", "#4383b4").append($("<strong></strong>").text("主材款项"))));
+        leftli.push(createLi().append($("<a></a>").attr("data-toggle", "tab").attr("href", "#salesPreFollowupList" + conf).css("color", "#4383b4").append($("<strong></strong>").text("售前跟单"))));
         leftli.push(createDiv("pull-right action-buttons").append($("<a></a>").attr("class", "btn btn-minier btn-info").attr("name", "consumptionDetailsPrint").text("消费明细打印")));
         leftul.append(leftli);
 
-        var left3 = createDiv("tab-content").append(createDiv("tab-pane in active", "salesResultList" + conf, "margin-left: -12px;"), createDiv("tab-pane", "oalesResultList" + conf, "margin-left: -12px;"), createDiv("tab-pane", "salesMaterialPayments" + conf, "margin-left: -12px;"), createDiv("tab-pane", "fanglinMaterialPayments" + conf, "margin-left: -12px;")).append(createDiv("fl-page-wrap clearfix hidden", "pagenation"));
+        var left3 = createDiv("tab-content").append(createDiv("tab-pane in active", "salesResultList" + conf, "margin-left: -12px;"), createDiv("tab-pane", "oalesResultList" + conf, "margin-left: -12px;"), createDiv("tab-pane", "salesMaterialPayments" + conf, "margin-left: -12px;"), createDiv("tab-pane", "fanglinMaterialPayments" + conf, "margin-left: -12px;"), createDiv("tab-pane", "salesPreFollowupList" + conf, "margin-left: -12px;")).append(createDiv("fl-page-wrap clearfix hidden", "pagenation"));
         left2.append(left3);
 
         var right1 = createDiv("col-xs-6 col-md-6 widget-container-span ui-sortable ");

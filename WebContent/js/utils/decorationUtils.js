@@ -219,6 +219,68 @@ var decorationUtils = {
 
         loadSalesResult();
 
+        // 售前跟单页签: 统计条+时间轴列表(设计师品类品牌意向), [新增跟单]开跟单弹层(pre模式); 删除=仅记录人可见(服务端370038硬闸)
+        var $preFollowup = com.focusPage('#salesPreFollowupList' + dataPage).html("");
+
+        var preFollowupMe = null;
+
+        com.post(api.personel.queryUserForSelfByUserId, {}, function(res) {
+
+            preFollowupMe = res.user.userId;
+        }, null, false);
+
+        function removePreFollowup(v) {
+
+            com.showConfirm("是否删除该条跟单记录?", function() {
+
+                com.post(api.sales.deleteSalesPreFollowup, {
+                    "salesPreFollowup.sfid": v.sfid
+                }, function(res) {
+
+                    com.showAlert(com.info, "操作成功");
+                    loadPreFollowup();
+                });
+            });
+        }
+
+        var loadPreFollowup = function() {
+
+            $preFollowup.html("");
+
+            var $statsWrap = $('<div></div>').appendTo($preFollowup);
+            var $btnRow = $('<div></div>').addClass('clearfix').css('padding', '6px').appendTo($preFollowup);
+            var $listWrap = $('<div></div>').appendTo($preFollowup);
+
+            com.post(api.sales.countSalesPreFollowup, {
+                "salesPreFollowup.orderId": decorationDetail.orderId
+            }, function(res) {
+
+                renderFollowupStats($statsWrap, res.salesPreFollowup || {});
+            }, null, false);
+
+            com.post(api.sales.querySalesPreFollowupByOrderId, {
+                "salesPreFollowup.orderId": decorationDetail.orderId
+            }, function(res) {
+
+                renderFollowupList($listWrap, res.salesPreFollowups || [], "pre", preFollowupMe, removePreFollowup);
+            }, null, false);
+
+            var $addBtn = $('<button class="btn btn-minier btn-primary pull-right" type="button">新增跟单</button>').appendTo($btnRow);
+
+            $addBtn.on('click', function() {
+
+                params.sales.followupMode = "pre";
+                params.sales.orderId = decorationDetail.orderId;
+
+                com.popup4page("#layerPopUp", "views/sales/salesFollowup.html", "售前跟单", '', function() {
+
+                    loadPreFollowup();
+                });
+            });
+        };
+
+        loadPreFollowup();
+
         com.post(api.sales.queryOalesByOrderId, {
             "oales.decoration.orderId": decorationDetail.orderId
         }, function(res) {
