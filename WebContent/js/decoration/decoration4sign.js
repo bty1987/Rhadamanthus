@@ -74,6 +74,7 @@ jQuery(function($) {
 
             data.orderId = decoration.orderId;
             data.status = decoration.status;
+            data.grade = decoration.grade;
             data.orderTotalPrice = decoration.orderTotalPrice;
             data.customerName = decoration.customer ? decoration.customer.name : null;
             data.houseNumber = decoration.house ? decoration.house.houseNumber : null;
@@ -707,7 +708,19 @@ jQuery(function($) {
 
             com.post(api.data.querySignet, {}, function(res) {
 
-                com.focusPage("#signetSel").bindData(res.signets, "sid", "name", false);
+                // 印章下拉按等级过滤(不限制章或与装修单等级一致), 限等级章对不匹配单直接不展示, 服务端130194兜底
+                var dgrade = data.grade;
+                var matched = $.map(res.signets || [], function(s) {
+                    return (!s.grade || s.grade == dgrade) ? s : null;
+                });
+
+                com.focusPage("#signetSel").bindData($.map(matched, function(s) {
+                    return $.extend({}, s, { name: s.name + (s.grade ? "[" + s.grade + "级]" : "") });
+                }), "sid", "name", false);
+
+                if (matched.length == 0) {
+                    com.showAlert(com.warning, "该公司暂无可用印章(需等级为不限制或与装修单等级匹配), 请先在印章维护中补全并完成认证授权");
+                }
 
                 com.focusPage("#companySignModal").modal("show");
             }, null, false);

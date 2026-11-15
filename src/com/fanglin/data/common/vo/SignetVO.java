@@ -30,6 +30,8 @@ public class SignetVO implements Serializable {
 
 	private Short provider;// 电子签厂商(1法大大/2e签宝), 前端印章选择按厂商标签区分
 
+	private String grade;// 适用装修单等级(decoration.grade), null=不限制, 非空=仅限同等级装修单使用
+
 	public SignetVO() {
 		super();
 	}
@@ -128,6 +130,14 @@ public class SignetVO implements Serializable {
 
 	public void setProvider(Short provider) {
 		this.provider = provider;
+	}
+
+	public String getGrade() {
+		return grade;
+	}
+
+	public void setGrade(String grade) {
+		this.grade = grade;
 	}
 
 }

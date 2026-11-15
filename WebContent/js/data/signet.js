@@ -16,6 +16,7 @@ jQuery(function($) {
             keyword: com.focusPage("#keyword", "#signetModal"),
             type: com.focusPage("#type", "#signetModal"),
             provider: com.focusPage("#provider", "#signetModal"),
+            grade: com.focusPage("#grade", "#signetModal"),
             path: com.focusPage("#path", "#signetModal"),
 
             signetImg: com.focusPage("#signetImg"),
@@ -38,6 +39,10 @@ jQuery(function($) {
     signet.status = constant.data().signet.status.keys;
     signet.type = constant.data().signet.type.keys;
     signet.items.type.bindData(constant.data().signet.type.datas, "key", "value");
+
+    // 等级=装修单等级字典(decoration.grade), 空值项"不限制"=任何装修单可用
+    signet.grade = constant.decoration().decoration.grade.keys;
+    signet.items.grade.bindData(constant.decoration().decoration.grade.datas, "key", "value", "不限制");
 
     com.post(api.system.queryCompany, {
         "company.atttype": 1
@@ -131,6 +136,16 @@ jQuery(function($) {
         show: function(v) {
 
             return v.provider = v.provider == 2 ? 2 : 1;
+        }
+    }, {
+        field: "grade",
+        name: "等级",
+        prop: "grade",
+        dataset: signet.grade,
+        clazz: "grey",
+        show: function(v) {
+
+            return v.grade ? v.grade + "(限同等级)" : "不限制";
         }
     }, ];
 
@@ -397,6 +412,9 @@ jQuery(function($) {
             options["signet.provider"] = signet.items.provider.val();
         }
 
+        // 等级无条件传(空串=不限制; updateSignet的BeanUtil拷贝跳过null, 条件传会导致限等级章改回不限制清不掉)
+        options["signet.grade"] = signet.items.grade.val();
+
         if (signet.sid) {
             options["signet.sid"] = signet.sid;
 
@@ -459,6 +477,7 @@ jQuery(function($) {
         signet.items.name.val(v.name);
         signet.items.keyword.val(v.keyword);
         signet.items.provider.val(v.provider ? String(v.provider) : "");
+        signet.items.grade.val(v.grade ? String(v.grade) : "");
         signet.items.path.val(v.path).prop("disabled", false);
         signet.imgsrc = com.showImg(signet.items.signetImg, v.path, 150, 150, '', null, 0);
     }
@@ -511,6 +530,7 @@ jQuery(function($) {
         signet.items.name.val(v.name);
         signet.items.keyword.val(v.keyword);
         signet.items.provider.val(v.provider ? String(v.provider) : "");
+        signet.items.grade.val(v.grade ? String(v.grade) : "");
         signet.items.path.val(v.path).prop("disabled", true);
         signet.imgsrc = com.showImg(signet.items.signetImg, v.path, 150, 150, '', null, 0);
     }

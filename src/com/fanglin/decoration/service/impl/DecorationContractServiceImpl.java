@@ -512,6 +512,12 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 			signetPO = signetPOs.get(0);
 		}
 
+		// 印章等级管控: 印章grade为空=不限制; 非空=仅限同等级装修单(严格口径: 装修单等级为空亦拒), 显式选章与app端自动取章同闸
+		String signetGrade = signetPO.getGrade();
+		if (signetGrade != null && !signetGrade.trim().isEmpty() && !signetGrade.equals(decorationPO.getGrade())) {
+			throw new FLException(130194, "印章等级与装修单等级不匹配, 请更换印章");
+		}
+
 		// 法大大: 单流合流建流+落章, 企业签行为与原先完全一致
 		String psnSignno = resolveCustomerSignno((int) decorationPO.getCustomer().getCid(), provider);
 

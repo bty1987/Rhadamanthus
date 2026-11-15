@@ -58,6 +58,8 @@ public class SignetPO implements Serializable, Signet {
 
 	private Short provider; // 电子签厂商：1=法大大 2=e签宝（见 ElecsignProvider），存量默认1
 
+	private String grade; // 适用装修单等级(decoration.grade)：null=不限制，非空=仅限同等级装修单使用
+
 	public SignetPO() {
 		super();
 	}
@@ -134,6 +136,15 @@ public class SignetPO implements Serializable, Signet {
 
 	public void setProvider(Short provider) {
 		this.provider = provider;
+	}
+
+	@Column(name = "grade")
+	public String getGrade() {
+		return grade;
+	}
+
+	public void setGrade(String grade) {
+		this.grade = grade;
 	}
 
 	@Column(name = "signid")

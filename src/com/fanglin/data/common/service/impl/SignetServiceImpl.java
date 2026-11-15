@@ -283,6 +283,7 @@ public class SignetServiceImpl implements SignetService {
 		signetCO.setName(signetVO.getName());
 		signetCO.setKeyword(signetPO.getKeyword());
 		signetCO.setType(signetPO.getType());
+		signetCO.setGrade(signetPO.getGrade());
 		signetCO.setPath(signetPO.getPath());
 		signetCO.setAuthurl(signetPO.getAuthurl());
 		signetCO.setSignno(signetPO.getSignno());

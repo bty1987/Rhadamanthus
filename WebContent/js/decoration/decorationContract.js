@@ -728,6 +728,13 @@ jQuery(function($) {
             return;
         }
 
+        // 章等级与装修单等级防呆(与下拉过滤同口径: 限等级章仅同等级单可用, 装修单等级未设置亦拦, 服务端130194兜底)
+        var dgrade = decorationContract.decoration ? decorationContract.decoration.grade : null;
+        if (signet && signet.grade && signet.grade != dgrade) {
+            com.showAlert(com.warning, "所选印章限" + signet.grade + "等级装修单使用, 当前装修单等级" + (dgrade ? "为" + dgrade : "未设置") + ", 请更换印章");
+            return;
+        }
+
         com.post(api.decoration.signDecorationContractForCompany, {
             "decorationContract.dcid": decorationContract.dcid,
             "signet.sid": decorationContract.items.signet.val()
@@ -834,18 +841,21 @@ jQuery(function($) {
         decorationContract.dcid = v.dcid;
         decorationContract.contractProvider = v.provider;
 
-        // 印章下拉按合同厂商过滤(双并行防呆: 只显示同厂商的章), 无匹配章给明确提示
+        // 印章下拉按合同厂商+等级过滤(双并行防呆: 厂商一致, 等级=不限制章或与装修单等级一致), 无匹配章给明确提示
         var provider = v.provider == 2 ? 2 : 1;
+        var dgrade = decorationContract.decoration ? decorationContract.decoration.grade : null;
         var matched = $.map(decorationContract.signets || [], function(s) {
-            return (s.provider == null ? 1 : s.provider) == provider ? s : null;
+            var providerOk = (s.provider == null ? 1 : s.provider) == provider;
+            var gradeOk = !s.grade || s.grade == dgrade;
+            return providerOk && gradeOk ? s : null;
         });
 
         decorationContract.items.signet.bindData($.map(matched, function(s) {
-            return $.extend({}, s, { name: s.name + (s.provider == 2 ? "(e签宝)" : "(法大大)") });
+            return $.extend({}, s, { name: s.name + (s.provider == 2 ? "(e签宝)" : "(法大大)") + (s.grade ? "[" + s.grade + "级]" : "") });
         }), "sid", "name", false);
 
         if (matched.length == 0) {
-            com.showAlert(com.warning, "该公司暂无" + (provider == 2 ? "e签宝" : "法大大") + "印章, 请先在印章维护中补全并完成认证授权");
+            com.showAlert(com.warning, "该公司暂无可用印章(需与合同厂商一致, 且等级为不限制或与装修单等级匹配), 请先在印章维护中补全并完成认证授权");
         }
 
         decorationContract.modals.decorationContractModal.modal("show");
