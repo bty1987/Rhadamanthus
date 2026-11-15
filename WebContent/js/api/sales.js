@@ -825,6 +825,34 @@ $.extend(api, {
         updateSalesProfileBrand: {
             url: "updateSalesProfileBrand.do"
         },
+        querySalesPreFollowupByOrderId: {
+            url: "querySalesPreFollowupByOrderId.do",
+            type: "query"
+        },
+        countSalesPreFollowup: {
+            url: "countSalesPreFollowup.do",
+            type: "query"
+        },
+        addSalesPreFollowup: {
+            url: "addSalesPreFollowup.do"
+        },
+        deleteSalesPreFollowup: {
+            url: "deleteSalesPreFollowup.do"
+        },
+        querySalesPostFollowupBySid: {
+            url: "querySalesPostFollowupBySid.do",
+            type: "query"
+        },
+        countSalesPostFollowup: {
+            url: "countSalesPostFollowup.do",
+            type: "query"
+        },
+        addSalesPostFollowup: {
+            url: "addSalesPostFollowup.do"
+        },
+        deleteSalesPostFollowup: {
+            url: "deleteSalesPostFollowup.do"
+        },
     }
 });
 

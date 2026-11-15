@@ -404,6 +404,14 @@ $(function() {
         com.popup4page("#layerPopUp", "/views/sales/sales4operate.html", "记录")
     }
 
+    function followupSales(v) {
+
+        params.sales.followupMode = "post";
+        params.sales.sales = v;
+        params.sales.sid = v.sid;
+        com.popup4page("#layerPopUp", "/views/sales/salesFollowup.html", "跟单")
+    }
+
     var lineprops = (function() {
 
         var propertyMap = {
@@ -846,6 +854,11 @@ $(function() {
                 name: "满意度",
                 clazz: "btn-purple",
                 handle: satisfactionSales
+            },
+            followup: {
+                name: "跟单",
+                clazz: "btn-purple",
+                handle: followupSales
             },
             operate: {
                 name: "记录",
