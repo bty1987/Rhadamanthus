@@ -18,8 +18,8 @@ public class SalesPreFollowupDaoImpl extends DaoImpl<SalesPreFollowupPO> impleme
 	}
 
 	@Override
+	@SuppressWarnings("unchecked")
 	public List<SalesPreFollowupPO> querySalesPreFollowupByOrderId(String orderId) {
-
 		return session().createCriteria(SalesPreFollowupPO.class).add(Restrictions.eq(SalesPreFollowupPO.COLUMN_ORDERID_STR, orderId)).add(Restrictions.eq(SalesPreFollowupPO.COLUMN_ISDELETE_STR, SalesPreFollowupPO.ISDELETE_ENABLE_INT)).addOrder(Order.desc("createTime")).list();
 	}
 
