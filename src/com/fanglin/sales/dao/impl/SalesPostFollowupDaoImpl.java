@@ -18,8 +18,8 @@ public class SalesPostFollowupDaoImpl extends DaoImpl<SalesPostFollowupPO> imple
 	}
 
 	@Override
+	@SuppressWarnings("unchecked")
 	public List<SalesPostFollowupPO> querySalesPostFollowupBySid(long sid) {
-
 		return session().createCriteria(SalesPostFollowupPO.class).add(Restrictions.eq(SalesPostFollowupPO.COLUMN_SID_STR, sid)).add(Restrictions.eq(SalesPostFollowupPO.COLUMN_ISDELETE_STR, SalesPostFollowupPO.ISDELETE_ENABLE_INT)).addOrder(Order.desc("createTime")).list();
 	}
 
