@@ -33,11 +33,23 @@ import com.fanglin.communion.vo.QuotationTypeVO;
 import com.fanglin.communion.vo.WorkTypeVO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
+import com.fanglin.data.po.CormoodPO;
+import com.fanglin.data.po.CormricePO;
+import com.fanglin.data.po.CormtimePO;
+import com.fanglin.data.po.NormoodPO;
+import com.fanglin.data.po.NormricePO;
+import com.fanglin.data.po.NormtimePO;
 import com.fanglin.data.po.QuotationCtemPO;
 import com.fanglin.data.po.QuotationFormatPO;
 import com.fanglin.data.po.QuotationItemPO;
 import com.fanglin.data.po.QuotationPricePO;
 import com.fanglin.data.po.QuotationVersionPO;
+import com.fanglin.data.quotation.dao.CormoodDao;
+import com.fanglin.data.quotation.dao.CormriceDao;
+import com.fanglin.data.quotation.dao.CormtimeDao;
+import com.fanglin.data.quotation.dao.NormoodDao;
+import com.fanglin.data.quotation.dao.NormriceDao;
+import com.fanglin.data.quotation.dao.NormtimeDao;
 import com.fanglin.data.quotation.dao.QuotationFormatDao;
 import com.fanglin.data.quotation.dao.QuotationItemDao;
 import com.fanglin.data.quotation.dao.QuotationPriceDao;
@@ -71,6 +83,24 @@ public class QuotationItemServiceImpl implements QuotationItemService {
 
 	@Autowired
 	private QuotationPriceDao quotationPriceDao;
+
+	@Autowired
+	private CormriceDao cormriceDao;
+
+	@Autowired
+	private CormoodDao cormoodDao;
+
+	@Autowired
+	private CormtimeDao cormtimeDao;
+
+	@Autowired
+	private NormriceDao normriceDao;
+
+	@Autowired
+	private NormoodDao normoodDao;
+
+	@Autowired
+	private NormtimeDao normtimeDao;
 
 	@Override
 	public void pageQuotationItem(Paging paging, List<Filter> filters, int company) {
@@ -202,6 +232,11 @@ public class QuotationItemServiceImpl implements QuotationItemService {
 			throw new FLException(200022, "报价版本不存在");
 		}
 
+		// 版本关联标识约束: 强关联版本要求报价项必须关联项目(规格)
+		if (quotationVersionPO.getRelateFlag() == QuotationVersionPO.RELATEFLAG_REQUIRE_INT && quotationItemPO.getQfid() <= 0) {
+			throw new FLException(200080, "报价版本要求关联项目(规格)");
+		}
+
 		quotationItemPO.setQuotationVersion(quotationVersionPO);
 
 		quotationItemPO.setQvid(quotationVersionPO.getQvId());
@@ -214,6 +249,45 @@ public class QuotationItemServiceImpl implements QuotationItemService {
 		quotationItemPO.setQuotationCtem(new QuotationCtemPO(quotationItemVO.getQuotationCtem().getQcid()));
 
 		quotationItemDao.save(quotationItemPO);
+
+		// 挂规格带出定额: 关联format时, 该规格的定额(cormrice/cormood/cormtime按qfid)复制为该项定额(normrice/normood/normtime, qiid=新项)
+		if (quotationItemPO.getQfid() > 0) {
+
+			for (CormricePO cormricePO : cormriceDao.queryCormriceByQfid((long) quotationItemPO.getQfid())) {
+
+				NormricePO normricePO = new NormricePO(quotationItemPO, cormricePO.getConstructionNode());
+				normricePO.setUnit(cormricePO.getUnit());
+				normricePO.setTrannum(cormricePO.getTrannum());
+				normricePO.setSalary(cormricePO.getSalary());
+				normricePO.setStuff(0);
+				normricePO.setStatus(NormricePO.STATUS_VALID_STR);
+				normriceDao.save(normricePO);
+			}
+
+			for (CormoodPO cormoodPO : cormoodDao.queryCormoodByQfid((long) quotationItemPO.getQfid())) {
+
+				NormoodPO normoodPO = new NormoodPO(quotationItemPO);
+				normoodPO.setNoods(cormoodPO.getNoods());
+				normoodPO.setName(cormoodPO.getName());
+				normoodPO.setNormunit(cormoodPO.getNormunit());
+				normoodPO.setNormnum(cormoodPO.getNormnum());
+				normoodPO.setStoreunit(cormoodPO.getStoreunit());
+				normoodPO.setStorenum(cormoodPO.getStorenum());
+				normoodPO.setPrice(cormoodPO.getPrice());
+				normoodPO.setStatus(NormoodPO.STATUS_VALID_STR);
+				normoodDao.save(normoodPO);
+			}
+
+			for (CormtimePO cormtimePO : cormtimeDao.queryCormtimeByQfid((long) quotationItemPO.getQfid())) {
+
+				NormtimePO normtimePO = new NormtimePO(quotationItemPO, cormtimePO.getConstructionNode());
+				normtimePO.setUnit(cormtimePO.getUnit());
+				normtimePO.setTrannum(cormtimePO.getTrannum());
+				normtimePO.setWorkdays(cormtimePO.getWorkdays());
+				normtimePO.setStatus(NormtimePO.STATUS_VALID_STR);
+				normtimeDao.save(normtimePO);
+			}
+		}
 
 		QuotationPricePO quotationPricePO = new QuotationPricePO();
 
@@ -239,6 +313,11 @@ public class QuotationItemServiceImpl implements QuotationItemService {
 
 		if (quotationItemPO == null) {
 			throw new FLException(200013, "报价项不存在");
+		}
+
+		// 版本关联标识约束: 强关联版本下未挂规格的报价项不可保存
+		if (quotationItemPO.getQuotationVersion() != null && quotationItemPO.getQuotationVersion().getRelateFlag() == QuotationVersionPO.RELATEFLAG_REQUIRE_INT && quotationItemPO.getQfid() <= 0) {
+			throw new FLException(200080, "报价版本要求关联项目(规格)");
 		}
 
 		BeanUtil.copyProperties(quotationItemVO, quotationItemPO, Arrays.asList("itemId", "qfid", "quotationType", "quotationClassification", "quotationBigCategory", "quotationSmallCategory", "measurementUnit", "workType", "quotationVersion", "quotationCtem"));

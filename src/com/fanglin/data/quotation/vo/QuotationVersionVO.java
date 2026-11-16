@@ -41,9 +41,19 @@ public class QuotationVersionVO implements Serializable {
 
 	private Short defaultFlag;
 
+	private Integer relateFlag;
+
 	private Short status;
 
 	private String comment;
+
+	public Integer getRelateFlag() {
+		return relateFlag;
+	}
+
+	public void setRelateFlag(Integer relateFlag) {
+		this.relateFlag = relateFlag;
+	}
 
 	public Long getQvId() {
 		return qvId;

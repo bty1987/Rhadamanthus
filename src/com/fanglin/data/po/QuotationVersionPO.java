@@ -65,11 +65,17 @@ public class QuotationVersionPO implements Serializable {
 
 	private short defaultFlag;
 
+	private int relateFlag;
+
 	private short status;
 
 	private String comment;
 
 	private int company;
+
+	public static final String COLUMN_RELATEFLAG_STR = "relateFlag";
+
+	public static final int RELATEFLAG_REQUIRE_INT = 1;
 
 	public QuotationVersionPO() {
 	}
@@ -190,6 +196,15 @@ public class QuotationVersionPO implements Serializable {
 
 	public void setDefaultFlag(short defaultFlag) {
 		this.defaultFlag = defaultFlag;
+	}
+
+	@Column(name = "relateFlag")
+	public int getRelateFlag() {
+		return relateFlag;
+	}
+
+	public void setRelateFlag(int relateFlag) {
+		this.relateFlag = relateFlag;
 	}
 
 	@Column(name = "status")
