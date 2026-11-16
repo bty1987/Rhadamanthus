@@ -988,6 +988,123 @@
                 that.bindInputKeydown($input.val(), e);
             });
         },
+
+        // 更换规格: 按行引用的报价项qiid圈同版本同项目兄弟项, 选中后换绑增减项明细行(就地, ariId不变, 工程量/位置不动)
+        showAddReduceItemFormat: function($item) {
+
+            var ariId = $item.attr('data-ariid');
+            var qiid = $item.attr('data-quotationItemId');
+
+            if (!ariId) {
+                com.showAlert(com.info, "请先保存增减项");
+                return;
+            }
+
+            if (!qiid || qiid == "0") {
+                com.showAlert(com.info, "该项未关联报价项, 无法更换规格");
+                return;
+            }
+
+            com.post(api.quotation.queryQuotationItemForFormatByQiid, {
+                "quotationItem.qiid": qiid
+            }, function(res) {
+
+                var _current = null, _others = [];
+
+                $.each(res.quotationItems || [], function(i, v) {
+
+                    if (String(v.qiid) == String(qiid)) {
+                        _current = v;
+                    } else {
+                        _others.push(v);
+                    }
+                });
+
+                if (!_current) {
+                    com.showAlert(com.info, "报价项不存在");
+                    return;
+                }
+
+                if (_others.length == 0) {
+                    com.showAlert(com.info, "该项目当前版本下无其他规格");
+                    return;
+                }
+
+                var _label = function(v) {
+
+                    return v.name + (v.formatName ? " | " + v.formatName : "") + " | " + (v.unit ? v.unit.name : "-") + " | 单价" + v.unitPrice;
+                };
+
+                com.focusPage('#arFormatCurrent').text(_label(_current));
+
+                com.focusPage('#arFormatSelect').bindData($.map(_others, function(v) {
+
+                    return $.extend({}, v, { "label": _label(v) });
+                }), "qiid", "label", "请选择");
+
+                com.focusPage('#arSaveFormatBtn').off('click').on('click', function() {
+
+                    var _targetQiid = com.focusPage('#arFormatSelect').val();
+
+                    if (!_targetQiid) {
+                        com.showAlert(com.info, "请选择规格");
+                        return;
+                    }
+
+                    var _target = null;
+
+                    $.each(_others, function(i, v) {
+
+                        if (String(v.qiid) == String(_targetQiid)) _target = v;
+                    });
+
+                    com.post(api.quotation.updateAddReduceItemForFormat, $.extend({
+                        "addReduce.arId": addReduceDetail.arid,
+                        "addReduceItem.ariId": ariId,
+                        "addReduceItem.quotationItemId": _targetQiid
+                    }, addReduceDetail.basicParams), function() {
+
+                        com.focusPage('#arFormatModal').modal("hide");
+
+                        quote.refreshAddReduceItemForFormat($item, _target);
+                    }, function(res) {
+
+                        com.showAlert(com.error, res.errorMsg);
+                    });
+                });
+
+                com.focusPage('#arFormatModal').modal("show");
+            });
+        },
+
+        // 换绑成功后就地刷新行(单元格/attr/折扣勾选), 重算行费用与整单合计(换规格不改num)
+        refreshAddReduceItemForFormat: function($item, target) {
+
+            $item.find('.name .cell-wrap').text(target.name);
+            $item.find('.unit .cell-wrap').text(target.unit ? target.unit.name : "-");
+            $item.find('.worktype .cell-wrap').text(target.workType ? target.workType.name : "-");
+            $item.find('.unitprice .cell-wrap').text(target.unitPrice);
+
+            $item.attr({
+                "data-quotationItemId": target.qiid,
+                "data-addPrice": target.addPrice,
+                "data-unitPrice": target.unitPrice,
+                "data-subPrice": target.subPrice,
+                "data-discount": target.discount
+            });
+
+            $item.find('input[name="ariid"]').attr('data-quoteItemId', target.qiid);
+
+            // 折扣勾选随新规格折扣位同步(checkcal=非配比位, discounted=打折位, 与createQuote置位口径同)
+            $item.find('.checkcal').prop("checked", [constant.quotation().addReduceItem.DISCOUNT_NODISCOUNT_NON_INT, constant.quotation().addReduceItem.DISCOUNT_DISCOUNT_NON_INT].indexOf(target.discount) != -1);
+            $item.find('.discounted').prop("checked", [constant.quotation().addReduceItem.DISCOUNT_DISCOUNT_INT, constant.quotation().addReduceItem.DISCOUNT_DISCOUNT_NON_INT].indexOf(target.discount) != -1);
+
+            arCalculator.calculateQuoteFee($item);
+            arCalculator.calculateFees();
+
+            com.showAlert(com.info, "操作成功");
+        },
+
         bindInputKeydown: function(num, e) {
 
             var that = this;
@@ -1444,6 +1561,25 @@
             }
 
             $btnCellWrap.append($input).append($btnDel).append($btnInfo).append($up).append($down).appendTo($btnCell);
+
+            // 更换规格: 仅绑定报价项的行显示(自定义/无引用行无qiid不显示)
+            if (qv.quotationItemId) {
+
+                var $btnFormat = $('<a></a>').attr({
+                    "href": "javascript:void(0)"
+                }).css({
+                    "padding-left": "5px"
+                }).append('<i class="bigger-125 icon-exchange"></i>').mouseenter(function() {
+
+                    com.showTip(this, "更换规格", "top");
+                }).click(function(e) {
+
+                    quote.showAddReduceItemFormat($item);
+                    return false;
+                });
+
+                $btnCellWrap.append($btnFormat);
+            }
 
             $item.append($discountCell).append($checkCell).append($btnCell);
 

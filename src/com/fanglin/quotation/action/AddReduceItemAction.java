@@ -68,6 +68,15 @@ public class AddReduceItemAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	// 变更记录受控接口: 增减项明细行换绑报价项(换规格), 授权走operation登记through=0(45号SQL)
+	@Action(value = "updateAddReduceItemForFormat", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateAddReduceItemForFormat() throws FLException {
+
+		addReduceItemService.updateAddReduceItemForFormat(addReduce, addReduceItem, queryUserId());
+
+		return SUCCESS;
+	}
+
 	@Action(value = "updateAddReduceItemForAdvance", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String updateAddReduceItemForAdvance() throws FLException {
 

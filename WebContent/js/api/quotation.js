@@ -2685,6 +2685,13 @@ $.extend(api, {
                 args: ["addReduce.total", "addReduce.manageRate", "addReduce.managePrice", "addReduce.undisPrice", "addReduce.disPrice", "addReduce.uncalPrice", "addReduce.calPrice", "addReduce.consPrice", "addReduce.comsPrice", "addReduce.discount", "addReduceItem.addPrice", "addReduceItem.unitPrice", "addReduceItem.subPrice", "addReduceItem.num", "addReduceItem.initnum", "addReduce.taxRate", "addReduce.taxPrice"],
             }
         },
+        updateAddReduceItemForFormat: {
+            url: "updateAddReduceItemForFormat.do",
+            type: "update",
+            tranargs: {
+                args: ["addReduce.total", "addReduce.manageRate", "addReduce.managePrice", "addReduce.undisPrice", "addReduce.disPrice", "addReduce.uncalPrice", "addReduce.calPrice", "addReduce.consPrice", "addReduce.comsPrice", "addReduce.discount", "addReduce.taxRate", "addReduce.taxPrice"]
+            }
+        },
         updateAddReduceItemForAdvance: {
             url: "updateAddReduceItemForAdvance.do",
             intercept: true,

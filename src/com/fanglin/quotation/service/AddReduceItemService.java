@@ -25,6 +25,8 @@ public interface AddReduceItemService {
 
 	public int updateAddReduceItem(AddReduceVO addReduceVO, AddReduceItemVO addReduceItemVO) throws FLException;
 
+	public int updateAddReduceItemForFormat(AddReduceVO addReduceVO, AddReduceItemVO addReduceItemVO, String userId) throws FLException;
+
 	public int updateAddReduceItemForAdvance(AddReduceVO addReduceVO, AddReduceItemVO addReduceItemVO) throws FLException;
 
 	public int updateAddReduceItemForIndex(List<AddReduceItemVO> addReduceItemVOs) throws FLException;

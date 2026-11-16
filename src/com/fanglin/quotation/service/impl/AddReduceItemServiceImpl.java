@@ -223,6 +223,84 @@ public class AddReduceItemServiceImpl implements AddReduceItemService {
 		return 0;
 	}
 
+	// 换绑增减项明细行关联报价项(换规格): 同版本+同项目兄弟项, 工程量/位置不动, 价格随新规格刷新; 变更记录受控(operation through=0, 45号SQL)
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int updateAddReduceItemForFormat(AddReduceVO addReduceVO, AddReduceItemVO addReduceItemVO, String userId) throws FLException {
+
+		AddReducePO addReducePO = addReduceDao.get(addReduceVO.getArId());
+
+		if (addReducePO == null) {
+			throw new FLException(140018, "增减项不存在");
+		}
+
+		if (addReducePO.getStatus() != AddReducePO.STATUS_UNSUBMIT_INT) {
+			throw new FLException(200061, "增减单状态不可操作");
+		}
+
+		if (addReducePO.getIsSalary() == AddReducePO.ISSALARY_MARKED_INT) {
+			throw new FLException(200064, "增减单已开工费,不可操作");
+		}
+
+		AddReduceItemPO addReduceItemPO = addReduceItemDao.get(addReduceItemVO.getAriId());
+
+		if (addReduceItemPO == null) {
+			throw new FLException(140036, "增减项目不存在");
+		}
+
+		if (selectionItemDao.countSelectionItem(addReducePO.getOrderId(), addReducePO.getArId(), addReduceItemPO.getAriId()) > 0) {
+			throw new FLException(200037, "存在关联选材项");
+		}
+
+		long oldQiid = addReduceItemPO.getQiid();
+		long targetQiid = addReduceItemVO.getQuotationItemId();
+
+		QuotationItemPO oldItemPO = oldQiid > 0 ? quotationItemDao.get(oldQiid) : null;
+		QuotationItemPO targetItemPO = quotationItemDao.get(targetQiid);
+
+		if (oldItemPO == null || targetItemPO == null || targetItemPO.getStatus() != QuotationItemPO.STATUS_ENABLE_INT) {
+			throw new FLException(200013, "报价项不存在");
+		}
+
+		if (targetQiid == oldQiid) {
+			return 0;
+		}
+
+		// 同项目校验(quotationCtem关联, 任一侧未挂项目/qcid<=0 无关联数据按不一致拦截)
+		if (oldItemPO.getQuotationCtem() == null || targetItemPO.getQuotationCtem() == null || oldItemPO.getQuotationCtem().getQcid() <= 0 || targetItemPO.getQuotationCtem().getQcid() <= 0 || oldItemPO.getQuotationCtem().getQcid() != targetItemPO.getQuotationCtem().getQcid()) {
+			throw new FLException(200073, "报价项与原项目不一致");
+		}
+
+		// 同版本校验(目标项须与原引用项同版本)
+		if (targetItemPO.getQuotationVersion() == null || oldItemPO.getQuotationVersion() == null || !targetItemPO.getQuotationVersion().getNo().equals(oldItemPO.getQuotationVersion().getNo())) {
+			throw new FLException(200081, "报价项版本与原报价项版本不一致");
+		}
+
+		// 换绑引用+快照随新规格刷新(qiid=quoteItemId镜像, num/initnum/index/subtype/content不动)
+		addReduceItemPO.setQiid(targetItemPO.getQiid());
+		addReduceItemPO.setQuoteItemId(targetItemPO.getQiid());
+		addReduceItemPO.setItemName(targetItemPO.getName());
+		addReduceItemPO.setMeasurementUnit(targetItemPO.getMeasurementUnit().getName());
+		addReduceItemPO.setWorkType(targetItemPO.getWorkType().getName());
+		addReduceItemPO.setUnitPrice(targetItemPO.getUnitPrice());
+		addReduceItemPO.setAddPrice(targetItemPO.getAddPrice());
+		addReduceItemPO.setSubPrice(targetItemPO.getSubPrice());
+		addReduceItemPO.setDiscount(targetItemPO.getDiscount());
+
+		addReduceItemDao.update(addReduceItemPO);
+
+		addReducePO.ptvadvance(addReduceVO);
+
+		handleDecorationPayment(addReducePO);
+
+		addReduceDao.update(addReducePO);
+
+		// 变更记录: 增减项明细行换绑报价项(换规格)
+		normChangeRecordDao.save(new NormChangeRecordPO().init(NormChangeRecordPO.TYPE_ADDREDUCEITEM_QIID_INT, NormChangeRecordPO.CHANGETYPE_UPDATE_INT, userId).refId(addReduceItemPO.getAriId()).refNo(targetItemPO.getName()).before(String.format("规格: qiid=%d qfid=%d %s 单价%d", oldItemPO.getQiid(), oldItemPO.getQfid(), oldItemPO.getName(), oldItemPO.getUnitPrice())).after(String.format("规格: qiid=%d qfid=%d %s 单价%d", targetItemPO.getQiid(), targetItemPO.getQfid(), targetItemPO.getName(), targetItemPO.getUnitPrice())));
+
+		return 0;
+	}
+
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public int updateAddReduceItemForAdvance(AddReduceVO addReduceVO, AddReduceItemVO addReduceItemVO) throws FLException {
