@@ -39,6 +39,12 @@ public class QuotationCtemDaoImpl extends DaoImpl<QuotationCtemPO> implements Qu
 		return query.list();
 	}
 
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<QuotationCtemPO> queryQuotationCtemByName(String name) {
+		return createCriteria(QuotationCtemPO.class).add(Restrictions.eq(QuotationCtemPO.COLUMN_NAME_STR, name)).list();
+	}
+
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {
 
 		if (filters == null) return;

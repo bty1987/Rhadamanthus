@@ -5,7 +5,6 @@
         qfid: null,
         quotationTypes: {},
         items: {
-            name: com.focusPage('#name', "#addQuotationFormatModal"),
             format: com.focusPage('#format', "#addQuotationFormatModal"),
             alias: com.focusPage('#alias', "#addQuotationFormatModal"),
             quotationType: com.focusPage('#quotationType', "#addQuotationFormatModal"),
@@ -39,7 +38,6 @@
         handle: function(v) {
 
             quotationFormat.qfid = v.qfid;
-            quotationFormat.items.name.val(v.name).attr("disabled", "disabled");
             quotationFormat.items.format.val(v.format);
             quotationFormat.items.alias.val(v.alias);
             quotationFormat.items.quotationType.val(v.type);
@@ -190,7 +188,6 @@
     quotationFormat.btns.addQuotationFormatBtn.click(function() {
 
         quotationFormat.qfid = null;
-        quotationFormat.items.name.val("").removeAttr("disabled");
         quotationFormat.items.format.val("");
         quotationFormat.items.alias.val("");
         quotationFormat.items.quotationType.val("");
@@ -215,7 +212,6 @@
 
         var option = {
             "quotationFormat.quotationCtem.qcid": quotationFormat.qcid,
-            "quotationFormat.name": quotationFormat.items.name.val(),
             "quotationFormat.format": quotationFormat.items.format.val(),
             "quotationFormat.alias": quotationFormat.items.alias.val(),
             "quotationFormat.type": quotationFormat.items.quotationType.val(),

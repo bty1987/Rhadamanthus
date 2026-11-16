@@ -69,6 +69,11 @@ public class QuotationCtemServiceImpl implements QuotationCtemService {
 	@Transactional(rollbackFor = Exception.class)
 	public int addQuotationCtem(QuotationCtemVO quotationCtemVO) throws FLException {
 
+		// 项目名称全局唯一(含禁用, 不分状态)
+		if (!quotationCtemDao.queryQuotationCtemByName(quotationCtemVO.getName()).isEmpty()) {
+			throw new FLException(200078, "报价项目名称已存在");
+		}
+
 		QuotationCtemPO quotationCtemPO = new QuotationCtemPO();
 
 		BeanUtil.copyProperties(quotationCtemVO, quotationCtemPO, Arrays.asList("category", "classification", "bigCategory", "smallCategory", "unit", "workType"));
@@ -84,6 +89,14 @@ public class QuotationCtemServiceImpl implements QuotationCtemService {
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public int updateQuotationCtem(QuotationCtemVO quotationCtemVO) throws FLException {
+
+		// 项目名称全局唯一, 排除自身
+		for (QuotationCtemPO sameName : quotationCtemDao.queryQuotationCtemByName(quotationCtemVO.getName())) {
+
+			if (sameName.getQcid() != quotationCtemVO.getQcid()) {
+				throw new FLException(200078, "报价项目名称已存在");
+			}
+		}
 
 		QuotationCtemPO quotationCtemPO = quotationCtemDao.get(quotationCtemVO.getQcid());
 

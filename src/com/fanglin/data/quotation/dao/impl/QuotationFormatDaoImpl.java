@@ -63,4 +63,10 @@ public class QuotationFormatDaoImpl extends DaoImpl<QuotationFormatPO> implement
 		return criteria.list();
 	}
 
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<QuotationFormatPO> queryQuotationFormatByQcidAndFormat(Long qcid, String format) {
+		return createCriteria(QuotationFormatPO.class).createAlias("quotationCtem", "quotationCtem").add(Restrictions.eq(QuotationFormatPO.COLUMN_QCID_STR, qcid)).add(Restrictions.eq("format", format)).list();
+	}
+
 }

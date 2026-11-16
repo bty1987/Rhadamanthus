@@ -15,6 +15,7 @@ import com.fanglin.communion.po.MeasurementUnitPO;
 import com.fanglin.communion.po.WorkTypePO;
 import com.fanglin.data.po.QuotationCtemPO;
 import com.fanglin.data.po.QuotationFormatPO;
+import com.fanglin.data.quotation.dao.QuotationCtemDao;
 import com.fanglin.data.quotation.dao.QuotationFormatDao;
 import com.fanglin.data.quotation.service.QuotationFormatService;
 import com.fanglin.data.quotation.vo.QuotationCtemVO;
@@ -29,6 +30,9 @@ public class QuotationFormatServiceImpl implements QuotationFormatService {
 
 	@Autowired
 	public QuotationFormatDao quotationFormatDao;
+
+	@Autowired
+	public QuotationCtemDao quotationCtemDao;
 
 	@Override
 	public List<QuotationFormatVO> queryQuotationFormat(QuotationFormatVO quotationFormatVO) {
@@ -68,7 +72,21 @@ public class QuotationFormatServiceImpl implements QuotationFormatService {
 
 		BeanUtil.copyPropertie(quotationFormatVO, quotationFormatPO, Arrays.asList("quotationCtem", "unit", "workType"));
 
-		quotationFormatPO.setQuotationCtem(new QuotationCtemPO(quotationFormatVO.getQuotationCtem().getQcid()));
+		QuotationCtemPO quotationCtemPO = quotationCtemDao.get(quotationFormatVO.getQuotationCtem().getQcid());
+
+		if (quotationCtemPO == null) {
+			throw new FLException(200077, "报价项目不存在");
+		}
+
+		// 同项目下规格唯一(含空串, 一项目仅一条空规格)
+		if (!quotationFormatDao.queryQuotationFormatByQcidAndFormat(quotationCtemPO.getQcid(), quotationFormatVO.getFormat()).isEmpty()) {
+			throw new FLException(200079, "报价规格已存在");
+		}
+
+		quotationFormatPO.setQuotationCtem(quotationCtemPO);
+
+		// 名称随项目: 表单不再采集, 取所属项目名(规格可为空串)
+		quotationFormatPO.setName(quotationCtemPO.getName());
 
 		quotationFormatPO.setMeasurementUnit(quotationFormatVO.getUnit() == null || quotationFormatVO.getUnit().getId() == 0 ? null : new MeasurementUnitPO(quotationFormatVO.getUnit().getId()));
 
@@ -76,7 +94,7 @@ public class QuotationFormatServiceImpl implements QuotationFormatService {
 
 		quotationFormatPO.setStatus(QuotationFormatPO.STATUS_ENABLE_STR);
 
-		quotationFormatPO.setPinyin(PinYin4Util.getPinYinHeadChar(quotationFormatVO.getName() + quotationFormatVO.getFormat()).get(0));
+		quotationFormatPO.setPinyin(PinYin4Util.getPinYinHeadChar(quotationFormatPO.getName() + quotationFormatVO.getFormat()).get(0));
 
 		quotationFormatDao.save(quotationFormatPO);
 
@@ -89,13 +107,22 @@ public class QuotationFormatServiceImpl implements QuotationFormatService {
 
 		QuotationFormatPO quotationFormatPO = quotationFormatDao.get(quotationFormatVO.getQfid());
 
+		// 同项目下规格唯一, 排除自身
+		for (QuotationFormatPO sameFormat : quotationFormatDao.queryQuotationFormatByQcidAndFormat(quotationFormatPO.getQuotationCtem().getQcid(), quotationFormatVO.getFormat())) {
+
+			if (sameFormat.getQfid() != quotationFormatVO.getQfid()) {
+				throw new FLException(200079, "报价规格已存在");
+			}
+		}
+
 		BeanUtil.copyProperties(quotationFormatVO, quotationFormatPO, Arrays.asList("quotationCtem", "unit", "workType"));
 
 		quotationFormatPO.setMeasurementUnit(quotationFormatVO.getUnit() == null || quotationFormatVO.getUnit().getId() == 0 ? null : new MeasurementUnitPO(quotationFormatVO.getUnit().getId()));
 
 		quotationFormatPO.setWorkType(quotationFormatVO.getWorkType() == null || quotationFormatVO.getWorkType().getId() == 0 ? null : new WorkTypePO(quotationFormatVO.getWorkType().getId()));
 
-		quotationFormatPO.setPinyin(PinYin4Util.getPinYinHeadChar(quotationFormatVO.getName() + quotationFormatVO.getFormat()).get(0));
+		// 名称不随表单更新(表单已不采集), 拼音按库中名称+新规格重算
+		quotationFormatPO.setPinyin(PinYin4Util.getPinYinHeadChar(quotationFormatPO.getName() + quotationFormatVO.getFormat()).get(0));
 
 		quotationFormatDao.update(quotationFormatPO);
 

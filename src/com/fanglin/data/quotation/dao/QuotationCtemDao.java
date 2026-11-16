@@ -13,4 +13,6 @@ public interface QuotationCtemDao extends Dao<QuotationCtemPO> {
 
 	public List<QuotationCtemPO> queryQuotationCtem(Paging paging, String name);
 
+	public List<QuotationCtemPO> queryQuotationCtemByName(String name);
+
 }

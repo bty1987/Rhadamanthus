@@ -13,4 +13,6 @@ public interface QuotationFormatDao extends Dao<QuotationFormatPO> {
 
 	public List<QuotationFormatPO> queryQuotationFormatByQcid(Long qcid, List<Filter> filters);
 
+	public List<QuotationFormatPO> queryQuotationFormatByQcidAndFormat(Long qcid, String format);
+
 }
