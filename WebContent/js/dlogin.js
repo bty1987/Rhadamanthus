@@ -361,9 +361,8 @@ jQuery(function (a) {
 
     initPage();
 
-    if (!parent.window.isPC) {
-        backgroundShaking('container', 'canvas', '#ba2454', config.shakingColor);
-    }
+    // 原3D物理动画背景(CAV/shaking.js)逐帧渲染开销大, 替换为静态蓝色渐变(仿images/background.jpg: 深蓝底+左上柔光), 零渲染开销
+    $("#container").css("background", "radial-gradient(ellipse 130% 120% at 38% 40%, #66a3d9 0%, #3d80b5 42%, #1f5d94 72%, #164a7c 100%)");
 
     // $("#backgroundImage > img").attr('src', config.backgroundImg);
     // $("#backgroundImage").fullscreenBackground();
