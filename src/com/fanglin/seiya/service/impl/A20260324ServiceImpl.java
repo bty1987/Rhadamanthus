@@ -11,6 +11,7 @@
 
 package com.fanglin.seiya.service.impl;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -30,6 +31,7 @@ import com.fanglin.communion.po.DepartmentTypePO;
 import com.fanglin.communion.po.DutyPO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.security.MD5Helper;
+import com.fanglin.core.security.SensitiveDataHelper;
 import com.fanglin.personel.dao.DutmentDao;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.dao.UserExperienceDao;
@@ -781,15 +783,24 @@ public class A20260324ServiceImpl implements A20260324Service {
 			} else {
 				// ========== 更新场景 ==========
 
-				// 7.0 唯一性校验同键收敛(与5.2分键一致): 身份证命中本人时只查身份证冲突,
-				// 同手机号的录错/离职遗留档案不再阻断本人更新; 身份证缺失保持手机号口径
-				List<UserPO> existUsers = (identity != null && !identity.trim().isEmpty())
-					? userDao.queryUserByPhoneAIdent(null, identity)
-					: userDao.queryUserByPhoneAIdent(phone, null);
+				// 7.0 唯一性校验: 冲突=另一用户与本请求手机号相同且身份证不同(不同人共用手机号);
+				// 身份证相同的命中=本人回聘双档(在职新档+历史离职档), 属同一人, 放行不阻断;
+				// 身份证缺失的请求无法证明同人, 同手机号的他人档案仍拦; 密文形态经全形态表判等
+				List<UserPO> existUsers = new ArrayList<UserPO>();
+				if (phone != null && !phone.trim().isEmpty()) {
+					existUsers = userDao.queryUserByPhoneAIdent(phone, null);
+				}
+				List<String> identityForms = (identity != null && !identity.trim().isEmpty())
+					? SensitiveDataHelper.getAllEncryptedForms(identity)
+					: null;
 				for (UserPO existUser : existUsers) {
-					if (existUser.getUid() != userPO.getUid()) {
-						throw new FLException(402011, "手机号或身份证已被使用");
+					if (existUser.getUid() == userPO.getUid()) {
+						continue;
 					}
+					if (identityForms != null && identityForms.contains(existUser.getIdentity())) {
+						continue; // 同身份证=本人另一档案(回聘双档)
+					}
+					throw new FLException(402011, "手机号或身份证已被使用");
 				}
 
 				// 7.1 更新基本信息
