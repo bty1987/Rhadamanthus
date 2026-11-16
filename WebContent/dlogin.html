@@ -36,6 +36,9 @@
 		document.write(csses);
 	</script>
 	<style>
+		/* 禁横向滚动条: 背景容器层曾被3D渲染器按窗口宽撑出溢出, 一律裁掉不出现滚动条 */
+		html, body { overflow-x: hidden; }
+		.slide, .slide .bg, #container, #canvas { overflow: hidden; }
 		#winTop {
 			-webkit-app-region: drag;
 		}
