@@ -25,6 +25,7 @@ $(function() {
 
             type: com.focusPage("#type", "#updateQuotationVersionModal"),
             offset: com.focusPage("#offset", "#updateQuotationVersionModal"),
+            relateFlag: com.focusPage("#relateFlag", "#updateQuotationVersionModal").switchBtn(),
             comment: com.focusPage("#comment", "#updateQuotationVersionModal"),
         },
 
@@ -113,6 +114,14 @@ $(function() {
         prop: function(v) {
 
             return constant.data().quotationVersion.defaultFlag.keys[v.defaultFlag];
+        },
+        clazz: "red"
+    }, {
+        field: "relateFlag",
+        name: "关联标识",
+        prop: function(v) {
+
+            return v.relateFlag == 1 ? "必须关联" : "自由";
         },
         clazz: "red"
     }, {
@@ -207,6 +216,7 @@ $(function() {
         quotationVersion.no = null;
         com.cleanItems(quotationVersion.items);
         quotationVersion.items.notTaxDiscount.prop("checked", true);
+        quotationVersion.items.relateFlag.prop("checked", false);
 
         quotationVersion.modals.updateQuotationVersionModal.modal("show");
     });
@@ -221,6 +231,8 @@ $(function() {
         quotationVersion.items.taxRate.val(b.taxRate);
         quotationVersion.items.type.val(b.type);
         quotationVersion.items.offset.val(b.offset);
+
+        quotationVersion.items.relateFlag.prop("checked", b.relateFlag == 1);
 
         quotationVersion.items.comment.val(b.comment);
 
@@ -261,6 +273,7 @@ $(function() {
             "quotationVersion.taxDiscount": quotationVersion.items.taxDiscount.prop("checked") ? constant.data().quotationVersion.TAX_NOTTAXDISCOUNT_INT : quotationVersion.taxDiscounts,
             "quotationVersion.type": quotationVersion.items.type.val(),
             "quotationVersion.offset": quotationVersion.items.offset.val(),
+            "quotationVersion.relateFlag": quotationVersion.items.relateFlag.prop("checked") ? 1 : 0,
             "quotationVersion.comment": quotationVersion.items.comment.val(),
         };
 

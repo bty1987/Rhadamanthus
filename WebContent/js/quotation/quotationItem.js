@@ -46,6 +46,8 @@ $(function() {
 
         qcid: null,
 
+        versions: [],
+
         types: [],
 
         validator: {
@@ -92,6 +94,8 @@ $(function() {
 
     com.post(api.quotation.queryQuotationVersion, {}, function(a) {
 
+        quotationItem.versions = a.quotationVersions;
+
         quotationItem.items.version.bindData(a.quotationVersions, "no", "name");
     });
 
@@ -103,6 +107,23 @@ $(function() {
 
         quotationItem.qfid = key;
         quotationItem.qcid = _quotationFormat != null ? _quotationFormat.qcid : null;
+
+        // 关联format自动填充: 类型联动加载大小类选项后, 别名/单位/工种/四价/说明随format带入(价格tranargs已换算为元)
+        if (_quotationFormat != null) {
+
+            quotationItem.items.quotationType.val(_quotationFormat.type);
+            queryQuotationBigCategory(_quotationFormat.type);
+            queryQuotationSmallCategory(_quotationFormat.type);
+
+            quotationItem.items.alias.val(com.checkNull(_quotationFormat.alias, ""));
+            quotationItem.items.workType.val(_quotationFormat.workType != null ? _quotationFormat.workType.id : "");
+            quotationItem.items.measurementUnit.val(_quotationFormat.unit != null ? _quotationFormat.unit.id : "");
+            quotationItem.items.addPrice.val(_quotationFormat.addPrice);
+            quotationItem.items.unitPrice.val(_quotationFormat.price);
+            quotationItem.items.subPrice.val(_quotationFormat.subPrice);
+            quotationItem.items.achePrices.val(_quotationFormat.achePrice);
+            quotationItem.items.comment.val(com.checkNull(_quotationFormat.comment, ""));
+        }
 
         return value;
     }, null, false);
@@ -541,6 +562,17 @@ $(function() {
                     com.showAlert(com.warning, "输入金额过长");
                     return false;
                 }
+            }
+
+            // 版本关联标识约束: relateFlag=1 的版本要求报价项必须关联项目(规格)
+            var _versionNo = quotationItem.items.version.val();
+            var _relateVersion = $.grep(quotationItem.versions, function(d) {
+                return d.no == _versionNo;
+            })[0];
+
+            if (_relateVersion != null && _relateVersion.relateFlag == 1 && (quotationItem.qfid == null || quotationItem.qfid == 0)) {
+                com.showAlert(com.warning, "当前报价版本要求关联项目(规格), 请通过名称选择关联规格");
+                return false;
             }
 
             var url, option = {
