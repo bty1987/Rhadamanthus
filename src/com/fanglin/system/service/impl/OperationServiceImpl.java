@@ -103,7 +103,7 @@ public class OperationServiceImpl implements OperationService {
 	@Override
 	public List<OperationVO> queryOperationByUserId(OperationVO operationVO, UserVO userVO, Integer company) throws FLException {
 
-		UserPO userPO = userDao.get(userVO.getUserId());
+		UserPO userPO = userDao.queryUserByUserId(userVO.getUserId());
 
 		if (userPO == null) {
 			throw new FLException(190005, "人员不存在");
