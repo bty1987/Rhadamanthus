@@ -75,4 +75,52 @@ public interface A20261025Service {
 	 */
 	Map<String, Object> syncDecorationPaymentForNerp(String orderId, Long money, Long cost, Long psid, String userId) throws FLException;
 
+	/**
+	 * NERP销售款项同步（补全单据语义）
+	 *
+	 * 兼容 sales.sales / payment.salespayment: 目的是补全销售单据并生成待收/待退款项, 收款/退款动作在 ERP 走正常流程
+	 * (collectSalesPayment/refundsSalesPayment 承接收据/渠道/状态推进/销售比例重算):
+	 * 判断补充式——按 sales.comment='NERP:{salesNo}' 查重, 销售单不存在时凭空创建(照 addSales 口径, no 走 counting 52 号,
+	 * house/customer/dept/region 从装修单带出, 四人员 supplier/salesman/instorer/guider 必传), 存在时复用;
+	 * 款项按 销售单(NERP锚)+type+referMoney+待收态 组合查重防重推, 落 salespayment(status=INIT 待收/待退):
+	 * type=2 定金 / 3 补款 → 待收款项行; type=4 退款 → 待退款项行 + 凭空生成 salesRefunds
+	 * (照审批物化口径, comment 嵌 NERP 款项单号, spid 回填, 待退态)并关联款项
+	 *
+	 * @param orderId 装修单号
+	 * @param salesNo NERP销售单号（幂等锚, 嵌 sales.comment）
+	 * @param paymentNo NERP款项单号（留痕, 嵌 salesRefunds.comment; 幂等按组合查重）
+	 * @param type 款项类型: 2 定金 / 3 补款 / 4 退款
+	 * @param money 金额, 单位:分（>0）
+	 * @param bid 品牌ID（凭空建销售单时必填, 品类由品牌带出）
+	 * @param supplierUid 厂商工号（凭空建单时必传）
+	 * @param salesmanUid 销售员工号（凭空建单时必传）
+	 * @param instorerUid 驻店员工号（凭空建单时必传）
+	 * @param guiderUid 导购工号（凭空建单时必传）
+	 * @param salesAmount 销售单商品总额, 单位:分（可选, 凭空建单时缺省取首笔 money; 复用已有单不修改）
+	 * @param userId 操作账号（创建人）
+	 * @return 包含 operation, sid, no, spid, rid(退款时), orderId, type, money 等信息的 Map
+	 * @throws FLException 业务异常
+	 */
+	Map<String, Object> syncSalesPaymentForNerp(String orderId, String salesNo, String paymentNo, Short type, Long money, Long bid, String supplierUid, String salesmanUid, String instorerUid, String guiderUid, Long salesAmount, String userId) throws FLException;
+
+	/**
+	 * NERP增减款同步
+	 *
+	 * 兼容 quotation.addreduce / payment.decorationpayment: 判断补充式——按 orderId+content 精等查重
+	 * (content 嵌 'NERP:{arNo} ' 前缀作幂等锚, NERP 重试报文一致即命中), 增减单不存在时经 addAddReduce 凭空创建
+	 * (STATUS_UNSUBMIT, total=money), 已存在时复用; 再走 submitAddReduce 提交链落 decorationpayment
+	 * (paymentType=增项款/减项款, twoType=增减款, referMoney 取整千元, dpId 回写, normchanerecord 埋点),
+	 * payment 数据由增减单提交动作产生, 不裸落
+	 *
+	 * @param orderId 装修单号
+	 * @param arNo NERP增减单号（幂等锚, 嵌 content 前缀）
+	 * @param type 增减类型: 0 增项 / 1 减项（2 漏项不开放）
+	 * @param money 金额, 单位:分（>0, 落款项时按原版口径取整千元）
+	 * @param content 增减明细说明（必填, NERP 原文, 接口拼 NERP 单号前缀后落库; 含前缀总长不得超 256 字符）
+	 * @param userId 操作账号（增减单创建人/提交人）
+	 * @return 包含 operation, arId, dpId, orderId, type, money, paymentMoney(实际落库款项金额) 等信息的 Map
+	 * @throws FLException 业务异常
+	 */
+	Map<String, Object> syncAddreduceForNerp(String orderId, String arNo, Short type, Long money, String content, String userId) throws FLException;
+
 }

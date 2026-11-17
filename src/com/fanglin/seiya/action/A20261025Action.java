@@ -171,6 +171,39 @@ public class A20261025Action extends BaseListAction {
 	/** 报价单名称（签约接口可选, 缺省"报价单"） */
 	private String quotationName;
 
+	/** NERP销售单号（销售款项接口必填, 幂等锚, 嵌 sales.comment） */
+	private String salesNo;
+
+	/** NERP款项单号（销售款项接口必填, 留痕嵌 salesRefunds.comment, 幂等按组合查重） */
+	private String paymentNo;
+
+	/** 款项类型（销售款项接口必填: 2 定金 / 3 补款 / 4 退款） */
+	private Short type;
+
+	/** 品牌ID（销售款项接口凭空建单时必填, 品类由品牌带出） */
+	private Long bid;
+
+	/** 厂商工号（销售款项接口凭空建单时必传） */
+	private String supplierUid;
+
+	/** 销售员工号（销售款项接口凭空建单时必传） */
+	private String salesmanUid;
+
+	/** 驻店员工号（销售款项接口凭空建单时必传） */
+	private String instorerUid;
+
+	/** 导购工号（销售款项接口凭空建单时必传） */
+	private String guiderUid;
+
+	/** 销售单商品总额, 单位:分（销售款项接口可选, 凭空建单时缺省取首笔 money; 复用已有单不修改） */
+	private Long salesAmount;
+
+	/** NERP增减单号（增减款接口必填, 幂等锚, 嵌增减单 content 前缀） */
+	private String arNo;
+
+	/** 增减明细说明（增减款接口必填, NERP 原文, 接口拼 NERP 单号前缀后落库） */
+	private String content;
+
 	// ==================== 响应字段 ====================
 
 	/**
@@ -312,6 +345,72 @@ public class A20261025Action extends BaseListAction {
 
 		// 调用服务层处理
 		Map<String, Object> result = a20261025Service.syncDecorationPaymentForNerp(orderId.trim(), money, cost, psid, userId);
+
+		// 设置响应数据
+		this.data = result;
+
+		return SUCCESS;
+	}
+
+	/**
+	 * NERP销售款项同步接口
+	 *
+	 * 兼容 sales.sales / payment.salespayment: 补全单据语义——销售单判断补充(comment 嵌 NERP 销售单号, 不存在凭空创建),
+	 * 落待收/待退款项 salespayment(status=INIT), 收款/退款动作在 ERP 走正常流程;
+	 * type=2 定金 / 3 补款 → 待收款项; type=4 退款 → 待退款项 + 凭空生成 salesRefunds 并关联
+	 *
+	 * @return SUCCESS
+	 * @throws FLException 业务异常
+	 */
+	@Action(value = "syncSalesPaymentForNerp", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false", "includeProperties", "errorCode,errorMsg,uid,data.*" }) }, params = { "contentType", "text/html" })
+	public String syncSalesPaymentForNerp() throws FLException {
+
+		// 参数必填验证
+		if (orderId == null || orderId.trim().isEmpty()) {
+			throw new FLException(400013, "装修单号不能为空");
+		}
+
+		String userId = querySyncUserId();
+
+		if (userId == null || userId.trim().isEmpty()) {
+			throw new FLException(400040, "操作账号无效");
+		}
+
+		// 调用服务层处理
+		Map<String, Object> result = a20261025Service.syncSalesPaymentForNerp(orderId.trim(), salesNo, paymentNo, type, money, bid, supplierUid, salesmanUid, instorerUid, guiderUid, salesAmount, userId);
+
+		// 设置响应数据
+		this.data = result;
+
+		return SUCCESS;
+	}
+
+	/**
+	 * NERP增减款同步接口
+	 *
+	 * 兼容 quotation.addreduce / payment.decorationpayment: 增减单判断补充(content 嵌 NERP 单号前缀, 不存在凭空创建),
+	 * 经 submitAddReduce 提交链落 decorationpayment 增项款/减项款(dpId 回写), payment 数据由增减单提交动作产生;
+	 * type 取值 0 增项 / 1 减项(2 漏项不开放), 同 NERP 单号改单(类型/金额不一致)拒绝
+	 *
+	 * @return SUCCESS
+	 * @throws FLException 业务异常
+	 */
+	@Action(value = "syncAddreduceForNerp", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false", "includeProperties", "errorCode,errorMsg,uid,data.*" }) }, params = { "contentType", "text/html" })
+	public String syncAddreduceForNerp() throws FLException {
+
+		// 参数必填验证
+		if (orderId == null || orderId.trim().isEmpty()) {
+			throw new FLException(400013, "装修单号不能为空");
+		}
+
+		String userId = querySyncUserId();
+
+		if (userId == null || userId.trim().isEmpty()) {
+			throw new FLException(400040, "操作账号无效");
+		}
+
+		// 调用服务层处理
+		Map<String, Object> result = a20261025Service.syncAddreduceForNerp(orderId.trim(), arNo, type, money, content, userId);
 
 		// 设置响应数据
 		this.data = result;
@@ -698,6 +797,94 @@ public class A20261025Action extends BaseListAction {
 
 	public void setQuotationName(String quotationName) {
 		this.quotationName = quotationName;
+	}
+
+	public String getSalesNo() {
+		return salesNo;
+	}
+
+	public void setSalesNo(String salesNo) {
+		this.salesNo = salesNo;
+	}
+
+	public String getPaymentNo() {
+		return paymentNo;
+	}
+
+	public void setPaymentNo(String paymentNo) {
+		this.paymentNo = paymentNo;
+	}
+
+	public Short getType() {
+		return type;
+	}
+
+	public void setType(Short type) {
+		this.type = type;
+	}
+
+	public Long getBid() {
+		return bid;
+	}
+
+	public void setBid(Long bid) {
+		this.bid = bid;
+	}
+
+	public String getSupplierUid() {
+		return supplierUid;
+	}
+
+	public void setSupplierUid(String supplierUid) {
+		this.supplierUid = supplierUid;
+	}
+
+	public String getSalesmanUid() {
+		return salesmanUid;
+	}
+
+	public void setSalesmanUid(String salesmanUid) {
+		this.salesmanUid = salesmanUid;
+	}
+
+	public String getInstorerUid() {
+		return instorerUid;
+	}
+
+	public void setInstorerUid(String instorerUid) {
+		this.instorerUid = instorerUid;
+	}
+
+	public String getGuiderUid() {
+		return guiderUid;
+	}
+
+	public void setGuiderUid(String guiderUid) {
+		this.guiderUid = guiderUid;
+	}
+
+	public Long getSalesAmount() {
+		return salesAmount;
+	}
+
+	public void setSalesAmount(Long salesAmount) {
+		this.salesAmount = salesAmount;
+	}
+
+	public String getArNo() {
+		return arNo;
+	}
+
+	public void setArNo(String arNo) {
+		this.arNo = arNo;
+	}
+
+	public String getContent() {
+		return content;
+	}
+
+	public void setContent(String content) {
+		this.content = content;
 	}
 
 	public Map<String, Object> getData() {

@@ -11,6 +11,7 @@
 
 package com.fanglin.seiya.service.impl;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
@@ -22,9 +23,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.approval.dao.ApprovalDao;
+import com.fanglin.communion.dao.BrandDao;
+import com.fanglin.communion.po.BrandPO;
 import com.fanglin.communion.po.DepartmentTypePO;
 import com.fanglin.construction.dao.ConstructionInfoDao;
 import com.fanglin.construction.po.ConstructionInfoPO;
+import com.fanglin.common.po.CountingPO;
+import com.fanglin.common.service.CountingService;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.customer.dao.CustomerChanceDao;
 import com.fanglin.customer.dao.CustomerUserRuleDao;
@@ -49,26 +54,41 @@ import com.fanglin.decoration.po.DecorationBelongPO;
 import com.fanglin.decoration.po.DecorationOperatePO;
 import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.decoration.service.DecorationAccountStatusService;
+import com.fanglin.decoration.service.DecorationAdditionService;
+import com.fanglin.decoration.vo.DecorationVO;
 import com.fanglin.information.dao.MessageQueuingDao;
 import com.fanglin.information.po.MessageCueuingPO;
 import com.fanglin.information.po.MessagePO;
 import com.fanglin.information.po.MessageQueuingPO;
 import com.fanglin.information.service.MessageService;
 import com.fanglin.payment.dao.DecorationPaymentDao;
+import com.fanglin.payment.dao.SalesPaymentDao;
 import com.fanglin.payment.po.DecorationPaymentPO;
+import com.fanglin.payment.po.SalesPaymentPO;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
+import com.fanglin.quotation.dao.AddReduceDao;
 import com.fanglin.quotation.dao.ProtationDao;
 import com.fanglin.quotation.dao.QuotationDao;
+import com.fanglin.quotation.po.AddReducePO;
 import com.fanglin.quotation.po.ProtationPO;
 import com.fanglin.quotation.po.QuotationPO;
+import com.fanglin.quotation.service.AddReduceService;
+import com.fanglin.quotation.vo.AddReduceVO;
 import com.fanglin.quotation.vo.ProtationVO;
+import com.fanglin.sales.dao.SalesDao;
+import com.fanglin.sales.dao.SalesRefundsDao;
+import com.fanglin.sales.po.SalesPO;
+import com.fanglin.sales.po.SalesRefundsPO;
 import com.fanglin.seiya.service.A20261025Service;
 import com.fanglin.system.dao.SystemConfigDao;
+import com.fanglin.system.dao.CompanyDao;
+import com.fanglin.system.po.CompanyPO;
 import com.fanglin.system.po.SystemConfigPO;
 import com.fanglin.utils.Arith;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
+import com.fanglin.utils.FormatUtil;
 
 @Service("a20261025Service")
 @Transactional(readOnly = true)
@@ -133,6 +153,33 @@ public class A20261025ServiceImpl implements A20261025Service {
 
 	@Autowired
 	private PresignProduceDao presignProduceDao;
+
+	@Autowired
+	private SalesDao salesDao;
+
+	@Autowired
+	private SalesPaymentDao salesPaymentDao;
+
+	@Autowired
+	private SalesRefundsDao salesRefundsDao;
+
+	@Autowired
+	private AddReduceDao addReduceDao;
+
+	@Autowired
+	private BrandDao brandDao;
+
+	@Autowired
+	private CompanyDao companyDao;
+
+	@Autowired
+	private CountingService countingService;
+
+	@Autowired
+	private AddReduceService addReduceService;
+
+	@Autowired
+	private DecorationAdditionService decorationAdditionService;
 
 	/**
 	 * NERP凭空预签（原 A20261024Action.syncProsignForNerp, 2026-10-25 合并入本类）
@@ -688,6 +735,330 @@ public class A20261025ServiceImpl implements A20261025Service {
 		result.put("money", money);
 		result.put("paymentMoney", paymentMoney);
 		result.put("orderTotalPrice", sumMoney);
+
+		return result;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public Map<String, Object> syncSalesPaymentForNerp(String orderId, String salesNo, String paymentNo, Short type, Long money, Long bid, String supplierUid, String salesmanUid, String instorerUid, String guiderUid, Long salesAmount, String userId) throws FLException {
+
+		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(orderId);
+
+		if (decorationPO == null) {
+			throw new FLException(140013, "装修单不存在");
+		}
+
+		if (salesNo == null || salesNo.trim().isEmpty() || paymentNo == null || paymentNo.trim().isEmpty()) {
+			throw new FLException(400046, "NERP单号不能为空");
+		}
+
+		if (type == null || (type != SalesPaymentPO.TYPE_DEPOSIT_INT && type != SalesPaymentPO.TYPE_REPLENISHMENT_INT && type != SalesPaymentPO.TYPE_REFUNDS_INT)) {
+			throw new FLException(400045, "款项类型无效");
+		}
+
+		if (money == null || money.longValue() <= 0) {
+			throw new FLException(150100, "款项金额必须大于0");
+		}
+
+		UserPO creater = userDao.queryUserByUserId(userId);
+
+		if (creater == null) {
+			throw new FLException(400040, "操作账号无效");
+		}
+
+		String salesKey = "NERP:" + salesNo.trim();
+
+		// 款项幂等: 同销售单(NERP单号锚)+同类型+同金额+待收/待退 精等, NERP 重试命中直接返回既有记录
+		for (SalesPaymentPO payment : salesPaymentDao.querySalesPaymentByOrderId(orderId, null)) {
+
+			if (payment.getType() == type && payment.getStatus() == SalesPaymentPO.STATUS_INITIAL_INT && payment.getReferMoney() == money.longValue() && payment.getSales() != null && salesKey.equals(payment.getSales().getComment())) {
+
+				Map<String, Object> exists = new HashMap<String, Object>();
+
+				exists.put("operation", "exists");
+				exists.put("sid", payment.getSales().getSid());
+				exists.put("no", payment.getSales().getNo());
+				exists.put("spid", payment.getSpid());
+				if (payment.getSalesRefunds() != null) exists.put("rid", payment.getSalesRefunds().getRid());
+				exists.put("orderId", orderId);
+				exists.put("type", type);
+				exists.put("money", money);
+
+				return exists;
+			}
+		}
+
+		// 销售单判断补充(补全单据): sales.comment 嵌 NERP 销售单号查重, 命中复用, 未命中凭空创建(照 addSales 口径)
+		SalesPO salesPO = null;
+
+		for (SalesPO sales : salesDao.querySalesByOrderId(orderId)) {
+
+			if (salesKey.equals(sales.getComment())) {
+				salesPO = sales;
+				break;
+			}
+		}
+
+		String operation;
+
+		if (salesPO == null) {
+
+			if (bid == null || bid.longValue() <= 0) {
+				throw new FLException(130077, "品牌不存在");
+			}
+
+			BrandPO brandPO = brandDao.get(bid);
+
+			if (brandPO == null) {
+				throw new FLException(130077, "品牌不存在");
+			}
+
+			UserPO supplier = userDao.queryUserByUserId(supplierUid);
+			UserPO salesman = userDao.queryUserByUserId(salesmanUid);
+			UserPO instorer = userDao.queryUserByUserId(instorerUid);
+			UserPO guider = userDao.queryUserByUserId(guiderUid);
+
+			if (supplier == null || salesman == null || instorer == null || guider == null) {
+				throw new FLException(190005, "人员不存在");
+			}
+
+			CompanyPO companyPO = companyDao.get(decorationPO.getCompany());
+
+			if (companyPO == null) {
+				throw new FLException(230015, "公司不存在");
+			}
+
+			int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_SALES_INT, DateUtil.current("yyMMdd").toString(), decorationPO.getCompany());
+
+			String no = companyPO.getShortname() + DateUtil.current("yyMMdd") + FormatUtil.fillZero(FormatUtil.offset(count), "0000");
+
+			// amount/total = 销售单商品总额属性(单据维度), 非款项累计; 缺省取首笔 money
+			long amount = salesAmount == null || salesAmount.longValue() <= 0 ? money.longValue() : salesAmount.longValue();
+
+			salesPO = new SalesPO();
+
+			salesPO.setNo(no);
+			salesPO.setOrderId(orderId);
+			salesPO.setSalesman(salesman);
+			salesPO.setDept(decorationPO.getDesignDept());
+			salesPO.setRegion(decorationPO.getDesignDept() == null ? null : decorationPO.getDesignDept().getFatherDept());
+			salesPO.setCreater(creater);
+			salesPO.setSupplier(supplier);
+			salesPO.setInstorer(instorer);
+			salesPO.setGuider(guider);
+			salesPO.setGuideDept(guider.getDept());
+			salesPO.setHouse(decorationPO.getHouse());
+			salesPO.setCustomer(decorationPO.getCustomer());
+			salesPO.setBrand(brandPO);
+			salesPO.setCategory(brandPO.getCategory().getName());
+			salesPO.setAmount(amount);
+			salesPO.setTotal(amount);
+			salesPO.setMaling(0);
+			salesPO.setVenderMaling(0);
+			salesPO.setDepositpay(0);
+			salesPO.setDepositpayStatus(SalesPO.DESPOSITPAYSTATUS_INIT_SHORT);
+			salesPO.setFullpay(0);
+			salesPO.setFullpayStatus(SalesPO.FULLPAYSTATUS_INIT_SHORT);
+			salesPO.setType((short) 0);
+			salesPO.setCompany(decorationPO.getCompany());
+			salesPO.setDompany(decorationPO.getCompany());
+			salesPO.setPompany(decorationPO.getCompany());
+			salesPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
+			salesPO.setComment(salesKey);
+
+			salesDao.save(salesPO);
+
+			operation = "add";
+		} else {
+			operation = "update";
+		}
+
+		// 款项落行(待收/待退): 补全单据语义, 收款/退款动作在 ERP 走正常流程(collect/refundsSalesPayment 承接状态推进与收据)
+		SalesPaymentPO salesPaymentPO = new SalesPaymentPO();
+
+		salesPaymentPO.setSales(salesPO);
+		salesPaymentPO.setOrderId(orderId);
+		salesPaymentPO.setType(type);
+		salesPaymentPO.setStatus(SalesPaymentPO.STATUS_INITIAL_INT);
+		salesPaymentPO.setCategory(salesPO.getCategory());
+		salesPaymentPO.setBrand(salesPO.getBrand() == null ? "" : salesPO.getBrand().getName());
+		salesPaymentPO.setCreater(creater);
+		salesPaymentPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
+		salesPaymentPO.setReferMoney(money);
+		salesPaymentPO.setCompany(salesPO.getPompany());
+
+		salesPaymentDao.save(salesPaymentPO);
+
+		Long rid = null;
+
+		// 退款(4): 凭空生成退货单(照审批物化口径, 待退态), spid 回填+关联款项, 退款执行走 ERP refundSalesPayment
+		if (type == SalesPaymentPO.TYPE_REFUNDS_INT) {
+
+			SalesRefundsPO salesRefundsPO = new SalesRefundsPO();
+
+			salesRefundsPO.setSales(salesPO);
+			salesRefundsPO.setSpid(salesPaymentPO.getSpid());
+			salesRefundsPO.setTotal(money);
+			salesRefundsPO.setType((short) 0);
+			salesRefundsPO.setStatus(SalesRefundsPO.STATUS_TYPE_REFUNDS_INT);
+			salesRefundsPO.setIsAffirm(SalesRefundsPO.ISAFFIRM_NONE_INT);
+			salesRefundsPO.setCreater(creater);
+			salesRefundsPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
+			salesRefundsPO.setComment("NERP:" + paymentNo.trim());
+
+			salesRefundsDao.save(salesRefundsPO);
+
+			salesPaymentPO.setSalesRefunds(salesRefundsPO);
+
+			salesPaymentDao.update(salesPaymentPO);
+
+			rid = salesRefundsPO.getRid();
+		}
+
+		Map<String, Object> result = new HashMap<String, Object>();
+
+		result.put("operation", operation);
+		result.put("sid", salesPO.getSid());
+		result.put("no", salesPO.getNo());
+		result.put("spid", salesPaymentPO.getSpid());
+		if (rid != null) result.put("rid", rid);
+		result.put("orderId", orderId);
+		result.put("type", type);
+		result.put("money", money);
+
+		return result;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public Map<String, Object> syncAddreduceForNerp(String orderId, String arNo, Short type, Long money, String content, String userId) throws FLException {
+
+		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(orderId);
+
+		if (decorationPO == null) {
+			throw new FLException(140013, "装修单不存在");
+		}
+
+		if (arNo == null || arNo.trim().isEmpty()) {
+			throw new FLException(400046, "NERP单号不能为空");
+		}
+
+		if (type == null || (type != AddReducePO.TYPE_ADD_INT && type != AddReducePO.TYPE_REDUCE_INT)) {
+			throw new FLException(400045, "销售款项类型无效");
+		}
+
+		if (money == null || money.longValue() <= 0) {
+			throw new FLException(150100, "款项金额必须大于0");
+		}
+
+		if (content == null || content.trim().isEmpty()) {
+			throw new FLException(400047, "增减明细不能为空");
+		}
+
+		UserPO creater = userDao.queryUserByUserId(userId);
+
+		if (creater == null) {
+			throw new FLException(400040, "操作账号无效");
+		}
+
+		// 幂等锚: content 嵌 NERP 单号前缀, NERP 重试报文一致即精等命中
+		String contentKey = "NERP:" + arNo.trim() + " " + content.trim();
+
+		// 增减单判断补充: 命中复用(已提交直接返回), 未命中经 addAddReduce 凭空创建后提交落款
+		AddReducePO existed = null;
+
+		for (AddReducePO addReducePO : addReduceDao.queryAddReduceByOrderId(orderId)) {
+
+			if (contentKey.equals(addReducePO.getContent())) {
+				existed = addReducePO;
+				break;
+			}
+		}
+
+		long arId;
+		long dpId;
+
+		if (existed != null && existed.getDpId() != 0) {
+
+			// 改单防御: 同 NERP 单号重推但类型/金额与首笔不一致, 拒绝处理(款项已落, 不支持改单)
+			if (existed.getType() != type || existed.getTotal() != money.longValue()) {
+				throw new FLException(200061, "增减单状态不可操作");
+			}
+
+			arId = existed.getArId();
+			dpId = existed.getDpId();
+
+			Map<String, Object> exists = new HashMap<String, Object>();
+
+			exists.put("operation", "exists");
+			exists.put("arId", arId);
+			exists.put("dpId", dpId);
+			exists.put("orderId", orderId);
+			exists.put("type", type);
+			exists.put("money", money);
+			exists.put("paymentMoney", decorationPaymentDao.get(dpId).getReferMoney());
+
+			return exists;
+		}
+
+		if (existed == null) {
+
+			AddReduceVO addReduceVO = new AddReduceVO();
+
+			addReduceVO.setOrderId(orderId);
+			addReduceVO.setType(type);
+			addReduceVO.setPaytype(AddReducePO.PAYTYPE_PAY_INT);
+			addReduceVO.setContent(contentKey);
+
+			addReduceService.addAddReduce(addReduceVO, userId);
+
+			for (AddReducePO addReducePO : addReduceDao.queryAddReduceByOrderId(orderId)) {
+
+				if (contentKey.equals(addReducePO.getContent())) {
+					existed = addReducePO;
+					break;
+				}
+			}
+
+			if (existed == null) {
+				throw new FLException(200060, "增减单不存在");
+			}
+
+			existed.setTotal(money);
+
+			addReduceDao.update(existed);
+		}
+
+		arId = existed.getArId();
+
+		// 提交链落装修款项(paymentType=增项款/减项款, twoType=增减款, referMoney 取整千元, dpId 回写, 变更记录埋点)
+		AddReduceVO submitVO = new AddReduceVO();
+
+		submitVO.setOrderId(orderId);
+
+		AddReduceVO itemVO = new AddReduceVO();
+
+		itemVO.setArId(arId);
+
+		List<AddReduceVO> addReduceVOs = new ArrayList<AddReduceVO>();
+
+		addReduceVOs.add(itemVO);
+
+		addReduceService.submitAddReduce(submitVO, addReduceVOs, userId);
+
+		// 提交后回读 dpId 与实际落库款项金额(原版口径取整千元, 与入参 money 可能存在零头差)
+		dpId = addReduceDao.get(arId).getDpId();
+
+		Map<String, Object> result = new HashMap<String, Object>();
+
+		result.put("operation", existed.getDpId() == 0 ? "add" : "update");
+		result.put("arId", arId);
+		result.put("dpId", dpId);
+		result.put("orderId", orderId);
+		result.put("type", type);
+		result.put("money", money);
+		result.put("paymentMoney", decorationPaymentDao.get(dpId).getReferMoney());
 
 		return result;
 	}
