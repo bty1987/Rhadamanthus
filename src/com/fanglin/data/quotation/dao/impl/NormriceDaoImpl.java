@@ -1,5 +1,6 @@
 package com.fanglin.data.quotation.dao.impl;
 
+import java.util.Collection;
 import java.util.List;
 
 import org.hibernate.criterion.Restrictions;
@@ -33,7 +34,13 @@ public class NormriceDaoImpl extends DaoImpl<NormricePO> implements NormriceDao{
 	public List<NormricePO> queryNormriceByQiid(Long qiid) {
 		return createCriteria(NormricePO.class).createAlias("quotationItem", "quotationItem").add(Restrictions.eq(NormricePO.COLUMN_QIID_STR, qiid)).list();
 	}
-	
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<NormricePO> queryNormriceByQiids(Collection<Long> qiids) {
+		return createCriteria(NormricePO.class).createAlias("quotationItem", "quotationItem").add(Restrictions.in(NormricePO.COLUMN_QIID_STR, qiids)).list();
+	}
+
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {
 
 		if (filters == null) return;

@@ -1,5 +1,6 @@
 package com.fanglin.data.quotation.dao.impl;
 
+import java.util.Collection;
 import java.util.List;
 
 import org.hibernate.criterion.Restrictions;
@@ -32,6 +33,12 @@ public class NormoodDaoImpl extends DaoImpl<NormoodPO> implements NormoodDao {
 	@SuppressWarnings("unchecked")
 	public List<NormoodPO> queryNormoodByQiid(Long qiid) {
 		return createCriteria(NormoodPO.class).createAlias("quotationItem", "quotationItem").add(Restrictions.eq(NormoodPO.COLUMN_QIID_STR, qiid)).list();
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<NormoodPO> queryNormoodByQiids(Collection<Long> qiids) {
+		return createCriteria(NormoodPO.class).createAlias("quotationItem", "quotationItem").add(Restrictions.in(NormoodPO.COLUMN_QIID_STR, qiids)).list();
 	}
 
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {

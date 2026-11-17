@@ -1,5 +1,6 @@
 package com.fanglin.data.quotation.dao;
 
+import java.util.Collection;
 import java.util.List;
 
 import com.fanglin.core.dao.Dao;
@@ -12,5 +13,7 @@ public interface NormoodDao extends Dao<NormoodPO> {
 	public List<NormoodPO> pageNormood(Paging paging, List<Filter> filters);
 	
 	public List<NormoodPO> queryNormoodByQiid(Long qiid);
+
+	public List<NormoodPO> queryNormoodByQiids(Collection<Long> qiids);
 
 }
