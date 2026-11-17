@@ -25,7 +25,8 @@ public class QuotationFormatDaoImpl extends DaoImpl<QuotationFormatPO> implement
 	public List<QuotationFormatPO> queryQuotationFormat(Paging paging, String pinyin) {
 		PagingQuery<QuotationFormatPO> query = pagingQuery(paging, QuotationFormatPO.class);
 
-		query.add(Restrictions.eq(QuotationCtemPO.COLUMN_STATUS_STR, QuotationFormatPO.STATUS_ENABLE_STR)).add(Restrictions.ilike(QuotationFormatPO.COLUMN_PINYIN_STR, pinyin, MatchMode.ANYWHERE));
+		// 双列检索对齐queryQuotationCtem家法: 中文输入中name(ctem名), 拼音首字母输入中pinyin
+		query.add(Restrictions.eq(QuotationCtemPO.COLUMN_STATUS_STR, QuotationFormatPO.STATUS_ENABLE_STR)).add(Restrictions.or(Restrictions.ilike(QuotationFormatPO.COLUMN_PINYIN_STR, pinyin, MatchMode.ANYWHERE), Restrictions.ilike("name", pinyin, MatchMode.ANYWHERE)));
 
 		return query.list();
 	}
