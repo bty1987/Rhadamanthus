@@ -321,8 +321,10 @@ jQuery(function($) {
         $("#" + base + "Name").val(section.userName);
         $("#" + base + "Dept").val(section.deptName || "");
         $("#" + base + "Region").val(section.regionName || "");
-        $("#" + base + "Rate").val(Math.round(section.rate / 10 * 10) / 10);
-        $("#" + base + "Default").prop("checked", section.defaultFlag == 1);
+        // Rate/Default 控件 id 无 User 段(html=belongTranDesignRate/belongTranDesignDefault), 与 Input/Name 等长前缀控件不同源; 2026-11-18 修复错位(此前读取落空, 任何比例值均被NaN拦)
+        var prefix = base.replace(/User$/, "");
+        $("#" + prefix + "Rate").val(Math.round(section.rate / 10 * 10) / 10);
+        $("#" + prefix + "Default").prop("checked", section.defaultFlag == 1);
     }
 
     // 现归属行展示: 供默认标识/比例决策参考(queryDecorationBelong的rate经tranargs已÷1000, 此处×1000还原‰展示)
@@ -415,7 +417,8 @@ jQuery(function($) {
             error: "请从下拉列表中选择接手人"
         };
 
-        var rate = tranParseRatePercent($("#" + base + "Rate"));
+        // Rate/Default 控件 id 无 User 段(见 tranFillSection 注), 2026-11-18 修复错位
+        var rate = tranParseRatePercent($("#" + base.replace(/User$/, "") + "Rate"));
 
         if (isNaN(rate)) return {
             error: "归属比例须在0~100之间(可一位小数)"
@@ -428,7 +431,7 @@ jQuery(function($) {
                 deptName: receiver.deptName,
                 regionName: receiver.regionName,
                 rate: rate,
-                defaultFlag: $("#" + base + "Default").prop("checked") ? 1 : 0
+                defaultFlag: $("#" + base.replace(/User$/, "") + "Default").prop("checked") ? 1 : 0
             }
         };
     }
