@@ -38,10 +38,18 @@ public class A20261117Action extends BaseListAction {
 	/** 补插定额行数(反馈用) */
 	private int count;
 
-	@Action(value = "supplementNormForSync", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String supplementNormForSync() throws FLException {
+	@Action(value = "syncNormriceItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String syncNormriceItem() throws FLException {
 
-		count = a20261117Service.supplementNormForSync(orderId, queryUserId());
+		count = a20261117Service.syncNormriceItem(orderId, queryUserId());
+
+		return SUCCESS;
+	}
+
+	@Action(value = "syncNormoodItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String syncNormoodItem() throws FLException {
+
+		count = a20261117Service.syncNormoodItem(orderId, queryUserId());
 
 		return SUCCESS;
 	}

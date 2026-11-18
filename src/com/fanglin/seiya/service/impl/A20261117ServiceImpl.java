@@ -6,9 +6,14 @@
  * @Copyright	: Copyright Creators 2014
  * @Author		: baity
  * @Email			: bty1987@163.com
- * @Describing	: 上方系统定额补数服务实现(工费/辅料两接口 → data.normrice/data.normood)
+ * @Describing	: 上方系统定额补数服务实现(工费/辅料两接口 → quotation.normriceitem/normooditem 实例层直存)
  *
- *                   落点说明: 先落 seiya 模块独立触发(Phase 1), 后续 makeNormtion 接线复用本服务(Phase 2)。
+ *                   落点说明: seiya 模块独立端点(Phase 1), 后续 makeNormtion 接线复用本服务(Phase 2)。
+ *                   数据模型: 三方定额不关联报价项(这类单报价无明细), 以 normtion 单据(qid)锚单落实例层——
+ *                   normriceitem/normooditem 的 qiid/areald/quoteld/npid(ngid) 置 0, type=3 定额行
+ *                   (makeNormtion 两级 disable 均带 type!=3, 幸存重跑); 工费 normtype=1 附加确认流
+ *                   (confirmNormriceItem 确认后计入工资核算), 辅料 normtype=0(INIT 即计辅料管控);
+ *                   工费 trannum=0 总额行(salary 即金额, 不乘工程量), 辅料 normnum=storenum=实际量(毫)。
  *                   评估与实施设计见 docs/01-方案设计/定额数据接口补充评估方案.md 第 7 节。
  */
 
@@ -27,7 +32,6 @@ import java.security.SecureRandom;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -44,23 +48,17 @@ import com.fanglin.core.interceptor.FLException;
 import com.fanglin.data.common.dao.ConstructionNodeDao;
 import com.fanglin.data.material.dao.NoodsDao;
 import com.fanglin.data.po.ConstructionNodePO;
-import com.fanglin.data.po.NormoodPO;
-import com.fanglin.data.po.NormricePO;
 import com.fanglin.data.po.NoodsPO;
-import com.fanglin.data.quotation.dao.NormoodDao;
-import com.fanglin.data.quotation.dao.NormriceDao;
-import com.fanglin.data.quotation.dao.QuotationItemDao;
-import com.fanglin.data.quotation.po.QuotationItemPO;
 import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.personel.dao.UserDao;
+import com.fanglin.quotation.dao.NormoodItemDao;
 import com.fanglin.quotation.dao.NormtionDao;
+import com.fanglin.quotation.dao.NormriceItemDao;
 import com.fanglin.quotation.dao.QuotationDao;
-import com.fanglin.quotation.dao.QuotationFunctionAreaDao;
-import com.fanglin.quotation.dao.QuotationFunctionAreaItemDao;
+import com.fanglin.quotation.po.NormoodItemPO;
 import com.fanglin.quotation.po.NormtionPO;
-import com.fanglin.quotation.po.QuotationFunctionAreaItemPO;
-import com.fanglin.quotation.po.QuotationFunctionAreaPO;
+import com.fanglin.quotation.po.NormriceItemPO;
 import com.fanglin.quotation.po.QuotationPO;
 import com.fanglin.seiya.service.A20261117Service;
 import com.fanglin.system.dao.SystemConfigDao;
@@ -107,28 +105,19 @@ public class A20261117ServiceImpl implements A20261117Service {
 	private QuotationDao quotationDao;
 
 	@Autowired
-	private QuotationFunctionAreaDao quotationFunctionAreaDao;
+	private NormtionDao normtionDao;
 
 	@Autowired
-	private QuotationFunctionAreaItemDao quotationFunctionAreaItemDao;
+	private NormriceItemDao normriceItemDao;
 
 	@Autowired
-	private QuotationItemDao quotationItemDao;
+	private NormoodItemDao normoodItemDao;
 
 	@Autowired
 	private ConstructionNodeDao constructionNodeDao;
 
 	@Autowired
 	private NoodsDao noodsDao;
-
-	@Autowired
-	private NormriceDao normriceDao;
-
-	@Autowired
-	private NormoodDao normoodDao;
-
-	@Autowired
-	private NormtionDao normtionDao;
 
 	@Autowired
 	private UserDao userDao;
@@ -138,7 +127,127 @@ public class A20261117ServiceImpl implements A20261117Service {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int supplementNormForSync(String orderId, String userId) throws FLException {
+	public int syncNormriceItem(String orderId, String userId) throws FLException {
+
+		QuotationPO quotationPO = prepareForSync(orderId, userId);
+
+		if (quotationPO == null) {
+			return 0;
+		}
+
+		JSONArray laborFees = queryNormSync(orderId, PATH_LABOR_FEE);
+
+		// 解析+字典校验(fail-closed: cnid 查不到施工节点字典即中止)
+		Map<Long, ConstructionNodePO> nodeByCnid = new LinkedHashMap<Long, ConstructionNodePO>();
+		Map<Long, Integer> salaryByCnid = new LinkedHashMap<Long, Integer>();
+		parseLaborFees(laborFees, nodeByCnid, salaryByCnid);
+
+		// 占用检查(仅补缺): 该单 type=3 现存 INIT/CONFIRMED 行同 cnid 跳过
+		Set<Long> occupiedCnids = new HashSet<Long>();
+
+		for (NormriceItemPO itemPO : normriceItemDao.queryNormriceItemByType(quotationPO.getQid(), NormriceItemPO.TYPE_QUOTA_INT)) {
+			if (itemPO.getConstructionNode() != null) {
+				occupiedCnids.add(itemPO.getConstructionNode().getCnid());
+			}
+		}
+
+		// 落实例行: normtion 单据锚单(qid/sid), 不关联报价项(qiid/areald/quoteld/npid 置 0)
+		int count = 0;
+
+		for (Map.Entry<Long, Integer> entry : salaryByCnid.entrySet()) {
+
+			if (occupiedCnids.contains(entry.getKey())) {
+				log.info(String.format("三方工费行跳过(该单已有同节点定额行), orderId:%s, cnid:%s", orderId, entry.getKey()));
+				continue;
+			}
+
+			ConstructionNodePO nodePO = nodeByCnid.get(entry.getKey());
+
+			NormriceItemPO normriceItemPO = new NormriceItemPO();
+			normriceItemPO.setQid(quotationPO.getQid());
+			normriceItemPO.setSid(quotationPO.getQid());
+			normriceItemPO.setType(NormriceItemPO.TYPE_QUOTA_INT);
+			normriceItemPO.setNormtype(NormriceItemPO.NORMTYPE_ADD_INT); // 附加确认流: confirmNormriceItem 确认后计入工资核算
+			normriceItemPO.setAtttype(NormriceItemPO.ATTTYPE_COLLECTION_INT);
+			normriceItemPO.setConstructionNode(nodePO);
+			normriceItemPO.setName(nodePO.getName());
+			normriceItemPO.setTrannum(0); // 总额行约定(trannum=0): salary 即金额(厘), 工资SQL/前端不乘工程量
+			normriceItemPO.setSalary(entry.getValue());
+			normriceItemPO.setNum(0);
+			normriceItemPO.setStatus(NormriceItemPO.STATUS_INIT_INT);
+			normriceItemDao.save(normriceItemPO);
+
+			count++;
+		}
+
+		log.info(String.format("三方工费补数完成, orderId:%s, 接口行数:%s, 补插:%s行", orderId, salaryByCnid.size(), count));
+
+		return count;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int syncNormoodItem(String orderId, String userId) throws FLException {
+
+		QuotationPO quotationPO = prepareForSync(orderId, userId);
+
+		if (quotationPO == null) {
+			return 0;
+		}
+
+		JSONArray auxiliaries = queryNormSync(orderId, PATH_AUXILIARY);
+
+		// 解析+字典校验(fail-closed: nid 查不到定材字典即中止)
+		Map<Long, NoodsPO> noodsByNid = new LinkedHashMap<Long, NoodsPO>();
+		Map<Long, Integer> numByNid = new LinkedHashMap<Long, Integer>();
+		parseAuxiliaries(auxiliaries, noodsByNid, numByNid);
+
+		// 占用检查(仅补缺): 该单现存 INIT 行同 nid 跳过
+		Set<Long> occupiedNids = new HashSet<Long>();
+
+		for (NormoodItemPO itemPO : normoodItemDao.queryNormoodItem(quotationPO.getQid())) {
+			if (itemPO.getNoods() != null) {
+				occupiedNids.add(itemPO.getNoods().getNid());
+			}
+		}
+
+		// 落实例行: normtion 单据锚单(qid/sid), 不关联报价项(qiid/areald/quoteld/ngid 置 0)
+		int count = 0;
+
+		for (Map.Entry<Long, Integer> entry : numByNid.entrySet()) {
+
+			if (occupiedNids.contains(entry.getKey())) {
+				log.info(String.format("三方辅料行跳过(该单已有同定材定额行), orderId:%s, nid:%s", orderId, entry.getKey()));
+				continue;
+			}
+
+			NormoodItemPO normoodItemPO = new NormoodItemPO();
+			normoodItemPO.setQid(quotationPO.getQid());
+			normoodItemPO.setSid(quotationPO.getQid());
+			normoodItemPO.setType(NormoodItemPO.TYPE_QUOTA_INT);
+			normoodItemPO.setNormtype(NormoodItemPO.NORMTYPE_MATERIAL_INT);
+			normoodItemPO.setAtttype(NormoodItemPO.ATTTYPE_COLLECTION_INT);
+			normoodItemPO.setNoods(noodsByNid.get(entry.getKey()));
+			normoodItemPO.setNormnum(entry.getValue()); // 实例层直存实际量(毫), 辅料管控 amountNormoodItem INIT 即计
+			normoodItemPO.setStorenum(entry.getValue());
+			normoodItemPO.setStatus(NormoodItemPO.STATUS_INIT_INT);
+			normoodItemDao.save(normoodItemPO);
+
+			count++;
+		}
+
+		log.info(String.format("三方辅料补数完成, orderId:%s, 接口行数:%s, 补插:%s行", orderId, numByNid.size(), count));
+
+		return count;
+	}
+
+	/**
+	 * 公共前置: 装修单判断(140013) → 公司开关(norm.sync.enable 公司行, 未配置走现有逻辑) →
+	 * 报价判断(200003, 报价可无明细但行必须存在——normtion/实例均以 qid 锚单) → normtion 单据头判断不存在创建。
+	 *
+	 * @return 报价单; null = 公司未启用三方补数(走现有逻辑)
+	 */
+	private QuotationPO prepareForSync(String orderId, String userId) throws FLException {
 
 		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(orderId);
 
@@ -146,12 +255,11 @@ public class A20261117ServiceImpl implements A20261117Service {
 			throw new FLException(140013, "装修单不存在");
 		}
 
-		// 公司开关(公司行): 未配置/≠1 = 未启用, 走现有逻辑(两分支)
 		SystemConfigPO enableConfig = systemConfigDao.querySystemConfig(KEY_SYNC_ENABLE, decorationPO.getCompany());
 
 		if (enableConfig == null || !"1".equals(enableConfig.getValue())) {
 			log.info(String.format("三方定额补数公司未启用, 走现有逻辑, orderId:%s, company:%s", orderId, decorationPO.getCompany()));
-			return 0;
+			return null;
 		}
 
 		QuotationPO quotationPO = quotationDao.queryQuotationForDefaultByOrderId(orderId);
@@ -160,7 +268,6 @@ public class A20261117ServiceImpl implements A20261117Service {
 			throw new FLException(200003, "报价不存在");
 		}
 
-		// normtion 单据头: 判断不存在进行创建
 		NormtionPO normtionPO = normtionDao.queryNormtion(quotationPO.getQid());
 
 		if (normtionPO == null) {
@@ -172,32 +279,17 @@ public class A20261117ServiceImpl implements A20261117Service {
 			normtionDao.save(normtionPO);
 		}
 
-		// 锚点报价项: 功能区内第一个工程量>0 的报价项; 同时收集全部报价项 qiid(占用检查用)
-		Set<Long> qiids = new HashSet<Long>();
+		return quotationPO;
+	}
 
-		long anchorQiid = 0;
-		int anchorInitNum = 0;
+	/**
+	 * 调上方定额接口: 基地址公司行优先、无则集团行(company=0), 密钥固定集团行(cost.app.secret);
+	 * 缺配置 200132 / 调用失败或 code≠0 200133 / data 为空 200134, 全部 fail-closed 中止。
+	 */
+	private JSONArray queryNormSync(String orderId, String path) throws FLException {
 
-		for (QuotationFunctionAreaPO functionArea : quotationFunctionAreaDao.queryQuotationFunctionAreaByQuotationId(quotationPO.getQid())) {
+		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(orderId);
 
-			for (QuotationFunctionAreaItemPO item : quotationFunctionAreaItemDao.queryQuotationFunctionAreaItemByFunctionAreaId(QuotationFunctionAreaItemPO.factoryToClazz(functionArea.getQfaId(), functionArea.getIndex()), functionArea.getQfaId())) {
-
-				long qiid = item.getQuotationItem().getQiid();
-
-				qiids.add(qiid);
-
-				if (anchorQiid == 0 && item.getInitNum() > 0) {
-					anchorQiid = qiid;
-					anchorInitNum = item.getInitNum();
-				}
-			}
-		}
-
-		if (qiids.isEmpty() || anchorQiid == 0) {
-			throw new FLException(200136, "报价无可挂载报价项");
-		}
-
-		// 接口配置: 基地址公司行优先、无则集团行(company=0); 密钥固定集团行(复用 cost.app.secret)
 		SystemConfigPO urlConfig = systemConfigDao.querySystemConfig(KEY_SYNC_URL, decorationPO.getCompany());
 
 		if (urlConfig == null) {
@@ -210,107 +302,23 @@ public class A20261117ServiceImpl implements A20261117Service {
 			throw new FLException(200132, "三方定额接口未配置");
 		}
 
-		String url = urlConfig.getValue().trim();
-		String secret = secretConfig.getValue().trim();
+		JSONObject response = postForSync(urlConfig.getValue().trim() + path, buildBody(orderId), secretConfig.getValue().trim());
 
-		// 工费清单查询 + 辅料单查询(fail-closed: 调用失败/返回无数据中止)
-		JSONObject laborFee = postForSync(url + PATH_LABOR_FEE, buildBody(orderId), secret);
-		checkResponse(laborFee, orderId, PATH_LABOR_FEE);
+		if (response == null || response.get("code") == null || response.getIntValue("code") != 0) {
+			log.error(String.format("三方定额接口调用失败, orderId:%s, api:%s, response:%s", orderId, path, response == null ? "null" : response.toJSONString()));
+			throw new FLException(200133, "三方定额接口调用失败");
+		}
 
-		JSONArray laborFees = laborFee.getJSONArray("data");
+		JSONArray data = response.getJSONArray("data");
 
-		if (laborFees == null || laborFees.isEmpty()) {
+		if (data == null || data.isEmpty()) {
 			throw new FLException(200134, "三方定额数据为空");
 		}
 
-		JSONObject auxiliary = postForSync(url + PATH_AUXILIARY, buildBody(orderId), secret);
-		checkResponse(auxiliary, orderId, PATH_AUXILIARY);
-
-		JSONArray auxiliaries = auxiliary.getJSONArray("data");
-
-		if (auxiliaries == null || auxiliaries.isEmpty()) {
-			throw new FLException(200134, "三方定额数据为空");
-		}
-
-		// 解析+字典校验(fail-closed: cnid/nid 查不到字典即中止)
-		Map<Long, ConstructionNodePO> nodeByCnid = new LinkedHashMap<Long, ConstructionNodePO>();
-		Map<Long, Integer> salaryByCnid = new LinkedHashMap<Long, Integer>();
-		parseLaborFees(laborFees, nodeByCnid, salaryByCnid);
-
-		Map<Long, NoodsPO> noodsByNid = new LinkedHashMap<Long, NoodsPO>();
-		Map<Long, Integer> numByNid = new LinkedHashMap<Long, Integer>();
-		parseAuxiliaries(auxiliaries, noodsByNid, numByNid);
-
-		// 占用检查(仅补缺): 该单报价任一报价项下已有同 cnid/nid 的定额行则跳过该三方行
-		Set<Long> occupiedCnids = new HashSet<Long>();
-
-		for (NormricePO normricePO : normriceDao.queryNormriceByQiids(qiids)) {
-			if (normricePO.getConstructionNode() != null) {
-				occupiedCnids.add(normricePO.getConstructionNode().getCnid());
-			}
-		}
-
-		Set<Long> occupiedNids = new HashSet<Long>();
-
-		for (NormoodPO normoodPO : normoodDao.queryNormoodByQiids(qiids)) {
-			if (normoodPO.getNoods() != null) {
-				occupiedNids.add(normoodPO.getNoods().getNid());
-			}
-		}
-
-		// 落行: 挂锚点报价项
-		QuotationItemPO anchorItem = quotationItemDao.get(anchorQiid);
-		int count = 0;
-
-		for (Map.Entry<Long, Integer> entry : salaryByCnid.entrySet()) {
-
-			if (occupiedCnids.contains(entry.getKey())) {
-				log.info(String.format("三方定额工费行跳过(该单报价已有同节点定额), orderId:%s, cnid:%s", orderId, entry.getKey()));
-				continue;
-			}
-
-			NormricePO normricePO = new NormricePO(anchorItem, nodeByCnid.get(entry.getKey()));
-			normricePO.setTrannum(0); // 总额行约定(trannum=0): salary 即金额(厘), 实例生成与工资核算不乘工程量
-			normricePO.setSalary(entry.getValue());
-			normricePO.setStuff(0);
-			normricePO.setStatus(NormricePO.STATUS_VALID_STR);
-			normriceDao.save(normricePO);
-
-			count++;
-		}
-
-		for (Map.Entry<Long, Integer> entry : numByNid.entrySet()) {
-
-			if (occupiedNids.contains(entry.getKey())) {
-				log.info(String.format("三方定额辅料行跳过(该单报价已有同定材定额), orderId:%s, nid:%s", orderId, entry.getKey()));
-				continue;
-			}
-
-			// normood 无 trannum, 实例生成固定 Arith.mul(工程量, 单量): 按锚点项工程量还原单量 → 实例量 = 三方总量
-			int normnum = (int) Math.round((double) entry.getValue() * SCALE / anchorInitNum);
-
-			if (normnum <= 0) {
-				throw new FLException(200135, "三方定额数据异常");
-			}
-
-			NormoodPO normoodPO = new NormoodPO(anchorItem);
-			normoodPO.setNoods(noodsByNid.get(entry.getKey()));
-			normoodPO.setName(noodsByNid.get(entry.getKey()).getName());
-			normoodPO.setNormnum(normnum);
-			normoodPO.setStorenum(normnum);
-			normoodPO.setPrice(0);
-			normoodPO.setStatus(NormoodPO.STATUS_VALID_STR);
-			normoodDao.save(normoodPO);
-
-			count++;
-		}
-
-		log.info(String.format("三方定额补数完成, orderId:%s, company:%s, 工费:%s行/辅料:%s行, 补插:%s行", orderId, decorationPO.getCompany(), salaryByCnid.size(), numByNid.size(), count));
-
-		return count;
+		return data;
 	}
 
-	/** 工费行解析: id(erpId串)=cnid → constructionNode 字典校验; amount(元4位小数) → salary(厘, ×1000 截断) */
+	/** 工费行解析: id(erpId串)=cnid → constructionNode 字典校验; amount(元4位小数) → salary(厘, ×1000 截断, ≤0 异常) */
 	private void parseLaborFees(JSONArray laborFees, Map<Long, ConstructionNodePO> nodeByCnid, Map<Long, Integer> salaryByCnid) throws FLException {
 
 		for (int i = 0; i < laborFees.size(); i++) {
@@ -334,9 +342,10 @@ public class A20261117ServiceImpl implements A20261117Service {
 			}
 
 			BigDecimal amount = row.getBigDecimal("amount");
+			int salary = amount == null ? 0 : amount.movePointRight(3).setScale(0, RoundingMode.DOWN).intValue();
 
-			if (amount == null) {
-				log.error(String.format("三方定额工费行amount缺失, cnid:%s", cnid));
+			if (amount == null || salary <= 0) {
+				log.error(String.format("三方定额工费行amount缺失或非正, cnid:%s, amount:%s", cnid, amount));
 				throw new FLException(200135, "三方定额数据异常");
 			}
 
@@ -345,11 +354,11 @@ public class A20261117ServiceImpl implements A20261117Service {
 			}
 
 			nodeByCnid.put(cnid, nodePO);
-			salaryByCnid.put(cnid, amount.movePointRight(3).setScale(0, RoundingMode.DOWN).intValue());
+			salaryByCnid.put(cnid, salary);
 		}
 	}
 
-	/** 辅料行解析: nid → noods 字典校验; quantity(4位小数) → 需求量(毫, ×1000 截断) */
+	/** 辅料行解析: nid → noods 字典校验; quantity(4位小数) → 需求量(毫, ×1000 截断, ≤0 异常) */
 	private void parseAuxiliaries(JSONArray auxiliaries, Map<Long, NoodsPO> noodsByNid, Map<Long, Integer> numByNid) throws FLException {
 
 		for (int i = 0; i < auxiliaries.size(); i++) {
@@ -371,8 +380,9 @@ public class A20261117ServiceImpl implements A20261117Service {
 			}
 
 			BigDecimal quantity = row.getBigDecimal("quantity");
+			int num = quantity == null ? 0 : quantity.movePointRight(3).setScale(0, RoundingMode.DOWN).intValue();
 
-			if (quantity == null || quantity.movePointRight(3).setScale(0, RoundingMode.DOWN).intValue() <= 0) {
+			if (quantity == null || num <= 0) {
 				log.error(String.format("三方定额辅料行quantity缺失或非正, nid:%s, quantity:%s", nid, quantity));
 				throw new FLException(200135, "三方定额数据异常");
 			}
@@ -382,16 +392,7 @@ public class A20261117ServiceImpl implements A20261117Service {
 			}
 
 			noodsByNid.put(nid, noodsPO);
-			numByNid.put(nid, quantity.movePointRight(3).setScale(0, RoundingMode.DOWN).intValue());
-		}
-	}
-
-	/** 接口响应校验(fail-closed): 缺失/HTTP 失败/业务 code≠0 一律 200133 中止 */
-	private void checkResponse(JSONObject response, String orderId, String api) throws FLException {
-
-		if (response == null || response.get("code") == null || response.getIntValue("code") != 0) {
-			log.error(String.format("三方定额接口调用失败, orderId:%s, api:%s, response:%s", orderId, api, response == null ? "null" : response.toJSONString()));
-			throw new FLException(200133, "三方定额接口调用失败");
+			numByNid.put(nid, num);
 		}
 	}
 

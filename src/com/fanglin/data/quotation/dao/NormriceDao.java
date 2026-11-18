@@ -1,6 +1,5 @@
 package com.fanglin.data.quotation.dao;
 
-import java.util.Collection;
 import java.util.List;
 
 import com.fanglin.core.dao.Dao;
@@ -13,7 +12,5 @@ public interface NormriceDao extends Dao<NormricePO> {
 	public List<NormricePO> pageNormrice(Paging paging, List<Filter> filters);
 	
 	public List<NormricePO> queryNormriceByQiid(Long qiid);
-
-	public List<NormricePO> queryNormriceByQiids(Collection<Long> qiids);
-
+	
 }
