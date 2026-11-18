@@ -15,7 +15,6 @@ jQuery(function($) {
     accessoriesInfo["orderId"] = params.manifest.accessories.orderId || "";
     accessoriesInfo["createTime"] = params.manifest.accessories.createTime || "";
     accessoriesInfo["creater"] = params.manifest.accessories.creater;
-    accessoriesInfo["manifestTime"] = params.manifest.accessories.manifestTime || "";
     accessoriesInfo["printnum"] = params.manifest.accessories.printnum || "";
 
     var STATUS_ADVANCE = constant.inventory().accessories.STATUS_ADVANCE_INT;
@@ -30,9 +29,8 @@ jQuery(function($) {
         accessoriesInfo["phone"] = data.decoration.supervisor.phone == null ? "---" : data.decoration.supervisor.phone;
     }, null, false);
 
-    // 费用明细(照外辅打印: 按项aiid分组挂子行, tranargs已折元)
+    // 费用明细(照外辅打印: 按项aiid分组挂子行, tranargs已折元; 合计仅累计配送项费用, 在明细回调中计算)
     var chargeMap = {};
-    var chargeTotalAmount = 0;
 
     com.post(api.inventory.queryAccessoriesCharge, {
         "accessoriesCharge.accessories.aid": accessoriesInfo["aid"]
@@ -48,43 +46,32 @@ jQuery(function($) {
                     if (!chargeMap[aiidKey]) chargeMap[aiidKey] = [];
                     chargeMap[aiidKey].push(charge);
                 }
-
-                var price = charge.price || 0;
-                var surplus = charge.surplus || 0;
-                chargeTotalAmount += utils.accAdd(price, surplus) * (charge.num || 0);
             });
         }
     }, null, false);
 
-    if (isAdvance) {
-        com.post(api.inventory.queryAccessoriesItemByAid, {
-            "accessoriesItem.aid": params.manifest.accessories.aid
-        }, function(res) {
-            createReceiptTable(accessoriesInfo, res.accessoriesItems);
+    // 打印口径=辅料单(2026-11-18): 明细统一取辅料单项并仅显示配送项(deliveryFlag=1, 自配项不打印);
+    // 数量: 预出=待出库量surplus, 出货/到货=已出库量num-surplus; 费用合计仅累计配送项费用(与打印口径一致)
+    com.post(api.inventory.queryAccessoriesItemByAid, {
+        "accessoriesItem.aid": params.manifest.accessories.aid
+    }, function(res) {
+
+        var items = $.grep(res.accessoriesItems || [], function(v) {
+            return v.deliveryFlag == 1;
         });
-    } else {
 
-        var options = {
-            "accessoriesManifest.accessories.aid": params.manifest.accessories.aid,
-            "accessoriesManifest.manifest.type": 7
-        };
+        var chargeTotalAmount = 0;
 
-        com.post(api.inventory.queryManifestByAid, options, function(res) {
-
-            var manifest = res.manifests;
-
-            $.each(manifest, function(i, v) {
-                accessoriesInfo["mno"] = v.code;
-                com.post(api.inventory.queryManifestItemByMid, {
-                    "manifest.mid": v.mid
-                }, function(res) {
-                    createReceiptTable(accessoriesInfo, res.manifestItems);
-                }, null, false);
+        $.each(items, function(i, v) {
+            $.each(chargeMap[String(v.aiid)] || [], function(j, charge) {
+                chargeTotalAmount += utils.accAdd(charge.price || 0, charge.surplus || 0) * (charge.num || 0);
             });
-        }, null, false);
-    }
+        });
 
-    function createReceiptTable(accessoriesInfo, itemInfo) {
+        createReceiptTable(accessoriesInfo, items, chargeTotalAmount);
+    }, null, false);
+
+    function createReceiptTable(accessoriesInfo, itemInfo, chargeTotalAmount) {
 
         var center = $("<center></center>").appendTo($("#accessoriesPrint"));
 
@@ -109,34 +96,21 @@ jQuery(function($) {
         var orderReceiptTr = $('<tr></tr>').appendTo(receiptTable);
         var anoTd = $('<td colspan="4" style="padding-left: 10px;font"></td>').text('辅料单号: ' + accessoriesInfo["no"]);
         var createrTd = $('<td colspan="4" style="padding-left: 10px;"></td>').text('装修单号: ' + accessoriesInfo["orderId"]);
-        var codeTd = $('<td colspan="4" style="padding-left: 10px;"></td>').text('货单号: ' + accessoriesInfo["mno"]);
+        var totalTd = $('<td colspan="4" style="padding-left: 10px;"></td>').text('地   址: ' + accessoriesInfo["address"]);
 
         var presonReceiptTr = $('<tr></tr>').appendTo(receiptTable);
-        var totalTd = $('<td colspan="4" style="padding-left: 10px;"></td>').text('地   址: ' + accessoriesInfo["address"]);
-        var createTimeTd = $('<td colspan="4" style="padding-left: 10px;"></td>').text('创建时间: ' + accessoriesInfo["createTime"]);
-        var createTimeTd2 = $('<td colspan="8" style="padding-left: 10px;"></td>').text('创建时间: ' + accessoriesInfo["createTime"]);
-        var manifestTimeTd = $('<td colspan="4" style="padding-left: 10px;"></td>').text('货单时间: ' + accessoriesInfo["manifestTime"]);
-
-        var totalReceiptTr = $('<tr></tr>').appendTo(receiptTable);
         var statusTd = $('<td colspan="4" style="padding-left: 10px;"></td>').text('监   理: ' + accessoriesInfo["supervisor"]);
         var deptTd = $('<td colspan="4" style="padding-left: 10px;"></td>').text('部   门: ' + accessoriesInfo["dept"]);
         var phoneTd = $('<td colspan="4" style="padding-left: 10px;"></td>').text('电   话: ' + accessoriesInfo["phone"]);
 
         var msgReceiptTr = $('<tr></tr>').appendTo(receiptTable);
         var createrName = accessoriesInfo["creater"] && accessoriesInfo["creater"].currentName ? accessoriesInfo["creater"].currentName : "";
-        var createrReceiptTd = $('<td colspan="12" style="padding-left: 10px;"></td>').text('创  建  人: ' + createrName);
         var createTd = $('<td colspan="4" style="padding-left: 10px;"></td>').text('创  建  人: ' + createrName);
+        var createTimeTd2 = $('<td colspan="8" style="padding-left: 10px;"></td>').text('创建时间: ' + accessoriesInfo["createTime"]);
 
-        if (isAdvance) {
-            orderReceiptTr.append(anoTd).append(createrTd).append(totalTd);
-            presonReceiptTr.append(statusTd).append(deptTd).append(phoneTd);
-            msgReceiptTr.append(createTd).append(createTimeTd2);
-        } else {
-            orderReceiptTr.append(anoTd).append(createrTd).append(codeTd);
-            presonReceiptTr.append(totalTd).append(createTimeTd).append(manifestTimeTd);
-            totalReceiptTr.append(statusTd).append(deptTd).append(phoneTd);
-            msgReceiptTr.append(createrReceiptTd);
-        }
+        orderReceiptTr.append(anoTd).append(createrTd).append(totalTd);
+        presonReceiptTr.append(statusTd).append(deptTd).append(phoneTd);
+        msgReceiptTr.append(createTd).append(createTimeTd2);
 
         var receReceiptTr = $('<tr></tr>').appendTo(receiptTable);
         var goodsNoTd = $('<td style="text-align: center;" colspan="2"></td>').html('<strong>商品编号</strong>').appendTo(receReceiptTr);
@@ -147,14 +121,14 @@ jQuery(function($) {
 
         $.each(itemInfo, function(i, v) {
 
-            var outstorehouseName = isAdvance ? "---" : (v.outstorehouse && v.outstorehouse.name ? v.outstorehouse.name : "---");
+            var itemNum = isAdvance ? (v.surplus == null ? 0 : v.surplus) : ((v.num == null ? 0 : v.num) - (v.surplus == null ? 0 : v.surplus));
 
             var receReceiptTr = $('<tr></tr>').appendTo(receiptTable);
             var goodsNoTd = $('<td style="text-align: center;" colspan="2"></td>').html(v.goods.no).appendTo(receReceiptTr);
-            var outstorehouseTd = $('<td style="text-align: center;" colspan="2"></td>').html(outstorehouseName).appendTo(receReceiptTr);
+            var outstorehouseTd = $('<td style="text-align: center;" colspan="2"></td>').html("---").appendTo(receReceiptTr);
             var goodsNameTd = $('<td style="text-align: center;" colspan="4"></td>').html(v.goods.name).appendTo(receReceiptTr);
             var measurementUnitTd = $('<td style="text-align: center;" colspan="2"></td>').html(v.goods.measurementUnit).appendTo(receReceiptTr);
-            var numTd = $('<td style="text-align: center;" colspan="2"></td>').html(v.surplus).appendTo(receReceiptTr);
+            var numTd = $('<td style="text-align: center;" colspan="2"></td>').html(itemNum).appendTo(receReceiptTr);
 
             // 费用子行(照外辅: 按 aiid 挂在明细行下, tranargs已折元)
             var charges = chargeMap[String(v.aiid)] || [];
