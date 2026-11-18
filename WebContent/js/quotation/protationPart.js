@@ -975,12 +975,12 @@ var protationPart = (function() {
             quo.calculateQuoFees();
         },
 
-        // 加载审批人列表
-        // submitType: 0=特批优惠(type=22), 1=活动优惠(type=26)
+        // 加载审批人列表(2026-11-18 与报价侧拆分审批人配置: 预签优惠→23, 预签活动优惠→28新增)
+        // submitType: 0=特批/管理优惠(type=23), 1=活动优惠(type=28); 报价侧保持 22/26 不变
         loadApprovers: function(submitType, callback) {
 
             // 根据提交类型确定审批人类型
-            var approverType = (submitType === 1) ? 26 : 22;
+            var approverType = (submitType === 1) ? 28 : 23;
 
             // 清空旧的审批人列表
             com.focusPage("#approveManSel", "#approveModal").empty();

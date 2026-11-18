@@ -58,8 +58,9 @@ $(function() {
         protation.items.version.bindData(res.quotationVersions, "qvId", "name", "无");
     });
 
+    // 预签优惠审批人(2026-11-18 与报价侧拆分: 22→23 预签优惠专用配置)
     com.post(api.approval.queryApproverByType, {
-        "approver.type": 22
+        "approver.type": 23
     }, function(res) {
 
         $.each(res.approvers, function(i, v) {
