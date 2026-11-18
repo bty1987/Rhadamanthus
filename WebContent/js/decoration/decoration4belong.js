@@ -107,9 +107,14 @@ jQuery(function($) {
 
     /* ====================== 日常列表(查看/设计/业务/移交+勾选批量) ====================== */
 
+    // 功能配置接入(2026-11-18): 独立变体 belongTran, 与主列表belong变体(mid785在用)完全隔离;
+    // 功能配置页(mid373)为公司勾选 belongTran 变体的条件(type2)/列(type3)条目后按配置渲染, 取消勾选即回退现状;
+    // 未配置公司走下方 fallback 硬编码(条件8条+原列组), 行为与历史版本完全一致(零回归)
+    var pageConfig = drawNode.getConfig("belongTran");
+
     var lineprops = (function() {
 
-        return [{
+        var props = [{
             type: "checkbox",
             name: "belongTranCheck",
             prop: "orderId",
@@ -121,71 +126,137 @@ jQuery(function($) {
                 if ($input.prop("checked")) tranChecked[v.orderId] = tranSnapshotOrder(v);
                 else delete tranChecked[v.orderId];
             }
-        }, {
-            field: "address",
-            name: "楼盘地址",
-            prop: function(v) {
+        }];
 
-                return v.house.village.name + " " + v.house.houseNumber;
-            },
-            clazz: "grey"
-        }, {
-            field: "customer",
-            name: "客户名",
-            prop: "customer.name",
-            clazz: "grey"
-        }, {
-            field: "designDepartment",
-            name: "设计部",
-            prop: "designer.dept.name",
-            clazz: "grey"
-        }, {
-            field: "designer",
-            name: "设计师",
-            prop: "designer.currentName",
-            clazz: "grey"
-        }, {
-            field: "salesmanDepartment",
-            name: "业务部",
-            prop: "salesman.dept.name",
-            clazz: "grey"
-        }, {
-            field: "salesman",
-            name: "业务员",
-            prop: "salesman.currentName",
-            clazz: "grey"
-        }, {
-            field: "houseArea",
-            name: "面积",
-            prop: "house.buildArea",
-            clazz: "blue"
-        }, {
-            field: "orderTotalPrice",
-            name: "合同报价",
-            prop: "orderTotalPrice",
-            clazz: "blue"
-        }, {
-            field: "measureTime",
-            name: "量房时间",
-            prop: "measureTime",
-            clazz: "green"
-        }, {
-            field: "type",
-            name: "类型",
-            prop: function(v) {
+        // 配置分支: 键对齐功能条目池(type3 propertyArr value, 与主列表共用条目, 新增条目走功能维护mid933页面);
+        // 渲染器保持简单prop形态(不依赖tools/custom render); grade列池中暂无条目, 功能维护新建(等级|propertyArr|grade)即勾即用
+        var propertyMap = {
+            address: {
+                field: "address",
+                name: "楼盘地址",
+                prop: function(v) {
 
-                return decorationBelong.decorationType[v.type];
+                    return v.house.village.name + " " + v.house.houseNumber;
+                },
+                clazz: "grey"
             },
-            clazz: "red"
-        }, {
-            field: "status",
-            name: "状态",
-            prop: function(v) {
+            villageName: {field: "villageName", name: "楼盘", prop: "house.village.name", clazz: "grey"},
+            houseNumber: {field: "houseNumber", name: "楼号", prop: "house.houseNumber", clazz: "grey"},
+            customerName: {field: "customerName", name: "客户名", prop: "customer.name", clazz: "grey"},
+            designDepartment: {field: "designDepartment", name: "设计部", prop: "designer.dept.name", clazz: "grey"},
+            designerName: {field: "designerName", name: "设计师", prop: "designer.currentName", clazz: "grey"},
+            salesmanDepartment: {field: "salesmanDepartment", name: "业务部", prop: "salesman.dept.name", clazz: "grey"},
+            salesmanName: {field: "salesmanName", name: "业务员", prop: "salesman.currentName", clazz: "grey"},
+            supervisorName: {field: "supervisorName", name: "监理", prop: "supervisor.currentName", clazz: "grey"},
+            houseArea: {field: "houseArea", name: "面积", prop: "house.buildArea", clazz: "blue"},
+            orderTotalPrice: {field: "orderTotalPrice", name: "合同报价", prop: "orderTotalPrice", clazz: "blue"},
+            quotationPrice: {field: "quotationPrice", name: "报价额", prop: "quotationPrice", clazz: "blue"},
+            precontractPrice: {field: "precontractPrice", name: "预签额", prop: "precontractPrice", clazz: "blue"},
+            factPrice: {field: "factPrice", name: "实收额", prop: "factPrice", clazz: "blue"},
+            createTime: {field: "createTime", name: "创建时间", prop: "createTime", clazz: "green"},
+            measureTime: {field: "measureTime", name: "量房时间", prop: "measureTime", clazz: "green"},
+            contractTime: {field: "contractTime", name: "签单时间", prop: "contractTime", clazz: "green"},
+            grade: {field: "grade", name: "等级", prop: "grade", clazz: "red"},
+            decorationType: {
+                field: "decorationType",
+                name: "类型",
+                prop: function(v) {
 
-                return decorationBelong.decorationOrderStatus[v.status];
+                    return decorationBelong.decorationType[v.typeness];
+                },
+                clazz: "red"
             },
-            clazz: "red"
-        }, {
+            decorationStatus: {
+                field: "decorationStatus",
+                name: "状态",
+                prop: function(v) {
+
+                    return decorationBelong.decorationOrderStatus[v.status];
+                },
+                clazz: "red"
+            }
+        };
+
+        var configProps = pageConfig.propertyArr || [];
+
+        if (configProps.length > 0) {
+
+            $.each(configProps, function(i, key) {
+                propertyMap[key] && props.push(propertyMap[key]);
+            });
+
+        } else {
+
+            // fallback: 未配置公司维持现硬编码列组(类型=v.type 现状语义, 与配置分支decorationType=typeness语义不同, 保持历史零回归)
+            props.push({
+                field: "address",
+                name: "楼盘地址",
+                prop: function(v) {
+
+                    return v.house.village.name + " " + v.house.houseNumber;
+                },
+                clazz: "grey"
+            }, {
+                field: "customer",
+                name: "客户名",
+                prop: "customer.name",
+                clazz: "grey"
+            }, {
+                field: "designDepartment",
+                name: "设计部",
+                prop: "designer.dept.name",
+                clazz: "grey"
+            }, {
+                field: "designer",
+                name: "设计师",
+                prop: "designer.currentName",
+                clazz: "grey"
+            }, {
+                field: "salesmanDepartment",
+                name: "业务部",
+                prop: "salesman.dept.name",
+                clazz: "grey"
+            }, {
+                field: "salesman",
+                name: "业务员",
+                prop: "salesman.currentName",
+                clazz: "grey"
+            }, {
+                field: "houseArea",
+                name: "面积",
+                prop: "house.buildArea",
+                clazz: "blue"
+            }, {
+                field: "orderTotalPrice",
+                name: "合同报价",
+                prop: "orderTotalPrice",
+                clazz: "blue"
+            }, {
+                field: "measureTime",
+                name: "量房时间",
+                prop: "measureTime",
+                clazz: "green"
+            }, {
+                field: "type",
+                name: "类型",
+                prop: function(v) {
+
+                    return decorationBelong.decorationType[v.type];
+                },
+                clazz: "red"
+            }, {
+                field: "status",
+                name: "状态",
+                prop: function(v) {
+
+                    return decorationBelong.decorationOrderStatus[v.status];
+                },
+                clazz: "red"
+            });
+        }
+
+        // 移交配置列固定保留(本页移交功能强依赖, 不受配置管控)
+        props.push({
             field: "tranConfig",
             name: "移交配置",
             prop: function(v) {
@@ -193,7 +264,9 @@ jQuery(function($) {
                 return tranConfigText(v);
             },
             clazz: "blue"
-        }];
+        });
+
+        return props;
     })();
 
     var linebtns = (function() {
@@ -206,7 +279,8 @@ jQuery(function($) {
         };
     })();
 
-    var _condArr = ['decoration-orderId', 'decoration-village', 'decoration-houseNumber', 'decoration-houseArea', 'decoration-designer', 'decoration-salesman', 'decoration-type', 'decoration-salesType'];
+    // 条件: belongTran变体type2条目非空按配置, 否则fallback现硬编码8条(全部在条件规则库+DAO白名单内, 池内条目即勾即用)
+    var _condArr = pageConfig.condArr && pageConfig.condArr.length > 0 ? pageConfig.condArr : ['decoration-orderId', 'decoration-village', 'decoration-houseNumber', 'decoration-houseArea', 'decoration-designer', 'decoration-salesman', 'decoration-type', 'decoration-salesType'];
 
     var searcher = new Searcher();
 
