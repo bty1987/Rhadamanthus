@@ -53,12 +53,12 @@ import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.quotation.dao.NormoodItemDao;
-import com.fanglin.quotation.dao.NormtionDao;
 import com.fanglin.quotation.dao.NormriceItemDao;
+import com.fanglin.quotation.dao.NormtionDao;
 import com.fanglin.quotation.dao.QuotationDao;
 import com.fanglin.quotation.po.NormoodItemPO;
-import com.fanglin.quotation.po.NormtionPO;
 import com.fanglin.quotation.po.NormriceItemPO;
+import com.fanglin.quotation.po.NormtionPO;
 import com.fanglin.quotation.po.QuotationPO;
 import com.fanglin.seiya.service.A20261117Service;
 import com.fanglin.system.dao.SystemConfigDao;
@@ -92,9 +92,6 @@ public class A20261117ServiceImpl implements A20261117Service {
 	private static final int CONNECT_TIMEOUT = 5000;
 
 	private static final int READ_TIMEOUT = 10000;
-
-	/** 元→厘 / 需求数量→毫 的统一 ×1000 口径 */
-	private static final int SCALE = 1000;
 
 	private static final SecureRandom RANDOM = new SecureRandom();
 
@@ -242,9 +239,8 @@ public class A20261117ServiceImpl implements A20261117Service {
 	}
 
 	/**
-	 * 公共前置: 装修单判断(140013) → 公司开关(norm.sync.enable 公司行, 未配置走现有逻辑) →
-	 * 报价判断(200003, 报价可无明细但行必须存在——normtion/实例均以 qid 锚单) → normtion 单据头判断不存在创建。
-	 *
+	 * 公共前置: 装修单判断(140013) → 公司开关(norm.sync.enable 公司行, 未配置走现有逻辑) → 报价判断(200003, 报价可无明细但行必须存在——normtion/实例均以 qid 锚单) → normtion 单据头判断不存在创建。
+	 * 
 	 * @return 报价单; null = 公司未启用三方补数(走现有逻辑)
 	 */
 	private QuotationPO prepareForSync(String orderId, String userId) throws FLException {
@@ -283,8 +279,7 @@ public class A20261117ServiceImpl implements A20261117Service {
 	}
 
 	/**
-	 * 调上方定额接口: 基地址公司行优先、无则集团行(company=0), 密钥固定集团行(cost.app.secret);
-	 * 缺配置 200132 / 调用失败或 code≠0 200133 / data 为空 200134, 全部 fail-closed 中止。
+	 * 调上方定额接口: 基地址公司行优先、无则集团行(company=0), 密钥固定集团行(cost.app.secret); 缺配置 200132 / 调用失败或 code≠0 200133 / data 为空 200134, 全部 fail-closed 中止。
 	 */
 	private JSONArray queryNormSync(String orderId, String path) throws FLException {
 
@@ -405,12 +400,7 @@ public class A20261117ServiceImpl implements A20261117Service {
 	}
 
 	/**
-	 * 签名 POST(fl-sync 统一验签, 与 DecorationActivityCostServiceImpl 同款):
-	 * headers appId/timestamp(毫秒, 时差≤30s)/nonce(60s 防重)/sign;
-	 * sign = SHA256_HEX(queryString + "#" + rawBody + "##" + headerString + "###" + appSecret),
-	 * 本接口业务参数全在 Body(queryString 空串), headerString 仅 appId/nonce/timestamp 按名称升序;
-	 * rawBody 签名与发送必须同一份序列化串。
-	 * 任何失败(网络/超时/HTTP 非 200/解析)仅 log.error 并返回 null, 由调用方 fail-closed 中止。
+	 * 签名 POST(fl-sync 统一验签, 与 DecorationActivityCostServiceImpl 同款): headers appId/timestamp(毫秒, 时差≤30s)/nonce(60s 防重)/sign; sign = SHA256_HEX(queryString + "#" + rawBody + "##" + headerString + "###" + appSecret), 本接口业务参数全在 Body(queryString 空串), headerString 仅 appId/nonce/timestamp 按名称升序; rawBody 签名与发送必须同一份序列化串。 任何失败(网络/超时/HTTP 非 200/解析)仅 log.error 并返回 null, 由调用方 fail-closed 中止。
 	 */
 	private JSONObject postForSync(String url, String rawBody, String secret) {
 

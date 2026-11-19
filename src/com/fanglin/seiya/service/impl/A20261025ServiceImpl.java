@@ -23,13 +23,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.approval.dao.ApprovalDao;
+import com.fanglin.common.po.CountingPO;
+import com.fanglin.common.service.CountingService;
 import com.fanglin.communion.dao.BrandDao;
 import com.fanglin.communion.po.BrandPO;
 import com.fanglin.communion.po.DepartmentTypePO;
 import com.fanglin.construction.dao.ConstructionInfoDao;
 import com.fanglin.construction.po.ConstructionInfoPO;
-import com.fanglin.common.po.CountingPO;
-import com.fanglin.common.service.CountingService;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.customer.dao.CustomerChanceDao;
 import com.fanglin.customer.dao.CustomerUserRuleDao;
@@ -54,8 +54,6 @@ import com.fanglin.decoration.po.DecorationBelongPO;
 import com.fanglin.decoration.po.DecorationOperatePO;
 import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.decoration.service.DecorationAccountStatusService;
-import com.fanglin.decoration.service.DecorationAdditionService;
-import com.fanglin.decoration.vo.DecorationVO;
 import com.fanglin.information.dao.MessageQueuingDao;
 import com.fanglin.information.po.MessageCueuingPO;
 import com.fanglin.information.po.MessagePO;
@@ -81,8 +79,8 @@ import com.fanglin.sales.dao.SalesRefundsDao;
 import com.fanglin.sales.po.SalesPO;
 import com.fanglin.sales.po.SalesRefundsPO;
 import com.fanglin.seiya.service.A20261025Service;
-import com.fanglin.system.dao.SystemConfigDao;
 import com.fanglin.system.dao.CompanyDao;
+import com.fanglin.system.dao.SystemConfigDao;
 import com.fanglin.system.po.CompanyPO;
 import com.fanglin.system.po.SystemConfigPO;
 import com.fanglin.utils.Arith;
@@ -177,9 +175,6 @@ public class A20261025ServiceImpl implements A20261025Service {
 
 	@Autowired
 	private AddReduceService addReduceService;
-
-	@Autowired
-	private DecorationAdditionService decorationAdditionService;
 
 	/**
 	 * NERP凭空预签（原 A20261024Action.syncProsignForNerp, 2026-10-25 合并入本类）
