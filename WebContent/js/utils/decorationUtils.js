@@ -220,7 +220,11 @@ var decorationUtils = {
         loadSalesResult();
 
         // 售前跟单页签: 统计条+时间轴列表(设计师品类品牌意向), [新增跟单]开跟单弹层(pre模式); 删除=仅记录人可见(服务端370038硬闸)
+        // 渲染逻辑内联本页(pre专用,弹层版在js/sales/salesFollowup.js内联)——枚举与后端 SalesPreFollowupPO 常量一一对应
         var $preFollowup = com.focusPage('#salesPreFollowupList' + dataPage).html("");
+
+        var preFollowupItems = {0: "意向沟通", 1: "品牌到店", 2: "方案比价", 9: "其他"};
+        var preFollowupWays = {0: "电话", 1: "微信", 2: "到店接待", 3: "上门", 9: "其他"};
 
         var preFollowupMe = null;
 
@@ -255,14 +259,81 @@ var decorationUtils = {
                 "salesPreFollowup.orderId": decorationDetail.orderId
             }, function(res) {
 
-                renderFollowupStats($statsWrap, res.salesPreFollowup || {});
+                var stats = res.salesPreFollowup || {};
+                var overdue = stats.overdueCount || 0;
+
+                var $box = $('<div></div>').addClass('clearfix').css({'padding': '4px 8px', 'border-bottom': '1px solid #eee'});
+
+                $box.append($('<b></b>').addClass('blue').text("跟单记录:" + (stats.total || 0)));
+
+                var lastDays = stats.lastTime ? Math.floor((Date.now() - new Date(String(stats.lastTime).replace(/-/g, "/")).getTime()) / 86400000) : null;
+                var $last = $('<b></b>').text(stats.lastTime ? "最近跟进:" + lastDays + "天前" : "最近跟进:无记录");
+                $last.addClass(stats.lastTime && lastDays > 7 ? 'orange' : 'grey');
+                $box.append($last);
+
+                $box.append($('<b></b>').addClass(overdue > 0 ? 'red' : 'grey').text("超期计划:" + overdue));
+
+                $statsWrap.append($box);
             }, null, false);
 
             com.post(api.sales.querySalesPreFollowupByOrderId, {
                 "salesPreFollowup.orderId": decorationDetail.orderId
             }, function(res) {
 
-                renderFollowupList($listWrap, res.salesPreFollowups || [], "pre", preFollowupMe, removePreFollowup);
+                var records = res.salesPreFollowups || [];
+
+                var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
+
+                if (!records.length) {
+                    $('<li></li>').addClass('item-orange clearfix').append(
+                        $('<div></div>').html("暂无跟单记录").css({"text-align": "center", "color": "#999", "padding": "8px"})).appendTo($ul);
+                }
+
+                $.each(records, function(i, v) {
+
+                    var overduePlan = v.planTime && new Date(String(v.planTime).replace(/-/g, "/")).getTime() < Date.now();
+
+                    var $li = $('<li></li>').addClass('item-orange clearfix');
+                    if (overduePlan) $li.css('border-left', '3px solid #d15b47');
+
+                    var $h3 = $('<h3></h3>').addClass('oid');
+                    $h3.append($('<small></small>').addClass(overduePlan ? 'red' : 'blue').text(preFollowupItems[v.item] || v.item));
+                    $h3.append($('<span></span>').addClass('grey').css('margin-left', '10px').text(v.content || ""));
+
+                    if (preFollowupMe && v.creater && v.creater.userId == preFollowupMe) {
+
+                        var $del = $('<a></a>').addClass('btn btn-minier btn-danger pull-right').text('删除');
+                        $del.on('click', function() {
+                            removePreFollowup(v);
+                        });
+                        $h3.append($del);
+                    }
+
+                    var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix').css('padding-left', '12px').appendTo($li);
+
+                    var props = [
+                        ["记录人:", v.creater ? (v.creater.currentName || v.creater.userName) : "-", "grey"],
+                        ["方式:", preFollowupWays[v.way] || v.way, "grey"],
+                        ["品类:", v.category || "-", "grey"],
+                        ["品牌:", v.brandName || "-", "grey"],
+                        ["跟进时间:", v.createTime, "green"],
+                        ["下一步计划:", v.plan || "-", "blue"]
+                    ];
+
+                    if (v.planTime) props.push(["计划跟进:", v.planTime, overduePlan ? "red" : "orange"]);
+
+                    $.each(props, function(j, p) {
+
+                        var $liProp = $('<li></li>').appendTo($ulProperty);
+                        $('<strong></strong>').text(p[0]).appendTo($liProp);
+                        $('<b></b>').text(p[1] == null || p[1] == "" ? "-" : p[1]).addClass(p[2]).appendTo($liProp);
+                    });
+
+                    $li.prepend($h3);
+                    $ul.append($li);
+                });
+
+                $listWrap.append($ul);
             }, null, false);
 
             var $addBtn = $('<button class="btn btn-minier btn-primary pull-right" type="button">新增跟单</button>').appendTo($btnRow);
