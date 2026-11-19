@@ -2,7 +2,7 @@
 
 | 项目 | 内容 |
 |---|---|
-| 版本 | v1.3（已落码,与实现同步) |
+| 版本 | v1.4（落码+两轮拍板调整:渲染内联/按钮直配) |
 | 日期 | 2026-11-15 |
 | 状态 | 已落码待部署 |
 | 涉及模块 | sales（主）、decoration（入口）、communion（operation） |
@@ -10,6 +10,8 @@
 
 > **v1.0 → v1.1**：单表拆双表（角度/字段不同）。
 > **v1.1 → v1.2（拍板落定）**：①售前不限装修单状态（有装修单就行）；②售后不限销售单状态（有销售单就行）；③逻辑删除（isDelete+deleteTime）；④工作台维持二期。
+> **v1.3 → v1.4（拍板调整）**：①删共享 salesFollowupUtils.js,渲染内联弹层页与 decorationUtils(避免 drawNode 同名全局互踩);②"跟单"按钮不走 salesfunction 配置,代码直配,02 号 SQL 删 function 配置段。
+>
 > **v1.2 → v1.3（落码定稿）**：实体族按命名规范带 Sales 前缀——`SalesPreFollowup*`（售前）/`SalesPostFollowup*`（售后）；表名 `sales.salesprefollowup`/`sales.salespostfollowup`（PK=sfid）；枚举字典改前端 JS 映射（免 constant 表依赖,照 sales4operate.js 先例）；售前/售后共用一个双模式弹层页 `salesFollowup.html`；错误码收敛为 370037/370038/370039。
 
 ---
@@ -51,7 +53,7 @@
 3. **不改主链路**。不加 SalesPO/DecorationPO 字段,不动收款/配送/结算;售后跟单不替代 salesdelivery。
 4. **两个入口**。装修单详情页签 + 销售单列表行按钮;工作台二期。
 5. **记录不可改,逻辑删**。仅记录人本人可删(isDelete=1+deleteTime,服务端硬闸)。
-6. **字典前端映射**。枚举与 PO 常量一一对应,JS 字典单源(salesFollowupUtils.js),两入口共用。
+6. **字典前端映射**。枚举与 PO 常量一一对应,JS 字典随页内联(弹层版 salesFollowup.js / 页签版 decorationUtils.js),不建共享 utils 文件。
 
 ---
 
@@ -107,7 +109,7 @@ sfid(PK AI)、company、sid bigint、orderId varchar(15,服务端冗余)、item 
 
 ### 6.3 枚举字典（前端 JS 映射,免 constant 表依赖）
 
-`WebContent/js/utils/salesFollowupUtils.js` 内 `salesFollowupDict = {pre:{items,ways}, post:{items,ways}}`,与 PO 常量一一对应;照 `sales4operate.js` 字典先例。售前表单只出 pre 组,售后表单只出 post 组。
+`salesFollowupDict = {pre:{items,ways}, post:{items,ways}}` 内联于弹层页 `js/sales/salesFollowup.js`(pre+post 全量),页签版 pre 字典内联于 `decorationUtils.js`;与 PO 常量一一对应,照 `sales4operate.js` 字典先例。售前表单只出 pre 组,售后表单只出 post 组。
 
 ---
 
@@ -159,13 +161,14 @@ brandName 由 PO @ManyToOne BrandPO 带出(ptv 内 set);creater 由 UserPO.setBa
 | 文件 | 改动 |
 |---|---|
 | `WebContent/views/sales/salesFollowup.html` | **新增**,双模式弹层页(信息条/统计条/筛选/列表/新增表单弹窗) |
-| `WebContent/js/sales/salesFollowup.js` | **新增**,弹层逻辑(pre/post 按 params.sales.followupMode 分流) |
-| `WebContent/js/utils/salesFollowupUtils.js` | **新增**,共享字典(salesFollowupDict)+统计条/时间轴/列表渲染函数 |
+| `WebContent/js/sales/salesFollowup.js` | **新增**,弹层逻辑(pre/post 按 params.sales.followupMode 分流)+ 字典与渲染函数**内联本页**(不依赖共享 utils) |
 | `WebContent/js/api/sales.js` | +8 端点映射 |
-| `WebContent/js/sales/sales.js` | buttonMap 加"跟单"按钮 + followupSales(post 模式 popup) |
+| `WebContent/js/sales/sales.js` | buttonMap 加"跟单"按钮 + followupSales(post 模式 popup)+ btns.followup **直配追加(不走 salesfunction 配置)** |
 | `WebContent/js/utils/decorationPageUtils.js` | drawMaterial 左列加"售前跟单"页签(salesPreFollowupList{conf}) |
-| `WebContent/js/utils/decorationUtils.js` | initMaterial 内 loadPreFollowup(统计+列表+新增按钮开 pre 模式弹层+行内删除) |
-| `WebContent/views/decoration/decoration4detail.html` | loadScript 追加 salesFollowupUtils.js |
+| `WebContent/js/utils/decorationUtils.js` | initMaterial 内 loadPreFollowup(统计+列表+新增按钮开 pre 模式弹层+行内删除,pre 渲染**内联本页**) |
+| `WebContent/views/decoration/decoration4detail.html` | loadScript 不变(渲染内联后无新依赖) |
+
+> 拍板(v1.4):①跟单渲染不建共享 utils 文件(避免 utils 加载关系与 drawNode 同名全局互踩),弹层版内联 salesFollowup.js、页签版内联 decorationUtils.js;②"跟单"行按钮暂不走 salesfunction 配置,页面代码直接实现(btns.followup 追加,全变体显示),02 号 SQL 相应不含 function 配置段。
 
 要点：品牌下拉联动=queryCategory(主材品类 type≠0)→queryBrandByCid(参数 brand.cid);计划时间=com.datetime("date")+" 00:00:00"拼串(照 pelivery 先例);删除按钮仅记录人可见(前端 queryUserForSelfByUserId 比对+服务端硬闸双保险);post 信息条配送进度=querySalesDeliveryItem(salesDeliveryItem.sales.sid)取最大状态文案。
 
@@ -182,16 +185,16 @@ brandName 由 PO @ManyToOne BrandPO 带出(ptv 内 set);creater 由 UserPO.setBa
 
 ### 9.2 页面配置
 
-salesfunction 插入"跟单"行按钮(key='pageBtn',value='followup',group=1 销售单,sort=21)+salesfunctionright 铺开现存全部(变体,公司)组合(照 03 号"记录"按钮先例);不配数据按钮不渲染。装修单详情页签为代码定义,不涉及 decorationFunction 配置。
+**无 function 配置数据**(拍板:暂不配置化)——"跟单"行按钮由 sales.js 页面代码直接实现(btns.followup 追加,绕过 pageBtn 配置过滤,全变体显示);装修单详情页签本就是代码定义(drawMaterial)。02 号 SQL 仅含两表 DDL + operation 4 行。
 
 ### 9.3 SQL（`sqls/sales/02_salesfollowup.sql`,单文件幂等）
 
-两表 CREATE TABLE IF NOT EXISTS + salesfunction 按钮与铺开 + operation 4 行;error.md 已登记 370037/370038/370039。
+两表 CREATE TABLE IF NOT EXISTS + operation 4 行(through=1);**不含 salesfunction 配置段**(按钮代码直配);error.md 已登记 370037/370038/370039。
 
 ### 9.4 部署物
 
 - 后端：`fanglin-sales-8.3.031.jar`（259773B,旧 241581B 作废,13 个新类已验证在包内）
-- 前端：8 处（3 新增+5 修改）
+- 前端：7 处（2 新增+5 修改；salesFollowupUtils.js 已删,渲染内联两页）
 - SQL：sqls/sales/02号（DDL 先于 jar）
 
 ---
@@ -217,7 +220,7 @@ v1 不做：状态机/审批/字段回写、消息推送/定时任务、图片�
 
 售后：
 
-- [ ] 销售单列表"跟单"按钮(salesfunction 配置后)打开弹层,信息条带出销售单信息+配送进度;
+- [ ] 销售单列表"跟单"按钮(代码直配,无需配置数据)打开弹层,信息条带出销售单信息+配送进度;
 - [ ] 初始/完结/全退/折单/废单均可记录,落库 salespostfollowup;
 - [ ] orderId 服务端冗余写入(前端不传也正确);
 - [ ] 处理结果可补记;删除仅本人(两表同验),重复删返回 370037。

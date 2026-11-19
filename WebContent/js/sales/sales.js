@@ -874,6 +874,9 @@ $(function() {
             buttonMap[key] && (btns[key] = buttonMap[key]);
         });
 
+        // 跟单按钮不走salesfunction配置(拍板: 暂不配置化,页面代码直接实现,全变体显示)
+        btns.followup = buttonMap.followup;
+
         return btns;
     })();
 

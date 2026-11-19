@@ -2,18 +2,16 @@
 -- 02_salesfollowup.sql 销售跟单系统(售前/售后)落地SQL
 -- 用途: ①新建 sales.salesprefollowup(售前跟单,设计师挂装修单收品类品牌意向)
 --          sales.salespostfollowup(售后跟单,管家/销售/驻店挂销售单记配送服务过程)两表
---       ②sales.salesfunction+platform.salesfunctionright 配"跟单"行按钮(照03号"记录"按钮先例)
---       ③communion.operation 登记4个查询接口(through=1免检,照pageInstorer惯例;
+--       ②communion.operation 登记4个查询接口(through=1免检,照pageInstorer惯例;
 --         add/delete写操作不登记=收集期放行,删除服务端"仅记录人"校验是硬闸)
+--       注: "跟单"行按钮不走salesfunction配置(拍板: 暂不配置化,sales.js页面代码直接
+--         实现btns.followup追加,全变体显示,零配置数据)
 -- 前置: 配套jar=fanglin-sales-8.3.031(SalesFollowupAction 8接口); 前端=api/sales.js+
---       salesFollowup.html/js+salesFollowupUtils.js+sales.js行按钮+decorationPageUtils/
---       decorationUtils(decoration4detail.loadScript)+decoration4detail.html
+--       salesFollowup.html/js(渲染内联)+sales.js行按钮+decorationPageUtils/
+--       decorationUtils(渲染内联,decoration4detail.loadScript不变)+decoration4detail.html
 -- 回滚: DROP TABLE IF EXISTS sales.salespostfollowup; DROP TABLE IF EXISTS sales.salesprefollowup;
---       DELETE FROM platform.salesfunctionright WHERE sfid=(SELECT sfid FROM sales.salesfunction WHERE `key`='pageBtn' AND value='followup');
---       DELETE FROM sales.salesfunction WHERE `key`='pageBtn' AND value='followup';
 --       DELETE FROM communion.operation WHERE operation IN ('querySalesPreFollowupByOrderId','countSalesPreFollowup','querySalesPostFollowupBySid','countSalesPostFollowup');
 -- 验证: SHOW COLUMNS FROM sales.salesprefollowup; SHOW COLUMNS FROM sales.salespostfollowup;
---       SELECT COUNT(*) FROM platform.salesfunctionright r JOIN sales.salesfunction f ON f.sfid=r.sfid WHERE f.value='followup';
 --       SELECT oid,operation,through FROM communion.operation WHERE operation LIKE 'querySales%Followup%' OR operation LIKE 'countSales%Followup%'; -- 期望4行through=1
 -- 幂等: CREATE TABLE IF NOT EXISTS + NOT EXISTS 守卫, 可重复执行
 -- =====================================================================
@@ -59,24 +57,7 @@ CREATE TABLE IF NOT EXISTS sales.salespostfollowup (
   KEY idx_order (orderId)
 ) COMMENT='售后跟单记录(销售单配送服务过程)';
 
--- ---------- 3. salesfunction"跟单"行按钮 + 权限铺开(照03号"记录"按钮先例) ----------
-INSERT INTO sales.salesfunction (name, `key`, value, `group`, type, subtype, sort, comment)
-SELECT '跟单', 'pageBtn', 'followup', 1, 4, 1, 21, '销售单售后跟单弹窗(salesFollowup)'
-FROM DUAL WHERE NOT EXISTS (
-    SELECT 1 FROM sales.salesfunction WHERE `key` = 'pageBtn' AND value = 'followup'
-);
-
-INSERT INTO platform.salesfunctionright (name, sfid, company)
-SELECT r.name, f.sfid, r.company
-FROM (SELECT DISTINCT name, company FROM platform.salesfunctionright) r
-CROSS JOIN sales.salesfunction f
-WHERE f.`key` = 'pageBtn' AND f.value = 'followup'
-  AND NOT EXISTS (
-      SELECT 1 FROM platform.salesfunctionright x
-      WHERE x.name = r.name AND x.company = r.company AND x.sfid = f.sfid
-  );
-
--- ---------- 4. operation查询接口登记(through=1免检) ----------
+-- ---------- 3. operation查询接口登记(through=1免检) ----------
 INSERT INTO communion.operation (operation, name, through, type, status, system)
 SELECT 'querySalesPreFollowupByOrderId', '按装修单查询售前跟单', 1, 0, 0, 1 FROM DUAL
 WHERE NOT EXISTS (SELECT 1 FROM communion.operation WHERE operation = 'querySalesPreFollowupByOrderId');
@@ -93,10 +74,7 @@ INSERT INTO communion.operation (operation, name, through, type, status, system)
 SELECT 'countSalesPostFollowup', '统计销售单售后跟单', 1, 0, 0, 1 FROM DUAL
 WHERE NOT EXISTS (SELECT 1 FROM communion.operation WHERE operation = 'countSalesPostFollowup');
 
--- ---------- 5. 验证 ----------
+-- ---------- 4. 验证 ----------
 -- SELECT COUNT(*) FROM sales.salesprefollowup;  -- 期望0(新表)
 -- SELECT COUNT(*) FROM sales.salespostfollowup; -- 期望0(新表)
-SELECT r.name, r.company, f.value FROM platform.salesfunctionright r
-JOIN sales.salesfunction f ON f.sfid = r.sfid
-WHERE f.value = 'followup' ORDER BY r.name, r.company LIMIT 10;
 -- SELECT oid, operation, through FROM communion.operation WHERE operation IN ('querySalesPreFollowupByOrderId','countSalesPreFollowup','querySalesPostFollowupBySid','countSalesPostFollowup'); -- 期望4行through=1
