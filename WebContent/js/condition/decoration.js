@@ -257,6 +257,22 @@ Condition.addupRule("decoration", {
             validate: null
         }
     },
+    "grade": {
+        label: "等级",
+        type: "select",
+        submitConfig: {
+            name: "decoration.grade",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: null,
+            postData: null,
+            listPath: constant.decoration().decoration.grade.datas,
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
     "design-region": {
         label: "设计中心",
         type: "autofill",
