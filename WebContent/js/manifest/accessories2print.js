@@ -50,15 +50,13 @@ jQuery(function($) {
         }
     }, null, false);
 
-    // 打印口径=辅料单(2026-11-18): 明细统一取辅料单项并仅显示配送项(deliveryFlag=1, 自配项不打印);
-    // 数量: 预出=待出库量surplus, 出货/到货=已出库量num-surplus; 费用合计仅累计配送项费用(与打印口径一致)
+    // 打印口径=辅料单(2026-11-18): 明细统一取辅料单项显示全部项目(2026-11-19 用户拍板删除配送标识过滤, 存量项deliveryFlag全0过滤即空表);
+    // 数量: 预出=待出库量surplus, 出货/到货=已出库量num-surplus; 费用合计=整单全部项费用
     com.post(api.inventory.queryAccessoriesItemByAid, {
         "accessoriesItem.aid": params.manifest.accessories.aid
     }, function(res) {
 
-        var items = $.grep(res.accessoriesItems || [], function(v) {
-            return v.deliveryFlag == 1;
-        });
+        var items = res.accessoriesItems || [];
 
         var chargeTotalAmount = 0;
 
