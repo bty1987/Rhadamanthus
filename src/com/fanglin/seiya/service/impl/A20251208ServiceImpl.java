@@ -776,7 +776,11 @@ public class A20251208ServiceImpl implements A20251208Service {
 
 		String content = String.format("装修单: %s, 地址: %s %s, 预计完工时间: %s , 还剩%s日 , 请及时对接完工安排 ", decorationPO.getOrderId(), decorationPO.getHouse().getVillage().getName(), SensitiveDataHelper.decrypt(decorationPO.getHouse().getHouseNumber()), finishTime, finishDay + 1);
 
-		messageService.sendMessage(constructionPO.getSupervisor().getUserId(), decorationPO.getCreater().getUserId(), content, MessagePO.TYPE_SEND_CONSTRUCTION_INT, decorationPO.getCompany());
+		// 完工通知(旁路,尽力而为): 监理未派(construction.suid空, 生产实测801工程/105在途)或创建人为空时跳过,
+		// 不阻断环节完工主流程(2026-11-20 平台推完工1503130069 此处 NPE 实证)
+		if (constructionPO.getSupervisor() != null && decorationPO.getCreater() != null) {
+			messageService.sendMessage(constructionPO.getSupervisor().getUserId(), decorationPO.getCreater().getUserId(), content, MessagePO.TYPE_SEND_CONSTRUCTION_INT, decorationPO.getCompany());
+		}
 
 		constructionScheduleVO.setEndTime(constructionSchedulePO.getEndTime());
 
