@@ -101,7 +101,7 @@
 
 ### 6.1 `sales.salesprefollowup`
 
-sfid(PK AI)、company、orderId varchar(15)、category varchar(32)、bid bigint(0=未指定)、item tinyint(0意向沟通/1品牌到店/2方案比价/9其他)、way tinyint(0电话/1微信/2到店接待/3上门/9其他)、content varchar(512)、plan varchar(256)、planTime datetime、isDelete tinyint(0/1)、deleteTime datetime、cuid bigint、createTime datetime；KEY idx_order(orderId)。COMMENT='售前跟单记录(设计师品类品牌意向)'。
+sfid(PK AI)、company、orderId varchar(15)、category varchar(32)、bid bigint NULL(NULL=未指定; Hibernate关联null时显式写NULL,列须允许NULL——test实测NOT NULL+DEFAULT 0被显式NULL击穿)、item tinyint(0意向沟通/1品牌到店/2方案比价/9其他)、way tinyint(0电话/1微信/2到店接待/3上门/9其他)、content varchar(512)、plan varchar(256)、planTime datetime、isDelete tinyint(0/1)、deleteTime datetime、cuid bigint、createTime datetime；KEY idx_order(orderId)。COMMENT='售前跟单记录(设计师品类品牌意向)'。
 
 ### 6.2 `sales.salespostfollowup`
 

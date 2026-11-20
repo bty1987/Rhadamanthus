@@ -22,7 +22,7 @@ CREATE TABLE IF NOT EXISTS sales.salesprefollowup (
   company    int    NOT NULL DEFAULT 0      COMMENT '公司',
   orderId    varchar(15) NOT NULL           COMMENT '装修单号',
   category   varchar(32) DEFAULT NULL       COMMENT '品类快照(照sales.category口径,冗余文本)',
-  bid        bigint NOT NULL DEFAULT 0      COMMENT '品牌ID(0=未指定,品牌名join brand)',
+  bid        bigint NULL DEFAULT NULL       COMMENT '品牌ID(NULL=未指定,品牌名join brand; Hibernate关联null时显式写NULL,列须允许NULL)',
   item       tinyint NOT NULL DEFAULT 0     COMMENT '事项: 0意向沟通/1品牌到店/2方案比价/9其他',
   way        tinyint NOT NULL DEFAULT 0     COMMENT '方式: 0电话/1微信/2到店接待/3上门/9其他',
   content    varchar(512) NOT NULL          COMMENT '跟进内容',
