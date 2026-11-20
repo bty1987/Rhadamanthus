@@ -3,6 +3,8 @@ package com.fanglin.sales.vo;
 import java.io.Serializable;
 import java.sql.Timestamp;
 
+import org.apache.struts2.json.annotations.JSON;
+
 import com.fanglin.personel.vo.UserBaseVO;
 
 public class SalesPreFollowupVO implements Serializable {
@@ -120,6 +122,7 @@ public class SalesPreFollowupVO implements Serializable {
 		this.plan = plan;
 	}
 
+	@JSON(format = "yyyy-MM-dd HH:mm:ss")
 	public Timestamp getPlanTime() {
 		return planTime;
 	}
@@ -136,6 +139,7 @@ public class SalesPreFollowupVO implements Serializable {
 		this.creater = creater;
 	}
 
+	@JSON(format = "yyyy-MM-dd HH:mm:ss")
 	public Timestamp getCreateTime() {
 		return createTime;
 	}
@@ -152,6 +156,7 @@ public class SalesPreFollowupVO implements Serializable {
 		this.total = total;
 	}
 
+	@JSON(format = "yyyy-MM-dd HH:mm:ss")
 	public Timestamp getLastTime() {
 		return lastTime;
 	}
