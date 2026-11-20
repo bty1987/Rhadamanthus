@@ -332,14 +332,106 @@ var decorationUtils = {
                 $listWrap.append($ul);
             }, null, false);
 
+            // 内联新增表单(拍板: 页签内直接新增不开弹层,保存后原位刷新)
             var $addBtn = $('<button class="btn btn-minier btn-primary pull-right" type="button">新增跟单</button>').appendTo($btnRow);
 
+            var $formWrap = $('<div></div>').css({'padding': '8px', 'background': '#f8f8f8', 'border': '1px solid #ddd', 'border-radius': '3px', 'display': 'none'}).insertAfter($btnRow);
+
+            var $row1 = $('<div></div>').addClass('clearfix').css({'margin-bottom': '6px'}).appendTo($formWrap);
+
+            var $selItem = $('<select class="form-control input-sm" style="width: 110px; display: inline-block; margin-right: 6px;"></select>').appendTo($row1);
+            $.each(preFollowupItems, function(k, v) {
+                $selItem.append($('<option></option>').attr("value", k).text(v));
+            });
+            $selItem.val('0');
+
+            var $selWay = $('<select class="form-control input-sm" style="width: 110px; display: inline-block; margin-right: 6px;"></select>').appendTo($row1);
+            $.each(preFollowupWays, function(k, v) {
+                $selWay.append($('<option></option>').attr("value", k).text(v));
+            });
+            $selWay.val('1');
+
+            var $selCategory = $('<select class="form-control input-sm" style="width: 130px; display: inline-block; margin-right: 6px;"></select>').appendTo($row1).append($('<option></option>').attr("value", "").text("不限"));
+            var $selBrand = $('<select class="form-control input-sm" style="width: 130px; display: inline-block; margin-right: 6px;"></select>').appendTo($row1).append($('<option></option>').attr("value", "0").text("不限"));
+
+            com.post(api.data.queryCategory, {}, function(res) {
+
+                $.each(res.categorys, function(i, v) {
+
+                    if (v.type == 0 || !v.name)
+                        return;
+
+                    $selCategory.append($('<option></option>').attr("value", v.cid).text(v.name));
+                });
+
+            }, null, false);
+
+            $selCategory.on('change', function() {
+
+                var cid = $(this).val();
+
+                $selBrand.html('').append($('<option></option>').attr("value", "0").text("不限"));
+
+                if (!cid)
+                    return;
+
+                com.post(api.data.queryBrandByCid, {
+                    "brand.cid": cid
+                }, function(res) {
+
+                    $.each(res.brands, function(i, v) {
+                        $selBrand.append($('<option></option>').attr("value", v.bid).text(v.name));
+                    });
+
+                }, null, false);
+            });
+
+            var $planTime = $('<input type="text" readonly="readonly" class="form-control input-sm" style="width: 110px; display: inline-block;" placeholder="计划跟进时间">').appendTo($row1);
+            com.datetime($planTime, "date");
+
+            var $row2 = $('<div></div>').addClass('clearfix').css({'margin-bottom': '6px'}).appendTo($formWrap);
+            var $content = $('<textarea class="form-control" rows="2" maxlength="512" placeholder="跟进内容(必填), 如: 客户到店看了金意陶, 约下周带看蜡笔小新"></textarea>').appendTo($row2);
+            var $plan = $('<input type="text" class="form-control input-sm" style="width: 100%; margin-top: 6px;" maxlength="256" placeholder="下一步计划(选填)">').appendTo($row2);
+
+            var $saveBtn = $('<button class="btn btn-minier btn-success" style="margin-right: 6px;">保存</button>').appendTo($formWrap);
+            var $cancelBtn = $('<button class="btn btn-minier btn-default">取消</button>').appendTo($formWrap);
+
             $addBtn.on('click', function() {
+                $formWrap.toggle();
+            });
 
-                params.sales.followupMode = "pre";
-                params.sales.orderId = decorationDetail.orderId;
+            $cancelBtn.on('click', function() {
+                $formWrap.hide();
+            });
 
-                com.popup4page("#layerPopUp", "views/sales/salesFollowup.html", "售前跟单", '', function() {
+            $saveBtn.on('click', function() {
+
+                var content = $.trim($content.val());
+
+                if (!content) {
+                    com.showAlert(com.error, "跟单内容不能为空");
+                    return;
+                }
+
+                var $categorySelected = $selCategory.find("option:selected");
+
+                com.post(api.sales.addSalesPreFollowup, {
+                    "salesPreFollowup.orderId": decorationDetail.orderId,
+                    "salesPreFollowup.item": $selItem.val(),
+                    "salesPreFollowup.way": $selWay.val(),
+                    "salesPreFollowup.bid": $selBrand.val() || 0,
+                    "salesPreFollowup.category": $categorySelected.attr("value") ? $categorySelected.text() : "",
+                    "salesPreFollowup.content": content,
+                    "salesPreFollowup.plan": $plan.val(),
+                    "salesPreFollowup.planTime": $planTime.val() ? $planTime.val() + " 00:00:00" : ""
+                }, function(res) {
+
+                    com.showAlert(com.info, "操作成功");
+
+                    $formWrap.hide();
+                    $content.val('');
+                    $plan.val('');
+                    $planTime.val('');
 
                     loadPreFollowup();
                 });
