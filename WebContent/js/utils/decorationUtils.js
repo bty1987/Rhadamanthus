@@ -245,6 +245,14 @@ var decorationUtils = {
 
         var loadPreFollowup = function() {
 
+            // 🔴 容器守卫: 页签容器仅由 decorationPageUtils.drawMaterial 在主材信息步骤创建,
+            // 不含该页签的页面(如装修单决算页 decoration4account)此处拿到空jQuery——空集经 com.datetime
+            // 的 [container] 包裹分支会把 jQuery 对象本身传给 laydate, 其内部包装 elem[0] 无 tagName,
+            // 异步 init 的 isInput 抛 "toLocaleLowerCase" TypeError 整页脚本中断(2026-11-20 实证)
+            if ($preFollowup.length == 0) {
+                return;
+            }
+
             $preFollowup.html("");
 
             var $statsWrap = $('<div></div>').appendTo($preFollowup);

@@ -1902,6 +1902,12 @@ var com = {
         else
             return false;
 
+        // 空集合防雷: 空 jQuery/空数组经下方 each 会把 jQuery 对象本身作为 elem 传给 laydate,
+        // layui 内部包装对 object 一律按 [obj] 处理, elem[0] 即该对象(无 tagName),
+        // 异步 init 的 isInput 抛 "toLocaleLowerCase" TypeError 导致整页脚本中断(2026-11-20 decoration4account 实证)
+        if (!container.length)
+            return false;
+
         $(container).attr("readonly", "readonly");
 
         type = type && typeof (type) == "string" ? ["year", "month", "day", "date", "time"].indexOf(type) != -1 ? type : "date" : "date";
@@ -1920,6 +1926,9 @@ var com = {
             format = "HH:mm:ss";
 
         $.each(container, function(i, e) {
+
+            if (!e || !e.tagName)
+                return; // 非元素项(空jQuery包裹项/文本节点等)跳过, 防止 laydate 内部 isInput 崩溃
 
             laydate.render({
                 elem: e,
