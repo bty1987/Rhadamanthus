@@ -195,9 +195,6 @@ public class ApprovalDecorationActivityServiceImpl implements ApprovalDecoration
 
 		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(approvalDecorationActivityPO.getOrderId());
 
-		long couponCut = decorationPO.getCouponCut();
-		long thingCut = decorationPO.getThingCut();
-
 		List<ApprovalDecorationActivityItemPO> approvalDecorationActivityItemPOs = approvalDecorationActivityItemDao.queryApprovalDecorationActivityItemByAaId(approvalDecorationActivityPO.getAdaId());
 
 		// 额度类明细识别与合并校验: 同单同员工多明细合并金额一次校验(N 次现算 → 1 次)
@@ -254,7 +251,7 @@ public class ApprovalDecorationActivityServiceImpl implements ApprovalDecoration
 			decorationActivityItemPO.setIsPayment(awardStockPO.getIsPayment());
 			decorationActivityItemPO.setReceiveTime(approvalPO.getApprovalTime());
 
-			// 额度类 type 服务端按配置覆盖(不信前端); 券族口径: 10额度券随券族计入 couponCut 金额, 11/12(额度-物品/红包)不进 couponCut/thingCut 金额口径
+			// 额度类 type 服务端按配置覆盖(不信前端); 金额口径统一由 DAO 全量重算判定(见方法尾部 flush+amountDecorationActivityItem): 券族(0/10/20)计入 couponCut, 11/12(额度-物品/红包)不进 couponCut/thingCut
 			ActivityItemPO activityItemPO = costItemMap.get(approvalDecorationActivityItemPO.getAsid());
 
 			if (activityItemPO != null) {
@@ -266,12 +263,6 @@ public class ApprovalDecorationActivityServiceImpl implements ApprovalDecoration
 			} else {
 				// content 列 NOT NULL: 校验跳过/非额度类时置空串兜底(否则插行 ConstraintViolation 110000)
 				decorationActivityItemPO.setContent("");
-			}
-
-			if (Arrays.asList(DecorationActivityItemPO.TYPE_COUPON_FAMILY).contains(decorationActivityItemPO.getType()) && decorationActivityItemPO.getIsPayment() == DecorationActivityItemPO.ISPAYMENT_CAL_INT) {
-				couponCut = Arith.add(couponCut, Arith.mul(decorationActivityItemPO.getMoney(), decorationActivityItemPO.getNum()));
-			} else if (Arrays.asList(DecorationActivityItemPO.TYPE_THING_INT).contains(decorationActivityItemPO.getType()) && decorationActivityItemPO.getIsPayment() == DecorationActivityItemPO.ISPAYMENT_CAL_INT) {
-				thingCut = Arith.add(thingCut, Arith.mul(decorationActivityItemPO.getMoney(), decorationActivityItemPO.getNum()));
 			}
 
 			decorationActivityItemPO.setCreater(approvalPO.getSender());
@@ -300,6 +291,13 @@ public class ApprovalDecorationActivityServiceImpl implements ApprovalDecoration
 
 			decorationActivityDao.update(decorationActivityPO);
 		}
+
+		// 优惠金额统一由 DAO 全量重算(单一计算源, 禁止内联累加造成口径漂移): couponCut=券族(0/10/20), thingCut=物品(1);
+		// 新插行先 flush 推库, 原生 SQL 统计才可见
+		decorationActivityItemDao.flush();
+
+		long couponCut = decorationActivityItemDao.amountDecorationActivityItem(decorationPO.getOrderId(), DecorationActivityItemPO.TYPE_COUPON_INT, null, DecorationActivityItemPO.ISPAYMENT_CAL_INT);
+		long thingCut = decorationActivityItemDao.amountDecorationActivityItem(decorationPO.getOrderId(), DecorationActivityItemPO.TYPE_THING_INT, null, DecorationActivityItemPO.ISPAYMENT_CAL_INT);
 
 		decorationPO.setCouponCut(couponCut);
 		decorationPO.setThingCut(thingCut);

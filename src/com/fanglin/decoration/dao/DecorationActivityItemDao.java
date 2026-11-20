@@ -25,8 +25,29 @@ public interface DecorationActivityItemDao extends Dao<DecorationActivityItemPO>
 
 	public List<DecorationActivityItemPO> queryDecorationActivityItem(String orderId, String no);
 
+	/**
+	 * 券族优惠合计(签单链专用口径): type=券族(0/10/20), isPayment 按传入值,
+	 * 仅 (atttype=0 AND state=0) OR (atttype=1 AND state IN (2,10)) 行计入
+	 *
+	 * @param orderId 订单号
+	 * @param isPayment 是否计入金额(0计入/1不计入)
+	 * @return 优惠金额(厘, 与 decoration.couponCut 同单位); 调用前需 flush 使同事务新插行对原生SQL可见
+	 */
 	public long amountDecorationActivityItem(String orderId, short isPayment);
 
+	/**
+	 * 活动物品金额合计(唯一计算源, 手动统计/核销/审批通过等 couponCut/thingCut 全量重算一律复用本方法,
+	 * 🔴 禁止在业务代码内联 Σmoney×num 累加——口径漂移教训见 2b51d1999 券族定案漏改审批累加):
+	 * type 传券族任一值(0/10/20)按整族圈定, 其余值等值过滤, null 不过滤;
+	 * state 口径 = (atttype=0 AND state IN (0,2,4,5,6,10)) OR (atttype=1 AND state IN (2,10));
+	 * 注意本方法状态口径宽于 2参 版本(含已领/配送/未退/升级/核销), 两版本服务不同场景勿混用
+	 *
+	 * @param orderId 订单号
+	 * @param type 活动类型(券族任一值按整族圈定, null 不过滤)
+	 * @param isPrefor 是否计算业绩(可选)
+	 * @param isPayment 是否计算金额(可选)
+	 * @return 优惠金额(厘, 与 decoration.couponCut 同单位); 调用前需 flush 使同事务新插行对原生SQL可见
+	 */
 	public long amountDecorationActivityItem(String orderId, Short type, Short isPrefor, Short isPayment);
 
 	public long pointDecorationActivityItem(String orderId);
