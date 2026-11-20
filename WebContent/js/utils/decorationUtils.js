@@ -226,12 +226,8 @@ var decorationUtils = {
         var preFollowupItems = {0: "意向沟通", 1: "品牌到店", 2: "方案比价", 9: "其他"};
         var preFollowupWays = {0: "电话", 1: "微信", 2: "到店接待", 3: "上门", 9: "其他"};
 
-        var preFollowupMe = null;
-
-        com.post(api.personel.queryUserForSelfByUserId, {}, function(res) {
-
-            preFollowupMe = res.user.userId;
-        }, null, false);
+        // 当前登录人取全局params.user(index.js登录后从queryUserForSelfByUserId的userInfo.user填入,勿重复调接口——顶层user键恒为null)
+        var preFollowupMe = params.user ? params.user.userId : null;
 
         function removePreFollowup(v) {
 

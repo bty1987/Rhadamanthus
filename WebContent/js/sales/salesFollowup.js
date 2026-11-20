@@ -155,10 +155,8 @@ jQuery(function($) {
         com.closePopup();
     });
 
-    // 当前登录人(删除按钮仅记录人可见)
-    com.post(api.personel.queryUserForSelfByUserId, {}, function(res) {
-        followup.me = res.user.userId;
-    }, null, false);
+    // 当前登录人取全局params.user(index.js登录后从queryUserForSelfByUserId的userInfo.user填入,勿重复调接口——顶层user键恒为null),删除按钮仅记录人可见
+    followup.me = params.user ? params.user.userId : null;
 
     initPage();
     initForm();
