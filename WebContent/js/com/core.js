@@ -174,7 +174,10 @@ var com = {
         var $ct = new Date();
         var timeout = config.timeout;
         if (!params.loginTime || (params.loginTime + timeout * 60 * 1000) < $ct.getTime()) {
+            // 超时锁屏(设计行为): 120 分钟无操作, 本次请求不再执行, 锁屏重登后再操作
+            // 🔴 此前缺 return——锁屏弹出的同时请求继续发出, 操作在锁屏期间照样生效(2026-11-20 解锁报价场景反馈)
             $("#userLock").click();
+            return false;
         } else {
             params.loginTime = $ct.getTime();
         }
