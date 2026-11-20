@@ -16588,3 +16588,38 @@
 |------|------|------|
 | `quotationRtem` | QuotationRtemVO |  |
 
+
+## 补录接口 (自动生成 2026-11-03)
+
+
+> **类**: `api.data.QuotationItemAction`
+
+
+##### `查询` queryQuotationItemForFormatByQiid
+
+- **接口**: `queryQuotationItemForFormatByQiid.do`
+- **方法**: `queryQuotationItemForFormatByQiid()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `quotationItem` | QuotationItemVO |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `quotationItems` | List<QuotationItemVO> |
+
+##### `更新` updateQuotationItemForQfid
+
+- **接口**: `updateQuotationItemForQfid.do`
+- **方法**: `updateQuotationItemForQfid()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `quotationItem` | QuotationItemVO |  |
+

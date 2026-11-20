@@ -8748,3 +8748,53 @@
 |------|------|------|
 | `selectionItem` | SelectionItemVO |  |
 
+
+## 补录接口 (自动生成 2026-11-03)
+
+
+> **类**: `api.quotation.AddReduceItemAction`
+
+
+##### `更新` updateAddReduceItemForFormat
+
+- **接口**: `updateAddReduceItemForFormat.do`
+- **方法**: `updateAddReduceItemForFormat()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `addReduce` | AddReduceVO |  |
+| `addReduceItem` | AddReduceItemVO |  |
+
+
+> **类**: `api.quotation.NormChangeRecordAction`
+
+
+##### `查询` pageNormChangeRecord
+
+- **接口**: `pageNormChangeRecord.do`
+- **方法**: `pageNormChangeRecord()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `paging` | Paging | 分页参数 , 参照 [paging](../check_rule.html#page) |
+
+
+> **类**: `api.quotation.QuotationFunctionAreaItemAction`
+
+
+##### `更新` updateQuotationFunctionAreaItemForFormat
+
+- **接口**: `updateQuotationFunctionAreaItemForFormat.do`
+- **方法**: `updateQuotationFunctionAreaItemForFormat()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `quotation` | QuotationVO |  |
+| `quotationFunctionAreaItem` | QuotationFunctionAreaItemVO |  |
+

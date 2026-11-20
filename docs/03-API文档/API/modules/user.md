@@ -6564,3 +6564,157 @@
 | `orderId` | String |
 | `data` | Map<String, Object> |
 
+
+## 补录接口 (自动生成 2026-11-03)
+
+
+> **类**: `api.user.WorkerAction`
+
+
+##### `查询` pageWorker
+
+- **接口**: `pageWorker.do`
+- **方法**: `pageWorker()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `paging` | Paging | 分页参数 , 参照 [paging](../check_rule.html#page) |
+
+##### `新增` addWorker
+
+- **接口**: `addWorker.do`
+- **方法**: `addWorker()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `worker` | UserVO |  |
+
+##### `更新` updateWorker
+
+- **接口**: `updateWorker.do`
+- **方法**: `updateWorker()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `worker` | UserVO |  |
+
+
+> **类**: `api.user.A20261025Action`
+
+
+##### `更新` syncQuotationForNerp
+
+- **接口**: `syncQuotationForNerp.do`
+- **方法**: `syncQuotationForNerp()`
+- **说明**: NERP报价单数据同步接口 同步报价单主数据(创建或更新, 不含明细, 不推进装修单状态): 无默认报价单时凭空创建无明细初始报价单, 已有默认报价单时按传参部分更新(名称/版本/总价/折扣, null 不动), 锁定报价单拒绝(200033)
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `qvid` | Long |  |
+| `totalPrice` | Long |  |
+| `discount` | Integer |  |
+| `quotationName` | String |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `orderId` | String |
+| `data` | Map<String, Object> |
+
+##### `更新` syncSalesPaymentForNerp
+
+- **接口**: `syncSalesPaymentForNerp.do`
+- **方法**: `syncSalesPaymentForNerp()`
+- **说明**: NERP销售款项同步接口 兼容 sales.sales / payment.salespayment: 补全单据语义——销售单判断补充(comment 嵌 NERP 销售单号, 不存在凭空创建), 落待收/待退款项 salespayment(status=INIT), 收款/退款动作在 ERP 走正常流程;
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `money` | Long |  |
+| `salesNo` | String |  |
+| `paymentNo` | String |  |
+| `type` | Short |  |
+| `bid` | Long |  |
+| `supplierUid` | String |  |
+| `salesmanUid` | String |  |
+| `instorerUid` | String |  |
+| `guiderUid` | String |  |
+| `salesAmount` | Long |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `orderId` | String |
+| `data` | Map<String, Object> |
+
+##### `更新` syncAddreduceForNerp
+
+- **接口**: `syncAddreduceForNerp.do`
+- **方法**: `syncAddreduceForNerp()`
+- **说明**: NERP增减款同步接口 兼容 quotation.addreduce / payment.decorationpayment: 增减单判断补充(content 嵌 NERP 单号前缀, 不存在凭空创建), 经 submitAddReduce 提交链落 decorationpayment 增项款/减项款(dpId 回写), payment 数据由增减单提交动作产生;
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `money` | Long |  |
+| `type` | Short |  |
+| `arNo` | String |  |
+| `content` | String |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `orderId` | String |
+| `data` | Map<String, Object> |
+
+
+> **类**: `api.user.A20261117Action`
+
+
+##### `更新` syncNormriceItem
+
+- **接口**: `syncNormriceItem.do`
+- **方法**: `syncNormriceItem()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `orderId` | String |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `count` | int |
+
+##### `更新` syncNormoodItem
+
+- **接口**: `syncNormoodItem.do`
+- **方法**: `syncNormoodItem()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `orderId` | String |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `count` | int |
+

@@ -6,7 +6,7 @@
  * @Copyright	: Copyright Creators 2014
  * @Author		: baity
  * @Email			: bty1987@163.com
- * @Describing	: NERP预签/签约/款项同步服务接口
+ * @Describing	: NERP预签/签约/报价单/款项同步服务接口
  */
 
 package com.fanglin.seiya.service;
@@ -56,6 +56,26 @@ public interface A20261025Service {
 	 * @throws FLException 业务异常
 	 */
 	Map<String, Object> syncSignContractForNerp(String orderId, String quotationName, Long qvid, Long totalPrice, Integer discount, String userId) throws FLException;
+
+	/**
+	 * NERP报价单数据同步（创建或更新, 不含明细）
+	 *
+	 * 同步报价单主数据到 ERP, 不推进装修单状态:
+	 * 无默认报价单时凭空创建一条无明细初始报价单(建法同 syncSignContractForNerp, 但不锁单/不签约/无提成与消息副作用);
+	 * 已有默认报价单时按传参部分更新(名称/版本/总价/折扣, null 字段不动, 仅刷新 updateTime), 锁定报价单拒绝(200033)
+	 *
+	 * 状态白名单同 syncSignContractForNerp: 初始(0)/定金(1)/预签(2)/重签(4), 其余拒绝(140005)
+	 *
+	 * @param orderId 装修单号
+	 * @param quotationName 报价单名称（可选, 创建缺省"报价单"）
+	 * @param qvid 报价版本ID（可选, >0 校验存在(200050); 创建缺省按公司默认版本解析）
+	 * @param totalPrice 总价, 单位:分（可选, 写报价单 总价/未拆分价/折后价）
+	 * @param discount 折扣, 万分比 10000=不打折（可选, 创建缺省10000）
+	 * @param userId 操作账号（报价创建人）
+	 * @return 包含 operation, orderId, qid, quotationCreated, name, totalPrice, discount 等信息的 Map
+	 * @throws FLException 业务异常
+	 */
+	Map<String, Object> syncQuotationForNerp(String orderId, String quotationName, Long qvid, Long totalPrice, Integer discount, String userId) throws FLException;
 
 	/**
 	 * NERP凭空款项计划

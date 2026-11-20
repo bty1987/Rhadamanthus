@@ -5954,3 +5954,185 @@
 | `phoneCode` | String |  |
 | `company` | String |  |
 
+
+## 补录接口 (自动生成 2026-11-03)
+
+
+> **类**: `api.sales.SalesAction`
+
+
+##### `查询` querySalesOperateBySid
+
+- **接口**: `querySalesOperateBySid.do`
+- **方法**: `querySalesOperateBySid()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `sales` | SalesVO |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `salesOperates` | List<SalesOperateVO> |
+
+
+> **类**: `api.sales.SalesFollowupAction`
+
+
+##### `查询` querySalesPreFollowupByOrderId
+
+- **接口**: `querySalesPreFollowupByOrderId.do`
+- **方法**: `querySalesPreFollowupByOrderId()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `salesPreFollowup` | SalesPreFollowupVO |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `salesPreFollowups` | List<SalesPreFollowupVO> |
+
+##### `查询` countSalesPreFollowup
+
+- **接口**: `countSalesPreFollowup.do`
+- **方法**: `countSalesPreFollowup()`
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `salesPreFollowup` | SalesPreFollowupVO |
+
+##### `新增` addSalesPreFollowup
+
+- **接口**: `addSalesPreFollowup.do`
+- **方法**: `addSalesPreFollowup()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `salesPreFollowup` | SalesPreFollowupVO |  |
+
+##### `删除` deleteSalesPreFollowup
+
+- **接口**: `deleteSalesPreFollowup.do`
+- **方法**: `deleteSalesPreFollowup()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `salesPreFollowup` | SalesPreFollowupVO |  |
+
+##### `查询` querySalesPostFollowupBySid
+
+- **接口**: `querySalesPostFollowupBySid.do`
+- **方法**: `querySalesPostFollowupBySid()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `salesPostFollowup` | SalesPostFollowupVO |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `salesPostFollowups` | List<SalesPostFollowupVO> |
+
+##### `查询` countSalesPostFollowup
+
+- **接口**: `countSalesPostFollowup.do`
+- **方法**: `countSalesPostFollowup()`
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `salesPostFollowup` | SalesPostFollowupVO |
+
+##### `新增` addSalesPostFollowup
+
+- **接口**: `addSalesPostFollowup.do`
+- **方法**: `addSalesPostFollowup()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `salesPostFollowup` | SalesPostFollowupVO |  |
+
+##### `删除` deleteSalesPostFollowup
+
+- **接口**: `deleteSalesPostFollowup.do`
+- **方法**: `deleteSalesPostFollowup()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `salesPostFollowup` | SalesPostFollowupVO |  |
+
+
+> **类**: `api.sales.SalesFunctionAction`
+
+
+##### `查询` pageSalesFunction
+
+- **接口**: `pageSalesFunction.do`
+- **方法**: `pageSalesFunction()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `paging` | Paging | 分页参数 , 参照 [paging](../check_rule.html#page) |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `salesFunctions` | List<SalesFunctionVO> |
+
+##### `新增` addSalesFunction
+
+- **接口**: `addSalesFunction.do`
+- **方法**: `addSalesFunction()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `salesFunction` | SalesFunctionVO |  |
+
+##### `更新` updateSalesFunction
+
+- **接口**: `updateSalesFunction.do`
+- **方法**: `updateSalesFunction()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `salesFunction` | SalesFunctionVO |  |
+
+##### `删除` deleteSalesFunction
+
+- **接口**: `deleteSalesFunction.do`
+- **方法**: `deleteSalesFunction()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `salesFunction` | SalesFunctionVO |  |
+

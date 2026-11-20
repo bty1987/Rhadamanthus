@@ -6,7 +6,7 @@
  * @Copyright	: Copyright Creators 2014
  * @Author		: baity
  * @Email			: bty1987@163.com
- * @Describing	: NERP预签/签约/款项同步
+ * @Describing	: NERP预签/签约/报价单/款项同步
  */
 
 package com.fanglin.seiya.action;
@@ -312,6 +312,39 @@ public class A20261025Action extends BaseListAction {
 
 		// 调用服务层处理
 		Map<String, Object> result = a20261025Service.syncSignContractForNerp(orderId.trim(), quotationName, qvid, totalPrice, discount, userId);
+
+		// 设置响应数据
+		this.data = result;
+
+		return SUCCESS;
+	}
+
+	/**
+	 * NERP报价单数据同步接口
+	 *
+	 * 同步报价单主数据(创建或更新, 不含明细, 不推进装修单状态): 无默认报价单时凭空创建无明细初始报价单,
+	 * 已有默认报价单时按传参部分更新(名称/版本/总价/折扣, null 不动), 锁定报价单拒绝(200033)
+	 * 状态白名单同 syncSignContractForNerp: 初始(0)/定金(1)/预签(2)/重签(4)
+	 *
+	 * @return SUCCESS
+	 * @throws FLException 业务异常
+	 */
+	@Action(value = "syncQuotationForNerp", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false", "includeProperties", "errorCode,errorMsg,uid,data.*" }) }, params = { "contentType", "text/html" })
+	public String syncQuotationForNerp() throws FLException {
+
+		// 参数必填验证
+		if (orderId == null || orderId.trim().isEmpty()) {
+			throw new FLException(400013, "装修单号不能为空");
+		}
+
+		String userId = querySyncUserId();
+
+		if (userId == null || userId.trim().isEmpty()) {
+			throw new FLException(400040, "操作账号无效");
+		}
+
+		// 调用服务层处理
+		Map<String, Object> result = a20261025Service.syncQuotationForNerp(orderId.trim(), quotationName, qvid, totalPrice, discount, userId);
 
 		// 设置响应数据
 		this.data = result;

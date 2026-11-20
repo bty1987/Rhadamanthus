@@ -7644,3 +7644,42 @@
 - **接口**: `fadadaCallback.do`
 - **方法**: `fadadaCallback()`
 
+
+## 补录接口 (自动生成 2026-11-03)
+
+
+> **类**: `api.decoration.DecorationAction`
+
+
+##### `更新` updateDecorationForGrade
+
+- **接口**: `updateDecorationForGrade.do`
+- **方法**: `updateDecorationForGrade()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `decoration` | DecorationVO |  |
+
+
+> **类**: `api.decoration.DecorationActivityItemAction`
+
+
+##### `查询` queryDecorationActivityItemForScale
+
+- **接口**: `queryDecorationActivityItemForScale.do`
+- **方法**: `queryDecorationActivityItemForScale()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `decoration` | DecorationVO |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `decorationActivityItems` | List<DecorationActivityItemVO> |
+

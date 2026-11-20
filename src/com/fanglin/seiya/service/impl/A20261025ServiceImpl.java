@@ -550,6 +550,126 @@ public class A20261025ServiceImpl implements A20261025Service {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
+	public Map<String, Object> syncQuotationForNerp(String orderId, String quotationName, Long qvid, Long totalPrice, Integer discount, String userId) throws FLException {
+
+		List<Short> status = Arrays.asList(new Short[] { DecorationPO.STATUS_INIT_INT, DecorationPO.STATUS_DEPOSIT_INT, DecorationPO.STATUS_PROSIGN_INT, DecorationPO.STATUS_RESIGNED_INT });
+
+		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(orderId);
+
+		if (decorationPO == null) {
+			throw new FLException(140013, "装修单不存在");
+		}
+
+		if (!status.contains(decorationPO.getStatus())) {
+			throw new FLException(140005, "订单合同不能修改");
+		}
+
+		UserPO operater = userDao.queryUserByUserId(userId);
+
+		if (operater == null) {
+			throw new FLException(400040, "操作账号无效");
+		}
+
+		QuotationPO quotationPO = quotationDao.queryQuotationForDefaultByOrderId(orderId);
+
+		boolean quotationCreated = false;
+
+		if (quotationPO == null) { // 凭空创建: 无明细初始报价单, 不锁单/不推进状态(建法同签约接口)
+
+			quotationCreated = true;
+
+			QuotationVersionPO versionPO = null;
+
+			if (qvid != null && qvid.longValue() > 0) {
+				versionPO = quotationVersionDao.get(qvid.longValue());
+
+				if (versionPO == null) {
+					throw new FLException(200050, "报价版本不存在");
+				}
+			} else {
+				versionPO = quotationVersionDao.queryQuotationVersionForDefault(decorationPO.getCompany(), decorationPO.getType(), QuotationVersionPO.DEFAULTFLAG_DEFAULT_INT);
+
+				if (versionPO == null) {
+					versionPO = quotationVersionDao.queryQuotationVersionForDefault(decorationPO.getCompany(), QuotationVersionPO.TYPE_COMMON_INT, QuotationVersionPO.DEFAULTFLAG_DEFAULT_INT);
+				}
+
+				if (versionPO == null) {
+					throw new FLException(200050, "报价版本不存在");
+				}
+			}
+
+			quotationPO = new QuotationPO();
+
+			quotationPO.setOrderId(orderId);
+			quotationPO.setName(quotationName == null || quotationName.trim().isEmpty() ? "报价单" : quotationName.trim());
+			quotationPO.setCreater(operater);
+			quotationPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
+			quotationPO.setVersion(versionPO);
+			quotationPO.setDiscount(discount == null ? 10000 : discount.intValue());
+
+			if (totalPrice != null) {
+				quotationPO.setTotalPrice(totalPrice.longValue());
+				quotationPO.setUndisPrice(totalPrice.longValue());
+				quotationPO.setDisPrice(totalPrice.longValue());
+			}
+
+			quotationPO.setDefaults(QuotationPO.DEFAULTS_DEFAULT_INT);
+			quotationPO.setStatus(QuotationPO.STATUS_INIT_INT);
+
+			quotationDao.save(quotationPO);
+
+		} else { // 更新默认报价单: 传参字段部分更新(null 不动), 锁定报价单拒绝
+
+			if (QuotationPO.STATUS_LOCK_INT == quotationPO.getStatus()) {
+				throw new FLException(200033, "报价已锁定");
+			}
+
+			if (quotationName != null && !quotationName.trim().isEmpty()) {
+				quotationPO.setName(quotationName.trim());
+			}
+
+			if (qvid != null && qvid.longValue() > 0) {
+
+				QuotationVersionPO versionPO = quotationVersionDao.get(qvid.longValue());
+
+				if (versionPO == null) {
+					throw new FLException(200050, "报价版本不存在");
+				}
+
+				quotationPO.setVersion(versionPO);
+			}
+
+			if (totalPrice != null) {
+				quotationPO.setTotalPrice(totalPrice.longValue());
+				quotationPO.setUndisPrice(totalPrice.longValue());
+				quotationPO.setDisPrice(totalPrice.longValue());
+			}
+
+			if (discount != null) {
+				quotationPO.setDiscount(discount.intValue());
+			}
+
+			quotationPO.setUpdateTime(DateUtil.getDateToTimestamp(new Date()));
+
+			quotationDao.update(quotationPO);
+		}
+
+		Map<String, Object> result = new HashMap<String, Object>();
+
+		result.put("success", true);
+		result.put("operation", "syncQuotation");
+		result.put("orderId", orderId);
+		result.put("qid", quotationPO.getQid());
+		result.put("quotationCreated", quotationCreated);
+		result.put("name", quotationPO.getName());
+		result.put("totalPrice", quotationPO.getTotalPrice());
+		result.put("discount", quotationPO.getDiscount());
+
+		return result;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
 	public Map<String, Object> syncDecorationPaymentForNerp(String orderId, Long money, Long cost, Long psid, String userId) throws FLException {
 
 		List<Short> status = Arrays.asList(new Short[] { DecorationPO.STATUS_INIT_INT, DecorationPO.STATUS_DEPOSIT_INT, DecorationPO.STATUS_PROSIGN_INT, DecorationPO.STATUS_SIGNED_INT, DecorationPO.STATUS_RESIGNED_INT });

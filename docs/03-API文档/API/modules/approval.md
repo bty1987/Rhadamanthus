@@ -2919,3 +2919,42 @@
 |------|------|
 | `tasks` | List<ApprovalTaskVO> |
 
+
+## 补录接口 (自动生成 2026-11-03)
+
+
+> **类**: `api.approval.ApprovalBelongTranAction`
+
+
+##### `更新` submitApprovalForBelongTran
+
+- **接口**: `submitApprovalForBelongTran.do`
+- **方法**: `submitApprovalForBelongTran()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `approval` | ApprovalVO |  |
+| `approvalBelongTran` | ApprovalBelongTranVO |  |
+| `approvalBelongTranItems` | List<ApprovalBelongTranItemVO> |  |
+
+##### `查询` queryApprovalBelongTranByAId
+
+- **接口**: `queryApprovalBelongTranByAId.do`
+- **方法**: `queryApprovalBelongTranByAId()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `approval` | ApprovalVO |  |
+| `aid` | long |  |
+
+**出参:**
+
+| 字段 | 类型 |
+|------|------|
+| `approvalBelongTran` | ApprovalBelongTranVO |
+| `approvalBelongTranItems` | List<ApprovalBelongTranItemVO> |
+
