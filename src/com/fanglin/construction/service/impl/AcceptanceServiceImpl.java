@@ -71,6 +71,11 @@ public class AcceptanceServiceImpl implements AcceptanceService {
 	@Override
 	public AcceptanceVO queryAcceptanceByOrderId(AcceptanceVO acceptanceVO) throws FLException {
 
+		// 零参数请求(Struts未绑定acceptance成员)直接NPE噪音, 前置判空走标准业务错误
+		if (acceptanceVO == null || acceptanceVO.getOrderId() == null || "".equals(acceptanceVO.getOrderId())) {
+			throw new FLException(140093, "装修单号不能为空");
+		}
+
 		String orderId = acceptanceVO.getOrderId();
 
 		AcceptancePO acceptancePO = acceptanceDao.queryAcceptanceByOrderId(orderId);
@@ -105,6 +110,11 @@ public class AcceptanceServiceImpl implements AcceptanceService {
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public int updateAcceptance(AcceptanceVO acceptanceVO) throws FLException {
+
+		// 零参数请求(Struts未绑定acceptance成员)直接NPE噪音, 前置判空走标准业务错误
+		if (acceptanceVO == null || acceptanceVO.getOrderId() == null || "".equals(acceptanceVO.getOrderId())) {
+			throw new FLException(140093, "装修单号不能为空");
+		}
 
 		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(acceptanceVO.getOrderId());
 
