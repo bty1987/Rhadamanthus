@@ -96,9 +96,11 @@
 <!-- 无顶栏/无菜单: body 不带 navbar-fixed(免顶栏 padding 留白), main-content 置 margin-left:0(免侧栏让位);
      standalonePane = com.switchPage 默认装载容器(.flpage.tab-pane.active), com.focusPage 作用域成立, 页面片段功能不受无框影响 -->
 <body>
-    <div id="standaloneDenied" style="display: none; background: #ffffff;">
-        <div style="padding: 120px 0 0; text-align: center;">
-            <p id="standaloneDeniedMsg" style="color: #999999; font-size: 14px;">该页面未开放访问</p>
+    <div id="standaloneDenied" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: #ffffff; z-index: 99999;">
+        <div style="text-align: center; padding-top: 20vh;">
+            <i class="icon-lock" style="font-size: 52px; color: #d8dce0;"></i>
+            <div style="margin: 26px 0 12px; color: #555555; font-size: 20px; font-weight: 300; letter-spacing: 3px;">该页面未开放访问</div>
+            <div style="color: #b0b0b0; font-size: 13px;">如需访问, 请从系统内菜单进入本页面, 或联系管理员开放</div>
         </div>
     </div>
 
