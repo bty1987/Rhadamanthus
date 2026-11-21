@@ -96,12 +96,9 @@
 <!-- 无顶栏/无菜单: body 不带 navbar-fixed(免顶栏 padding 留白), main-content 置 margin-left:0(免侧栏让位);
      standalonePane = com.switchPage 默认装载容器(.flpage.tab-pane.active), com.focusPage 作用域成立, 页面片段功能不受无框影响 -->
 <body>
-    <div id="standaloneDenied" style="display: none;">
-        <div style="max-width: 520px; margin: 120px auto 0; text-align: center; padding: 40px 30px; border: 1px solid #e5e5e5; border-radius: 4px; background: #fff;">
-            <i class="icon-lock" style="font-size: 42px; color: #bbbbbb;"></i>
-            <h2 id="standaloneDeniedTitle" style="margin: 18px 0 8px; color: #555555; font-weight: 300; font-size: 22px;">页面不可用</h2>
-            <p id="standaloneDeniedMsg" style="color: #999999; margin-bottom: 26px;"></p>
-            <a id="standaloneDeniedLogin" href="/" class="btn btn-primary" style="padding: 6px 28px;">重新登录</a>
+    <div id="standaloneDenied" style="display: none; background: #ffffff;">
+        <div style="padding: 120px 0 0; text-align: center;">
+            <p id="standaloneDeniedMsg" style="color: #999999; font-size: 14px;">该页面未开放访问</p>
         </div>
     </div>
 

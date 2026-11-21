@@ -1,18 +1,13 @@
 $(function() {
 
-    // standalone拒绝页: 拦截(登录缺失/无效地址/未开放页面/无权限)统一就地显示提示视图, 不再跳转登录页/主页
-    function standaloneDeny(title, message, showLogin) {
-
-        $("#standaloneDeniedTitle").text(title);
-        $("#standaloneDeniedMsg").text(message || "");
-        $("#standaloneDeniedLogin").toggle(showLogin !== false);
-        $("#main-container").hide();
+    // standalone拒绝页: 拦截(登录缺失/无效地址/未开放页面/无权限)统一就地显示"该页面未开放访问", 不再跳转登录页/主页
+    function standaloneDeny() {
         $("#standaloneDenied").fadeIn();
     }
 
     // 登录态缺失(无cookie且URL未携带authentication): 就地显示, 不再跳转登录页
     if (window.loginTime == undefined) {
-        standaloneDeny("登录状态缺失", "请从系统内访问本页面, 或点击下方按钮重新登录");
+        standaloneDeny();
         return;
     }
 
@@ -103,7 +98,7 @@ $(function() {
         var target = decodeURIComponent(com.splitUrl(location.href)["target"] || "");
 
         if (!target || !/^\/?views\/[\w\/.\-]+\.html(\?.*)?$/.test(target)) {
-            standaloneDeny("页面不可用", "无效的页面地址");
+            standaloneDeny();
             return false;
         }
 
@@ -115,7 +110,7 @@ $(function() {
         $.get(fetchUrl, function(response) {
 
             if (response.slice(0, 500).indexOf("standalone: true") == -1) {
-                standaloneDeny("页面不可用", "该页面未开放standalone访问");
+                standaloneDeny();
                 return;
             }
 
@@ -125,7 +120,7 @@ $(function() {
             com.switchPage(target);
         }).fail(function() {
 
-            standaloneDeny("页面不可用", "页面不存在或无法访问");
+            standaloneDeny();
         });
     }
 
@@ -141,7 +136,7 @@ $(function() {
 
         // 平台权限位校验(web, 与 index.html 同水位): 无权限就地提示
         if ((res.userInfo.user.extranet & 8) != 8) {
-            standaloneDeny("无访问权限", "当前账号无使用该平台的权限");
+            standaloneDeny();
             return false;
         }
 
@@ -165,7 +160,7 @@ $(function() {
         loadTarget();
     }, function(res) {
 
-        standaloneDeny("加载失败", (res && res.errorMsg) || "用户信息加载失败, 请稍后重试");
+        standaloneDeny();
     });
 
 });
