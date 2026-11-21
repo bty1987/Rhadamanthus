@@ -60,15 +60,6 @@ class Exporter(Util):
                 %s
         """
 
-    def company(self, column, company):
-
-        if int(company) != 0:
-            companyId = "AND %s = %s" % (column, company)
-        else:
-            companyId = " "
-
-        return companyId
-
     def rower(self, row):
 
         self.divNum(row, [3])
@@ -83,7 +74,8 @@ class Exporter(Util):
 
         startTime, endTime = args.split("-")
 
-        self.condition = "%s >= '%s 00:00:00' AND %s <= '%s 23:59:59' %s" % (field, startTime, field, endTime, self.company("cp.company", company))
+        # 集团导出: 不限制公司条件, company参数仅保留传参兼容
+        self.condition = "%s >= '%s 00:00:00' AND %s <= '%s 23:59:59' " % (field, startTime, field, endTime)
 
         return self.SQL_QUERY_HANDLE % ("%s", self.condition)
 
@@ -142,6 +134,7 @@ if __name__ == '__main__':
     """
         导出工程标签说明:
             根据查询条件,以分页拿数据的方式导出工程标签(construction.constructionprofile, 预交会标签)信息;并上传到文件服务器中,可从任务页面上点击下载即可;
+            集团导出: 不限制公司条件, 导出全公司数据, 以"公司"列区分归属;
             type=0按标签创建时间(constructionprofile.createTime), type=1按交接时间(constructioninfo.handoverTime)过滤;
             合同方案确认时间取decoration.sdesignTime(与工程信息页面口径一致);
             行粒度为标签题目:join constructionprofileitem 后每题一行;单选/多选(type=2/3)答案按勾选项(constructionprofileoption.checked=1按cpoid序)拆列,一勾选项一格(答案1..答案N,N=范围内单题最多勾选项数执行前实测,单值时单列"答案"),文本/输入(type=0/1)答案取item.content(换行替换为空格)置于答案1;
@@ -150,7 +143,7 @@ if __name__ == '__main__':
             1.type          0:创建时间 1:交接时间;
             2.pid           information.plan的主键;
             3.args          "2024/07/01 - 2024/7/30"
-            4.company       公司
+            4.company       公司(集团导出: 不限制公司条件, 该参数仅保留传参兼容)
     """
 
     modernFilePath = os.path.realpath(__file__)

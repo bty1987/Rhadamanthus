@@ -77,12 +77,8 @@ class Exporter(Util):
 
         startTime, endTime = args.split("-")
 
-        if company != 0:
-            companyId = "AND qp.company = %s " % company
-        else:
-            companyId = " "
-
-        self.condition = " qp.type = 5 AND qp.createTime >= '%s 00:00:00' AND qp.createTime <= '%s 23:59:59' %s" % (startTime, endTime, companyId)
+        # 集团导出: 不限制公司条件, company参数仅保留传参兼容
+        self.condition = " qp.type = 5 AND qp.createTime >= '%s 00:00:00' AND qp.createTime <= '%s 23:59:59' " % (startTime, endTime)
 
         return self.SQL_QUERY_STR % ("%s", self.condition)
 
@@ -126,13 +122,14 @@ if __name__ == '__main__':
     """
         导出增减单标签说明:
             根据查询条件,以分页拿数据的方式导出增减单标签(quotation.quotationprofile, type=5)信息;并上传到文件服务器中,可从任务页面上点击下载即可;
+            集团导出: 不限制公司条件, 导出全公司数据, 以"公司"列区分归属;
             增减单标签通过qp.qid关联quotation.addreduce.arId;
             行粒度为标签题目:join quotationprofileitem 后每题一行;单选/多选(type=2/3)答案按勾选项(quotationprofileoption.checked=1按qpoid序)拆列,一勾选项一格(答案1..答案N,N=范围内单题最多勾选项数执行前实测,单值时单列"答案"),文本/输入(type=0/1)答案取item.content(换行替换为空格)置于答案1;
             当该脚本执行出现异常时,将跟新进度为失败并记录到log文件中上传至文件服务器中;
         1.传入必须参数说明
             1.pid           information.plan的主键;
             2.args          "2024/07/01 - 2024/7/30"
-            3.company       公司
+            3.company       公司(集团导出: 不限制公司条件, 该参数仅保留传参兼容)
     """
 
     modernFilePath = os.path.realpath(__file__)
