@@ -546,6 +546,17 @@ jQuery(function($) {
             return false;
         }
 
+        // 前台控制: 修改时间只允许为上个月最后一天(当月01号回退上月末, 31/30/29/28)
+        var inputDate = com.focusPage("#orderDate").val();
+        var now = new Date();
+        var lastDay = new Date(now.getFullYear(), now.getMonth(), 0);
+        var expect = lastDay.getFullYear() + "-" + ("0" + (lastDay.getMonth() + 1)).slice(-2) + "-" + ("0" + lastDay.getDate()).slice(-2);
+
+        if (inputDate != expect) {
+            com.showAlert(com.warning, "修改时间只允许为上个月最后一天: " + expect);
+            return false;
+        }
+
         var options = {
             "decoration.orderId": com.focusPage("#orderIdForTime").val(),
             "timeType": com.focusPage("#timeType").val(),
