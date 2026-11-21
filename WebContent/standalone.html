@@ -25,6 +25,17 @@
         var versionCode = '';
         var cookies = document.cookie.split(";");
 
+        // standalone直开: URL携带authentication/loginTime时优先于cookie(redirect免登透传, 规避部分浏览器/容器cookie写入受限), 顺带持久化供刷新
+        var urlParams = {};
+        var qs = window.location.search.substring(1);
+        if (qs) {
+            var qpairs = qs.split("&");
+            for (var qi = 0; qi < qpairs.length; qi++) {
+                var qkv = qpairs[qi].split("=");
+                if (qkv.length >= 2) urlParams[decodeURIComponent(qkv[0])] = decodeURIComponent(qkv.slice(1).join("="));
+            }
+        }
+
         for(var i=0;i<cookies.length;i++){
             var cookie = cookies[i];
 
@@ -37,6 +48,17 @@
             }else if(cookie.indexOf("communion") != -1){
                 window.communion = cookie.split("=")[1];
             }
+        }
+
+        if (urlParams["authentication"]) {
+            // base64按长度补齐padding(redirect透传约定为去尾'=='的密文)
+            var authFull = urlParams["authentication"];
+            while (authFull.length % 4 !== 0) authFull += "=";
+            window.authentication = authFull;
+            window.loginTime = urlParams["loginTime"] || new Date().getTime();
+            var exp = "expires=" + new Date(new Date().getTime() + 120 * 60 * 1000).toUTCString() + "; path=/";
+            document.cookie = "authentication=" + authFull + "; " + exp;
+            document.cookie = "loginTime=" + window.loginTime + "; " + exp;
         }
 
         // 登录超时: 无 loginTime cookie 回登录页(与 index.html 同款)

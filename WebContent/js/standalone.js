@@ -80,6 +80,8 @@ $(function() {
 
     // 目标页面装载: redirect.html 分流携带 target(如 /views/quotation/quotationPart.html 或带参 ...html?orderId=xxx)
     // 仅允许 views/ 前缀 html 片段(防开放跳转参数滥用); target=页面自身携带参数, 经 params.urlLoadParams 传给页面 JS(与菜单装载同机制)
+    // 页面准入自声明: 页面html首行放标记 <!-- standalone: true --> 即支持standalone直开(纯前端, 各页面自维护, 无集中清单);
+    // 未放标记的页面拒绝装载并回登录页; 装载前预取探测一次(静态页双请求无副作用)
     function loadTarget() {
 
         var target = decodeURIComponent(com.splitUrl(location.href)["target"] || "");
@@ -93,10 +95,25 @@ $(function() {
         if (target.indexOf("/") != 0)
             target = "/" + target;
 
-        params.urlLoadParams = com.splitUrl(target);
+        var fetchUrl = target + (target.indexOf("?") > -1 ? "&" : "?") + "_=" + new Date().getTime();
 
-        $('#main-container').fadeIn();
-        com.switchPage(target);
+        $.get(fetchUrl, function(response) {
+
+            if (response.slice(0, 500).indexOf("standalone: true") == -1) {
+                com.showAlert(com.warning, "该页面未开放standalone访问");
+                window.location.href = "/";
+                return;
+            }
+
+            params.urlLoadParams = com.splitUrl(target);
+
+            $('#main-container').fadeIn();
+            com.switchPage(target);
+        }).fail(function() {
+
+            com.showAlert(com.warning, "无效的页面地址");
+            window.location.href = "/";
+        });
     }
 
     com.post(api.personel.queryUserForSelfByUserId, {}, function(res) {
