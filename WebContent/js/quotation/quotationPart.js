@@ -177,15 +177,6 @@ var QuotationDetail = (function() {
 
                     com.popup("打印报价", api.index.quotationOutputIndex.url, null, null, true);
                 }),
-                // 返回
-                $btnBack: com.focusPage('#detailBckBtn').on('click', function() {
-
-                    com.showConfirm("当前页面存在重要数据,是否进行当前操作", function(result) {
-
-                        com.switchPage(api.index.quotationIndex.url);
-                        com.closePopover();
-                    });
-                }),
                 // 展开
                 $btnSpread: com.focusPage('#openFunctionAreasBtn').click(function() {
 
@@ -240,6 +231,21 @@ var QuotationDetail = (function() {
                     }
                 })
             };
+
+            // standalone直开时无上层报价列表: 隐藏返回按钮且不绑跳转
+            if (document.getElementById("standalonePane")) {
+                com.focusPage('#detailBckBtn').hide();
+            } else {
+                com.focusPage('#detailBckBtn').on('click', function() {
+
+                    com.showConfirm("当前页面存在重要数据,是否进行当前操作", function(result) {
+
+                        com.switchPage(api.index.quotationIndex.url);
+                        com.closePopover();
+                    });
+                });
+            }
+
             return that;
         },
 
@@ -5192,6 +5198,43 @@ var QuotationDetail = (function() {
             com.post(api.quotation.queryFunctionAreaType, {}, function(res) {
                 com.focusPage("#functionAreaType4Area").bindData(res.functionAreaTypes, "name", "name", "未分类");
             });
+
+            // standalone直开兼容: 主框架打开时由列表行装配params.quotation; 无框直开(standalone/redirect target)时
+            // params.quotation为空, 按target参数装配同一上下文: qid优先(指定报价单), 无qid按orderId自查默认报价单; 页面其余逻辑零改动
+            if (params.quotation.quotation == null) {
+
+                if (params.urlLoadParams.orderId == null) {
+                    com.showAlert(com.error, "缺少装修单号, 请从报价单列表打开或standalone target携带orderId");
+                    return;
+                }
+
+                var quotationLoaded = false;
+
+                if (params.urlLoadParams.qid != null) {
+                    com.post(api.quotation.queryQuotationById, {
+                        "quotation.qid": params.urlLoadParams.qid
+                    }, function(res) {
+
+                        quotationLoaded = res.quotation != null;
+                        params.quotation.quotation = res.quotation;
+                    }, null, false);
+                } else {
+                    com.post(api.quotation.queryQuotationForDefaultByOrderId, {
+                        "quotation.orderId": params.urlLoadParams.orderId
+                    }, function(res) {
+
+                        quotationLoaded = res.quotation != null;
+                        params.quotation.quotation = res.quotation;
+                    }, null, false);
+                }
+
+                if (quotationLoaded) {
+                    params.quotation.orderId = params.urlLoadParams.orderId;
+                } else {
+                    // 查询失败(qid不存在/无默认报价单200003等)已弹全局错误提示, 终止init防后续undefined链炸
+                    return;
+                }
+            }
 
             quo.orderid = params.quotation.orderId;
             quo.quotationid = params.quotation.quotation.qid;

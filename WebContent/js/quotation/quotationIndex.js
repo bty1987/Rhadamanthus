@@ -1,5 +1,10 @@
 ﻿$(function() {
 
+    // standalone直开兼容: target携带orderId时注入报价列表上下文(主框架打开时由装修单详情/菜单装配)
+    if (params.quotation.orderId == null && params.urlLoadParams.orderId != null) {
+        params.quotation.orderId = params.urlLoadParams.orderId;
+    }
+
     var quotation = {
 
         decorationInfo: com.focusPage("#decorationInfo"),
@@ -136,10 +141,15 @@
         });
     }, null, false);
 
-    com.focusPage('#btnBack').on('click', function() {
+    // standalone直开时无上层装修单列表: 隐藏返回按钮且不绑跳转
+    if (document.getElementById("standalonePane")) {
+        com.focusPage('#btnBack').hide();
+    } else {
+        com.focusPage('#btnBack').on('click', function() {
 
-        com.switchPage("/views/decoration/decoration.html");
-    });
+            com.switchPage("/views/decoration/decoration.html");
+        });
+    }
 
     com.focusPage('#createQuotation').on('click', function() {
 
