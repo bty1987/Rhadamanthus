@@ -36,7 +36,7 @@ class Exporter(Util):
             ci.handoverTime '交接时间',
             CASE WHEN i.name IS NULL OR i.name = '' THEN '(无题目)' ELSE i.name END '题目',
             CASE i.type WHEN 0 THEN '文本' WHEN 1 THEN '输入' WHEN 2 THEN '单选' WHEN 3 THEN '多选' WHEN 4 THEN '日期' END '题型',
-            CASE WHEN i.type IN (2, 3) THEN (SELECT GROUP_CONCAT(REPLACE(o.title, '\\n', ' ') ORDER BY o.cpoid SEPARATOR '\\n') FROM construction.constructionprofileoption o WHERE o.cpiid = i.cpiid AND o.checked = 1) ELSE REPLACE(i.content, '\\n', ' ') END '答案',
+            CASE WHEN i.type IN (2, 3) THEN (SELECT GROUP_CONCAT(REPLACE(o.title, '\\n', ' ') ORDER BY o.cpoid SEPARATOR '\\n') FROM construction.constructionprofileoption o WHERE o.cpiid = i.cpiid AND o.checked = 0) ELSE REPLACE(i.content, '\\n', ' ') END '答案',
             co.name '公司'
         """
 
@@ -80,12 +80,12 @@ class Exporter(Util):
         return self.SQL_QUERY_HANDLE % ("%s", self.condition)
 
     # @功能: 实测查询范围内单题最多勾选项数, 决定答案拆分列数(答案1..答案N); 无勾选数据时返回1(单列)
-    # 注: type=1按ci.handoverTime过滤, 故此处同样join constructioninfo保持条件一致
+    # 注: type=1按ci.handoverTime过滤, 故此处同样join constructioninfo保持条件一致; checked约定为反极性: 0=勾选, 1=未勾选(CHECKED_INIT_INT=1), 勾选项按checked=0取
     def maxAnswer(self):
 
         sql = """
             SELECT MAX(c) FROM (
-                SELECT (SELECT COUNT(*) FROM construction.constructionprofileoption o WHERE o.cpiid = i.cpiid AND o.checked = 1) c
+                SELECT (SELECT COUNT(*) FROM construction.constructionprofileoption o WHERE o.cpiid = i.cpiid AND o.checked = 0) c
                 FROM construction.constructionprofileitem i
                 JOIN construction.constructionprofile cp ON i.cpid = cp.cpid
                 LEFT JOIN construction.constructioninfo ci ON cp.orderId = ci.orderId
@@ -137,7 +137,8 @@ if __name__ == '__main__':
             集团导出: 不限制公司条件, 导出全公司数据, 以"公司"列区分归属;
             type=0按标签创建时间(constructionprofile.createTime), type=1按交接时间(constructioninfo.handoverTime)过滤;
             合同方案确认时间取decoration.sdesignTime(与工程信息页面口径一致);
-            行粒度为标签题目:join constructionprofileitem 后每题一行;单选/多选(type=2/3)答案按勾选项(constructionprofileoption.checked=1按cpoid序)拆列,一勾选项一格(答案1..答案N,N=范围内单题最多勾选项数执行前实测,单值时单列"答案"),文本/输入(type=0/1)答案取item.content(换行替换为空格)置于答案1;
+            行粒度为标签题目:join constructionprofileitem 后每题一行;单选/多选(type=2/3)答案按勾选项(constructionprofileoption.checked=0按cpoid序)拆列,一勾选项一格(答案1..答案N,N=范围内单题最多勾选项数执行前实测,单值时单列"答案"),文本/输入(type=0/1)答案取item.content(换行替换为空格)置于答案1;
+            🔴checked为反极性约定: 0=勾选, 1=未勾选(CHECKED_INIT_INT=1, 三端前端提交即勾选传0), 勾选项必须按checked=0取, 按1取导出的是未勾项;
             当该脚本执行出现异常时,将跟新进度为失败并记录到log文件中上传至文件服务器中;
         1.传入必须参数说明
             1.type          0:创建时间 1:交接时间;

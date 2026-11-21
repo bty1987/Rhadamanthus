@@ -33,7 +33,7 @@ class Exporter(Util):
             dl.actualTime '放线时间',
             CASE WHEN i.name IS NULL OR i.name = '' THEN '(无题目)' ELSE i.name END '题目',
             CASE i.type WHEN 0 THEN '文本' WHEN 1 THEN '输入' WHEN 2 THEN '单选' WHEN 3 THEN '多选' WHEN 4 THEN '日期' END '题型',
-            CASE WHEN i.type IN (2, 3) THEN (SELECT GROUP_CONCAT(REPLACE(o.title, '\\n', ' ') ORDER BY o.dpoid SEPARATOR '\\n') FROM construction.drawlineprofileoption o WHERE o.dpiid = i.dpiid AND o.checked = 1) ELSE REPLACE(i.content, '\\n', ' ') END '答案',
+            CASE WHEN i.type IN (2, 3) THEN (SELECT GROUP_CONCAT(REPLACE(o.title, '\\n', ' ') ORDER BY o.dpoid SEPARATOR '\\n') FROM construction.drawlineprofileoption o WHERE o.dpiid = i.dpiid AND o.checked = 0) ELSE REPLACE(i.content, '\\n', ' ') END '答案',
             st.name '标签模板',
             cu.currentName '创建人',
             dp.createTime '创建时间',
@@ -83,11 +83,12 @@ class Exporter(Util):
         return self.SQL_QUERY_STR % ("%s", self.condition)
 
     # @功能: 实测查询范围内单题最多勾选项数, 决定答案拆分列数(答案1..答案N); 无勾选数据时返回1(单列)
+    # 注: checked约定为反极性: 0=勾选, 1=未勾选(CHECKED_INIT_INT=1), 勾选项按checked=0取
     def maxAnswer(self):
 
         sql = """
             SELECT MAX(c) FROM (
-                SELECT (SELECT COUNT(*) FROM construction.drawlineprofileoption o WHERE o.dpiid = i.dpiid AND o.checked = 1) c
+                SELECT (SELECT COUNT(*) FROM construction.drawlineprofileoption o WHERE o.dpiid = i.dpiid AND o.checked = 0) c
                 FROM construction.drawlineprofileitem i
                 JOIN construction.drawlineprofile dp ON i.dpid = dp.dpid
                 WHERE %s
@@ -123,7 +124,8 @@ if __name__ == '__main__':
             根据查询条件,以分页拿数据的方式导出放线标签(construction.drawlineprofile)信息;并上传到文件服务器中,可从任务页面上点击下载即可;
             集团导出: 不限制公司条件, 导出全公司数据, 以"公司"列区分归属;
             含放线方案标签与预交会标签两类模板,以"标签模板"列区分;
-            行粒度为标签题目:join drawlineprofileitem 后每题一行;单选/多选(type=2/3)答案按勾选项(drawlineprofileoption.checked=1按dpoid序)拆列,一勾选项一格(答案1..答案N,N=范围内单题最多勾选项数执行前实测,单值时单列"答案"),文本/输入(type=0/1)答案取item.content(换行替换为空格)置于答案1;
+            行粒度为标签题目:join drawlineprofileitem 后每题一行;单选/多选(type=2/3)答案按勾选项(drawlineprofileoption.checked=0按dpoid序)拆列,一勾选项一格(答案1..答案N,N=范围内单题最多勾选项数执行前实测,单值时单列"答案"),文本/输入(type=0/1)答案取item.content(换行替换为空格)置于答案1;
+            🔴checked为反极性约定: 0=勾选, 1=未勾选(CHECKED_INIT_INT=1, 三端前端提交即勾选传0), 勾选项必须按checked=0取, 按1取导出的是未勾项;
             dlid关联construction.drawline(259/325标签dlid=0无关联,放线小组/申请时间/放线时间为空);放线时间为YYYYMMDD整型,与导出放线脚本口径一致;
             当该脚本执行出现异常时,将跟新进度为失败并记录到log文件中上传至文件服务器中;
         1.传入必须参数说明
