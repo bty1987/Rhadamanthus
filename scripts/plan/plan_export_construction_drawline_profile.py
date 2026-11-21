@@ -33,7 +33,7 @@ class Exporter(Util):
             dl.actualTime '放线时间',
             CASE WHEN i.name IS NULL OR i.name = '' THEN '(无题目)' ELSE i.name END '题目',
             CASE i.type WHEN 0 THEN '文本' WHEN 1 THEN '输入' WHEN 2 THEN '单选' WHEN 3 THEN '多选' WHEN 4 THEN '日期' END '题型',
-            CASE WHEN i.type IN (2, 3) THEN (SELECT GROUP_CONCAT(o.title ORDER BY o.dpoid SEPARATOR '、') FROM construction.drawlineprofileoption o WHERE o.dpiid = i.dpiid AND o.checked = 1) ELSE i.content END '答案',
+            CASE WHEN i.type IN (2, 3) THEN (SELECT GROUP_CONCAT(REPLACE(o.title, '\\n', ' ') ORDER BY o.dpoid SEPARATOR '\\n') FROM construction.drawlineprofileoption o WHERE o.dpiid = i.dpiid AND o.checked = 1) ELSE REPLACE(i.content, '\\n', ' ') END '答案',
             st.name '标签模板',
             cu.currentName '创建人',
             dp.createTime '创建时间',
@@ -67,6 +67,10 @@ class Exporter(Util):
 
         self.divNum(row, [3])
 
+        # 单选/多选答案按'\n'拆分,一勾选项一格(答案1..答案N);文本类答案单值落答案1;超出预估列数截断兜底
+        answers = row[self.answerIndex] and u"%s" % row[self.answerIndex] or ""
+        row[self.answerIndex:self.answerIndex + 1] = (answers.split("\n") + [""] * self.answerNum)[:self.answerNum]
+
         return row
 
     def sqler(self, args, company):
@@ -78,9 +82,26 @@ class Exporter(Util):
         else:
             companyId = " "
 
-        condition = " dp.createTime >= '%s 00:00:00' AND dp.createTime <= '%s 23:59:59' %s" % (startTime, endTime, companyId)
+        self.condition = " dp.createTime >= '%s 00:00:00' AND dp.createTime <= '%s 23:59:59' %s" % (startTime, endTime, companyId)
 
-        return self.SQL_QUERY_STR % ("%s", condition)
+        return self.SQL_QUERY_STR % ("%s", self.condition)
+
+    # @功能: 实测查询范围内单题最多勾选项数, 决定答案拆分列数(答案1..答案N); 无勾选数据时返回1(单列)
+    def maxAnswer(self):
+
+        sql = """
+            SELECT MAX(c) FROM (
+                SELECT (SELECT COUNT(*) FROM construction.drawlineprofileoption o WHERE o.dpiid = i.dpiid AND o.checked = 1) c
+                FROM construction.drawlineprofileitem i
+                JOIN construction.drawlineprofile dp ON i.dpid = dp.dpid
+                WHERE %s
+            ) t
+        """ % self.condition
+
+        self.cursor.execute(sql)
+        data = self.cursor.fetchall()
+
+        return (data and len(data) > 0 and data[0][0] or 0) or 1
 
     def main(self, pid, args, company):
 
@@ -92,6 +113,11 @@ class Exporter(Util):
         ]
         sql = self.sqler(args, int(company))
 
+        # 答案拆列: 列数=范围内单题最多勾选项数(执行前实测), 单值时保持单列"答案"
+        self.answerNum = self.maxAnswer()
+        self.answerIndex = tableHead.index("答案")
+        tableHead[self.answerIndex:self.answerIndex + 1] = self.answerNum > 1 and ["答案%s" % (i + 1) for i in range(self.answerNum)] or ["答案"]
+
         self.exporter(pid, "", "放线标签", tableHead, self.colum, sql, self.rower)
 
 if __name__ == '__main__':
@@ -100,7 +126,7 @@ if __name__ == '__main__':
         导出放线标签说明:
             根据查询条件,以分页拿数据的方式导出放线标签(construction.drawlineprofile)信息;并上传到文件服务器中,可从任务页面上点击下载即可;
             含放线方案标签与预交会标签两类模板,以"标签模板"列区分;
-            行粒度为标签题目:join drawlineprofileitem 后每题一行;单选/多选(type=2/3)答案取勾选项(drawlineprofileoption.checked=1按dpoid序拼接),文本/输入(type=0/1)答案取item.content;
+            行粒度为标签题目:join drawlineprofileitem 后每题一行;单选/多选(type=2/3)答案按勾选项(drawlineprofileoption.checked=1按dpoid序)拆列,一勾选项一格(答案1..答案N,N=范围内单题最多勾选项数执行前实测,单值时单列"答案"),文本/输入(type=0/1)答案取item.content(换行替换为空格)置于答案1;
             dlid关联construction.drawline(259/325标签dlid=0无关联,放线小组/申请时间/放线时间为空);放线时间为YYYYMMDD整型,与导出放线脚本口径一致;
             当该脚本执行出现异常时,将跟新进度为失败并记录到log文件中上传至文件服务器中;
         1.传入必须参数说明
