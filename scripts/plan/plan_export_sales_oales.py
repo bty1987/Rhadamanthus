@@ -98,41 +98,18 @@ class Exporter(Util):
                 db.status = 0 AND
                 db.defaultflag = 1 AND
                 o.%s >= '%s 00:00:00' AND
-                o.%s <= '%s 23:59:59' AND
-                o.company = %s
+                o.%s <= '%s 23:59:59'
+                %s
             """
 
-        # 集团版(company=0): 不限制公司条件, 导出所有公司
-        self.SQL_QUERY_GROUP = """
-            SELECT
-                %s
-            FROM
-                sales.oales o
-                LEFT JOIN decoration.decoration d on o.orderId = d.orderId
-                LEFT JOIN decoration.decorationbelong db on d.orderId = db.orderId
-                LEFT JOIN communion.house h on d.hid = h.hid
-                LEFT JOIN communion.village v on h.vid = v.vid
-                LEFT JOIN communion.user du on o.chauid = du.uid
-                LEFT JOIN communion.department dd on db.did = dd.did
-                LEFT JOIN communion.department dr on db.rid = dr.did
-                LEFT JOIN communion.department sdd on du.deptid = sdd.did
-                LEFT JOIN communion.department sdr on sdd.fdid = sdr.did
-                LEFT JOIN communion.user mu on o.mauid = mu.uid
-                LEFT JOIN communion.user chu on o.chauid = chu.uid
-                LEFT JOIN communion.user su on o.svuid = su.uid
-                LEFT JOIN communion.user eu on d.euid = eu.uid
-                LEFT JOIN communion.user bu on d.smuid = bu.uid
-                LEFT JOIN communion.department bdd on bu.deptid = bdd.did
-                LEFT JOIN communion.department bdr on bdd.fdid = bdr.did
-                LEFT JOIN communion.brand b on o.bid = b.bid
-                LEFT JOIN communion.company co on o.company = co.cid
-            WHERE
-                db.type = 0 AND
-                db.status = 0 AND
-                db.defaultflag = 1 AND
-                o.%s >= '%s 00:00:00' AND
-                o.%s <= '%s 23:59:59'
-            """
+    def company(self, columnCompany, company):
+
+        if company != 0:
+            companyString = u"AND %s = %s" % (columnCompany, company)
+        else:
+            companyString = u" "
+
+        return companyString
 
     def sqler(self, type, args, company):
 
@@ -144,11 +121,7 @@ class Exporter(Util):
         elif type == "1":
             timeColumn = "checkTime"
 
-        # company=0集团导出: 不限制公司条件导出所有公司; company=具体公司(如1): 仍按公司过滤
-        if str(company) == "0":
-            return self.SQL_QUERY_GROUP % ("%s", timeColumn, startTime, timeColumn, endTime)
-
-        return self.SQL_QUERY % ("%s", timeColumn, startTime, timeColumn, endTime, company)
+        return self.SQL_QUERY % ("%s", timeColumn, startTime, timeColumn, endTime, self.company("o.company", int(company)))
 
     def rower(self, row):
 
@@ -181,7 +154,7 @@ if __name__ == '__main__':
         1.传入必须参数说明
             1.pid         information.plan的主键;
             2.args        2022/12/01-2022/12/31
-            3.company     公司: 0=集团导出(不限公司, 导出所有公司), 具体公司编号(如1)=按该公司过滤
+            3.company     公司: 0=集团导出(不限公司), 具体公司编号(如1)=按该公司过滤
         2.命令使用 plan_export_payment_oales_achievement.py  pid args company
     """
 
