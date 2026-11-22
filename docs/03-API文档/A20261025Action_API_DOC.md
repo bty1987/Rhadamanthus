@@ -1,9 +1,10 @@
 # A20261025Action 对外接口调用说明
 
-> 模块: seiya (NERP预签/签约/款项/销售款项/增减款同步接口)
-> 版本: 2.1
-> 日期: 2026-11-13
+> 模块: seiya (NERP预签/签约/报价/款项/销售款项/增减款同步接口)
+> 版本: 2.2
+> 日期: 2026-11-21
 > 变更:
+> - v2.2 (2026-11-21) 新增报价单主数据同步 syncQuotationForNerp（A20261025 家族第 6 端点）：报价单创建或更新（不含明细，不推进装修单状态），凭空建单不锁单无提成消息副作用，已有报价部分更新（null 字段不动），锁定报价拒绝 200033。
 > - v2.1 (2026-11-13) 新增销售款项同步 syncSalesPaymentForNerp（sales.sales + payment.salespayment, type=2 定金/3 补款/4 退款, 判断补充式建销售单+落待收/待退款项, 退款凭空生成 salesRefunds）与增减款同步 syncAddreduceForNerp（quotation.addreduce + payment.decorationpayment 增减款, 判断补充式建增减单+经提交链落未收款项）；零 DDL, 幂等锚嵌既有文本列（NERP: 前缀隔离）。
 > - v2.0 (2026-10-25) 原 A20261024Action（凭空预签 syncProsignForNerp）合并入本 Action，三接口统一承载；接口路径/参数/行为不变，调用方零感知。
 
@@ -18,12 +19,13 @@
 | NERP凭空预签 | `POST /syncProsignForNerp.do` | 不依赖 ERP 预签报价流程，凭空创建一张无明细的锁定预签单（protation，业务字段按入参回填），并将装修单推进到预签状态 |
 | NERP凭空签约 | `POST /syncSignContractForNerp.do` | 匹配 ERP 签约（signDecorationContract）：订单无报价时凭空创建报价单并锁单，装修单推进签约状态(3) |
 | NERP凭空款项计划 | `POST /syncDecorationPaymentForNerp.do` | 匹配 ERP 款项生成（makeDecorationPayment）：按款项比例方案生成未收合同款项，后续收款走 ERP 正常流程 |
+| NERP报价单数据同步 | `POST /syncQuotationForNerp.do` | 报价单主数据同步（创建或更新，不含明细，不推进装修单状态）：无默认报价凭空建无明细初始报价单（不锁单/无提成消息副作用），有默认报价按传参部分更新（null 字段不动） |
 | NERP销售款项同步 | `POST /syncSalesPaymentForNerp.do` | 兼容 sales.sales / payment.salespayment：销售单判断补充（不存在凭空创建），落待收/待退款项（type=2 定金/3 补款/4 退款），退款凭空生成退货单 salesRefunds，后续收款/退款走 ERP 正常流程 |
 | NERP增减款同步 | `POST /syncAddreduceForNerp.do` | 兼容 quotation.addreduce / payment.decorationpayment：增减单判断补充（不存在凭空创建），经 ERP 提交链落未收增项款/减项款（dpId 关联），后续收款走 ERP 装修款流程 |
 
-五接口均为"迁移补齐"语义：ERP 页面流转要求已有预签单/报价/已收款/工程信息等前置，迁移单不具备，故凭空放宽；其余副作用（状态推进、归属回刷/提成挂账、操作留痕、消息联动）与页面操作完全同路。payment 数据一律经由对应单据（销售单/增减单）的生成过程产生，不裸落。
+六接口均为"迁移补齐"语义：ERP 页面流转要求已有预签单/报价/已收款/工程信息等前置，迁移单不具备，故凭空放宽；其余副作用（状态推进、归属回刷/提成挂账、操作留痕、消息联动）与页面操作完全同路。payment 数据一律经由对应单据（销售单/增减单）的生成过程产生，不裸落。
 
-**推荐调用顺序**: 合同域 `syncProsignForNerp`(预签) → `syncDecorationPaymentForNerp`(款项计划) → `syncSignContractForNerp`(签约)；销售域 `syncSalesPaymentForNerp`(销售款项, 可多笔按 type 逐笔推)；增减域 `syncAddreduceForNerp`(增减款)。顺序不强制（签约不要求款项已收），但按此序与 ERP 真实业务流转一致。
+**推荐调用顺序**: 合同域 `syncProsignForNerp`(预签) → `syncDecorationPaymentForNerp`(款项计划) → `syncSignContractForNerp`(签约)；报价主数据 `syncQuotationForNerp`（签约前后均可，锁定前有效）；销售域 `syncSalesPaymentForNerp`(销售款项, 可多笔按 type 逐笔推)；增减域 `syncAddreduceForNerp`(增减款)。顺序不强制（签约不要求款项已收），但按此序与 ERP 真实业务流转一致。
 
 ---
 
@@ -494,6 +496,71 @@ authentication=xxx&orderId=FL1812310023&arNo=NRPA20261113001&type=0&money=500000
 
 ---
 
+### 3.6 NERP报价单数据同步 - syncQuotationForNerp
+
+**接口路径**: POST /syncQuotationForNerp.do
+
+**功能说明**: 报价单主数据同步（创建或更新，**不含明细，不推进装修单状态**）。装修单状态白名单 [0 初始, 1 定金, 2 预签, 4 重签]，其余状态报 140005。
+
+- **无默认报价单** → 凭空创建一条无明细初始报价单（建法同 3.2 签约接口但不锁单/不签约/无提成与消息副作用）：名称缺省"报价单"，折扣缺省 10000（不打折），totalPrice 同步写入 undisPrice/disPrice，版本缺省按公司默认版本解析（qvid 传入则校验存在 200050）；创建分支不走报价数量上限校验
+- **已有默认报价单** → 按传参部分更新（名称/版本/总价（undisPrice/disPrice 同步写）/折扣，**null 字段保持不动**），仅刷 updateTime；报价已锁定（status=LOCK）拒绝 200033
+- **幂等**：重推同值无副作用（部分更新同值等价刷新 updateTime）
+
+#### 请求参数
+
+| 参数 | 类型 | 必填 | 说明 |
+|------|------|------|------|
+| authentication | String | 是 | ERP 分配的认证串 |
+| orderId | String | 是 | 装修单号 |
+| quotationName | String | 否 | 报价单名称（创建缺省"报价单"；更新传入才改） |
+| qvid | Long | 否 | 报价版本ID（>0 校验存在 200050；创建缺省按公司默认版本解析；更新传入才改） |
+| totalPrice | Long | 否 | 报价单总价，单位:分（创建写入并同步 undisPrice/disPrice；更新传入才改） |
+| discount | Integer | 否 | 折扣，万分比 10000=不打折（创建缺省 10000；更新传入才改） |
+
+#### 请求示例
+
+```
+POST /syncQuotationForNerp.do
+Content-Type: application/x-www-form-urlencoded
+
+authentication=xxx&orderId=FL1812310023&quotationName=NERP主材报价&qvid=256&totalPrice=15000000&discount=9500
+```
+
+#### 响应示例
+
+```json
+{
+  "errorCode": 0,
+  "errorMsg": null,
+  "data": {
+    "success": true,
+    "operation": "syncQuotation",
+    "orderId": "FL1812310023",
+    "qid": 30001,
+    "quotationCreated": true,
+    "name": "NERP主材报价",
+    "totalPrice": 15000000,
+    "discount": 9500
+  }
+}
+```
+
+- `quotationCreated`: true 本次凭空创建 / false 复用已有默认报价（更新）
+- `qid`: 报价单ID（后续对账与关联依据）
+
+#### 错误码
+
+| 错误码 | 说明 |
+|--------|------|
+| 400013 | 装修单号不能为空 |
+| 400040 | 操作账号无效 |
+| 140013 | 装修单不存在 |
+| 140005 | 订单合同不能修改（装修单状态不在白名单） |
+| 200050 | 报价版本不存在 |
+| 200033 | 报价已锁定 |
+
+---
+
 ## 四、调用方实施要求
 
 1. **调用顺序**：推荐 预签 → 款项计划 → 签约（与 ERP 真实流转一致）；签约不强制要求款项接口先调，但 ERP 报表口径建议按序补齐。
@@ -561,7 +628,7 @@ WHERE NOT EXISTS (SELECT 1 FROM communion.operation WHERE operation = 'syncAddre
 | Service接口 | src/com/fanglin/seiya/service/A20261025Service.java |
 | Service实现 | src/com/fanglin/seiya/service/impl/A20261025ServiceImpl.java |
 | 部署SQL | sqls/communion/20_operation_sync_prosign_for_nerp.sql、sqls/communion/21_operation_sync_sign_payment_for_nerp.sql、sqls/communion/46_operation_nerp_sales_addreduce.sql |
-| 错误码登记 | docs/03-API文档/API/error.md (400044/400045/400046/400047/200050/150100) |
+| 错误码登记 | docs/03-API文档/API/error.md (400044/400045/400046/400047/200050/200033/150100) |
 | 参照的原生预签 | src/com/fanglin/decoration/service/impl/DecorationContractServiceImpl.java (presignDecorationContract) |
 | 参照的原生签约 | src/com/fanglin/decoration/service/impl/DecorationContractServiceImpl.java (signDecorationContract) |
 | 参照的原生款项 | src/com/fanglin/payment/service/impl/DecorationPaymentServiceImpl.java (makeDecorationPayment) |
