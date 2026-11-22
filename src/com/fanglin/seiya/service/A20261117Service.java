@@ -7,8 +7,6 @@
  * @Author		: baity
  * @Email			: bty1987@163.com
  * @Describing	: 上方系统定额补数服务(工费/辅料两接口 → quotation.normriceitem/normooditem 实例层)
- *
- *                   实现下沉 quotation.NormtionService(2026-11-22 解耦, 本接口为 seiya 端点壳契约)
  */
 
 package com.fanglin.seiya.service;
