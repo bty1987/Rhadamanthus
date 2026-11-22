@@ -108,6 +108,10 @@ public class SelectionItemServiceImpl implements SelectionItemService {
 
 		UserPO createrPO = userDao.queryUserByUserId(userId);
 
+		if (createrPO == null) {
+			throw new FLException(200096, "操作人不存在");
+		}
+
 		List<SelectionItemPD> selectionItemPDs = selectionItemDao.pageSelectionItemForSupplier(paging, filters, createrPO.getUid(), company);
 		List<SelectionItemVO> selectionItemVOs = ptv(selectionItemPDs);
 
@@ -203,11 +207,40 @@ public class SelectionItemServiceImpl implements SelectionItemService {
 			throw new FLException(200037, "存在关联选材项");
 		}
 
+		if (selectionItemVO.getSoods() == null || selectionItemVO.getSoods().getSid() == null) {
+			throw new FLException(130118, "定材不存在");
+		}
+
+		if (selectionItemVO.getGoods() == null || selectionItemVO.getGoods().getGid() == null) {
+			throw new FLException(260004, "商品不存在");
+		}
+
 		SoodsPO soodsPO = soodsDao.get(selectionItemVO.getSoods().getSid());
 		GoodsPO goodsPO = goodsDao.get(selectionItemVO.getGoods().getGid());
+
+		if (soodsPO == null) {
+			throw new FLException(130118, "定材不存在");
+		}
+
+		if (goodsPO == null) {
+			throw new FLException(260004, "商品不存在");
+		}
+
 		BrandPO brandPO = brandDao.get(goodsPO.getBid());
 
+		if (brandPO == null) {
+			throw new FLException(130077, "品牌不存在");
+		}
+
 		UserPO operater = userDao.queryUserByUserId(userId);
+
+		if (operater == null) {
+			throw new FLException(200096, "操作人不存在");
+		}
+
+		if (brandPO.getSupplier() == null) {
+			throw new FLException(200136, "品牌未关联厂商");
+		}
 
 		long suid = brandPO.getSupplier().getUid();
 
@@ -354,6 +387,10 @@ public class SelectionItemServiceImpl implements SelectionItemService {
 			throw new FLException(200039, "选材项状态不可操作");
 		}
 
+		if (selectionItemVO.getSupplier() == null || selectionItemVO.getSupplier().getUid() == null) {
+			throw new FLException(200045, "厂商不在品牌关联列表中");
+		}
+
 		long uid = selectionItemVO.getSupplier().getUid();
 
 		List<BrandSupplierPO> brandSupplierPOs = brandSupplierDao.queryBrandSupplier(selectionItemPO.getGoods().getBid());
@@ -382,6 +419,10 @@ public class SelectionItemServiceImpl implements SelectionItemService {
 	public int tranSelectionItem(List<SelectionItemVO> selectionItemVOs, String userId) throws FLException {
 
 		UserPO traner = userDao.queryUserByUserId(userId);
+
+		if (traner == null) {
+			throw new FLException(200096, "操作人不存在");
+		}
 
 		for (SelectionItemVO selectionItemVO : selectionItemVOs) {
 
@@ -429,6 +470,10 @@ public class SelectionItemServiceImpl implements SelectionItemService {
 
 		UserPO checker = userDao.queryUserByUserId(userId);
 
+		if (checker == null) {
+			throw new FLException(200096, "操作人不存在");
+		}
+
 		for (SelectionItemVO selectionItemVO : selectionItemVOs) {
 
 			SelectionItemPO selectionItemPO = selectionItemDao.get(selectionItemVO.getSiid());
@@ -453,6 +498,10 @@ public class SelectionItemServiceImpl implements SelectionItemService {
 
 			if (selectionItemVO.getChecker() != null) {
 				checker = userDao.get(selectionItemVO.getChecker().getUid());
+
+				if (checker == null) {
+					throw new FLException(200096, "操作人不存在");
+				}
 			}
 
 			selectionItemPO.setChecker(checker);
@@ -478,6 +527,10 @@ public class SelectionItemServiceImpl implements SelectionItemService {
 	public int confirmSelectionItem(List<SelectionItemVO> selectionItemVOs, String userId) throws FLException {
 
 		UserPO confirmer = userDao.queryUserByUserId(userId);
+
+		if (confirmer == null) {
+			throw new FLException(200096, "操作人不存在");
+		}
 
 		for (SelectionItemVO selectionItemVO : selectionItemVOs) {
 
@@ -524,6 +577,10 @@ public class SelectionItemServiceImpl implements SelectionItemService {
 	public int finishSelectionItem(List<SelectionItemVO> selectionItemVOs, String userId) throws FLException {
 
 		UserPO finish = userDao.queryUserByUserId(userId);
+
+		if (finish == null) {
+			throw new FLException(200096, "操作人不存在");
+		}
 
 		for (SelectionItemVO selectionItemVO : selectionItemVOs) {
 
@@ -583,6 +640,10 @@ public class SelectionItemServiceImpl implements SelectionItemService {
 
 		UserPO reviewer = userDao.queryUserByUserId(userId);
 
+		if (reviewer == null) {
+			throw new FLException(200096, "操作人不存在");
+		}
+
 		for (SelectionItemVO selectionItemVO : selectionItemVOs) {
 
 			SelectionItemPO selectionItemPO = selectionItemDao.get(selectionItemVO.getSiid());
@@ -628,6 +689,10 @@ public class SelectionItemServiceImpl implements SelectionItemService {
 	public int balanceSelectionItem(List<SelectionItemVO> selectionItemVOs, String userId) throws FLException {
 
 		UserPO balancer = userDao.queryUserByUserId(userId);
+
+		if (balancer == null) {
+			throw new FLException(200096, "操作人不存在");
+		}
 
 		for (SelectionItemVO selectionItemVO : selectionItemVOs) {
 
@@ -725,6 +790,10 @@ public class SelectionItemServiceImpl implements SelectionItemService {
 		}
 
 		UserPO operater = userDao.queryUserByUserId(userId);
+
+		if (operater == null) {
+			throw new FLException(200096, "操作人不存在");
+		}
 
 		SelectionItemPO selectionItemPO = new SelectionItemPO();
 
