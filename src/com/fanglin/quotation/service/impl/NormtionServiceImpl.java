@@ -72,9 +72,6 @@ import com.fanglin.quotation.vo.NormtionVO;
 import com.fanglin.quotation.vo.QuotationFunctionAreaItemVO;
 import com.fanglin.quotation.vo.QuotationFunctionAreaVO;
 import com.fanglin.quotation.vo.QuotationVO;
-import com.fanglin.seiya.service.A20261117Service;
-import com.fanglin.system.dao.SystemConfigDao;
-import com.fanglin.system.po.SystemConfigPO;
 import com.fanglin.utils.Arith;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
@@ -125,12 +122,6 @@ public class NormtionServiceImpl implements NormtionService {
 
 	@Autowired
 	private DecorationDao decorationDao;
-
-	@Autowired
-	private SystemConfigDao systemConfigDao;
-
-	@Autowired
-	private A20261117Service a20261117Service;
 
 	@Override
 	public void pageNormtion(Paging paging, List<Filter> filters, Integer company) throws FLException {
@@ -705,11 +696,6 @@ public class NormtionServiceImpl implements NormtionService {
 			return 0;
 		}
 
-		// 三方定额补数闸(Phase 2 接线): 公司启用且报价无功能区明细时走三方补数, 本地流程结束(必须在 disable 之前, 防三方行被置禁用)
-		if (tryNormSyncForQuotation(normtionPO.getOrderId(), userId)) {
-			return 0;
-		}
-
 		normoodItemDao.disableNormoodItem(normtionVO.getQid());
 		normriceItemDao.disabledNormriceItem(normtionVO.getQid());
 		normtimeItemDao.disabledNormtimeItem(normtionVO.getQid());
@@ -738,11 +724,6 @@ public class NormtionServiceImpl implements NormtionService {
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public int makeNormtion(NormtionVO normtionVO, Short schedule, String userId) throws FLException {
-
-		// 三方定额补数闸(Phase 2 接线): 同主入口, makeNormtionForQuotation 直连路径兼容
-		if (tryNormSyncForQuotation(normtionVO.getOrderId(), userId)) {
-			return 0;
-		}
 
 		QuotationPO quotationPO = quotationDao.queryQuotationForDefaultByOrderId(normtionVO.getOrderId());
 
@@ -1633,32 +1614,4 @@ public class NormtionServiceImpl implements NormtionService {
 
 		return normtimeVOs;
 	}
-	/**
-	 * 三方定额补数闸(Phase 2 接线, 供 makeNormtion 两入口调用):
-	 * 公司启用三方补数(norm.sync.enable 公司行)且默认报价无功能区明细(本地报价项定额流程无数据可生成)时,
-	 * 走 A20261117 三方补数(按装修单整单维度仅补缺落工费/辅料定额行, fail-closed)并返回 true; 其余情况返回 false
-	 * 继续本地原有逻辑(开关未配/报价不存在/有功能区明细均保持原行为)。调用方须在本地 disable 之前调用。
-	 */
-	private boolean tryNormSyncForQuotation(String orderId, String userId) throws FLException {
-
-		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(orderId);
-
-		if (decorationPO == null) return false; // 本地流程自行报 140013
-
-		SystemConfigPO enableConfig = systemConfigDao.querySystemConfig("norm.sync.enable", decorationPO.getCompany());
-
-		if (enableConfig == null || !"1".equals(enableConfig.getValue())) return false; // 未启用走现有逻辑
-
-		QuotationPO quotationPO = quotationDao.queryQuotationForDefaultByOrderId(orderId);
-
-		if (quotationPO == null) return false; // 本地流程自行报 200003
-
-		if (!quotationFunctionAreaDao.queryQuotationFunctionAreaByQuotationId(quotationPO.getQid()).isEmpty()) return false; // 有功能区明细走本地
-
-		a20261117Service.syncNormriceItem(orderId, userId);
-		a20261117Service.syncNormoodItem(orderId, userId);
-
-		return true;
-	}
-
 }
