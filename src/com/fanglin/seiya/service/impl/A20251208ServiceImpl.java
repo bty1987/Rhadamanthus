@@ -1198,11 +1198,13 @@ public class A20251208ServiceImpl implements A20251208Service {
 	public void syncConstructionNodeForPlatforPm(ConstructionNodeVO constructionNodeVO) throws FLException {
 
 		// 平台同步兼容: 未传字段补安全默认后再调data服务——下游 ConstructionNodeServiceImpl 对
-		// mark/timeLimit/precheck/postcheck/stacheck/fincheck/salaryLimit/accessoryLimit 等基本型字段
+		// mark/process/proset/timeLimit/precheck/postcheck/stacheck/fincheck/salaryLimit/accessoryLimit 等基本型字段
 		// 直接 set(VO包装类型null即自动拆箱NPE, 实证2026-11-22 test: mark未传炸136行), startalk/endtalk
 		// 为NOT NULL无默认列直写(库层违例); add路径data侧已有同款缺省惯例(account/company/pcnid), 此处对齐,
 		// update路径为全量覆盖契约, 未传按0兜
 		if (constructionNodeVO.getMark() == null) constructionNodeVO.setMark((short) 0);
+		if (constructionNodeVO.getProcess() == null) constructionNodeVO.setProcess((short) 0);
+		if (constructionNodeVO.getProset() == null) constructionNodeVO.setProset((short) 0);
 		if (constructionNodeVO.getStartalk() == null) constructionNodeVO.setStartalk("");
 		if (constructionNodeVO.getEndtalk() == null) constructionNodeVO.setEndtalk("");
 		if (constructionNodeVO.getTimeLimit() == null) constructionNodeVO.setTimeLimit(0);
