@@ -343,6 +343,13 @@ $.extend(api, {
                 args: ["customerUserRule.measureNum", "customerUserRule.contractNum", "customerUserRule.contractPrice", "customerUserRule.materialPrice", "customerUserRule.designPrice", "customerUserRule.predisPrice", "customerUserRule.score", "customerUserRule.rank", "customerUserRule.chance", "customerUserRule.surplus", "customerUserRule.polling"]
             }
         },
+        updateCustomerUserRuleForAdvance: {
+            url: "updateCustomerUserRuleForAdvance.do",
+            type: "update",
+            tranargs: {
+                args: ["customerUserRule.measureNum", "customerUserRule.contractNum", "customerUserRule.contractPrice", "customerUserRule.materialPrice", "customerUserRule.designPrice", "customerUserRule.predisPrice", "customerUserRule.score", "customerUserRule.rank", "customerUserRule.chance", "customerUserRule.surplus", "customerUserRule.polling"]
+            }
+        },
         disableCustomerUserRule: {
             url: "disableCustomerUserRule.do"
         },

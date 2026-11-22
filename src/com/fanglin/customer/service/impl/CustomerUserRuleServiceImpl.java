@@ -224,15 +224,24 @@ public class CustomerUserRuleServiceImpl implements CustomerUserRuleService {
 			throw new FLException(330122, "管理禁用状态下, 个人无法操作");
 		}
 
-		// 翻转垫: 归属人本人对已停用(1)/管理启用(6)规则发停用target=1 → 落个人启用(0): 外部小程序停/接单双钮共用一函数恒发1, 翻转仅限本人自己的规则, 管理侧对他人规则仍为显式直写不受影响; 6态翻转=个人经由启用状态接管管理启用(2026-11-11拍板)
+		// 口径不流通(2026-11-22拍板): 管理启用态对个人全锁(原"个人经由启用状态接管"废除, 6↔0只走updateCustomerUserRuleForAdvance)
+		if (owner && status == CustomerUserRulePO.STATUS_ADVANCE_ENABLE_INT) {
+			throw new FLException(330123, "管理启用状态下, 个人无法操作");
+		}
+
+		// 翻转垫: 归属人本人对已停用(1)规则发停用target=1 → 落个人启用(0): 外部小程序停/接单双钮共用一函数恒发1, 翻转仅限本人自己的规则(2026-11-11拍板); 6管理启用翻转已于2026-11-22口径不流通拍板摘除
 		boolean flip = owner
-				&& (status == CustomerUserRulePO.STATUS_USER_INVALID_INT || status == CustomerUserRulePO.STATUS_ADVANCE_ENABLE_INT)
+				&& status == CustomerUserRulePO.STATUS_USER_INVALID_INT
 				&& customerUserRuleVO.getStatus() == CustomerUserRulePO.STATUS_USER_INVALID_INT;
 		short target = flip ? CustomerUserRulePO.STATUS_ENABLE_INT : customerUserRuleVO.getStatus();
 
-		// 6管理启用: 个人仅可启用接管(显式target=0或翻转落0, 个人与管理经由启用状态过渡), 停用及其他目标仍拒
-		if (owner && status == CustomerUserRulePO.STATUS_ADVANCE_ENABLE_INT && target != CustomerUserRulePO.STATUS_ENABLE_INT) {
-			throw new FLException(330123, "管理启用状态下, 个人无法操作");
+		// 口径不流通拦截(2026-11-22拍板): 管理/个人状态族互不直达——本接口不再提供6管理启用↔0个人启用、5管理禁用↔1个人停用转换(只走updateCustomerUserRuleForAdvance);
+		// 个人族内部(0/1/2/3互转)与管理族内部(5↔6)不受影响, 部门/分区失效(2/3)不在两族定义内照旧直写
+		if (((status == CustomerUserRulePO.STATUS_ADVANCE_INVALID_INT || status == CustomerUserRulePO.STATUS_ADVANCE_ENABLE_INT)
+				&& (target == CustomerUserRulePO.STATUS_ENABLE_INT || target == CustomerUserRulePO.STATUS_USER_INVALID_INT || target == CustomerUserRulePO.STATUS_DISABLE_INT))
+				|| ((status == CustomerUserRulePO.STATUS_ENABLE_INT || status == CustomerUserRulePO.STATUS_USER_INVALID_INT || status == CustomerUserRulePO.STATUS_DISABLE_INT)
+						&& (target == CustomerUserRulePO.STATUS_ADVANCE_INVALID_INT || target == CustomerUserRulePO.STATUS_ADVANCE_ENABLE_INT))) {
+			throw new FLException(330124, "管理与个人口径不流通, 请使用口径转换功能");
 		}
 
 		if (target == CustomerUserRulePO.STATUS_USER_INVALID_INT && systemConfigDao.querySystemConfig("CUSTOMER_USER_RULE_CONTROL", customerUserRulePO.getCompany()) != null) {
@@ -247,6 +256,39 @@ public class CustomerUserRuleServiceImpl implements CustomerUserRuleService {
 		UserPO issuer = userDao.queryUserByUserId(userId);
 
 		customerSourceRecordDao.save(new CustomerSourceRecordPO().init(String.format("更新人员规则,归属:%s(%s),原状态:%s,现状态:%s%s", customerUserRulePO.getUser().getCurrentName(), customerUserRulePO.getUser().getUserId(), status, customerUserRulePO.getStatus(), flip ? "(个人侧翻转)" : ""), CustomerSourceRecordPO.TYPE_USER_RULE_INT, issuer));
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public void updateCustomerUserRuleForAdvance(CustomerUserRuleVO customerUserRuleVO, String userId) throws FLException {
+
+		CustomerUserRulePO customerUserRulePO = customerUserRuleDao.get(customerUserRuleVO.getCurid());
+
+		if (customerUserRulePO == null) {
+			throw new FLException(330081, "无匹配规则");
+		}
+
+		short status = customerUserRulePO.getStatus();
+		short target = customerUserRuleVO.getStatus();
+
+		// 口径转换专用通道(2026-11-22拍板): 仅同档互转四条边——6管理启用↔0个人启用、5管理禁用↔1个人停用;
+		// 其余任何组合拒(4禁用为终态不参与, 2/3部门/分区失效不参与); 原状态转换入口(updateCustomerUserRuleForStatus)已拦跨族, 本接口为唯一转换入口, 仅人员规则-管理页面提供
+		boolean valid = (status == CustomerUserRulePO.STATUS_ADVANCE_ENABLE_INT && target == CustomerUserRulePO.STATUS_ENABLE_INT)
+				|| (status == CustomerUserRulePO.STATUS_ENABLE_INT && target == CustomerUserRulePO.STATUS_ADVANCE_ENABLE_INT)
+				|| (status == CustomerUserRulePO.STATUS_ADVANCE_INVALID_INT && target == CustomerUserRulePO.STATUS_USER_INVALID_INT)
+				|| (status == CustomerUserRulePO.STATUS_USER_INVALID_INT && target == CustomerUserRulePO.STATUS_ADVANCE_INVALID_INT);
+
+		if (!valid) {
+			throw new FLException(330124, "管理与个人口径不流通, 请使用口径转换功能");
+		}
+
+		customerUserRulePO.setStatus(target);
+
+		customerUserRuleDao.update(customerUserRulePO);
+
+		UserPO issuer = userDao.queryUserByUserId(userId);
+
+		customerSourceRecordDao.save(new CustomerSourceRecordPO().init(String.format("转换人员规则口径,归属:%s(%s),原状态:%s,现状态:%s", customerUserRulePO.getUser().getCurrentName(), customerUserRulePO.getUser().getUserId(), status, customerUserRulePO.getStatus()), CustomerSourceRecordPO.TYPE_USER_RULE_INT, issuer));
 	}
 
 	@Override

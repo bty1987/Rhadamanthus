@@ -89,6 +89,14 @@ public class CustomerUserRuleAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "updateCustomerUserRuleForAdvance", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateCustomerUserRuleForAdvance() throws FLException {
+
+		customerUserRuleService.updateCustomerUserRuleForAdvance(customerUserRule, queryUserId());
+
+		return SUCCESS;
+	}
+
 	@Action(value = "disableCustomerUserRule", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String disableCustomerUserRule() throws FLException {
 

@@ -23,6 +23,7 @@ public interface CustomerUserRuleService {
 	public void updateCustomerUserRule(CustomerUserRuleVO customerUserRule, String userId) throws FLException;
 
 	public void updateCustomerUserRuleForStatus(CustomerUserRuleVO customerUserRule, String userId) throws FLException;
+	public void updateCustomerUserRuleForAdvance(CustomerUserRuleVO customerUserRule, String userId) throws FLException;
 
 	public void disableCustomerUserRule(int company);
 

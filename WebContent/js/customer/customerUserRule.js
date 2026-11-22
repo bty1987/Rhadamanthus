@@ -377,8 +377,8 @@ $(function() {
         },
         show: function(v) {
 
-            // 开始接单: 各维度视角均可, 状态须为失效态(1/2/3/5)——启用后归 0(个人口径)或 6(管理口径)
-            return btnVisible("start") && (customerUserRule.depage == "dept" || customerUserRule.depage == "fatherDept") && (v.status == constant.customer().customerUserRule.STATUS_USER_INVALID_INT || v.status == constant.customer().customerUserRule.STATUS_DEPT_INVALID_INT || v.status == constant.customer().customerUserRule.STATUS_REGION_INVALID_INT || v.status == constant.customer().customerUserRule.STATUS_ADVANCE_INVALID_INT);
+            // 开始接单: 各维度视角均可, 状态须为个人族失效态(1/2/3)——5管理禁用已按口径不流通摘除(2026-11-22), 先经管理页口径转换
+            return btnVisible("start") && (customerUserRule.depage == "dept" || customerUserRule.depage == "fatherDept") && (v.status == constant.customer().customerUserRule.STATUS_USER_INVALID_INT || v.status == constant.customer().customerUserRule.STATUS_DEPT_INVALID_INT || v.status == constant.customer().customerUserRule.STATUS_REGION_INVALID_INT);
         }
     }, {
         name: "停止接单",
@@ -442,7 +442,8 @@ $(function() {
         },
         show: function(v) {
 
-            return customerUserRule.depage == null || customerUserRule.depage == "company";
+            // 个人启用: 仅个人族状态(1/2/3)可落0; 6/5管理口径跨族已被后端330124拦(2026-11-22口径不流通)
+            return (customerUserRule.depage == null || customerUserRule.depage == "company") && (v.status == constant.customer().customerUserRule.STATUS_USER_INVALID_INT || v.status == constant.customer().customerUserRule.STATUS_DEPT_INVALID_INT || v.status == constant.customer().customerUserRule.STATUS_REGION_INVALID_INT);
         }
     }, {
         name: "个人停用",
@@ -465,7 +466,8 @@ $(function() {
         },
         show: function(v) {
 
-            return customerUserRule.depage == null || customerUserRule.depage == "company";
+            // 个人停用: 仅0个人启用态可落1; 6/5跨族已被后端330124拦
+            return (customerUserRule.depage == null || customerUserRule.depage == "company") && v.status == constant.customer().customerUserRule.STATUS_ENABLE_INT;
         }
     }, {
         name: "管理启用",
@@ -488,7 +490,8 @@ $(function() {
         },
         show: function(v) {
 
-            return customerUserRule.depage == null || customerUserRule.depage == "company";
+            // 管理启用: 仅5管理禁用态可恢复到6(管理族内部); 0/1跨族已被后端330124拦
+            return (customerUserRule.depage == null || customerUserRule.depage == "company") && v.status == constant.customer().customerUserRule.STATUS_ADVANCE_INVALID_INT;
         }
     }, {
         name: "管理禁用",
@@ -511,7 +514,42 @@ $(function() {
         },
         show: function(v) {
 
-            return customerUserRule.depage == null || customerUserRule.depage == "company";
+            // 管理禁用: 仅6管理启用态可落5(管理族内部); 0/1跨族已被后端330124拦
+            return (customerUserRule.depage == null || customerUserRule.depage == "company") && v.status == constant.customer().customerUserRule.STATUS_ADVANCE_ENABLE_INT;
+        }
+    }, {
+        // 口径转换(2026-11-22拍板): 管理/个人口径不流通, 本按钮为唯一转换入口, 仅人员规则-管理页面提供;
+        // 按当前状态映射目标: 0个人启用→6管理启用/6→0/5管理禁用→1个人停用/1→5; 其余状态(2/3/4)不提供转换
+        name: "口径转换",
+        clazz: "btn-yellow",
+        handle: function(v, check) {
+
+            var dict = constant.customer().customerUserRule;
+
+            var target;
+
+            if (v.status == dict.STATUS_ENABLE_INT) {
+                target = dict.STATUS_ADVANCE_ENABLE_INT;// 0个人启用→6管理启用
+            } else if (v.status == dict.STATUS_ADVANCE_ENABLE_INT) {
+                target = dict.STATUS_ENABLE_INT;// 6管理启用→0个人启用
+            } else if (v.status == dict.STATUS_ADVANCE_INVALID_INT) {
+                target = dict.STATUS_USER_INVALID_INT;// 5管理禁用→1个人停用
+            } else {
+                target = dict.STATUS_ADVANCE_INVALID_INT;// 1个人停用→5管理禁用
+            }
+
+            com.post(api.customer.updateCustomerUserRuleForAdvance, {
+                "customerUserRule.curid": v.curid,
+                "customerUserRule.status": target
+            }, function(res) {
+
+                searcher.doSearch();
+                return false;
+            });
+        },
+        show: function(v) {
+
+            return (customerUserRule.depage == null || customerUserRule.depage == "company") && (v.status == constant.customer().customerUserRule.STATUS_ENABLE_INT || v.status == constant.customer().customerUserRule.STATUS_ADVANCE_ENABLE_INT || v.status == constant.customer().customerUserRule.STATUS_ADVANCE_INVALID_INT || v.status == constant.customer().customerUserRule.STATUS_USER_INVALID_INT);
         }
     }, {
         name: "状态",
