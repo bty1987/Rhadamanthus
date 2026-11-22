@@ -33,10 +33,11 @@ public interface A20260324Service {
 	 * @param leaderCode 部门经理工号（如：FL-09527）
 	 * @param posts 定岗数据（JSON字符串，如：{"1": 10, "2": 20}）
 	 * @param orderValue 排序值
+	 * @param isPrefor 业绩标识（0计入，1不计入；未传时新增默认计入、更新保持原值）
 	 * @return 部门ID（did）的字符串形式
 	 * @throws FLException 业务异常
 	 */
-	public String syncDepartment(Integer deptId, String code, String name, Integer type, String parentCode, String orgCode, Integer status, String leaderCode, String posts, Integer orderValue) throws FLException;
+	public String syncDepartment(Integer deptId, String code, String name, Integer type, String parentCode, String orgCode, Integer status, String leaderCode, String posts, Integer orderValue, Integer isPrefor) throws FLException;
 
 	/**
 	 * 同步用户信息（支持新增/更新）

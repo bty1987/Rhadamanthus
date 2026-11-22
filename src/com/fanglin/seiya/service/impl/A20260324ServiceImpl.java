@@ -209,10 +209,10 @@ public class A20260324ServiceImpl implements A20260324Service {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public String syncDepartment(Integer deptId, String code, String name, Integer type, String parentCode, String orgCode, Integer status, String leaderCode, String posts, Integer orderValue) throws FLException {
+	public String syncDepartment(Integer deptId, String code, String name, Integer type, String parentCode, String orgCode, Integer status, String leaderCode, String posts, Integer orderValue, Integer isPrefor) throws FLException {
 
 		try {
-			logger.info("同步部门信息: deptId={}, code={}, name={}, type={}, parentCode={}, orgCode={}, status={}, leaderCode={}, orderValue={}", deptId, code, name, type, parentCode, orgCode, status, leaderCode, orderValue);
+			logger.info("同步部门信息: deptId={}, code={}, name={}, type={}, parentCode={}, orgCode={}, status={}, leaderCode={}, orderValue={}, isPrefor={}", deptId, code, name, type, parentCode, orgCode, status, leaderCode, orderValue, isPrefor);
 
 			// 1. 获取部门类型
 			DepartmentTypePO departmentType = departmentTypeDao.get(type);
@@ -321,6 +321,9 @@ public class A20260324ServiceImpl implements A20260324Service {
 				// 设置其他默认值
 				deptPO.setIsdet((short) 0); // 默认不是详细部门
 
+				// 业绩标识(是否计入业绩): 0计入(默认), 1不计入(与activityitem isPrefor同款口径)
+				deptPO.setIsPrefor(isPrefor != null ? isPrefor.shortValue() : DepartmentPO.ISPREFOR_CAL_INT);
+
 				// 保存部门
 				departmentDao.save(deptPO);
 
@@ -389,6 +392,11 @@ public class A20260324ServiceImpl implements A20260324Service {
 				// 更新排序值
 				if (orderValue != null) {
 					deptPO.setLimit(orderValue);
+				}
+
+				// 业绩标识(是否计入业绩): 未传保持原值(照status"未传不动"契约)
+				if (isPrefor != null) {
+					deptPO.setIsPrefor(isPrefor.shortValue());
 				}
 
 				// 更新部门

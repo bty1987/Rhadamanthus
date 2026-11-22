@@ -58,6 +58,8 @@ public class DepartmentVO implements Serializable {
 
 	private Integer aompany;  // 业绩公司
 
+	private Short isPrefor;  // 业绩标识(是否计入业绩) 0:计 1:不计
+
 	public DepartmentVO() {
 		super();
 	}
@@ -175,6 +177,14 @@ public class DepartmentVO implements Serializable {
 
 	public void setAompany(Integer aompany) {
 		this.aompany = aompany;
+	}
+
+	public Short getIsPrefor() {
+		return isPrefor;
+	}
+
+	public void setIsPrefor(Short isPrefor) {
+		this.isPrefor = isPrefor;
 	}
 
 	public Short getStatus() {

@@ -58,6 +58,10 @@ public class DepartmentPO implements Serializable {
 
 	public static final short ISDET_DETMENT_INT = 1;
 
+	public static final short ISPREFOR_CAL_INT = 0; // 业绩标识 0 计(与activityitem isPrefor同款口径)
+
+	public static final short ISPREFOR_UNCAL_INT = 1; // 业绩标识 1 不计
+
 	private int did;
 
 	private String no;
@@ -95,6 +99,8 @@ public class DepartmentPO implements Serializable {
 	private int company;
 
 	private int aompany; // 业绩公司
+
+	private short isPrefor; // 业绩标识(是否计入业绩) 0:计 1:不计
 
 	public DepartmentPO() {
 		super();
@@ -298,6 +304,15 @@ public class DepartmentPO implements Serializable {
 
 	public void setAompany(int aompany) {
 		this.aompany = aompany;
+	}
+
+	@Column(name = "isPrefor")
+	public short getIsPrefor() {
+		return isPrefor;
+	}
+
+	public void setIsPrefor(short isPrefor) {
+		this.isPrefor = isPrefor;
 	}
 
 	public DepartmentVO ptv() {

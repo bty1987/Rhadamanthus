@@ -65,6 +65,9 @@ public class A20260324Action extends BaseListAction {
 	/** 定岗数据（JSON字符串）- 部门同步专用 */
 	private String posts;
 
+	/** 业绩标识（0计入，1不计入）- 部门同步专用 */
+	private Integer is_prefor;
+
 	// ==================== 用户同步专用参数 ====================
 	/** 现用名（可选，默认使用name） */
 	private String current_name;
@@ -122,7 +125,7 @@ public class A20260324Action extends BaseListAction {
 	/**
 	 * 同步部门信息接口
 	 * 
-	 * 请求参数示例： { "dept_id": 123, // 部门主键ID（更新时提供，优先级高于code） "name": "设计一部", // 部门名称 "code": "DEPT9526", // 信息平台部门ID或编码：更新时提供 "type": 1, // 部门类型ID "parent_code": "DEPT9525", // 信息平台父级编码：创建/更新时提供 "org_code": "1", // 公司ID（对应 company.cid）：创建时提供 "status": 1, // 状态：1启用，2禁用 "order_value": 1, // 排序值 "leader_code": "FL-09527", // 部门经理工号（传空串=清空管理人员；不传=更新时保持原值） "posts": "{\"1\": 10, \"2\": 20}" // 定岗映射信息：岗位码 => 人员上限值（JSON字符串） }
+	 * 请求参数示例： { "dept_id": 123, // 部门主键ID（更新时提供，优先级高于code） "name": "设计一部", // 部门名称 "code": "DEPT9526", // 信息平台部门ID或编码：更新时提供 "type": 1, // 部门类型ID "parent_code": "DEPT9525", // 信息平台父级编码：创建/更新时提供 "org_code": "1", // 公司ID（对应 company.cid）：创建时提供 "status": 1, // 状态：1启用，2禁用 "order_value": 1, // 排序值 "leader_code": "FL-09527", // 部门经理工号（传空串=清空管理人员；不传=更新时保持原值） "posts": "{\"1\": 10, \"2\": 20}", // 定岗映射信息：岗位码 => 人员上限值（JSON字符串） "is_prefor": 0 // 业绩标识：0计入，1不计入（未传时新增默认计入、更新保持原值） }
 	 * 
 	 * 更新定位优先级：dept_id（主键）→ code（编码）；两者均为空时视为新增。
 	 * 
@@ -144,7 +147,7 @@ public class A20260324Action extends BaseListAction {
 		}
 
 		// 调用服务层处理
-		data = a20260324Service.syncDepartment(dept_id, code, name, type, parent_code, org_code, status, leader_code, posts, order_value);
+		data = a20260324Service.syncDepartment(dept_id, code, name, type, parent_code, org_code, status, leader_code, posts, order_value, is_prefor);
 
 		return SUCCESS;
 	}
@@ -271,6 +274,14 @@ public class A20260324Action extends BaseListAction {
 
 	public void setPosts(String posts) {
 		this.posts = posts;
+	}
+
+	public Integer getIs_prefor() {
+		return is_prefor;
+	}
+
+	public void setIs_prefor(Integer is_prefor) {
+		this.is_prefor = is_prefor;
 	}
 
 	public String getData() {

@@ -228,6 +228,7 @@ public class DepartmentServiceImpl implements DepartmentService {
 		departmentPO.setStatus(DepartmentPO.STATUS_ENABLE_INT);
 		departmentPO.setCompany(company);
 		departmentPO.setAompany(company);  // 业绩公司默认与公司相同
+		departmentPO.setIsPrefor(departmentVO.getIsPrefor() == null ? DepartmentPO.ISPREFOR_CAL_INT : departmentVO.getIsPrefor());  // 业绩标识默认计入
 		departmentPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 
 		if (userPO != null) {

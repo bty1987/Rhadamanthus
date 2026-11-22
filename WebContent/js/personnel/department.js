@@ -13,6 +13,7 @@ jQuery(function($) {
             manager: com.focusPage("#manager"),
             comment: com.focusPage("#des"),
             isdet: com.focusPage("#isdet"),// 是否定岗
+            isPrefor: com.focusPage("#isPrefor"),// 是否计入业绩
             code: com.focusPage("#code"),
             limit: com.focusPage("#limit"),// 人员数量上限
         },
@@ -102,6 +103,11 @@ jQuery(function($) {
             name: "是否定岗",
             prop: function(v) { return com.checkNull(v.isdet == 1 ? "定岗" : "开放"); },
             clazz: "red"
+        }, {
+            field: "isPrefor",
+            name: "是否计入业绩",
+            prop: function(v) { return v.isPrefor == 1 ? "不计入" : "计入"; },
+            clazz: "grey"
         }, {
             field: "limit",
             name: "人员数量上限",
@@ -198,6 +204,8 @@ jQuery(function($) {
 
         com.cleanItems(department.items);
 
+        department.items.isPrefor.prop("checked", true);// 新增默认计入业绩(cleanItems会重置checkbox, 需在其后设置)
+
         com.focusPage("#ndeptId").css({
             "display": "none"
         });
@@ -224,6 +232,7 @@ jQuery(function($) {
         department.items.kiname.val(dept.kiname);
         department.items.comment.val(dept.comment);
         department.items.isdet.val(dept.isdet);
+        department.items.isPrefor.prop("checked", dept.isPrefor == 0);// 0计入=勾选, 1不计=不勾
         department.items.code.val(dept.code);
         department.items.limit.val(dept.limit);
 
@@ -264,6 +273,7 @@ jQuery(function($) {
             'dept.manager.userId': com.typeahead("manager"),
             'dept.comment': department.items.comment.val(),
             'dept.isdet': department.items.isdet.val(),
+            'dept.isPrefor': department.items.isPrefor.prop("checked") ? 0 : 1,
             'dept.code': department.items.code.val(),
             'dept.limit': department.items.limit.val()
         };
