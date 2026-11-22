@@ -71,11 +71,16 @@ public interface A20261025Service {
 	 * @param qvid 报价版本ID（可选, >0 校验存在(200050); 创建缺省按公司默认版本解析）
 	 * @param totalPrice 总价, 单位:分（可选, 写报价单 总价/未拆分价/折后价）
 	 * @param discount 折扣, 万分比 10000=不打折（可选, 创建缺省10000）
+	 * @param couponCut 券抵扣金额, 单位:分（可选, 传入即写 decoration.couponCut; 不传不动）
+	 * @param thingCut 物品抵扣金额, 单位:分（可选, 传入即写 decoration.thingCut）
+	 * @param factPrice 成交价, 单位:分（可选, 传入即写 decoration.factPrice; 原生口径=orderTotalPrice-couponCut, NERP 直传终值）
+	 * @param orderTotalPrice 订单总价(签约合同额), 单位:分（可选, 传入即写 decoration.orderTotalPrice）
+	 * @param quotationPrice 报价金额, 单位:分（可选, 传入即写 decoration.quotationPrice; 原生口径=默认报价 totalPrice 回写）
 	 * @param userId 操作账号（报价创建人）
-	 * @return 包含 operation, orderId, qid, quotationCreated, name, totalPrice, discount 等信息的 Map
+	 * @return 包含 operation, orderId, qid, quotationCreated, name, totalPrice, discount 及装修单优惠五列终值(couponCut/thingCut/factPrice/orderTotalPrice/quotationPrice)等信息的 Map
 	 * @throws FLException 业务异常
 	 */
-	Map<String, Object> syncQuotationForNerp(String orderId, String quotationName, Long qvid, Long totalPrice, Integer discount, String userId) throws FLException;
+	Map<String, Object> syncQuotationForNerp(String orderId, String quotationName, Long qvid, Long totalPrice, Integer discount, Long couponCut, Long thingCut, Long factPrice, Long orderTotalPrice, Long quotationPrice, String userId) throws FLException;
 
 	/**
 	 * NERP凭空款项计划

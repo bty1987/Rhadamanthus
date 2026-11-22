@@ -550,7 +550,7 @@ public class A20261025ServiceImpl implements A20261025Service {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public Map<String, Object> syncQuotationForNerp(String orderId, String quotationName, Long qvid, Long totalPrice, Integer discount, String userId) throws FLException {
+	public Map<String, Object> syncQuotationForNerp(String orderId, String quotationName, Long qvid, Long totalPrice, Integer discount, Long couponCut, Long thingCut, Long factPrice, Long orderTotalPrice, Long quotationPrice, String userId) throws FLException {
 
 		List<Short> status = Arrays.asList(new Short[] { DecorationPO.STATUS_INIT_INT, DecorationPO.STATUS_DEPOSIT_INT, DecorationPO.STATUS_PROSIGN_INT, DecorationPO.STATUS_RESIGNED_INT });
 
@@ -652,6 +652,19 @@ public class A20261025ServiceImpl implements A20261025Service {
 			quotationPO.setUpdateTime(DateUtil.getDateToTimestamp(new Date()));
 
 			quotationDao.update(quotationPO);
+
+			// 装修单优惠/金额信息同步(传入即写, null 不动): 列语义照原生维护口径——
+			// quotationPrice=默认报价总价回写(updateQuotationForAdvance 口径, 连带 discount 由报价单列已有传入支持),
+			// couponCut/thingCut=活动项统计值(NERP 场景无 activityitem 行, 由 NERP 侧核算直传),
+			// factPrice=成交价(原生口径=orderTotalPrice-couponCut, NERP 直传终值), orderTotalPrice=签约合同额
+			if (couponCut != null) decorationPO.setCouponCut(couponCut.longValue());
+			if (thingCut != null) decorationPO.setThingCut(thingCut.longValue());
+			if (factPrice != null) decorationPO.setFactPrice(factPrice.longValue());
+			if (orderTotalPrice != null) decorationPO.setOrderTotalPrice(orderTotalPrice.longValue());
+			if (quotationPrice != null) decorationPO.setQuotationPrice(quotationPrice.longValue());
+			if (couponCut != null || thingCut != null || factPrice != null || orderTotalPrice != null || quotationPrice != null) {
+				decorationDao.update(decorationPO);
+			}
 		}
 
 		Map<String, Object> result = new HashMap<String, Object>();
@@ -664,6 +677,11 @@ public class A20261025ServiceImpl implements A20261025Service {
 		result.put("name", quotationPO.getName());
 		result.put("totalPrice", quotationPO.getTotalPrice());
 		result.put("discount", quotationPO.getDiscount());
+		result.put("couponCut", decorationPO.getCouponCut());
+		result.put("thingCut", decorationPO.getThingCut());
+		result.put("factPrice", decorationPO.getFactPrice());
+		result.put("orderTotalPrice", decorationPO.getOrderTotalPrice());
+		result.put("quotationPrice", decorationPO.getQuotationPrice());
 
 		return result;
 	}

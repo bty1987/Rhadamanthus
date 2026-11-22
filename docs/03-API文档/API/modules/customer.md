@@ -9988,3 +9988,21 @@
 |------|------|
 | `pointAccount` | PointAccountVO |
 
+
+## 补录接口 (自动生成 2026-11-03)
+
+
+> **类**: `api.customer.CustomerUserRuleAction`
+
+
+##### `更新` updateCustomerUserRuleForAdvance
+
+- **接口**: `updateCustomerUserRuleForAdvance.do`
+- **方法**: `updateCustomerUserRuleForAdvance()`
+
+**入参:**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `customerUserRule` | CustomerUserRuleVO |  |
+

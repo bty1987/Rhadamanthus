@@ -171,6 +171,21 @@ public class A20261025Action extends BaseListAction {
 	/** 报价单名称（签约接口可选, 缺省"报价单"） */
 	private String quotationName;
 
+	/** 券抵扣金额, 单位:分（报价同步接口可选, 传入即写装修单 couponCut） */
+	private Long couponCut;
+
+	/** 物品抵扣金额, 单位:分（报价同步接口可选, 传入即写装修单 thingCut） */
+	private Long thingCut;
+
+	/** 成交价, 单位:分（报价同步接口可选, 传入即写装修单 factPrice） */
+	private Long factPrice;
+
+	/** 订单总价(签约合同额), 单位:分（报价同步接口可选, 传入即写装修单 orderTotalPrice） */
+	private Long orderTotalPrice;
+
+	/** 报价金额, 单位:分（报价同步接口可选, 传入即写装修单 quotationPrice） */
+	private Long quotationPrice;
+
 	/** NERP销售单号（销售款项接口必填, 幂等锚, 嵌 sales.comment） */
 	private String salesNo;
 
@@ -320,7 +335,7 @@ public class A20261025Action extends BaseListAction {
 	}
 
 	/**
-	 * NERP报价单数据同步接口
+	 * NERP报价单数据同步接口（支持装修单优惠五列同步: couponCut/thingCut/factPrice/orderTotalPrice/quotationPrice 传入即写）
 	 *
 	 * 同步报价单主数据(创建或更新, 不含明细, 不推进装修单状态): 无默认报价单时凭空创建无明细初始报价单,
 	 * 已有默认报价单时按传参部分更新(名称/版本/总价/折扣, null 不动), 锁定报价单拒绝(200033)
@@ -344,7 +359,7 @@ public class A20261025Action extends BaseListAction {
 		}
 
 		// 调用服务层处理
-		Map<String, Object> result = a20261025Service.syncQuotationForNerp(orderId.trim(), quotationName, qvid, totalPrice, discount, userId);
+		Map<String, Object> result = a20261025Service.syncQuotationForNerp(orderId.trim(), quotationName, qvid, totalPrice, discount, couponCut, thingCut, factPrice, orderTotalPrice, quotationPrice, userId);
 
 		// 设置响应数据
 		this.data = result;
@@ -830,6 +845,46 @@ public class A20261025Action extends BaseListAction {
 
 	public void setQuotationName(String quotationName) {
 		this.quotationName = quotationName;
+	}
+
+	public Long getCouponCut() {
+		return couponCut;
+	}
+
+	public void setCouponCut(Long couponCut) {
+		this.couponCut = couponCut;
+	}
+
+	public Long getThingCut() {
+		return thingCut;
+	}
+
+	public void setThingCut(Long thingCut) {
+		this.thingCut = thingCut;
+	}
+
+	public Long getFactPrice() {
+		return factPrice;
+	}
+
+	public void setFactPrice(Long factPrice) {
+		this.factPrice = factPrice;
+	}
+
+	public Long getOrderTotalPrice() {
+		return orderTotalPrice;
+	}
+
+	public void setOrderTotalPrice(Long orderTotalPrice) {
+		this.orderTotalPrice = orderTotalPrice;
+	}
+
+	public Long getQuotationPrice() {
+		return quotationPrice;
+	}
+
+	public void setQuotationPrice(Long quotationPrice) {
+		this.quotationPrice = quotationPrice;
 	}
 
 	public String getSalesNo() {

@@ -504,6 +504,7 @@ authentication=xxx&orderId=FL1812310023&arNo=NRPA20261113001&type=0&money=500000
 
 - **无默认报价单** → 凭空创建一条无明细初始报价单（建法同 3.2 签约接口但不锁单/不签约/无提成与消息副作用）：名称缺省"报价单"，折扣缺省 10000（不打折），totalPrice 同步写入 undisPrice/disPrice，版本缺省按公司默认版本解析（qvid 传入则校验存在 200050）；创建分支不走报价数量上限校验
 - **已有默认报价单** → 按传参部分更新（名称/版本/总价（undisPrice/disPrice 同步写）/折扣，**null 字段保持不动**），仅刷 updateTime；报价已锁定（status=LOCK）拒绝 200033
+- **装修单优惠五列同步（更新分支专属）**：couponCut/thingCut/factPrice/orderTotalPrice/quotationPrice 传入即写 `decoration` 对应列（不传不动），写入不动装修单状态、不涉及款项；列语义照原生维护口径（原生 couponCut/thingCut 来自活动项统计、factPrice=orderTotalPrice-couponCut、quotationPrice=默认报价总价回写——NERP 场景无活动项行由 NERP 侧核算直传）；**创建分支不写装修单**（装修单金额随 3.2 签约接口）
 - **幂等**：重推同值无副作用（部分更新同值等价刷新 updateTime）
 
 #### 请求参数
@@ -516,6 +517,11 @@ authentication=xxx&orderId=FL1812310023&arNo=NRPA20261113001&type=0&money=500000
 | qvid | Long | 否 | 报价版本ID（>0 校验存在 200050；创建缺省按公司默认版本解析；更新传入才改） |
 | totalPrice | Long | 否 | 报价单总价，单位:分（创建写入并同步 undisPrice/disPrice；更新传入才改） |
 | discount | Integer | 否 | 折扣，万分比 10000=不打折（创建缺省 10000；更新传入才改） |
+| couponCut | Long | 否 | 券抵扣金额，单位:分（**更新分支传入即写 decoration.couponCut**，不传不动；NERP 场景无 ERP 活动项行，由 NERP 侧核算直传） |
+| thingCut | Long | 否 | 物品抵扣金额，单位:分（**更新分支传入即写 decoration.thingCut**） |
+| factPrice | Long | 否 | 成交价，单位:分（**更新分支传入即写 decoration.factPrice**；原生口径=orderTotalPrice-couponCut，NERP 直传终值） |
+| orderTotalPrice | Long | 否 | 订单总价(签约合同额)，单位:分（**更新分支传入即写 decoration.orderTotalPrice**） |
+| quotationPrice | Long | 否 | 报价金额，单位:分（**更新分支传入即写 decoration.quotationPrice**；原生口径=默认报价 totalPrice 回写） |
 
 #### 请求示例
 
@@ -540,13 +546,19 @@ authentication=xxx&orderId=FL1812310023&quotationName=NERP主材报价&qvid=256&
     "quotationCreated": true,
     "name": "NERP主材报价",
     "totalPrice": 15000000,
-    "discount": 9500
+    "discount": 9500,
+    "couponCut": 200000,
+    "thingCut": 50000,
+    "factPrice": 14800000,
+    "orderTotalPrice": 15000000,
+    "quotationPrice": 15000000
   }
 }
 ```
 
 - `quotationCreated`: true 本次凭空创建 / false 复用已有默认报价（更新）
 - `qid`: 报价单ID（后续对账与关联依据）
+- `couponCut/thingCut/factPrice/orderTotalPrice/quotationPrice`: 装修单优惠五列**终值**（对账口径，含本次未传的列返回现库值）
 
 #### 错误码
 
