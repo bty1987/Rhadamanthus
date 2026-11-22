@@ -46,7 +46,7 @@ public class ActivityItemServiceImpl implements ActivityItemService {
 	@Override
 	public List<ActivityItemVO> queryActivityItemByAid(ActivityVO activityVO) {
 
-		List<ActivityItemPO> activityItemPOs = activityItemDao.queryActivityItemByAid(activityVO.getAid());
+		List<ActivityItemPO> activityItemPOs = activityItemDao.queryActivityItemByAid(activityVO.getAid(), activityVO.getLevel());
 		List<ActivityItemVO> activityItemVOs = new ArrayList<ActivityItemVO>();
 
 		for (ActivityItemPO activityItemPO : activityItemPOs) {

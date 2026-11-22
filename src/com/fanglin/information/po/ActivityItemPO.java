@@ -17,6 +17,10 @@ public class ActivityItemPO implements java.io.Serializable {
 
 	private static final long serialVersionUID = -7540185816527717351L;
 
+	public static final String COLUMN_LEVEL_STR = "level";
+	public static final short LEVEL_COMMON_INT = 0; // 普通(申领可见)
+	public static final short LEVEL_MANAGE_INT = 1; // 管理专用(仅"添加活动物品"高级功能可见), 后续层级递增
+
 	public static final short TYPE_COUPON_INT = 0;// 券
 
 	public static final short TYPE_THING_INT = 1;// 物品
@@ -52,6 +56,8 @@ public class ActivityItemPO implements java.io.Serializable {
 	private int money;
 
 	private int integral;
+
+	private short level; // 资格层级 0:普通(申领可见) 1:管理专用(仅"添加活动物品"高级功能可见), 后续可扩展更高层级
 
 	public ActivityItemPO() {
 		super();
@@ -139,6 +145,15 @@ public class ActivityItemPO implements java.io.Serializable {
 
 	public void setIntegral(int integral) {
 		this.integral = integral;
+	}
+
+	@Column(name = "level")
+	public short getLevel() {
+		return level;
+	}
+
+	public void setLevel(short level) {
+		this.level = level;
 	}
 
 }

@@ -127,7 +127,8 @@ jQuery(function($) {
             return false;
 
         var options = {
-            "activity.aid": activity
+            "activity.aid": activity,
+                "activity.level": 1// 添加活动物品(高级功能): 查全量含管理专用层级; 申领弹窗不传仅普通层级
         };
 
         com.post(api.information.queryActivityItemByAid, options, function(res) {
@@ -162,7 +163,8 @@ jQuery(function($) {
             return false;
 
         var options = {
-            "activity.aid": activity
+            "activity.aid": activity,
+                "activity.level": 1// 添加活动物品(高级功能): 查全量含管理专用层级; 申领弹窗不传仅普通层级
         };
 
         com.post(api.information.queryActivityItemByAid, options, function(res) {

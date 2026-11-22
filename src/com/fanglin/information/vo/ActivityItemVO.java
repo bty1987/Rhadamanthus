@@ -21,6 +21,7 @@ public class ActivityItemVO implements java.io.Serializable {
 	private Integer integral;
 
 	private Integer stockNum; // 奖品剩余库存(毫→tranargs转张, 展示用非映射字段)
+	private Short level; // 资格层级 0:普通(申领可见) 1:管理专用(仅添加活动物品功能可见)
 
 	public ActivityItemVO() {
 		super();
@@ -96,6 +97,14 @@ public class ActivityItemVO implements java.io.Serializable {
 
 	public void setStockNum(Integer stockNum) {
 		this.stockNum = stockNum;
+	}
+
+	public Short getLevel() {
+		return level;
+	}
+
+	public void setLevel(Short level) {
+		this.level = level;
 	}
 
 }

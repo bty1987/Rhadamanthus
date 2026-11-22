@@ -182,4 +182,14 @@ public class ActivityVO implements java.io.Serializable {
 		this.company = company;
 	}
 
+	private Short level; // 查询参数(非映射): 1=查询含管理专用层级物品(添加活动物品/配置维护用), 不传=仅普通层级
+
+	public Short getLevel() {
+		return level;
+	}
+
+	public void setLevel(Short level) {
+		this.level = level;
+	}
+
 }
