@@ -66,7 +66,8 @@ class Exporter(Util):
             bdr.no AS '业务分区编号',
             bdr.alias AS '业务分区',
             b.kiname AS '品牌金蝶名称',
-            b.kino AS '品牌金蝶编码'
+            b.kino AS '品牌金蝶编码',
+            co.name AS '公司'
         """
 
         self.SQL_QUERY = """
@@ -91,13 +92,13 @@ class Exporter(Util):
                 LEFT JOIN communion.department bdd on bu.deptid = bdd.did
                 LEFT JOIN communion.department bdr on bdd.fdid = bdr.did
                 LEFT JOIN communion.brand b on o.bid = b.bid
+                LEFT JOIN communion.company co on o.company = co.cid
             WHERE
                 db.type = 0 AND
                 db.status = 0 AND
                 db.defaultflag = 1 AND
                 o.%s >= '%s 00:00:00' AND
-                o.%s <= '%s 23:59:59' AND
-                o.company = %s
+                o.%s <= '%s 23:59:59'
             """
 
     def sqler(self, type, args, company):
@@ -110,7 +111,8 @@ class Exporter(Util):
         elif type == "1":
             timeColumn = "checkTime"
 
-        return self.SQL_QUERY % ("%s", timeColumn, startTime, timeColumn, endTime, company)
+        # 集团导出: 不限制公司条件, company参数仅保留传参兼容
+        return self.SQL_QUERY % ("%s", timeColumn, startTime, timeColumn, endTime)
 
     def rower(self, row):
 
@@ -125,7 +127,7 @@ class Exporter(Util):
             "创建时间", "签单时间", "复核时间", "设计师工号", "设计师", "签约设计分区编号", "签设计分区", "签约设计部编号", "签约设计部", "设计师分区编号",
             "设计师分区", "设计师部编号", "设计师部", "主材员工号", "主材员", "渠道工号", "渠道", "服务管家工号", "服务管家", "方案设计工号",
             "方案设计", "利润", "系数", "成本", "总额", "奖励", "奖励类型", "类型", "复合业绩",
-            "业务工号", "业务姓名", "业务部门编号", "业务部门", "业务分区编号", "业务分区", "品牌金蝶名称", "品牌金蝶编码"
+            "业务工号", "业务姓名", "业务部门编号", "业务部门", "业务分区编号", "业务分区", "品牌金蝶名称", "品牌金蝶编码", "公司"
         ]
 
         self.getDBCursor(self.host, self.username, self.password, self.charset)
@@ -138,12 +140,12 @@ if __name__ == '__main__':
 
     """
         外销单业绩脚本说明:
-            根据查询条件,以分页形式导出外销单业绩;并上传到文件服务器中,可从任务页面上点击下载即可;
+            集团导出: 不限制公司条件, 导出全公司外销单业绩, 以"公司"列区分归属;并上传到文件服务器中,可从任务页面上点击下载即可;
             当该脚本执行出现异常时,将跟新进度为失败并记录到log文件中上传至文件服务器中;
         1.传入必须参数说明
             1.pid         information.plan的主键;
             2.args        2022/12/01-2022/12/31
-            3.company     公司:1
+            3.company     公司(集团导出: 不限制公司条件, 该参数仅保留传参兼容)
         2.命令使用 plan_export_payment_oales_achievement.py  pid args company
     """
 
