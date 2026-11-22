@@ -67,7 +67,7 @@
 | A20260324Action_API_DOC.md | A20260324Action 接口说明文档 |
 | A20260404Action_API_DOC.md | A20260404Action 供应商/驻店员同步接口文档（syncSupplier/syncInstorer） |
 | A20260904Action_API_DOC.md | A20260904Action 库存数据同步接口文档（辅材/仓库/出入库） |
-| A20261025Action_API_DOC.md | A20261025Action NERP 同步接口文档 v2.2 六端点（凭空预签 syncProsignForNerp + 凭空签约 syncSignContractForNerp + 款项计划 syncDecorationPaymentForNerp + 报价单数据同步 syncQuotationForNerp + 销售款项 syncSalesPaymentForNerp + 增减款 syncAddreduceForNerp；v2.0 原 A20261024Action 预签文档并入） |
+| A20261025Action_API_DOC.md | A20261025Action NERP 同步接口文档 v2.3 六端点（凭空预签 syncProsignForNerp + 凭空签约 syncSignContractForNerp + 款项计划 syncDecorationPaymentForNerp + 报价单数据同步 syncQuotationForNerp[含装修单优惠五列同步] + 销售款项 syncSalesPaymentForNerp + 增减款 syncAddreduceForNerp；v2.0 原 A20261024Action 预签文档并入） |
 | A20261117Action_API_DOC.md | A20261117Action 上方系统定额补数接口文档（工费 syncNormriceItem / 辅料 syncNormoodItem，触发式仅补缺，fail-closed） |
 | ADD_CUSTOMER_CHANCE_EXCEPTIONS.md | addCustomerChance 异常场景汇总文档 |
 | ADD_CUSTOMER_LEAD_EXCEPTIONS.md | addCustomerLead 异常场景汇总文档 |

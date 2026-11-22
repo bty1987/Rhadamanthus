@@ -6612,22 +6612,40 @@
 
 - **接口**: `syncQuotationForNerp.do`
 - **方法**: `syncQuotationForNerp()`
-- **说明**: NERP报价单数据同步接口 同步报价单主数据(创建或更新, 不含明细, 不推进装修单状态): 无默认报价单时凭空创建无明细初始报价单, 已有默认报价单时按传参部分更新(名称/版本/总价/折扣, null 不动), 锁定报价单拒绝(200033)
+- **说明**: NERP报价单数据同步接口 同步报价单主数据(创建或更新, 不含明细, 不推进装修单状态): 无默认报价单时凭空创建无明细初始报价单, 已有默认报价单时按传参部分更新(名称/版本/总价/折扣, null 不动), 锁定报价单拒绝(200033); 更新分支支持装修单优惠五列同步(couponCut/thingCut/factPrice/orderTotalPrice/quotationPrice 传入即写, null 不动)
 
 **入参:**
 
 | 参数 | 类型 | 说明 |
 |------|------|------|
-| `qvid` | Long |  |
-| `totalPrice` | Long |  |
-| `discount` | Integer |  |
-| `quotationName` | String |  |
+| `orderId` | String | 装修单号 |
+| `quotationName` | String | 报价单名称(创建缺省报价单) |
+| `qvid` | Long | 报价版本ID |
+| `totalPrice` | Long | 报价单总价(分) |
+| `discount` | Integer | 折扣(万分比, 10000=不打折) |
+| `couponCut` | Long | 券抵扣金额(分, 更新分支传入即写decoration.couponCut) |
+| `thingCut` | Long | 物品抵扣金额(分, 更新分支传入即写decoration.thingCut) |
+| `factPrice` | Long | 成交价(分, 更新分支传入即写decoration.factPrice) |
+| `orderTotalPrice` | Long | 订单总价/签约合同额(分, 更新分支传入即写decoration.orderTotalPrice) |
+| `quotationPrice` | Long | 报价金额(分, 更新分支传入即写decoration.quotationPrice) |
 
 **出参:**
 
 | 字段 | 类型 |
 |------|------|
+| `success` | Boolean |
+| `operation` | String |
 | `orderId` | String |
+| `qid` | Long |
+| `quotationCreated` | Boolean |
+| `name` | String |
+| `totalPrice` | Long |
+| `discount` | Integer |
+| `couponCut` | Long |
+| `thingCut` | Long |
+| `factPrice` | Long |
+| `orderTotalPrice` | Long |
+| `quotationPrice` | Long |
 | `data` | Map<String, Object> |
 
 ##### `更新` syncSalesPaymentForNerp

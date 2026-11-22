@@ -1,9 +1,10 @@
 # A20261025Action 对外接口调用说明
 
 > 模块: seiya (NERP预签/签约/报价/款项/销售款项/增减款同步接口)
-> 版本: 2.2
-> 日期: 2026-11-21
+> 版本: 2.3
+> 日期: 2026-11-22
 > 变更:
+> - v2.3 (2026-11-22) syncQuotationForNerp 支持装修单优惠五列同步：couponCut/thingCut/factPrice/orderTotalPrice/quotationPrice 更新分支传入即写 decoration 对应列（null 不动，创建分支不写——装修单金额随签约接口），返回体补五列终值对账口径。
 > - v2.2 (2026-11-21) 新增报价单主数据同步 syncQuotationForNerp（A20261025 家族第 6 端点）：报价单创建或更新（不含明细，不推进装修单状态），凭空建单不锁单无提成消息副作用，已有报价部分更新（null 字段不动），锁定报价拒绝 200033。
 > - v2.1 (2026-11-13) 新增销售款项同步 syncSalesPaymentForNerp（sales.sales + payment.salespayment, type=2 定金/3 补款/4 退款, 判断补充式建销售单+落待收/待退款项, 退款凭空生成 salesRefunds）与增减款同步 syncAddreduceForNerp（quotation.addreduce + payment.decorationpayment 增减款, 判断补充式建增减单+经提交链落未收款项）；零 DDL, 幂等锚嵌既有文本列（NERP: 前缀隔离）。
 > - v2.0 (2026-10-25) 原 A20261024Action（凭空预签 syncProsignForNerp）合并入本 Action，三接口统一承载；接口路径/参数/行为不变，调用方零感知。
@@ -12,14 +13,14 @@
 
 ## 一、接口概述
 
-`A20261025Action` 提供以下五个接口，供 NERP 等外部系统为迁移单补齐 ERP 单据与业务流转，**生成的款项均为待收/待退状态，收款/退款动作统一在 ERP 走正常流程**：
+`A20261025Action` 提供以下六个接口，供 NERP 等外部系统为迁移单补齐 ERP 单据与业务流转，**生成的款项均为待收/待退状态，收款/退款动作统一在 ERP 走正常流程**：
 
 | 接口 | 路径 | 用途 |
 |------|------|------|
 | NERP凭空预签 | `POST /syncProsignForNerp.do` | 不依赖 ERP 预签报价流程，凭空创建一张无明细的锁定预签单（protation，业务字段按入参回填），并将装修单推进到预签状态 |
 | NERP凭空签约 | `POST /syncSignContractForNerp.do` | 匹配 ERP 签约（signDecorationContract）：订单无报价时凭空创建报价单并锁单，装修单推进签约状态(3) |
 | NERP凭空款项计划 | `POST /syncDecorationPaymentForNerp.do` | 匹配 ERP 款项生成（makeDecorationPayment）：按款项比例方案生成未收合同款项，后续收款走 ERP 正常流程 |
-| NERP报价单数据同步 | `POST /syncQuotationForNerp.do` | 报价单主数据同步（创建或更新，不含明细，不推进装修单状态）：无默认报价凭空建无明细初始报价单（不锁单/无提成消息副作用），有默认报价按传参部分更新（null 字段不动） |
+| NERP报价单数据同步 | `POST /syncQuotationForNerp.do` | 报价单主数据同步（创建或更新，不含明细，不推进装修单状态）：无默认报价凭空建无明细初始报价单（不锁单/无提成消息副作用），有默认报价按传参部分更新（null 字段不动）；**支持装修单优惠五列同步**（couponCut/thingCut/factPrice/orderTotalPrice/quotationPrice 更新分支传入即写） |
 | NERP销售款项同步 | `POST /syncSalesPaymentForNerp.do` | 兼容 sales.sales / payment.salespayment：销售单判断补充（不存在凭空创建），落待收/待退款项（type=2 定金/3 补款/4 退款），退款凭空生成退货单 salesRefunds，后续收款/退款走 ERP 正常流程 |
 | NERP增减款同步 | `POST /syncAddreduceForNerp.do` | 兼容 quotation.addreduce / payment.decorationpayment：增减单判断补充（不存在凭空创建），经 ERP 提交链落未收增项款/减项款（dpId 关联），后续收款走 ERP 装修款流程 |
 
@@ -53,7 +54,7 @@ http(s)://{ERP_HOST}/{接口路径}
 
 - **`authentication` 必传**，否则返回 110005（登陆超时）
 - 值为 **ERP 分配的认证串**（AES 加密的账号标识），无需 ERP 登录态
-- 认证串对应账号将作为预签单创建人、签约人（contracter）、报价创建人、款项创建人、销售单/增减单创建人与操作记录操作人（五接口同一对接账号）
+- 认证串对应账号将作为预签单创建人、签约人（contracter）、报价创建人、款项创建人、销售单/增减单创建人与操作记录操作人（六接口同一对接账号）
 - 认证串无效返回 -2（无操作权限）
 
 ### 2.4 通用响应格式
