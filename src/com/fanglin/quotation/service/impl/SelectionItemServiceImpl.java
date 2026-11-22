@@ -96,7 +96,8 @@ public class SelectionItemServiceImpl implements SelectionItemService {
 	@Override
 	public void pageSelectionItem(Paging paging, List<Filter> filters, Integer company, SelectionItemVO selectionItemVO) throws FLException {
 
-		List<SelectionItemPD> selectionItemPDs = selectionItemDao.pageSelectionItem(paging, filters, selectionItemVO.getStatus(), company);
+		// VO由Struts OGNL绑定, 请求不带selectionItem.*参数时为null, 外部裸调即NPE; 守卫后status缺省=不过滤(DAO已容null)
+		List<SelectionItemPD> selectionItemPDs = selectionItemDao.pageSelectionItem(paging, filters, selectionItemVO == null ? null : selectionItemVO.getStatus(), company);
 		List<SelectionItemVO> selectionItemVOs = ptv(selectionItemPDs);
 
 		paging.setData(selectionItemVOs);
