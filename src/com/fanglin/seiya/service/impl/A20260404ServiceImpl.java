@@ -259,21 +259,21 @@ public class A20260404ServiceImpl implements A20260404Service {
 			throw new FLException(230015, "公司不存在");
 		}
 
-		// 1. 验证所属厂商：必须是已存在的供应商类型用户（user.type = 1），
+		// 1. 验证所属厂商：必须是已存在的供应商用户（DAO 内限定 user.type = 1），
 		// 驻店员经品牌链路归属厂商（brandInstorer.bid -> brand.ocuid），这里显式校验厂商有效性
 		// 解析链:userId → oldUserId → identity(统一信用代码,密文全形态匹配),三键全未命中=400028
-		UserPO supplierPO = userDao.queryUserByUserId(supplierUserId);
+		UserPO supplierPO = supplierDao.querySupplierByUserId(supplierUserId, company);
 
 		if (supplierPO == null) {
-			supplierPO = userDao.queryUserByOldUserId(supplierUserId);
+			supplierPO = supplierDao.querySupplierByOldUserId(supplierUserId, company);
 		}
 
 		if (supplierPO == null) {
 			supplierPO = supplierDao.querySupplierByIdentity(supplierUserId, company);
 		}
 
-		if (supplierPO == null || supplierPO.getType() != UserPO.TYPE_SUPPLIER_INT) {
-			logger.warn("厂商不存在或类型不符: supplierUserId={}, type={}", supplierUserId, supplierPO == null ? null : supplierPO.getType());
+		if (supplierPO == null) {
+			logger.warn("厂商不存在: supplierUserId={}", supplierUserId);
 			throw new FLException(400028, "厂商不存在");
 		}
 

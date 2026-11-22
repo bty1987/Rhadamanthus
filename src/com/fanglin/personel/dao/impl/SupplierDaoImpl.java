@@ -83,6 +83,66 @@ public class SupplierDaoImpl extends DaoImpl<UserPO> implements SupplierDao {
 
 	@Override
 	@SuppressWarnings("unchecked")
+	public UserPO querySupplierByUserId(String userId, int company) {
+
+		// 空值不参与匹配(空串eq会误命中键为空的脏档)
+		if (StringUtils.isBlank(userId)) {
+			return null;
+		}
+
+		Criteria criteria = session().createCriteria(UserPO.class)
+				.add(Restrictions.eq("userId", userId))
+				.add(Restrictions.eq("type", UserPO.TYPE_SUPPLIER_INT));
+
+		if (SystemConfig.getInt("multicompany", 0) != 0) {
+			criteria.add(Restrictions.eq("company", company));
+		}
+
+		List<UserPO> supplierPOs = criteria.list();
+
+		// 多命中=脏数据无法唯一定位, 返回null交由上层按未命中拒绝(fail-closed), warn留排查痕迹(键取前6位脱敏)
+		if (supplierPOs == null || supplierPOs.size() != 1) {
+			if (supplierPOs != null && supplierPOs.size() > 1) {
+				logger.warn("userId命中多个供应商, 拒绝解析: userId={}, hits={}", StringUtils.left(userId, 6), supplierPOs.size());
+			}
+			return null;
+		}
+
+		return supplierPOs.get(0);
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public UserPO querySupplierByOldUserId(String oldUserId, int company) {
+
+		// 空值不参与匹配(空串eq会误命中键为空的脏档)
+		if (StringUtils.isBlank(oldUserId)) {
+			return null;
+		}
+
+		Criteria criteria = session().createCriteria(UserPO.class)
+				.add(Restrictions.eq("oldUserId", oldUserId))
+				.add(Restrictions.eq("type", UserPO.TYPE_SUPPLIER_INT));
+
+		if (SystemConfig.getInt("multicompany", 0) != 0) {
+			criteria.add(Restrictions.eq("company", company));
+		}
+
+		List<UserPO> supplierPOs = criteria.list();
+
+		// 多命中=脏数据无法唯一定位, 返回null交由上层按未命中拒绝(fail-closed), warn留排查痕迹(键取前6位脱敏)
+		if (supplierPOs == null || supplierPOs.size() != 1) {
+			if (supplierPOs != null && supplierPOs.size() > 1) {
+				logger.warn("oldUserId命中多个供应商, 拒绝解析: oldUserId={}, hits={}", StringUtils.left(oldUserId, 6), supplierPOs.size());
+			}
+			return null;
+		}
+
+		return supplierPOs.get(0);
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
 	public UserPO querySupplierByIdentity(String identity, int company) {
 
 		// 空值不参与匹配(照queryUserByPhoneAIdent空值守卫, 空串IN会命中全部空档厂商)
@@ -100,10 +160,10 @@ public class SupplierDaoImpl extends DaoImpl<UserPO> implements SupplierDao {
 
 		List<UserPO> supplierPOs = criteria.list();
 
-		// 同一信用代码命中多个厂商=脏数据无法唯一定位, 返回null交由上层按未命中拒绝(fail-closed), warn留排查痕迹
+		// 多命中=脏数据无法唯一定位, 返回null交由上层按未命中拒绝(fail-closed), warn留排查痕迹(键取前6位脱敏)
 		if (supplierPOs == null || supplierPOs.size() != 1) {
 			if (supplierPOs != null && supplierPOs.size() > 1) {
-				logger.warn("信用代码命中多个供应商, 拒绝解析: identity={}*, hits={}", identity.substring(0, Math.min(6, identity.length())), supplierPOs.size());
+				logger.warn("identity命中多个供应商, 拒绝解析: identity={}, hits={}", StringUtils.left(identity, 6), supplierPOs.size());
 			}
 			return null;
 		}

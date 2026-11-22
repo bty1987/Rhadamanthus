@@ -25,6 +25,10 @@ public interface SupplierDao extends Dao<UserPO> {
 
 	public List<UserPO> querySupplierByPinyin(String pinyin, int company) throws FLException;
 
+	public UserPO querySupplierByUserId(String userId, int company);
+
+	public UserPO querySupplierByOldUserId(String oldUserId, int company);
+
 	public UserPO querySupplierByIdentity(String identity, int company);
 
 	public int countSupplierByCompany(int company);
