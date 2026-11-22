@@ -15,13 +15,17 @@ import java.math.BigInteger;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
+import org.hibernate.Criteria;
 import org.hibernate.criterion.Disjunction;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Restrictions;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
 import com.fanglin.core.dao.impl.DaoImpl;
 import com.fanglin.core.interceptor.FLException;
+import com.fanglin.core.security.SensitiveDataHelper;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.personel.dao.SupplierDao;
 import com.fanglin.personel.po.UserPO;
@@ -30,6 +34,8 @@ import com.fanglin.utils.SystemConfig;
 
 @Repository("supplierDao")
 public class SupplierDaoImpl extends DaoImpl<UserPO> implements SupplierDao {
+
+	private static final Logger logger = LoggerFactory.getLogger(SupplierDaoImpl.class);
 
 	public SupplierDaoImpl() {
 		super(UserPO.class);
@@ -73,6 +79,36 @@ public class SupplierDaoImpl extends DaoImpl<UserPO> implements SupplierDao {
 		}
 
 		return query.list();
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public UserPO querySupplierByIdentity(String identity, int company) {
+
+		// 空值不参与匹配(照queryUserByPhoneAIdent空值守卫, 空串IN会命中全部空档厂商)
+		if (StringUtils.isBlank(identity)) {
+			return null;
+		}
+
+		Criteria criteria = session().createCriteria(UserPO.class)
+				.add(Restrictions.in("identity", SensitiveDataHelper.getAllEncryptedForms(identity)))
+				.add(Restrictions.eq("type", UserPO.TYPE_SUPPLIER_INT));
+
+		if (SystemConfig.getInt("multicompany", 0) != 0) {
+			criteria.add(Restrictions.eq("company", company));
+		}
+
+		List<UserPO> supplierPOs = criteria.list();
+
+		// 同一信用代码命中多个厂商=脏数据无法唯一定位, 返回null交由上层按未命中拒绝(fail-closed), warn留排查痕迹
+		if (supplierPOs == null || supplierPOs.size() != 1) {
+			if (supplierPOs != null && supplierPOs.size() > 1) {
+				logger.warn("信用代码命中多个供应商, 拒绝解析: identity={}*, hits={}", identity.substring(0, Math.min(6, identity.length())), supplierPOs.size());
+			}
+			return null;
+		}
+
+		return supplierPOs.get(0);
 	}
 
 	@Override

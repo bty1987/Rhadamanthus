@@ -42,7 +42,7 @@ public interface A20260404Service {
 	 * @param userName 驻店员姓名
 	 * @param phone 联系电话
 	 * @param company 公司ID
-	 * @param supplierUserId 所属厂商编号（user 表 type=1 的供应商用户）
+	 * @param supplierUserId 所属厂商编号（user 表 type=1 的供应商用户；解析链:userId → oldUserId → identity统一信用代码，三键全未命中=400028）
 	 * @param brands 品牌编号JSON数组字符串，如 ["B_001","B_002"]（对应 brand.no）
 	 * @param agentName 代理名称（可选，落 brandInstorer.agentName）
 	 * @param agentPhone 代理电话（可选，落 brandInstorer.agentPhone）

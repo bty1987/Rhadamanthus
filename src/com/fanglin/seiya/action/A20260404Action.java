@@ -50,7 +50,7 @@ public class A20260404Action extends BaseListAction {
 	/** 统一信用编码（对应 user.oldUserId） */
 	private String creditCode;
 
-	/** 所属厂商编号（user 表 type=1 的供应商用户） */
+	/** 所属厂商编号（user 表 type=1 的供应商用户；解析链:userId → oldUserId → identity统一信用代码，三键全未命中=400028） */
 	private String supplierUserId;
 
 	/** 品牌编号JSON数组字符串，如 ["B_001","B_002"]（对应 brand.no） */
