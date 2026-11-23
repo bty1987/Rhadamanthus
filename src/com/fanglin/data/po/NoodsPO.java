@@ -17,6 +17,8 @@ public class NoodsPO implements Serializable {
 
 	private static final long serialVersionUID = -65987712606770386L;
 
+	public static final String COLUMN_NID_STR = "nid";
+	public static final String COLUMN_PNID_STR = "pnid";
 	public static final String COLUMN_NAME_STR = "name";
 
 	public static final String COLUMN_STATUS_STR = "status";

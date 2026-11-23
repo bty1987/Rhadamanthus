@@ -15,4 +15,8 @@ public interface NoodsDao extends Dao<NoodsPO> {
 
 	public List<NoodsPO> queryNoodsForGroup(String name, int limit);
 
+	public List<NoodsPO> queryNoodsByNids(List<Long> nids);
+
+	public List<NoodsPO> queryNoodsByPnids(List<Long> pnids, int company);
+
 }

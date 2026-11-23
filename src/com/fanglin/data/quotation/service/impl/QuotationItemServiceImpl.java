@@ -13,7 +13,11 @@ package com.fanglin.data.quotation.service.impl;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,9 +37,12 @@ import com.fanglin.communion.vo.QuotationTypeVO;
 import com.fanglin.communion.vo.WorkTypeVO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
+import com.fanglin.data.common.dao.ConstructionNodeDao;
+import com.fanglin.data.po.ConstructionNodePO;
 import com.fanglin.data.po.CormoodPO;
 import com.fanglin.data.po.CormricePO;
 import com.fanglin.data.po.CormtimePO;
+import com.fanglin.data.po.NoodsPO;
 import com.fanglin.data.po.NormoodPO;
 import com.fanglin.data.po.NormricePO;
 import com.fanglin.data.po.NormtimePO;
@@ -53,6 +60,7 @@ import com.fanglin.data.quotation.dao.NormtimeDao;
 import com.fanglin.data.quotation.dao.QuotationFormatDao;
 import com.fanglin.data.quotation.dao.QuotationItemDao;
 import com.fanglin.data.quotation.dao.QuotationPriceDao;
+import com.fanglin.data.material.dao.NoodsDao;
 import com.fanglin.data.quotation.dao.QuotationVersionDao;
 import com.fanglin.data.quotation.service.QuotationItemService;
 import com.fanglin.data.quotation.vo.QuotationCtemVO;
@@ -83,6 +91,12 @@ public class QuotationItemServiceImpl implements QuotationItemService {
 
 	@Autowired
 	private QuotationPriceDao quotationPriceDao;
+
+	@Autowired
+	private ConstructionNodeDao constructionNodeDao;
+
+	@Autowired
+	private NoodsDao noodsDao;
 
 	@Autowired
 	private CormriceDao cormriceDao;
@@ -255,11 +269,64 @@ public class QuotationItemServiceImpl implements QuotationItemService {
 		quotationItemDao.save(quotationItemPO);
 
 		// 挂规格带出定额: 关联format时, 该规格的定额(cormrice/cormood/cormtime按qfid)复制为该项定额(normrice/normood/normtime, qiid=新项)
+		// 引用公司化: cnid/nid优先解析为报价版本公司的归集行(pcnid/pnid=原引用且company=版本公司), 公司行缺失则该条定额忽略(不回退company=0)
 		if (quotationItemPO.getQfid() > 0) {
 
-			for (CormricePO cormricePO : cormriceDao.queryCormriceByQfid((long) quotationItemPO.getQfid())) {
+			int company = quotationVersionPO.getCompany();
 
-				NormricePO normricePO = new NormricePO(quotationItemPO, cormricePO.getConstructionNode());
+			List<CormricePO> cormricePOs = cormriceDao.queryCormriceByQfid((long) quotationItemPO.getQfid());
+			List<CormoodPO> cormoodPOs = cormoodDao.queryCormoodByQfid((long) quotationItemPO.getQfid());
+			List<CormtimePO> cormtimePOs = cormtimeDao.queryCormtimeByQfid((long) quotationItemPO.getQfid());
+
+			// 施工节点批量预查: 引用行(cnid→行) + 非本公司行的版本公司归集行(原cnid→公司行), rice/time共用
+			Set<Long> cnids = new HashSet<Long>();
+			for (CormricePO cormricePO : cormricePOs) {
+				cnids.add(cormricePO.getConstructionNode().getCnid());
+			}
+			for (CormtimePO cormtimePO : cormtimePOs) {
+				cnids.add(cormtimePO.getConstructionNode().getCnid());
+			}
+
+			Map<Long, ConstructionNodePO> nodeMap = new HashMap<Long, ConstructionNodePO>();
+			Map<Long, ConstructionNodePO> nodeCompanyMap = new HashMap<Long, ConstructionNodePO>();
+
+			if (!cnids.isEmpty()) {
+
+				for (ConstructionNodePO nodePO : constructionNodeDao.queryConstructionNodeByCnids(new ArrayList<Long>(cnids))) {
+					nodeMap.put(nodePO.getCnid(), nodePO);
+				}
+
+				Set<Long> pcnids = new HashSet<Long>();
+				for (ConstructionNodePO nodePO : nodeMap.values()) {
+					if (nodePO.getCompany() != company) {
+						pcnids.add(nodePO.getCnid());
+					}
+				}
+
+				if (!pcnids.isEmpty()) {
+					for (ConstructionNodePO nodePO : constructionNodeDao.queryConstructionNodeByPcnids(new ArrayList<Long>(pcnids), company)) {
+						nodeCompanyMap.put(nodePO.getPcnid(), nodePO);
+					}
+				}
+			}
+
+			for (CormricePO cormricePO : cormricePOs) {
+
+				ConstructionNodePO refNode = nodeMap.get(cormricePO.getConstructionNode().getCnid());
+
+				if (refNode == null) {
+					continue;
+				}
+
+				if (refNode.getCompany() != company) {
+					ConstructionNodePO companyNode = nodeCompanyMap.get(refNode.getCnid());
+					if (companyNode == null) {
+						continue;
+					}
+					refNode = companyNode;
+				}
+
+				NormricePO normricePO = new NormricePO(quotationItemPO, refNode);
 				normricePO.setUnit(cormricePO.getUnit());
 				normricePO.setTrannum(cormricePO.getTrannum());
 				normricePO.setSalary(cormricePO.getSalary());
@@ -268,10 +335,53 @@ public class QuotationItemServiceImpl implements QuotationItemService {
 				normriceDao.save(normricePO);
 			}
 
-			for (CormoodPO cormoodPO : cormoodDao.queryCormoodByQfid((long) quotationItemPO.getQfid())) {
+			// 定材批量预查: 引用行(nid→行) + 非本公司行的版本公司归集行(原nid→公司行)
+			Set<Long> nids = new HashSet<Long>();
+			for (CormoodPO cormoodPO : cormoodPOs) {
+				nids.add(cormoodPO.getNoods().getNid());
+			}
+
+			Map<Long, NoodsPO> noodsMap = new HashMap<Long, NoodsPO>();
+			Map<Long, NoodsPO> noodsCompanyMap = new HashMap<Long, NoodsPO>();
+
+			if (!nids.isEmpty()) {
+
+				for (NoodsPO noodsPO : noodsDao.queryNoodsByNids(new ArrayList<Long>(nids))) {
+					noodsMap.put(noodsPO.getNid(), noodsPO);
+				}
+
+				Set<Long> pnids = new HashSet<Long>();
+				for (NoodsPO noodsPO : noodsMap.values()) {
+					if (noodsPO.getCompany() != company) {
+						pnids.add(noodsPO.getNid());
+					}
+				}
+
+				if (!pnids.isEmpty()) {
+					for (NoodsPO noodsPO : noodsDao.queryNoodsByPnids(new ArrayList<Long>(pnids), company)) {
+						noodsCompanyMap.put(noodsPO.getPnid(), noodsPO);
+					}
+				}
+			}
+
+			for (CormoodPO cormoodPO : cormoodPOs) {
+
+				NoodsPO refNoods = noodsMap.get(cormoodPO.getNoods().getNid());
+
+				if (refNoods == null) {
+					continue;
+				}
+
+				if (refNoods.getCompany() != company) {
+					NoodsPO companyNoods = noodsCompanyMap.get(refNoods.getNid());
+					if (companyNoods == null) {
+						continue;
+					}
+					refNoods = companyNoods;
+				}
 
 				NormoodPO normoodPO = new NormoodPO(quotationItemPO);
-				normoodPO.setNoods(cormoodPO.getNoods());
+				normoodPO.setNoods(refNoods);
 				normoodPO.setName(cormoodPO.getName());
 				normoodPO.setNormunit(cormoodPO.getNormunit());
 				normoodPO.setNormnum(cormoodPO.getNormnum());
@@ -282,9 +392,23 @@ public class QuotationItemServiceImpl implements QuotationItemService {
 				normoodDao.save(normoodPO);
 			}
 
-			for (CormtimePO cormtimePO : cormtimeDao.queryCormtimeByQfid((long) quotationItemPO.getQfid())) {
+			for (CormtimePO cormtimePO : cormtimePOs) {
 
-				NormtimePO normtimePO = new NormtimePO(quotationItemPO, cormtimePO.getConstructionNode());
+				ConstructionNodePO refNode = nodeMap.get(cormtimePO.getConstructionNode().getCnid());
+
+				if (refNode == null) {
+					continue;
+				}
+
+				if (refNode.getCompany() != company) {
+					ConstructionNodePO companyNode = nodeCompanyMap.get(refNode.getCnid());
+					if (companyNode == null) {
+						continue;
+					}
+					refNode = companyNode;
+				}
+
+				NormtimePO normtimePO = new NormtimePO(quotationItemPO, refNode);
 				normtimePO.setUnit(cormtimePO.getUnit());
 				normtimePO.setTrannum(cormtimePO.getTrannum());
 				normtimePO.setWorkdays(cormtimePO.getWorkdays());

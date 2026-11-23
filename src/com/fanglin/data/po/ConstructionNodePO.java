@@ -23,6 +23,9 @@ public class ConstructionNodePO implements Serializable {
 
 	private static final long serialVersionUID = 7434364138129555698L;
 
+	public static final String COLUMN_CNID_STR = "cnid";
+	public static final String COLUMN_PCNID_STR = "pcnid";
+	public static final String COLUMN_COMPANY_STR = "company";
 	public static final String COLUMN_STATUS_STR = "status";
 
 	public static final String COLUMN_SORT_STR = "sort";

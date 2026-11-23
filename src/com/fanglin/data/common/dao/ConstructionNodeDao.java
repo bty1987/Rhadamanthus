@@ -21,4 +21,8 @@ public interface ConstructionNodeDao extends Dao<ConstructionNodePO> {
 
 	public int countConstructionNodeForMark(short mark, int company);
 
+	public List<ConstructionNodePO> queryConstructionNodeByCnids(List<Long> cnids);
+
+	public List<ConstructionNodePO> queryConstructionNodeByPcnids(List<Long> pcnids, int company);
+
 }

@@ -62,6 +62,18 @@ public class ConstructionNodeDaoImpl extends DaoImpl<ConstructionNodePO> impleme
 	}
 
 	@Override
+	@SuppressWarnings("unchecked")
+	public List<ConstructionNodePO> queryConstructionNodeByCnids(List<Long> cnids) {
+		return session().createCriteria(ConstructionNodePO.class).add(Restrictions.in(ConstructionNodePO.COLUMN_CNID_STR, cnids)).list();
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<ConstructionNodePO> queryConstructionNodeByPcnids(List<Long> pcnids, int company) {
+		return session().createCriteria(ConstructionNodePO.class).add(Restrictions.in(ConstructionNodePO.COLUMN_PCNID_STR, pcnids)).add(Restrictions.eq(ConstructionNodePO.COLUMN_COMPANY_STR, company)).list();
+	}
+
+	@Override
 	public int countConstructionNodeForMark(short mark, int company) {
 
 		String sql = "select count(*) from data.constructionnode cn where cn.mark = :mark and cn.company = :company";
