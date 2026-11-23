@@ -561,6 +561,20 @@ public class A20261025ServiceImpl implements A20261025Service {
 		}
 
 		if (!status.contains(decorationPO.getStatus())) {
+
+			// 已签约(3): 幂等跳过返回(2026-11-24 移除 140005 阻断——NERP 重推不被卡, 不重复执行提成挂账/归属回刷/签约消息副作用)
+			if (decorationPO.getStatus() == DecorationPO.STATUS_SIGNED_INT) {
+
+				Map<String, Object> exists = new HashMap<String, Object>();
+
+				exists.put("success", true);
+				exists.put("operation", "exists");
+				exists.put("orderId", orderId);
+				exists.put("orderTotalPrice", decorationPO.getOrderTotalPrice());
+
+				return exists;
+			}
+
 			throw new FLException(140005, "订单合同不能修改");
 		}
 
@@ -618,11 +632,7 @@ public class A20261025ServiceImpl implements A20261025Service {
 
 			quotationDao.save(quotationPO);
 
-		} else { // 更新默认报价单: 传参字段部分更新(null 不动), 锁定报价单拒绝
-
-			if (QuotationPO.STATUS_LOCK_INT == quotationPO.getStatus()) {
-				throw new FLException(200033, "报价已锁定");
-			}
+		} else { // 更新默认报价单: 传参字段部分更新(null 不动); 锁定报价单同样放行(NERP 迁移补数据场景, 2026-11-24 移除锁定拦截)
 
 			if (quotationName != null && !quotationName.trim().isEmpty()) {
 				quotationPO.setName(quotationName.trim());
@@ -706,13 +716,23 @@ public class A20261025ServiceImpl implements A20261025Service {
 			throw new FLException(150100, "款项金额必须大于0");
 		}
 
-		// 款项已付/审批中不可重建（同原版）
+		// 款项已付/审批中: 幂等跳过返回(2026-11-24 移除 150001 阻断——NERP 重推不被卡, 已收合同款项行保护不变, 全删重建不执行)
 		Short[] paymentStatus = new Short[] { DecorationPaymentPO.PAYMENTSTATUS_PAY_INT, DecorationPaymentPO.PAYMENTSTATUS_CONFIRM_INT, DecorationPaymentPO.PAYMENTSTATUS_APPLYING_INT };
 
 		List<DecorationPaymentPO> decorationPayments = decorationPaymentDao.queryDecorationPaymentByOrderId(orderId, paymentStatus, DecorationPaymentPO.ONETYPE_ADD_INT, DecorationPaymentPO.TWOTYPE_DEAL_INT);
 
 		if (decorationPayments != null && decorationPayments.size() > 0) {
-			throw new FLException(150001, "款项已付,不可修改");
+
+			Map<String, Object> exists = new HashMap<String, Object>();
+
+			exists.put("success", true);
+			exists.put("operation", "exists");
+			exists.put("orderId", orderId);
+			exists.put("count", decorationPayments.size());
+			exists.put("money", money);
+			exists.put("orderTotalPrice", decorationPO.getOrderTotalPrice());
+
+			return exists;
 		}
 
 		// 款项比例方案比例项（同原版）
