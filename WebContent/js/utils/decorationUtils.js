@@ -3444,7 +3444,7 @@ var decorationUtils = {
     },
 
     // 内联渲染直领面板: selector=面板容器, orderId=装修单号; hideWhenEmpty=true时无内容连同最近widget-box一起隐藏(主力页降噪)
-    initLadderPanel: function(selector, orderId, hideWhenEmpty) {
+    initLadderPanel: function(selector, orderId, hideWhenEmpty, allowReceive) {
 
         var $panel = com.focusPage(selector);
 
@@ -3486,8 +3486,8 @@ var decorationUtils = {
 
                             shown++;
                             decorationUtils.renderLadderRow($panel, activity, activityItem, coupons, function() {
-                                decorationUtils.initLadderPanel(selector, orderId, hideWhenEmpty);
-                            });
+                                decorationUtils.initLadderPanel(selector, orderId, hideWhenEmpty, allowReceive);
+                            }, allowReceive);
                         });
 
                         processed++;
@@ -3503,7 +3503,7 @@ var decorationUtils = {
         }, null, false);
     },
 
-    renderLadderRow: function($panel, activity, activityItem, coupons, refresh) {
+    renderLadderRow: function($panel, activity, activityItem, coupons, refresh, allowReceive) {
 
         // 券行与奖品按 asid 对应(券行asid=awardstock, activityitem.asid同源)
         var coupon = null;
@@ -3591,16 +3591,23 @@ var decorationUtils = {
 
         } else if (coupon.state == 0) {
 
-            $btn.text("直接领取").on("click", function() {
+            // allowReceive显式=false(详情页)不提供领取入口, 领取收敛至高权限decoration4activity页; 缺省=true兼容activity页既有调用
+            if (allowReceive !== false) {
 
-                com.post(api.decoration.receiveDecorationActivityItem, {
-                    "decorationActivityItem.daiId": coupon.daiId
-                }, function(res) {
+                $btn.text("直接领取").on("click", function() {
 
-                    com.showAlert(com.info, "领取成功");
-                    refresh();
+                    com.post(api.decoration.receiveDecorationActivityItem, {
+                        "decorationActivityItem.daiId": coupon.daiId
+                    }, function(res) {
+
+                        com.showAlert(com.info, "领取成功");
+                        refresh();
+                    });
                 });
-            });
+
+            } else {
+                $btn.addClass("disabled").prop("disabled", true).text("装修活动页领取");
+            }
 
         } else {
             $btn.addClass("disabled").prop("disabled", true).text("—");

@@ -527,7 +527,7 @@ jQuery(function($) {
             decorationUtils.addDecorationActivityForDiv(decorationDetail.activitys, decorationActivity, activityBtnMethod);
 
             // 阶梯奖品直领面板刷新(新参加的活动可能挂 type=30 物品); 2026-11-23 按拍板恢复(fb7ed57eb曾收敛至activity页)
-            decorationUtils.initLadderPanel("#activityLadderPanel", decorationDetail.orderId);
+            decorationUtils.initLadderPanel("#activityLadderPanel", decorationDetail.orderId, null, false);
         });
 
         decorationDetail.joinDecorationActivityModal.modal("hide");
@@ -1853,7 +1853,7 @@ jQuery(function($) {
                 decorationUtils.memberActivityItemInfo(decorationDetail.orderId, decorationDetail.memberActivityItems, decorationActivity, wizard);
 
                 // 阶梯奖品直领面板: 装修活动列表下方(activityLadderPanel); 2026-11-23 按拍板恢复(fb7ed57eb曾收敛至activity页)
-                decorationUtils.initLadderPanel("#activityLadderPanel", decorationDetail.orderId);
+                decorationUtils.initLadderPanel("#activityLadderPanel", decorationDetail.orderId, null, false);
 
                 initActivityIntegral(decorationDetail.orderId);
 
