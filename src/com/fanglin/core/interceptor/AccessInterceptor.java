@@ -213,8 +213,10 @@ public class AccessInterceptor extends AbstractInterceptor {
 
 					if (operationService.checkOperation(authentication.getUserId(), actionName, authentication.getRollcall())) {
 
-						// 影子收集: 校验通过后补登 roleoperation(只记录合法使用, 被拒角色不经此放行)
-						operationService.fillOperation(authentication.getUserId(), authentication.getRoleId(), authentication.getCompany(), actionName);
+						// through=0 强权限纯验证不补种(2026-11-24守卫恢复, 前版随拉取丢失): 补种按用户全部角色写入roleoperation,
+						// 持有白名单+泛角色的用户会把泛角色重新种回, 59号SQL类收窄被影子收集逐步还原;
+						// 授权只走显式配置, 采集职责保留在through=1(PASS)分支
+						// operationService.fillOperation(authentication.getUserId(), authentication.getRoleId(), authentication.getCompany(), actionName);
 
 						return invocation.invoke();
 					} else {
