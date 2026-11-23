@@ -3605,7 +3605,7 @@ var decorationUtils = {
         } else {
             $btn.addClass("disabled").prop("disabled", true).text("—");
             if (coupon.state == 2)
-                $row.addClass("alert-success");
+                widgetMain.addClass("alert-success");
         }
     }
 }
