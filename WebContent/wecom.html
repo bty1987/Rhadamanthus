@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>FIP</title>
+		<meta name="keywords" content="方林,装饰,ERP,信息平台" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+		<link rel="shortcut icon" href="fanglin.ico" mce_href="fanglin.ico" type="image/x-icon">
+
+		<script type="text/javascript" src="assets/js/jquery-2.0.3.min.js"></script>
+		<script type="text/javascript" src="js/com/config.js"></script>
+
+		<script>
+
+			function getUrlParams() {
+				var paramsObj = {};
+				var paramsString = window.location.search.substring(1);
+				if (paramsString) {
+					var pairs = paramsString.split('&');
+					for (var i = 0; i < pairs.length; i++) {
+						var pair = pairs[i].split('=');
+						var key = decodeURIComponent(pair[0]);
+						var value = decodeURIComponent(pair[1] || '');
+						paramsObj[key] = value;
+					}
+				}
+				return paramsObj;
+			}
+
+			function alertError(message) {
+				alert(message);
+			}
+
+			function entry(authentication) {
+				window.location.href = "redirect.html?authentication=" + authentication.replace(/[\r\n]/g, "");
+			}
+
+			function requestAuthentication(userid) {
+
+				$.ajax({
+					type: 'POST',
+					url: 'requestAuthCode.do?timestamp=' + new Date().getTime(),
+					data: {
+						"userId": userid,
+						"code": "baitianyu",
+						"secret": "0C7134AAC334FBD88AAC850E51F2CE69"
+					},
+					dataType: 'json',
+					success: function (data) {
+						if (data.errorCode == 0 && data.authentication) {
+							entry(data.authentication);
+						} else {
+							alertError(data.errorMsg || "获取认证信息失败");
+						}
+					},
+					error: function (xhr, errorType, error) {
+						alertError("系统错误" + error);
+					}
+				});
+			}
+
+			function requestUser(code) {
+
+				$.ajax({
+					type: 'POST',
+					url: 'queryWecomUserInfo.do?timestamp=' + new Date().getTime(),
+					data: { "code": code, "company": config.wecom.company },
+					dataType: 'json',
+					success: function (data) {
+						if (data.errorCode == 0 && data.wecomUser && data.wecomUser.userid) {
+							requestAuthentication(data.wecomUser.userid);
+						} else {
+							alertError(data.errorMsg || "获取人员信息失败");
+						}
+					},
+					error: function (xhr, errorType, error) {
+						alertError("系统错误" + error);
+					}
+				});
+			}
+
+			(function () {
+
+				var params = getUrlParams();
+
+				if (params.code) {
+					requestUser(params.code);
+					return;
+				}
+
+				// 无code → 企微OAuth2静默授权(snsapi_base), 容器内自动带code回跳本页
+				var redirectUri = window.location.origin + window.location.pathname;
+				window.location.href = "https://open.weixin.qq.com/connect/oauth2/authorize"
+					+ "?appid=" + config.wecom.corpid
+					+ "&redirect_uri=" + encodeURIComponent(redirectUri)
+					+ "&response_type=code"
+					+ "&scope=snsapi_base"
+					+ "&state=ERP"
+					+ "&agentid=" + config.wecom.agentid
+					+ "#wechat_redirect";
+			})();
+
+		</script>
+
+	</head>
+
+	<body>
+	</body>
+</html>

@@ -86,6 +86,13 @@ var config = {
     library: '',
     store: '',
 
+    // 企业微信免登配置(wecom.html中转页使用): corpid=企业ID, agentid=自建应用ID, company=免登取token的公司
+    wecom: {
+        corpid: '',
+        agentid: '',
+        company: '1'
+    },
+
     // 国际化配置
     defaultLang: 'cn',                       // 默认语言(短码),未匹配任何来源时使用
     supportedLangs: ['cn', 'tw', 'en'],      // 支持的语言列表(对应 js/i18n/*-{lang}.json)
