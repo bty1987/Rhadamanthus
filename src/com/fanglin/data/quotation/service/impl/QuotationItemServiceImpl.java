@@ -246,7 +246,11 @@ public class QuotationItemServiceImpl implements QuotationItemService {
 		quotationItemPO.setQuotationSmallCategory(new QuotationSmallCategoryPO(quotationItemVO.getSmallCategory().getId()));
 		quotationItemPO.setMeasurementUnit(new MeasurementUnitPO(quotationItemVO.getUnit().getId()));
 		quotationItemPO.setWorkType(new WorkTypePO(quotationItemVO.getWorkType().getId()));
-		quotationItemPO.setQuotationCtem(new QuotationCtemPO(quotationItemVO.getQuotationCtem().getQcid()));
+
+		// 不强制关联版本允许无名称模板(手动输入名称), ctem仅在选择关联时落
+		if (quotationItemVO.getQuotationCtem() != null && quotationItemVO.getQuotationCtem().getQcid() != null) {
+			quotationItemPO.setQuotationCtem(new QuotationCtemPO(quotationItemVO.getQuotationCtem().getQcid()));
+		}
 
 		quotationItemDao.save(quotationItemPO);
 
@@ -328,7 +332,11 @@ public class QuotationItemServiceImpl implements QuotationItemService {
 		quotationItemPO.setQuotationSmallCategory(new QuotationSmallCategoryPO(quotationItemVO.getSmallCategory().getId()));
 		quotationItemPO.setMeasurementUnit(new MeasurementUnitPO(quotationItemVO.getUnit().getId()));
 		quotationItemPO.setWorkType(new WorkTypePO(quotationItemVO.getWorkType().getId()));
-		quotationItemPO.setQuotationCtem(new QuotationCtemPO(quotationItemVO.getQuotationCtem().getQcid()));
+
+		// 未重选名称(无ctem关联)时保留原名称模板不动
+		if (quotationItemVO.getQuotationCtem() != null && quotationItemVO.getQuotationCtem().getQcid() != null) {
+			quotationItemPO.setQuotationCtem(new QuotationCtemPO(quotationItemVO.getQuotationCtem().getQcid()));
+		}
 
 		quotationItemDao.update(quotationItemPO);
 

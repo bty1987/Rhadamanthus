@@ -538,9 +538,15 @@ $(function() {
         var _quotationBigCategory = quotationItem.items.quotationBigCategory.val() == false;
         var _quotationSmallCategory = quotationItem.items.quotationSmallCategory.val() == false;
 
-        if (quotationItem.qcid == null) {
-            com.showAlert(com.warning, "输入名称不匹配");
-            return;
+        // 版本关联标识约束: relateFlag=1的版本要求名称必须通过选择关联(规格/名称模板); 不强制版本允许手动输入, 无需ctem关联
+        var _versionNo = quotationItem.items.version.val();
+        var _relateVersion = $.grep(quotationItem.versions, function(d) {
+            return d.no == _versionNo;
+        })[0];
+
+        if (_relateVersion != null && _relateVersion.relateFlag == 1 && (quotationItem.qfid == null || quotationItem.qfid == 0)) {
+            com.showAlert(com.warning, "当前报价版本要求关联项目(规格), 请通过名称选择关联规格");
+            return false;
         }
 
         if (_quotationType || _quotationBigCategory || _quotationSmallCategory) {
@@ -564,17 +570,6 @@ $(function() {
                 }
             }
 
-            // 版本关联标识约束: relateFlag=1 的版本要求报价项必须关联项目(规格)
-            var _versionNo = quotationItem.items.version.val();
-            var _relateVersion = $.grep(quotationItem.versions, function(d) {
-                return d.no == _versionNo;
-            })[0];
-
-            if (_relateVersion != null && _relateVersion.relateFlag == 1 && (quotationItem.qfid == null || quotationItem.qfid == 0)) {
-                com.showAlert(com.warning, "当前报价版本要求关联项目(规格), 请通过名称选择关联规格");
-                return false;
-            }
-
             var url, option = {
                 "quotationItem.name": quotationItem.items.name.val(),
                 "quotationItem.alias": quotationItem.items.alias.val(),
@@ -589,8 +584,8 @@ $(function() {
                 "quotationItem.smallCategory.id": quotationItem.items.quotationSmallCategory.val(),
                 "quotationItem.unit.id": quotationItem.items.measurementUnit.val(),
                 "quotationItem.workType.id": quotationItem.items.workType.val(),
-                "quotationItem.quotationCtem.qcid": quotationItem.qcid,
-                "quotationItem.qfid": quotationItem.qfid,
+                "quotationItem.qfid": quotationItem.qfid != null ? quotationItem.qfid : 0,
+
 
                 "quotationItem.unitPrice": quotationItem.items.unitPrice.val(),
                 "quotationItem.addPrice": quotationItem.items.addPrice.val(),
@@ -600,6 +595,11 @@ $(function() {
                 "quotationItem.comment": quotationItem.items.comment.val(),
 
             };
+
+            // 手动输入名称(不强制关联版本)时qcid为空, 不传名称模板参数避免OGNL空绑定
+            if (quotationItem.qcid != null) {
+                option["quotationItem.quotationCtem.qcid"] = quotationItem.qcid;
+            }
 
             if (quotationItem.editFlg) {
                 url = api.quotation.updateQuotationItem;
