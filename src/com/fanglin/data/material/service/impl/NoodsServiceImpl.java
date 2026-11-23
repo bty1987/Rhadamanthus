@@ -1,7 +1,9 @@
 package com.fanglin.data.material.service.impl;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -43,6 +45,30 @@ public class NoodsServiceImpl implements NoodsService {
 			BeanUtil.copyProperties(noodsPO, noodsVO);
 
 			noodsVOs.add(noodsVO);
+		}
+
+		// 上级定材名称回填: 引用行(pnid>0)按pnid批量查集团行, 防循环单查
+		List<Long> pnids = new ArrayList<Long>();
+
+		for (NoodsVO item : noodsVOs) {
+			if (item.getPnid() != null && item.getPnid() > 0) {
+				pnids.add(item.getPnid());
+			}
+		}
+
+		if (!pnids.isEmpty()) {
+
+			Map<Long, String> parentNames = new HashMap<Long, String>();
+
+			for (NoodsPO parentPO : noodsDao.queryNoodsByNids(pnids)) {
+				parentNames.put(parentPO.getNid(), parentPO.getName());
+			}
+
+			for (NoodsVO item : noodsVOs) {
+				if (item.getPnid() != null && item.getPnid() > 0) {
+					item.setParentName(parentNames.get(item.getPnid()));
+				}
+			}
 		}
 
 		paging.setData(noodsVOs);

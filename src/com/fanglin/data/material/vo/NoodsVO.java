@@ -24,6 +24,9 @@ public class NoodsVO implements Serializable {
 
 	private Integer company;
 
+	/* 上级定材(集团行)名称, 仅引用行(pnid>0)回填 */
+	private String parentName;
+
 	public NoodsVO() {
 		super();
 	}
@@ -90,6 +93,14 @@ public class NoodsVO implements Serializable {
 
 	public void setCalc(Short calc) {
 		this.calc = calc;
+	}
+
+	public String getParentName() {
+		return parentName;
+	}
+
+	public void setParentName(String parentName) {
+		this.parentName = parentName;
 	}
 
 	public Integer getCompany() {

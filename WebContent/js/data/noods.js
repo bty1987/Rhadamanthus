@@ -134,6 +134,11 @@ $(function() {
         prop: "name",
         clazz: "grey"
     }, {
+        field: "parentName",
+        name: "上级定材",
+        prop: "parentName",
+        clazz: "grey"
+    }, {
         field: "selling",
         name: "售价",
         prop: "selling",

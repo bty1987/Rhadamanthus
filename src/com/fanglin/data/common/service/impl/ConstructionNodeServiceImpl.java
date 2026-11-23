@@ -2,7 +2,9 @@ package com.fanglin.data.common.service.impl;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -46,6 +48,30 @@ public class ConstructionNodeServiceImpl implements ConstructionNodeService {
 
 		for (ConstructionNodePO constructionNodePO : constructionNodePOs) {
 			constructionNodeVOs.add(constructionNodePO.ptv(new ConstructionNodeVO(new SurveyTemplateVO(), new SurveyTemplateVO())));
+		}
+
+		// 上级节点名称回填: 引用行(pcnid>0)按pcnid批量查集团行, 防循环单查
+		List<Long> cnids = new ArrayList<Long>();
+
+		for (ConstructionNodeVO item : constructionNodeVOs) {
+			if (item.getPcnid() != null && item.getPcnid() > 0) {
+				cnids.add(item.getPcnid());
+			}
+		}
+
+		if (!cnids.isEmpty()) {
+
+			Map<Long, String> parentNames = new HashMap<Long, String>();
+
+			for (ConstructionNodePO parentPO : constructionNodeDao.queryConstructionNodeByCnids(cnids)) {
+				parentNames.put(parentPO.getCnid(), parentPO.getName());
+			}
+
+			for (ConstructionNodeVO item : constructionNodeVOs) {
+				if (item.getPcnid() != null && item.getPcnid() > 0) {
+					item.setParentName(parentNames.get(item.getPcnid()));
+				}
+			}
 		}
 
 		paging.setData(constructionNodeVOs);

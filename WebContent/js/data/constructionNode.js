@@ -127,6 +127,11 @@ jQuery(function($) {
         prop: "pcnid",
         clazz: "blue"
     }, {
+        fieId: "parentName",
+        name: "上级节点",
+        prop: "parentName",
+        clazz: "grey"
+    }, {
         fieId: "precheck",
         name: "开工款项比",
         prop: "precheck",
