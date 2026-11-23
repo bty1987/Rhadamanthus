@@ -14,6 +14,7 @@
             addPrice: com.focusPage('#addPrice', "#addQuotationFormatModal"),
             subPrice: com.focusPage('#subPrice', "#addQuotationFormatModal"),
             achePrice: com.focusPage('#achePrice', "#addQuotationFormatModal"),
+            formula: com.focusPage('#formula', "#addQuotationFormatModal"),
             comment: com.focusPage('#comment', "#addQuotationFormatModal"),
         },
         modals: {
@@ -47,6 +48,7 @@
             quotationFormat.items.addPrice.val(v.addPrice);
             quotationFormat.items.subPrice.val(v.subPrice);
             quotationFormat.items.achePrice.val(v.achePrice);
+            quotationFormat.items.formula.val(paramToFormula(v.formula));
             quotationFormat.items.comment.val(v.comment);
 
             quotationFormat.modals.addQuotationFormatModal.modal("show");
@@ -208,6 +210,20 @@
             return false;
         }
 
+        // 公式校验(与报价项公式同口径): 关键字白名单外字符=无效参数; 参数化试算失败=运算结果失败
+        var formula = quotationFormat.items.formula.val();
+        formula = formula == null ? "" : formula;
+
+        if (formula != "" && formula.replace(/(取整|周长|反计价面积|计价面积|面积|举架|洞面|参数|窗面|变量|梁长|梁高)|车运费|税金|管理费|不打折总额|打折总额|楼层|电梯/g, "").replace(/[\+\-\*\/\(\)\|\!\~]/g, "").replace(/[0-9]/g, "") != "") {
+            com.showAlert(com.warning, "公式存在无效参数");
+            return false;
+        }
+
+        if (formula != "" && evals(formulaToParam(formula))) {
+            com.showAlert(com.warning, "公式运算结果失败");
+            return false;
+        }
+
         var url = api.quotation.addQuotationFormat;
 
         var option = {
@@ -221,6 +237,7 @@
             "quotationFormat.addPrice": quotationFormat.items.addPrice.val(),
             "quotationFormat.subPrice": quotationFormat.items.subPrice.val(),
             "quotationFormat.achePrice": quotationFormat.items.achePrice.val(),
+            "quotationFormat.formula": formulaToParam(formula),
             "quotationFormat.comment": quotationFormat.items.comment.val(),
         };
 
@@ -503,4 +520,45 @@
         com.cleanItems(cormood.items);
     });
 
+    // ---------- 公式转换(与报价项公式同口径, 照quotationItem.js) ----------
+
+    function formulaToParam(formula) {
+
+        return formula.replace(/取整/g, "!").replace(/周长/g, "{a}").replace(/反计价面积/g, "{j}").replace(/计价面积/g, "{k}").replace(/面积/g, "{b}").replace(/举架/g, "{c}").replace(/洞面/g, "{d}").replace(/窗面/g, "{f}").replace(/梁长/g, "{h}").replace(/梁高/g, "{i}").replace(/参数/g, "{e}").replace(/变量/g, "{g}").replace(/楼层/g, "{o}").replace(/电梯/g, "{of}").replace(/税金/g, "{u}").replace(/管理费/g, "{v}").replace(/不打折总额/g, "{x}").replace(/打折总额/g, "{y}").replace(/车运费/g, "{z}");
+    }
+
+    function paramToFormula(param) {
+
+        return param.replace(/\!/g, "取整").replace(/\{a\}/g, "周长").replace(/{j}/g, "反计价面积").replace(/{k\}/g, "计价面积").replace(/\{b\}/g, "面积").replace(/\{c\}/g, "举架").replace(/\{d\}/g, "洞面").replace(/\{f\}/g, "窗面").replace(/\{h\}/g, "梁长").replace(/\{i\}/g, "梁高").replace(/\{e\}/g, "参数").replace(/\{g\}/g, "变量").replace(/{o\}/g, "楼层").replace(/{of\}/g, "电梯").replace(/{u\}/g, "税金").replace(/{v\}/g, "管理费").replace(/{x\}/g, "不打折总额").replace(/{y\}/g, "打折总额").replace(/{z\}/g, "车运费");
+    }
+
+    function evals(formula) {
+
+        formula = formula.replace(/\!\s*\(/g, "Math.ceil(");
+
+        formula = com.format(formula, {
+            "a": 1,
+            "j": 1,
+            "k": 1,
+            "b": 1,
+            "c": 1,
+            "d": 1,
+            "e": 1,
+            "f": 1,
+            "g": 1,
+            "h": 1,
+            "i": 1,
+            "o": 1,
+            "of": 1,
+            "u": 1,
+            "v": 1,
+            "x": 1,
+            "y": 1,
+            "z": 1,
+        });
+
+        var res = new Function("return function(){return " + formula + "}")()();
+
+        return isNaN(res) || !Number.isFinite(res);
+    }
 });

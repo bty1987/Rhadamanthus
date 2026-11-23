@@ -122,6 +122,7 @@ $(function() {
             quotationItem.items.unitPrice.val(_quotationFormat.price);
             quotationItem.items.subPrice.val(_quotationFormat.subPrice);
             quotationItem.items.achePrices.val(_quotationFormat.achePrice);
+            quotationItem.items.formula.val(com.checkNull(paramToFormula(_quotationFormat.formula), ""));
             quotationItem.items.comment.val(com.checkNull(_quotationFormat.comment, ""));
         }
 
