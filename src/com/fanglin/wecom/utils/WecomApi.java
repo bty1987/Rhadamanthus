@@ -26,4 +26,10 @@ public interface WecomApi {
 	/** 群机器人 webhook 发送消息: %s=域名, %s=webhook key */
 	public static final String WECOM_WEBHOOK_SEND_STR = "%s/cgi-bin/webhook/send?key=%s";
 
+	/** 网页授权免登code换成员userid: %s=域名, %s=access_token, %s=code */
+	public static final String WECOM_GET_USER_INFO_STR = "%s/cgi-bin/auth/getuserinfo?access_token=%s&code=%s";
+
+	/** 读取通讯录成员详情(userid换work_code工号): %s=域名, %s=access_token, %s=userid */
+	public static final String WECOM_USER_GET_STR = "%s/cgi-bin/user/get?access_token=%s&userid=%s";
+
 }

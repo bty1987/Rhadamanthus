@@ -26,6 +26,7 @@ import com.fanglin.dingding.bean.User;
 import com.fanglin.dingding.service.DingTalkAuthService;
 import com.fanglin.dingding.service.DingTalkUserService;
 import com.fanglin.utils.LogUtils;
+import com.fanglin.wecom.service.WecomAuthService;
 
 @ParentPackage("base")
 @Namespace("/")
@@ -42,6 +43,9 @@ public class DoginAction extends BaseListAction {
 	@Autowired
 	private DingTalkUserService userDDService;
 
+	@Autowired
+	private WecomAuthService wecomAuthService;
+
 	private String url;
 
 	private String configInfo;
@@ -49,6 +53,8 @@ public class DoginAction extends BaseListAction {
 	private String code;
 
 	private User user;
+
+	private com.fanglin.wecom.bean.User wecomUser;
 
 	private String company;
 
@@ -77,6 +83,21 @@ public class DoginAction extends BaseListAction {
 			setErrorMsg("系统繁忙,请稍后重试");
 
 			LogUtils.logging(logger, e, "queryDDUserInfo", "common");
+		}
+
+		return SUCCESS;
+	}
+
+	@Action(value = "queryWecomUserInfo", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryWecomUserInfo() throws FLException {
+
+		try {
+			wecomUser = wecomAuthService.getUserInfo(code, company);
+		} catch (Exception e) {
+			setErrorCode(110000);
+			setErrorMsg("系统繁忙,请稍后重试");
+
+			LogUtils.logging(logger, e, "queryWecomUserInfo", "common");
 		}
 
 		return SUCCESS;
@@ -112,6 +133,14 @@ public class DoginAction extends BaseListAction {
 
 	public void setUser(User user) {
 		this.user = user;
+	}
+
+	public com.fanglin.wecom.bean.User getWecomUser() {
+		return wecomUser;
+	}
+
+	public void setWecomUser(com.fanglin.wecom.bean.User wecomUser) {
+		this.wecomUser = wecomUser;
 	}
 
 	public String getCompany() {
