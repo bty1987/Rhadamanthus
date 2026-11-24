@@ -11,7 +11,9 @@
 
 package com.fanglin.information.service.impl;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +31,7 @@ import com.fanglin.information.service.ActivityItemService;
 import com.fanglin.information.vo.ActivityItemVO;
 import com.fanglin.information.vo.ActivityVO;
 import com.fanglin.utils.BeanUtil;
+import com.fanglin.utils.DateUtil;
 
 @Service("activityItemService")
 @Transactional(readOnly = true)
@@ -49,11 +52,25 @@ public class ActivityItemServiceImpl implements ActivityItemService {
 		List<ActivityItemPO> activityItemPOs = activityItemDao.queryActivityItemByAid(activityVO.getAid(), activityVO.getLevel());
 		List<ActivityItemVO> activityItemVOs = new ArrayList<ActivityItemVO>();
 
+		// 阶梯奖品(type=30)物品级有效期过滤: 业务侧选品传 filterWindow=1 启用, 维护页不传全量可见(引擎守卫140116/140117 fail-closed兜底);
+		// 逐边界兜底活动窗(item.startTime ?? activity.startTime / item.endTime ?? activity.endTime, 物品优先, null=不设限)
+		ActivityPO activityPO = activityVO.getFilterWindow() != null && activityVO.getFilterWindow() == 1 ? activityDao.get(activityVO.getAid()) : null;
+
+		Timestamp now = activityPO == null ? null : DateUtil.getDateToTimestamp(new Date());
+
 		for (ActivityItemPO activityItemPO : activityItemPOs) {
 
 			ActivityItemVO activityItemVO = new ActivityItemVO();
 
 			if (activityItemPO.getAsid() == 0) continue;
+
+			if (now != null && activityItemPO.getType() == ActivityItemPO.TYPE_LADDER_LOTTERY_INT) {
+
+				Timestamp start = activityItemPO.getStartTime() != null ? activityItemPO.getStartTime() : activityPO.getStartTime();
+				Timestamp end = activityItemPO.getEndTime() != null ? activityItemPO.getEndTime() : activityPO.getEndTime();
+
+				if ((start != null && now.before(start)) || (end != null && now.after(end))) continue;
+			}
 
 			BeanUtil.copyProperties(activityItemPO, activityItemVO);
 

@@ -843,6 +843,11 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 				throw new FLException(140113, "优惠额度券状态不可用");
 			}
 
+			// 有效期闸(生效时按物品级有效期回写expireTime, 空=不设限): 过期券不可抵扣, 选券列表已过滤, 此处fail-closed兜底
+			if (couponItem.getExpireTime() != null && couponItem.getExpireTime().before(DateUtil.getDateToTimestamp(new Date()))) {
+				throw new FLException(140122, "活动奖品已过期,不可抵扣");
+			}
+
 			if (decorationScaleDetailDao.countDecorationScaleDetailByDaiId(daiId.longValue()) > 0) {
 				throw new FLException(140112, "优惠额度券已被其他收款使用");
 			}
@@ -876,6 +881,39 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 			scaleDetailPO.setComment("阶梯券收款抵扣");
 
 			decorationScaleDetailDao.save(scaleDetailPO);
+		}
+	}
+
+	/**
+	 * 阶梯券全退回退: 仅全退/倒单退款行(type 7定金退款/8非定金退款)触发, 部分退款(type 4/5/6)不回退, 装修单状态不判定;
+	 * 配比明细 status 0→1 + 券行 7→2 已领 + 轨迹; 调用点置于 updateDecorationForSaleScale 之前, 配比随本次重算自动修正;
+	 * 幂等/并发 = 只取 status=0 明细 + 券行仅 7 条件转移(行锁串行化), 重复/并发回退安全
+	 */
+	private void restoreLadderScaleDetails(String orderId, String salesNo, short refundType, UserPO operater) throws FLException {
+
+		if (refundType != SalesPaymentPO.TYPE_DEPOSITREFUND_INT && refundType != SalesPaymentPO.TYPE_NOTDEPOSITREFUND_INT) {
+			return;
+		}
+
+		for (DecorationScaleDetailPO scaleDetailPO : decorationScaleDetailDao.queryDecorationScaleDetailValidByOrderId(orderId)) {
+
+			scaleDetailPO.setStatus(Short.valueOf(DecorationScaleDetailPO.STATUS_INVALID_INT));
+			scaleDetailPO.setComment(scaleDetailPO.getComment() == null ? "全退回退" : scaleDetailPO.getComment() + " 全退回退");
+
+			decorationScaleDetailDao.update(scaleDetailPO);
+
+			DecorationActivityItemPO couponItem = decorationActivityItemDao.get(scaleDetailPO.getDaiId());
+
+			if (couponItem == null || couponItem.getState() != DecorationActivityItemPO.STATUS_CONSUME_INT) {
+				continue;
+			}
+
+			couponItem.setState(DecorationActivityItemPO.STATUS_RECEIVE_INT);
+			couponItem.setContent((couponItem.getContent() == null ? "" : couponItem.getContent()) + " 全退回退:" + salesNo);
+
+			decorationActivityItemDao.update(couponItem);
+
+			decorationActivityRecordDao.save(new DecorationActivityRecordPO().init(couponItem.getAid(), couponItem, DecorationActivityItemPO.STATUS_RECEIVE_INT, operater, "全退回退"));
 		}
 	}
 
@@ -946,6 +984,9 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 		} else if (salesPayment.getType() == SalesPaymentPO.TYPE_REFUNDS_INT) {
 			salesRefundsDao.updateSalesRefundsForStatusBySpid(salesPaymentVO.getSpid(), SalesPaymentPO.STATUS_PAIDFOR_INT);
 		}
+
+		// 阶梯券全退回退(仅全退/倒单 type7/8; 部分退款不回退; 装修单状态不判定): 配比明细作废+券行7→2, 置于销售比例重算之前随本次生效
+		restoreLadderScaleDetails(sales.getOrderId(), sales.getNo(), salesPayment.getType(), user);
 
 		decorationAdditionService.updateDecorationForSaleScale(new DecorationVO(sales.getOrderId())); // 更新装修单上的销售比例
 

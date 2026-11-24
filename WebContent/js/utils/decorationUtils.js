@@ -3538,6 +3538,11 @@ var decorationUtils = {
         $('<strong></strong>').text("活动:").appendTo(activityLi);
         $('<span></span>').text(activity.activity.name).appendTo(activityLi);
 
+        // 档位有效期(物品级, 优先于活动窗口): 空=随活动窗口
+        var validLi = $('<li></li>').appendTo(ul);
+        $('<strong></strong>').text("有效期:").appendTo(validLi);
+        $('<span></span>').text(activityItem.startTime || activityItem.endTime ? (activityItem.startTime || "").substring(0, 10) + " ~ " + (activityItem.endTime || "").substring(0, 10) : "不限").appendTo(validLi);
+
         // 创建信息(创建人/创建时间): 已参与(有券行)时显示
         if (coupon != null) {
             var createLi = $('<li></li>').appendTo(ul);

@@ -37,6 +37,8 @@ public class DecorationScaleDetailPO implements java.io.Serializable {
 
 	public static final short STATUS_VALID_INT = 0; // 有效
 
+	public static final short STATUS_INVALID_INT = 1; // 作废(销售单全退/倒单退款回退)
+
 	private long dsdId;
 
 	private Long spid;

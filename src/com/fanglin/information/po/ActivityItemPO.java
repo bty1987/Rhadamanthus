@@ -2,6 +2,8 @@ package com.fanglin.information.po;
 
 import static javax.persistence.GenerationType.IDENTITY;
 
+import java.sql.Timestamp;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -39,6 +41,9 @@ public class ActivityItemPO implements java.io.Serializable {
 
 	public static final String COLUMN_AID_STR = "aid";
 
+	public static final String COLUMN_STARTTIME_STR = "startTime";
+	public static final String COLUMN_ENDTIME_STR = "endTime";
+
 	private long aiid;
 
 	private long aid;
@@ -58,6 +63,9 @@ public class ActivityItemPO implements java.io.Serializable {
 	private int integral;
 
 	private short level; // 资格层级 0:普通(申领可见) 1:管理专用(仅"添加活动物品"高级功能可见), 后续可扩展更高层级
+
+	private Timestamp startTime; // 物品有效期起(阶梯奖品type=30判窗用, 优先级高于活动窗口, 空=逐边界回退活动)
+	private Timestamp endTime; // 物品有效期止(同上)
 
 	public ActivityItemPO() {
 		super();
@@ -154,6 +162,24 @@ public class ActivityItemPO implements java.io.Serializable {
 
 	public void setLevel(short level) {
 		this.level = level;
+	}
+
+	@Column(name = "startTime")
+	public Timestamp getStartTime() {
+		return startTime;
+	}
+
+	public void setStartTime(Timestamp startTime) {
+		this.startTime = startTime;
+	}
+
+	@Column(name = "endTime")
+	public Timestamp getEndTime() {
+		return endTime;
+	}
+
+	public void setEndTime(Timestamp endTime) {
+		this.endTime = endTime;
 	}
 
 }

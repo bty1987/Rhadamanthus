@@ -1,5 +1,7 @@
 package com.fanglin.decoration.dao;
 
+import java.util.List;
+
 import com.fanglin.core.dao.Dao;
 import com.fanglin.decoration.po.DecorationScaleDetailPO;
 
@@ -24,5 +26,10 @@ public interface DecorationScaleDetailDao extends Dao<DecorationScaleDetailPO> {
 	 * 该装修单是否已有有效配比明细(每单一张守卫)
 	 */
 	public int countDecorationScaleDetailByOrderId(String orderId);
+
+	/**
+	 * 该装修单的有效配比明细列表(销售单全退/倒单退款回退用)
+	 */
+	public List<DecorationScaleDetailPO> queryDecorationScaleDetailValidByOrderId(String orderId);
 
 }

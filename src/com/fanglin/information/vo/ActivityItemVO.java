@@ -1,5 +1,7 @@
 package com.fanglin.information.vo;
 
+import java.sql.Timestamp;
+
 public class ActivityItemVO implements java.io.Serializable {
 
 	private static final long serialVersionUID = 2606014203338812720L;
@@ -22,6 +24,8 @@ public class ActivityItemVO implements java.io.Serializable {
 
 	private Integer stockNum; // 奖品剩余库存(毫→tranargs转张, 展示用非映射字段)
 	private Short level; // 资格层级 0:普通(申领可见) 1:管理专用(仅添加活动物品功能可见)
+	private Timestamp startTime; // 物品有效期起(阶梯奖品type=30, 优先级高于活动窗口)
+	private Timestamp endTime; // 物品有效期止(同上)
 
 	public ActivityItemVO() {
 		super();
@@ -105,6 +109,22 @@ public class ActivityItemVO implements java.io.Serializable {
 
 	public void setLevel(Short level) {
 		this.level = level;
+	}
+
+	public Timestamp getStartTime() {
+		return startTime;
+	}
+
+	public void setStartTime(Timestamp startTime) {
+		this.startTime = startTime;
+	}
+
+	public Timestamp getEndTime() {
+		return endTime;
+	}
+
+	public void setEndTime(Timestamp endTime) {
+		this.endTime = endTime;
 	}
 
 }

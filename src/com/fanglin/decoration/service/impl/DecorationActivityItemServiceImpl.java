@@ -1245,6 +1245,57 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 
 		UserPO operater = userDao.queryUserByUserId(userId);
 
+		// 物品级有效期过滤(startTime/endTime ?? 活动窗 逐边界兜底, null=不设限): 预占只圈窗内档(水位自动落窗内最高档), 生效跳窗外档降级
+		List<ActivityItemPO> windowRules = new ArrayList<ActivityItemPO>();
+
+		for (ActivityItemPO ladderItem : priorityRules) {
+
+			Timestamp effectiveStart = ladderItem.getStartTime() != null ? ladderItem.getStartTime() : activityPO.getStartTime();
+			Timestamp effectiveEnd = ladderItem.getEndTime() != null ? ladderItem.getEndTime() : activityPO.getEndTime();
+
+			if ((effectiveStart == null || !now.before(effectiveStart)) && (effectiveEnd == null || !now.after(effectiveEnd))) {
+				windowRules.add(ladderItem);
+			}
+		}
+
+		if (windowRules.isEmpty()) {
+
+			if (scene == LADDER_SCENE_JOIN) {
+				throw new FLException(140117, "活动奖品已清零,不可参与");
+			}
+
+			// 生效时窗内空集: 全窗已结束才收口(领取拒绝140121/签约预占行失效不阻断签约, 与数量不够保持初始同构幂等可重入);
+			// 尚有窗口未结束(未开始/窗内有货) → 保持预占行 state=0 等待
+			boolean allEnded = true;
+
+			for (ActivityItemPO ladderItem : priorityRules) {
+				Timestamp effectiveEnd = ladderItem.getEndTime() != null ? ladderItem.getEndTime() : activityPO.getEndTime();
+				if (effectiveEnd == null || !now.after(effectiveEnd)) {
+					allEnded = false;
+					break;
+				}
+			}
+
+			if (!allEnded) {
+				return 0;
+			}
+
+			if (scene == LADDER_SCENE_RECEIVE) {
+				throw new FLException(140121, "活动奖品不在有效期内,不可发放");
+			}
+
+			preItem.setState(DecorationActivityItemPO.STATUS_UNVALID_INT);
+			preItem.setContent((preItem.getContent() == null ? "" : preItem.getContent()) + "(有效期外失效)");
+
+			decorationActivityItemDao.update(preItem);
+
+			decorationActivityRecordDao.save(new DecorationActivityRecordPO().init(preItem.getAid(), preItem, DecorationActivityItemPO.STATUS_UNVALID_INT, operater, "生效时有效期外失效"));
+
+			return 0;
+		}
+
+		priorityRules = windowRules;
+
 		// 参与: 按水位预占(只读不扣库存, 扣减发生在签约/领取结算)
 		if (scene == LADDER_SCENE_JOIN) {
 
@@ -1312,6 +1363,7 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 					preItem.setState(DecorationActivityItemPO.STATUS_RECEIVE_INT);
 					preItem.setReceiver(operater);
 					preItem.setReceiveTime(now);
+					preItem.setExpireTime(ladderItem.getEndTime()); // 物品级有效期: 生效时回写使用截止(空=不设限), 收款侧140122兜底
 					preItem.setContent(summary);
 
 					decorationActivityItemDao.update(preItem);
@@ -1341,6 +1393,7 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 			decorationActivityItemPO.setAtttype(DecorationActivityItemPO.ATTTYPE_OFFLINE_INT);
 			decorationActivityItemPO.setNum(1000); // 券行num按毫(1张=1000毫)
 			decorationActivityItemPO.setMoney(ladderItem.getMoney());
+			decorationActivityItemPO.setExpireTime(ladderItem.getEndTime()); // 物品级有效期: 生效时回写使用截止(空=不设限), 收款侧140122兜底
 			decorationActivityItemPO.setExpendPrice(0);
 			decorationActivityItemPO.setDiscountPrice(0);
 			decorationActivityItemPO.setIsPrefor(DecorationActivityItemPO.ISPREFOR_UNCAL_INT);
@@ -1387,6 +1440,11 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 		for (DecorationActivityItemPO decorationActivityItemPO : decorationActivityItemDao.queryDecorationActivityItemByOrderId(decorationVO.getOrderId())) {
 
 			if (decorationActivityItemPO.getType() != DecorationActivityItemPO.TYPE_LADDER_LOTTERY_ACTIVITY_ITEM || decorationActivityItemPO.getState() != DecorationActivityItemPO.STATUS_RECEIVE_INT) {
+				continue;
+			}
+
+			// 已过期券不进选券数据源(收款侧140122 fail-closed兜底)
+			if (decorationActivityItemPO.getExpireTime() != null && decorationActivityItemPO.getExpireTime().before(DateUtil.getDateToTimestamp(new Date()))) {
 				continue;
 			}
 

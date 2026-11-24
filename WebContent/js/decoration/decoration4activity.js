@@ -40,7 +40,8 @@ jQuery(function($) {
         var papers = [];
 
         var options = {
-            "activity.aid": $this.val()
+            "activity.aid": $this.val(),
+            "activity.filterWindow": 1// 阶梯奖品物品级有效期: 窗外type=30隐藏(引擎140116/140117 fail-closed兜底)
         };
 
         com.post(api.information.queryActivityItemByAid, options, function(res) {
@@ -128,7 +129,8 @@ jQuery(function($) {
 
         var options = {
             "activity.aid": activity,
-                "activity.level": 1// 添加活动物品(高级功能): 查全量含管理专用层级; 申领弹窗不传仅普通层级
+                "activity.level": 1,// 添加活动物品(高级功能): 查全量含管理专用层级; 申领弹窗不传仅普通层级
+                "activity.filterWindow": 1// 阶梯奖品物品级有效期: 窗外type=30隐藏(引擎140116/140117 fail-closed兜底)
         };
 
         com.post(api.information.queryActivityItemByAid, options, function(res) {
@@ -164,7 +166,8 @@ jQuery(function($) {
 
         var options = {
             "activity.aid": activity,
-                "activity.level": 1// 添加活动物品(高级功能): 查全量含管理专用层级; 申领弹窗不传仅普通层级
+                "activity.level": 1,// 添加活动物品(高级功能): 查全量含管理专用层级; 申领弹窗不传仅普通层级
+                "activity.filterWindow": 1// 阶梯奖品物品级有效期: 窗外type=30隐藏(引擎140116/140117 fail-closed兜底)
         };
 
         com.post(api.information.queryActivityItemByAid, options, function(res) {

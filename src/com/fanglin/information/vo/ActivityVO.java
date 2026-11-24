@@ -42,6 +42,8 @@ public class ActivityVO implements java.io.Serializable {
 
 	private Integer company;
 
+	private Short filterWindow; // 请求参数: 1=queryActivityItemByAid 过滤窗外阶梯奖品(type=30, 物品级有效期), 缺省不过滤(维护页全量)
+
 	public ActivityVO() {
 		super();
 	}
@@ -180,6 +182,14 @@ public class ActivityVO implements java.io.Serializable {
 
 	public void setCompany(Integer company) {
 		this.company = company;
+	}
+
+	public Short getFilterWindow() {
+		return filterWindow;
+	}
+
+	public void setFilterWindow(Short filterWindow) {
+		this.filterWindow = filterWindow;
 	}
 
 	private Short level; // 查询参数(非映射): 1=查询含管理专用层级物品(添加活动物品/配置维护用), 不传=仅普通层级

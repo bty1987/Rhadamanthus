@@ -175,9 +175,12 @@ var paymentUtils = {
                 // 面值元: ForScale tranargs 框架已转, 勿再除1000
                 var face = v.money;
 
+                // 有效期展示(生效时按物品级有效期回写expireTime, 空=不设限; 过期券服务端已过滤不进数据源)
+                var expire = v.expireTime ? " 有效期至:" + v.expireTime.substring(0, 10) : "";
+
                 ladderItems.push({
                     daiId: v.daiId,
-                    ladderName: v.activityItemName + " 面值:" + face + "元",
+                    ladderName: v.activityItemName + " 面值:" + face + "元" + expire,
                     money: face
                 });
             });

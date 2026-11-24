@@ -2,7 +2,9 @@ package com.fanglin.decoration.dao.impl;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.List;
 
+import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 import com.fanglin.core.dao.impl.DaoImpl;
@@ -64,6 +66,13 @@ public class DecorationScaleDetailDaoImpl extends DaoImpl<DecorationScaleDetailP
 		BigInteger count = (BigInteger) session().createSQLQuery(sql).setString("orderId", orderId).uniqueResult();
 
 		return count == null ? 0 : count.intValue();
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<DecorationScaleDetailPO> queryDecorationScaleDetailValidByOrderId(String orderId) {
+
+		return session().createCriteria(DecorationScaleDetailPO.class).add(Restrictions.eq("orderId", orderId)).add(Restrictions.eq("status", DecorationScaleDetailPO.STATUS_VALID_INT)).list();
 	}
 
 }

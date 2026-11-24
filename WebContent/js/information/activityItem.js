@@ -17,7 +17,9 @@ jQuery(function($) {
 
             name: com.focusPage("#name", "#activityItemModal"),
             money: com.focusPage("#money", "#activityItemModal"),
-            integral: com.focusPage("#integral", "#activityItemModal")
+            integral: com.focusPage("#integral", "#activityItemModal"),
+            startTime: com.focusPage("#startTime", "#activityItemModal"),
+            endTime: com.focusPage("#endTime", "#activityItemModal")
         },
 
         activityItemPostData: {
@@ -28,6 +30,8 @@ jQuery(function($) {
         type: {},
         storeroom: {}
     };
+
+    com.datetime(com.focusPage(".date-picker-date", "#activityItemModal"));
 
     activityItem.saveBtn.bindClick(saveData);
 
@@ -118,6 +122,9 @@ jQuery(function($) {
         var integralLi = $("<li></li>").text("积分:").appendTo(ul);
         var integralSpan = $("<span></span>").attr("id", "integral_" + _activityItem.aiid).text(_activityItem.integral).appendTo(integralLi);
 
+        var validLi = $("<li></li>").text("有效期:").appendTo(ul);
+        var validSpan = $("<span></span>").attr("id", "valid_" + _activityItem.aiid).text(_activityItem.startTime || _activityItem.endTime ? (_activityItem.startTime || "").substring(0, 10) + " ~ " + (_activityItem.endTime || "").substring(0, 10) : "不限").appendTo(validLi);
+
         var uiPgDiv = $("<div></div>").addClass("ui-pg-div").appendTo(widgetBody);
         var deleteBtn = $("<span></span>").addClass("ui-icon ui-icon-trash").attr("id", "delete_" + _activityItem.aiid).appendTo(uiPgDiv);
 
@@ -138,13 +145,21 @@ jQuery(function($) {
             return false;
         }
 
+        // 有效期起止校验(均可空=随活动窗口)
+        if (activityItem.items.startTime.val() && activityItem.items.endTime.val() && activityItem.items.startTime.val() > activityItem.items.endTime.val()) {
+            com.showAlert(com.warning, "有效期起不能晚于有效期止");
+            return false;
+        }
+
         var options = {
             "activity.aid": params.infomation.aid,
             "activityItem.asid": com.typeahead(activityItem.items.name),
             "activityItem.money": activityItem.items.money.val(),
             "activityItem.integral": activityItem.items.integral.val(),
             "activityItem.type": activityItem.awardStock.type,
-            "activityItem.activity": params.infomation.activityName
+            "activityItem.activity": params.infomation.activityName,
+            "activityItem.startTime": activityItem.items.startTime.val(),
+            "activityItem.endTime": activityItem.items.endTime.val()
         };
 
         com.post(api.information.addActivityItem, options, function(res) {

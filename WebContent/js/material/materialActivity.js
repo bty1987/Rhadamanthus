@@ -51,7 +51,8 @@ $(function () {
         var _things = [];
         var _coupons = [];
         var options = {
-            "activity.aid": $this.val()
+            "activity.aid": $this.val(),
+            "activity.filterWindow": 1// 阶梯奖品物品级有效期: 窗外type=30隐藏(引擎140116/140117 fail-closed兜底)
         };
         if ($this.val()) {
             com.post(api.information.queryActivityItemByAid, options, function (res) {
