@@ -33,9 +33,6 @@ public interface AdvancePaymentDao extends Dao<AdvancePaymentPO> {
 	/**
 	 * 原子扣减指定类型余额(含余额校验): UPDATE payment.advancepayment SET {field} = {field} - :delta WHERE apId = :apId AND {field} >= :delta 返回受影响行数, 0 表示余额不足
 	 */
-	public int decreaseAdvancePayment(int apId, short paymentType, long delta);
-
-	/** 原生SQL绕一级缓存重读余额列(原子增减后取真实新值, 供流水快照落账) */
-	public long queryBalanceRaw(int apId, short paymentType);
+	public int decreaseAdvancePayment(int apId, short paymentType, long delta);
 
 }

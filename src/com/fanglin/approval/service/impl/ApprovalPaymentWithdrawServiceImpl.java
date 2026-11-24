@@ -193,12 +193,9 @@ public class ApprovalPaymentWithdrawServiceImpl implements ApprovalPaymentWithdr
 		// 3.5 主材预付款提现,复核主材可用积分(防提交至通过期间积分变动)
 		checkMaterialPoint(decorationPO, paymentType);
 
-		// 原子扣款(条件UPDATE自带余额守卫, affected=0即余额不足或被并发抢先, 防双发互相覆盖)
-		if (advancePaymentDao.decreaseAdvancePayment(advancePaymentPO.getApId(), paymentType, amount) == 0) {
-			throw new FLException(150010, "预付款余额不足");
-		}
-
-		long overBalance = advancePaymentDao.queryBalanceRaw(advancePaymentPO.getApId(), paymentType);
+		long overBalance = Arith.sub(currentBalance, amount);
+		AdvancePaymentServiceImpl.setBalance(advancePaymentPO, paymentType, overBalance);
+		advancePaymentDao.update(advancePaymentPO);
 
 		// 4. 创建预付款收据
 		AdvanceReceiptPO advanceReceiptPO = new AdvanceReceiptPO();
