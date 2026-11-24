@@ -65,7 +65,7 @@ jQuery(function($) {
     // ‰ → "85%" / "85.5%"
     function tranRatePercentText(rate) {
 
-        return (Math.round(rate / 10 * 10) / 10) + "%";
+        return String(Math.round(rate) / 1000);
     }
 
     function tranSnapshotOrder(v) {
@@ -397,7 +397,7 @@ jQuery(function($) {
         $("#" + base + "Region").val(section.regionName || "");
         // Rate/Default 控件 id 无 User 段(html=belongTranDesignRate/belongTranDesignDefault), 与 Input/Name 等长前缀控件不同源; 2026-11-18 修复错位(此前读取落空, 任何比例值均被NaN拦)
         var prefix = base.replace(/User$/, "");
-        $("#" + prefix + "Rate").val(Math.round(section.rate / 10 * 10) / 10);
+        $("#" + prefix + "Rate").val(Math.round(section.rate) / 1000);
         $("#" + prefix + "Default").prop("checked", section.defaultFlag == 1);
     }
 
@@ -495,7 +495,7 @@ jQuery(function($) {
         var rate = tranParseRatePercent($("#" + base.replace(/User$/, "") + "Rate"));
 
         if (isNaN(rate)) return {
-            error: "归属比例须在0~100之间(可一位小数)"
+            error: "归属比例须在0~1之间(支持三位小数)"
         };
 
         return {
@@ -519,9 +519,9 @@ jQuery(function($) {
 
         var num = parseFloat(val);
 
-        if (isNaN(num) || num < 0 || num > 100) return NaN;
+        if (isNaN(num) || num < 0 || num > 1) return NaN;
 
-        return Math.round(num * 10);
+        return Math.round(num * 1000);
     }
 
     $("#belongTranConfigBatchBtn").on('click', function() {

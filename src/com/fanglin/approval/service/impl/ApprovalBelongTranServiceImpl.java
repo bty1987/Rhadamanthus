@@ -344,9 +344,10 @@ public class ApprovalBelongTranServiceImpl implements ApprovalBelongTranService 
 			approvalBelongTranItemVO.setBelongTypeName(approvalBelongTranItemPO.getBelongType() == DecorationBelongPO.BELONGTYPE_DESIGN_INT ? "设计" : "业务");
 			approvalBelongTranItemVO.setDefaultFlagName(DecorationBelongPO.DEFAULTFLAG_TRUE_INT == approvalBelongTranItemPO.getDefaultFlag() ? "默认" : "否");
 
-			double ratePercent = approvalBelongTranItemPO.getRate() / 10.0;
+			// 比例展示对齐输入语义(0~1三位小数): ‰/1000, 不带%号
+			double rateRatio = approvalBelongTranItemPO.getRate() / 1000.0;
 
-			approvalBelongTranItemVO.setRateText((ratePercent == Math.floor(ratePercent) ? String.valueOf((int) ratePercent) : String.valueOf(ratePercent)) + "%");
+			approvalBelongTranItemVO.setRateText(String.valueOf(rateRatio));
 
 			UserPO newBelonger = userDao.get(Integer.valueOf(approvalBelongTranItemPO.getBuid()));
 
