@@ -633,8 +633,7 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 	@Transactional(rollbackFor = Exception.class)
 	public void changeCustomerChance(DecorationVO decorationVO, CustomerChanceVO customerChanceVO, String userId, int company) throws FLException {
 
-		// 锁定读(防并发双发穿透status校验): 双请求串行化后, 后到者见COMPLETE被幂等拒
-		CustomerChancePO customerChancePO = customerChanceDao.getCustomerChanceForUpdate(customerChanceVO.getCcid());
+		CustomerChancePO customerChancePO = customerChanceDao.get(customerChanceVO.getCcid());
 
 		if (customerChancePO == null) {
 			throw new FLException(330075, "客户机会不存在");
@@ -646,6 +645,12 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 
 		if (customerChancePO.getStatus() != CustomerChancePO.STATUS_CONFIRM_INT) {
 			throw new FLException(330077, "客户机会不可操作");
+		}
+
+		// 原子占位防并发双发(项目无行锁惯例, 条件UPDATE替代FOR UPDATE): status=3才置4,
+		// 并发第二发affected=0即抢先失败, 事务回滚时占位一并回滚(未建单无残留)
+		if (customerChanceDao.updateCustomerChanceForComplete(customerChanceVO.getCcid()) == 0) {
+			throw new FLException(330125, "客户机会已转装修单, 不可重复操作");
 		}
 
 		if (customerChancePO.getCustomer() == null) {

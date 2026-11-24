@@ -4,7 +4,6 @@ import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.List;
 
-import org.hibernate.LockOptions;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
@@ -63,9 +62,8 @@ public class CustomerChanceDaoImpl extends DaoImpl<CustomerChancePO> implements 
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
-	public CustomerChancePO getCustomerChanceForUpdate(long ccid) {
-		return (CustomerChancePO) session().get(CustomerChancePO.class, ccid, LockOptions.UPGRADE);
+	public int updateCustomerChanceForComplete(long ccid) {
+		return session().createQuery("update CustomerChancePO set status = :status where ccid = :ccid and status = :fromStatus").setShort("status", CustomerChancePO.STATUS_COMPLETE_INT).setLong("ccid", ccid).setShort("fromStatus", CustomerChancePO.STATUS_CONFIRM_INT).executeUpdate();
 	}
 
 	@Override
