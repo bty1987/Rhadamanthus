@@ -19,7 +19,6 @@ public interface CustomerChanceDao extends Dao<CustomerChancePO> {
 
 	public CustomerChancePO queryCustomerChanceByCno(String cno);
 
-	public CustomerChancePO getCustomerChanceForUpdate(long ccid);
 
 	public int countCustomerSchance(long csid);
 

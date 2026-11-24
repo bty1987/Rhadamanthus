@@ -633,15 +633,10 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 	@Transactional(rollbackFor = Exception.class)
 	public void changeCustomerChance(DecorationVO decorationVO, CustomerChanceVO customerChanceVO, String userId, int company) throws FLException {
 
-		// 锁定读(防并发双发穿透status校验): 双请求串行化后, 后到者见COMPLETE被幂等拒
-		CustomerChancePO customerChancePO = customerChanceDao.getCustomerChanceForUpdate(customerChanceVO.getCcid());
+		CustomerChancePO customerChancePO = customerChanceDao.get(customerChanceVO.getCcid());
 
 		if (customerChancePO == null) {
 			throw new FLException(330075, "客户机会不存在");
-		}
-
-		if (customerChancePO.getStatus() == CustomerChancePO.STATUS_COMPLETE_INT) {
-			throw new FLException(330125, "客户机会已转装修单, 不可重复操作");
 		}
 
 		if (customerChancePO.getStatus() != CustomerChancePO.STATUS_CONFIRM_INT) {
@@ -708,12 +703,7 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 
 		// 判断orderId是否发生变化，如果不同则更新
 		if (!decorationVO.getOrderId().equals(originalOrderId)) {
-			// 预占号已被customerchanceorder绑定, 转正生成新号=并发穿透标志, 不覆盖绑定关系(留原值供核对)
-			if (originalOrderId != null && !originalOrderId.isEmpty()) {
-				log.warn("客户机会[{}]转正产生双号: 绑定号{} vs 新号{}, 保留绑定号不覆盖", customerChancePO.getCcid(), originalOrderId, decorationVO.getOrderId());
-			} else {
-				customerChancePO.setOrderId(decorationVO.getOrderId());
-			}
+			customerChancePO.setOrderId(decorationVO.getOrderId());
 
 			messageQueuingDao.save(new MessageQueuingPO().init(decorationVO.getOrderId(), "changeCustomerChance", "{\"orderId\":\"" + decorationVO.getOrderId() + "\",\"originOrderId\":\"" + originalOrderId + "\",\"event\":\"TRAN_DECORATION_ORDER_CHANGED\",\"ccid\":" + customerChancePO.getCcid() + ",\"csid\":" + customerChancePO.getSource().getCsid() + buildLeadnoArgs(customerChancePO) + "}"));
 		}
