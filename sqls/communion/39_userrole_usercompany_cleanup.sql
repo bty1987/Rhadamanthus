@@ -8,11 +8,14 @@
 --       段二 多公司关联收敛(分角色双口径):
 --         2a 主角色=游客的沉睡账号: usercompany 关联全删(821人/4,005行, 游客账号不应有多公司挂靠)
 --         2b 正式角色用户: 每用户仅保留最早一行(ucid 最小, 1,407人/13,771行, 删多余12,364行)
---         合计预计删 ~16,369 行; 段三游客已在段一清零, 收敛对象天然不含游客(无盲区)
---       段三 多角色收敛: 段一清理后 userrole 每用户仅保留最早一行附加角色(urid 最小),
---         多角色用户 419 人(TOP=1人挂12岗), 预计删数百行
--- 🔴 分段独立可单独执行; 执行顺序必须 段一 → 段三(段三按"段一清理后"的剩余行定保留行,
---    若颠倒会把游客行当最早行保留而误删业务角色行); 段二独立任意时点
+--         合计预计删 ~16,369 行
+--       段三 多角色收敛: 每用户仅保留最早一行**非游客**附加角色(rid=82 显式排除于
+--         保留行选择与删除范围, 段首再清一遍游客行幂等双保险)——四段全部显式含 82/82排除,
+--         不依赖任何前置段执行状态, 任意单段/任意顺序执行结果一致
+--       段三 多角色收敛: 每用户仅保留最早一行**非游客**附加角色(rid=82 显式排除于保留行
+--         选择与删除范围), 多角色用户 419 人(TOP=1人挂12岗), 预计删数百行
+-- 🔴 分段独立可单独执行, 顺序无关: 四段均显式含 82(游客清理)或 82排除(非游客范围),
+--    任意单段/任意顺序执行, 结果一致; 段一首句与段三 3a 为同句幂等重复(双保险)
 -- 🔴 游客 roleoperation(rid=82, 32,271 行)与本脚本无关、不可删除:
 --    主角色=游客(user.roleId=82)的用户有 43,184 人, 游客 roleoperation 是其登录基础权限
 --    (首屏菜单/通知/人员信息/通用查询, 845接口)——全删=全公司功能瘫痪;
@@ -47,10 +50,11 @@ SELECT COUNT(*) AS bakCompany_expect16369 FROM communion.bak_usercompany_del_202
 
 CREATE TABLE IF NOT EXISTS communion.bak_userrole_multi_20261124 AS
 SELECT ur.* FROM communion.userrole ur
-JOIN (SELECT uid, MIN(urid) AS keepUrid FROM communion.userrole GROUP BY uid) k
-  ON k.uid = ur.uid AND k.keepUrid <> ur.urid;
-SELECT COUNT(*) AS bakRoleMulti FROM communion.bak_userrole_multi_20261124;
--- 🔴 段三备份必须在【段一执行之后】创建, 行数=段一清理后仍多角色的行
+JOIN (SELECT uid, MIN(urid) AS keepUrid FROM communion.userrole WHERE rid <> 82 GROUP BY uid) k
+  ON k.uid = ur.uid AND k.keepUrid <> ur.urid
+WHERE ur.rid <> 82;
+SELECT COUNT(*) AS bakRoleMulti_expect419users FROM communion.bak_userrole_multi_20261124;
+-- 保留行选择(GROUP BY)与删除范围均已显式排除游客(rid=82), 不依赖段一执行状态
 
 -- ============ 段一、游客附加角色全清(影响行数必须=31850) ============
 
@@ -66,13 +70,20 @@ WHERE u.roleId = 82;
 
 DELETE uc FROM communion.usercompany uc
 JOIN (SELECT uid, MIN(ucid) AS keepUcid FROM communion.usercompany GROUP BY uid) k
-  ON k.uid = uc.uid AND k.keepUcid <> uc.ucid;
+  ON k.uid = uc.uid AND k.keepUcid <> uc.ucid
+JOIN communion.user u ON u.uid = uc.uid
+WHERE u.roleId <> 82;
 
--- ============ 段三、多角色收敛(🔴段一之后执行): 每用户保留最早一行附加角色 ============
+-- ============ 段三、多角色收敛: 非游客行每用户保留最早一行(段顺序无关) ============
 
+-- 3a. 游客附加再清(与段一同句幂等: 段一已删则0行——双保险, 保证本段收敛对象不含游客)
+DELETE FROM communion.userrole WHERE rid = 82;
+
+-- 3b. 非游客多余附加收敛: 保留行选择与删除范围均显式排除游客(rid <> 82)
 DELETE ur FROM communion.userrole ur
-JOIN (SELECT uid, MIN(urid) AS keepUrid FROM communion.userrole GROUP BY uid) k
-  ON k.uid = ur.uid AND k.keepUrid <> ur.urid;
+JOIN (SELECT uid, MIN(urid) AS keepUrid FROM communion.userrole WHERE rid <> 82 GROUP BY uid) k
+  ON k.uid = ur.uid AND k.keepUrid <> ur.urid
+WHERE ur.rid <> 82;
 
 -- ============ 验证段 ============
 
