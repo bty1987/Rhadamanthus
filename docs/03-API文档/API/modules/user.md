@@ -6311,7 +6311,7 @@
 
 - **接口**: `syncUser.do`
 - **方法**: `syncUser()`
-- **说明**: 同步用户信息接口 请求参数示例： { "code": "FL-09527", // 用户工号（更新时提供，新增时为空） "name": "张三", // 姓名（必填） "current_name": "张三", // 现用名（可选，默认使用name） "gender": 1, // 性别：0女，1男（可选，默认1） "identity": "210xxx...", // 身份证号（必填） "phone": "13800138000", // 手机号（必填） "login_id": "zhangsan", // 登录用户名（可选，默认使用userId） "dept_id": 123, // 部门ID（必填） "duty_id": 456, // 职位ID（必填） "company": 1, // 公司ID（必填，user.company） "status": 1 // 状态：1在职, 0离职, 2停薪留职（可选，默认1） } 响应示例： { "errorCode": 0, "errorMsg": "", "code": "FL-09527", // 工号userId(顶层, 新增) "data": { "code": "12345", // user.uid "belong_org_code": "1", // user.company "userId": "FL-09527" // user.userId（工号, 原样保留兼容既有解析方） } }
+- **说明**: 同步用户信息接口 请求参数示例： { "code": "FL-09527", // 用户工号（更新时提供，新增时为空） "name": "张三", // 姓名（必填） "current_name": "张三", // 现用名（可选，默认使用name） "gender": 1, // 性别：0女，1男（可选，默认1） "identity": "210xxx...", // 身份证号（必填） "phone": "13800138000", // 手机号（必填） "login_id": "zhangsan", // 登录用户名（可选，默认使用userId） "dept_id": 123, // 部门ID（必填） "duty_id": 456, // 职位ID（必填） "company": 1, // 公司ID（必填，user.company） "status": 1, // 状态：1在职, 0离职, 2停薪留职（可选，默认1） "address": "沈阳市浑南区xx路xx号", // 现住址（可选，写userInfo.address，不传不覆盖） "hometown_address": "辽宁省铁岭市xx县" // 原住址（可选，写userInfo.hometownAddress，不传不覆盖） } 响应示例： { "errorCode": 0, "errorMsg": "", "code": "FL-09527", // 工号userId(顶层, 新增) "data": { "code": "12345", // user.uid "belong_org_code": "1", // user.company "userId": "FL-09527" // user.userId（工号, 原样保留兼容既有解析方） } }
 
 **入参:**
 

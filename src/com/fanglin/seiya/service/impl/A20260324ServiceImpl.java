@@ -601,10 +601,10 @@ public class A20260324ServiceImpl implements A20260324Service {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public String syncUser(String code, String name, String currentName, Integer gender, String identity, String phone, String loginId, Integer deptId, Long dutyId, Integer company, Integer status) throws FLException {
+	public String syncUser(String code, String name, String currentName, Integer gender, String identity, String phone, String loginId, Integer deptId, Long dutyId, Integer company, Integer status, String address, String hometownAddress) throws FLException {
 
 		try {
-			logger.info("同步用户信息: code={}, name={}, currentName={}, gender={}, identity={}, phone={}, loginId={}, deptId={}, dutyId={}, company={}, status={}", code, name, currentName, gender, identity, phone, loginId, deptId, dutyId, company, status);
+			logger.info("同步用户信息: code={}, name={}, currentName={}, gender={}, identity={}, phone={}, loginId={}, deptId={}, dutyId={}, company={}, status={}, address={}, hometownAddress={}", code, name, currentName, gender, identity, phone, loginId, deptId, dutyId, company, status, address, hometownAddress);
 
 			// 1. 获取公司信息
 			CompanyPO companyPO = companyDao.get(company);
@@ -765,6 +765,13 @@ public class A20260324ServiceImpl implements A20260324Service {
 				userInfoPO.setSalary("0");
 				userInfoPO.setUser(userPO);
 				userInfoPO.setHireTime(DateUtil.getDateToTimestamp(new Date()));
+				// 现住址/原住址(非必填, 报文传了才写)
+				if (address != null && !address.trim().isEmpty()) {
+					userInfoPO.setAddress(address);
+				}
+				if (hometownAddress != null && !hometownAddress.trim().isEmpty()) {
+					userInfoPO.setHometownAddress(hometownAddress);
+				}
 				userInfoDao.save(userInfoPO);
 
 				// 6.10.2 记录入职经历
@@ -840,6 +847,27 @@ public class A20260324ServiceImpl implements A20260324Service {
 				// 7.2 更新用户（不处理定岗人数，不修改loginId）
 				userDao.update(userPO);
 				logger.info("更新用户成功: uid={}, userId={}, name={}, status={}", userPO.getUid(), userPO.getUserId(), userPO.getUserName(), userPO.getStatus());
+
+				// 7.3 更新档案现住址/原住址(非必填: 报文传了才覆盖, 空值不清洗既有地址; 档案缺失warn跳过不补建)
+				if ((address != null && !address.trim().isEmpty()) || (hometownAddress != null && !hometownAddress.trim().isEmpty())) {
+
+					UserInfoPO userInfoPO = userInfoDao.queryUserInfoByUserId(userPO.getUserId());
+
+					if (userInfoPO == null) {
+						logger.warn("更新档案地址跳过: 用户档案不存在, userId={}", userPO.getUserId());
+					} else {
+						if (address != null && !address.trim().isEmpty()) {
+							userInfoPO.setAddress(address);
+						}
+						if (hometownAddress != null && !hometownAddress.trim().isEmpty()) {
+							userInfoPO.setHometownAddress(hometownAddress);
+						}
+						userInfoDao.update(userInfoPO);
+						logger.info("更新档案地址成功: userId={}, address={}, hometownAddress={}", userPO.getUserId(),
+								address != null && !address.trim().isEmpty() ? "已更新" : "保持",
+								hometownAddress != null && !hometownAddress.trim().isEmpty() ? "已更新" : "保持");
+					}
+				}
 			}
 
 			// 8. 返回 JSON 格式的结果

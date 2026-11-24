@@ -243,6 +243,8 @@ posts字段为JSON字符串，key为职位ID，value为人员上限值:
 | duty_id | Long | 是 | 职位ID |
 | company | Integer | 是 | 公司ID(user.company) |
 | status | Integer | 否 | 状态：1=在职，0=离职，2=停薪留职，默认1 |
+| address | String | 否 | 现住址(写userInfo.address；新增写入，更新报文传了才覆盖，不传/空不改动既有值) |
+| hometown_address | String | 否 | 原住址(写userInfo.hometownAddress；覆盖口径同address) |
 
 #### 请求示例
 

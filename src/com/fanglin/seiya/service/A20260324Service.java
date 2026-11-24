@@ -56,6 +56,6 @@ public interface A20260324Service {
 	 * @return 用户ID（uid）的字符串形式，格式：{"code":"uid","belong_org_code":"company","userId":"工号"}
 	 * @throws FLException 业务异常
 	 */
-	public String syncUser(String code, String name, String currentName, Integer gender, String identity, String phone, String loginId, Integer deptId, Long dutyId, Integer company, Integer status) throws FLException;
+	public String syncUser(String code, String name, String currentName, Integer gender, String identity, String phone, String loginId, Integer deptId, Long dutyId, Integer company, Integer status, String address, String hometownAddress) throws FLException;
 
 }
