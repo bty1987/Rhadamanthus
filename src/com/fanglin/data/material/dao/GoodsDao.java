@@ -28,6 +28,8 @@ public interface GoodsDao extends Dao<GoodsPO> {
 
 	public List<GoodsPO> queryGoodsByName(String name, int limit, int company);
 
+	public List<GoodsPO> queryGoodsByNameForBrandRight(String name, int limit, int company, List<Long> bids);
+
 	public List<GoodsPO> queryGoodsByNo(String no, int limit, int company);
 
 	public List<GoodsPO> queryGoodsByAtid(long atid);

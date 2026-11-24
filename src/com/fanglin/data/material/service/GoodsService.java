@@ -28,7 +28,9 @@ public interface GoodsService {
 
 	public List<GoodsVO> queryGoodsByNo(GoodsVO goodsVO, int company);
 
-	public List<GoodsVO> queryGoodsByName(GoodsVO goodsVO, int company);
+	public List<GoodsVO> queryGoodsByName(GoodsVO goodsVO, int company);
+
+	public List<GoodsVO> queryGoodsByNameForBrandRight(GoodsVO goodsVO, String userId, int company);
 
 	public List<GoodsVO> queryGoodsByAtid(GoodsVO goodsVO);
 

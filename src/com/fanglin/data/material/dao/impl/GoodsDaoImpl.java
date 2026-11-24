@@ -88,6 +88,21 @@ public class GoodsDaoImpl extends DaoImpl<GoodsPO> implements GoodsDao {
 
 	@Override
 	@SuppressWarnings("unchecked")
+	public List<GoodsPO> queryGoodsByNameForBrandRight(String name, int limit, int company, List<Long> bids) {
+
+		String likestr = String.format("%%%s%%", name);
+
+		String sql = "SELECT g.* FROM `data`.goods g, communion.brand b WHERE g.bid = b.bid AND  g.`status` = :status AND b.`status` = :bStatus AND (g.`name` LIKE :name OR g.`no` LIKE :no) AND g.company = :company AND g.bid IN (:bids) LIMIT :limit";
+
+		SQLQuery query = session().createSQLQuery(sql.toString()).addEntity(GoodsPO.class);
+
+		query.setShort("status", GoodsPO.STATUS_ENABLE_INT).setShort("bStatus", GoodsPO.BRAND_STATUS_INT).setString("name", likestr).setString("no", likestr).setInteger("company", company).setParameterList("bids", bids).setInteger("limit", limit);
+
+		return query.list();
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
 	public List<GoodsPO> queryGoodsByNo(String no, int limit, int company) {
 		return session().createCriteria(GoodsPO.class).add(Restrictions.eq(GoodsPO.COLUMN_COMPANY_STR, company)).add(Restrictions.eq(GoodsPO.COLUMN_STATUS_STR, GoodsPO.STATUS_ENABLE_INT)).add(Restrictions.ilike(GoodsPO.COLUMN_NO_STR, no, MatchMode.ANYWHERE)).setMaxResults(limit).list();
 	}

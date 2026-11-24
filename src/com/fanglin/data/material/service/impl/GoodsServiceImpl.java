@@ -193,6 +193,31 @@ public class GoodsServiceImpl implements GoodsService {
 	}
 
 	@Override
+	public List<GoodsVO> queryGoodsByNameForBrandRight(GoodsVO goodsVO, String userId, int company) {
+
+		UserPO userPO = userDao.queryUserByUserId(userId);
+
+		List<BrandUserRightPO> brandUserRightPOs = brandUserRightDao.queryBrandUserRightByUid(userPO.getUid());
+
+		List<GoodsVO> goodsVOs = new ArrayList<GoodsVO>();
+
+		// 无品牌权限=不可选(fail-closed, 同pageGoods口径)
+		if (brandUserRightPOs.isEmpty()) return goodsVOs;
+
+		List<Long> bids = new ArrayList<Long>();
+
+		for (BrandUserRightPO brandUserRightPO : brandUserRightPOs) {
+			bids.add(brandUserRightPO.getBrand().getBid());
+		}
+
+		for (GoodsPO goodsPO : goodsDao.queryGoodsByNameForBrandRight(goodsVO.getName(), 10, company, bids)) {
+			goodsVOs.add(goodsPO.ptv(new GoodsVO(new AccessoriesTypeVO(), new GoodsKindVO(), new GoodsKindVO(), new GoodsKindVO(), new GoodsKindVO())));
+		}
+
+		return goodsVOs;
+	}
+
+	@Override
 	public List<GoodsVO> queryGoodsByAtid(GoodsVO goodsVO) {
 
 		List<GoodsPO> goodsPOs = goodsDao.queryGoodsByAtid(goodsVO.getAccessoriesType().getAtid());

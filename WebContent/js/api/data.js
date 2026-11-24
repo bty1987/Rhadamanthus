@@ -1004,6 +1004,14 @@ $.extend(api, {
                 args: ["purchase", "selling", "pieceNum", "confine"]
             }]
         },
+        queryGoodsByNameForBrandRight: {
+            url: "queryGoodsByNameForBrandRight.do",
+            type: "query",
+            tranargs: [{
+                result: "goodes",
+                args: ["purchase", "selling", "pieceNum", "confine"]
+            }]
+        },
         queryGoodsByAtid: {
             url: "queryGoodsByAtid.do",
             type: "query",

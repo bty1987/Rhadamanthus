@@ -89,6 +89,14 @@ public class GoodsAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "queryGoodsByNameForBrandRight", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryGoodsByNameForBrandRight() throws FLException {
+
+		goodes = goodsService.queryGoodsByNameForBrandRight(goods, queryUserId(), (goods.getCompany() != null && FormatUtil.decodeCompany(SensitiveDataHelper.decrypt(goods.getCompany())) != -1) ? FormatUtil.decodeCompany(SensitiveDataHelper.decrypt(goods.getCompany())) : queryCompany());
+
+		return SUCCESS;
+	}
+
 	@Action(value = "queryGoodsByBarcode", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryGoodsByBarcode() throws FLException {
 
