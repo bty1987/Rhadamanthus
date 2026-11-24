@@ -246,13 +246,16 @@ public class PaymentServiceImpl implements PaymentService {
 			throw new FLException(150016, "预付款操作不正确");
 		}
 
-		overBalance = Arith.add(balance, recharge);
+		// 原子加款防并发双发互相覆盖(条件UPDATE原生SQL, 绕一级缓存)
+		if (advancePaymentDao.increaseAdvancePayment(advancePaymentPO.getApId(), paymentType, recharge) == 0) {
+			throw new FLException(150010, "预付款余额不足");
+		}
 
 		paymentVO.setRecharge(Math.abs(recharge));
 		paymentVO.setCollectTime(DateUtil.getDateToTimestamp(new Date()));
 
-		// 设置当前款项类型的预付款(advancePayment)的余额
-		AdvancePaymentServiceImpl.setBalance(advancePaymentPO, paymentType, overBalance);
+		// 原生SQL重读真实新余额(供payment流水快照落账), 不走setBalance(避免脏检查覆盖原子结果)
+		overBalance = advancePaymentDao.queryBalanceRaw(advancePaymentPO.getApId(), paymentType);
 
 		AdvanceReceiptPO advanceReceiptPO = new AdvanceReceiptPO();
 		BeanUtil.copyProperties(paymentVO, advanceReceiptPO, Arrays.asList("collectUser", "confirmUser", "status", "type"));
@@ -426,14 +429,15 @@ public class PaymentServiceImpl implements PaymentService {
 			pointAccountService.checkMaterialPointForWithdraw(decorationPO);
 		}
 
-		overBalance = Arith.sub(balance, recharge);
+		// 原子扣款(条件UPDATE自带余额守卫, affected=0即余额不足或被并发抢先, 防双发互相覆盖)
+		if (advancePaymentDao.decreaseAdvancePayment(advancePaymentPO.getApId(), paymentType, recharge) == 0) {
+			throw new FLException(150010, "预付款余额不足");
+		}
+
+		overBalance = advancePaymentDao.queryBalanceRaw(advancePaymentPO.getApId(), paymentType);
 
 		paymentVO.setRecharge(Math.abs(recharge));
 		paymentVO.setCollectTime(DateUtil.getDateToTimestamp(new Date()));
-
-		AdvancePaymentServiceImpl.setBalance(advancePaymentPO, paymentType, overBalance);
-
-		advancePaymentDao.update(advancePaymentPO);
 
 		AdvanceReceiptPO advanceReceiptPO = new AdvanceReceiptPO();
 		BeanUtil.copyProperties(paymentVO, advanceReceiptPO, Arrays.asList("collectUser", "confirmUser", "status", "type"));
@@ -519,14 +523,15 @@ public class PaymentServiceImpl implements PaymentService {
 			throw new FLException(150010, "预付款余额不足");
 		}
 
-		overBalance = Arith.sub(balance, recharge);
+		// 原子扣款(条件UPDATE自带余额守卫, affected=0即余额不足或被并发抢先, 防双发互相覆盖)
+		if (advancePaymentDao.decreaseAdvancePayment(advancePaymentPO.getApId(), paymentType, recharge) == 0) {
+			throw new FLException(150010, "预付款余额不足");
+		}
+
+		overBalance = advancePaymentDao.queryBalanceRaw(advancePaymentPO.getApId(), paymentType);
 
 		paymentVO.setRecharge(Math.abs(recharge));
 		paymentVO.setCollectTime(DateUtil.getDateToTimestamp(new Date()));
-
-		AdvancePaymentServiceImpl.setBalance(advancePaymentPO, paymentType, overBalance);
-
-		advancePaymentDao.update(advancePaymentPO);
 
 		AdvanceReceiptPO advanceReceiptPO = new AdvanceReceiptPO();
 		BeanUtil.copyProperties(paymentVO, advanceReceiptPO, Arrays.asList("collectUser", "confirmUser", "status"));
@@ -590,14 +595,14 @@ public class PaymentServiceImpl implements PaymentService {
 
 		Short paymentType = paymentVO.getPaymentType();
 
-		long balance = AdvancePaymentServiceImpl.getBalance(advancePaymentPO, paymentType);
 		long recharge = gatherPayment(paymentVO);
 
-		long overBalance = Arith.add(balance, recharge);
+		// 原子加款防并发双发互相覆盖(条件UPDATE原生SQL, 绕一级缓存)
+		if (advancePaymentDao.increaseAdvancePayment(advancePaymentPO.getApId(), paymentType, recharge) == 0) {
+			throw new FLException(150010, "预付款余额不足");
+		}
 
-		AdvancePaymentServiceImpl.setBalance(advancePaymentPO, paymentType, overBalance);
-
-		advancePaymentDao.update(advancePaymentPO);
+		long overBalance = advancePaymentDao.queryBalanceRaw(advancePaymentPO.getApId(), paymentType);
 
 		paymentVO.setRecharge(Math.abs(recharge));
 		paymentVO.setCollectTime(DateUtil.getDateToTimestamp(new Date()));

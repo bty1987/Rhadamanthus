@@ -81,6 +81,17 @@ public class AdvancePaymentDaoImpl extends DaoImpl<AdvancePaymentPO> implements 
 
 		String sql = String.format("update payment.advancepayment set %s = %s - :delta where apId = :apId and %s >= :delta", column, column, column);
 		return session().createSQLQuery(sql).setLong("delta", delta).setInteger("apId", apId).executeUpdate();
+	}
+
+	@Override
+	public long queryBalanceRaw(int apId, short paymentType) {
+
+		String column = balanceColumn(paymentType);
+		if (column == null) return 0;
+
+		Object value = session().createSQLQuery(String.format("select %s from payment.advancepayment where apId = :apId", column)).setInteger("apId", apId).uniqueResult();
+
+		return value == null ? 0L : ((Number) value).longValue();
 	}
 
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) throws FLException {

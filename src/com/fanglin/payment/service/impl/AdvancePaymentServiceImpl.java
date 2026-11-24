@@ -162,27 +162,28 @@ public class AdvancePaymentServiceImpl implements AdvancePaymentService {
 		Short type = paymentVO.getType();
 		Short paymentType = paymentVO.getPaymentType();
 
-		// 计算当前款项类型的预付款的余额
+		// 计算当前款项类型的预付款的余额(快照仅用于提前友好报错, 权威判断走条件UPDATE原子增减, 防并发双发互相覆盖)
 		balance = getBalance(advancePaymentPO, paymentType);
 
-		// 收款(余额加上操作金额),付款(预付款余额减去操作的金额)之后得到的余额
-		long overBalance = 0;
 		List<Short> types = Arrays.asList(PaymentPO.PAYMENT_TYPE_COLLECTION_INT, PaymentPO.PAYMENT_TYPE_RETURN_INT);
 
-		if (types.contains(type)) {
-			overBalance = Arith.add(balance, recharge);
-		} else {
-			if (balance < recharge) {
-				throw new FLException(150010, "预付款余额不足");
-			}
-			overBalance = Arith.sub(balance, recharge);
+		if (!types.contains(type) && balance < recharge) {
+			throw new FLException(150010, "预付款余额不足");
+		}
+
+		int affected = types.contains(type)
+				? advancePaymentDao.increaseAdvancePayment(advancePaymentPO.getApId(), paymentType, recharge)
+				: advancePaymentDao.decreaseAdvancePayment(advancePaymentPO.getApId(), paymentType, recharge);
+
+		if (affected == 0) {
+			throw new FLException(150010, "预付款余额不足");
 		}
 
 		paymentVO.setRecharge(Math.abs(recharge));
 		paymentVO.setCollectTime(DateUtil.getDateToTimestamp(new Date()));
 
-		// 设置当前款项类型的预付款(advancePayment)的余额
-		setBalance(advancePaymentPO, paymentType, overBalance);
+		// 原生SQL绕一级缓存重读真实新余额(供payment流水快照落账), 不走setBalance(避免脏检查覆盖原子结果)
+		long overBalance = advancePaymentDao.queryBalanceRaw(advancePaymentPO.getApId(), paymentType);
 
 		UserPO userPO = userDao.queryUserByUserId(paymentVO.getCollectUser().getUserId());
 
@@ -237,17 +238,4 @@ public class AdvancePaymentServiceImpl implements AdvancePaymentService {
 	}
 
 	// 设置当前款项类型的预付款(advancePayment)的余额
-	public static void setBalance(AdvancePaymentPO advancePaymentPO, Short type, long value) {
-
-		if (type == CustomerPO.BALANCE_TYPE_BALANCE_INT) {
-			advancePaymentPO.setBalance(value);
-		} else if (type == CustomerPO.BALANCE_TYPE_MATERIAL_INT) {
-			advancePaymentPO.setMaterialBalance(value);
-		} else if (type == CustomerPO.BALANCE_TYPE_PROJECT_INT) {
-			advancePaymentPO.setProjectBalance(value);
-		} else if (type == CustomerPO.BALANCE_TYPE_ZHENGLIN_INT) {
-			advancePaymentPO.setZhenglinBalance(value);
-		}
-	}
-
 }
