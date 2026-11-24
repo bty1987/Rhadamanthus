@@ -16,7 +16,7 @@ jQuery(function($) {
 
     // 配置直接挂在装修单上: 按单号单键, 每单同时容纳设计段+业务段(接手人/比例‰/默认标识);
     // 移交人=单数据自带的原设计师/原业务员快照; sessionStorage TTL 24h 过期即弃
-    var TRAN_CONFIG_KEY = "belongTranConfigs";
+    var TRAN_CONFIG_KEY = "belongTranConfigs_v2"; // v2: rate全链改0~1比例语义(提交×1000走api tranargs), 旧‰缓存随key废弃
     var TRAN_TTL = 24 * 60 * 60 * 1000;
 
     var tranConfigs = JSON.parse(sessionStorage.getItem(TRAN_CONFIG_KEY)) || {};
@@ -62,10 +62,10 @@ jQuery(function($) {
         return count;
     }
 
-    // ‰ → "85%" / "85.5%"
-    function tranRatePercentText(rate) {
+    // 比例(0~1) → 展示文本(全链rate已统一比例语义, 数值转换归api tranargs)
+    function tranRateText(rate) {
 
-        return String(Math.round(rate) / 1000);
+        return rate == null ? "0" : String(rate);
     }
 
     function tranSnapshotOrder(v) {
@@ -99,8 +99,8 @@ jQuery(function($) {
 
         var parts = [];
 
-        if (config.design) parts.push("设计→" + config.design.userName + " " + tranRatePercentText(config.design.rate) + (config.design.defaultFlag == 1 ? "默认" : ""));
-        if (config.sales) parts.push("业务→" + config.sales.userName + " " + tranRatePercentText(config.sales.rate) + (config.sales.defaultFlag == 1 ? "默认" : ""));
+        if (config.design) parts.push("设计→" + config.design.userName + " " + tranRateText(config.design.rate) + (config.design.defaultFlag == 1 ? "默认" : ""));
+        if (config.sales) parts.push("业务→" + config.sales.userName + " " + tranRateText(config.sales.rate) + (config.sales.defaultFlag == 1 ? "默认" : ""));
 
         return parts.join(" / ");
     }
@@ -397,11 +397,11 @@ jQuery(function($) {
         $("#" + base + "Region").val(section.regionName || "");
         // Rate/Default 控件 id 无 User 段(html=belongTranDesignRate/belongTranDesignDefault), 与 Input/Name 等长前缀控件不同源; 2026-11-18 修复错位(此前读取落空, 任何比例值均被NaN拦)
         var prefix = base.replace(/User$/, "");
-        $("#" + prefix + "Rate").val(Math.round(section.rate) / 1000);
+        $("#" + prefix + "Rate").val(section.rate);
         $("#" + prefix + "Default").prop("checked", section.defaultFlag == 1);
     }
 
-    // 现归属行展示: 供默认标识/比例决策参考(queryDecorationBelong的rate经tranargs已÷1000, 此处×1000还原‰展示)
+    // 现归属行展示: 供默认标识/比例决策参考(queryDecorationBelong的rate经tranargs已÷1000成比例, 直展无需换算)
     function tranLoadCurrentBelongs(orderId) {
 
         com.post(api.decoration.queryDecorationBelong, {
@@ -428,7 +428,7 @@ jQuery(function($) {
 
         var texts = $.map(rows, function(b) {
 
-            return (b.belonger ? b.belonger.currentName : "?") + "(" + (b.department ? b.department.name : "") + ") " + tranRatePercentText(b.rate != null ? Math.round(b.rate * 1000) : 0) + (b.defaultFlag == 1 ? " 默认" : "");
+            return (b.belonger ? b.belonger.currentName : "?") + "(" + (b.department ? b.department.name : "") + ") " + tranRateText(b.rate) + (b.defaultFlag == 1 ? " 默认" : "");
         });
 
         $box.text("现归属: " + texts.join(" | "));
@@ -492,7 +492,7 @@ jQuery(function($) {
         };
 
         // Rate/Default 控件 id 无 User 段(见 tranFillSection 注), 2026-11-18 修复错位
-        var rate = tranParseRatePercent($("#" + base.replace(/User$/, "") + "Rate"));
+        var rate = tranParseRate($("#" + base.replace(/User$/, "") + "Rate"));
 
         if (isNaN(rate)) return {
             error: "归属比例须在0~1之间(支持三位小数)"
@@ -510,8 +510,8 @@ jQuery(function($) {
         };
     }
 
-    // % → ‰整数(空/非法返NaN)
-    function tranParseRatePercent($input) {
+    // 0~1比例输入解析(空/非法/越界返NaN); ×1000落‰由api tranargs(submitApprovalForBelongTran)自动处理
+    function tranParseRate($input) {
 
         var val = $.trim($input.val());
 
@@ -521,7 +521,7 @@ jQuery(function($) {
 
         if (isNaN(num) || num < 0 || num > 1) return NaN;
 
-        return Math.round(num * 1000);
+        return num;
     }
 
     $("#belongTranConfigBatchBtn").on('click', function() {
@@ -861,7 +861,7 @@ jQuery(function($) {
 
             $.each(g.items, function(j, item) {
 
-                $sum.append('<div style="margin-left:12px">' + item.orderId + ' ' + (item.belongType == 0 ? "设计" : "业务") + '→' + item.userName + '(' + tranRatePercentText(item.rate) + (item.defaultFlag == 1 ? ',默认' : '') + ')</div>');
+                $sum.append('<div style="margin-left:12px">' + item.orderId + ' ' + (item.belongType == 0 ? "设计" : "业务") + '→' + item.userName + '(' + tranRateText(item.rate) + (item.defaultFlag == 1 ? ',默认' : '') + ')</div>');
             });
         });
     }

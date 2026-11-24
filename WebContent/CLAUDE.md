@@ -567,6 +567,31 @@ $.extend(api, {
 });
 ```
 
+#### 🔴 千倍换算(厘/毫↔元/‰↔比例)强制走 tranargs 配置 — 页面 JS 禁止手写 ×1000/÷1000
+
+`com.post` 已双向内建精度换算, 任何金额/比例字段的前后端换算**只能在 api 定义里配置**, 禁止在页面 JS 手写 `Math.round(x * 1000)` / `Math.round(x / 1000)`(2026-11-24 移交比例页四处手写被批, 含 ×1000 再 ÷1000 展示绕圈反例):
+
+```javascript
+// update 类: 提交自动 ×1000(com.post 对 opts 键名经 [\d+] 归一后匹配 args, utils.accExtend 精确乘)
+submitApprovalForBelongTran: {
+    url: "submitApprovalForBelongTran.do",
+    type: "update",
+    tranargs: { args: ["approvalBelongTranItems.rate"] }
+},
+
+// query 类: 响应自动 ÷1000(tranargs 数组, result=数据路径, utils.accDiv)
+queryDecorationBelong: {
+    url: "queryDecorationBelong.do",
+    type: "query",
+    tranargs: [{ result: "decorationBelongs", args: ["rate"] }]
+}
+```
+
+- 配置后页面 JS 全链直传框架换算后的值: 提交传元/比例原值, 回显即元/比例, 不做任何二次换算
+- ⚠️ accExtend 为精确乘后 **parseInt 截断**: 三位小数比例(0~1, step=0.001)×1000 恒整数无损, 四位以上小数会截断
+- 数值语义变更(如 ‰ 改比例)必须同步 bump 页面本地缓存 key, 防旧单位存量缓存混读
+- 新增/改动接口先查 api 定义是否已有 tranargs, 缺失即补; 先例: `submitApprovalForDecorationBelong` / `queryDecorationBelong`
+
 ### 4. `Validator()` 组件 - 表单验证
 
 **文件**: `js/com/validator.js`
