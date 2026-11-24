@@ -180,37 +180,30 @@ public class GoodsServiceImpl implements GoodsService {
 	}
 
 	@Override
-	public List<GoodsVO> queryGoodsByName(GoodsVO goodsVO, int company) {
+	public List<GoodsVO> queryGoodsByName(GoodsVO goodsVO, String userId, int company) {
 
-		List<GoodsPO> goodsPOs = goodsDao.queryGoodsByName(goodsVO.getName(), 10, company);
-		List<GoodsVO> goodsVOs = new ArrayList<GoodsVO>();
+		// userId非空=品牌权限链(bids过滤, 无品牌权限空列表fail-closed同pageGoods口径); null=共用入口bids不传(DAO不拼IN段)
+		List<Long> bids = null;
 
-		for (GoodsPO goodsPO : goodsPOs) {
-			goodsVOs.add(goodsPO.ptv(new GoodsVO(new AccessoriesTypeVO(), new GoodsKindVO(), new GoodsKindVO(), new GoodsKindVO(), new GoodsKindVO())));
+		if (userId != null && !userId.trim().isEmpty()) {
+
+			UserPO userPO = userDao.queryUserByUserId(userId);
+
+			List<BrandUserRightPO> brandUserRightPOs = brandUserRightDao.queryBrandUserRightByUid(userPO.getUid());
+
+			// 无品牌权限=不可选
+			if (brandUserRightPOs.isEmpty()) return new ArrayList<GoodsVO>();
+
+			bids = new ArrayList<Long>();
+
+			for (BrandUserRightPO brandUserRightPO : brandUserRightPOs) {
+				bids.add(brandUserRightPO.getBrand().getBid());
+			}
 		}
 
-		return goodsVOs;
-	}
-
-	@Override
-	public List<GoodsVO> queryGoodsByNameForBrandRight(GoodsVO goodsVO, String userId, int company) {
-
-		UserPO userPO = userDao.queryUserByUserId(userId);
-
-		List<BrandUserRightPO> brandUserRightPOs = brandUserRightDao.queryBrandUserRightByUid(userPO.getUid());
-
 		List<GoodsVO> goodsVOs = new ArrayList<GoodsVO>();
 
-		// 无品牌权限=不可选(fail-closed, 同pageGoods口径)
-		if (brandUserRightPOs.isEmpty()) return goodsVOs;
-
-		List<Long> bids = new ArrayList<Long>();
-
-		for (BrandUserRightPO brandUserRightPO : brandUserRightPOs) {
-			bids.add(brandUserRightPO.getBrand().getBid());
-		}
-
-		for (GoodsPO goodsPO : goodsDao.queryGoodsByNameForBrandRight(goodsVO.getName(), 10, company, bids)) {
+		for (GoodsPO goodsPO : goodsDao.queryGoodsByName(goodsVO.getName(), 10, company, bids)) {
 			goodsVOs.add(goodsPO.ptv(new GoodsVO(new AccessoriesTypeVO(), new GoodsKindVO(), new GoodsKindVO(), new GoodsKindVO(), new GoodsKindVO())));
 		}
 

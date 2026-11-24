@@ -11190,6 +11190,7 @@
 **Requests:**
 
 - `goods.name` (String): 商品名称
+- `goods.brandRight` (Short, 可选): 1=按当前用户品牌权限过滤(仅BrandUserRight授权品牌下商品, 无授权返回空列表fail-closed); 缺省不过滤(共用入口)。原 queryGoodsByNameForBrandRight 专用接口已并入本接口(该URL已删除)
 
 ```json
 {

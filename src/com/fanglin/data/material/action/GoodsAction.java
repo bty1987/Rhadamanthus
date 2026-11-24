@@ -84,15 +84,8 @@ public class GoodsAction extends BaseListAction {
 	@Action(value = "queryGoodsByName", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryGoodsByName() throws FLException {
 
-		goodes = goodsService.queryGoodsByName(goods, (goods.getCompany() != null && FormatUtil.decodeCompany(SensitiveDataHelper.decrypt(goods.getCompany())) != -1) ? FormatUtil.decodeCompany(SensitiveDataHelper.decrypt(goods.getCompany())) : queryCompany());
-
-		return SUCCESS;
-	}
-
-	@Action(value = "queryGoodsByNameForBrandRight", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryGoodsByNameForBrandRight() throws FLException {
-
-		goodes = goodsService.queryGoodsByNameForBrandRight(goods, queryUserId(), (goods.getCompany() != null && FormatUtil.decodeCompany(SensitiveDataHelper.decrypt(goods.getCompany())) != -1) ? FormatUtil.decodeCompany(SensitiveDataHelper.decrypt(goods.getCompany())) : queryCompany());
+		// brandRight=1走当前用户品牌权限过滤(无授权空列表fail-closed); 缺省共用入口不过滤(queryGoodsByNameForBrandRight已合并不再单独设URL)
+		goodes = goodsService.queryGoodsByName(goods, goods.getBrandRight() != null && goods.getBrandRight() == 1 ? queryUserId() : null, (goods.getCompany() != null && FormatUtil.decodeCompany(SensitiveDataHelper.decrypt(goods.getCompany())) != -1) ? FormatUtil.decodeCompany(SensitiveDataHelper.decrypt(goods.getCompany())) : queryCompany());
 
 		return SUCCESS;
 	}

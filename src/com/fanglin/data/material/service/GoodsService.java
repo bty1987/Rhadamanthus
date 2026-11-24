@@ -28,9 +28,12 @@ public interface GoodsService {
 
 	public List<GoodsVO> queryGoodsByNo(GoodsVO goodsVO, int company);
 
-	public List<GoodsVO> queryGoodsByName(GoodsVO goodsVO, int company);
-
-	public List<GoodsVO> queryGoodsByNameForBrandRight(GoodsVO goodsVO, String userId, int company);
+	/**
+	 * 按名称模糊查商品: userId非空=按该用户品牌权限过滤(无品牌权限空列表fail-closed), null=共用入口不过滤品牌
+	 */
+	public List<GoodsVO> queryGoodsByName(GoodsVO goodsVO, String userId, int company);
+
+
 
 	public List<GoodsVO> queryGoodsByAtid(GoodsVO goodsVO);
 

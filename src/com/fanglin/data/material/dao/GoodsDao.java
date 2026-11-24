@@ -26,9 +26,10 @@ public interface GoodsDao extends Dao<GoodsPO> {
 
 	public List<GoodsPO> queryGoods(List<Filter> filters, int company);
 
-	public List<GoodsPO> queryGoodsByName(String name, int limit, int company);
-
-	public List<GoodsPO> queryGoodsByNameForBrandRight(String name, int limit, int company, List<Long> bids);
+	/**
+	 * 按名称/编号模糊查商品(启用态+品牌启用): bids非空=按品牌权限过滤(品牌专用入口), null/空=不过滤品牌(共用入口)
+	 */
+	public List<GoodsPO> queryGoodsByName(String name, int limit, int company, List<Long> bids);
 
 	public List<GoodsPO> queryGoodsByNo(String no, int limit, int company);
 

@@ -42,6 +42,8 @@ public class GoodsVO implements java.io.Serializable {
 
 	private Short atttype;
 
+	private Short brandRight; // 请求参数: 1=queryGoodsByName按当前用户品牌权限过滤(BrandUserRight fail-closed), 缺省不过滤(共用入口)
+
 	private GoodsKindVO zerokind;
 
 	private GoodsKindVO onekind;
@@ -370,6 +372,14 @@ public class GoodsVO implements java.io.Serializable {
 
 	public void setAtttype(Short atttype) {
 		this.atttype = atttype;
+	}
+
+	public Short getBrandRight() {
+		return brandRight;
+	}
+
+	public void setBrandRight(Short brandRight) {
+		this.brandRight = brandRight;
 	}
 
 }

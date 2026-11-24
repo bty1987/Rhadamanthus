@@ -61,8 +61,8 @@ jQuery(function() {
         pageType: params['urlLoadParams'].type,
     };
 
-    // 商品联想走品牌权限口径: 仅BrandUserRight授权品牌下的商品可选(无授权=无结果)
-    com.initTypeahead('goods', api.data.queryGoodsByNameForBrandRight, "goods.name", {}, 'goodes', 'gid', 'name', function(list, k, v) {
+    // 商品联想走品牌权限口径: 仅BrandUserRight授权品牌下的商品可选(无授权=无结果); queryGoodsByNameForBrandRight已并入queryGoodsByName(goods.brandRight=1开关)
+    com.initTypeahead('goods', api.data.queryGoodsByName, "goods.name", { "goods.brandRight": 1 }, 'goodes', 'gid', 'name', function(list, k, v) {
 
         com.cleanItems(sales.leftitems);
         sales.items.left.find('select').empty();

@@ -73,30 +73,28 @@ public class GoodsDaoImpl extends DaoImpl<GoodsPO> implements GoodsDao {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<GoodsPO> queryGoodsByName(String name, int limit, int company) {
+	public List<GoodsPO> queryGoodsByName(String name, int limit, int company, List<Long> bids) {
 
 		String likestr = String.format("%%%s%%", name);
 
-		String sql = "SELECT g.* FROM `data`.goods g, communion.brand b WHERE g.bid = b.bid AND  g.`status` = :status AND b.`status` = :bStatus AND (g.`name` LIKE :name OR g.`no` LIKE :no) AND g.company = :company LIMIT :limit";
+		// bids非空拼品牌IN段(品牌权限入口), null/空不拼(共用入口); IN段与参数绑定同flag, 空集合不触达(防IN()非法SQL)
+		boolean brandFiltered = bids != null && !bids.isEmpty();
+
+		StringBuilder sql = new StringBuilder("SELECT g.* FROM `data`.goods g, communion.brand b WHERE g.bid = b.bid AND g.`status` = :status AND b.`status` = :bStatus AND (g.`name` LIKE :name OR g.`no` LIKE :no) AND g.company = :company");
+
+		if (brandFiltered) {
+			sql.append(" AND g.bid IN (:bids)");
+		}
+
+		sql.append(" LIMIT :limit");
 
 		SQLQuery query = session().createSQLQuery(sql.toString()).addEntity(GoodsPO.class);
 
 		query.setShort("status", GoodsPO.STATUS_ENABLE_INT).setShort("bStatus", GoodsPO.BRAND_STATUS_INT).setString("name", likestr).setString("no", likestr).setInteger("company", company).setInteger("limit", limit);
 
-		return query.list();
-	}
-
-	@Override
-	@SuppressWarnings("unchecked")
-	public List<GoodsPO> queryGoodsByNameForBrandRight(String name, int limit, int company, List<Long> bids) {
-
-		String likestr = String.format("%%%s%%", name);
-
-		String sql = "SELECT g.* FROM `data`.goods g, communion.brand b WHERE g.bid = b.bid AND  g.`status` = :status AND b.`status` = :bStatus AND (g.`name` LIKE :name OR g.`no` LIKE :no) AND g.company = :company AND g.bid IN (:bids) LIMIT :limit";
-
-		SQLQuery query = session().createSQLQuery(sql.toString()).addEntity(GoodsPO.class);
-
-		query.setShort("status", GoodsPO.STATUS_ENABLE_INT).setShort("bStatus", GoodsPO.BRAND_STATUS_INT).setString("name", likestr).setString("no", likestr).setInteger("company", company).setParameterList("bids", bids).setInteger("limit", limit);
+		if (brandFiltered) {
+			query.setParameterList("bids", bids);
+		}
 
 		return query.list();
 	}
