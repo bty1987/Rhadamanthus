@@ -50,7 +50,6 @@ public class ApprovalBelongTranItemVO implements java.io.Serializable {
 
 	private String defaultFlagName; // 默认/否文本
 
-	private String rateText; // 比例百分比文本(500→50%)
 
 	public Integer getAbtiId() {
 		return abtiId;
@@ -188,12 +187,5 @@ public class ApprovalBelongTranItemVO implements java.io.Serializable {
 		this.defaultFlagName = defaultFlagName;
 	}
 
-	public String getRateText() {
-		return rateText;
-	}
-
-	public void setRateText(String rateText) {
-		this.rateText = rateText;
-	}
 
 }

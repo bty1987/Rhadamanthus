@@ -64,7 +64,7 @@ jQuery(function($) {
                 "api": api.approval.queryApprovalBelongTranByAId,
                 "title": "离职移交明细",
                 "resultname": "approvalBelongTranItems",
-                "args": [['15', '装修单号: ', "orderId"], ['15', '客户: ', "customerName"], ['10', '状态: ', "status"], ['10', '归属类型: ', "belongTypeName"], ['15', '接手人: ', "userName"], ['15', '接手部门: ', "deptName"], ['10', '分区: ', "regionName"], ['10', '比例: ', "rateText"], ['10', '默认人: ', "defaultFlagName"]]
+                "args": [['15', '装修单号: ', "orderId"], ['15', '客户: ', "customerName"], ['10', '状态: ', "status"], ['10', '归属类型: ', "belongTypeName"], ['15', '接手人: ', "userName"], ['15', '接手部门: ', "deptName"], ['10', '分区: ', "regionName"], ['10', '比例: ', "rate"], ['10', '默认人: ', "defaultFlagName"]]
             }
         },
 
