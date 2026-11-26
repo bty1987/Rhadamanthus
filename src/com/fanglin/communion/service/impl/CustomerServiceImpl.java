@@ -173,7 +173,8 @@ public class CustomerServiceImpl implements CustomerService {
 	}
 
 	@Override
-	public List<CustomerPhoneVO> queryCustomerPhoneByCid(CustomerPhoneVO customerPhone) throws FLException {
+	@Transactional(rollbackFor = Exception.class)
+	public List<CustomerPhoneVO> queryCustomerPhoneByCid(CustomerPhoneVO customerPhone, String userId) throws FLException {
 
 		List<CustomerPhonePO> customerPhonePOs = customerPhoneDao.queryCustomerPhoneByCid(customerPhone.getCid(), customerPhone.getStatus());
 		List<CustomerPhoneVO> customerPhoneVOs = new ArrayList<CustomerPhoneVO>();
@@ -190,6 +191,12 @@ public class CustomerServiceImpl implements CustomerService {
 
 			customerPhoneVOs.add(customerPhoneVO);
 		}
+
+		customerRecordDao.save(new CustomerRecordPO(customerPhone.getCid(), 0l, CustomerRecordPO.TYPE_QUERY_INT, userDao.queryUserByUserId(userId), DateUtil.getDateToTimestamp(new Date())));
+
+		// Phase 7: 同时写入 log 模块的统一客户电话查询日志表（双写过渡期）
+		// 后续废弃原表后可移除上面那行 customerRecordDao.save
+		customerLogService.addCustomerLog(customerPhone.getCid(), 0l, userId, null);
 
 		return customerPhoneVOs;
 	}

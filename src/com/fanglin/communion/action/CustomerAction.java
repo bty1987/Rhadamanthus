@@ -98,7 +98,7 @@ public class CustomerAction extends BaseListAction {
 	@Action(value = "queryCustomerPhoneByCid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryCustomerPhoneByCid() throws FLException {
 
-		customerPhones = customerService.queryCustomerPhoneByCid(customerPhone);
+		customerPhones = customerService.queryCustomerPhoneByCid(customerPhone, queryUserId());
 
 		return SUCCESS;
 	}

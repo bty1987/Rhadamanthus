@@ -484,15 +484,6 @@ jQuery(function($) {
 
                         customerPhone = res.decorationInfo.customerPhone;
                     }, null, false);
-
-                    com.post(api.communion.addCustomerRecord, {
-                        "customerRecord.cid": decorationDetail.customer.cid,
-                        "customerRecord.type": 0
-                    }, function(res) {
-
-                    }, function(res) {
-
-                    });
                 } else {
                     com.post(api.data.queryCustomerForPhone, {
                         "customerPhone.cid": decorationDetail.customer.cid,
@@ -2313,15 +2304,6 @@ jQuery(function($) {
 
                     if (!resp)
                         return false;
-
-                    com.post(api.communion.addCustomerRecord, {
-                        "customerRecord.cid": decorationDetail.customer.cid,
-                        "customerRecord.type": 0
-                    }, function(res) {
-
-                    }, function(res) {
-
-                    });
                 } else {
 
                     com.post(api.data.queryCustomerForPhone, {

@@ -12,6 +12,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.alibaba.fastjson.JSON;
+import com.fanglin.communion.dao.CustomerRecordDao;
+import com.fanglin.communion.po.CustomerRecordPO;
 import com.fanglin.communion.po.HousePO;
 import com.fanglin.communion.po.VillagePO;
 import com.fanglin.construction.dao.ConstructionInfoDao;
@@ -46,6 +48,7 @@ import com.fanglin.information.dao.MessageQueuingDao;
 import com.fanglin.information.po.MessageCueuingPO;
 import com.fanglin.information.po.MessagePO;
 import com.fanglin.information.service.MessageService;
+import com.fanglin.log.service.CustomerLogService;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.utils.Arith;
@@ -107,6 +110,12 @@ public class DecorationInfoServiceImpl implements DecorationInfoService {
 	@Autowired
 	private WeChatAppService weChatAppService;
 
+	@Autowired
+	private CustomerRecordDao customerRecordDao;
+
+	@Autowired
+	private CustomerLogService customerLogService;
+
 	@Override
 	public DecorationInfoVO queryDecorationInfoByOrderId(DecorationInfoVO decorationInfoVO) {
 
@@ -118,7 +127,8 @@ public class DecorationInfoServiceImpl implements DecorationInfoService {
 	}
 
 	@Override
-	public DecorationInfoVO queryDecorationInfoForCustomer(DecorationInfoVO decorationInfoVO) {
+	@Transactional(rollbackFor = Exception.class)
+	public DecorationInfoVO queryDecorationInfoForCustomer(DecorationInfoVO decorationInfoVO, String userId) {
 
 		DecorationInfoPO decorationInfoPO = decorationInfoDao.queryDecorationInfoByOrderId(decorationInfoVO.getOrderId());
 
@@ -128,6 +138,12 @@ public class DecorationInfoServiceImpl implements DecorationInfoService {
 
 		if (decorationPO != null && decorationPO.getCustomer() != null) {
 			decorationInfoVO.setCustomerPhone(decorationPO.getCustomer().getPhone());
+
+			customerRecordDao.save(new CustomerRecordPO(decorationPO.getCustomer().getCid(), 0l, CustomerRecordPO.TYPE_QUERY_INT, userDao.queryUserByUserId(userId), DateUtil.getDateToTimestamp(new Date())));
+
+			// Phase 7: 同时写入 log 模块的统一客户电话查询日志表（双写过渡期）
+			// 后续废弃原表后可移除上面那行 customerRecordDao.save
+			customerLogService.addCustomerLog(decorationPO.getCustomer().getCid(), 0l, userId, null);
 		}
 
 		return decorationInfoVO;

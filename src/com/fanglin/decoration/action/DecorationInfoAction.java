@@ -51,7 +51,7 @@ public class DecorationInfoAction extends BaseListAction {
 	@Action(value = "queryDecorationInfoForCustomer", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryDecorationInfoForCustomer() throws FLException {
 
-		decorationInfo = decorationInfoService.queryDecorationInfoForCustomer(decorationInfo);
+		decorationInfo = decorationInfoService.queryDecorationInfoForCustomer(decorationInfo, queryUserId());
 
 		return SUCCESS;
 	}

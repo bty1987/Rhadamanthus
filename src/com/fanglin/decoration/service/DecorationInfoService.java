@@ -8,7 +8,7 @@ public interface DecorationInfoService {
 
 	public DecorationInfoVO queryDecorationInfoByOrderId(DecorationInfoVO decorationInfoVO);
 
-	public DecorationInfoVO queryDecorationInfoForCustomer(DecorationInfoVO decorationInfoVO);
+	public DecorationInfoVO queryDecorationInfoForCustomer(DecorationInfoVO decorationInfoVO, String userId);
 
 	public void sendDecorationInfoForConfirm(DecorationInfoVO decorationInfoVO, String userId);
 
