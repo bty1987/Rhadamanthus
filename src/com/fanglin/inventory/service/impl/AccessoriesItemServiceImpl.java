@@ -163,7 +163,7 @@ public class AccessoriesItemServiceImpl implements AccessoriesItemService {
 
 		if (noodsPO.getCalc() != NoodsPO.CALC_CACL_INT) return 0;
 
-		long normamount = normoodItemDao.amountNormoodItem(quotationPO.getQid(), accessoriesItemVO.getNid());
+		long normamount = normoodItemDao.amountNormoodItem(normtionPO.getIndex(), quotationPO.getQid(), accessoriesItemVO.getNid());
 		long acceamount = accessoriesItemDao.amountAccessoriesItem(orderId, accessoriesItemVO.getNid());
 
 		normamount = Arith.round(normamount, 0, Arith.ROUND_UP);
