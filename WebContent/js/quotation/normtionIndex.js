@@ -57,6 +57,21 @@ $(function() {
         }
     };
 
+    // 拆单: 按功能区分组查看定额明细, 行内修改数量
+    var btnSplit = {
+        name: "拆单",
+        clazz: "btn-warning",
+        handle: function(v) {
+
+            params.quotation.orderId = v.decoration.orderId;
+            params.quotation.quotation = v;
+
+            params.historyPage = api.index.normIndex.url;
+
+            com.switchPage(api.index.normSplit.url);
+        }
+    };
+
     // 变更记录按钮: 按报价单qid查定额变更记录时间线(工费/材料验证相关变更)
     var changeRecordBtn = {
         name: "变更记录",
@@ -77,6 +92,7 @@ $(function() {
         cardbtns.push(btnStatus);
     if (norm.pageConfig.pageBtn.contains("view"))
         cardbtns.push(btnView);
+    cardbtns.push(btnSplit);
     cardbtns.push(changeRecordBtn);
 
     var searcher = new Searcher();

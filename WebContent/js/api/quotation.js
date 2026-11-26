@@ -103,6 +103,9 @@ $.extend(api.index, {
     normPart: {
         url: "/views/quotation/normtionPart.html"
     },
+    normSplit: {
+        url: "/views/quotation/normtionSplit.html"
+    },
 
     qeasure4detailIndex: {
         url: "/views/quotation/qeasure4detail.html"
@@ -1955,6 +1958,28 @@ $.extend(api, {
         deleteNormtimeItem: {
             url: "deleteNormtimeItem.do",
             intercept: true
+        },
+
+        updateNormriceItemForNum: {
+            url: "updateNormriceItemForNum.do",
+            type: "update",
+            tranargs: {
+                args: ["normriceItem.num"]
+            }
+        },
+        updateNormoodItemForNum: {
+            url: "updateNormoodItemForNum.do",
+            type: "update",
+            tranargs: {
+                args: ["normoodItem.normnum", "normoodItem.storenum"]
+            }
+        },
+        updateNormtimeItemForNum: {
+            url: "updateNormtimeItemForNum.do",
+            type: "update",
+            tranargs: {
+                args: ["normtimeItem.num"]
+            }
         },
 
         queryQuotationNormood: {
