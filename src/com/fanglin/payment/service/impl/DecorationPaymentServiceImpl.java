@@ -43,6 +43,7 @@ import com.fanglin.decoration.vo.DecorationVO;
 import com.fanglin.dingding.service.DingTalkMessageService;
 import com.fanglin.information.po.MessageCueuingPO;
 import com.fanglin.information.po.MessagePO;
+import com.fanglin.information.po.MessageQueuingPO;
 import com.fanglin.information.service.MessageService;
 import com.fanglin.payment.dao.AdvancePaymentDao;
 import com.fanglin.payment.dao.DecorationPaymentDao;
@@ -573,16 +574,9 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 		if (decorationPO.getStatus() == DecorationPO.STATUS_INIT_INT) {
 			decorationPO.setStatus(DecorationPO.STATUS_DEPOSIT_INT);
 			decorationPO.setDepositTime(DateUtil.getDateToTimestamp(new Date()));
-			// 生成消息提示数据
-			messageQueuingDao.save(new MessageCueuingPO().init(orderId, "collectDecorationPayment", "{\"orderId\":\"" + orderId + "\",\"dpid\":" + decorationPaymentVO.getDpid() + ",\"userId\":\"" + userId + "\",\"event\":\"PAYMENT_COLLECTED\"" + (decorationPO.getBusitype() != null ? ",\"busiTypeName\":\"" + decorationPO.getBusitype().getName() + "\"" : "") + buildCcidArgs(orderId) + "}"));
 		}
 
 		String paymentType = decorationPaymentPO.getPaymentType();
-
-		// 设计费收款时生成消息提示数据
-		if (paymentType.equals(DecorationPaymentPO.PAYMENTTYPE_DESIGN_STR)) {
-			messageQueuingDao.save(new MessageCueuingPO().init(orderId, "collectDecorationPayment", "{\"orderId\":\"" + orderId + "\",\"dpid\":" + decorationPaymentVO.getDpid() + ",\"userId\":\"" + userId + "\",\"event\":\"PAYMENT_COLLECTED\"" + (decorationPO.getBusitype() != null ? ",\"busiTypeName\":\"" + decorationPO.getBusitype().getName() + "\"" : "") + buildCcidArgs(orderId) + "}"));
-		}
 
 		if (paymentType.contains(DecorationPaymentPO.PAYMENTTYPE_REFUND_STR) || paymentType.equals(DecorationPaymentPO.PAYMENTTYPE_REDUCE_STR)) {
 			decorationReceiptPO.setType(DecorationReceiptPO.RECEIPT_TYPE_REFUND_INT);
@@ -702,8 +696,10 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 
 		decorationService.sendMessage(decorationPaymentPO.getDecoration().getOrderId(), "装修单", String.format("装修交款金额%.3f元", Arith.div(decorationPaymentPO.getReferMoney(), 1000.0)), String.format("pages/payment/receipt/receipt?orderId=%s&rid=%s&paymentType=1", decorationPaymentPO.getDecoration().getOrderId(), decorationReceiptPO.getDrId()));
 
-		// 生成消息队列数据
-		// messageQueuingDao.save(new MessageQueuingPO().init(orderId, "collectDecorationPayment", "{\"orderId\":\"" + orderId + "\",\"dpid\":" + decorationPaymentVO.getDpid() + ",\"userId\":\"" + userId + "\",\"event\":\"CUSTOMER_STATUS_CHANGED\"" + (decorationPO.getBusitype() != null ? ",\"busiTypeName\":\"" + decorationPO.getBusitype().getName() + "\"" : "") + "}"));
+		// 生成消息队列数据: 每笔收款双写(Queuing 内部队列 + Cueing 外部业务通知), event=PAYMENT_COLLECTED
+		String paymentArgs = "{\"orderId\":\"" + orderId + "\",\"dpid\":" + decorationPaymentVO.getDpid() + ",\"userId\":\"" + userId + "\",\"event\":\"PAYMENT_COLLECTED\",\"paymentType\":\"" + paymentType + "\",\"referMoney\":" + decorationPaymentPO.getReferMoney() + (decorationPO.getBusitype() != null ? ",\"busiTypeName\":\"" + decorationPO.getBusitype().getName() + "\"" : "") + buildCcidArgs(orderId) + "}";
+		messageQueuingDao.save(new MessageQueuingPO().init(orderId, "collectDecorationPayment", paymentArgs));
+		messageQueuingDao.save(new MessageCueuingPO().init(orderId, "collectDecorationPayment", paymentArgs));
 
 		// 收款成功即自动确认(收款+确认同事务原子完成; confirmDecorationPayment 仅已收态执行, 其余静默跳过)
 		confirmDecorationPayment(Arrays.asList(decorationPaymentVO.getDpid()), userId);

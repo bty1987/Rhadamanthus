@@ -74,7 +74,7 @@
 | 归属审批通过 | `TEAM_DESIGNER_CHANGED`/`TEAM_SALESMAN_CHANGED` | `TEAM_DESIGNER_CHANGED`/`TEAM_SALESMAN_CHANGED` |
 | 转装修单 | `TRAN_DECORATION_ORDER_CHANGED` | `TRAN_DECORATION` |
 | 验收通过 | `PROJECT_STATUS_CHANGED` | `PROJECT_STATUS_CHANGED` |
-| 装饰收款 | — | `PAYMENT_COLLECTED`（仅Cueing） |
+| 装饰收款 | `PAYMENT_COLLECTED` | `PAYMENT_COLLECTED` |
 | 通用收款 | — | `PAYMENT_COLLECTED`（仅Cueing） |
 
 ---
@@ -164,11 +164,11 @@ public MessageCueuingPO init(String orderId, String operation, String args) { ..
 
 | 序号 | 触发场景 | operation | event | PO类型 | 代码位置 |
 |:----:|---------|-----------|-------|--------|---------|
-| 1 | 装饰收款 | `collectDecorationPayment` | `PAYMENT_COLLECTED` | Cueing | `DecorationPaymentServiceImpl:563/570` |
-| 2 | 通用收款 | `collectPayment` | `PAYMENT_COLLECTED` | Cueing | `PaymentServiceImpl:285` |
+| 1 | 装饰收款(每笔) | `collectDecorationPayment` | `PAYMENT_COLLECTED` | **双写** | `DecorationPaymentServiceImpl:700/701` |
+| 2 | 通用收款(首笔) | `collectPayment` | `PAYMENT_COLLECTED` | Cueing | `PaymentServiceImpl:305` |
 
-> **注意**: 原有的 `CUSTOMER_STATUS_CHANGED` 事件已被注释掉（见 `DecorationPaymentServiceImpl:692`、`PaymentServiceImpl:324`）。
-> 📌 v2.2 行号修正：DecorationPayment 545/552→563/570，注释行 674→692；Payment 269→285，注释行 308→324。
+> **注意**: 原有的 `CUSTOMER_STATUS_CHANGED` 事件已被注释掉（见 `PaymentServiceImpl:324`）。
+> 📌 v2.4 变更：`collectDecorationPayment` 由"仅 Cueing + 条件写入（首收款/设计费两场景，原 :577/:584）"改为**每笔收款无条件双写**（Queuing + Cueing），args 新增 `paymentType`（款项类型）与 `referMoney`（应金，厘）字段；原两处条件写入已删除（首收款+设计费场景曾重复写两条的问题一并消除）。写入点移至收款主流程完成之后（收款成功即双写）。
 
 ### 七、客户机会模块 (5个场景)
 
@@ -379,7 +379,7 @@ private String buildLeadnoArgs(CustomerChancePO customerChancePO) {
 | `TEAM_SALESMAN_CHANGED` | 销售变更 | Queuing/Cueing | 订单归属、归属审批 |
 | `TEAM_SUPERVISOR_CHANGED` | 监理变更 | Queuing | 施工管理、放线 🆕 |
 | `SUPERVISOR_PRE_ASSIGNED` | 监理预派 | Queuing | 放线 🆕 |
-| `PAYMENT_COLLECTED` | 收款 | Cueing | 收款模块 |
+| `PAYMENT_COLLECTED` | 收款 | Queuing/Cueing | 收款模块 |
 | `TRAN_DECORATION_ORDER_CHANGED` | 转装修单(数据同步) | Queuing | 客户机会 |
 | `TRAN_DECORATION` | 转装修单(通知) | Cueing | 客户机会 🆕 |
 | `ESTATE_CREATED` | 楼盘创建 | Queuing | 楼盘管理 🆕 |
@@ -610,7 +610,7 @@ args JSON 中的 `customerNo` 字段映射自数据库列 `customerchance.custom
 
 ### 3. 已注释的消息
 
-部分原有的 `CUSTOMER_STATUS_CHANGED` 消息已被注释掉（见 `DecorationPaymentServiceImpl:692`、`PaymentServiceImpl:324`），收款场景改为仅写 `PAYMENT_COLLECTED`（Cueing）。
+部分原有的 `CUSTOMER_STATUS_CHANGED` 消息已被注释掉（见 `PaymentServiceImpl:324`），收款场景改为写 `PAYMENT_COLLECTED`。`collectDecorationPayment` 自 v2.4 起为**每笔收款双写**（Queuing + Cueing），args 含 `paymentType`/`referMoney`；`collectPayment` 仍为"首笔收款"时写 Cueing。
 
 ### 4. 异步处理
 
@@ -619,6 +619,15 @@ args JSON 中的 `customerNo` 字段映射自数据库列 `customerchance.custom
 ---
 
 ## 变更记录
+
+### v2.4 (2026-11-26)
+
+**收款场景变更（`collectDecorationPayment`）：**
+- 由"仅 Cueing + 条件写入（仅首收款 `STATUS_INIT→DEPOSIT` 或设计费收款两场景）"改为**每笔收款无条件双写**（Queuing + Cueing，event 均为 `PAYMENT_COLLECTED`）。
+- args 新增字段：`paymentType`（款项类型）、`referMoney`（应金，厘）。其余字段（orderId/dpid/userId/busiTypeName/ccidArgs）不变。
+- 原两处条件写入删除（首收款且为设计费时曾重复写两条的问题一并消除）。
+- 写入点移至收款主流程完成之后：:700(paymentArgs)/:701(Queuing)/:702(Cueing)。
+- 消费用途定位：通知外部业务（Cueing）+ 内部队列留存（Queuing）。`collectPayment`（通用收款）未动。
 
 ### v2.3 (2026-07-03)
 
