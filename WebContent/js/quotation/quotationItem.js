@@ -12,6 +12,7 @@ $(function() {
             selectItemModal: com.focusPage("#selectItemModal"),
             updateModal: com.focusPage("#updateModal"),
             updateCostModal: com.focusPage("#updateCostModal"),
+            updateQfidModal: com.focusPage("#updateQfidModal"),
         },
 
         items: {
@@ -35,6 +36,8 @@ $(function() {
             achePrice: com.focusPage("#achePrice"),
             achePrices: com.focusPage("#achePrices"),
             formula: com.focusPage("#formula"),
+            qfidItemName: com.focusPage("#qfidItemName"),
+            qfidItemOld: com.focusPage("#qfidItemOld"),
         },
 
         editFlag: false,
@@ -42,6 +45,7 @@ $(function() {
 
         args: {
             qiid: null,
+            qfid: null, // 换绑规格: 目标qfid(typeahead选中带出)
         },
 
         qcid: null,
@@ -98,6 +102,14 @@ $(function() {
 
         quotationItem.items.version.bindData(a.quotationVersions, "no", "name");
     });
+
+    // 换绑规格: 名称选择带出目标qfid(与编辑弹窗同源接口, 独立实例)
+    com.initTypeahead('qfidItemName', api.quotation.queryQuotationFormat, "quotationFormat.pinyin", {}, "quotationFormats", "qfid", "name", function(i, key, value) {
+
+        quotationItem.args.qfid = key;
+
+        return value;
+    }, null, false);
 
     com.initTypeahead('name', api.quotation.queryQuotationFormat, "quotationFormat.pinyin", {}, "quotationFormats", "qfid", "name", function(i, key, value) {
 
@@ -166,6 +178,13 @@ $(function() {
         quotationItem.qfid = null;
     });
 
+    quotationItem.modals.updateQfidModal.on('hide.bs.modal', function() {
+
+        com.clearValidator();
+        com.cleanItems({ qfidItemName: quotationItem.items.qfidItemName });
+        quotationItem.args.qfid = null;
+    });
+
     quotationItem.saveBtn.bindClick(saveData);
 
     /**
@@ -208,6 +227,7 @@ $(function() {
             var $btnPrice = $('<a></a>').addClass('btn btn-minier btn-purple').html('价格');
             var $btnFormula = $('<a></a>').addClass('btn btn-minier btn-pink').html('公式');
             var $btnCost = $('<a></a>').addClass('btn btn-minier btn-purple').html('成本');
+            var $btnUpdateQfid = $('<a></a>').addClass('btn btn-minier btn-yellow').html('换绑规格');
 
             // 启用禁用
             var $btnStatus = $('<div></div>').addClass('pull-right');
@@ -262,9 +282,9 @@ $(function() {
 
                     // 对于定额类型(type==3)的报价项，显示定额工时按钮
                     if (v.type == 3) {
-                        $divBtnWrap.append($btnNormtime).append($btnRtem).append($btnPrice).append($btnFormula).append($btnEdit).append($btnDiscount).append($btnImportant).append($btnStatus).appendTo($h3);
+                        $divBtnWrap.append($btnNormtime).append($btnRtem).append($btnPrice).append($btnFormula).append($btnUpdateQfid).append($btnEdit).append($btnDiscount).append($btnImportant).append($btnStatus).appendTo($h3);
                     } else {
-                        $divBtnWrap.append($btnRtem).append($btnPrice).append($btnFormula).append($btnEdit).append($btnDiscount).append($btnImportant).append($btnStatus).appendTo($h3);
+                        $divBtnWrap.append($btnRtem).append($btnPrice).append($btnFormula).append($btnUpdateQfid).append($btnEdit).append($btnDiscount).append($btnImportant).append($btnStatus).appendTo($h3);
                     }
             }
 
@@ -372,6 +392,17 @@ $(function() {
                 quotationItem.args.qiid = v.qiid;
 
                 updateCost(v);
+            });
+
+            // 换绑规格: 受控通道(后端记normchanerecord type=8), 只换关联字段不级联定额
+            $btnUpdateQfid.click(function() {
+
+                quotationItem.args.qiid = v.qiid;
+                quotationItem.args.qfid = null;
+
+                quotationItem.items.qfidItemOld.text(v.qfid > 0 ? "qfid=" + v.qfid : "未关联");
+
+                quotationItem.modals.updateQfidModal.modal("show");
             });
 
             !v.status && $statusSwitch.prop("checked", true);
@@ -906,5 +937,29 @@ $(function() {
             quotationItem.modals.updateCostModal.modal("hide");
         });
 
+    });
+
+    // 换绑规格保存: 目标qfid必选, 同规格提交由后端幂等返回
+    com.focusPage("#btnUpdateQfid").on("click", function() {
+
+        if (com.validate("updateQfidModal"))
+            return false;
+
+        if (!quotationItem.args.qfid) {
+            com.showAlert(com.warning, "请通过名称选择关联规格");
+            return false;
+        }
+
+        com.post(api.quotation.updateQuotationItemForQfid, {
+            "quotationItem.qiid": quotationItem.args.qiid,
+            "quotationItem.qfid": quotationItem.args.qfid
+        }, function(res) {
+
+            com.showAlert(com.info, "操作成功");
+
+            quotationItemSeacher.doSearch();
+
+            quotationItem.modals.updateQfidModal.modal("hide");
+        });
     });
 });

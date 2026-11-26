@@ -493,6 +493,10 @@ $.extend(api, {
                 args: ["quotationItem.cost", "quotationItem.achePrice"]
             }
         },
+        updateQuotationItemForQfid: {
+            url: "updateQuotationItemForQfid.do",
+            type: "update"
+        },
 
         queryQuotationRtemByQuotationId: {
             url: "queryQuotationRtemByQuotationId.do",
