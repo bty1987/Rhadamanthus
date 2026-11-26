@@ -115,7 +115,16 @@ public class QuotationItemDaoImpl extends DaoImpl<QuotationItemPO> implements Qu
 				query.add(query.getCriterion("quotationCtem.qcid", Long.valueOf(data), op));
 			} else if ("company".equals(field)) {
 				query.alias("quotationVersion", "quotationVersion");
-				query.add(query.getCriterion("quotationVersion.company", Integer.parseInt(data), op));
+				// in=多公司范围("N,0"=本司+集团), 其余op走通用eq等
+				if ("in".equals(op)) {
+					List<Integer> companys = new ArrayList<Integer>();
+					for (String part : data.split(",")) {
+						companys.add(Integer.parseInt(part.trim()));
+					}
+					query.add(Restrictions.in("quotationVersion.company", companys));
+				} else {
+					query.add(query.getCriterion("quotationVersion.company", Integer.parseInt(data), op));
+				}
 			} else if ("type".equals(field)) {
 				query.add(query.getCriterion("type", Short.parseShort(data), op));
 			}

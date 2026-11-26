@@ -119,7 +119,8 @@ public class QuotationItemServiceImpl implements QuotationItemService {
 	@Override
 	public void pageQuotationItem(Paging paging, List<Filter> filters, int company) {
 
-		filters.add(new Filter(QuotationItemPO.COLUMN_COMPANY_STR, String.valueOf(company), "eq"));
+		// 数据范围=本司+集团(company=0版本下的报价项, 共享项目不特殊处理, 全调用点统一混排可见)
+		filters.add(new Filter(QuotationItemPO.COLUMN_COMPANY_STR, company + ",0", "in"));
 
 		List<QuotationItemPO> quotationItemPOs = quotationItemDao.pageQuotationItem(paging, filters);
 		List<QuotationItemVO> quotationItemVOs = new ArrayList<QuotationItemVO>();
