@@ -5,7 +5,8 @@
 --   按 normtion.index 路由(镜像 qfai 的 qfa.index→quotationfunctionareaitem{index} 机制):
 --   ① normtion 加列 `index`(路由键, 存量默认 0=原表, 零迁移)
 --   ② systemConfig 新增 normtionIndex=0(当前批次号, 运维切表: 先建表后改值)
---   ③ 建分表 normriceitem1 / normooditem1(结构+索引同款, 自增错开防视觉混淆)
+--   ③ 建分表 normriceitem1 / normooditem1(结构+索引同款, 自增各从默认 1 起 ——
+--     各分表主键独立自增是 qfai 模式既定设计, 唯一性靠引用伴路由键(index+主键)保证)
 -- 配套代码: quotation jar(PO1 实体+DAO 路由化+make/新增链写 index+双键化) + seiya jar
 --   (三方补数写入路由化) —— 41 号(RANGE 分区)方案已被本方案取代作废。
 -- 路由语义: normtion.index=0 → 原表; =1 → *item1; 切表动作=建 normxxxitem2 + normtionIndex 改 2。
@@ -37,12 +38,10 @@ INSERT INTO communion.systemconfig (`group`, `key`, `value`, createTime, `commen
 SELECT 'quotation', 'normtionIndex', '0', NOW(), '定额明细分表路由批次(normtion.index): 0=原表, N=normxxxitem{N}', 0
 FROM DUAL WHERE NOT EXISTS (SELECT 1 FROM communion.systemconfig WHERE `key` = 'normtionIndex' AND company = 0);
 
--- ---------- 段3: 建分表(结构+索引同款; 自增错开 1 亿防主键视觉混淆) ----------
+-- ---------- 段3: 建分表(结构+索引同款; 自增默认 1 起) ----------
 CREATE TABLE quotation.normriceitem1 LIKE quotation.normriceitem;
-ALTER TABLE quotation.normriceitem1 AUTO_INCREMENT = 100000000;
 
 CREATE TABLE quotation.normooditem1 LIKE quotation.normooditem;
-ALTER TABLE quotation.normooditem1 AUTO_INCREMENT = 100000000;
 
 -- ---------- 段4: 验证 ----------
 -- ① normtion 列与默认值
@@ -56,3 +55,4 @@ SHOW INDEX FROM quotation.normooditem1;
 -- INSERT INTO quotation.normriceitem1 (qid, sid, type, normtype, atttype, status) VALUES (999999001, 999999001, 3, 1, 0, 0);
 -- SELECT npiid, qid, type FROM quotation.normriceitem1 WHERE qid = 999999001;
 -- DELETE FROM quotation.normriceitem1 WHERE qid = 999999001;
+-- 注意: 各分表主键独立自增(npiid/ngiid 跨表可重复), 排障定位行需携带 qid 或分表归属
