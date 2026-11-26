@@ -5,32 +5,39 @@ import java.util.List;
 import com.fanglin.core.dao.Dao;
 import com.fanglin.quotation.po.NormoodItemPO;
 
+/**
+ * 定额材料明细 DAO。
+ * 🔴 分表路由: normtion.index 决定物理表(normooditem / normooditem{index}), 全方法首参 index
+ *   由 Service 层按 qid 解析, 传 0 即原表。漏传 index = 查错表。
+ */
 public interface NormoodItemDao extends Dao<NormoodItemPO> {
 
-	public List<NormoodItemPO> queryNormoodItem(long qid);
+	public List<NormoodItemPO> queryNormoodItem(int index, long qid);
 
-	public NormoodItemPO queryNormoodItem(long sid, long quoteId, long ngid, short type);
+	public NormoodItemPO queryNormoodItem(int index, long sid, long quoteId, long ngid, short type);
 
-	public long amountNormoodItem(long qid, long nid);
+	public NormoodItemPO getNormoodItem(int index, long ngiid);
 
-	public int countNormoodItem(long sid, short type);
+	public long amountNormoodItem(int index, long qid, long nid);
 
-	public int countNormoodItem(long sid, long quoteld, short type);
+	public int countNormoodItem(int index, long qid, long sid, short type);
 
-	public int disableNormoodItem(long qid);
+	public int countNormoodItem(int index, long qid, long sid, long quoteld, short type);
 
-	public int disableNormoodItem(long qid, short type);
+	public int disableNormoodItem(int index, long qid);
 
-	public int disableNormoodItem(long qid, long sid, short type);
+	public int disableNormoodItem(int index, long qid, short type);
 
-	public int disableNormoodItem(long qid, long sid, long quoteId, short type);
+	public int disableNormoodItem(int index, long qid, long sid, short type);
 
-	public int deleteNormoodItem(long qid, short type);
+	public int disableNormoodItem(int index, long qid, long sid, long quoteId, short type);
 
-	public int deleteNormoodItem(long qid, short type, short status);
+	public int deleteNormoodItem(int index, long qid, short type);
 
-	public int deleteNormoodItem(long qid, long sid, short type);
+	public int deleteNormoodItem(int index, long qid, short type, short status);
 
-	public int deleteNormoodItem(long qid, long sid, long quoteId, short type);
+	public int deleteNormoodItem(int index, long qid, long sid, short type);
+
+	public int deleteNormoodItem(int index, long qid, long sid, long quoteId, short type);
 
 }

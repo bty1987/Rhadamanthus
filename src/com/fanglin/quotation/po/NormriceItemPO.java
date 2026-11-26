@@ -92,6 +92,33 @@ public class NormriceItemPO implements Serializable {
 		this.constructionNode = constructionNode;
 	}
 
+	// 定额明细分表路由(normtion.index 决定): 0=原表, >0=normriceitem{index} 分表
+	public static String tableName(int index) {
+		return index == 0 ? "normriceitem" : "normriceitem" + index;
+	}
+
+	public static Class<?> factoryToClazz(int index) {
+		if (index == 0) {
+			return NormriceItemPO.class;
+		}
+		try {
+			return Class.forName("com.fanglin.quotation.po.NormriceItemPO" + index);
+		} catch (Exception e) {
+			throw new RuntimeException("定额明细分表实体不存在: normriceitem" + index, e);
+		}
+	}
+
+	public static NormriceItemPO factoryToInstance(int index) {
+		if (index == 0) {
+			return new NormriceItemPO();
+		}
+		try {
+			return (NormriceItemPO) Class.forName("com.fanglin.quotation.po.NormriceItemPO" + index).newInstance();
+		} catch (Exception e) {
+			throw new RuntimeException("定额明细分表实体不存在: normriceitem" + index, e);
+		}
+	}
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "npiid")

@@ -126,11 +126,13 @@ public class A20261117ServiceImpl implements A20261117Service {
 	@Transactional(rollbackFor = Exception.class)
 	public int syncNormriceItem(String orderId, String userId) throws FLException {
 
-		QuotationPO quotationPO = prepareForSync(orderId, userId);
+		NormtionPO normtionPO = prepareForSync(orderId, userId);
 
-		if (quotationPO == null) {
+		if (normtionPO == null) {
 			return 0;
 		}
+
+		int index = normtionPO.getIndex();
 
 		JSONArray laborFees = queryNormSync(orderId, PATH_LABOR_FEE);
 
@@ -142,7 +144,7 @@ public class A20261117ServiceImpl implements A20261117Service {
 		// 占用检查(仅补缺): 该单 type=3 现存 INIT/CONFIRMED 行同 cnid 跳过
 		Set<Long> occupiedCnids = new HashSet<Long>();
 
-		for (NormriceItemPO itemPO : normriceItemDao.queryNormriceItemByType(quotationPO.getQid(), NormriceItemPO.TYPE_QUOTA_INT)) {
+		for (NormriceItemPO itemPO : normriceItemDao.queryNormriceItemByType(index, normtionPO.getQid(), NormriceItemPO.TYPE_QUOTA_INT)) {
 			if (itemPO.getConstructionNode() != null) {
 				occupiedCnids.add(itemPO.getConstructionNode().getCnid());
 			}
@@ -160,9 +162,9 @@ public class A20261117ServiceImpl implements A20261117Service {
 
 			ConstructionNodePO nodePO = nodeByCnid.get(entry.getKey());
 
-			NormriceItemPO normriceItemPO = new NormriceItemPO();
-			normriceItemPO.setQid(quotationPO.getQid());
-			normriceItemPO.setSid(quotationPO.getQid());
+			NormriceItemPO normriceItemPO = NormriceItemPO.factoryToInstance(index);
+			normriceItemPO.setQid(normtionPO.getQid());
+			normriceItemPO.setSid(normtionPO.getQid());
 			normriceItemPO.setType(NormriceItemPO.TYPE_QUOTA_INT);
 			normriceItemPO.setNormtype(NormriceItemPO.NORMTYPE_ADD_INT); // 附加确认流: confirmNormriceItem 确认后计入工资核算
 			normriceItemPO.setAtttype(NormriceItemPO.ATTTYPE_COLLECTION_INT);
@@ -186,11 +188,13 @@ public class A20261117ServiceImpl implements A20261117Service {
 	@Transactional(rollbackFor = Exception.class)
 	public int syncNormoodItem(String orderId, String userId) throws FLException {
 
-		QuotationPO quotationPO = prepareForSync(orderId, userId);
+		NormtionPO normtionPO = prepareForSync(orderId, userId);
 
-		if (quotationPO == null) {
+		if (normtionPO == null) {
 			return 0;
 		}
+
+		int index = normtionPO.getIndex();
 
 		JSONArray auxiliaries = queryNormSync(orderId, PATH_AUXILIARY);
 
@@ -202,7 +206,7 @@ public class A20261117ServiceImpl implements A20261117Service {
 		// 占用检查(仅补缺): 该单现存 INIT 行同 nid 跳过
 		Set<Long> occupiedNids = new HashSet<Long>();
 
-		for (NormoodItemPO itemPO : normoodItemDao.queryNormoodItem(quotationPO.getQid())) {
+		for (NormoodItemPO itemPO : normoodItemDao.queryNormoodItem(index, normtionPO.getQid())) {
 			if (itemPO.getNoods() != null) {
 				occupiedNids.add(itemPO.getNoods().getNid());
 			}
@@ -218,9 +222,9 @@ public class A20261117ServiceImpl implements A20261117Service {
 				continue;
 			}
 
-			NormoodItemPO normoodItemPO = new NormoodItemPO();
-			normoodItemPO.setQid(quotationPO.getQid());
-			normoodItemPO.setSid(quotationPO.getQid());
+			NormoodItemPO normoodItemPO = NormoodItemPO.factoryToInstance(index);
+			normoodItemPO.setQid(normtionPO.getQid());
+			normoodItemPO.setSid(normtionPO.getQid());
 			normoodItemPO.setType(NormoodItemPO.TYPE_QUOTA_INT);
 			normoodItemPO.setNormtype(NormoodItemPO.NORMTYPE_MATERIAL_INT);
 			normoodItemPO.setAtttype(NormoodItemPO.ATTTYPE_COLLECTION_INT);
@@ -243,7 +247,7 @@ public class A20261117ServiceImpl implements A20261117Service {
 	 * 
 	 * @return 报价单; null = 公司未启用三方补数(走现有逻辑)
 	 */
-	private QuotationPO prepareForSync(String orderId, String userId) throws FLException {
+	private NormtionPO prepareForSync(String orderId, String userId) throws FLException {
 
 		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(orderId);
 
@@ -272,10 +276,13 @@ public class A20261117ServiceImpl implements A20261117Service {
 			normtionPO.setOrderId(orderId);
 			normtionPO.setCreater(userDao.queryUserByUserId(userId));
 			normtionPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
+			// 定额明细分表路由批次: 与 ERP 侧 makeNormtion 首建同款分配(normtionIndex 配置)
+			SystemConfigPO indexConfig = systemConfigDao.querySystemConfig("normtionIndex");
+			normtionPO.setIndex(indexConfig == null ? 0 : Integer.valueOf(indexConfig.getValue()));
 			normtionDao.save(normtionPO);
 		}
 
-		return quotationPO;
+		return normtionPO;
 	}
 
 	/**

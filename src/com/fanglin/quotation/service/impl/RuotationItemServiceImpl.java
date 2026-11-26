@@ -23,6 +23,8 @@ import com.fanglin.quotation.dao.AddReduceDao;
 import com.fanglin.quotation.dao.AddReduceItemDao;
 import com.fanglin.quotation.dao.ExtensionDao;
 import com.fanglin.quotation.dao.ExtensionItemDao;
+import com.fanglin.quotation.dao.NormtionDao;
+import com.fanglin.quotation.po.NormtionPO;
 import com.fanglin.quotation.dao.NormriceItemDao;
 import com.fanglin.quotation.dao.QuotationDao;
 import com.fanglin.quotation.dao.QuotationFunctionAreaDao;
@@ -63,6 +65,9 @@ public class RuotationItemServiceImpl implements RuotationItemService{
 
 	@Autowired
 	public QuotationDao quotationDao;
+
+	@Autowired
+	public NormtionDao normtionDao;
 
 	@Autowired
 	public DecorationDao decorationDao;
@@ -128,7 +133,7 @@ public class RuotationItemServiceImpl implements RuotationItemService{
 
 		if (quotationPO != null) {
 
-			for (NormriceItemPO normriceItemPO : normriceItemDao.queryNormriceItem(quotationPO.getQid())) {
+			for (NormriceItemPO normriceItemPO : normriceItemDao.queryNormriceItem(resolveIndex(quotationPO.getQid()), quotationPO.getQid())) {
 
 				if (normriceItemPO.getConstructionNode() == null || normriceItemPO.getQiid() == 0) continue;
 
@@ -390,4 +395,14 @@ public class RuotationItemServiceImpl implements RuotationItemService{
 		return 0;
 	}
 
+
+	/**
+	 * 分表路由解析: qid → normtion.index。normtion 不存在按 0(原表)处理。
+	 */
+	private int resolveIndex(long qid) {
+
+		NormtionPO normtionPO = normtionDao.queryNormtion(qid);
+
+		return normtionPO == null ? 0 : normtionPO.getIndex();
+	}
 }

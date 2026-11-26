@@ -20,128 +20,136 @@ public class NormriceItemDaoImpl extends DaoImpl<NormriceItemPO> implements Norm
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<NormriceItemPO> queryNormriceItem(long qid) {
-		return createCriteria(NormriceItemPO.class).add(Restrictions.eq("qid", qid)).add(Restrictions.eq("status", NormriceItemPO.STATUS_INIT_INT)).list();
+	public List<NormriceItemPO> queryNormriceItem(int index, long qid) {
+		return session().createCriteria(NormriceItemPO.factoryToClazz(index)).add(Restrictions.eq("qid", qid)).add(Restrictions.eq("status", NormriceItemPO.STATUS_INIT_INT)).list();
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<NormriceItemPO> queryNormriceItemByType(long qid, short type) {
-		return createCriteria(NormriceItemPO.class).add(Restrictions.eq("qid", qid)).add(Restrictions.eq("type", type)).add(Restrictions.in("status", new Short[] { NormriceItemPO.STATUS_INIT_INT, NormriceItemPO.STATUS_CONFIRMED_INT })).list();
+	public List<NormriceItemPO> queryNormriceItemByType(int index, long qid, short type) {
+		return session().createCriteria(NormriceItemPO.factoryToClazz(index)).add(Restrictions.eq("qid", qid)).add(Restrictions.eq("type", type)).add(Restrictions.in("status", new Short[] { NormriceItemPO.STATUS_INIT_INT, NormriceItemPO.STATUS_CONFIRMED_INT })).list();
 	}
 
 	@Override
-	public NormriceItemPO queryNormriceItem(long sid, long quoteId, long npid, short type) {
-		return (NormriceItemPO) session().createCriteria(NormriceItemPO.class).add(Restrictions.eq("sid", sid)).add(Restrictions.eq("quoteld", quoteId)).add(Restrictions.eq("npid", npid)).add(Restrictions.eq("type", type)).setMaxResults(1).uniqueResult();
+	public NormriceItemPO queryNormriceItem(int index, long sid, long quoteId, long npid, short type) {
+		return (NormriceItemPO) session().createCriteria(NormriceItemPO.factoryToClazz(index)).add(Restrictions.eq("sid", sid)).add(Restrictions.eq("quoteld", quoteId)).add(Restrictions.eq("npid", npid)).add(Restrictions.eq("type", type)).setMaxResults(1).uniqueResult();
 	}
 
 	@Override
-	public int amountNormriceItem(long qid, long cnid) {
+	public NormriceItemPO getNormriceItem(int index, long npiid) {
+		return (NormriceItemPO) session().createCriteria(NormriceItemPO.factoryToClazz(index)).add(Restrictions.eq("npiid", npiid)).setMaxResults(1).uniqueResult();
+	}
 
-		String sql = "select sum(if(atttype = 0, salary, -salary)*if(trannum = 0, 1, num/1000*trannum/1000)) from quotation.normriceitem where qid =:qid and cnid = :cnid and status = :status";
+	@Override
+	public int amountNormriceItem(int index, long qid, long cnid) {
+
+		String sql = "select sum(if(atttype = 0, salary, -salary)*if(trannum = 0, 1, num/1000*trannum/1000)) from quotation.%s where qid =:qid and cnid = :cnid and status = :status";
+		sql = String.format(sql, NormriceItemPO.tableName(index));
 		BigDecimal amount = (BigDecimal) session().createSQLQuery(sql).setLong("qid", qid).setLong("cnid", cnid).setShort("status", NormriceItemPO.STATUS_INIT_INT).uniqueResult();
 
 		return amount == null ? 0 : amount.intValue();
 	}
 
 	@Override
-	public int amountNormriceItemForSalary(long qid, long cnid) {
+	public int amountNormriceItemForSalary(int index, long qid, long cnid) {
 
-		String sql = "select sum(if(atttype = 0, salary, -salary)*if(trannum = 0, 1, num/1000*trannum/1000)) from quotation.normriceitem where qid = :qid and cnid = :cnid and ((status = :statusInit and type != :typeQuota) or (status = :statusConfirmed and type = :typeQuota and normtype = :normtypeAdd))";
+		String sql = "select sum(if(atttype = 0, salary, -salary)*if(trannum = 0, 1, num/1000*trannum/1000)) from quotation.%s where qid = :qid and cnid = :cnid and ((status = :statusInit and type != :typeQuota) or (status = :statusConfirmed and type = :typeQuota and normtype = :normtypeAdd))";
+		sql = String.format(sql, NormriceItemPO.tableName(index));
 		BigDecimal amount = (BigDecimal) session().createSQLQuery(sql).setLong("qid", qid).setLong("cnid", cnid).setShort("statusInit", NormriceItemPO.STATUS_INIT_INT).setShort("statusConfirmed", NormriceItemPO.STATUS_CONFIRMED_INT).setShort("typeQuota", NormriceItemPO.TYPE_QUOTA_INT).setShort("normtypeAdd", NormriceItemPO.NORMTYPE_ADD_INT).uniqueResult();
 
 		return amount == null ? 0 : amount.intValue();
 	}
 
 	@Override
-	public int countNormoodItem(long qid, long cnid) {
+	public int countNormoodItem(int index, long qid, long cnid) {
 
 		// 仅统计 type=QUOTA(附加项) 且 status=INIT(待确认) 的记录
 		// 普通报价项(type=OFFER/EXPAND/ADDCUT) 天然 status=0, 不得计入附加项待审判定, 否则会导致
 		// constructionschedule.additemStatus 确认/驳回后无法重置回 0
-		String sql = "select count(*) from quotation.normriceitem where qid = :qid and cnid = :cnid and type = :type and status = :status";
+		String sql = "select count(*) from quotation.%s where qid = :qid and cnid = :cnid and type = :type and status = :status";
+		sql = String.format(sql, NormriceItemPO.tableName(index));
 		BigInteger count = (BigInteger) session().createSQLQuery(sql).setLong("qid", qid).setLong("cnid", cnid).setShort("type", NormriceItemPO.TYPE_QUOTA_INT).setShort("status", NormriceItemPO.STATUS_INIT_INT).uniqueResult();
 
 		return count == null ? 0 : count.intValue();
 	}
 
 	@Override
-	public int disabledNormriceItem(long qid) {
+	public int disabledNormriceItem(int index, long qid) {
 
-		String sql = "update quotation.normriceitem set status = :status where qid = :qid and type != :type";
+		String sql = "update quotation." + NormriceItemPO.tableName(index) + " set status = :status where qid = :qid and type != :type";
 		session().createSQLQuery(sql).setLong("qid", qid).setShort("status", NormriceItemPO.STATUS_DISABLED_INT).setShort("type", NormriceItemPO.TYPE_QUOTA_INT).executeUpdate();
 
 		return 0;
 	}
 
 	@Override
-	public int disabledNormriceItem(long qid, short type) {
+	public int disabledNormriceItem(int index, long qid, short type) {
 
-		String sql = "update quotation.normriceitem set status = :status where qid = :qid and type = :type";
+		String sql = "update quotation." + NormriceItemPO.tableName(index) + " set status = :status where qid = :qid and type = :type";
 		session().createSQLQuery(sql).setLong("qid", qid).setShort("type", type).setShort("status", NormriceItemPO.STATUS_DISABLED_INT).executeUpdate();
 
 		return 0;
 	}
 
 	@Override
-	public int disabledNormriceItem(long qid, long sid, short type) {
+	public int disabledNormriceItem(int index, long qid, long sid, short type) {
 
-		String sql = "update quotation.normriceitem set status = :status where qid = :qid and type = :type and sid = :sid";
-		session().createSQLQuery(sql).setLong("qid", qid).setShort("type", type).setLong("sid", sid).setLong("sid", sid).setShort("status", NormriceItemPO.STATUS_DISABLED_INT).executeUpdate();
+		String sql = "update quotation." + NormriceItemPO.tableName(index) + " set status = :status where qid = :qid and type = :type and sid = :sid";
+		session().createSQLQuery(sql).setLong("qid", qid).setShort("type", type).setLong("sid", sid).setShort("status", NormriceItemPO.STATUS_DISABLED_INT).executeUpdate();
 
 		return 0;
 	}
 
 	@Override
-	public int disabledNormriceItem(long qid, long sid, long quoteId, short type) {
+	public int disabledNormriceItem(int index, long qid, long sid, long quoteId, short type) {
 
-		String sql = "update quotation.normriceitem set status = :status where qid = :qid and type = :type and sid = :sid and quoteId = :quoteId";
+		String sql = "update quotation." + NormriceItemPO.tableName(index) + " set status = :status where qid = :qid and type = :type and sid = :sid and quoteId = :quoteId";
 		session().createSQLQuery(sql).setLong("qid", qid).setShort("type", type).setLong("sid", sid).setLong("quoteId", quoteId).setShort("status", NormriceItemPO.STATUS_DISABLED_INT).executeUpdate();
 
 		return 0;
 	}
 
 	@Override
-	public int deleteNormriceItem(long qid, short type) {
+	public int deleteNormriceItem(int index, long qid, short type) {
 
-		String sql = "delete from quotation.normriceitem where qid = :qid and type = :type";
+		String sql = "delete from quotation." + NormriceItemPO.tableName(index) + " where qid = :qid and type = :type";
 		session().createSQLQuery(sql).setLong("qid", qid).setShort("type", type).executeUpdate();
 
 		return 0;
 	}
 
 	@Override
-	public int deleteNormriceItem(long qid, short type, short status) {
+	public int deleteNormriceItem(int index, long qid, short type, short status) {
 
-		String sql = "delete from quotation.normriceitem where qid = :qid and type = :type and status = :status";
+		String sql = "delete from quotation." + NormriceItemPO.tableName(index) + " where qid = :qid and type = :type and status = :status";
 		session().createSQLQuery(sql).setLong("qid", qid).setShort("type", type).setShort("status", status).executeUpdate();
 
 		return 0;
 	}
 
 	@Override
-	public int deleteNormriceItem(long qid, long sid, short type) {
+	public int deleteNormriceItem(int index, long qid, long sid, short type) {
 
-		String sql = "delete from quotation.normriceitem where qid = :qid and type = :type and sid = :sid";
+		String sql = "delete from quotation." + NormriceItemPO.tableName(index) + " where qid = :qid and type = :type and sid = :sid";
 		session().createSQLQuery(sql).setLong("qid", qid).setLong("sid", sid).setShort("type", type).executeUpdate();
 
 		return 0;
 	}
 
 	@Override
-	public int confirmNormriceItem(long qid, long npiid, String confirmer) {
+	public int confirmNormriceItem(int index, long qid, long npiid, String confirmer) {
 
-		// qid+主键双键: RANGE 分区裁剪, 单分区本地主键查找
-		String sql = "update quotation.normriceitem set status = :status, confirmer = :confirmer, confirmTime = now() where qid = :qid and npiid = :npiid";
+		// qid+主键双键: 路由后表内主键定位
+		String sql = "update quotation." + NormriceItemPO.tableName(index) + " set status = :status, confirmer = :confirmer, confirmTime = now() where qid = :qid and npiid = :npiid";
 		session().createSQLQuery(sql).setLong("qid", qid).setLong("npiid", npiid).setShort("status", NormriceItemPO.STATUS_CONFIRMED_INT).setString("confirmer", confirmer).executeUpdate();
 
 		return 0;
 	}
 
 	@Override
-	public int rejectNormriceItem(long qid, long npiid) {
+	public int rejectNormriceItem(int index, long qid, long npiid) {
 
-		String sql = "update quotation.normriceitem set status = :status where qid = :qid and npiid = :npiid";
+		String sql = "update quotation." + NormriceItemPO.tableName(index) + " set status = :status where qid = :qid and npiid = :npiid";
 		session().createSQLQuery(sql).setLong("qid", qid).setLong("npiid", npiid).setShort("status", NormriceItemPO.STATUS_REJECTED_INT).executeUpdate();
 
 		return 0;

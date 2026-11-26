@@ -2,6 +2,7 @@ package com.fanglin.quotation.service.impl;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,14 +17,19 @@ import com.fanglin.data.po.NormpackItemPO;
 import com.fanglin.data.quotation.dao.impl.NormpackItemDaoImpl;
 import com.fanglin.quotation.dao.NormoodItemDao;
 import com.fanglin.quotation.dao.NormChangeRecordDao;
+import com.fanglin.quotation.dao.NormtionDao;
 import com.fanglin.quotation.dao.QuotationDao;
 import com.fanglin.quotation.po.NormChangeRecordPO;
 import com.fanglin.quotation.po.NormoodItemPO;
+import com.fanglin.quotation.po.NormtionPO;
 import com.fanglin.quotation.po.QuotationPO;
 import com.fanglin.quotation.service.NormoodItemService;
 import com.fanglin.quotation.vo.NormoodItemVO;
 import com.fanglin.quotation.vo.QuotationVO;
+import com.fanglin.system.dao.SystemConfigDao;
+import com.fanglin.system.po.SystemConfigPO;
 import com.fanglin.utils.BeanUtil;
+import com.fanglin.utils.DateUtil;
 
 @Service("normoodItemService")
 @Transactional(readOnly = true)
@@ -34,6 +40,12 @@ public class NormoodItemServiceImpl implements NormoodItemService {
 
 	@Autowired
 	private QuotationDao quotationDao;
+
+	@Autowired
+	private NormtionDao normtionDao;
+
+	@Autowired
+	private SystemConfigDao systemConfigDao;
 
 	@Autowired
 	private NormpackItemDaoImpl normpackItemDaoImpl;
@@ -47,7 +59,8 @@ public class NormoodItemServiceImpl implements NormoodItemService {
 	@Override
 	public List<NormoodItemVO> queryNormoodItem(NormoodItemVO normoodItem) {
 
-		List<NormoodItemPO> normoodItemPOs = normoodItemDao.queryNormoodItem(normoodItem.getQid());
+		int index = resolveIndex(normoodItem.getQid());
+		List<NormoodItemPO> normoodItemPOs = normoodItemDao.queryNormoodItem(index, normoodItem.getQid());
 		List<NormoodItemVO> normoodItemVOs = new ArrayList<NormoodItemVO>();
 
 		for (NormoodItemPO normoodItemPO : normoodItemPOs) {
@@ -66,7 +79,8 @@ public class NormoodItemServiceImpl implements NormoodItemService {
 	@Override
 	public int amountNormoodItem(NormoodItemVO normoodItemVO) {
 
-		long amount = normoodItemDao.amountNormoodItem(normoodItemVO.getQid(), normoodItemVO.getNoods().getNid());
+		int index = resolveIndex(normoodItemVO.getQid());
+		long amount = normoodItemDao.amountNormoodItem(index, normoodItemVO.getQid(), normoodItemVO.getNoods().getNid());
 
 		normoodItemVO.setAmount(amount);
 
@@ -82,6 +96,11 @@ public class NormoodItemServiceImpl implements NormoodItemService {
 		if (quotationPO == null) {
 			throw new FLException(200003, "报价不存在");
 		}
+
+		// 有明细必有单据头: ensure normtion(幂等), 同时取得分表路由 index
+		NormtionPO normtionPO = ensureNormtion(quotationPO.getQid(), quotationPO.getOrderId());
+
+		int index = normtionPO.getIndex();
 
 		List<NormpackItemPO> normpackItems = new ArrayList<NormpackItemPO>();
 
@@ -99,7 +118,7 @@ public class NormoodItemServiceImpl implements NormoodItemService {
 
 				normoodItemVOs = new ArrayList<NormoodItemVO>();
 
-				NormoodItemPO normoodItemPO = new NormoodItemPO();
+				NormoodItemPO normoodItemPO = NormoodItemPO.factoryToInstance(index);
 
 				normoodItemPO.setQid(quotationPO.getQid());
 
@@ -139,7 +158,7 @@ public class NormoodItemServiceImpl implements NormoodItemService {
 
 		for (NormpackItemPO normpackItemPO : normpackItems) {
 
-			NormoodItemPO normoodItemPO = new NormoodItemPO();
+			NormoodItemPO normoodItemPO = NormoodItemPO.factoryToInstance(index);
 
 			normoodItemPO.setQid(quotationPO.getQid());
 			normoodItemPO.setSid(quotationPO.getQid());
@@ -180,12 +199,15 @@ public class NormoodItemServiceImpl implements NormoodItemService {
 	@Transactional(rollbackFor = Exception.class)
 	public int deleteNormoodItem(NormoodItemVO normoodItemVO, String userId) throws FLException {
 
-		NormoodItemPO normoodItemPO = normoodItemDao.get(normoodItemVO.getNgiid());
+		// 路由兜底: 前端未传 qid 时按分表序遍历定位行
+		IndexedItem indexed = fetchNormoodItem(normoodItemVO.getQid(), normoodItemVO.getNgiid());
 
 		// 守卫: 不存在幂等返回(原实现此处为空 if 体直接硬删)
-		if (normoodItemPO == null) {
+		if (indexed == null) {
 			return 0;
 		}
+
+		NormoodItemPO normoodItemPO = indexed.item;
 
 		// 变更记录: 下定材删除(行快照)
 		String noodsName = normoodItemPO.getNoods() != null ? normoodItemPO.getNoods().getName() : "---";
@@ -194,7 +216,7 @@ public class NormoodItemServiceImpl implements NormoodItemService {
 				.qid(normoodItemPO.getQid()).refId(normoodItemPO.getNgiid()).refNo(noodsName)
 				.before(String.format("定材: %s, 定额数量: %s, 库房数量: %s", noodsName, normoodItemPO.getNormnum(), normoodItemPO.getStorenum())));
 
-		normoodItemDao.delete(normoodItemPO);
+		normoodItemDao.deleteNormoodItem(indexed.index, normoodItemPO.getQid(), normoodItemPO.getNgiid(), normoodItemPO.getType());
 
 		return 0;
 	}
@@ -203,11 +225,14 @@ public class NormoodItemServiceImpl implements NormoodItemService {
 	@Transactional(rollbackFor = Exception.class)
 	public int updateNormoodItemForNum(NormoodItemVO normoodItemVO, String userId) throws FLException {
 
-		NormoodItemPO normoodItemPO = normoodItemDao.get(normoodItemVO.getNgiid());
+		// 路由兜底: 前端未传 qid 时按分表序遍历定位行
+		IndexedItem indexed = fetchNormoodItem(normoodItemVO.getQid(), normoodItemVO.getNgiid());
 
-		if (normoodItemPO == null) {
+		if (indexed == null) {
 			return 0;
 		}
+
+		NormoodItemPO normoodItemPO = indexed.item;
 
 		if (normoodItemPO.getStatus() == NormoodItemPO.STATUS_DISABLED_INT) {
 			throw new FLException(200137, "定额明细状态不可操作");
@@ -236,6 +261,89 @@ public class NormoodItemServiceImpl implements NormoodItemService {
 				.after(String.format("定额数量: %s, 库房数量: %s", normoodItemVO.getNormnum(), normoodItemVO.getStorenum())));
 
 		return 0;
+	}
+
+	/**
+	 * 分表路由解析: qid → normtion.index。normtion 不存在(尚未做过定额操作)按 0(原表)处理。
+	 */
+	private int resolveIndex(Long qid) {
+
+		if (qid == null) {
+			return 0;
+		}
+
+		NormtionPO normtionPO = normtionDao.queryNormtion(qid);
+
+		return normtionPO == null ? 0 : normtionPO.getIndex();
+	}
+
+	/**
+	 * 有明细必有单据头: normtion 不存在时按当前批次(normtionIndex 配置)创建, 返回带 index 的单据头。
+	 */
+	private NormtionPO ensureNormtion(long qid, String orderId) {
+
+		NormtionPO normtionPO = normtionDao.queryNormtion(qid);
+
+		if (normtionPO != null) {
+			return normtionPO;
+		}
+
+		normtionPO = new NormtionPO();
+		normtionPO.setQid(qid);
+		normtionPO.setOrderId(orderId);
+
+		SystemConfigPO indexConfig = systemConfigDao.querySystemConfig("normtionIndex");
+		normtionPO.setIndex(indexConfig == null ? 0 : Integer.valueOf(indexConfig.getValue()));
+		normtionPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
+
+		normtionDao.save(normtionPO);
+
+		return normtionPO;
+	}
+
+	/**
+	 * 行定位: qid 可用则路由直达; qid 缺失(历史前端只传主键)时按分表序遍历兜底。
+	 */
+	private IndexedItem fetchNormoodItem(Long qid, long ngiid) {
+
+		if (qid != null) {
+			int index = resolveIndex(qid);
+			NormoodItemPO itemPO = normoodItemDao.getNormoodItem(index, ngiid);
+			return itemPO == null ? null : new IndexedItem(index, itemPO);
+		}
+
+		int curIndex = currentBatchIndex();
+
+		for (int index = 0; index <= curIndex; index++) {
+
+			NormoodItemPO itemPO = normoodItemDao.getNormoodItem(index, ngiid);
+
+			if (itemPO != null) {
+				return new IndexedItem(index, itemPO);
+			}
+		}
+
+		return null;
+	}
+
+	private int currentBatchIndex() {
+
+		SystemConfigPO indexConfig = systemConfigDao.querySystemConfig("normtionIndex");
+
+		return indexConfig == null ? 0 : Integer.valueOf(indexConfig.getValue());
+	}
+
+	/** 分表定位结果: index + 行 */
+	private static class IndexedItem {
+
+		private final int index;
+
+		private final NormoodItemPO item;
+
+		private IndexedItem(int index, NormoodItemPO item) {
+			this.index = index;
+			this.item = item;
+		}
 	}
 
 }

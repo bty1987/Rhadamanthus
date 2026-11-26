@@ -1,7 +1,13 @@
 -- ============================================================================
 -- 41_normitem_range_partition.sql
 -- ============================================================================
--- 用途: quotation.normriceitem / normooditem / normtimeitem 三表按 qid RANGE 分区
+-- 🔴 已作废(2026-11-26): 拍板改走"normtion.index 路由中枢手工分表"方案(42 号)——
+--   MySQL 原生 RANGE 分区整体让位: 分表诉求(跨库可扩展/表级运维直观)由手工分表承载。
+--   本文件与配套 scripts/normitem_partition/ 定时执行包一并留档勿执行。
+--   test 库已执行过本文件的三表分区(联调环境处于分区态), 如需还原:
+--   ALTER TABLE quotation.normxxx REMOVE PARTITIONING;
+-- ----------------------------------------------------------------------------
+-- 用途(原文): quotation.normriceitem / normooditem / normtimeitem 三表按 qid RANGE 分区
 --   (存储层切分, 应用零改动)。每 10 万 qid 一段, MAXVALUE 兜底段承接新写入, 扩段=
 --   REORGANIZE 兜底段(仅重组该段, 秒~分钟级)。
 -- 设计依据(2026-11-26 只读库实测):

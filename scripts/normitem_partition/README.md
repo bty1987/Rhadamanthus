@@ -1,3 +1,5 @@
+# 🔴 已作废(2026-11-26): 分区方案让位于"normtion.index 手工分表"(sqls/quotation/42 号)——本定时执行包留档勿用。test 库分区已 REMOVE PARTITIONING 还原。
+
 # normitem 三表 RANGE 分区 — 半夜定时执行包
 
 方案依据: `sqls/quotation/41_normitem_range_partition.sql`（RANGE(qid) 每 10 万 qid 一段 + MAXVALUE 兜底）。

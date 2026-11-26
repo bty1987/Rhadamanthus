@@ -20,110 +20,116 @@ public class NormoodItemDaoImpl extends DaoImpl<NormoodItemPO> implements Normoo
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<NormoodItemPO> queryNormoodItem(long qid) {
-		return createCriteria(NormoodItemPO.class).add(Restrictions.eq("qid", qid)).add(Restrictions.eq("status", NormoodItemPO.STATUS_INIT_INT)).list();
+	public List<NormoodItemPO> queryNormoodItem(int index, long qid) {
+		return session().createCriteria(NormoodItemPO.factoryToClazz(index)).add(Restrictions.eq("qid", qid)).add(Restrictions.eq("status", NormoodItemPO.STATUS_INIT_INT)).list();
 	}
 
 	@Override
-	public NormoodItemPO queryNormoodItem(long sid, long quoteId, long ngid, short type) {
-		return (NormoodItemPO) session().createCriteria(NormoodItemPO.class).add(Restrictions.eq("sid", sid)).add(Restrictions.eq("quoteld", quoteId)).add(Restrictions.eq("ngid", ngid)).add(Restrictions.eq("type", type)).setMaxResults(1).uniqueResult();
+	public NormoodItemPO queryNormoodItem(int index, long sid, long quoteId, long ngid, short type) {
+		return (NormoodItemPO) session().createCriteria(NormoodItemPO.factoryToClazz(index)).add(Restrictions.eq("sid", sid)).add(Restrictions.eq("quoteld", quoteId)).add(Restrictions.eq("ngid", ngid)).add(Restrictions.eq("type", type)).setMaxResults(1).uniqueResult();
 	}
 
 	@Override
-	public long amountNormoodItem(long qid, long nid) {
+	public NormoodItemPO getNormoodItem(int index, long ngiid) {
+		return (NormoodItemPO) session().createCriteria(NormoodItemPO.factoryToClazz(index)).add(Restrictions.eq("ngiid", ngiid)).setMaxResults(1).uniqueResult();
+	}
+
+	@Override
+	public long amountNormoodItem(int index, long qid, long nid) {
 
 		// 同族归一:铺法(normood)全局共享,明细可能挂其他公司同族实例,按pnid族合并统计;pnid=0自建行仅统计自身
-		String sql = "select sum(if(ni.atttype = 0, ni.storenum, -ni.storenum)) from quotation.normooditem ni where ni.qid = :qid and ni.status = :status and (ni.nid = :nid or ni.nid in (select x.nid from data.noods x where x.pnid != 0 and x.pnid = (select t.pnid from data.noods t where t.nid = :nid)))";
+		String sql = "select sum(if(ni.atttype = 0, ni.storenum, -ni.storenum)) from quotation.%s ni where ni.qid = :qid and ni.status = :status and (ni.nid = :nid or ni.nid in (select x.nid from data.noods x where x.pnid != 0 and x.pnid = (select t.pnid from data.noods t where t.nid = :nid)))";
+		sql = String.format(sql, NormoodItemPO.tableName(index));
 		BigDecimal count = (BigDecimal) session().createSQLQuery(sql).setLong("qid", qid).setLong("nid", nid).setShort("status", NormoodItemPO.STATUS_INIT_INT).uniqueResult();
 
 		return count == null ? 0 : count.longValue();
 	}
 
 	@Override
-	public int countNormoodItem(long sid, short type) {
+	public int countNormoodItem(int index, long qid, long sid, short type) {
 
-		String sql = "select count(*) from quotation.normooditem where qid =:qid and sid = :sid and type = :type";
-		BigInteger count = (BigInteger) session().createSQLQuery(sql).setLong("sid", sid).setShort("type", type).uniqueResult();
-
-		return count == null ? 0 : count.intValue();
-	}
-
-	@Override
-	public int countNormoodItem(long sid, long quoteld, short type) {
-
-		String sql = "select count(*) from quotation.normooditem where qid =:qid and sid = :sid and quoteld = :quoteId and type = :type";
-		BigInteger count = (BigInteger) session().createSQLQuery(sql).setLong("sid", sid).setLong("quoteId", quoteld).setShort("type", type).uniqueResult();
+		String sql = "select count(*) from quotation." + NormoodItemPO.tableName(index) + " where qid = :qid and sid = :sid and type = :type";
+		BigInteger count = (BigInteger) session().createSQLQuery(sql).setLong("qid", qid).setLong("sid", sid).setShort("type", type).uniqueResult();
 
 		return count == null ? 0 : count.intValue();
 	}
 
 	@Override
-	public int disableNormoodItem(long qid) {
+	public int countNormoodItem(int index, long qid, long sid, long quoteld, short type) {
 
-		String sql = "update quotation.normooditem set status = :status where qid = :qid and type != :type";
+		String sql = "select count(*) from quotation." + NormoodItemPO.tableName(index) + " where qid = :qid and sid = :sid and quoteld = :quoteId and type = :type";
+		BigInteger count = (BigInteger) session().createSQLQuery(sql).setLong("qid", qid).setLong("sid", sid).setLong("quoteId", quoteld).setShort("type", type).uniqueResult();
+
+		return count == null ? 0 : count.intValue();
+	}
+
+	@Override
+	public int disableNormoodItem(int index, long qid) {
+
+		String sql = "update quotation." + NormoodItemPO.tableName(index) + " set status = :status where qid = :qid and type != :type";
 		session().createSQLQuery(sql).setShort("status", NormoodItemPO.STATUS_DISABLED_INT).setLong("qid", qid).setShort("type", NormoodItemPO.TYPE_QUOTA_INT).executeUpdate();
 
 		return 0;
 	}
 
 	@Override
-	public int disableNormoodItem(long qid, short type) {
+	public int disableNormoodItem(int index, long qid, short type) {
 
-		String sql = "update quotation.normooditem set status = :status where qid = :qid and type = :type";
+		String sql = "update quotation." + NormoodItemPO.tableName(index) + " set status = :status where qid = :qid and type = :type";
 		session().createSQLQuery(sql).setShort("status", NormoodItemPO.STATUS_DISABLED_INT).setLong("qid", qid).setShort("type", type).executeUpdate();
 
 		return 0;
 	}
 
 	@Override
-	public int disableNormoodItem(long qid, long sid, short type) {
+	public int disableNormoodItem(int index, long qid, long sid, short type) {
 
-		String sql = "update quotation.normooditem set status = :status where qid = :qid and type = :type and sid = :sid";
-		session().createSQLQuery(sql).setShort("status", NormoodItemPO.STATUS_DISABLED_INT).setLong("sid", sid).setLong("qid", qid).setShort("type", type).executeUpdate();
+		String sql = "update quotation." + NormoodItemPO.tableName(index) + " set status = :status where qid = :qid and type = :type and sid = :sid";
+		session().createSQLQuery(sql).setShort("status", NormoodItemPO.STATUS_DISABLED_INT).setLong("qid", qid).setLong("sid", sid).setShort("type", type).executeUpdate();
 
 		return 0;
 	}
 
 	@Override
-	public int disableNormoodItem(long qid, long sid, long quoteId, short type) {
+	public int disableNormoodItem(int index, long qid, long sid, long quoteId, short type) {
 
-		String sql = "update quotation.normooditem set status = :status where qid = :qid and type = :type and sid = :sid and quoteld = :quoteId";
+		String sql = "update quotation." + NormoodItemPO.tableName(index) + " set status = :status where qid = :qid and type = :type and sid = :sid and quoteld = :quoteId";
 		session().createSQLQuery(sql).setShort("status", NormoodItemPO.STATUS_DISABLED_INT).setLong("qid", qid).setLong("sid", sid).setLong("quoteId", quoteId).setShort("type", type).executeUpdate();
 
 		return 0;
 	}
 
 	@Override
-	public int deleteNormoodItem(long qid, short type) {
+	public int deleteNormoodItem(int index, long qid, short type) {
 
-		String sql = "delete from quotation.normooditem where qid = :qid and type = :type";
+		String sql = "delete from quotation." + NormoodItemPO.tableName(index) + " where qid = :qid and type = :type";
 		session().createSQLQuery(sql).setLong("qid", qid).setShort("type", type).executeUpdate();
 
 		return 0;
 	}
 
 	@Override
-	public int deleteNormoodItem(long qid, short type, short status) {
+	public int deleteNormoodItem(int index, long qid, short type, short status) {
 
-		String sql = "delete from quotation.normooditem where qid = :qid and type = :type and status = :status";
+		String sql = "delete from quotation." + NormoodItemPO.tableName(index) + " where qid = :qid and type = :type and status = :status";
 		session().createSQLQuery(sql).setLong("qid", qid).setShort("type", type).setShort("status", status).executeUpdate();
 
 		return 0;
 	}
 
 	@Override
-	public int deleteNormoodItem(long qid, long sid, short type) {
+	public int deleteNormoodItem(int index, long qid, long sid, short type) {
 
-		String sql = "delete from quotation.normooditem where qid = :qid and type = :type and sid = :sid";
-		session().createSQLQuery(sql).setLong("qid", qid).setShort("type", type).setLong("sid", sid).executeUpdate();
+		String sql = "delete from quotation." + NormoodItemPO.tableName(index) + " where qid = :qid and type = :type and sid = :sid";
+		session().createSQLQuery(sql).setLong("qid", qid).setLong("sid", sid).setShort("type", type).executeUpdate();
 
 		return 0;
 	}
 
 	@Override
-	public int deleteNormoodItem(long qid, long sid, long quoteId, short type) {
+	public int deleteNormoodItem(int index, long qid, long sid, long quoteId, short type) {
 
-		String sql = "delete from quotation.normooditem where qid = :qid and sid = :sid and quoteld = :quoteId and type = :type";
+		String sql = "delete from quotation." + NormoodItemPO.tableName(index) + " where sid = :sid and quoteld = :quoteId and type = :type and qid = :qid";
 		session().createSQLQuery(sql).setLong("qid", qid).setLong("sid", sid).setLong("quoteId", quoteId).setShort("type", type).executeUpdate();
 
 		return 0;

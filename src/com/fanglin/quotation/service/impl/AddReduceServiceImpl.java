@@ -40,6 +40,8 @@ import com.fanglin.quotation.dao.AddReduceDao;
 import com.fanglin.quotation.dao.AddReduceItemDao;
 import com.fanglin.quotation.dao.ExtensionItemDao;
 import com.fanglin.quotation.dao.NormChangeRecordDao;
+import com.fanglin.quotation.dao.NormtionDao;
+import com.fanglin.quotation.po.NormtionPO;
 import com.fanglin.quotation.dao.NormoodItemDao;
 import com.fanglin.quotation.dao.QuotationDao;
 import com.fanglin.quotation.dao.QuotationFunctionAreaDao;
@@ -112,6 +114,9 @@ public class AddReduceServiceImpl implements AddReduceService {
 
 	@Autowired
 	private NormoodItemDao normoodItemDao;
+
+	@Autowired
+	private NormtionDao normtionDao;
 
 	@Autowired
 	private DecorationService decorationService;
@@ -817,7 +822,7 @@ public class AddReduceServiceImpl implements AddReduceService {
 			decorationPaymentDao.delete(decorationPaymentPO);
 		}
 
-		normoodItemDao.deleteNormoodItem(quotationPO.getQid(), arId, NormoodItemPO.TYPE_ADDCUT_INT);
+		normoodItemDao.deleteNormoodItem(resolveIndex(quotationPO.getQid()), quotationPO.getQid(), arId, NormoodItemPO.TYPE_ADDCUT_INT);
 
 		addReduceDao.delete(addReducePO);
 
@@ -845,4 +850,14 @@ public class AddReduceServiceImpl implements AddReduceService {
 		return addReduceVOs;
 	}
 
+
+	/**
+	 * 分表路由解析: qid → normtion.index。normtion 不存在按 0(原表)处理。
+	 */
+	private int resolveIndex(long qid) {
+
+		NormtionPO normtionPO = normtionDao.queryNormtion(qid);
+
+		return normtionPO == null ? 0 : normtionPO.getIndex();
+	}
 }

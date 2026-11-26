@@ -40,6 +40,9 @@ public class NormtionPO implements Serializable {
 
 	private Timestamp createTime;
 
+	// 定额明细分表路由键: normtionIndex 配置决定当前批次, 0=原表, >0=normxxxitem{index}
+	private int index;
+
 	private UserPO creater;
 
 	public NormtionPO() {
@@ -118,6 +121,15 @@ public class NormtionPO implements Serializable {
 
 	public void setStatus(short status) {
 		this.status = status;
+	}
+
+	@Column(name = "[index]")
+	public int getIndex() {
+		return index;
+	}
+
+	public void setIndex(int index) {
+		this.index = index;
 	}
 
 	@Column(name = "createTime")

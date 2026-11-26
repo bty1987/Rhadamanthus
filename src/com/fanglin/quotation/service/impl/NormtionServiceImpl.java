@@ -37,6 +37,8 @@ import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.decoration.vo.DecorationVO;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.vo.UserBaseVO;
+import com.fanglin.system.dao.SystemConfigDao;
+import com.fanglin.system.po.SystemConfigPO;
 import com.fanglin.quotation.dao.AddReduceDao;
 import com.fanglin.quotation.dao.ExtensionDao;
 import com.fanglin.quotation.dao.NormoodItemDao;
@@ -122,6 +124,9 @@ public class NormtionServiceImpl implements NormtionService {
 
 	@Autowired
 	private DecorationDao decorationDao;
+
+	@Autowired
+	private SystemConfigDao systemConfigDao;
 
 	@Override
 	public void pageNormtion(Paging paging, List<Filter> filters, Integer company) throws FLException {
@@ -669,6 +674,7 @@ public class NormtionServiceImpl implements NormtionService {
 
 			normtionPO.setCreater(userDao.queryUserByUserId(userId));
 			normtionPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
+			normtionPO.setIndex(assignIndex());
 
 			normtionDao.save(normtionPO);
 		}
@@ -681,13 +687,13 @@ public class NormtionServiceImpl implements NormtionService {
 
 		if (decorationPO.getProjectStatus() == DecorationPO.STATUS_INIT_INT) {
 
-			normoodItemDao.deleteNormoodItem(normtionPO.getQid(), NormoodItemPO.TYPE_OFFER_INT, NormoodItemPO.STATUS_DISABLED_INT);
-			normoodItemDao.deleteNormoodItem(normtionPO.getQid(), NormoodItemPO.TYPE_EXPAND_INT, NormoodItemPO.STATUS_DISABLED_INT);
-			normoodItemDao.deleteNormoodItem(normtionPO.getQid(), NormoodItemPO.TYPE_ADDCUT_INT, NormoodItemPO.STATUS_DISABLED_INT);
+			normoodItemDao.deleteNormoodItem(normtionPO.getIndex(), normtionPO.getQid(), NormoodItemPO.TYPE_OFFER_INT, NormoodItemPO.STATUS_DISABLED_INT);
+			normoodItemDao.deleteNormoodItem(normtionPO.getIndex(), normtionPO.getQid(), NormoodItemPO.TYPE_EXPAND_INT, NormoodItemPO.STATUS_DISABLED_INT);
+			normoodItemDao.deleteNormoodItem(normtionPO.getIndex(), normtionPO.getQid(), NormoodItemPO.TYPE_ADDCUT_INT, NormoodItemPO.STATUS_DISABLED_INT);
 
-			normriceItemDao.deleteNormriceItem(normtionPO.getQid(), NormriceItemPO.TYPE_OFFER_INT, NormriceItemPO.STATUS_DISABLED_INT);
-			normriceItemDao.deleteNormriceItem(normtionPO.getQid(), NormriceItemPO.TYPE_EXPAND_INT, NormriceItemPO.STATUS_DISABLED_INT);
-			normriceItemDao.deleteNormriceItem(normtionPO.getQid(), NormriceItemPO.TYPE_ADDCUT_INT, NormriceItemPO.STATUS_DISABLED_INT);
+			normriceItemDao.deleteNormriceItem(normtionPO.getIndex(), normtionPO.getQid(), NormriceItemPO.TYPE_OFFER_INT, NormriceItemPO.STATUS_DISABLED_INT);
+			normriceItemDao.deleteNormriceItem(normtionPO.getIndex(), normtionPO.getQid(), NormriceItemPO.TYPE_EXPAND_INT, NormriceItemPO.STATUS_DISABLED_INT);
+			normriceItemDao.deleteNormriceItem(normtionPO.getIndex(), normtionPO.getQid(), NormriceItemPO.TYPE_ADDCUT_INT, NormriceItemPO.STATUS_DISABLED_INT);
 
 			normtimeItemDao.deleteNormtimeItem(normtionPO.getQid(), NormtimeItemPO.TYPE_OFFER_INT, NormtimeItemPO.STATUS_DISABLED_INT);
 			normtimeItemDao.deleteNormtimeItem(normtionPO.getQid(), NormtimeItemPO.TYPE_EXPAND_INT, NormtimeItemPO.STATUS_DISABLED_INT);
@@ -696,8 +702,8 @@ public class NormtionServiceImpl implements NormtionService {
 			return 0;
 		}
 
-		normoodItemDao.disableNormoodItem(normtionVO.getQid());
-		normriceItemDao.disabledNormriceItem(normtionVO.getQid());
+		normoodItemDao.disableNormoodItem(normtionPO.getIndex(), normtionVO.getQid());
+		normriceItemDao.disabledNormriceItem(normtionPO.getIndex(), normtionVO.getQid());
 		normtimeItemDao.disabledNormtimeItem(normtionVO.getQid());
 
 		normoodItemDao.flush();
@@ -735,10 +741,11 @@ public class NormtionServiceImpl implements NormtionService {
 
 		if (normtionPO == null) {
 			addNormtion(normtionVO, userId);
+			normtionPO = normtionDao.queryNormtion(quotationPO.getQid());
 		}
 
-		normoodItemDao.disableNormoodItem(normtionVO.getQid(), NormoodItemPO.TYPE_OFFER_INT);
-		normriceItemDao.disabledNormriceItem(normtionVO.getQid(), NormriceItemPO.TYPE_OFFER_INT);
+		normoodItemDao.disableNormoodItem(normtionPO.getIndex(), normtionVO.getQid(), NormoodItemPO.TYPE_OFFER_INT);
+		normriceItemDao.disabledNormriceItem(normtionPO.getIndex(), normtionVO.getQid(), NormriceItemPO.TYPE_OFFER_INT);
 		normtimeItemDao.disabledNormtimeItem(normtionVO.getQid(), NormtimeItemPO.TYPE_OFFER_INT);
 
 		normoodItemDao.flush();
@@ -757,7 +764,7 @@ public class NormtionServiceImpl implements NormtionService {
 				NormoodPO normoodPO = (NormoodPO) data[1];
 				NoodsPO noodsPO = (NoodsPO) data[2];
 
-				NormoodItemPO normoodItemPO = normoodItemDao.queryNormoodItem(normtionVO.getQid(), itemPO.getQfaiId(), normoodPO.getNgid(), NormoodItemPO.TYPE_OFFER_INT);
+				NormoodItemPO normoodItemPO = normoodItemDao.queryNormoodItem(normtionPO.getIndex(), normtionVO.getQid(), itemPO.getQfaiId(), normoodPO.getNgid(), NormoodItemPO.TYPE_OFFER_INT);
 
 				if (normoodItemPO != null) {
 
@@ -805,7 +812,7 @@ public class NormtionServiceImpl implements NormtionService {
 				NormricePO normricePO = (NormricePO) data[1];
 				ConstructionNodePO constructionNodePO = (ConstructionNodePO) data[2];
 
-				NormriceItemPO normriceItemPO = normriceItemDao.queryNormriceItem(normtionVO.getQid(), item.getQfaiid(), normricePO.getNpid(), NormriceItemPO.TYPE_OFFER_INT);
+				NormriceItemPO normriceItemPO = normriceItemDao.queryNormriceItem(normtionPO.getIndex(), normtionVO.getQid(), item.getQfaiid(), normricePO.getNpid(), NormriceItemPO.TYPE_OFFER_INT);
 
 				if (normriceItemPO != null) {
 
@@ -919,10 +926,11 @@ public class NormtionServiceImpl implements NormtionService {
 
 		if (normtionPO == null) {
 			addNormtion(normtionVO, userId);
+			normtionPO = normtionDao.queryNormtion(quotationPO.getQid());
 		}
 
-		normoodItemDao.disableNormoodItem(normtionVO.getQid(), extensionVO.getEid(), NormoodItemPO.TYPE_EXPAND_INT);
-		normriceItemDao.disabledNormriceItem(normtionVO.getQid(), extensionVO.getEid(), NormriceItemPO.TYPE_EXPAND_INT);
+		normoodItemDao.disableNormoodItem(normtionPO.getIndex(), normtionVO.getQid(), extensionVO.getEid(), NormoodItemPO.TYPE_EXPAND_INT);
+		normriceItemDao.disabledNormriceItem(normtionPO.getIndex(), normtionVO.getQid(), extensionVO.getEid(), NormriceItemPO.TYPE_EXPAND_INT);
 		normtimeItemDao.disabledNormtimeItem(normtionVO.getQid(), extensionVO.getEid(), NormtimeItemPO.TYPE_EXPAND_INT);
 
 		normoodItemDao.flush();
@@ -937,7 +945,7 @@ public class NormtionServiceImpl implements NormtionService {
 			NormoodPO normoodPO = (NormoodPO) data[1];
 			NoodsPO noodsPO = (NoodsPO) data[2];
 
-			NormoodItemPO normoodItemPO = normoodItemDao.queryNormoodItem(normtionVO.getQid(), itemPO.getEiid(), normoodPO.getNgid(), NormoodItemPO.TYPE_EXPAND_INT);
+			NormoodItemPO normoodItemPO = normoodItemDao.queryNormoodItem(normtionPO.getIndex(), normtionVO.getQid(), itemPO.getEiid(), normoodPO.getNgid(), NormoodItemPO.TYPE_EXPAND_INT);
 
 			if (normoodItemPO != null) {
 
@@ -990,7 +998,7 @@ public class NormtionServiceImpl implements NormtionService {
 			NormricePO normricePO = (NormricePO) data[1];
 			ConstructionNodePO constructionNodePO = (ConstructionNodePO) data[2];
 
-			NormriceItemPO normriceItemPO = normriceItemDao.queryNormriceItem(normtionVO.getQid(), itemPO.getEiid(), normricePO.getNpid(), NormriceItemPO.TYPE_EXPAND_INT);
+			NormriceItemPO normriceItemPO = normriceItemDao.queryNormriceItem(normtionPO.getIndex(), normtionVO.getQid(), itemPO.getEiid(), normricePO.getNpid(), NormriceItemPO.TYPE_EXPAND_INT);
 
 			if (normriceItemPO != null) {
 
@@ -1113,10 +1121,11 @@ public class NormtionServiceImpl implements NormtionService {
 
 		if (normtionPO == null) {
 			addNormtion(normtionVO, userId);
+			normtionPO = normtionDao.queryNormtion(quotationPO.getQid());
 		}
 
-		normoodItemDao.disableNormoodItem(normtionVO.getQid(), addReduceVO.getArId(), NormoodItemPO.TYPE_ADDCUT_INT);
-		normriceItemDao.disabledNormriceItem(normtionVO.getQid(), addReduceVO.getArId(), NormriceItemPO.TYPE_ADDCUT_INT);
+		normoodItemDao.disableNormoodItem(normtionPO.getIndex(), normtionVO.getQid(), addReduceVO.getArId(), NormoodItemPO.TYPE_ADDCUT_INT);
+		normriceItemDao.disabledNormriceItem(normtionPO.getIndex(), normtionVO.getQid(), addReduceVO.getArId(), NormriceItemPO.TYPE_ADDCUT_INT);
 		normtimeItemDao.disabledNormtimeItem(normtionVO.getQid(), addReduceVO.getArId(), NormtimeItemPO.TYPE_ADDCUT_INT);
 
 		normoodItemDao.flush();
@@ -1131,7 +1140,7 @@ public class NormtionServiceImpl implements NormtionService {
 			NormoodPO normoodPO = (NormoodPO) data[1];
 			NoodsPO noodsPO = (NoodsPO) data[2];
 
-			NormoodItemPO normoodItemPO = normoodItemDao.queryNormoodItem(normtionVO.getQid(), itemPO.getAriId(), normoodPO.getNgid(), NormoodItemPO.TYPE_ADDCUT_INT);
+			NormoodItemPO normoodItemPO = normoodItemDao.queryNormoodItem(normtionPO.getIndex(), normtionVO.getQid(), itemPO.getAriId(), normoodPO.getNgid(), NormoodItemPO.TYPE_ADDCUT_INT);
 
 			if (normoodItemPO != null) {
 
@@ -1184,7 +1193,7 @@ public class NormtionServiceImpl implements NormtionService {
 			NormricePO normricePO = (NormricePO) data[1];
 			ConstructionNodePO constructionNodePO = (ConstructionNodePO) data[2];
 
-			NormriceItemPO normriceItemPO = normriceItemDao.queryNormriceItem(normtionVO.getQid(), itemPO.getAriId(), normricePO.getNpid(), NormriceItemPO.TYPE_ADDCUT_INT);
+			NormriceItemPO normriceItemPO = normriceItemDao.queryNormriceItem(normtionPO.getIndex(), normtionVO.getQid(), itemPO.getAriId(), normricePO.getNpid(), NormriceItemPO.TYPE_ADDCUT_INT);
 
 			if (normriceItemPO != null) {
 
@@ -1338,6 +1347,7 @@ public class NormtionServiceImpl implements NormtionService {
 
 		normtionPO.setCreater(userDao.queryUserByUserId(userId));
 		normtionPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
+		normtionPO.setIndex(assignIndex());
 
 		normtionDao.save(normtionPO);
 
@@ -1613,5 +1623,16 @@ public class NormtionServiceImpl implements NormtionService {
 		}
 
 		return normtimeVOs;
+	}
+
+	/**
+	 * 定额明细分表路由批次: systemConfig normtionIndex 决定新建定额单的 index,
+	 * 0=原表 normxxxitem, >0=normxxxitem{index} 分表(与 qfai 的 quotationFunctionAreaIndex 同款机制)
+	 */
+	private int assignIndex() {
+
+		SystemConfigPO systemConfigPO = systemConfigDao.querySystemConfig("normtionIndex");
+
+		return systemConfigPO == null ? 0 : Integer.valueOf(systemConfigPO.getValue());
 	}
 }

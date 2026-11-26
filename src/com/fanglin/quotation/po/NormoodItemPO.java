@@ -81,6 +81,33 @@ public class NormoodItemPO implements Serializable {
 		this.noods = noods;
 	}
 
+	// 定额明细分表路由(normtion.index 决定): 0=原表, >0=normooditem{index} 分表
+	public static String tableName(int index) {
+		return index == 0 ? "normooditem" : "normooditem" + index;
+	}
+
+	public static Class<?> factoryToClazz(int index) {
+		if (index == 0) {
+			return NormoodItemPO.class;
+		}
+		try {
+			return Class.forName("com.fanglin.quotation.po.NormoodItemPO" + index);
+		} catch (Exception e) {
+			throw new RuntimeException("定额明细分表实体不存在: normooditem" + index, e);
+		}
+	}
+
+	public static NormoodItemPO factoryToInstance(int index) {
+		if (index == 0) {
+			return new NormoodItemPO();
+		}
+		try {
+			return (NormoodItemPO) Class.forName("com.fanglin.quotation.po.NormoodItemPO" + index).newInstance();
+		} catch (Exception e) {
+			throw new RuntimeException("定额明细分表实体不存在: normooditem" + index, e);
+		}
+	}
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "ngiid")
