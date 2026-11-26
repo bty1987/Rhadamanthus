@@ -23,7 +23,7 @@ $(function(){
         
     }else{
         
-        config.library = ''; // library(单点登录:升级检查/会话登记/心跳)部署于192.168.5.22, 该机2026-11-16宕机且dev无备用实例, 置空改打同源/library 404毫秒级快速失败不再阻塞首屏; 5.22恢复后改回'http://192.168.5.22/'
+        config.library = 'http://192.168.5.22/';
         config.communion = 'http://192.168.5.21/';
         config.server = 'http://192.168.5.21/';
         config.media = 'http://192.168.5.21/';

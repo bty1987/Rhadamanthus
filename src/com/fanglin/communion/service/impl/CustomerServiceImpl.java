@@ -9,12 +9,6 @@
 
 package com.fanglin.communion.service.impl;
 
-import com.fanglin.elecsign.dao.ElecsignAuthDao;
-import com.fanglin.elecsign.enums.ElecsignProvider;
-import com.fanglin.elecsign.enums.ElecsignScene;
-import com.fanglin.elecsign.po.ElecsignAuthPO;
-import com.fanglin.elecsign.router.ElecsignRouter;
-import com.fanglin.elecsign.service.ElecsignService;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -41,6 +35,12 @@ import com.fanglin.communion.vo.CustomerVO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.security.SensitiveDataHelper;
 import com.fanglin.core.vo.Filter;
+import com.fanglin.elecsign.dao.ElecsignAuthDao;
+import com.fanglin.elecsign.enums.ElecsignProvider;
+import com.fanglin.elecsign.enums.ElecsignScene;
+import com.fanglin.elecsign.po.ElecsignAuthPO;
+import com.fanglin.elecsign.router.ElecsignRouter;
+import com.fanglin.elecsign.service.ElecsignService;
 import com.fanglin.information.dao.MessageQueuingDao;
 import com.fanglin.information.po.MessageCueuingPO;
 import com.fanglin.information.po.MessageQueuingPO;
@@ -143,7 +143,6 @@ public class CustomerServiceImpl implements CustomerService {
 	}
 
 	@Override
-	@Transactional(rollbackFor = Exception.class)
 	public CustomerVO queryCustomerForPhone(CustomerPhoneVO customerPhoneVO, String userId) throws FLException {
 
 		CustomerPO customerPO = customerDao.get(customerPhoneVO.getCid());
@@ -162,12 +161,6 @@ public class CustomerServiceImpl implements CustomerService {
 		} else {
 			customerPhoneVO.setCpid(0l);
 		}
-
-		customerRecordDao.save(new CustomerRecordPO(customerPO.getCid(), customerPhoneVO.getCpid(), CustomerRecordPO.TYPE_QUERY_INT, userDao.queryUserByUserId(userId), DateUtil.getDateToTimestamp(new Date())));
-
-		// Phase 7: 同时写入 log 模块的统一客户电话查询日志表（双写过渡期）
-		// 后续废弃原表后可移除上面那行 customerRecordDao.save
-		customerLogService.addCustomerLog(customerPO.getCid(), customerPhoneVO.getCpid(), userId, null);
 
 		return customerVO;
 	}
@@ -611,8 +604,7 @@ public class CustomerServiceImpl implements CustomerService {
 		ElecsignAuthPO authPO = obtainElecsignAuth(customerPO, target);
 
 		// 守卫(对齐旧行为): 非定向且该厂商已完成实名 → 拒, 防误触重置; 显式跨厂商 = 定向重实名放行
-		short rowStatus = authPO != null ? authPO.getStatus()
-				: (customerPO.getStatus() == CustomerPO.STATUS_INIT_INT ? ElecsignAuthPO.STATUS_INIT_INT : ElecsignAuthPO.STATUS_AUTH_INT);
+		short rowStatus = authPO != null ? authPO.getStatus() : (customerPO.getStatus() == CustomerPO.STATUS_INIT_INT ? ElecsignAuthPO.STATUS_INIT_INT : ElecsignAuthPO.STATUS_AUTH_INT);
 
 		if (!crossNamespace && rowStatus != ElecsignAuthPO.STATUS_INIT_INT) {
 			throw new FLException(130184, "客户状态不可操作");
@@ -702,9 +694,7 @@ public class CustomerServiceImpl implements CustomerService {
 		// 按 psnAccount=手机号查询; token 存的是 authFlowId 供认证回调反查, 不能当账号标识
 		String token = authPO != null && authPO.getToken() != null ? authPO.getToken() : customerPO.getToken();
 
-		JSONObject info = esignNamespace
-			? elecsignService.person(SensitiveDataHelper.decrypt(customerPO.getPhone()))
-			: elecsignService.person(token);
+		JSONObject info = esignNamespace ? elecsignService.person(SensitiveDataHelper.decrypt(customerPO.getPhone())) : elecsignService.person(token);
 
 		if (esignNamespace) {
 			Short realnameStatus = info.getShort("realnameStatus");
@@ -885,9 +875,7 @@ public class CustomerServiceImpl implements CustomerService {
 	}
 
 	/**
-	 * 认证行获取即建(按厂商各一份, UNIQUE cid+provider)。
-	 * 目标厂商无行时: customer 同命名空间存量值迁入建行(懒迁移, 一次); 异命名空间则全新 INIT 行。
-	 * 行读写随事务走(elecsignauth 表已建, sqls/elecsign/18), 失败回滚暴露, 不做"新表不可用"降级。
+	 * 认证行获取即建(按厂商各一份, UNIQUE cid+provider)。 目标厂商无行时: customer 同命名空间存量值迁入建行(懒迁移, 一次); 异命名空间则全新 INIT 行。 行读写随事务走(elecsignauth 表已建, sqls/elecsign/18), 失败回滚暴露, 不做"新表不可用"降级。
 	 */
 	private ElecsignAuthPO obtainElecsignAuth(CustomerPO customerPO, short provider) {
 
