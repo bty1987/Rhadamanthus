@@ -71,7 +71,8 @@ PARTITION pmax VALUES LESS THAN MAXVALUE)"
 alter_table() {
     local table="$1" pkcol="$2"
     log "START alter ${table} (联合主键 + RANGE(qid) 11 分区) ..."
-    if x "ALTER TABLE ${table} DROP PRIMARY KEY, ADD PRIMARY KEY (${pkcol}, qid), PARTITION BY RANGE (qid) ${PARTITIONS_DEF}"; then
+    # 🔴 test 实证: PARTITION BY 不能与其它 ALTER 子句组合(1064), 必须两段式(两次重建)
+    if x "ALTER TABLE ${table} DROP PRIMARY KEY, ADD PRIMARY KEY (${pkcol}, qid)" &&        x "ALTER TABLE ${table} PARTITION BY RANGE (qid) ${PARTITIONS_DEF}"; then
         log "DONE alter ${table}"
         return 0
     else

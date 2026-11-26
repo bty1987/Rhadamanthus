@@ -39,7 +39,10 @@ SELECT COUNT(*) AS total_rows, MAX(qid) AS max_qid FROM quotation.normriceitem; 
 -- ================= 段1: normtimeitem 试点(1667 行, 秒级) =================
 ALTER TABLE quotation.normtimeitem
   DROP PRIMARY KEY,
-  ADD PRIMARY KEY (ntiid, qid),
+  ADD PRIMARY KEY (ntiid, qid);
+-- 🔴 test 实证(2026-11-26): PARTITION BY 不能与其它 ALTER 子句组合(1064), 必须独立一条;
+--   两段式=两次重建, 生产直跑成本×2, DMS 无锁/pt-osc 路径可在 shadow 表一次完成
+ALTER TABLE quotation.normtimeitem
   PARTITION BY RANGE (qid) (
     PARTITION p00 VALUES LESS THAN (100000),
     PARTITION p01 VALUES LESS THAN (200000),
@@ -57,7 +60,8 @@ ALTER TABLE quotation.normtimeitem
 -- ================= 段2: normooditem(1890 万, 低峰长事务/DMS 无锁) =================
 ALTER TABLE quotation.normooditem
   DROP PRIMARY KEY,
-  ADD PRIMARY KEY (ngiid, qid),
+  ADD PRIMARY KEY (ngiid, qid);
+ALTER TABLE quotation.normooditem
   PARTITION BY RANGE (qid) (
     PARTITION p00 VALUES LESS THAN (100000),
     PARTITION p01 VALUES LESS THAN (200000),
@@ -75,7 +79,8 @@ ALTER TABLE quotation.normooditem
 -- ================= 段3: normriceitem(2585 万, 同上) =================
 ALTER TABLE quotation.normriceitem
   DROP PRIMARY KEY,
-  ADD PRIMARY KEY (npiid, qid),
+  ADD PRIMARY KEY (npiid, qid);
+ALTER TABLE quotation.normriceitem
   PARTITION BY RANGE (qid) (
     PARTITION p00 VALUES LESS THAN (100000),
     PARTITION p01 VALUES LESS THAN (200000),
