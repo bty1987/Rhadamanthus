@@ -33,8 +33,9 @@ public interface NormriceItemDao extends Dao<NormriceItemPO> {
 
 	public int deleteNormriceItem(long qid, long sid, short type);
 
-	public int confirmNormriceItem(long npiid, String confirmer);
+	// qid+主键双键: qid RANGE 分区裁剪(分区表落地后按主键裸查=全分区扫描)
+	public int confirmNormriceItem(long qid, long npiid, String confirmer);
 
-	public int rejectNormriceItem(long npiid);
+	public int rejectNormriceItem(long qid, long npiid);
 
 }

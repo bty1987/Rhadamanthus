@@ -129,19 +129,20 @@ public class NormriceItemDaoImpl extends DaoImpl<NormriceItemPO> implements Norm
 	}
 
 	@Override
-	public int confirmNormriceItem(long npiid, String confirmer) {
+	public int confirmNormriceItem(long qid, long npiid, String confirmer) {
 
-		String sql = "update quotation.normriceitem set status = :status, confirmer = :confirmer, confirmTime = now() where npiid = :npiid";
-		session().createSQLQuery(sql).setLong("npiid", npiid).setShort("status", NormriceItemPO.STATUS_CONFIRMED_INT).setString("confirmer", confirmer).executeUpdate();
+		// qid+主键双键: RANGE 分区裁剪, 单分区本地主键查找
+		String sql = "update quotation.normriceitem set status = :status, confirmer = :confirmer, confirmTime = now() where qid = :qid and npiid = :npiid";
+		session().createSQLQuery(sql).setLong("qid", qid).setLong("npiid", npiid).setShort("status", NormriceItemPO.STATUS_CONFIRMED_INT).setString("confirmer", confirmer).executeUpdate();
 
 		return 0;
 	}
 
 	@Override
-	public int rejectNormriceItem(long npiid) {
+	public int rejectNormriceItem(long qid, long npiid) {
 
-		String sql = "update quotation.normriceitem set status = :status where npiid = :npiid";
-		session().createSQLQuery(sql).setLong("npiid", npiid).setShort("status", NormriceItemPO.STATUS_REJECTED_INT).executeUpdate();
+		String sql = "update quotation.normriceitem set status = :status where qid = :qid and npiid = :npiid";
+		session().createSQLQuery(sql).setLong("qid", qid).setLong("npiid", npiid).setShort("status", NormriceItemPO.STATUS_REJECTED_INT).executeUpdate();
 
 		return 0;
 	}

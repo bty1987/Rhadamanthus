@@ -190,7 +190,7 @@ public class NormriceItemServiceImpl implements NormriceItemService {
 
 		QuotationPO quotationPO = checkQuotationForStatusByEnabled(normriceItemPO.getQid());
 
-		normriceItemDao.confirmNormriceItem(normriceItemPO.getNpiid(), userId);
+		normriceItemDao.confirmNormriceItem(normriceItemPO.getQid(), normriceItemPO.getNpiid(), userId);
 
 		// 更新工程计划附加项状态
 		updateConstructionScheduleForAdditemStatus(quotationPO, normriceItemPO.getConstructionNode().getCnid());
@@ -210,7 +210,7 @@ public class NormriceItemServiceImpl implements NormriceItemService {
 
 		QuotationPO quotationPO = checkQuotationForStatusByEnabled(normriceItemPO.getQid());
 
-		normriceItemDao.rejectNormriceItem(normriceItemPO.getNpiid());
+		normriceItemDao.rejectNormriceItem(normriceItemPO.getQid(), normriceItemPO.getNpiid());
 
 		// 更新工程计划附加项状态
 		updateConstructionScheduleForAdditemStatus(quotationPO, normriceItemPO.getConstructionNode().getCnid());
