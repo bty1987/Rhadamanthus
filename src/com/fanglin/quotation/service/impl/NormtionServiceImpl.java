@@ -724,6 +724,14 @@ public class NormtionServiceImpl implements NormtionService {
 			makeNormtion(normtionVO, new AddReduceVO(addReducePO.getArId()), null, userId);
 		}
 
+		// 重算自清理: 回收本次与历史的 DISABLED 旧明细(仅 type 0/1/2; QUOTA 附加项不参与重算永不清理),
+		// 镜像未开工单分支的删除三连先例 —— 活跃报价每次重算后零死行残留, 存量随重算逐步消化
+		normoodItemDao.deleteNormoodItem(normtionPO.getIndex(), normtionVO.getQid(), NormoodItemPO.TYPE_OFFER_INT, NormoodItemPO.STATUS_DISABLED_INT);
+		normoodItemDao.deleteNormoodItem(normtionPO.getIndex(), normtionVO.getQid(), NormoodItemPO.TYPE_EXPAND_INT, NormoodItemPO.STATUS_DISABLED_INT);
+		normoodItemDao.deleteNormoodItem(normtionPO.getIndex(), normtionVO.getQid(), NormoodItemPO.TYPE_ADDCUT_INT, NormoodItemPO.STATUS_DISABLED_INT);
+		normriceItemDao.deleteNormriceItem(normtionPO.getIndex(), normtionVO.getQid(), NormriceItemPO.TYPE_OFFER_INT, NormriceItemPO.STATUS_DISABLED_INT);
+		normriceItemDao.deleteNormriceItem(normtionPO.getIndex(), normtionVO.getQid(), NormriceItemPO.TYPE_EXPAND_INT, NormriceItemPO.STATUS_DISABLED_INT);
+		normriceItemDao.deleteNormriceItem(normtionPO.getIndex(), normtionVO.getQid(), NormriceItemPO.TYPE_ADDCUT_INT, NormriceItemPO.STATUS_DISABLED_INT);
 		return 0;
 	}
 
@@ -908,6 +916,10 @@ public class NormtionServiceImpl implements NormtionService {
 				normtimeItemDao.save(normtimeItemPO);
 			}
 		}
+
+		// 重算自清理: 回收本来源(OFFER)的 DISABLED 旧明细
+		normoodItemDao.deleteNormoodItem(normtionPO.getIndex(), normtionVO.getQid(), NormoodItemPO.TYPE_OFFER_INT, NormoodItemPO.STATUS_DISABLED_INT);
+		normriceItemDao.deleteNormriceItem(normtionPO.getIndex(), normtionVO.getQid(), NormriceItemPO.TYPE_OFFER_INT, NormriceItemPO.STATUS_DISABLED_INT);
 
 		return 0;
 	}
@@ -1104,6 +1116,10 @@ public class NormtionServiceImpl implements NormtionService {
 			normtimeItemDao.save(normtimeItemPO);
 		}
 
+		// 重算自清理: 回收本来源(EXPAND)的 DISABLED 旧明细
+		normoodItemDao.deleteNormoodItem(normtionPO.getIndex(), normtionVO.getQid(), NormoodItemPO.TYPE_EXPAND_INT, NormoodItemPO.STATUS_DISABLED_INT);
+		normriceItemDao.deleteNormriceItem(normtionPO.getIndex(), normtionVO.getQid(), NormriceItemPO.TYPE_EXPAND_INT, NormriceItemPO.STATUS_DISABLED_INT);
+
 		return 0;
 	}
 
@@ -1298,6 +1314,10 @@ public class NormtionServiceImpl implements NormtionService {
 
 			normtimeItemDao.save(normtimeItemPO);
 		}
+
+		// 重算自清理: 回收本来源(ADDCUT)的 DISABLED 旧明细
+		normoodItemDao.deleteNormoodItem(normtionPO.getIndex(), normtionVO.getQid(), NormoodItemPO.TYPE_ADDCUT_INT, NormoodItemPO.STATUS_DISABLED_INT);
+		normriceItemDao.deleteNormriceItem(normtionPO.getIndex(), normtionVO.getQid(), NormriceItemPO.TYPE_ADDCUT_INT, NormriceItemPO.STATUS_DISABLED_INT);
 
 		return 0;
 	}
