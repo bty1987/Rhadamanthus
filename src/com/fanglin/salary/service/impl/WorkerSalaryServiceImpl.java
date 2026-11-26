@@ -25,6 +25,8 @@ import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.quotation.dao.NormriceItemDao;
+import com.fanglin.quotation.dao.NormtionDao;
+import com.fanglin.quotation.po.NormtionPO;
 import com.fanglin.quotation.dao.QuotationDao;
 import com.fanglin.quotation.po.QuotationPO;
 import com.fanglin.salary.dao.WorkerBalanceDao;
@@ -64,6 +66,9 @@ public class WorkerSalaryServiceImpl implements WorkerSalaryService {
 
 	@Autowired
 	private NormriceItemDao normriceItemDao;
+
+	@Autowired
+	private NormtionDao normtionDao;
 
 	@Autowired
 	private UserDao userDao;
@@ -216,7 +221,9 @@ public class WorkerSalaryServiceImpl implements WorkerSalaryService {
 
 			List<Short> twotypes = Arrays.asList(WorkerSalaryPO.TWOTYPE_SALARY_INT, WorkerSalaryPO.TWOTYPE_ADDITME_INT, WorkerSalaryPO.TWOTYPE_PROPER_INT);
 
-			int nodeSalary = normriceItemDao.amountNormriceItemForSalary(quotationPO.getQid(), constructionSchedulePO.getNode().getCnid());
+			NormtionPO normtionPO = normtionDao.queryNormtion(quotationPO.getQid());
+			int index = normtionPO == null ? 0 : normtionPO.getIndex();
+			int nodeSalary = normriceItemDao.amountNormriceItemForSalary(index, quotationPO.getQid(), constructionSchedulePO.getNode().getCnid());
 
 			if (nodeSalary < constructionSchedulePO.getNode().getSalaryFloor()) {
 				nodeSalary = constructionSchedulePO.getNode().getSalaryFloor(); // 定额工费低于保底额,按保底额管控
