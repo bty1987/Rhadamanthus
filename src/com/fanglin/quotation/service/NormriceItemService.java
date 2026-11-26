@@ -19,4 +19,6 @@ public interface NormriceItemService {
 	public int confirmNormriceItem(NormriceItemVO normriceItemVO, String userId) throws FLException;
 
 	public int rejectNormriceItem(NormriceItemVO normriceItemVO) throws FLException;
+
+	public int updateNormriceItemForNum(NormriceItemVO normriceItemVO, String userId) throws FLException;
 }

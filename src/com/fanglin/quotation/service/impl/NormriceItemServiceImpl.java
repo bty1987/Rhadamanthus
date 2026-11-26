@@ -16,8 +16,10 @@ import com.fanglin.data.common.vo.ConstructionNodeVO;
 import com.fanglin.data.po.ConstructionNodePO;
 import com.fanglin.data.po.NormaddPO;
 import com.fanglin.data.quotation.dao.impl.NormaddDaoImpl;
+import com.fanglin.quotation.dao.NormChangeRecordDao;
 import com.fanglin.quotation.dao.NormriceItemDao;
 import com.fanglin.quotation.dao.QuotationDao;
+import com.fanglin.quotation.po.NormChangeRecordPO;
 import com.fanglin.quotation.po.NormriceItemPO;
 import com.fanglin.quotation.po.QuotationPO;
 import com.fanglin.quotation.service.NormriceItemService;
@@ -43,6 +45,9 @@ public class NormriceItemServiceImpl implements NormriceItemService {
 
 	@Autowired
 	private ConstructionScheduleDao constructionScheduleDao;
+
+	@Autowired
+	private NormChangeRecordDao normChangeRecordDao;
 
 	@Override
 	public List<NormriceItemVO> queryNormriceItem(NormriceItemVO normriceItem) {
@@ -206,6 +211,47 @@ public class NormriceItemServiceImpl implements NormriceItemService {
 		QuotationPO quotationPO = checkQuotationForStatusByEnabled(normriceItemPO.getQid());
 
 		normriceItemDao.rejectNormriceItem(normriceItemPO.getNpiid());
+
+		// 更新工程计划附加项状态
+		updateConstructionScheduleForAdditemStatus(quotationPO, normriceItemPO.getConstructionNode().getCnid());
+
+		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int updateNormriceItemForNum(NormriceItemVO normriceItemVO, String userId) throws FLException {
+
+		NormriceItemPO normriceItemPO = normriceItemDao.get(normriceItemVO.getNpiid());
+
+		if (normriceItemPO == null) {
+			return 0;
+		}
+
+		if (normriceItemPO.getStatus() == NormriceItemPO.STATUS_DISABLED_INT) {
+			throw new FLException(200137, "定额明细状态不可操作");
+		}
+
+		QuotationPO quotationPO = checkQuotationForStatusByEnabled(normriceItemPO.getQid());
+
+		Integer oldNum = normriceItemPO.getNum();
+
+		normriceItemPO.setNum(normriceItemVO.getNum());
+
+		// 已确认附加项数量变更后回退待确认, 重走确认流(计薪口径以确认值为准)
+		if (normriceItemPO.getType() == NormriceItemPO.TYPE_QUOTA_INT && normriceItemPO.getStatus() == NormriceItemPO.STATUS_CONFIRMED_INT) {
+			normriceItemPO.setStatus(NormriceItemPO.STATUS_INIT_INT);
+			normriceItemPO.setConfirmer(null);
+			normriceItemPO.setConfirmTime(null);
+		}
+
+		normriceItemDao.update(normriceItemPO);
+
+		// 变更记录: 工费项数量修改
+		normChangeRecordDao.save(new NormChangeRecordPO().init(NormChangeRecordPO.TYPE_NORMRICEITEM_NUM_INT, NormChangeRecordPO.CHANGETYPE_UPDATE_INT, userId)
+				.orderId(quotationPO.getOrderId()).qid(normriceItemPO.getQid()).refId(normriceItemPO.getNpiid()).refNo(normriceItemPO.getName())
+				.before(String.format("数量: %s", oldNum))
+				.after(String.format("数量: %s", normriceItemVO.getNum())));
 
 		// 更新工程计划附加项状态
 		updateConstructionScheduleForAdditemStatus(quotationPO, normriceItemPO.getConstructionNode().getCnid());

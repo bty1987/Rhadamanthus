@@ -12,8 +12,10 @@ import com.fanglin.core.interceptor.FLException;
 import com.fanglin.data.common.dao.ConstructionNodeDao;
 import com.fanglin.data.common.vo.ConstructionNodeVO;
 import com.fanglin.data.po.ConstructionNodePO;
+import com.fanglin.quotation.dao.NormChangeRecordDao;
 import com.fanglin.quotation.dao.NormtimeItemDao;
 import com.fanglin.quotation.dao.QuotationDao;
+import com.fanglin.quotation.po.NormChangeRecordPO;
 import com.fanglin.quotation.po.NormtimeItemPO;
 import com.fanglin.quotation.po.QuotationPO;
 import com.fanglin.quotation.service.NormtimeItemService;
@@ -33,6 +35,9 @@ public class NormtimeItemServiceImpl implements NormtimeItemService {
 
 	@Autowired
 	private ConstructionNodeDao constructionNodeDao;
+
+	@Autowired
+	private NormChangeRecordDao normChangeRecordDao;
 
 	@Override
 	public List<NormtimeItemVO> queryNormtimeItem(NormtimeItemVO normtimeItem) {
@@ -99,6 +104,37 @@ public class NormtimeItemServiceImpl implements NormtimeItemService {
 		checkQuotationForStatusByEnabled(normtimeItemPO.getQid());
 
 		normtimeItemDao.delete(normtimeItemPO);
+
+		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int updateNormtimeItemForNum(NormtimeItemVO normtimeItemVO, String userId) throws FLException {
+
+		NormtimeItemPO normtimeItemPO = normtimeItemDao.get(normtimeItemVO.getNtiid());
+
+		if (normtimeItemPO == null) {
+			return 0;
+		}
+
+		if (normtimeItemPO.getStatus() == NormtimeItemPO.STATUS_DISABLED_INT) {
+			throw new FLException(200137, "定额明细状态不可操作");
+		}
+
+		QuotationPO quotationPO = checkQuotationForStatusByEnabled(normtimeItemPO.getQid());
+
+		Integer oldNum = normtimeItemPO.getNum();
+
+		normtimeItemPO.setNum(normtimeItemVO.getNum());
+
+		normtimeItemDao.update(normtimeItemPO);
+
+		// 变更记录: 工时项数量修改
+		normChangeRecordDao.save(new NormChangeRecordPO().init(NormChangeRecordPO.TYPE_NORMTIMEITEM_NUM_INT, NormChangeRecordPO.CHANGETYPE_UPDATE_INT, userId)
+				.orderId(quotationPO.getOrderId()).qid(normtimeItemPO.getQid()).refId(normtimeItemPO.getNtiid()).refNo(normtimeItemPO.getName())
+				.before(String.format("数量: %s", oldNum))
+				.after(String.format("数量: %s", normtimeItemVO.getNum())));
 
 		return 0;
 	}

@@ -46,6 +46,14 @@ public class NormtimeItemAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "updateNormtimeItemForNum", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateNormtimeItemForNum() throws FLException {
+
+		normtimeItemService.updateNormtimeItemForNum(normtimeItem, queryUserId());
+
+		return SUCCESS;
+	}
+
 	@Action(value = "deleteNormtimeItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String deleteNormtimeItem() throws FLException {
 

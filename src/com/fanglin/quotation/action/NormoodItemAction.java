@@ -47,6 +47,14 @@ public class NormoodItemAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "updateNormoodItemForNum", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateNormoodItemForNum() throws FLException {
+
+		normoodItemService.updateNormoodItemForNum(normoodItem, queryUserId());
+
+		return SUCCESS;
+	}
+
 	@Action(value = "deleteNormoodItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String deleteNormoodItem() throws FLException {
 

@@ -13,4 +13,6 @@ public interface NormtimeItemService {
 	public int addNormtimeItem(NormtionVO normtionVO, NormtimeItemVO normtimeItemsVO) throws FLException;
 
 	public int deleteNormtimeItem(NormtionVO normtionVO, NormtimeItemVO normtimeItemsVO) throws FLException;
+
+	public int updateNormtimeItemForNum(NormtimeItemVO normtimeItemVO, String userId) throws FLException;
 }

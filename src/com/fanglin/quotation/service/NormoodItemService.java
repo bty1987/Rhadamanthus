@@ -14,6 +14,8 @@ public interface NormoodItemService {
 
 	public int deleteNormoodItem(NormoodItemVO normoodItemVO, String userId) throws FLException;
 
+	public int updateNormoodItemForNum(NormoodItemVO normoodItemVO, String userId) throws FLException;
+
 	public int amountNormoodItem(NormoodItemVO normoodItemVO);
 
 }

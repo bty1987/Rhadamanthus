@@ -54,6 +54,14 @@ public class NormriceItemAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "updateNormriceItemForNum", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateNormriceItemForNum() throws FLException {
+
+		normriceItemService.updateNormriceItemForNum(normriceItem, queryUserId());
+
+		return SUCCESS;
+	}
+
 	@Action(value = "deleteNormriceItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String deleteNormriceItem() throws FLException {
 

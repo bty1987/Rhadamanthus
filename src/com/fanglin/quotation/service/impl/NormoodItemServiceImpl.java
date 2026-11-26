@@ -199,4 +199,43 @@ public class NormoodItemServiceImpl implements NormoodItemService {
 		return 0;
 	}
 
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int updateNormoodItemForNum(NormoodItemVO normoodItemVO, String userId) throws FLException {
+
+		NormoodItemPO normoodItemPO = normoodItemDao.get(normoodItemVO.getNgiid());
+
+		if (normoodItemPO == null) {
+			return 0;
+		}
+
+		if (normoodItemPO.getStatus() == NormoodItemPO.STATUS_DISABLED_INT) {
+			throw new FLException(200137, "定额明细状态不可操作");
+		}
+
+		QuotationPO quotationPO = quotationDao.get(normoodItemPO.getQid());
+
+		if (quotationPO == null) {
+			throw new FLException(200003, "报价不存在");
+		}
+
+		Integer oldNormnum = normoodItemPO.getNormnum();
+		Integer oldStorenum = normoodItemPO.getStorenum();
+
+		normoodItemPO.setNormnum(normoodItemVO.getNormnum());
+		normoodItemPO.setStorenum(normoodItemVO.getStorenum());
+
+		normoodItemDao.update(normoodItemPO);
+
+		// 变更记录: 下定材数量修改(行快照)
+		String noodsName = normoodItemPO.getNoods() != null ? normoodItemPO.getNoods().getName() : "---";
+
+		normChangeRecordDao.save(new NormChangeRecordPO().init(NormChangeRecordPO.TYPE_NORMOODITEM_INT, NormChangeRecordPO.CHANGETYPE_UPDATE_INT, userId)
+				.qid(normoodItemPO.getQid()).refId(normoodItemPO.getNgiid()).refNo(noodsName)
+				.before(String.format("定额数量: %s, 库房数量: %s", oldNormnum, oldStorenum))
+				.after(String.format("定额数量: %s, 库房数量: %s", normoodItemVO.getNormnum(), normoodItemVO.getStorenum())));
+
+		return 0;
+	}
+
 }
