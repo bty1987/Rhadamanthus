@@ -158,12 +158,16 @@ public class ConstructionNodeServiceImpl implements ConstructionNodeService {
 		constructionNodePO.setEndtalk(constructionNodeVO.getEndtalk());
 		constructionNodePO.setKino(constructionNodeVO.getKino());
 		constructionNodePO.setKiname(constructionNodeVO.getKiname());
-		constructionNodePO.setTimeLimit(0);
+		constructionNodePO.setTimeLimit(constructionNodeVO.getTimeLimit());
 		constructionNodePO.setMark(constructionNodeVO.getMark());
 		constructionNodePO.setAccount(constructionNodeVO.getAccount() == null ? ConstructionNodePO.ACCOUNT_INVALID_INT : constructionNodeVO.getAccount());
 		constructionNodePO.setAccessoryLimit(constructionNodeVO.getAccessoryLimit());
 		constructionNodePO.setSalaryLimit(constructionNodeVO.getSalaryLimit());
 		constructionNodePO.setSalaryFloor(constructionNodeVO.getSalaryFloor() == null ? 0 : constructionNodeVO.getSalaryFloor());
+
+		// 平台同步: 创建支持status(未传默认启用INIT)与sort(未传默认0), timeLimit取VO实值(入口已兜null)
+		constructionNodePO.setStatus(constructionNodeVO.getStatus() == null ? ConstructionNodePO.STATUS_INIT_SHORT : constructionNodeVO.getStatus());
+		constructionNodePO.setSort(constructionNodeVO.getSort() == null ? 0 : constructionNodeVO.getSort());
 
 		constructionNodePO.setProcess(constructionNodeVO.getProcess());
 		constructionNodePO.setProset(constructionNodeVO.getProset());
@@ -189,6 +193,10 @@ public class ConstructionNodeServiceImpl implements ConstructionNodeService {
 		if (constructionNodePO == null) {
 			throw new FLException(130026, "工程节点不存在");
 		}
+
+		// 平台同步增量语义: name/status 传了才覆盖(name列NOT NULL防全量覆盖置空; status支持启停同步)
+		if (constructionNodeVO.getName() != null) constructionNodePO.setName(constructionNodeVO.getName());
+		if (constructionNodeVO.getStatus() != null) constructionNodePO.setStatus(constructionNodeVO.getStatus());
 
 		constructionNodePO.setPrecheck(constructionNodeVO.getPrecheck());
 		constructionNodePO.setPostcheck(constructionNodeVO.getPostcheck());
