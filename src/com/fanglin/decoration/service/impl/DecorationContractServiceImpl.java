@@ -351,9 +351,11 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 		if (params != null && decorationPO != null && decorationPO.getCustomer() != null) {
 
 			String customerPhone = com.fanglin.core.security.SensitiveDataHelper.decrypt(decorationPO.getCustomer().getPhone());
+			String customerIdNo = com.fanglin.core.security.SensitiveDataHelper.decrypt(decorationPO.getCustomer().getIdentity());
 
 			if (params.containsKey("con-customer-phone")) params.put("con-customer-phone", customerPhone);
 			if (params.containsKey("sin-customer-phone")) params.put("sin-customer-phone", customerPhone);
+			if (params.containsKey("con-customer-ident")) params.put("con-customer-ident", customerIdNo);
 		}
 
 		// 流程模板路线上下文(e签宝 signTemplate 发起需要签署人信息):
@@ -453,9 +455,11 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 		if (params != null && decorationPO != null && decorationPO.getCustomer() != null) {
 
 			String customerPhone = com.fanglin.core.security.SensitiveDataHelper.decrypt(decorationPO.getCustomer().getPhone());
+			String customerIdNo = com.fanglin.core.security.SensitiveDataHelper.decrypt(decorationPO.getCustomer().getIdentity());
 
 			if (params.containsKey("con-customer-phone")) params.put("con-customer-phone", customerPhone);
 			if (params.containsKey("sin-customer-phone")) params.put("sin-customer-phone", customerPhone);
+			if (params.containsKey("con-customer-ident")) params.put("con-customer-ident", customerIdNo);
 		}
 
 		// 流程模板路线上下文: 仅e签宝模板行(esign://前缀)塞入, 法大大/文档模板行params保持原样

@@ -113,6 +113,33 @@ public class SensitiveDataHelper {
 		return phone.substring(0, 3) + "****" + phone.substring(7);
 	}
 
+	/**
+	 * 身份证号脱敏：保留前6位与后4位(末位字母原样保留), 中间用*填充
+	 *
+	 * 例如: 110101199001011234 → 110101********1234
+	 *
+	 * @param identity 明文身份证号
+	 * @return 脱敏后的身份证号, 空值或长度不足10位直接返回
+	 */
+	public static String maskIdentity(String identity) {
+		if (identity == null || identity.trim().isEmpty()) {
+			return identity;
+		}
+
+		identity = identity.trim();
+
+		if (identity.length() <= 10) {
+			return identity;
+		}
+
+		StringBuilder mask = new StringBuilder();
+		for (int i = 0; i < identity.length() - 10; i++) {
+			mask.append('*');
+		}
+
+		return identity.substring(0, 6) + mask.toString() + identity.substring(identity.length() - 4);
+	}
+
 	// ========== 查询辅助 ==========
 
 	/**

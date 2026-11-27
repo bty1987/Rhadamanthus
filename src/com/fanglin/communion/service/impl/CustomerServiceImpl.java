@@ -163,6 +163,7 @@ public class CustomerServiceImpl implements CustomerService {
 		CustomerVO customerVO = customerPO.ptv(new CustomerVO(), CustomerPO.PRIVACY_OPENESS_INT);
 
 		customerVO.setPhone(SensitiveDataHelper.maskPhone(customerVO.getPhone()));
+		customerVO.setIdentity(SensitiveDataHelper.maskIdentity(customerVO.getIdentity()));
 
 		if (customerPhoneVO.getCpid() != null) {
 
