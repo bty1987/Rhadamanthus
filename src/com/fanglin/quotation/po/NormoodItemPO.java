@@ -3,15 +3,13 @@ package com.fanglin.quotation.po;
 import java.io.Serializable;
 
 import com.fanglin.core.interceptor.FLException;
-
 import com.fanglin.data.po.NoodsPO;
 
 /**
  * 定额材料明细字段基类(纯字段载体, 零JPA注解 —— 映射注解在各分表实体上, 照qfai正统: QuotationFunctionAreaItemPO基类同为纯类)。
- *
- * 分表实体: NormoodItemPO0(@Entity @Table normooditem, 原表/index=0) 与 NormoodItemPO1(@Entity @Table normooditem1, index=1) ...
- * 各实体字段与@Id全重声明, 相互并列根实体, 禁止实体间extends(启动SingleTableSubclass炸已实证)。
- *
+ * 
+ * 分表实体: NormoodItemPO0(@Entity @Table normooditem, 原表/index=0) 与 NormoodItemPO1(@Entity @Table normooditem1, index=1) ... 各实体字段与@Id全重声明, 相互并列根实体, 禁止实体间extends(启动SingleTableSubclass炸已实证)。
+ * 
  * 分表路由: normtion.index 决定物理表, 见 tableName / factoryToClazz / factoryToInstance。
  */
 public class NormoodItemPO implements Serializable {
@@ -204,24 +202,28 @@ public class NormoodItemPO implements Serializable {
 	}
 
 	public static Class<?> factoryToClazz(int index) {
+
 		if (index == 0) {
 			return NormoodItemPO0.class;
 		}
+
 		try {
 			return Class.forName("com.fanglin.quotation.po.NormoodItemPO" + index);
 		} catch (Exception e) {
-			throw new FLException(200138, "定额明细分表实体不存在: normooditem" + index, e);
+			throw new FLException(200138, "定额项存储对象错误");
 		}
 	}
 
 	public static NormoodItemPO factoryToInstance(int index) {
+
 		if (index == 0) {
 			return new NormoodItemPO0();
 		}
+
 		try {
 			return (NormoodItemPO) Class.forName("com.fanglin.quotation.po.NormoodItemPO" + index).newInstance();
 		} catch (Exception e) {
-			throw new FLException(200138, "定额明细分表实体不存在: normooditem" + index, e);
+			throw new FLException(200138, "定额项存储对象错误");
 		}
 	}
 

@@ -23,10 +23,8 @@ import com.fanglin.quotation.dao.AddReduceDao;
 import com.fanglin.quotation.dao.AddReduceItemDao;
 import com.fanglin.quotation.dao.ExtensionDao;
 import com.fanglin.quotation.dao.ExtensionItemDao;
-import com.fanglin.quotation.dao.NormtionDao;
-import com.fanglin.quotation.po.NormtionPO;
-import com.fanglin.quotation.po.NormriceItemPO;
 import com.fanglin.quotation.dao.NormriceItemDao;
+import com.fanglin.quotation.dao.NormtionDao;
 import com.fanglin.quotation.dao.QuotationDao;
 import com.fanglin.quotation.dao.QuotationFunctionAreaDao;
 import com.fanglin.quotation.dao.QuotationFunctionAreaItemDao;
@@ -37,6 +35,7 @@ import com.fanglin.quotation.po.AddReducePO;
 import com.fanglin.quotation.po.ExtensionItemPO;
 import com.fanglin.quotation.po.ExtensionPO;
 import com.fanglin.quotation.po.NormriceItemPO;
+import com.fanglin.quotation.po.NormtionPO;
 import com.fanglin.quotation.po.QuotationFunctionAreaItemPO;
 import com.fanglin.quotation.po.QuotationFunctionAreaPO;
 import com.fanglin.quotation.po.QuotationPO;
@@ -50,7 +49,7 @@ import com.fanglin.utils.BeanUtil;
 
 @Service("ruotationItemService")
 @Transactional(readOnly = true)
-public class RuotationItemServiceImpl implements RuotationItemService{
+public class RuotationItemServiceImpl implements RuotationItemService {
 
 	@Autowired
 	public RuotationDao ruotationDao;
@@ -395,7 +394,6 @@ public class RuotationItemServiceImpl implements RuotationItemService{
 
 		return 0;
 	}
-
 
 	/**
 	 * 分表路由解析: qid → normtion.index。normtion 不存在按 0(原表)处理。
