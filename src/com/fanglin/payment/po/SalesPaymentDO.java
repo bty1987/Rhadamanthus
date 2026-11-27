@@ -13,242 +13,223 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import com.fanglin.decoration.po.DecorationPO;
-import com.fanglin.decoration.vo.DecorationVO;
 import com.fanglin.payment.vo.SalesPaymentVO;
 import com.fanglin.sales.po.SalesPO;
 import com.fanglin.sales.po.SalesRefundsPO;
 import com.fanglin.utils.BeanUtil;
 
 /**
- * 销售收款分页装配对象(PO关联PO, 照PaymentDO模式): SalesPaymentPO --sid--> SalesPO, SalesPaymentPO --orderId--> DecorationPO.
- * 专供 SalesPaymentServiceImpl.pageSalesPayment 查询装配使用, 装修等级经 sales.decoration.grade 下发(propertyMap.decorationGrade).
+ * 销售收款分页装配对象(PO关联PO, 照PaymentDO模式): SalesPaymentPO --sid--> SalesPO, SalesPaymentPO --orderId--> DecorationPO. 专供 SalesPaymentServiceImpl.pageSalesPayment 查询装配使用, 装修等级经 sales.decoration.grade 下发(propertyMap.decorationGrade).
  */
 @Entity
 @Table(name = "salespayment", catalog = "payment")
 public class SalesPaymentDO implements Serializable {
 
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
-    private long spid;
+	private long spid;
 
-    private SalesPO sales;
+	private SalesPO sales;
 
-    private SalesReceiptPO salesReceipt;
+	private SalesReceiptPO salesReceipt;
 
-    private SalesRefundsPO salesRefunds;
+	private SalesRefundsPO salesRefunds;
 
-    private DecorationPO decoration;
+	private DecorationPO decoration;
 
-    private String orderId;
+	private String orderId;
 
-    private short type;
+	private short type;
 
-    private short status;
+	private short status;
 
-    private String category;
+	private String category;
 
-    private String brand;
+	private String brand;
 
-    private long referMoney;
+	private long referMoney;
 
-    private short isAffirm;
+	private short isAffirm;
 
-    private Timestamp affirmTime;
+	private Timestamp affirmTime;
 
-    private int company;
+	private int company;
 
-    private Timestamp createTime;
+	private Timestamp createTime;
 
-    /**
-     * PO装配构造: 平铺字段同名列直拷(关联列由关联侧持有), 关联逐个取自PO(查询侧 join fetch 已加载)
-     */
-    public SalesPaymentDO(SalesPaymentPO salesPaymentPO) {
-        super();
+	/**
+	 * PO装配构造: 平铺字段同名列直拷(关联列由关联侧持有), 关联逐个取自PO(查询侧 join fetch 已加载)
+	 */
+	public SalesPaymentDO(SalesPaymentPO salesPaymentPO) {
+		super();
 
-        BeanUtil.copyProperties(salesPaymentPO, this, Arrays.asList("sales", "salesReceipt", "salesRefunds", "decoration"));
+		BeanUtil.copyProperties(salesPaymentPO, this, Arrays.asList("sales", "salesReceipt", "salesRefunds", "decoration"));
 
-        this.sales = salesPaymentPO.getSales();
-        this.salesReceipt = salesPaymentPO.getSalesReceipt();
-        this.salesRefunds = salesPaymentPO.getSalesRefunds();
-        this.decoration = salesPaymentPO.getDecoration();
-    }
+		this.sales = salesPaymentPO.getSales();
+		this.salesReceipt = salesPaymentPO.getSalesReceipt();
+		this.salesRefunds = salesPaymentPO.getSalesRefunds();
+		this.decoration = salesPaymentPO.getDecoration();
+	}
 
-    public SalesPaymentDO() {
-        super();
-    }
+	public SalesPaymentDO() {
+		super();
+	}
 
-    @Id
-    @Column(name = "spid")
-    public long getSpid() {
-        return spid;
-    }
+	@Id
+	@Column(name = "spid")
+	public long getSpid() {
+		return spid;
+	}
 
-    public void setSpid(long spid) {
-        this.spid = spid;
-    }
+	public void setSpid(long spid) {
+		this.spid = spid;
+	}
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "sid", referencedColumnName = "sid")
-    public SalesPO getSales() {
-        return sales;
-    }
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "sid", referencedColumnName = "sid")
+	public SalesPO getSales() {
+		return sales;
+	}
 
-    public void setSales(SalesPO sales) {
-        this.sales = sales;
-    }
+	public void setSales(SalesPO sales) {
+		this.sales = sales;
+	}
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "srid", referencedColumnName = "srid")
-    public SalesReceiptPO getSalesReceipt() {
-        return salesReceipt;
-    }
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "srid", referencedColumnName = "srid")
+	public SalesReceiptPO getSalesReceipt() {
+		return salesReceipt;
+	}
 
-    public void setSalesReceipt(SalesReceiptPO salesReceipt) {
-        this.salesReceipt = salesReceipt;
-    }
+	public void setSalesReceipt(SalesReceiptPO salesReceipt) {
+		this.salesReceipt = salesReceipt;
+	}
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "rid", referencedColumnName = "rid")
-    public SalesRefundsPO getSalesRefunds() {
-        return salesRefunds;
-    }
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "rid", referencedColumnName = "rid")
+	public SalesRefundsPO getSalesRefunds() {
+		return salesRefunds;
+	}
 
-    public void setSalesRefunds(SalesRefundsPO salesRefunds) {
-        this.salesRefunds = salesRefunds;
-    }
+	public void setSalesRefunds(SalesRefundsPO salesRefunds) {
+		this.salesRefunds = salesRefunds;
+	}
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "orderId", referencedColumnName = "orderId")
-    public DecorationPO getDecoration() {
-        return decoration;
-    }
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "orderId", referencedColumnName = "orderId")
+	public DecorationPO getDecoration() {
+		return decoration;
+	}
 
-    public void setDecoration(DecorationPO decoration) {
-        this.decoration = decoration;
-    }
+	public void setDecoration(DecorationPO decoration) {
+		this.decoration = decoration;
+	}
 
-    @Column(name = "orderId")
-    public String getOrderId() {
-        return orderId;
-    }
+	@Column(name = "orderId")
+	public String getOrderId() {
+		return orderId;
+	}
 
-    public void setOrderId(String orderId) {
-        this.orderId = orderId;
-    }
+	public void setOrderId(String orderId) {
+		this.orderId = orderId;
+	}
 
-    @Column(name = "type")
-    public short getType() {
-        return type;
-    }
+	@Column(name = "type")
+	public short getType() {
+		return type;
+	}
 
-    public void setType(short type) {
-        this.type = type;
-    }
+	public void setType(short type) {
+		this.type = type;
+	}
 
-    @Column(name = "status")
-    public short getStatus() {
-        return status;
-    }
+	@Column(name = "status")
+	public short getStatus() {
+		return status;
+	}
 
-    public void setStatus(short status) {
-        this.status = status;
-    }
+	public void setStatus(short status) {
+		this.status = status;
+	}
 
-    @Column(name = "category")
-    public String getCategory() {
-        return category;
-    }
+	@Column(name = "category")
+	public String getCategory() {
+		return category;
+	}
 
-    public void setCategory(String category) {
-        this.category = category;
-    }
+	public void setCategory(String category) {
+		this.category = category;
+	}
 
-    @Column(name = "brand")
-    public String getBrand() {
-        return brand;
-    }
+	@Column(name = "brand")
+	public String getBrand() {
+		return brand;
+	}
 
-    public void setBrand(String brand) {
-        this.brand = brand;
-    }
+	public void setBrand(String brand) {
+		this.brand = brand;
+	}
 
-    @Column(name = "referMoney")
-    public long getReferMoney() {
-        return referMoney;
-    }
+	@Column(name = "referMoney")
+	public long getReferMoney() {
+		return referMoney;
+	}
 
-    public void setReferMoney(long referMoney) {
-        this.referMoney = referMoney;
-    }
+	public void setReferMoney(long referMoney) {
+		this.referMoney = referMoney;
+	}
 
-    @Column(name = "isAffirm")
-    public short getIsAffirm() {
-        return isAffirm;
-    }
+	@Column(name = "isAffirm")
+	public short getIsAffirm() {
+		return isAffirm;
+	}
 
-    public void setIsAffirm(short isAffirm) {
-        this.isAffirm = isAffirm;
-    }
+	public void setIsAffirm(short isAffirm) {
+		this.isAffirm = isAffirm;
+	}
 
-    @Column(name = "affirmTime")
-    public Timestamp getAffirmTime() {
-        return affirmTime;
-    }
+	@Column(name = "affirmTime")
+	public Timestamp getAffirmTime() {
+		return affirmTime;
+	}
 
-    public void setAffirmTime(Timestamp affirmTime) {
-        this.affirmTime = affirmTime;
-    }
+	public void setAffirmTime(Timestamp affirmTime) {
+		this.affirmTime = affirmTime;
+	}
 
-    @Column(name = "company")
-    public int getCompany() {
-        return company;
-    }
+	@Column(name = "company")
+	public int getCompany() {
+		return company;
+	}
 
-    public void setCompany(int company) {
-        this.company = company;
-    }
+	public void setCompany(int company) {
+		this.company = company;
+	}
 
-    @Column(name = "createTime")
-    public Timestamp getCreateTime() {
-        return createTime;
-    }
+	@Column(name = "createTime")
+	public Timestamp getCreateTime() {
+		return createTime;
+	}
 
-    public void setCreateTime(Timestamp createTime) {
-        this.createTime = createTime;
-    }
+	public void setCreateTime(Timestamp createTime) {
+		this.createTime = createTime;
+	}
 
-    /**
-     * 装配销售收款页返回体(照PaymentDO.dtv): 平铺字段直拷 + 关联逐段ptv/ptvcascade;
-     * 装修单挂 sales.decoration 下(前端契约 v.sales.decoration.grade), ptvcascade 全嵌套(house/village/designer/grade)
-     */
-    public SalesPaymentVO dtv(SalesPaymentVO salesPaymentVO) {
+	/**
+	 * 装配销售收款页返回体(照PaymentDO.dtv): 平铺字段直拷 + 关联逐段ptv/ptvcascade; 装修单挂 sales.decoration 下(前端契约 v.sales.decoration.grade), ptvcascade 全嵌套(house/village/designer/grade)
+	 */
+	public SalesPaymentVO dtv(SalesPaymentVO salesPaymentVO) {
 
-        BeanUtil.copyProperties(this, salesPaymentVO, Arrays.asList("sales", "salesReceipt", "salesRefunds", "decoration"));
+		BeanUtil.copyProperties(this, salesPaymentVO, Arrays.asList("sales", "salesReceipt", "salesRefunds", "decoration"));
 
-        if (getSales() != null) getSales().ptv(salesPaymentVO.getSales());
+		if (getSales() != null) getSales().ptv(salesPaymentVO.getSales());
 
-        if (getSalesReceipt() != null && salesPaymentVO.getSalesReceipt() != null) {
+		if (getSalesReceipt() != null && salesPaymentVO.getSalesReceipt() != null) getSalesReceipt().ptv(salesPaymentVO.getSalesReceipt());
 
-            BeanUtil.copyProperties(getSalesReceipt(), salesPaymentVO.getSalesReceipt(), Arrays.asList("collecter", "confirmer"));
+		if (getSalesRefunds() != null) getSalesRefunds().ptv(salesPaymentVO.getSalesRefunds());
 
-            if (getSalesReceipt().getCollecter() != null && salesPaymentVO.getSalesReceipt().getCollecter() != null) {
-                BeanUtil.copyProperties(getSalesReceipt().getCollecter(), salesPaymentVO.getSalesReceipt().getCollecter(), Arrays.asList("role", "dept", "duty"));
-            }
+		if (getDecoration() != null && getSales() != null && salesPaymentVO.getSales() != null && salesPaymentVO.getSales().getDecoration() != null) getDecoration().ptvcascade(salesPaymentVO.getSales().getDecoration());
 
-            if (getSalesReceipt().getConfirmer() != null && salesPaymentVO.getSalesReceipt().getConfirmer() != null) {
-                BeanUtil.copyProperties(getSalesReceipt().getConfirmer(), salesPaymentVO.getSalesReceipt().getConfirmer(), Arrays.asList("role", "dept", "duty"));
-            }
-        }
-
-        if (getSalesRefunds() != null) getSalesRefunds().ptv(salesPaymentVO.getSalesRefunds());
-
-        if (getDecoration() != null && getSales() != null) {
-
-            salesPaymentVO.getSales().setDecoration(new DecorationVO());
-
-            getDecoration().ptvcascade(salesPaymentVO.getSales().getDecoration());
-        }
-
-        return salesPaymentVO;
-    }
+		return salesPaymentVO;
+	}
 }
