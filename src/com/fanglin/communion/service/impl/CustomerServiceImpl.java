@@ -142,11 +142,47 @@ public class CustomerServiceImpl implements CustomerService {
 		return customerVOs;
 	}
 
+	/**
+	 * 合同场景专用客户信息查询: 电话脱敏返回(合同页显示掩码), 合同文本/PDF 的明文电话由
+	 * addDecorationContract/makeDecorationContract 服务端按库值覆盖, 前端不接触明文
+	 */
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public CustomerVO queryCustomerForContract(CustomerPhoneVO customerPhoneVO, String userId) throws FLException {
 
-		return queryCustomerForPhone(customerPhoneVO, userId);
+		CustomerPO customerPO = customerDao.get(customerPhoneVO.getCid());
+
+		if (customerPO == null) {
+			throw new FLException(130178, "客户信息不存在");
+		}
+
+		if (customerPO.getStatus() < CustomerPO.STATUS_AUTH_INT) {
+			throw new FLException(130189, "客户实名认证未完成");
+		}
+
+		CustomerVO customerVO = customerPO.ptv(new CustomerVO(), CustomerPO.PRIVACY_OPENESS_INT);
+
+		customerVO.setPhone(SensitiveDataHelper.maskPhone(customerVO.getPhone()));
+
+		if (customerPhoneVO.getCpid() != null) {
+
+			CustomerPhonePO customerPhonePO = customerPhoneDao.get(customerPhoneVO.getCpid());
+
+			if (customerPhonePO != null) {
+				customerPhonePO.ptv(customerPhoneVO, CustomerPO.PRIVACY_OPENESS_INT);
+				customerPhoneVO.setPhone(SensitiveDataHelper.maskPhone(customerPhoneVO.getPhone()));
+			}
+		} else {
+			customerPhoneVO.setCpid(0l);
+		}
+
+		customerRecordDao.save(new CustomerRecordPO(customerPO.getCid(), customerPhoneVO.getCpid(), CustomerRecordPO.TYPE_QUERY_INT, userDao.queryUserByUserId(userId), DateUtil.getDateToTimestamp(new Date())));
+
+		// Phase 7: 同时写入 log 模块的统一客户电话查询日志表（双写过渡期）
+		// 后续废弃原表后可移除上面那行 customerRecordDao.save
+		customerLogService.addCustomerLog(customerPO.getCid(), customerPhoneVO.getCpid(), userId, null);
+
+		return customerVO;
 	}
 
 	@Override

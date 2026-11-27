@@ -15,7 +15,9 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.fanglin.approval.dao.ApprovalDao;
 import com.fanglin.communion.dao.CustomerDao;
+import com.fanglin.communion.dao.CustomerRecordDao;
 import com.fanglin.communion.po.CustomerPO;
+import com.fanglin.communion.po.CustomerRecordPO;
 import com.fanglin.communion.po.DepartmentTypePO;
 import com.fanglin.communion.vo.CustomerVO;
 import com.fanglin.construction.dao.ConstructionInfoDao;
@@ -66,6 +68,7 @@ import com.fanglin.information.po.MessageCueuingPO;
 import com.fanglin.information.po.MessagePO;
 import com.fanglin.information.po.MessageQueuingPO;
 import com.fanglin.information.service.MessageService;
+import com.fanglin.log.service.CustomerLogService;
 import com.fanglin.payment.dao.DecorationPaymentDao;
 import com.fanglin.payment.po.DecorationPaymentPO;
 import com.fanglin.personel.dao.UserDao;
@@ -139,6 +142,12 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 	private CustomerDao customerDao;
 
 	@Autowired
+	private CustomerRecordDao customerRecordDao;
+
+	@Autowired
+	private CustomerLogService customerLogService;
+
+	@Autowired
 	private ConstructionInfoDao constructionInfoDao;
 
 	@Autowired
@@ -192,12 +201,27 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 	}
 
 	@Override
-	public String viewDecorationContract(DecorationContractVO decorationContractVO) throws FLException {
+	@Transactional(rollbackFor = Exception.class)
+	public String viewDecorationContract(DecorationContractVO decorationContractVO, String userId) throws FLException {
 
 		DecorationContractPO decorationContractPO = decorationContractDao.get(decorationContractVO.getDcid());
 
 		if (decorationContractPO == null) {
 			throw new FLException(140067, "合同不存在");
+		}
+
+		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(decorationContractPO.getOrderId());
+
+		// 合同内容含客户明文电话, 查看行为记入客户电话审计(双写: customerrecord + log.customerlog)
+		if (decorationPO != null && decorationPO.getCustomer() != null) {
+
+			long cid = decorationPO.getCustomer().getCid();
+
+			customerRecordDao.save(new CustomerRecordPO(cid, 0l, CustomerRecordPO.TYPE_QUERY_INT, userDao.queryUserByUserId(userId), DateUtil.getDateToTimestamp(new Date())));
+
+			// Phase 7: 同时写入 log 模块的统一客户电话查询日志表（双写过渡期）
+			// 后续废弃原表后可移除上面那行 customerRecordDao.save
+			customerLogService.addCustomerLog(cid, 0l, userId, String.format("查看合同内容, dcid=%d, 合同编号=%s", decorationContractPO.getDcid(), decorationContractPO.getNo()));
 		}
 
 		return routeForRecord(decorationContractPO).view(decorationContractPO);
@@ -322,6 +346,16 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 
 		JSONObject params = JSONObject.parseObject(data);
 
+		// 客户电话槽位强制库值明文: 合同页经 queryCustomerForContract 拿到的是脱敏号,
+		// 合同文本/PDF 明文以服务端库值为准(前端传值不生效), e签宝模板另有 _flow_psnPhone 覆盖
+		if (params != null && decorationPO != null && decorationPO.getCustomer() != null) {
+
+			String customerPhone = com.fanglin.core.security.SensitiveDataHelper.decrypt(decorationPO.getCustomer().getPhone());
+
+			if (params.containsKey("con-customer-phone")) params.put("con-customer-phone", customerPhone);
+			if (params.containsKey("sin-customer-phone")) params.put("sin-customer-phone", customerPhone);
+		}
+
 		// 流程模板路线上下文(e签宝 signTemplate 发起需要签署人信息):
 		// 仅e签宝模板行(esign://前缀)塞入——法大大/文档模板行的params保持原样透传(历史行为零变化);
 		// 个人方=装修单客户, 企业方=签章主体(装修单公司)
@@ -413,6 +447,16 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(decorationContractPO.getOrderId());
 
 		JSONObject params = JSONObject.parseObject(data);
+
+		// 客户电话槽位强制库值明文: 合同页经 queryCustomerForContract 拿到的是脱敏号,
+		// 合同文本/PDF 明文以服务端库值为准(前端传值不生效), e签宝模板另有 _flow_psnPhone 覆盖
+		if (params != null && decorationPO != null && decorationPO.getCustomer() != null) {
+
+			String customerPhone = com.fanglin.core.security.SensitiveDataHelper.decrypt(decorationPO.getCustomer().getPhone());
+
+			if (params.containsKey("con-customer-phone")) params.put("con-customer-phone", customerPhone);
+			if (params.containsKey("sin-customer-phone")) params.put("sin-customer-phone", customerPhone);
+		}
 
 		// 流程模板路线上下文: 仅e签宝模板行(esign://前缀)塞入, 法大大/文档模板行params保持原样
 		boolean esignTemplateRow = contractPO.getPath() != null && contractPO.getPath().startsWith("esign://");

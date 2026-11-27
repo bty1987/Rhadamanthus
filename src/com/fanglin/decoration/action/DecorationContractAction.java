@@ -147,7 +147,7 @@ public class DecorationContractAction extends BaseListAction {
 	@Action(value = "viewDecorationContract", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String viewDecorationContract() throws FLException {
 
-		redirect = decorationContractService.viewDecorationContract(decorationContract);
+		redirect = decorationContractService.viewDecorationContract(decorationContract, queryUserId());
 
 		return SUCCESS;
 	}

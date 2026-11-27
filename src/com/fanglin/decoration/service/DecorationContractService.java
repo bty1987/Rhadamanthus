@@ -24,7 +24,7 @@ public interface DecorationContractService {
 
 	public String redirectDecorationContract(DecorationContractVO decorationContractVO) throws FLException;
 
-	public String viewDecorationContract(DecorationContractVO decorationContractVO) throws FLException;
+	public String viewDecorationContract(DecorationContractVO decorationContractVO, String userId) throws FLException;
 
 	public int addDecorationContract(DecorationContractVO decorationContractVO, ContractVO contractVO, String data, String table, String userId) throws FLException;
 
