@@ -1,5 +1,7 @@
 package com.fanglin.quotation.po;
 
+import java.io.Serializable;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -10,16 +12,15 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import com.fanglin.core.interceptor.FLException;
 import com.fanglin.data.po.NoodsPO;
-import java.io.Serializable;
 
 /**
- * 定额材料明细实体(NormoodItemPO0, 分表路由 index=0)。
- * 结构照 qfai 正统: extends 字段基类 NormoodItemPO(纯类), 字段与@Id全重声明 —— 各实体独立根实体。
+ * 定额材料明细原表实体(normooditem, 分表路由 index=0)。
+ * 结构照 qfai 正统(QuotationFunctionAreaItemPO0): extends 字段基类 NormoodItemPO(纯类),
+ * 字段与@Id全重声明 —— 各实体独立根实体, 禁止实体间extends(启动SingleTableSubclass炸已实证)。
  */
 @Entity
-@Table(name = "normooditem0", catalog = "quotation")
+@Table(name = "normooditem", catalog = "quotation")
 public class NormoodItemPO0 extends NormoodItemPO implements Serializable {
 
 	private static final long serialVersionUID = -1495497405192428115L;
@@ -57,7 +58,7 @@ public class NormoodItemPO0 extends NormoodItemPO implements Serializable {
 	private short status;
 
 	@Id
-	@GeneratedValue
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "ngiid")
 	public long getNgiid() {
 		return ngiid;
@@ -67,6 +68,7 @@ public class NormoodItemPO0 extends NormoodItemPO implements Serializable {
 		this.ngiid = ngiid;
 	}
 
+	@Column(name = "qid")
 	public long getQid() {
 		return qid;
 	}
@@ -75,6 +77,7 @@ public class NormoodItemPO0 extends NormoodItemPO implements Serializable {
 		this.qid = qid;
 	}
 
+	@Column(name = "sid")
 	public long getSid() {
 		return sid;
 	}
@@ -83,6 +86,7 @@ public class NormoodItemPO0 extends NormoodItemPO implements Serializable {
 		this.sid = sid;
 	}
 
+	@Column(name = "areald")
 	public long getAreald() {
 		return areald;
 	}
@@ -91,6 +95,7 @@ public class NormoodItemPO0 extends NormoodItemPO implements Serializable {
 		this.areald = areald;
 	}
 
+	@Column(name = "quoteld")
 	public long getQuoteld() {
 		return quoteld;
 	}
@@ -99,6 +104,7 @@ public class NormoodItemPO0 extends NormoodItemPO implements Serializable {
 		this.quoteld = quoteld;
 	}
 
+	@Column(name = "qiid")
 	public long getQiid() {
 		return qiid;
 	}
@@ -107,6 +113,7 @@ public class NormoodItemPO0 extends NormoodItemPO implements Serializable {
 		this.qiid = qiid;
 	}
 
+	@Column(name = "ngid")
 	public long getNgid() {
 		return ngid;
 	}
@@ -115,6 +122,7 @@ public class NormoodItemPO0 extends NormoodItemPO implements Serializable {
 		this.ngid = ngid;
 	}
 
+	@Column(name = "type")
 	public short getType() {
 		return type;
 	}
@@ -123,6 +131,7 @@ public class NormoodItemPO0 extends NormoodItemPO implements Serializable {
 		this.type = type;
 	}
 
+	@Column(name = "normtype")
 	public short getNormtype() {
 		return normtype;
 	}
@@ -131,6 +140,7 @@ public class NormoodItemPO0 extends NormoodItemPO implements Serializable {
 		this.normtype = normtype;
 	}
 
+	@Column(name = "atttype")
 	public short getAtttype() {
 		return atttype;
 	}
@@ -139,6 +149,8 @@ public class NormoodItemPO0 extends NormoodItemPO implements Serializable {
 		this.atttype = atttype;
 	}
 
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "nid", referencedColumnName = "nid")
 	public NoodsPO getNoods() {
 		return noods;
 	}
@@ -147,6 +159,7 @@ public class NormoodItemPO0 extends NormoodItemPO implements Serializable {
 		this.noods = noods;
 	}
 
+	@Column(name = "normunit")
 	public String getNormunit() {
 		return normunit;
 	}
@@ -155,6 +168,7 @@ public class NormoodItemPO0 extends NormoodItemPO implements Serializable {
 		this.normunit = normunit;
 	}
 
+	@Column(name = "normnum")
 	public int getNormnum() {
 		return normnum;
 	}
@@ -163,6 +177,7 @@ public class NormoodItemPO0 extends NormoodItemPO implements Serializable {
 		this.normnum = normnum;
 	}
 
+	@Column(name = "storeunit")
 	public String getStoreunit() {
 		return storeunit;
 	}
@@ -171,6 +186,7 @@ public class NormoodItemPO0 extends NormoodItemPO implements Serializable {
 		this.storeunit = storeunit;
 	}
 
+	@Column(name = "storenum")
 	public int getStorenum() {
 		return storenum;
 	}
@@ -185,33 +201,6 @@ public class NormoodItemPO0 extends NormoodItemPO implements Serializable {
 
 	public void setStatus(short status) {
 		this.status = status;
-	}
-
-	// 定额明细分表路由(normtion.index 决定): index=0 → normooditem(原表), >0 → normooditem{index} 分表
-	public static String tableName(int index) {
-		return index == 0 ? "normooditem" : "normooditem" + index;
-	}
-
-	public static Class<? extends NormoodItemPO> factoryToClazz(int index) {
-		if (index == 0) {
-			return NormoodItemPO0.class;
-		}
-		try {
-			return (Class<? extends NormoodItemPO>) Class.forName("com.fanglin.quotation.po.NormoodItemPO" + index);
-		} catch (Exception e) {
-			throw new FLException(200138, "定额明细分表实体不存在: normooditem" + index, e);
-		}
-	}
-
-	public static NormoodItemPO factoryToInstance(int index) {
-		if (index == 0) {
-			return new NormoodItemPO0();
-		}
-		try {
-			return (NormoodItemPO) Class.forName("com.fanglin.quotation.po.NormoodItemPO" + index).newInstance();
-		} catch (Exception e) {
-			throw new FLException(200138, "定额明细分表实体不存在: normooditem" + index, e);
-		}
 	}
 
 }

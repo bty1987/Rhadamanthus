@@ -9,7 +9,7 @@ import com.fanglin.data.po.NoodsPO;
 /**
  * 定额材料明细字段基类(纯字段载体, 零JPA注解 —— 映射注解在各分表实体上, 照qfai正统: QuotationFunctionAreaItemPO基类同为纯类)。
  *
- * 分表实体: NormoodItemPO0(@Entity @Table normooditem0, 原表/index=0) 与 NormoodItemPO1(@Entity @Table normooditem1, index=1) ...
+ * 分表实体: NormoodItemPO0(@Entity @Table normooditem, 原表/index=0) 与 NormoodItemPO1(@Entity @Table normooditem1, index=1) ...
  * 各实体字段与@Id全重声明, 相互并列根实体, 禁止实体间extends(启动SingleTableSubclass炸已实证)。
  *
  * 分表路由: normtion.index 决定物理表, 见 tableName / factoryToClazz / factoryToInstance。
