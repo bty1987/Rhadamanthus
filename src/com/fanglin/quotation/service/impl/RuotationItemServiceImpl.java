@@ -25,6 +25,7 @@ import com.fanglin.quotation.dao.ExtensionDao;
 import com.fanglin.quotation.dao.ExtensionItemDao;
 import com.fanglin.quotation.dao.NormtionDao;
 import com.fanglin.quotation.po.NormtionPO;
+import com.fanglin.quotation.po.NormriceItemBase;
 import com.fanglin.quotation.dao.NormriceItemDao;
 import com.fanglin.quotation.dao.QuotationDao;
 import com.fanglin.quotation.dao.QuotationFunctionAreaDao;
@@ -133,7 +134,7 @@ public class RuotationItemServiceImpl implements RuotationItemService{
 
 		if (quotationPO != null) {
 
-			for (NormriceItemPO normriceItemPO : normriceItemDao.queryNormriceItem(resolveIndex(quotationPO.getQid()), quotationPO.getQid())) {
+			for (NormriceItemBase normriceItemPO : normriceItemDao.queryNormriceItem(resolveIndex(quotationPO.getQid()), quotationPO.getQid())) {
 
 				if (normriceItemPO.getConstructionNode() == null || normriceItemPO.getQiid() == 0) continue;
 

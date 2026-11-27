@@ -23,6 +23,7 @@ import com.fanglin.quotation.dao.NormtionDao;
 import com.fanglin.quotation.dao.QuotationDao;
 import com.fanglin.quotation.po.NormChangeRecordPO;
 import com.fanglin.quotation.po.NormriceItemPO;
+import com.fanglin.quotation.po.NormriceItemBase;
 import com.fanglin.quotation.po.NormtionPO;
 import com.fanglin.quotation.po.QuotationPO;
 import com.fanglin.quotation.service.NormriceItemService;
@@ -65,10 +66,10 @@ public class NormriceItemServiceImpl implements NormriceItemService {
 	public List<NormriceItemVO> queryNormriceItem(NormriceItemVO normriceItem) {
 
 		int index = resolveIndex(normriceItem.getQid());
-		List<NormriceItemPO> normriceItemPOs = normriceItemDao.queryNormriceItem(index, normriceItem.getQid());
+		List<NormriceItemBase> normriceItemPOs = normriceItemDao.queryNormriceItem(index, normriceItem.getQid());
 		List<NormriceItemVO> normriceItemVOs = new ArrayList<NormriceItemVO>();
 
-		for (NormriceItemPO normriceItemPO : normriceItemPOs) {
+		for (NormriceItemBase normriceItemPO : normriceItemPOs) {
 
 			normriceItem = new NormriceItemVO(new ConstructionNodeVO());
 
@@ -85,10 +86,10 @@ public class NormriceItemServiceImpl implements NormriceItemService {
 	public List<NormriceItemVO> queryNormriceItemByType(NormriceItemVO normriceItem) {
 
 		int index = resolveIndex(normriceItem.getQid());
-		List<NormriceItemPO> normriceItemPOs = normriceItemDao.queryNormriceItemByType(index, normriceItem.getQid(), normriceItem.getType());
+		List<NormriceItemBase> normriceItemPOs = normriceItemDao.queryNormriceItemByType(index, normriceItem.getQid(), normriceItem.getType());
 		List<NormriceItemVO> normriceItemVOs = new ArrayList<NormriceItemVO>();
 
-		for (NormriceItemPO normriceItemPO : normriceItemPOs) {
+		for (NormriceItemBase normriceItemPO : normriceItemPOs) {
 
 			NormriceItemVO normriceItemVO = new NormriceItemVO(new ConstructionNodeVO());
 
@@ -112,7 +113,7 @@ public class NormriceItemServiceImpl implements NormriceItemService {
 
 		int index = normtionPO.getIndex();
 
-		NormriceItemPO normriceItemPO = NormriceItemPO.factoryToInstance(index);
+		NormriceItemBase normriceItemPO = NormriceItemPO.factoryToInstance(index);
 
 		if (normriceItemVO.getSid() != null) {
 
@@ -121,9 +122,9 @@ public class NormriceItemServiceImpl implements NormriceItemService {
 			normriceItemPO.setQid(quotationPO.getQid());
 			normriceItemPO.setSid(quotationPO.getQid());
 
-			normriceItemPO.setType(NormriceItemPO.TYPE_QUOTA_INT);
-			normriceItemPO.setNormtype(NormriceItemPO.NORMTYPE_ADD_INT);
-			normriceItemPO.setAtttype(NormriceItemPO.ATTTYPE_COLLECTION_INT);
+			normriceItemPO.setType(NormriceItemBase.TYPE_QUOTA_INT);
+			normriceItemPO.setNormtype(NormriceItemBase.NORMTYPE_ADD_INT);
+			normriceItemPO.setAtttype(NormriceItemBase.ATTTYPE_COLLECTION_INT);
 			normriceItemPO.setNum(normriceItemVO.getNum());
 
 			normriceItemPO.setConstructionNode(normaddPO.getConstructionNode());
@@ -152,9 +153,9 @@ public class NormriceItemServiceImpl implements NormriceItemService {
 			normriceItemPO.setTrannum(normriceItemVO.getTrannum());
 			normriceItemPO.setSalary(normriceItemVO.getSalary());
 
-			normriceItemPO.setType(NormriceItemPO.TYPE_QUOTA_INT);
-			normriceItemPO.setNormtype(NormriceItemPO.NORMTYPE_WORKFEE_INT);
-			normriceItemPO.setAtttype(NormriceItemPO.ATTTYPE_COLLECTION_INT);
+			normriceItemPO.setType(NormriceItemBase.TYPE_QUOTA_INT);
+			normriceItemPO.setNormtype(NormriceItemBase.NORMTYPE_WORKFEE_INT);
+			normriceItemPO.setAtttype(NormriceItemBase.ATTTYPE_COLLECTION_INT);
 
 			normriceItemDao.save(normriceItemPO);
 
@@ -182,7 +183,7 @@ public class NormriceItemServiceImpl implements NormriceItemService {
 		}
 
 		// 仅"待确认"状态的附加项允许删除, 保护已确认(计入金额)/已驳回记录
-		if (indexed.item.getStatus() != NormriceItemPO.STATUS_INIT_INT) {
+		if (indexed.item.getStatus() != NormriceItemBase.STATUS_INIT_INT) {
 			throw new FLException(200063, "附加项状态不可操作");
 		}
 
@@ -248,7 +249,7 @@ public class NormriceItemServiceImpl implements NormriceItemService {
 			return 0;
 		}
 
-		if (indexed.item.getStatus() == NormriceItemPO.STATUS_DISABLED_INT) {
+		if (indexed.item.getStatus() == NormriceItemBase.STATUS_DISABLED_INT) {
 			throw new FLException(200137, "定额明细状态不可操作");
 		}
 
@@ -259,8 +260,8 @@ public class NormriceItemServiceImpl implements NormriceItemService {
 		indexed.item.setNum(normriceItemVO.getNum());
 
 		// 已确认附加项数量变更后回退待确认, 重走确认流(计薪口径以确认值为准)
-		if (indexed.item.getType() == NormriceItemPO.TYPE_QUOTA_INT && indexed.item.getStatus() == NormriceItemPO.STATUS_CONFIRMED_INT) {
-			indexed.item.setStatus(NormriceItemPO.STATUS_INIT_INT);
+		if (indexed.item.getType() == NormriceItemBase.TYPE_QUOTA_INT && indexed.item.getStatus() == NormriceItemBase.STATUS_CONFIRMED_INT) {
+			indexed.item.setStatus(NormriceItemBase.STATUS_INIT_INT);
 			indexed.item.setConfirmer(null);
 			indexed.item.setConfirmTime(null);
 		}
@@ -358,7 +359,7 @@ public class NormriceItemServiceImpl implements NormriceItemService {
 
 		if (qid != null) {
 			int index = resolveIndex(qid);
-			NormriceItemPO itemPO = normriceItemDao.getNormriceItem(index, npiid);
+			NormriceItemBase itemPO = normriceItemDao.getNormriceItem(index, npiid);
 			return itemPO == null ? null : new IndexedItem(index, itemPO);
 		}
 
@@ -366,7 +367,7 @@ public class NormriceItemServiceImpl implements NormriceItemService {
 
 		for (int index = 0; index <= curIndex; index++) {
 
-			NormriceItemPO itemPO = normriceItemDao.getNormriceItem(index, npiid);
+			NormriceItemBase itemPO = normriceItemDao.getNormriceItem(index, npiid);
 
 			if (itemPO != null) {
 				return new IndexedItem(index, itemPO);
@@ -388,9 +389,9 @@ public class NormriceItemServiceImpl implements NormriceItemService {
 
 		private final int index;
 
-		private final NormriceItemPO item;
+		private final NormriceItemBase item;
 
-		private IndexedItem(int index, NormriceItemPO item) {
+		private IndexedItem(int index, NormriceItemBase item) {
 			this.index = index;
 			this.item = item;
 		}
