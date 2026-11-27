@@ -115,8 +115,9 @@ public class SalesPaymentDO implements Serializable {
 		this.salesRefunds = salesRefunds;
 	}
 
+	// orderId列已由平铺属性映射, 关联侧关闭读写防Repeated column(与SalesPaymentPO同款)
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "orderId", referencedColumnName = "orderId")
+	@JoinColumn(name = "orderId", referencedColumnName = "orderId", insertable = false, updatable = false)
 	public DecorationPO getDecoration() {
 		return decoration;
 	}
