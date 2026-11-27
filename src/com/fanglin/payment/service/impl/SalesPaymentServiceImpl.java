@@ -31,6 +31,9 @@ import com.fanglin.decoration.po.DecorationScaleDetailPO;
 import com.fanglin.decoration.service.DecorationAccountStatusService;
 import com.fanglin.decoration.service.DecorationAdditionService;
 import com.fanglin.decoration.vo.DecorationVO;
+import com.fanglin.information.dao.MessageQueuingDao;
+import com.fanglin.information.po.MessageCueuingPO;
+import com.fanglin.information.po.MessageQueuingPO;
 import com.fanglin.payment.dao.AdvancePaymentDao;
 import com.fanglin.payment.dao.PaytranDao;
 import com.fanglin.payment.dao.SalesPaymentDao;
@@ -86,6 +89,9 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 
 	@Autowired
 	private DecorationDao decorationDao;
+
+	@Autowired
+	private MessageQueuingDao messageQueuingDao;
 
 	@Autowired
 	private UserDao userDao;
@@ -999,6 +1005,11 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 		decorationAdditionService.updateDecorationForSaleScale(new DecorationVO(sales.getOrderId())); // 更新装修单上的销售比例
 
 		decorationService.sendMessage(sales.getOrderId(), "主材单", String.format("主材退款金额%.3f元", Arith.div(salesPayment.getReferMoney(), 1000.0)), String.format("pages/payment/receipt/receipt?orderId=%s&rid=%s&paymentType=3", sales.getOrderId(), salesReceiptPO.getSrId()));
+
+		// 生成消息队列数据: 销售退款双写(Queuing 内部队列 + Cueing 外部业务通知), event=PAYMENT_REFUNDED (口径同refundDecorationPayment)
+		String refundArgs = "{\"orderId\":\"" + sales.getOrderId() + "\",\"sid\":" + sales.getSid() + ",\"spid\":" + salesPayment.getSpid() + ",\"userId\":\"" + userId + "\",\"event\":\"PAYMENT_REFUNDED\",\"paymentType\":\"" + salesPayment.getType() + "\",\"referMoney\":" + salesPayment.getReferMoney() + "}";
+		messageQueuingDao.save(new MessageQueuingPO().init(sales.getOrderId(), "refundSalesPayment", refundArgs));
+		messageQueuingDao.save(new MessageCueuingPO().init(sales.getOrderId(), "refundSalesPayment", refundArgs));
 
 		return 0;
 	}
