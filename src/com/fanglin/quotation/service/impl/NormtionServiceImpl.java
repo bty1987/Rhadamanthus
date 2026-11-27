@@ -724,6 +724,10 @@ public class NormtionServiceImpl implements NormtionService {
 			makeNormtion(normtionVO, new AddReduceVO(addReducePO.getArId()), null, userId);
 		}
 
+		// 🔴 时序守卫: 清理 delete 前必须先 flush —— 复活行的 update(内存status=0)延迟到此刻才发SQL,
+		// 若先执行 DELETE WHERE status=1 会把「内存已复活但DB仍是status=1」的行物理删除, 提交flush时报StaleStateException(0/1)
+		normoodItemDao.flush();
+		normriceItemDao.flush();
 		// 重算自清理: 回收本次与历史的 DISABLED 旧明细(仅 type 0/1/2; QUOTA 附加项不参与重算永不清理),
 		// 镜像未开工单分支的删除三连先例 —— 活跃报价每次重算后零死行残留, 存量随重算逐步消化
 		normoodItemDao.deleteNormoodItem(normtionPO.getIndex(), normtionVO.getQid(), NormoodItemPO.TYPE_OFFER_INT, NormoodItemPO.STATUS_DISABLED_INT);
@@ -917,6 +921,10 @@ public class NormtionServiceImpl implements NormtionService {
 			}
 		}
 
+		// 🔴 时序守卫: 清理 delete 前必须先 flush —— 复活行的 update(内存status=0)延迟到此刻才发SQL,
+		// 若先执行 DELETE WHERE status=1 会把「内存已复活但DB仍是status=1」的行物理删除, 提交flush时报StaleStateException(0/1)
+		normoodItemDao.flush();
+		normriceItemDao.flush();
 		// 重算自清理: 回收本来源(OFFER)的 DISABLED 旧明细
 		normoodItemDao.deleteNormoodItem(normtionPO.getIndex(), normtionVO.getQid(), NormoodItemPO.TYPE_OFFER_INT, NormoodItemPO.STATUS_DISABLED_INT);
 		normriceItemDao.deleteNormriceItem(normtionPO.getIndex(), normtionVO.getQid(), NormriceItemPO.TYPE_OFFER_INT, NormriceItemPO.STATUS_DISABLED_INT);
@@ -1116,6 +1124,10 @@ public class NormtionServiceImpl implements NormtionService {
 			normtimeItemDao.save(normtimeItemPO);
 		}
 
+		// 🔴 时序守卫: 清理 delete 前必须先 flush —— 复活行的 update(内存status=0)延迟到此刻才发SQL,
+		// 若先执行 DELETE WHERE status=1 会把「内存已复活但DB仍是status=1」的行物理删除, 提交flush时报StaleStateException(0/1)
+		normoodItemDao.flush();
+		normriceItemDao.flush();
 		// 重算自清理: 回收本来源(EXPAND)的 DISABLED 旧明细
 		normoodItemDao.deleteNormoodItem(normtionPO.getIndex(), normtionVO.getQid(), NormoodItemPO.TYPE_EXPAND_INT, NormoodItemPO.STATUS_DISABLED_INT);
 		normriceItemDao.deleteNormriceItem(normtionPO.getIndex(), normtionVO.getQid(), NormriceItemPO.TYPE_EXPAND_INT, NormriceItemPO.STATUS_DISABLED_INT);
@@ -1315,6 +1327,10 @@ public class NormtionServiceImpl implements NormtionService {
 			normtimeItemDao.save(normtimeItemPO);
 		}
 
+		// 🔴 时序守卫: 清理 delete 前必须先 flush —— 复活行的 update(内存status=0)延迟到此刻才发SQL,
+		// 若先执行 DELETE WHERE status=1 会把「内存已复活但DB仍是status=1」的行物理删除, 提交flush时报StaleStateException(0/1)
+		normoodItemDao.flush();
+		normriceItemDao.flush();
 		// 重算自清理: 回收本来源(ADDCUT)的 DISABLED 旧明细
 		normoodItemDao.deleteNormoodItem(normtionPO.getIndex(), normtionVO.getQid(), NormoodItemPO.TYPE_ADDCUT_INT, NormoodItemPO.STATUS_DISABLED_INT);
 		normriceItemDao.deleteNormriceItem(normtionPO.getIndex(), normtionVO.getQid(), NormriceItemPO.TYPE_ADDCUT_INT, NormriceItemPO.STATUS_DISABLED_INT);
