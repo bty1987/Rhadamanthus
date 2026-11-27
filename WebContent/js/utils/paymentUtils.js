@@ -980,10 +980,20 @@ var paymentUtils = {
             },
             salesGrade: {
                 field: "salesGrade",
-                name: "销售单等级",
+                name: "销售等级",
                 prop: function(v) {
 
                     return deco(v).grade;
+                },
+                clazz: "red"
+            },
+            decorationGrade: {
+                field: "decorationGrade",
+                name: "装修等级",
+                prop: function(v) {
+
+                    var decoration = deco(v).decoration;
+                    return decoration && decoration.grade ? decoration.grade : "";
                 },
                 clazz: "red"
             },

@@ -255,6 +255,12 @@ public class DecorationDaoImpl extends DaoImpl<DecorationPO> implements Decorati
 
 	@Override
 	@SuppressWarnings("unchecked")
+	public List<DecorationPO> queryDecorationByOrderIds(List<String> orderIds) {
+		return session().createCriteria(DecorationPO.class).add(Restrictions.in("orderId", orderIds)).list();
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
 	public List<DecorationPO> queryDecorationByCustomer(Long cid, String customerId, List<Integer> companys) {
 
 		List<Short> status = Arrays.asList(new Short[] { DecorationPO.STATUS_WASTE_INT, DecorationPO.STATUS_TERMINATION_INT, DecorationPO.STATUS_FINAL_INT, DecorationPO.STATUS_COMPLETED_INT });

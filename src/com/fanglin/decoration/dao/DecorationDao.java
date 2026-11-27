@@ -50,6 +50,8 @@ public interface DecorationDao extends Dao<DecorationPO> {
 
 	public List<DecorationPO> queryDecorationByCustomerIds(List<Long> customerIds);
 
+	public List<DecorationPO> queryDecorationByOrderIds(List<String> orderIds);
+
 	public List<DecorationPO> queryDecorationByCustomer(Long cid, String customerId, List<Integer> companys);
 
 	public List<DecorationPO> queryDecorationByHid(long hid);
