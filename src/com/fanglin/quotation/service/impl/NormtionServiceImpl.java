@@ -56,9 +56,7 @@ import com.fanglin.quotation.po.AddReducePO;
 import com.fanglin.quotation.po.ExtensionItemPO;
 import com.fanglin.quotation.po.ExtensionPO;
 import com.fanglin.quotation.po.NormoodItemPO;
-import com.fanglin.quotation.po.NormoodItemBase;
 import com.fanglin.quotation.po.NormriceItemPO;
-import com.fanglin.quotation.po.NormriceItemBase;
 import com.fanglin.quotation.po.NormtimeItemPO;
 import com.fanglin.quotation.po.NormtionDO;
 import com.fanglin.quotation.po.NormChangeRecordPO;
@@ -689,9 +687,9 @@ public class NormtionServiceImpl implements NormtionService {
 
 		if (decorationPO.getProjectStatus() == DecorationPO.STATUS_INIT_INT) {
 
-			normoodItemDao.deleteNormoodItem(normtionPO.getIndex(), normtionPO.getQid(), NormoodItemBase.TYPE_OFFER_INT, NormoodItemBase.STATUS_DISABLED_INT);
-			normoodItemDao.deleteNormoodItem(normtionPO.getIndex(), normtionPO.getQid(), NormoodItemBase.TYPE_EXPAND_INT, NormoodItemBase.STATUS_DISABLED_INT);
-			normoodItemDao.deleteNormoodItem(normtionPO.getIndex(), normtionPO.getQid(), NormoodItemBase.TYPE_ADDCUT_INT, NormoodItemBase.STATUS_DISABLED_INT);
+			normoodItemDao.deleteNormoodItem(normtionPO.getIndex(), normtionPO.getQid(), NormoodItemPO.TYPE_OFFER_INT, NormoodItemPO.STATUS_DISABLED_INT);
+			normoodItemDao.deleteNormoodItem(normtionPO.getIndex(), normtionPO.getQid(), NormoodItemPO.TYPE_EXPAND_INT, NormoodItemPO.STATUS_DISABLED_INT);
+			normoodItemDao.deleteNormoodItem(normtionPO.getIndex(), normtionPO.getQid(), NormoodItemPO.TYPE_ADDCUT_INT, NormoodItemPO.STATUS_DISABLED_INT);
 
 			normriceItemDao.deleteNormriceItem(normtionPO.getIndex(), normtionPO.getQid(), NormriceItemPO.TYPE_OFFER_INT, NormriceItemPO.STATUS_DISABLED_INT);
 			normriceItemDao.deleteNormriceItem(normtionPO.getIndex(), normtionPO.getQid(), NormriceItemPO.TYPE_EXPAND_INT, NormriceItemPO.STATUS_DISABLED_INT);
@@ -728,9 +726,9 @@ public class NormtionServiceImpl implements NormtionService {
 
 		// 重算自清理: 回收本次与历史的 DISABLED 旧明细(仅 type 0/1/2; QUOTA 附加项不参与重算永不清理),
 		// 镜像未开工单分支的删除三连先例 —— 活跃报价每次重算后零死行残留, 存量随重算逐步消化
-		normoodItemDao.deleteNormoodItem(normtionPO.getIndex(), normtionVO.getQid(), NormoodItemBase.TYPE_OFFER_INT, NormoodItemBase.STATUS_DISABLED_INT);
-		normoodItemDao.deleteNormoodItem(normtionPO.getIndex(), normtionVO.getQid(), NormoodItemBase.TYPE_EXPAND_INT, NormoodItemBase.STATUS_DISABLED_INT);
-		normoodItemDao.deleteNormoodItem(normtionPO.getIndex(), normtionVO.getQid(), NormoodItemBase.TYPE_ADDCUT_INT, NormoodItemBase.STATUS_DISABLED_INT);
+		normoodItemDao.deleteNormoodItem(normtionPO.getIndex(), normtionVO.getQid(), NormoodItemPO.TYPE_OFFER_INT, NormoodItemPO.STATUS_DISABLED_INT);
+		normoodItemDao.deleteNormoodItem(normtionPO.getIndex(), normtionVO.getQid(), NormoodItemPO.TYPE_EXPAND_INT, NormoodItemPO.STATUS_DISABLED_INT);
+		normoodItemDao.deleteNormoodItem(normtionPO.getIndex(), normtionVO.getQid(), NormoodItemPO.TYPE_ADDCUT_INT, NormoodItemPO.STATUS_DISABLED_INT);
 		normriceItemDao.deleteNormriceItem(normtionPO.getIndex(), normtionVO.getQid(), NormriceItemPO.TYPE_OFFER_INT, NormriceItemPO.STATUS_DISABLED_INT);
 		normriceItemDao.deleteNormriceItem(normtionPO.getIndex(), normtionVO.getQid(), NormriceItemPO.TYPE_EXPAND_INT, NormriceItemPO.STATUS_DISABLED_INT);
 		normriceItemDao.deleteNormriceItem(normtionPO.getIndex(), normtionVO.getQid(), NormriceItemPO.TYPE_ADDCUT_INT, NormriceItemPO.STATUS_DISABLED_INT);
@@ -754,7 +752,7 @@ public class NormtionServiceImpl implements NormtionService {
 			normtionPO = normtionDao.queryNormtion(quotationPO.getQid());
 		}
 
-		normoodItemDao.disableNormoodItem(normtionPO.getIndex(), normtionVO.getQid(), NormoodItemBase.TYPE_OFFER_INT);
+		normoodItemDao.disableNormoodItem(normtionPO.getIndex(), normtionVO.getQid(), NormoodItemPO.TYPE_OFFER_INT);
 		normriceItemDao.disabledNormriceItem(normtionPO.getIndex(), normtionVO.getQid(), NormriceItemPO.TYPE_OFFER_INT);
 		normtimeItemDao.disabledNormtimeItem(normtionVO.getQid(), NormtimeItemPO.TYPE_OFFER_INT);
 
@@ -774,11 +772,11 @@ public class NormtionServiceImpl implements NormtionService {
 				NormoodPO normoodPO = (NormoodPO) data[1];
 				NoodsPO noodsPO = (NoodsPO) data[2];
 
-				NormoodItemBase normoodItemPO = normoodItemDao.queryNormoodItem(normtionPO.getIndex(), normtionVO.getQid(), itemPO.getQfaiId(), normoodPO.getNgid(), NormoodItemBase.TYPE_OFFER_INT);
+				NormoodItemPO normoodItemPO = normoodItemDao.queryNormoodItem(normtionPO.getIndex(), normtionVO.getQid(), itemPO.getQfaiId(), normoodPO.getNgid(), NormoodItemPO.TYPE_OFFER_INT);
 
 				if (normoodItemPO != null) {
 
-					normoodItemPO.setStatus(NormoodItemBase.STATUS_INIT_INT);
+					normoodItemPO.setStatus(NormoodItemPO.STATUS_INIT_INT);
 
 					normoodItemPO.setNormunit(normoodPO.getNormunit());
 					normoodItemPO.setNormnum(Arith.mul(itemPO.getInitNum(), normoodPO.getNormnum()));
@@ -799,9 +797,9 @@ public class NormtionServiceImpl implements NormtionService {
 				normoodItemPO.setQiid(itemPO.getQuotationItemId());
 				normoodItemPO.setNgid(normoodPO.getNgid());
 
-				normoodItemPO.setType(NormoodItemBase.TYPE_OFFER_INT);
-				normoodItemPO.setNormtype(NormoodItemBase.NORMTYPE_MATERIAL_INT);
-				normoodItemPO.setAtttype(NormoodItemBase.ATTTYPE_COLLECTION_INT);
+				normoodItemPO.setType(NormoodItemPO.TYPE_OFFER_INT);
+				normoodItemPO.setNormtype(NormoodItemPO.NORMTYPE_MATERIAL_INT);
+				normoodItemPO.setAtttype(NormoodItemPO.ATTTYPE_COLLECTION_INT);
 
 				normoodItemPO.setNormunit(normoodPO.getNormunit());
 				normoodItemPO.setNormnum(Arith.mul(itemPO.getInitNum(), normoodPO.getNormnum()));
@@ -822,7 +820,7 @@ public class NormtionServiceImpl implements NormtionService {
 				NormricePO normricePO = (NormricePO) data[1];
 				ConstructionNodePO constructionNodePO = (ConstructionNodePO) data[2];
 
-				NormriceItemBase normriceItemPO = normriceItemDao.queryNormriceItem(normtionPO.getIndex(), normtionVO.getQid(), item.getQfaiid(), normricePO.getNpid(), NormriceItemPO.TYPE_OFFER_INT);
+				NormriceItemPO normriceItemPO = normriceItemDao.queryNormriceItem(normtionPO.getIndex(), normtionVO.getQid(), item.getQfaiid(), normricePO.getNpid(), NormriceItemPO.TYPE_OFFER_INT);
 
 				if (normriceItemPO != null) {
 
@@ -920,7 +918,7 @@ public class NormtionServiceImpl implements NormtionService {
 		}
 
 		// 重算自清理: 回收本来源(OFFER)的 DISABLED 旧明细
-		normoodItemDao.deleteNormoodItem(normtionPO.getIndex(), normtionVO.getQid(), NormoodItemBase.TYPE_OFFER_INT, NormoodItemBase.STATUS_DISABLED_INT);
+		normoodItemDao.deleteNormoodItem(normtionPO.getIndex(), normtionVO.getQid(), NormoodItemPO.TYPE_OFFER_INT, NormoodItemPO.STATUS_DISABLED_INT);
 		normriceItemDao.deleteNormriceItem(normtionPO.getIndex(), normtionVO.getQid(), NormriceItemPO.TYPE_OFFER_INT, NormriceItemPO.STATUS_DISABLED_INT);
 
 		return 0;
@@ -943,7 +941,7 @@ public class NormtionServiceImpl implements NormtionService {
 			normtionPO = normtionDao.queryNormtion(quotationPO.getQid());
 		}
 
-		normoodItemDao.disableNormoodItem(normtionPO.getIndex(), normtionVO.getQid(), extensionVO.getEid(), NormoodItemBase.TYPE_EXPAND_INT);
+		normoodItemDao.disableNormoodItem(normtionPO.getIndex(), normtionVO.getQid(), extensionVO.getEid(), NormoodItemPO.TYPE_EXPAND_INT);
 		normriceItemDao.disabledNormriceItem(normtionPO.getIndex(), normtionVO.getQid(), extensionVO.getEid(), NormriceItemPO.TYPE_EXPAND_INT);
 		normtimeItemDao.disabledNormtimeItem(normtionVO.getQid(), extensionVO.getEid(), NormtimeItemPO.TYPE_EXPAND_INT);
 
@@ -959,11 +957,11 @@ public class NormtionServiceImpl implements NormtionService {
 			NormoodPO normoodPO = (NormoodPO) data[1];
 			NoodsPO noodsPO = (NoodsPO) data[2];
 
-			NormoodItemBase normoodItemPO = normoodItemDao.queryNormoodItem(normtionPO.getIndex(), normtionVO.getQid(), itemPO.getEiid(), normoodPO.getNgid(), NormoodItemBase.TYPE_EXPAND_INT);
+			NormoodItemPO normoodItemPO = normoodItemDao.queryNormoodItem(normtionPO.getIndex(), normtionVO.getQid(), itemPO.getEiid(), normoodPO.getNgid(), NormoodItemPO.TYPE_EXPAND_INT);
 
 			if (normoodItemPO != null) {
 
-				normoodItemPO.setStatus(NormoodItemBase.STATUS_INIT_INT);
+				normoodItemPO.setStatus(NormoodItemPO.STATUS_INIT_INT);
 
 				normoodItemPO.setNormunit(normoodPO.getNormunit());
 				normoodItemPO.setNormnum(Arith.mul(itemPO.getInitnum(), normoodPO.getNormnum()));
@@ -984,13 +982,13 @@ public class NormtionServiceImpl implements NormtionService {
 			normoodItemPO.setQiid(itemPO.getQiid());
 			normoodItemPO.setNgid(normoodPO.getNgid());
 
-			normoodItemPO.setType(NormoodItemBase.TYPE_EXPAND_INT);
-			normoodItemPO.setNormtype(NormoodItemBase.NORMTYPE_MATERIAL_INT);
+			normoodItemPO.setType(NormoodItemPO.TYPE_EXPAND_INT);
+			normoodItemPO.setNormtype(NormoodItemPO.NORMTYPE_MATERIAL_INT);
 
 			if (Arrays.asList(ExtensionItemPO.TYPE_ADD_DATA_INT, ExtensionItemPO.TYPE_ADD_CUSTOM_INT, ExtensionItemPO.TYPE_ADD_QUOTE_INT).contains(itemPO.getType())) {
-				normoodItemPO.setAtttype(NormoodItemBase.ATTTYPE_COLLECTION_INT);
+				normoodItemPO.setAtttype(NormoodItemPO.ATTTYPE_COLLECTION_INT);
 			} else {
-				normoodItemPO.setAtttype(NormoodItemBase.ATTTYPE_SUB_INT);
+				normoodItemPO.setAtttype(NormoodItemPO.ATTTYPE_SUB_INT);
 			}
 
 			normoodItemPO.setNormunit(normoodPO.getNormunit());
@@ -1012,7 +1010,7 @@ public class NormtionServiceImpl implements NormtionService {
 			NormricePO normricePO = (NormricePO) data[1];
 			ConstructionNodePO constructionNodePO = (ConstructionNodePO) data[2];
 
-			NormriceItemBase normriceItemPO = normriceItemDao.queryNormriceItem(normtionPO.getIndex(), normtionVO.getQid(), itemPO.getEiid(), normricePO.getNpid(), NormriceItemPO.TYPE_EXPAND_INT);
+			NormriceItemPO normriceItemPO = normriceItemDao.queryNormriceItem(normtionPO.getIndex(), normtionVO.getQid(), itemPO.getEiid(), normricePO.getNpid(), NormriceItemPO.TYPE_EXPAND_INT);
 
 			if (normriceItemPO != null) {
 
@@ -1119,7 +1117,7 @@ public class NormtionServiceImpl implements NormtionService {
 		}
 
 		// 重算自清理: 回收本来源(EXPAND)的 DISABLED 旧明细
-		normoodItemDao.deleteNormoodItem(normtionPO.getIndex(), normtionVO.getQid(), NormoodItemBase.TYPE_EXPAND_INT, NormoodItemBase.STATUS_DISABLED_INT);
+		normoodItemDao.deleteNormoodItem(normtionPO.getIndex(), normtionVO.getQid(), NormoodItemPO.TYPE_EXPAND_INT, NormoodItemPO.STATUS_DISABLED_INT);
 		normriceItemDao.deleteNormriceItem(normtionPO.getIndex(), normtionVO.getQid(), NormriceItemPO.TYPE_EXPAND_INT, NormriceItemPO.STATUS_DISABLED_INT);
 
 		return 0;
@@ -1142,7 +1140,7 @@ public class NormtionServiceImpl implements NormtionService {
 			normtionPO = normtionDao.queryNormtion(quotationPO.getQid());
 		}
 
-		normoodItemDao.disableNormoodItem(normtionPO.getIndex(), normtionVO.getQid(), addReduceVO.getArId(), NormoodItemBase.TYPE_ADDCUT_INT);
+		normoodItemDao.disableNormoodItem(normtionPO.getIndex(), normtionVO.getQid(), addReduceVO.getArId(), NormoodItemPO.TYPE_ADDCUT_INT);
 		normriceItemDao.disabledNormriceItem(normtionPO.getIndex(), normtionVO.getQid(), addReduceVO.getArId(), NormriceItemPO.TYPE_ADDCUT_INT);
 		normtimeItemDao.disabledNormtimeItem(normtionVO.getQid(), addReduceVO.getArId(), NormtimeItemPO.TYPE_ADDCUT_INT);
 
@@ -1158,11 +1156,11 @@ public class NormtionServiceImpl implements NormtionService {
 			NormoodPO normoodPO = (NormoodPO) data[1];
 			NoodsPO noodsPO = (NoodsPO) data[2];
 
-			NormoodItemBase normoodItemPO = normoodItemDao.queryNormoodItem(normtionPO.getIndex(), normtionVO.getQid(), itemPO.getAriId(), normoodPO.getNgid(), NormoodItemBase.TYPE_ADDCUT_INT);
+			NormoodItemPO normoodItemPO = normoodItemDao.queryNormoodItem(normtionPO.getIndex(), normtionVO.getQid(), itemPO.getAriId(), normoodPO.getNgid(), NormoodItemPO.TYPE_ADDCUT_INT);
 
 			if (normoodItemPO != null) {
 
-				normoodItemPO.setStatus(NormoodItemBase.STATUS_INIT_INT);
+				normoodItemPO.setStatus(NormoodItemPO.STATUS_INIT_INT);
 
 				normoodItemPO.setNormunit(normoodPO.getNormunit());
 				normoodItemPO.setNormnum(Arith.mul(itemPO.getInitnum(), normoodPO.getNormnum()));
@@ -1183,13 +1181,13 @@ public class NormtionServiceImpl implements NormtionService {
 			normoodItemPO.setQiid(itemPO.getQiid());
 			normoodItemPO.setNgid(normoodPO.getNgid());
 
-			normoodItemPO.setType(NormoodItemBase.TYPE_ADDCUT_INT);
-			normoodItemPO.setNormtype(NormoodItemBase.NORMTYPE_MATERIAL_INT);
+			normoodItemPO.setType(NormoodItemPO.TYPE_ADDCUT_INT);
+			normoodItemPO.setNormtype(NormoodItemPO.NORMTYPE_MATERIAL_INT);
 
 			if (Arrays.asList(AddReduceItemPO.TYPE_COMMON_QUOTATION_INT, AddReduceItemPO.TYPE_CUSTOM_QUOTATION_INT).contains(itemPO.getType())) {
-				normoodItemPO.setAtttype(NormoodItemBase.ATTTYPE_COLLECTION_INT);
+				normoodItemPO.setAtttype(NormoodItemPO.ATTTYPE_COLLECTION_INT);
 			} else {
-				normoodItemPO.setAtttype(NormoodItemBase.ATTTYPE_SUB_INT);
+				normoodItemPO.setAtttype(NormoodItemPO.ATTTYPE_SUB_INT);
 			}
 
 			normoodItemPO.setNormunit(normoodPO.getNormunit());
@@ -1211,7 +1209,7 @@ public class NormtionServiceImpl implements NormtionService {
 			NormricePO normricePO = (NormricePO) data[1];
 			ConstructionNodePO constructionNodePO = (ConstructionNodePO) data[2];
 
-			NormriceItemBase normriceItemPO = normriceItemDao.queryNormriceItem(normtionPO.getIndex(), normtionVO.getQid(), itemPO.getAriId(), normricePO.getNpid(), NormriceItemPO.TYPE_ADDCUT_INT);
+			NormriceItemPO normriceItemPO = normriceItemDao.queryNormriceItem(normtionPO.getIndex(), normtionVO.getQid(), itemPO.getAriId(), normricePO.getNpid(), NormriceItemPO.TYPE_ADDCUT_INT);
 
 			if (normriceItemPO != null) {
 
@@ -1243,9 +1241,9 @@ public class NormtionServiceImpl implements NormtionService {
 			normriceItemPO.setNormtype(NormriceItemPO.NORMTYPE_WORKFEE_INT);
 
 			if (Arrays.asList(AddReduceItemPO.TYPE_COMMON_QUOTATION_INT, AddReduceItemPO.TYPE_CUSTOM_QUOTATION_INT).contains(itemPO.getType())) {
-				normriceItemPO.setAtttype(NormoodItemBase.ATTTYPE_COLLECTION_INT);
+				normriceItemPO.setAtttype(NormoodItemPO.ATTTYPE_COLLECTION_INT);
 			} else {
-				normriceItemPO.setAtttype(NormoodItemBase.ATTTYPE_SUB_INT);
+				normriceItemPO.setAtttype(NormoodItemPO.ATTTYPE_SUB_INT);
 			}
 
 			normriceItemPO.setConstructionNode(constructionNodePO);
@@ -1318,7 +1316,7 @@ public class NormtionServiceImpl implements NormtionService {
 		}
 
 		// 重算自清理: 回收本来源(ADDCUT)的 DISABLED 旧明细
-		normoodItemDao.deleteNormoodItem(normtionPO.getIndex(), normtionVO.getQid(), NormoodItemBase.TYPE_ADDCUT_INT, NormoodItemBase.STATUS_DISABLED_INT);
+		normoodItemDao.deleteNormoodItem(normtionPO.getIndex(), normtionVO.getQid(), NormoodItemPO.TYPE_ADDCUT_INT, NormoodItemPO.STATUS_DISABLED_INT);
 		normriceItemDao.deleteNormriceItem(normtionPO.getIndex(), normtionVO.getQid(), NormriceItemPO.TYPE_ADDCUT_INT, NormriceItemPO.STATUS_DISABLED_INT);
 
 		return 0;

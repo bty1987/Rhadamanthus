@@ -57,9 +57,7 @@ import com.fanglin.quotation.dao.NormriceItemDao;
 import com.fanglin.quotation.dao.NormtionDao;
 import com.fanglin.quotation.dao.QuotationDao;
 import com.fanglin.quotation.po.NormoodItemPO;
-import com.fanglin.quotation.po.NormoodItemBase;
 import com.fanglin.quotation.po.NormriceItemPO;
-import com.fanglin.quotation.po.NormriceItemBase;
 import com.fanglin.quotation.po.NormtionPO;
 import com.fanglin.quotation.po.QuotationPO;
 import com.fanglin.seiya.service.A20261117Service;
@@ -146,7 +144,7 @@ public class A20261117ServiceImpl implements A20261117Service {
 		// 占用检查(仅补缺): 该单 type=3 现存 INIT/CONFIRMED 行同 cnid 跳过
 		Set<Long> occupiedCnids = new HashSet<Long>();
 
-		for (NormriceItemBase itemPO : normriceItemDao.queryNormriceItemByType(index, normtionPO.getQid(), NormriceItemPO.TYPE_QUOTA_INT)) {
+		for (NormriceItemPO itemPO : normriceItemDao.queryNormriceItemByType(index, normtionPO.getQid(), NormriceItemPO.TYPE_QUOTA_INT)) {
 			if (itemPO.getConstructionNode() != null) {
 				occupiedCnids.add(itemPO.getConstructionNode().getCnid());
 			}
@@ -164,7 +162,7 @@ public class A20261117ServiceImpl implements A20261117Service {
 
 			ConstructionNodePO nodePO = nodeByCnid.get(entry.getKey());
 
-			NormriceItemBase normriceItemPO = NormriceItemPO.factoryToInstance(index);
+			NormriceItemPO normriceItemPO = NormriceItemPO.factoryToInstance(index);
 			normriceItemPO.setQid(normtionPO.getQid());
 			normriceItemPO.setSid(normtionPO.getQid());
 			normriceItemPO.setType(NormriceItemPO.TYPE_QUOTA_INT);
@@ -208,7 +206,7 @@ public class A20261117ServiceImpl implements A20261117Service {
 		// 占用检查(仅补缺): 该单现存 INIT 行同 nid 跳过
 		Set<Long> occupiedNids = new HashSet<Long>();
 
-		for (NormoodItemBase itemPO : normoodItemDao.queryNormoodItem(index, normtionPO.getQid())) {
+		for (NormoodItemPO itemPO : normoodItemDao.queryNormoodItem(index, normtionPO.getQid())) {
 			if (itemPO.getNoods() != null) {
 				occupiedNids.add(itemPO.getNoods().getNid());
 			}
@@ -224,7 +222,7 @@ public class A20261117ServiceImpl implements A20261117Service {
 				continue;
 			}
 
-			NormoodItemBase normoodItemPO = NormoodItemPO.factoryToInstance(index);
+			NormoodItemPO normoodItemPO = NormoodItemPO.factoryToInstance(index);
 			normoodItemPO.setQid(normtionPO.getQid());
 			normoodItemPO.setSid(normtionPO.getQid());
 			normoodItemPO.setType(NormoodItemPO.TYPE_QUOTA_INT);

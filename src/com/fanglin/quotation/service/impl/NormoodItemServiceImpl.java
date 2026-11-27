@@ -21,7 +21,6 @@ import com.fanglin.quotation.dao.NormtionDao;
 import com.fanglin.quotation.dao.QuotationDao;
 import com.fanglin.quotation.po.NormChangeRecordPO;
 import com.fanglin.quotation.po.NormoodItemPO;
-import com.fanglin.quotation.po.NormoodItemBase;
 import com.fanglin.quotation.po.NormtionPO;
 import com.fanglin.quotation.po.QuotationPO;
 import com.fanglin.quotation.service.NormoodItemService;
@@ -61,10 +60,10 @@ public class NormoodItemServiceImpl implements NormoodItemService {
 	public List<NormoodItemVO> queryNormoodItem(NormoodItemVO normoodItem) {
 
 		int index = resolveIndex(normoodItem.getQid());
-		List<NormoodItemBase> normoodItemPOs = normoodItemDao.queryNormoodItem(index, normoodItem.getQid());
+		List<NormoodItemPO> normoodItemPOs = normoodItemDao.queryNormoodItem(index, normoodItem.getQid());
 		List<NormoodItemVO> normoodItemVOs = new ArrayList<NormoodItemVO>();
 
-		for (NormoodItemBase normoodItemPO : normoodItemPOs) {
+		for (NormoodItemPO normoodItemPO : normoodItemPOs) {
 
 			normoodItem = new NormoodItemVO(new NoodsVO());
 
@@ -119,13 +118,13 @@ public class NormoodItemServiceImpl implements NormoodItemService {
 
 				normoodItemVOs = new ArrayList<NormoodItemVO>();
 
-				NormoodItemBase normoodItemPO = NormoodItemPO.factoryToInstance(index);
+				NormoodItemPO normoodItemPO = NormoodItemPO.factoryToInstance(index);
 
 				normoodItemPO.setQid(quotationPO.getQid());
 
-				normoodItemPO.setType(NormoodItemBase.TYPE_QUOTA_INT);
-				normoodItemPO.setNormtype(NormoodItemBase.NORMTYPE_MATERIAL_INT);
-				normoodItemPO.setAtttype(NormoodItemBase.ATTTYPE_COLLECTION_INT);
+				normoodItemPO.setType(NormoodItemPO.TYPE_QUOTA_INT);
+				normoodItemPO.setNormtype(NormoodItemPO.NORMTYPE_MATERIAL_INT);
+				normoodItemPO.setAtttype(NormoodItemPO.ATTTYPE_COLLECTION_INT);
 
 				normoodItemPO.setNormunit(normoodItemVO.getNormunit());
 				normoodItemPO.setNormnum(normoodItemVO.getNormnum());
@@ -159,14 +158,14 @@ public class NormoodItemServiceImpl implements NormoodItemService {
 
 		for (NormpackItemPO normpackItemPO : normpackItems) {
 
-			NormoodItemBase normoodItemPO = NormoodItemPO.factoryToInstance(index);
+			NormoodItemPO normoodItemPO = NormoodItemPO.factoryToInstance(index);
 
 			normoodItemPO.setQid(quotationPO.getQid());
 			normoodItemPO.setSid(quotationPO.getQid());
 
-			normoodItemPO.setType(NormoodItemBase.TYPE_QUOTA_INT);
-			normoodItemPO.setNormtype(NormoodItemBase.NORMTYPE_PACK_INT);
-			normoodItemPO.setAtttype(NormoodItemBase.ATTTYPE_COLLECTION_INT);
+			normoodItemPO.setType(NormoodItemPO.TYPE_QUOTA_INT);
+			normoodItemPO.setNormtype(NormoodItemPO.NORMTYPE_PACK_INT);
+			normoodItemPO.setAtttype(NormoodItemPO.ATTTYPE_COLLECTION_INT);
 
 			if (normpackItemPO.getNoods() != null) {
 				normoodItemPO.setNoods(new NoodsPO(normpackItemPO.getNoods().getNid()));
@@ -208,7 +207,7 @@ public class NormoodItemServiceImpl implements NormoodItemService {
 			return 0;
 		}
 
-		NormoodItemBase normoodItemPO = indexed.item;
+		NormoodItemPO normoodItemPO = indexed.item;
 
 		// 变更记录: 下定材删除(行快照)
 		String noodsName = normoodItemPO.getNoods() != null ? normoodItemPO.getNoods().getName() : "---";
@@ -233,9 +232,9 @@ public class NormoodItemServiceImpl implements NormoodItemService {
 			return 0;
 		}
 
-		NormoodItemBase normoodItemPO = indexed.item;
+		NormoodItemPO normoodItemPO = indexed.item;
 
-		if (normoodItemPO.getStatus() == NormoodItemBase.STATUS_DISABLED_INT) {
+		if (normoodItemPO.getStatus() == NormoodItemPO.STATUS_DISABLED_INT) {
 			throw new FLException(200137, "定额明细状态不可操作");
 		}
 
@@ -309,7 +308,7 @@ public class NormoodItemServiceImpl implements NormoodItemService {
 
 		if (qid != null) {
 			int index = resolveIndex(qid);
-			NormoodItemBase itemPO = normoodItemDao.getNormoodItem(index, ngiid);
+			NormoodItemPO itemPO = normoodItemDao.getNormoodItem(index, ngiid);
 			return itemPO == null ? null : new IndexedItem(index, itemPO);
 		}
 
@@ -317,7 +316,7 @@ public class NormoodItemServiceImpl implements NormoodItemService {
 
 		for (int index = 0; index <= curIndex; index++) {
 
-			NormoodItemBase itemPO = normoodItemDao.getNormoodItem(index, ngiid);
+			NormoodItemPO itemPO = normoodItemDao.getNormoodItem(index, ngiid);
 
 			if (itemPO != null) {
 				return new IndexedItem(index, itemPO);
@@ -339,9 +338,9 @@ public class NormoodItemServiceImpl implements NormoodItemService {
 
 		private final int index;
 
-		private final NormoodItemBase item;
+		private final NormoodItemPO item;
 
-		private IndexedItem(int index, NormoodItemBase item) {
+		private IndexedItem(int index, NormoodItemPO item) {
 			this.index = index;
 			this.item = item;
 		}
