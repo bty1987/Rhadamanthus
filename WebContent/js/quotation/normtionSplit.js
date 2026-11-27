@@ -1,6 +1,6 @@
 /**
- * 定额拆单视图: 按功能区分组展示定额明细(工费/材料/工时), 支持行内修改数量.
- * 数据链: queryQuotationFunctionAreaForCommonByQuotationId(区骨架) + queryNormxxxItem(明细, 已滤禁用行)
+ * 定额拆单视图: 右侧两段(报价项参照区 + 定额项拆单区), 定额明细按功能区分组展示(工费/材料/工时), 支持行内修改数量.
+ * 数据链: queryQuotationFunctionAreaByQuotationId(区骨架+报价项quotationFunctionAreaItems) + queryNormxxxItem(明细, 已滤禁用行)
  * 写链: updateNormriceItemForNum / updateNormoodItemForNum / updateNormtimeItemForNum (数量千倍换算走 tranargs)
  * 说明: makeNormtion 全量重算会把 type=0/1/2 行数量重置回报价口径, 手工调整属临时修正(方案A);
  *       工费项(type=3)已确认行改数量后端自动回退待确认重走确认流.
@@ -237,6 +237,22 @@ var NormtionSplit = (function () {
             return $cell;
         },
 
+        // 报价项行: 名称/单位/单价/数量/小计/工种(只读参照区, unitPrice/num 已经接口 tranargs 千倍还原)
+        quotationRow: function ($ul, linenum, v) {
+
+            var $item = $('<li></li>').addClass('fl-quo-item item').attr({ "data-qfaiid": v.qfaiId });
+
+            $item.append(painter.cellOf("5%", linenum));
+            $item.append(painter.cellOf("30%", v.itemName));
+            $item.append(painter.cellOf("10%", v.measurementUnit || ""));
+            $item.append(painter.cellOf("12%", utils.changeThrDecimal(v.unitPrice)));
+            $item.append(painter.cellOf("12%", utils.changeThrDecimal(v.num)));
+            $item.append(painter.cellOf("14%", utils.changeThrDecimal(utils.accMul(v.unitPrice || 0, v.num || 0))));
+            $item.append(painter.cellOf("17%", v.workType || ""));
+
+            return $item;
+        },
+
         // 工时行: 节点/单位/工时天数/数量(可改)/总额/来源
         timeRow: function ($ul, linenum, v) {
 
@@ -303,7 +319,37 @@ var NormtionSplit = (function () {
         return { grouped: grouped, extra: extra };
     }
 
+    // 报价项参照区: 按功能区分组展示报价项(滤计价行 subtype 0/1, 只读), 口径同 selectionPart 报价项区
+    function renderQuotationItems() {
+
+        var $list = com.focusPage('#quotationItemSplitList').html('');
+
+        $.each(split.areas, function (i, area) {
+
+            var rows = [];
+
+            $.each(area.quotationFunctionAreaItems || [], function (j, v) {
+                if (v.subtype == 0 || v.subtype == 1) return true;
+                rows.push(v);
+            });
+
+            $list.append(painter.createAreaDomain({
+                title: area.functionAreaName,
+                em: area.functionAreaOrder
+            }, [
+                {
+                    cols: ["line:5", "name:30", "unit:10", "unitPrice:12", "num:12", "total:14", "workType:17"],
+                    titles: { line: "#", name: "名称", unit: "单位", unitPrice: "单价", num: "数量", total: "小计", workType: "工种" },
+                    rows: rows,
+                    rowPainter: painter.quotationRow
+                }
+            ]));
+        });
+    }
+
     function render() {
+
+        renderQuotationItems();
 
         var riceGroup = groupByArea(split.riceItems);
         var oodGroup = groupByArea(split.oodItems);
@@ -490,8 +536,8 @@ var NormtionSplit = (function () {
 
             }, null, false);
 
-            // 区骨架
-            com.post(api.quotation.queryQuotationFunctionAreaForCommonByQuotationId, {
+            // 区骨架(带报价项 quotationFunctionAreaItems, 供报价项参照区渲染)
+            com.post(api.quotation.queryQuotationFunctionAreaByQuotationId, {
                 "quotation.qid": split.quotationId
             }, function (res) {
 
