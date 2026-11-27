@@ -4,9 +4,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -36,6 +34,7 @@ import com.fanglin.decoration.vo.DecorationVO;
 import com.fanglin.payment.dao.AdvancePaymentDao;
 import com.fanglin.payment.dao.PaytranDao;
 import com.fanglin.payment.dao.SalesPaymentDao;
+import com.fanglin.payment.po.SalesPaymentDO;
 import com.fanglin.payment.dao.SalesReceiptDao;
 import com.fanglin.payment.po.AdvancePaymentPO;
 import com.fanglin.payment.po.PaymentPO;
@@ -144,33 +143,9 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 		List<SalesPaymentPO> salesPaymentPOs = salesPaymentDao.pageSalesPayment(paging, filters);
 		List<SalesPaymentVO> salesPaymentVOs = new ArrayList<SalesPaymentVO>();
 
-		// 装修单等级批量回填(收集orderId去重一次查询, 防循环内查询): 销售收款页列表显示装修等级
-		Map<String, String> gradeMap = new HashMap<String, String>();
-		List<String> orderIds = new ArrayList<String>();
-
+		// PO关联PO装配(SalesPaymentDO: PO --sid--> sales, PO --orderId--> decoration): 装修等级经 sales.decoration.grade 下发
 		for (SalesPaymentPO salesPaymentPO : salesPaymentPOs) {
-			String orderId = salesPaymentPO.getSales().getOrderId();
-			if (orderId != null && !orderIds.contains(orderId)) orderIds.add(orderId);
-		}
-
-		if (orderIds.size() > 0) {
-			for (DecorationPO decorationPO : decorationDao.queryDecorationByOrderIds(orderIds)) {
-				gradeMap.put(decorationPO.getOrderId(), decorationPO.getGrade());
-			}
-		}
-
-		for (SalesPaymentPO salesPaymentPO : salesPaymentPOs) {
-
-			SalesPaymentVO salesPaymentVO = salesPaymentPO.ptv(new SalesPaymentVO(new UserBaseVO(), new SalesVO(new HouseVO(new VillageVO(new CityProperVO(new CityVO()))), new CustomerVO(), new UserBaseVO(), new DepartmentVO(), new DepartmentVO(), new UserBaseVO(), new DepartmentVO(), new UserBaseVO(), new BrandVO()), new SalesReceiptVO(new UserBaseVO(), new UserBaseVO())));
-
-			String grade = gradeMap.get(salesPaymentVO.getSales().getOrderId());
-			if (grade != null) {
-				salesPaymentVO.getSales().setDecoration(new DecorationVO());
-				salesPaymentVO.getSales().getDecoration().setOrderId(salesPaymentVO.getSales().getOrderId());
-				salesPaymentVO.getSales().getDecoration().setGrade(grade);
-			}
-
-			salesPaymentVOs.add(salesPaymentVO);
+			salesPaymentVOs.add(new SalesPaymentDO(salesPaymentPO).dtv(new SalesPaymentVO(new UserBaseVO(), new SalesVO(new HouseVO(new VillageVO(new CityProperVO(new CityVO()))), new CustomerVO(), new UserBaseVO(), new DepartmentVO(), new DepartmentVO(), new UserBaseVO(), new DepartmentVO(), new UserBaseVO(), new BrandVO()), new SalesReceiptVO(new UserBaseVO(), new UserBaseVO()))));
 		}
 
 		paging.setData(salesPaymentVOs);

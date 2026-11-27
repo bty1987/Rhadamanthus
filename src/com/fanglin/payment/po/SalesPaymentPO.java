@@ -15,6 +15,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.payment.vo.SalesPaymentVO;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.sales.po.SalesPO;
@@ -82,6 +83,8 @@ public class SalesPaymentPO implements Serializable {
 	private SalesReceiptPO salesReceipt;
 
 	private SalesPO sales;
+
+	private DecorationPO decoration;
 
 	private SalesRefundsPO salesRefunds;
 
@@ -163,6 +166,18 @@ public class SalesPaymentPO implements Serializable {
 
 	public void setSalesRefunds(SalesRefundsPO salesRefunds) {
 		this.salesRefunds = salesRefunds;
+	}
+
+	// 装修单关联(销售收款页装修等级取数): salespayment.orderId 与 decoration.orderId 跨表同名列关联,
+	// 列映射由 orderId 属性持有, 关联侧 insertable/updatable 关闭; 默认 LAZY, 查询侧按需 fetch
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "orderId", referencedColumnName = "orderId", insertable = false, updatable = false)
+	public DecorationPO getDecoration() {
+		return decoration;
+	}
+
+	public void setDecoration(DecorationPO decoration) {
+		this.decoration = decoration;
 	}
 
 	@Column(name = "orderId")

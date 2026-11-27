@@ -43,6 +43,10 @@ public class SalesPaymentDaoImpl extends DaoImpl<SalesPaymentPO> implements Sale
 
 		queryFilterExecute(query, filters);
 
+		// PO关联PO联查取数: sales(等级列上下文) + decoration(装修等级), 一次 join fetch 防页内逐行加载
+		query.setFetchMode("sales");
+		query.setFetchMode("decoration");
+
 		return query.list();
 	}
 
