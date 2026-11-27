@@ -32,7 +32,7 @@ public class CustomerPO implements Serializable {
 
 	public static final short STATUS_AUTHED_INT = 2;
 
-	public static final short PRIVACY_PROTECT_INT = 0;
+	public static final short PRIVACY_PROTECT_INT = 1;
 
 	public static final short PRIVACY_OPENESS_INT = 0;
 
