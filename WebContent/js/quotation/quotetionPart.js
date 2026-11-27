@@ -151,14 +151,6 @@
                     com.popup("打印报价", api.index.quotetionOutputIndex.url, null, null, true);
                 }),
 
-                $btnBack: com.focusPage('#detailBckBtn').on('click', function() { // 返回
-
-                    com.showConfirm("当前页面存在重要数据,是否进行当前操作", function() {
-
-                        com.switchPage(api.index.quotetionIndex.url);
-                    });
-                }),
-
                 $btnSpread: com.focusPage('#openFunctionAreasBtn').click(function() { // 展开
 
                     com.focusPage('.icon-chevron-down').parent().trigger('click');
@@ -4042,8 +4034,46 @@
         }
     };
 
+    // standalone直开时无上层报价管理页: 隐藏返回按钮且不绑跳转
+    if (document.getElementById("standalonePane")) {
+        com.focusPage('#detailBckBtn').hide();
+    } else {
+        com.focusPage('#detailBckBtn').on('click', function() { // 返回
+
+            com.showConfirm("当前页面存在重要数据,是否进行当前操作", function() {
+
+                com.switchPage(api.index.quotetionIndex.url);
+            });
+        });
+    }
+
     return {
         init: function() {
+
+            // standalone直开兼容: 主框架打开时由报价管理列表行装配params.quotation.quotetion; 无框直开时为空,
+            // target携带qid走queryQuotetionByQid精确加载(老报价单与装修单无关联, 无orderId入口概念)
+            if (params.quotation.quotetion == null) {
+
+                if (params.urlLoadParams.qid == null) {
+                    com.showAlert(com.error, "缺少报价单编号, 请从报价管理页打开或standalone target携带qid");
+                    return;
+                }
+
+                var quotetionLoaded = false;
+
+                com.post(api.quotation.queryQuotetionByQid, {
+                    "quotetion.qid": params.urlLoadParams.qid
+                }, function(res) {
+
+                    quotetionLoaded = res.quotetion != null;
+                    params.quotation.quotetion = res.quotetion;
+                }, null, false);
+
+                if (!quotetionLoaded) {
+                    // 查询失败(qid不存在200003等)已弹全局错误提示, 终止init防后续undefined链炸
+                    return;
+                }
+            }
 
             // 报价ID
             quo.quotetionId = params.quotation.quotetion.qid;
