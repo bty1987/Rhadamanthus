@@ -238,12 +238,12 @@ public class NormriceItemPO implements Serializable {
 		return index == 0 ? "normriceitem" : "normriceitem" + index;
 	}
 
-	public static Class<? extends NormriceItemPO> factoryToClazz(int index) {
+	public static Class<?> factoryToClazz(int index) {
 		if (index == 0) {
 			return NormriceItemPO0.class;
 		}
 		try {
-			return (Class<? extends NormriceItemPO>) Class.forName("com.fanglin.quotation.po.NormriceItemPO" + index);
+			return Class.forName("com.fanglin.quotation.po.NormriceItemPO" + index);
 		} catch (Exception e) {
 			throw new FLException(200138, "定额明细分表实体不存在: normriceitem" + index, e);
 		}

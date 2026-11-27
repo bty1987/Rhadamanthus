@@ -203,12 +203,12 @@ public class NormoodItemPO implements Serializable {
 		return index == 0 ? "normooditem" : "normooditem" + index;
 	}
 
-	public static Class<? extends NormoodItemPO> factoryToClazz(int index) {
+	public static Class<?> factoryToClazz(int index) {
 		if (index == 0) {
 			return NormoodItemPO0.class;
 		}
 		try {
-			return (Class<? extends NormoodItemPO>) Class.forName("com.fanglin.quotation.po.NormoodItemPO" + index);
+			return Class.forName("com.fanglin.quotation.po.NormoodItemPO" + index);
 		} catch (Exception e) {
 			throw new FLException(200138, "定额明细分表实体不存在: normooditem" + index, e);
 		}
