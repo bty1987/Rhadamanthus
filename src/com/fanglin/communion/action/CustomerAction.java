@@ -87,6 +87,14 @@ public class CustomerAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "queryCustomerForContract", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryCustomerForContract() throws FLException {
+
+		customer = customerService.queryCustomerForContract(customerPhone, queryUserId());
+
+		return SUCCESS;
+	}
+
 	@Action(value = "queryCustomerForPhone", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryCustomerForPhone() throws FLException {
 

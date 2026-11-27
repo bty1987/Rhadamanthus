@@ -82,7 +82,7 @@ jQuery(function($) {
         contractEdit.cover["con-work-model"] = constant.decoration().decoration.typeness.keys[data.typeness];
     }, null, false);
 
-    com.post(api.data.queryCustomerForPhone, {
+    com.post(api.data.queryCustomerForContract, {
         "customerPhone.cid": contractEdit.customer.cid,
         "customerPhone.cpid": 0
     }, function(res) {

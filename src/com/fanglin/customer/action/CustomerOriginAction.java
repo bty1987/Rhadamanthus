@@ -53,7 +53,7 @@ public class CustomerOriginAction extends BaseListAction {
 	@Action(value = "queryCustomerOriginByCsid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryCustomerOriginByCsid() throws FLException {
 
-		customerOrigin = customerOriginService.queryCustomerOriginByCsid(customerOrigin);
+		customerOrigin = customerOriginService.queryCustomerOriginByCsid(customerOrigin, queryUserId());
 
 		return SUCCESS;
 	}

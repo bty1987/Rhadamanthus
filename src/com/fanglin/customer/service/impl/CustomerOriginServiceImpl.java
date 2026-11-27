@@ -3,6 +3,7 @@ package com.fanglin.customer.service.impl;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,9 +11,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.communion.dao.CustomerDao;
+import com.fanglin.communion.dao.CustomerRecordDao;
 import com.fanglin.communion.dao.HouseDao;
 import com.fanglin.communion.dao.VillageDao;
 import com.fanglin.communion.po.CustomerPO;
+import com.fanglin.communion.po.CustomerRecordPO;
 import com.fanglin.communion.po.HousePO;
 import com.fanglin.communion.po.VillagePO;
 import com.fanglin.communion.vo.CustomerVO;
@@ -38,6 +41,7 @@ import com.fanglin.decoration.vo.DecorationInfoVO;
 import com.fanglin.decoration.vo.DecorationVO;
 import com.fanglin.information.po.MessagePO;
 import com.fanglin.information.service.MessageService;
+import com.fanglin.log.service.CustomerLogService;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserBaseVO;
@@ -47,6 +51,7 @@ import com.fanglin.system.dao.CompanyDao;
 import com.fanglin.system.po.CompanyPO;
 import com.fanglin.system.vo.CityProperVO;
 import com.fanglin.utils.BeanUtil;
+import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.FormatUtil;
 import com.fanglin.utils.Paging;
 import com.fanglin.wechat.service.WeChatAppService;
@@ -79,6 +84,12 @@ public class CustomerOriginServiceImpl implements CustomerOriginService {
 
 	@Autowired
 	private CustomerDao customerDao;
+
+	@Autowired
+	private CustomerRecordDao customerRecordDao;
+
+	@Autowired
+	private CustomerLogService customerLogService;
 
 	@Autowired
 	private CompanyDao companyDao;
@@ -143,7 +154,8 @@ public class CustomerOriginServiceImpl implements CustomerOriginService {
 	}
 
 	@Override
-	public CustomerOriginVO queryCustomerOriginByCsid(CustomerOriginVO customerOriginVO) throws FLException {
+	@Transactional(rollbackFor = Exception.class)
+	public CustomerOriginVO queryCustomerOriginByCsid(CustomerOriginVO customerOriginVO, String userId) throws FLException {
 
 		CustomerOriginPO customerOriginPO = customerOriginDao.get(customerOriginVO.getCsid());
 
@@ -154,6 +166,12 @@ public class CustomerOriginServiceImpl implements CustomerOriginService {
 		customerOriginVO = customerOriginPO.ptv(new CustomerOriginVO(new VillageVO(new CityProperVO()), new UserBaseVO(), new UserBaseVO(), new DepartmentVO(), new DepartmentVO(), new CustomerVO(), new HouseVO(), new UserBaseVO(new DutyVO(), new DepartmentVO(new DepartmentTypeVO(), new DepartmentVO(), new UserBaseVO())), new UserBaseVO(new DutyVO(), new DepartmentVO(new DepartmentTypeVO(), new DepartmentVO(), new UserBaseVO())), new DecorationBusitypeVO()));
 
 		customerOriginVO.setPhone(SensitiveDataHelper.decrypt(customerOriginPO.getCustomer().getPhone()));
+
+		// 客源详情明文客户电话查询留痕(双写: customerrecord + log.customerlog)
+		customerRecordDao.save(new CustomerRecordPO(customerOriginPO.getCustomer().getCid(), 0l, CustomerRecordPO.TYPE_QUERY_INT, userDao.queryUserByUserId(userId), DateUtil.getDateToTimestamp(new Date())));
+
+		// Phase 7: 同步写入 log 模块的统一客户电话查询日志表(双写过渡期)
+		customerLogService.addCustomerLog(customerOriginPO.getCustomer().getCid(), 0l, userId, null);
 
 		CompanyPO companyPO = companyDao.get(customerOriginPO.getBelonger().getCompany());
 

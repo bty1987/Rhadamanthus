@@ -142,6 +142,23 @@ public class CustomerServiceImpl implements CustomerService {
 		return customerVOs;
 	}
 
+	/**
+	 * 查询客户电话前置校验: 客户须完成实名认证(状态>=已实名), 未认证客户禁止查询
+	 */
+	private void checkCustomerAuthForPhone(short status) throws FLException {
+
+		if (status < CustomerPO.STATUS_AUTH_INT) {
+			throw new FLException(130189, "客户实名认证未完成, 请先发起实名认证");
+		}
+	}
+
+	@Override
+	public CustomerVO queryCustomerForContract(CustomerPhoneVO customerPhoneVO, String userId) throws FLException {
+
+		// 合同场景独立授权入口, 查询逻辑与留痕与 queryCustomerForPhone 单一实现复用
+		return queryCustomerForPhone(customerPhoneVO, userId);
+	}
+
 	@Override
 	public CustomerVO queryCustomerForPhone(CustomerPhoneVO customerPhoneVO, String userId) throws FLException {
 
@@ -150,6 +167,8 @@ public class CustomerServiceImpl implements CustomerService {
 		if (customerPO == null) {
 			throw new FLException(130178, "客户信息不存在");
 		}
+
+		checkCustomerAuthForPhone(customerPO.getStatus());
 
 		CustomerVO customerVO = customerPO.ptv(new CustomerVO(), CustomerPO.PRIVACY_OPENESS_INT);
 
@@ -168,6 +187,14 @@ public class CustomerServiceImpl implements CustomerService {
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public List<CustomerPhoneVO> queryCustomerPhoneByCid(CustomerPhoneVO customerPhone, String userId) throws FLException {
+
+		CustomerPO customerPO = customerDao.get(customerPhone.getCid());
+
+		if (customerPO == null) {
+			throw new FLException(130178, "客户信息不存在");
+		}
+
+		checkCustomerAuthForPhone(customerPO.getStatus());
 
 		List<CustomerPhonePO> customerPhonePOs = customerPhoneDao.queryCustomerPhoneByCid(customerPhone.getCid(), customerPhone.getStatus());
 		List<CustomerPhoneVO> customerPhoneVOs = new ArrayList<CustomerPhoneVO>();

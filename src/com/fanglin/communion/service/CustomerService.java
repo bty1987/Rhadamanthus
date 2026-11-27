@@ -25,6 +25,11 @@ public interface CustomerService {
 
 	public List<CustomerVO> queryCustomerForName(String pinyinName, Integer company);
 
+	/**
+	 * 合同场景专用客户信息查询(含电话/身份证明文), 独立授权入口; queryCustomerForPhone 将整体收权停用
+	 */
+	public CustomerVO queryCustomerForContract(CustomerPhoneVO customerPhoneVO, String userId) throws FLException;
+
 	public CustomerVO queryCustomerForPhone(CustomerPhoneVO customerPhoneVO, String userId) throws FLException;
 
 	public List<CustomerPhoneVO> queryCustomerPhoneByCid(CustomerPhoneVO customerPhoneVO, String userId) throws FLException;

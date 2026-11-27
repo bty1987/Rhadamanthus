@@ -245,6 +245,10 @@ $.extend(api, {
         queryCustomerForName: {
             url: "queryCustomerForName.do"
         },
+        queryCustomerForContract: {
+            url: "queryCustomerForContract.do",
+            server: "communion"
+        },
         queryCustomerForPhone: {
             url: "queryCustomerForPhone.do",
             server: "communion"

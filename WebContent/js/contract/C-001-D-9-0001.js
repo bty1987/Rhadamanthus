@@ -60,7 +60,7 @@ jQuery(function($) {
 
     }, null, false);
 
-    com.post(api.data.queryCustomerForPhone, {
+    com.post(api.data.queryCustomerForContract, {
         "customerPhone.cid": contractEdit.customer.cid,
         "customerPhone.cpid": 0
     }, function(res) {
