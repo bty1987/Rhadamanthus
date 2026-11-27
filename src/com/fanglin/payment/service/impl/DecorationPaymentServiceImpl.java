@@ -788,6 +788,11 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 
 		decorationService.sendMessage(decorationPaymentPO.getDecoration().getOrderId(), "装修单", String.format("装修退款金额%.3f元", Arith.div(decorationPaymentPO.getReferMoney(), 1000.0)), String.format("pages/payment/receipt/receipt?orderId=%s&rid=%s&paymentType=1", decorationPaymentPO.getDecoration().getOrderId(), decorationReceiptPO.getDrId()));
 
+		// 生成消息队列数据: 减项/退款款双写(Queuing 内部队列 + Cueing 外部业务通知), event=PAYMENT_REFUNDED (口径同collectDecorationPayment)
+		String refundArgs = "{\"orderId\":\"" + decorationPO.getOrderId() + "\",\"dpid\":" + decorationPaymentVO.getDpid() + ",\"userId\":\"" + userId + "\",\"event\":\"PAYMENT_REFUNDED\",\"paymentType\":\"" + decorationPaymentPO.getPaymentType() + "\",\"referMoney\":" + decorationPaymentPO.getReferMoney() + (decorationPO.getBusitype() != null ? ",\"busiTypeName\":\"" + decorationPO.getBusitype().getName() + "\"" : "") + buildCcidArgs(decorationPO.getOrderId()) + "}";
+		messageQueuingDao.save(new MessageQueuingPO().init(decorationPO.getOrderId(), "refundDecorationPayment", refundArgs));
+		messageQueuingDao.save(new MessageCueuingPO().init(decorationPO.getOrderId(), "refundDecorationPayment", refundArgs));
+
 		return 0;
 	}
 
