@@ -277,7 +277,7 @@ public class NormriceItemPO implements Serializable {
 		try {
 			return (Class<? extends NormriceItemPO>) Class.forName("com.fanglin.quotation.po.NormriceItemPO" + index);
 		} catch (Exception e) {
-			throw new FLException(200029, "定额明细分表实体不存在: normriceitem" + index, e);
+			throw new FLException(200138, "定额明细分表实体不存在: normriceitem" + index, e);
 		}
 	}
 
@@ -288,7 +288,7 @@ public class NormriceItemPO implements Serializable {
 		try {
 			return (NormriceItemPO) Class.forName("com.fanglin.quotation.po.NormriceItemPO" + index).newInstance();
 		} catch (Exception e) {
-			throw new FLException(200029, "定额明细分表实体不存在: normriceitem" + index, e);
+			throw new FLException(200138, "定额明细分表实体不存在: normriceitem" + index, e);
 		}
 	}
 

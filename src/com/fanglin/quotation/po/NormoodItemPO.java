@@ -239,7 +239,7 @@ public class NormoodItemPO implements Serializable {
 		try {
 			return (Class<? extends NormoodItemPO>) Class.forName("com.fanglin.quotation.po.NormoodItemPO" + index);
 		} catch (Exception e) {
-			throw new FLException(200029, "定额明细分表实体不存在: normooditem" + index, e);
+			throw new FLException(200138, "定额明细分表实体不存在: normooditem" + index, e);
 		}
 	}
 
@@ -250,7 +250,7 @@ public class NormoodItemPO implements Serializable {
 		try {
 			return (NormoodItemPO) Class.forName("com.fanglin.quotation.po.NormoodItemPO" + index).newInstance();
 		} catch (Exception e) {
-			throw new FLException(200029, "定额明细分表实体不存在: normooditem" + index, e);
+			throw new FLException(200138, "定额明细分表实体不存在: normooditem" + index, e);
 		}
 	}
 
