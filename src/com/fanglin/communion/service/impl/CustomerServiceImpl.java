@@ -143,6 +143,7 @@ public class CustomerServiceImpl implements CustomerService {
 	}
 
 	@Override
+	@Transactional(rollbackFor = Exception.class)
 	public CustomerVO queryCustomerForContract(CustomerPhoneVO customerPhoneVO, String userId) throws FLException {
 
 		return queryCustomerForPhone(customerPhoneVO, userId);
