@@ -11,6 +11,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.MappedSuperclass;
 
+import com.fanglin.core.interceptor.FLException;
+
 import com.fanglin.data.po.ConstructionNodePO;
 
 /**
@@ -275,7 +277,7 @@ public class NormriceItemPO implements Serializable {
 		try {
 			return (Class<? extends NormriceItemPO>) Class.forName("com.fanglin.quotation.po.NormriceItemPO" + index);
 		} catch (Exception e) {
-			throw new RuntimeException("定额明细分表实体不存在: normriceitem" + index, e);
+			throw new FLException(200029, "定额明细分表实体不存在: normriceitem" + index, e);
 		}
 	}
 
@@ -286,7 +288,7 @@ public class NormriceItemPO implements Serializable {
 		try {
 			return (NormriceItemPO) Class.forName("com.fanglin.quotation.po.NormriceItemPO" + index).newInstance();
 		} catch (Exception e) {
-			throw new RuntimeException("定额明细分表实体不存在: normriceitem" + index, e);
+			throw new FLException(200029, "定额明细分表实体不存在: normriceitem" + index, e);
 		}
 	}
 
