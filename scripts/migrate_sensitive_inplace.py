@@ -188,7 +188,10 @@ def migrate_batch(conn, task, cursor_state):
 
     cur = conn.cursor(pymysql.cursors.DictCursor)
     col_str = ', '.join([id_col] + columns)
-    cur.execute(f"SELECT {col_str} FROM {table} WHERE {id_col} > %s ORDER BY {id_col} LIMIT %s",
+    # 只取任一迁移列非空的行(空行直接跳过): 主键范围扫描+过滤, 游标仍=批内最大id, 语义不变;
+    # 对有效值密度低的表(customer.identity命中率~16%)大幅减少扫描批次
+    nonempty = ' OR '.join([f"({c} IS NOT NULL AND {c} <> '')" for c in columns])
+    cur.execute(f"SELECT {col_str} FROM {table} WHERE {id_col} > %s AND ({nonempty}) ORDER BY {id_col} LIMIT %s",
                 (last_id, BATCH_SIZE))
     rows = cur.fetchall()
 
