@@ -14,6 +14,7 @@ import javax.persistence.Table;
 
 import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.payment.vo.SalesPaymentVO;
+import com.fanglin.personel.po.UserPO;
 import com.fanglin.sales.po.SalesPO;
 import com.fanglin.sales.po.SalesRefundsPO;
 import com.fanglin.utils.BeanUtil;
@@ -35,7 +36,9 @@ public class SalesPaymentDO implements Serializable {
 
 	private SalesRefundsPO salesRefunds;
 
-	private DecorationPO decoration;
+    private DecorationPO decoration;
+
+    private UserPO creater;
 
 	private String orderId;
 
@@ -63,12 +66,13 @@ public class SalesPaymentDO implements Serializable {
 	public SalesPaymentDO(SalesPaymentPO salesPaymentPO) {
 		super();
 
-		BeanUtil.copyProperties(salesPaymentPO, this, Arrays.asList("sales", "salesReceipt", "salesRefunds", "decoration"));
+        BeanUtil.copyProperties(salesPaymentPO, this, Arrays.asList("sales", "salesReceipt", "salesRefunds", "decoration", "creater"));
 
-		this.sales = salesPaymentPO.getSales();
-		this.salesReceipt = salesPaymentPO.getSalesReceipt();
-		this.salesRefunds = salesPaymentPO.getSalesRefunds();
-		this.decoration = salesPaymentPO.getDecoration();
+        this.sales = salesPaymentPO.getSales();
+        this.salesReceipt = salesPaymentPO.getSalesReceipt();
+        this.salesRefunds = salesPaymentPO.getSalesRefunds();
+        this.decoration = salesPaymentPO.getDecoration();
+        this.creater = salesPaymentPO.getCreater();
 	}
 
 	public SalesPaymentDO() {
@@ -116,11 +120,17 @@ public class SalesPaymentDO implements Serializable {
 	}
 
 	// orderId列已由平铺属性映射, 关联侧关闭读写防Repeated column(与SalesPaymentPO同款)
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "orderId", referencedColumnName = "orderId", insertable = false, updatable = false)
-	public DecorationPO getDecoration() {
-		return decoration;
-	}
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "orderId", referencedColumnName = "orderId", insertable = false, updatable = false)
+    public DecorationPO getDecoration() {
+        return decoration;
+    }
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "cuid", referencedColumnName = "uid")
+    public UserPO getCreater() {
+        return creater;
+    }
 
 	public void setDecoration(DecorationPO decoration) {
 		this.decoration = decoration;
@@ -227,7 +237,9 @@ public class SalesPaymentDO implements Serializable {
 
 		if (getSalesReceipt() != null && salesPaymentVO.getSalesReceipt() != null) getSalesReceipt().ptv(salesPaymentVO.getSalesReceipt());
 
-		if (getSalesRefunds() != null && salesPaymentVO.getSalesRefunds() != null) getSalesRefunds().ptv(salesPaymentVO.getSalesRefunds());
+        if (getSalesRefunds() != null && salesPaymentVO.getSalesRefunds() != null) getSalesRefunds().ptv(salesPaymentVO.getSalesRefunds());
+
+        if (getCreater() != null && salesPaymentVO.getCreater() != null) salesPaymentVO.getCreater().setBaseInfo(getCreater());
 
 		if (getDecoration() != null && getSales() != null && salesPaymentVO.getSales() != null && salesPaymentVO.getSales().getDecoration() != null) getDecoration().ptvcascade(salesPaymentVO.getSales().getDecoration());
 
