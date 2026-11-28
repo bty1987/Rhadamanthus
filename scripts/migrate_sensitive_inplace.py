@@ -23,7 +23,6 @@
 
 import pymysql
 from Crypto.Cipher import AES
-from Crypto.Util.Padding import pad, unpad
 import base64
 import json
 import os
@@ -31,8 +30,8 @@ import re
 import sys
 from datetime import datetime
 
-# ========== 数据库配置 (生产主库, 部署前必填) ==========
-DB_HOST = 'your-prod-master-host'   # 生产主库地址 (ECS 内网 rm-****.mysql.rds.aliyuncs.com)
+# ========== 数据库配置 (生产主库, 与执行器 config.json database.host 一致) ==========
+DB_HOST = 'rm-2zex3w4837e422i8x.mysql.rds.aliyuncs.com'
 DB_PORT = 3306
 DB_USER = 'fanglin1918'
 DB_PASS = 'Fanglin1918!'
@@ -62,17 +61,27 @@ TASKS = [
 
 # ========== AES 加解密 ==========
 
+def _pkcs7_pad(data):
+    """PKCS7填充 (手写实现, 兼容旧版PyCrypto 2.x无Crypto.Util.Padding)"""
+    n = AES.block_size - len(data) % AES.block_size
+    return data + bytes([n]) * n
+
+
+def _pkcs7_unpad(data):
+    return data[:-data[-1]]
+
+
 def aes_encrypt(plaintext, key=LEGACY_KEY, iv=LEGACY_IV):
-    """AES/CBC/PKCS5Padding 加密, 返回 Base64 (与应用层 AESHelper 一致)"""
+    """AES/CBC/PKCS7Padding 加密, 返回 Base64 (与应用层 AESHelper PKCS5Padding 一致, 16字节块下两者等价)"""
     cipher = AES.new(key, AES.MODE_CBC, iv)
-    padded = pad(plaintext.encode('utf-8'), AES.block_size)
+    padded = _pkcs7_pad(plaintext.encode('utf-8'))
     return base64.b64encode(cipher.encrypt(padded)).decode('utf-8')
 
 
 def aes_decrypt(ciphertext_b64, key=LEGACY_KEY, iv=LEGACY_IV):
     raw = base64.b64decode(ciphertext_b64)
     cipher = AES.new(key, AES.MODE_CBC, iv)
-    return unpad(cipher.decrypt(raw), AES.block_size).decode('utf-8')
+    return _pkcs7_unpad(cipher.decrypt(raw)).decode('utf-8')
 
 
 def to_new_encrypted(plaintext):
