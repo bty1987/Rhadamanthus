@@ -13,6 +13,7 @@ import com.fanglin.core.dao.impl.DaoImpl;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.payment.dao.SalesPaymentDao;
+import com.fanglin.payment.po.SalesPaymentDO;
 import com.fanglin.payment.po.SalesPaymentPO;
 import com.fanglin.sales.dao.impl.SalesDaoImpl;
 import com.fanglin.utils.Paging;
@@ -37,13 +38,13 @@ public class SalesPaymentDaoImpl extends DaoImpl<SalesPaymentPO> implements Sale
 	}
 
 	@Override
-	public List<SalesPaymentPO> pageSalesPayment(Paging paging, List<Filter> filters) throws FLException {
+	public List<SalesPaymentDO> pageSalesPayment(Paging paging, List<Filter> filters) throws FLException {
 
-		PagingQuery<SalesPaymentPO> query = pagingQuery(paging, SalesPaymentPO.class);
+		// DO即salespayment同表映射实体, 直接作criteria根: sales+decoration join fetch, 过滤引擎对DO平铺字段/关联路径全兼容
+		PagingQuery<SalesPaymentDO> query = pagingQuery(paging, SalesPaymentDO.class);
 
 		queryFilterExecute(query, filters);
 
-		// PO关联PO联查取数: sales(等级列上下文) + decoration(装修等级), 一次 join fetch 防页内逐行加载
 		query.setFetchMode("sales");
 		query.setFetchMode("decoration");
 

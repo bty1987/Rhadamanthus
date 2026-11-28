@@ -146,18 +146,17 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 
 		filters.add(new Filter(SalesPaymentPO.COLUMN_SALES_TYPE_STR, String.valueOf(SalesPO.TYPE_INIT_INT), "eq"));
 
-		List<SalesPaymentPO> salesPaymentPOs = salesPaymentDao.pageSalesPayment(paging, filters);
+		List<SalesPaymentDO> salesPaymentDOs = salesPaymentDao.pageSalesPayment(paging, filters);
 		List<SalesPaymentVO> salesPaymentVOs = new ArrayList<SalesPaymentVO>();
 
-		// PO关联PO装配(SalesPaymentDO: PO --sid--> sales, PO --orderId--> decoration): 装修等级经 sales.decoration.grade 下发
-		for (SalesPaymentPO salesPaymentPO : salesPaymentPOs) {
+		for (SalesPaymentDO salesPaymentDO : salesPaymentDOs) {
 
 			SalesPaymentVO salesPaymentVO = new SalesPaymentVO(new UserBaseVO(), new SalesVO(new HouseVO(new VillageVO(new CityProperVO(new CityVO()))), new CustomerVO(), new UserBaseVO(), new DepartmentVO(), new DepartmentVO(), new UserBaseVO(), new DepartmentVO(), new UserBaseVO(), new BrandVO()), new SalesReceiptVO(new UserBaseVO(), new UserBaseVO()));
 
 			// 装修等级载体: SalesVO构造不初始化decoration, DO.dtv按VO端decoration非null经ptvcascade填充grade
 			salesPaymentVO.getSales().setDecoration(new DecorationVO());
 
-			salesPaymentVOs.add(new SalesPaymentDO(salesPaymentPO).dtv(salesPaymentVO));
+			salesPaymentVOs.add(salesPaymentDO.dtv(salesPaymentVO));
 		}
 
 		paging.setData(salesPaymentVOs);

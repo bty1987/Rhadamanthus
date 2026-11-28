@@ -5,6 +5,7 @@ import java.util.List;
 import com.fanglin.core.dao.Dao;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
+import com.fanglin.payment.po.SalesPaymentDO;
 import com.fanglin.payment.po.SalesPaymentPO;
 import com.fanglin.utils.Paging;
 
@@ -12,7 +13,8 @@ public interface SalesPaymentDao extends Dao<SalesPaymentPO> {
 
 	public List<SalesPaymentPO> pageSalesPayment(Paging paging, List<Filter> filters, Short type) throws FLException;
 
-	public List<SalesPaymentPO> pageSalesPayment(Paging paging, List<Filter> filters) throws FLException;
+	// 销售收款页专用: DO关联PO联查返回(sales+decoration join fetch, 装修等级经sales.decoration.grade下发)
+	public List<SalesPaymentDO> pageSalesPayment(Paging paging, List<Filter> filters) throws FLException;
 
 	public List<SalesPaymentPO> querySalesPaymentByOrderId(String orderId, List<Filter> filters) throws FLException;
 
