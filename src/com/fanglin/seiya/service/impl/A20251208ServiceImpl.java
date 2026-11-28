@@ -53,7 +53,6 @@ import com.fanglin.customer.service.DecorationService;
 import com.fanglin.customer.service.SurveyService;
 import com.fanglin.customer.vo.SurveyVO;
 import com.fanglin.data.common.dao.ConstructionNodeDao;
-import com.fanglin.data.common.service.ConstructionNodeService;
 import com.fanglin.data.common.vo.ConstructionNodeVO;
 import com.fanglin.data.po.ConstructionNodePO;
 import com.fanglin.decoration.dao.DecorationDao;
@@ -122,9 +121,6 @@ public class A20251208ServiceImpl implements A20251208Service {
 
 	@Autowired
 	private ConstructionNodeDao constructionNodeDao;
-
-	@Autowired
-	private ConstructionNodeService constructionNodeService;
 
 	@Autowired
 	private ConstructionScheduleDao constructionScheduleDao;
@@ -1197,30 +1193,67 @@ public class A20251208ServiceImpl implements A20251208Service {
 	@Transactional(rollbackFor = Exception.class)
 	public void syncConstructionNodeForPlatforPm(ConstructionNodeVO constructionNodeVO) throws FLException {
 
-		// 平台同步兼容: 未传字段补安全默认后再调data服务——下游 ConstructionNodeServiceImpl 对
-		// mark/process/proset/timeLimit/precheck/postcheck/stacheck/fincheck/salaryLimit/accessoryLimit 等基本型字段
-		// 直接 set(VO包装类型null即自动拆箱NPE, 实证2026-11-22 test: mark未传炸136行), startalk/endtalk
-		// 为NOT NULL无默认列直写(库层违例); add路径data侧已有同款缺省惯例(account/company/pcnid), 此处对齐,
-		// update路径为全量覆盖契约, 未传按0兜
-		if (constructionNodeVO.getMark() == null) constructionNodeVO.setMark((short) 0);
-		if (constructionNodeVO.getProcess() == null) constructionNodeVO.setProcess((short) 0);
-		if (constructionNodeVO.getProset() == null) constructionNodeVO.setProset((short) 0);
-		if (constructionNodeVO.getStartalk() == null) constructionNodeVO.setStartalk("");
-		if (constructionNodeVO.getEndtalk() == null) constructionNodeVO.setEndtalk("");
-		if (constructionNodeVO.getTimeLimit() == null) constructionNodeVO.setTimeLimit(0);
-		if (constructionNodeVO.getPrecheck() == null) constructionNodeVO.setPrecheck(0);
-		if (constructionNodeVO.getPostcheck() == null) constructionNodeVO.setPostcheck(0);
-		if (constructionNodeVO.getStacheck() == null) constructionNodeVO.setStacheck(0);
-		if (constructionNodeVO.getFincheck() == null) constructionNodeVO.setFincheck(0);
-		if (constructionNodeVO.getSalaryLimit() == null) constructionNodeVO.setSalaryLimit(0);
-		if (constructionNodeVO.getAccessoryLimit() == null) constructionNodeVO.setAccessoryLimit(0);
-
+		// 平台PM施工节点同步自包含实现(不走data侧ConstructionNodeService, 同步语义自治不受ERP功能维护页契约影响):
+		// cnid为空=创建(全字段落库, 未传补安全默认——基本型null拆箱NPE/startalk-endtalk-name为NOT NULL列违例防护);
+		// cnid非空=增量更新(全字段非null才覆盖, 未传字段保持库中原值);
+		// 勘察模板(startSurvey/endSurvey)与NODE_CREATED/NODE_UPDATED消息不在同步范围
 		ConstructionNodePO constructionNodePO = constructionNodeVO.getCnid() == null ? null : constructionNodeDao.get(constructionNodeVO.getCnid());
 
 		if (constructionNodePO == null) {
-			constructionNodeService.addConstructionNode(constructionNodeVO);
+
+			ConstructionNodePO constructionNode = new ConstructionNodePO();
+
+			constructionNode.setName(constructionNodeVO.getName() == null ? "" : constructionNodeVO.getName());
+			constructionNode.setPrecheck(constructionNodeVO.getPrecheck() == null ? 0 : constructionNodeVO.getPrecheck());
+			constructionNode.setPostcheck(constructionNodeVO.getPostcheck() == null ? 0 : constructionNodeVO.getPostcheck());
+			constructionNode.setStacheck(constructionNodeVO.getStacheck() == null ? 0 : constructionNodeVO.getStacheck());
+			constructionNode.setFincheck(constructionNodeVO.getFincheck() == null ? 0 : constructionNodeVO.getFincheck());
+			constructionNode.setStartalk(constructionNodeVO.getStartalk() == null ? "" : constructionNodeVO.getStartalk());
+			constructionNode.setEndtalk(constructionNodeVO.getEndtalk() == null ? "" : constructionNodeVO.getEndtalk());
+			constructionNode.setKino(constructionNodeVO.getKino());
+			constructionNode.setKiname(constructionNodeVO.getKiname());
+			constructionNode.setTimeLimit(constructionNodeVO.getTimeLimit() == null ? 0 : constructionNodeVO.getTimeLimit());
+			constructionNode.setMark(constructionNodeVO.getMark() == null ? 0 : constructionNodeVO.getMark());
+			constructionNode.setAccount(constructionNodeVO.getAccount() == null ? ConstructionNodePO.ACCOUNT_INVALID_INT : constructionNodeVO.getAccount());
+			constructionNode.setAccessoryLimit(constructionNodeVO.getAccessoryLimit() == null ? 0 : constructionNodeVO.getAccessoryLimit());
+			constructionNode.setSalaryLimit(constructionNodeVO.getSalaryLimit() == null ? 0 : constructionNodeVO.getSalaryLimit());
+			constructionNode.setSalaryFloor(constructionNodeVO.getSalaryFloor() == null ? 0 : constructionNodeVO.getSalaryFloor());
+			constructionNode.setProcess(constructionNodeVO.getProcess() == null ? 0 : constructionNodeVO.getProcess());
+			constructionNode.setProset(constructionNodeVO.getProset() == null ? 0 : constructionNodeVO.getProset());
+			constructionNode.setSort(constructionNodeVO.getSort() == null ? 0 : constructionNodeVO.getSort());
+			constructionNode.setStatus(constructionNodeVO.getStatus() == null ? ConstructionNodePO.STATUS_INIT_SHORT : constructionNodeVO.getStatus());
+			constructionNode.setCompany(constructionNodeVO.getCompany() == null ? 0 : constructionNodeVO.getCompany());
+			constructionNode.setPcnid(constructionNodeVO.getPcnid() == null ? 0 : constructionNodeVO.getPcnid());
+
+			constructionNodeDao.save(constructionNode);
+
+			constructionNodeVO.setCnid(constructionNode.getCnid());
+
 		} else {
-			constructionNodeService.updateConstructionNode(constructionNodeVO);
+
+			if (constructionNodeVO.getName() != null) constructionNodePO.setName(constructionNodeVO.getName());
+			if (constructionNodeVO.getStatus() != null) constructionNodePO.setStatus(constructionNodeVO.getStatus());
+			if (constructionNodeVO.getPrecheck() != null) constructionNodePO.setPrecheck(constructionNodeVO.getPrecheck());
+			if (constructionNodeVO.getPostcheck() != null) constructionNodePO.setPostcheck(constructionNodeVO.getPostcheck());
+			if (constructionNodeVO.getStacheck() != null) constructionNodePO.setStacheck(constructionNodeVO.getStacheck());
+			if (constructionNodeVO.getFincheck() != null) constructionNodePO.setFincheck(constructionNodeVO.getFincheck());
+			if (constructionNodeVO.getStartalk() != null) constructionNodePO.setStartalk(constructionNodeVO.getStartalk());
+			if (constructionNodeVO.getEndtalk() != null) constructionNodePO.setEndtalk(constructionNodeVO.getEndtalk());
+			if (constructionNodeVO.getKino() != null) constructionNodePO.setKino(constructionNodeVO.getKino());
+			if (constructionNodeVO.getKiname() != null) constructionNodePO.setKiname(constructionNodeVO.getKiname());
+			if (constructionNodeVO.getProcess() != null) constructionNodePO.setProcess(constructionNodeVO.getProcess());
+			if (constructionNodeVO.getProset() != null) constructionNodePO.setProset(constructionNodeVO.getProset());
+			if (constructionNodeVO.getSort() != null) constructionNodePO.setSort(constructionNodeVO.getSort());
+			if (constructionNodeVO.getTimeLimit() != null) constructionNodePO.setTimeLimit(constructionNodeVO.getTimeLimit());
+			if (constructionNodeVO.getMark() != null) constructionNodePO.setMark(constructionNodeVO.getMark());
+			if (constructionNodeVO.getAccount() != null) constructionNodePO.setAccount(constructionNodeVO.getAccount());
+			if (constructionNodeVO.getAccessoryLimit() != null) constructionNodePO.setAccessoryLimit(constructionNodeVO.getAccessoryLimit());
+			if (constructionNodeVO.getSalaryLimit() != null) constructionNodePO.setSalaryLimit(constructionNodeVO.getSalaryLimit());
+			if (constructionNodeVO.getSalaryFloor() != null) constructionNodePO.setSalaryFloor(constructionNodeVO.getSalaryFloor());
+			if (constructionNodeVO.getCompany() != null) constructionNodePO.setCompany(constructionNodeVO.getCompany());
+			if (constructionNodeVO.getPcnid() != null) constructionNodePO.setPcnid(constructionNodeVO.getPcnid());
+
+			constructionNodeDao.update(constructionNodePO);
 		}
 	}
 
