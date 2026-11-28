@@ -47,6 +47,8 @@ public class SalesPaymentDaoImpl extends DaoImpl<SalesPaymentPO> implements Sale
 
 		query.setFetchMode("sales");
 		query.setFetchMode("decoration");
+		query.setFetchMode("salesReceipt");
+		query.setFetchMode("salesRefunds");
 
 		return query.list();
 	}

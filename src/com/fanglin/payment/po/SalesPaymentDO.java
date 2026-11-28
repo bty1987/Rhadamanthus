@@ -227,7 +227,7 @@ public class SalesPaymentDO implements Serializable {
 
 		if (getSalesReceipt() != null && salesPaymentVO.getSalesReceipt() != null) getSalesReceipt().ptv(salesPaymentVO.getSalesReceipt());
 
-		if (getSalesRefunds() != null) getSalesRefunds().ptv(salesPaymentVO.getSalesRefunds());
+		if (getSalesRefunds() != null && salesPaymentVO.getSalesRefunds() != null) getSalesRefunds().ptv(salesPaymentVO.getSalesRefunds());
 
 		if (getDecoration() != null && getSales() != null && salesPaymentVO.getSales() != null && salesPaymentVO.getSales().getDecoration() != null) getDecoration().ptvcascade(salesPaymentVO.getSales().getDecoration());
 
