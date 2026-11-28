@@ -38,10 +38,14 @@ DB_PASS = 'Fanglin1918!'
 DB_NAME = 'communion'
 
 # ========== 密钥配置 ==========
-# 与生产 sysconfig.properties encryptKey/encryptIv (legacy) 一致;
-# KeyManager 未配置 encryptKeyV1 时应用层 ENC(V1:) 实际也用此密钥, 两端完全一致
-LEGACY_KEY = b'b4d617b336124c63'
-LEGACY_IV  = b'b4d1a58a416957a5'
+# 🔴 必须与生产部署 sysconfig.properties 的 encryptKey/encryptIv 一致(8.3.031 生产=844dd1组, 无encryptKeyV1, KeyManager兜底生效);
+#    仓库 conf/sysconfig.properties 是 dev 侧配置(b4d6组), 两者不同! key错配=应用层解不开迁移密文
+#    (2026-11-28 已发生并修复: 详见 repair_user_key_mismatch.py)
+ACTIVE_KEY = b'844dd1be967b6e9e'
+ACTIVE_IV  = b'cdb421d038104126'
+# 兼容旧名(历史引用), 指向同一生效key
+LEGACY_KEY = ACTIVE_KEY
+LEGACY_IV  = ACTIVE_IV
 
 # ========== 迁移参数 ==========
 BATCH_SIZE = 1000                 # 每批处理记录数
