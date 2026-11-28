@@ -319,7 +319,7 @@ public class CustomerOriginServiceImpl implements CustomerOriginService {
 			throw new FLException(330002, "客源归属人错误");
 		}
 
-		customerOrginRecordDao.save(new CustomerOriginRecordPO().init(customerOriginPO.getCsid(), String.format("原归属人姓名:%s,原归属人员工号:%s,原归属人电话:%s", customerOriginPO.getBelonger().getUserName(), userId, userDao.queryUserByUserId(userId).getPhone()), CustomerOriginRecordPO.TYPE_DEFINE_INT, userDao.queryUserByUserId(userId)));
+		customerOrginRecordDao.save(new CustomerOriginRecordPO().init(customerOriginPO.getCsid(), String.format("原归属人姓名:%s,原归属人员工号:%s", customerOriginPO.getBelonger().getUserName(), userId), CustomerOriginRecordPO.TYPE_DEFINE_INT, userDao.queryUserByUserId(userId)));
 
 		customerOriginPO.setBelonger(null);
 
@@ -352,7 +352,7 @@ public class CustomerOriginServiceImpl implements CustomerOriginService {
 
 		customerOriginDao.update(customerOriginPO);
 
-		customerOrginRecordDao.save(new CustomerOriginRecordPO().init(customerOriginPO.getCsid(), String.format("认领人姓名:%s,认领人员工号:%s,认领人电话:%s", userDao.queryUserByUserId(userId).getUserName(), userId, userDao.queryUserByUserId(userId).getPhone()), CustomerOriginRecordPO.TYPE_DEFINE_INT, userDao.queryUserByUserId(userId)));
+		customerOrginRecordDao.save(new CustomerOriginRecordPO().init(customerOriginPO.getCsid(), String.format("认领人姓名:%s,认领人员工号:%s", userDao.queryUserByUserId(userId).getUserName(), userId), CustomerOriginRecordPO.TYPE_DEFINE_INT, userDao.queryUserByUserId(userId)));
 	}
 
 	@Override

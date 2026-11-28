@@ -404,7 +404,7 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 			throw new FLException(330077, "客户机会不可操作");
 		}
 
-		String content = String.format("客源确认,客户名:%s,楼盘:%s,电话:%s", customerChancePO.getSource().getName(), customerChancePO.getHouse().getVillage().getName(), customerChancePO.getCustomer().getPhone());
+		String content = String.format("客源确认,客户名:%s,楼盘:%s", customerChancePO.getSource().getName(), customerChancePO.getHouse().getVillage().getName());
 
 		UserPO designer = customerChancePO.getBelonger();
 

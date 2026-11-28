@@ -1289,7 +1289,7 @@ public class DecorationServiceImpl implements DecorationService {
 			throw new FLException(140013, "装修单不存在");
 		}
 
-		String oldHouse = String.format("%d %s %s", decorationPO.getHouse().getHid(), decorationPO.getHouse().getVillage().getName(), decorationPO.getHouse().getHouseNumber());
+		String oldHouse = String.format("%d %s", decorationPO.getHouse().getHid(), decorationPO.getHouse().getVillage().getName());
 
 		HousePO housePO = houseDao.get(decorationVO.getHouse().getHid());
 
@@ -1299,7 +1299,7 @@ public class DecorationServiceImpl implements DecorationService {
 
 		decorationPO.setHouse(housePO);
 
-		String newHouse = String.format("%d %s %s", housePO.getHid(), housePO.getVillage().getName(), housePO.getHouseNumber());
+		String newHouse = String.format("%d %s", housePO.getHid(), housePO.getVillage().getName());
 
 		decorationDao.update(decorationPO);
 
@@ -1723,7 +1723,7 @@ public class DecorationServiceImpl implements DecorationService {
 			housePO = houseDao.get(decorationVO.getHouse().getHid());
 		}
 
-		String content = String.format("客源确认,装修单:%s,楼盘:%s,楼号:%s", decorationVO.getOrderId(), housePO.getVillage().getName(), housePO.getHouseNumber());
+		String content = String.format("客源确认,装修单:%s,楼盘:%s", decorationVO.getOrderId(), housePO.getVillage().getName());
 
 		messageService.sendMessage(creater.getUserId(), null, content, MessagePO.TYPE_SEND_CUSTOMER_INT, creater.getCompany());
 	}

@@ -161,7 +161,7 @@ public class DecorationMeasureServiceImpl implements DecorationMeasureService {
 		HousePO housePO = decorationPO.getHouse();
 		VillagePO villagePO = housePO.getVillage();
 
-		String houseAddr = String.format("%s %s", villagePO.getName(), housePO.getHouseNumber());
+		String houseAddr = villagePO.getName();
 
 		if (decorationMeasureVO.getStatus() == DecorationPO.STATUS_CONTRACT_CONFIRMATION_INT) {
 

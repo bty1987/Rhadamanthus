@@ -25,6 +25,7 @@ import org.slf4j.LoggerFactory;
 
 import com.fanglin.communion.po.DepartmentPO;
 import com.fanglin.core.interceptor.FLException;
+import com.fanglin.core.security.SensitiveDataHelper;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.decoration.dao.DecorationBelongDao;
 import com.fanglin.decoration.dao.DecorationDao;
@@ -82,7 +83,8 @@ public class DecorationExportServiceImpl implements DecorationExportService {
 			DecorationExportVO decorationExportVO = new DecorationExportVO();
 
 			decorationExportVO.setOrderId(decorationPO.getOrderId());
-			decorationExportVO.setOrderAddr(decorationPO.getHouse().getVillage().getName() + " " + decorationPO.getHouse().getHouseNumber());
+			// 导出全脱敏: 门牌号库值decrypt后等长遮蔽(迁移前后行为一致)
+			decorationExportVO.setOrderAddr(decorationPO.getHouse().getVillage().getName() + " " + SensitiveDataHelper.maskFully(SensitiveDataHelper.decrypt(decorationPO.getHouse().getHouseNumber())));
 			decorationExportVO.setContractTime(decorationPO.getContractTime());
 			decorationExportVO.setNotSalesmanRate(decorationPO.getNotSalesmanRate());
 			decorationExportVO.setContractPrice(decorationPO.getOrderTotalPrice());

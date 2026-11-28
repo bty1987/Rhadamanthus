@@ -215,7 +215,7 @@ public class DecorationInfoServiceImpl implements DecorationInfoService {
 		HousePO housePO = decorationPO.getHouse();
 		VillagePO villagePO = housePO.getVillage();
 
-		String houseAddr = String.format("%s %s", villagePO.getName(), housePO.getHouseNumber());
+		String houseAddr = villagePO.getName();
 
 		if (decorationInfoVO.getSourceStatus() == DecorationPO.STATUS_CONTRACT_CONFIRMATION_INT) {
 			decorationPO.setDesignStatus(DecorationPO.DESIGNSTATUS_END_INT);

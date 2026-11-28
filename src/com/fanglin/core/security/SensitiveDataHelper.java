@@ -140,6 +140,32 @@ public class SensitiveDataHelper {
 		return identity.substring(0, 6) + mask.toString() + identity.substring(identity.length() - 4);
 	}
 
+	/**
+	 * 全遮蔽：每个字符替换为* (等长, 保留长度特征, 完全不可逆)
+	 *
+	 * 适用门牌号等无通用脱敏格式的字段, 导出/打印场景按库值decrypt后调用;
+	 * 空值原样返回
+	 *
+	 * 例如: 3-2-101 → *******
+	 *
+	 * @param value 明文值
+	 * @return 等长全*字符串, 空值直接返回
+	 */
+	public static String maskFully(String value) {
+		if (value == null || value.trim().isEmpty()) {
+			return value;
+		}
+
+		value = value.trim();
+
+		StringBuilder mask = new StringBuilder();
+		for (int i = 0; i < value.length(); i++) {
+			mask.append('*');
+		}
+
+		return mask.toString();
+	}
+
 	// ========== 查询辅助 ==========
 
 	/**

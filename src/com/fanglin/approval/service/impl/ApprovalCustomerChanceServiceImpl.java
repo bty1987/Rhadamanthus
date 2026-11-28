@@ -147,7 +147,7 @@ public class ApprovalCustomerChanceServiceImpl implements ApprovalCustomerChance
 		HousePO housePO = customerSourcePO.getHouse();
 		VillagePO villagePO = housePO.getVillage();
 
-		String content = String.format("客源转装修单,客户名:%s,楼盘:%s %s %s %s", customerSourcePO.getName(), villagePO.getCityProper().getCity().getName(), villagePO.getCityProper().getName(), villagePO.getName(), housePO.getHouseNumber());
+		String content = String.format("客源转装修单,客户名:%s,楼盘:%s %s %s", customerSourcePO.getName(), villagePO.getCityProper().getCity().getName(), villagePO.getCityProper().getName(), villagePO.getName());
 
 		approvalPO = new ApprovalPO().init(sender, receiver, "", String.valueOf(ccid), ApprovalPO.APPROVAL_TYPE_CUSTOMER_CHANCE_INT, content, approvalVO.getComment(), company);
 
@@ -165,7 +165,7 @@ public class ApprovalCustomerChanceServiceImpl implements ApprovalCustomerChance
 
 		customerSourceDao.update(customerSourcePO);
 
-		String contents = String.format("客源转装修单提交,客户名:%s,楼盘:%s %s,装修单号:%s,批注:%s", customerSourcePO.getName(), villagePO.getName(), housePO.getHouseNumber(), customerSourcePO.getOrderId(), approvalPO.getAnnotate());
+		String contents = String.format("客源转装修单提交,客户名:%s,楼盘:%s,装修单号:%s,批注:%s", customerSourcePO.getName(), villagePO.getName(), customerSourcePO.getOrderId(), approvalPO.getAnnotate());
 
 		messageService.sendMessage(receiver.getUserId(), null, contents, MessagePO.TYPE_SEND_APPROVAL_INT, receiver.getCompany());
 
@@ -230,7 +230,7 @@ public class ApprovalCustomerChanceServiceImpl implements ApprovalCustomerChance
 		HousePO housePO = customerSourcePO.getHouse();
 		VillagePO villagePO = housePO.getVillage();
 
-		String content = String.format("客源转装修单成功,客户名:%s,楼盘:%s %s,装修单号:%s,批注:%s", customerSourcePO.getName(), villagePO.getName(), housePO.getHouseNumber(), customerSourcePO.getOrderId(), approvalPO.getAnnotate());
+		String content = String.format("客源转装修单成功,客户名:%s,楼盘:%s,装修单号:%s,批注:%s", customerSourcePO.getName(), villagePO.getName(), customerSourcePO.getOrderId(), approvalPO.getAnnotate());
 
 		UserPO designer = customerChancePO.getBelonger();
 		UserPO salesman = customerSourcePO.getCreater();
@@ -269,7 +269,7 @@ public class ApprovalCustomerChanceServiceImpl implements ApprovalCustomerChance
 		HousePO housePO = customerSourcePO.getHouse();
 		VillagePO villagePO = housePO.getVillage();
 
-		String content = String.format("客源转装修单失败,审批拒绝,客户名:%s,楼盘:%s %s,批注:%s", customerSourcePO.getName(), villagePO.getName(), housePO.getHouseNumber(), approvalPO.getAnnotate());
+		String content = String.format("客源转装修单失败,审批拒绝,客户名:%s,楼盘:%s,批注:%s", customerSourcePO.getName(), villagePO.getName(), approvalPO.getAnnotate());
 
 		UserPO designer = customerChancePO.getBelonger();
 		UserPO salesman = customerSourcePO.getCreater();
@@ -315,13 +315,13 @@ public class ApprovalCustomerChanceServiceImpl implements ApprovalCustomerChance
 		HousePO housePO = customerSourcePO.getHouse();
 		VillagePO villagePO = housePO.getVillage();
 
-		String content = String.format("客户机会不匹配,客户名:%s,楼盘:%s %s %s %s", customerSourcePO.getName(), villagePO.getCityProper().getCity().getName(), villagePO.getCityProper().getName(), villagePO.getName(), housePO.getHouseNumber());
+		String content = String.format("客户机会不匹配,客户名:%s,楼盘:%s %s %s", customerSourcePO.getName(), villagePO.getCityProper().getCity().getName(), villagePO.getCityProper().getName(), villagePO.getName());
 
 		approvalPO = new ApprovalPO().init(sender, receiver, "", String.valueOf(ccid), ApprovalPO.APPROVAL_TYPE_CUSTOMER_CHANCE_DISABLED_INT, content, approvalVO.getComment(), company);
 
 		approvalDao.save(approvalPO);
 
-		String contents = String.format("客户机会不匹配,客户名:%s,楼盘:%s %s,批注:%s", customerSourcePO.getName(), villagePO.getName(), housePO.getHouseNumber(), approvalPO.getAnnotate());
+		String contents = String.format("客户机会不匹配,客户名:%s,楼盘:%s,批注:%s", customerSourcePO.getName(), villagePO.getName(), approvalPO.getAnnotate());
 
 		messageService.sendMessage(receiver.getUserId(), null, contents, MessagePO.TYPE_SEND_APPROVAL_INT, receiver.getCompany());
 
@@ -343,7 +343,7 @@ public class ApprovalCustomerChanceServiceImpl implements ApprovalCustomerChance
 		HousePO housePO = customerSourcePO.getHouse();
 		VillagePO villagePO = housePO.getVillage();
 
-		String content = String.format("客户机会不匹配,审批通过,客户名:%s,楼盘:%s %s,批注:%s", customerSourcePO.getName(), villagePO.getName(), housePO.getHouseNumber(), approvalPO.getAnnotate());
+		String content = String.format("客户机会不匹配,审批通过,客户名:%s,楼盘:%s,批注:%s", customerSourcePO.getName(), villagePO.getName(), approvalPO.getAnnotate());
 
 		UserPO designer = customerChancePO.getBelonger();
 		UserPO salesman = customerSourcePO.getCreater();

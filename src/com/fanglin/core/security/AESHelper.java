@@ -74,18 +74,8 @@ public class AESHelper {
 
 	public static void main(String[] args) throws Exception {
 
-		System.out.println(AESHelper.decrypt("eX3o2SZdrpVOV9HC4UYTRA==", "b4d617b336124c63", "b4d1a58a416957a5"));
-
-		System.out.println(AESHelper.encrypt("userId=flconstruction,roleId=82,userName=common,updateTime=1764410361176,company=0,timeout=1,rollcall=0", "b4d617b336124c63", "b4d1a58a416957a5"));
-
-		System.out.println(AESHelper.encrypt("flconstruction", "844dd1be967b6e9e", "cdb421d038104126"));
-		System.out.println(AESHelper.encrypt("fanglincommon", "844dd1be967b6e9e", "cdb421d038104126"));
-
-		System.out.println(AESHelper.decrypt("4vi3KIIonEAImn58EfBhGQ==", "844dd1be967b6e9e", "cdb421d038104126"));
-
-		System.out.println(AESHelper.decrypt("SNWFXB8tVXyRuhP8VWgXvdeHbdyYBLWIIOkF1o585Iza08yiDAd5XCdVCY+l7E2BWs2f9/aQtJyF17OOLAnioRyqKJRzISTucHkE12SfNgYycuza/WA3o18m5KzSHdFjmxfDHxlSihovc1j9tyybFw==", "844dd1be967b6e9e", "cdb421d038104126"));
-
-		System.out.println(AESHelper.decrypt("zmL/NgmvG3wVuBeKeyozyzKCrctm5y5bZ2Xz2J1vqrUlDt6JQYJFhLrJNFMkYjMJ5ZkbvOI9bI8S3fa2vLXC7IKHD+jTF2W743uSI4lylM8uEdKwLRDhPOqRhm7pMK1h152FrbgrzhyB+9qwbo0wWg==", "b4d617b336124c63", "b4d1a58a416957a5"));
+		// 密钥不入库(2026-11-28 安全清理): 原main硬编码了dev/生产两组真实密钥, 属源码密钥泄露点;
+		// 加解密自测请改用外部配置密钥, 或走单测环境变量注入
 	}
 
 }

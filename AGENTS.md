@@ -174,7 +174,7 @@ com.exporter.export(data, filename);
 修改现有功能必须直接修改原文件，禁止创建新文件实现相同功能。
 
 ### 安全规范
-- **手机号加密**: 使用 `AESHelper.encrypt()` 加密存储
+- **🔴 敏感字段加密存储(六字段强约束)**: `customer.phone` / `customer.identity` / `customer.companyPhone` / `user.phone` / `user.identity` / `house.houseNumber` 一律加密存储, 禁止明文入库。统一走 `com.fanglin.core.security.SensitiveDataHelper`: 写入 `encrypt()`(ENC(V1:)格式, 防重复加密)、读取 `decrypt()`(三层回退: 新格式→旧Base64→明文)、等值查询 `getAllEncryptedForms()` 三形态 IN(密文列不支持 LIKE, DAO 层必须白名单拦截前端 op)、展示默认 `maskPhone()/maskIdentity()/maskFully()` 脱敏; **导出/打印全脱敏, 消息/审批文本一律不携带敏感字段**。新增含敏感列的表先确认列宽≥密文长度; 生产密钥以生产部署 sysconfig 为准, 勿引用仓库 conf(两者分叉)
 - **SQL注入防护**: 必须使用参数化查询，禁止字符串拼接
 - **权限验证**: 所有接口需验证用户登录状态和操作权限
 

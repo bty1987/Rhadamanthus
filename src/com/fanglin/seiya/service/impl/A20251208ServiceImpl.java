@@ -770,7 +770,7 @@ public class A20251208ServiceImpl implements A20251208Service {
 			finishTime = DateUtil.getDateToDateString(DateUtil.getDateToTimestamp(constructionInfo.getFinishTime()), "yyyy年MM月dd日");
 		}
 
-		String content = String.format("装修单: %s, 地址: %s %s, 预计完工时间: %s , 还剩%s日 , 请及时对接完工安排 ", decorationPO.getOrderId(), decorationPO.getHouse().getVillage().getName(), SensitiveDataHelper.decrypt(decorationPO.getHouse().getHouseNumber()), finishTime, finishDay + 1);
+		String content = String.format("装修单: %s, 地址: %s, 预计完工时间: %s , 还剩%s日 , 请及时对接完工安排 ", decorationPO.getOrderId(), decorationPO.getHouse().getVillage().getName(), finishTime, finishDay + 1);
 
 		// 完工通知(旁路,尽力而为): 监理未派(construction.suid空, 生产实测801工程/105在途)或创建人为空时跳过,
 		// 不阻断环节完工主流程(2026-11-20 平台推完工1503130069 此处 NPE 实证)

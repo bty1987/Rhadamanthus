@@ -96,7 +96,7 @@ public class ApprovalDecorationHouseServiceImpl implements ApprovalDecorationHou
 		UserPO receiver = userDao.queryUserByUserId(approvalVO.getReceiver().getUserId());
 		UserPO sender = userDao.queryUserByUserId(userId);
 
-		String content = String.format("装修单号:%s,楼盘:%s,楼号:%s,修改为楼盘:%s,楼号:%s", orderId, oldhousePO.getVillage().getName(), oldhousePO.getHouseNumber(), newhousePO.getVillage().getName(), newhousePO.getHouseNumber());
+		String content = String.format("装修单号:%s,楼盘:%s,修改为楼盘:%s", orderId, oldhousePO.getVillage().getName(), newhousePO.getVillage().getName());
 
 		approvalPO = new ApprovalPO().init(sender, receiver, orderId, orderId, ApprovalPO.APPROVAL_TYPE_VILLAGE_INT, content, approvalVO.getComment(), company);
 

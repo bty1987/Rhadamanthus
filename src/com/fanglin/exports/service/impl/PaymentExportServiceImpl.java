@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.communion.po.VillagePO;
 import com.fanglin.core.interceptor.FLException;
+import com.fanglin.core.security.SensitiveDataHelper;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.exports.service.PaymentExportService;
@@ -76,7 +77,8 @@ public class PaymentExportServiceImpl implements PaymentExportService {
 			decorationPaymentExportVO.setDesignerDepartment(designer.getDept().getName());
 			decorationPaymentExportVO.setOrderId(decorationPO.getOrderId());
 			decorationPaymentExportVO.setVillage(villagePO.getName());
-			decorationPaymentExportVO.setHouseNumber(decorationPO.getHouse().getHouseNumber());
+			// 导出全脱敏: 门牌号库值decrypt后等长遮蔽(迁移前后行为一致)
+			decorationPaymentExportVO.setHouseNumber(SensitiveDataHelper.maskFully(SensitiveDataHelper.decrypt(decorationPO.getHouse().getHouseNumber())));
 
 			decorationPaymentExportVOs.add(decorationPaymentExportVO);
 		}

@@ -452,7 +452,7 @@ public class A20261025ServiceImpl implements A20261025Service {
 			decorationPO.setDesignStatus(DecorationPO.DESIGNSTATUS_CONDUCT_INT);
 
 			if (decorationPO.getDesigner() != null) {
-				messageService.sendMessage(decorationPO.getDesigner().getUserId(), null, String.format("装修单: %s , 地址: %s %s , 合同签署完成 , 设计状态已进入设计中 , 请持续关注设计推进 .", orderId, decorationPO.getHouse().getVillage().getName(), decorationPO.getHouse().getHouseNumber()), MessagePO.TYPE_SEND_PERSONEL_INT, decorationPO.getDesigner().getCompany());
+				messageService.sendMessage(decorationPO.getDesigner().getUserId(), null, String.format("装修单: %s , 地址: %s , 合同签署完成 , 设计状态已进入设计中 , 请持续关注设计推进 .", orderId, decorationPO.getHouse().getVillage().getName()), MessagePO.TYPE_SEND_PERSONEL_INT, decorationPO.getDesigner().getCompany());
 			}
 		}
 
