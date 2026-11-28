@@ -1,0 +1,25 @@
+-- ============================================================
+-- 63号: recruitment.identity 列扩容 varchar(21) -> varchar(128)
+-- ============================================================
+-- 用途说明:
+--   P2敏感数据迁移补救DDL。recruitment(招聘)表identity纳入加密范围时
+--   列宽核查遗漏: 18位身份证加密密文 = ENC(V1: + base64(32字节) + ) = 52字符,
+--   varchar(21) 截断写入导致 base64 不完整无法解密(已影响20行, bak表有明文)。
+--   扩容后清 recruitment 游标重扫即可修复(迁移脚本幂等)。
+--
+-- 执行前置条件:
+--   低峰执行; 表仅23行, ALTER 秒级; 无需停应用。
+--
+-- 回滚方式:
+--   ALTER TABLE communion.recruitment MODIFY COLUMN identity VARCHAR(21) NOT NULL;
+--   (仅当迁移尚未开始; 已有密文行回滚会截断)
+--
+-- 验证语句:
+--   SELECT COLUMN_TYPE FROM information_schema.COLUMNS
+--    WHERE TABLE_SCHEMA='communion' AND TABLE_NAME='recruitment' AND COLUMN_NAME='identity';
+--   -- 应返回 varchar(128)
+--
+-- 幂等性: MODIFY 到相同定义重复执行无变化, 可安全重跑。
+-- ============================================================
+
+ALTER TABLE communion.recruitment MODIFY COLUMN identity VARCHAR(128) NOT NULL;

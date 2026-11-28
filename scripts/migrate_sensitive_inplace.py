@@ -151,6 +151,22 @@ def save_cursor(cursor_state):
 
 # ========== 备份 ==========
 
+def ensure_column_width(conn, task, min_len=64):
+    """迁移前置列宽自检: 密文长度≈base64(明文pad后)+8, 列宽不足会被MySQL静默截断
+    → 密文不可解 + 截断值(ENC(开头无)结尾)重扫时会被classify误判PLAIN二次加密
+    (2026-11-28 recruitment.identity varchar(21)事故教训, 参照sqls/communion/63号DDL)"""
+    cur = conn.cursor()
+    for col in task['columns']:
+        cur.execute("SELECT COLUMN_TYPE FROM information_schema.COLUMNS WHERE TABLE_SCHEMA=%s AND TABLE_NAME=%s AND COLUMN_NAME=%s",
+                    (DB_NAME, task['table'], col))
+        row = cur.fetchone()
+        coltype = row[0] if row else ''
+        m = re.match(r'varchar\((\d+)\)', coltype)
+        if m and int(m.group(1)) < min_len:
+            raise SystemExit(f"[列宽不足] {task['table']}.{col} = {coltype} < varchar({min_len}), "
+                             f"请先扩容DDL(参照 sqls/communion/63_recruitment_identity_varchar128_upgrade.sql)再迁移")
+
+
 def ensure_backup(conn, task):
     """迁移前建备份表 (仅明文列), 已存在则跳过"""
     cur = conn.cursor()
@@ -287,6 +303,7 @@ def main():
                 if last >= max_id:
                     continue  # 本表已扫完
 
+                ensure_column_width(conn, task)
                 ensure_backup(conn, task)
                 result = migrate_batch(conn, task, cursor_state)
                 if result is None:
