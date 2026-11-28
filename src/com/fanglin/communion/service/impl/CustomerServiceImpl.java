@@ -123,7 +123,7 @@ public class CustomerServiceImpl implements CustomerService {
 		customerVO.setCompanyBankno(customerPO.getCompanyBankno());
 		customerVO.setCompanyName(customerPO.getCompanyName());
 		customerVO.setCompanyNo(customerPO.getCompanyNo());
-		customerVO.setCompanyPhone(customerPO.getCompanyPhone());
+		customerVO.setCompanyPhone(SensitiveDataHelper.decrypt(customerPO.getCompanyPhone()));
 
 		return customerVO;
 	}
@@ -164,6 +164,7 @@ public class CustomerServiceImpl implements CustomerService {
 
 		customerVO.setPhone(SensitiveDataHelper.maskPhone(customerVO.getPhone()));
 		customerVO.setIdentity(SensitiveDataHelper.maskIdentity(customerVO.getIdentity()));
+		customerVO.setCompanyPhone(SensitiveDataHelper.maskPhone(customerVO.getCompanyPhone()));
 
 		if (customerPhoneVO.getCpid() != null) {
 
@@ -486,7 +487,7 @@ public class CustomerServiceImpl implements CustomerService {
 		customerPO.setCompanyNo(customerVO.getCompanyNo());
 		customerPO.setCompanyName(customerVO.getCompanyName());
 		customerPO.setCompanyAddr(customerVO.getCompanyAddr());
-		customerPO.setCompanyPhone(customerVO.getCompanyPhone());
+		customerPO.setCompanyPhone(SensitiveDataHelper.encrypt(customerVO.getCompanyPhone()));
 		customerPO.setCompanyBank(customerVO.getCompanyBank());
 		customerPO.setCompanyBankno(customerVO.getCompanyBankno());
 
@@ -692,7 +693,7 @@ public class CustomerServiceImpl implements CustomerService {
 			return authurl;
 		}
 
-		String authno = customerPO.getIdentity();
+		String authno = SensitiveDataHelper.decrypt(customerPO.getIdentity());
 		Short type = 0;
 
 		if (customerVO.getPassport() != null) {
@@ -857,7 +858,8 @@ public class CustomerServiceImpl implements CustomerService {
 		String no = customerPO.getCompanyNo();
 		String name = customerPO.getCompanyName();
 		String address = customerPO.getCompanyAddr();
-		String phone = customerPO.getCompanyPhone();
+		// contentHash 保持明文口径, companyPhone 库值为密文, 先解密参与指纹
+		String phone = SensitiveDataHelper.decrypt(customerPO.getCompanyPhone());
 		String bank = customerPO.getCompanyBank();
 		String bankno = customerPO.getCompanyBankno();
 
@@ -881,7 +883,7 @@ public class CustomerServiceImpl implements CustomerService {
 		newAccount.setNo(no);
 		newAccount.setName(name);
 		newAccount.setAddress(address);
-		newAccount.setPhone(phone);
+		newAccount.setPhone(SensitiveDataHelper.encrypt(phone));
 		newAccount.setBank(bank);
 		newAccount.setBankno(bankno);
 		newAccount.setStatus(CustomerAccountPO.STATUS_ENABLE);

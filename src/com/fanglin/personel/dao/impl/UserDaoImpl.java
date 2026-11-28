@@ -224,9 +224,9 @@ public class UserDaoImpl extends DaoImpl<UserPO> implements UserDao {
 			} else if ("duty.name".equals(field)) {
 				query.add(query.getCriterion("duty.name", filter));
 			} else if ("identity".equals(field)) {
-				query.add(query.getCriterion("identity", filter));
+				query.add(Restrictions.in("identity", SensitiveDataHelper.getAllEncryptedForms(data)));
 			} else if ("phone".equals(field)) {
-				query.add(query.getCriterion("phone", filter));
+				query.add(Restrictions.in("phone", SensitiveDataHelper.getAllEncryptedForms(data)));
 			} else if ("no".equals(field)) {
 				query.add(Restrictions.eq("dept.no", data));
 			} else if ("deptType".equals(field)) {
@@ -257,11 +257,15 @@ public class UserDaoImpl extends DaoImpl<UserPO> implements UserDao {
 			} else if ("userName".equals(field)) {
 				where.append(String.format(" AND u.userName like '%%%s%%'", data));
 			} else if ("phone".equals(field)) {
-				where.append(String.format(" AND u.phone like '%%%s%%'", data));
+				List<String> phones = SensitiveDataHelper.getAllEncryptedForms(data);
+				for (int i = 0; i < phones.size(); i++) phones.set(i, phones.get(i).replace("'", "''"));
+				where.append(String.format(" AND u.phone in ('%s')", StringUtils.join(phones, "','")));
 			} else if ("roleId".equals(field)) {
 				where.append(String.format(" AND roleId like '%%%s%%'", data));
 			} else if ("identity".equals(field)) {
-				where.append(String.format(" AND identity like '%%%s%%'", data));
+				List<String> identitys = SensitiveDataHelper.getAllEncryptedForms(data);
+				for (int i = 0; i < identitys.size(); i++) identitys.set(i, identitys.get(i).replace("'", "''"));
+				where.append(String.format(" AND identity in ('%s')", StringUtils.join(identitys, "','")));
 			}
 		}
 

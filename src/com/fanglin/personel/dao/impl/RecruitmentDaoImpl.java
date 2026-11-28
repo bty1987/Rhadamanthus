@@ -7,6 +7,7 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 import com.fanglin.core.dao.impl.DaoImpl;
+import com.fanglin.core.security.SensitiveDataHelper;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.personel.dao.RecruitmentDao;
 import com.fanglin.personel.po.RecruitmentPO;
@@ -41,11 +42,11 @@ public class RecruitmentDaoImpl extends DaoImpl<RecruitmentPO> implements Recrui
 			if ("name".equals(field)) {
 				query.add(query.getCriterion("name", filter));
 			} else if ("identity".equals(field)) {
-				query.add(query.getCriterion("identity", filter));
+				query.add(Restrictions.in("identity", SensitiveDataHelper.getAllEncryptedForms(data)));
 			} else if ("education".equals(field)) {
 				query.add(Restrictions.eq("education", Short.valueOf(data)));
 			} else if ("phone".equals(field)) {
-				query.add(query.getCriterion("phone", filter));
+				query.add(Restrictions.in("phone", SensitiveDataHelper.getAllEncryptedForms(data)));
 			} else if ("employWay".equals(field)) {
 				query.add(Restrictions.eq("employWay", Short.valueOf(data)));
 			} else if ("status".equals(field)) {
@@ -68,11 +69,11 @@ public class RecruitmentDaoImpl extends DaoImpl<RecruitmentPO> implements Recrui
 		Criteria session = session().createCriteria(RecruitmentPO.class);
 
 		if (identity != null) {
-			session.add(Restrictions.eq("identity", identity));
+			session.add(Restrictions.in("identity", SensitiveDataHelper.getAllEncryptedForms(identity)));
 		}
 
 		if (phone != null) {
-			session.add(Restrictions.eq("phone", phone));
+			session.add(Restrictions.in("phone", SensitiveDataHelper.getAllEncryptedForms(phone)));
 		}
 
 		return (RecruitmentPO) session.setMaxResults(1).uniqueResult();

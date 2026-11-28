@@ -8,6 +8,7 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 import com.fanglin.core.dao.impl.DaoImpl;
+import com.fanglin.core.security.SensitiveDataHelper;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.customer.dao.CustomerChanceDao;
 import com.fanglin.customer.po.CustomerChancePO;
@@ -59,8 +60,8 @@ public class CustomerChanceDaoImpl extends DaoImpl<CustomerChancePO> implements 
 	@Override
 	public CustomerChancePO queryCustomerChanceByCno(String cno) {
 		return (CustomerChancePO) session().createCriteria(CustomerChancePO.class).add(Restrictions.eq("cno", cno)).add(Restrictions.ne("status", CustomerChancePO.STATUS_DISABLE_INT)).setMaxResults(1).uniqueResult();
-	}
-
+	}
+
 
 	@Override
 	public int countCustomerSchance(long csid) {
@@ -165,11 +166,11 @@ public class CustomerChanceDaoImpl extends DaoImpl<CustomerChancePO> implements 
 			} else if ("creater.dept".equals(field)) {
 				query.add(query.getCriterion("salesmanDept.no", data, op));
 			} else if ("customer.phone".equals(field)) {
-				query.add(query.getCriterion("customer.phone", data, op));
+				query.add(Restrictions.in("customer.phone", SensitiveDataHelper.getAllEncryptedForms(data)));
 			} else if ("house.village.no".equals(field)) {
 				query.add(query.getCriterion("village.no", data, op));
 			} else if ("house.houseNumber".equals(field)) {
-				query.add(query.getCriterion("house.houseNumber", data, op));
+				query.add(Restrictions.in("house.houseNumber", SensitiveDataHelper.getAllEncryptedForms(data)));
 			} else if ("orderId".equals(field)) {
 				query.add(query.getCriterion("orderId", data, op));
 			} else if ("finer".equals(field)) {

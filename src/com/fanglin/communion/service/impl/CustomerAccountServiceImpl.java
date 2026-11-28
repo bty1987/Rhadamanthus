@@ -14,6 +14,7 @@ import com.fanglin.communion.po.CustomerPO;
 import com.fanglin.communion.service.CustomerAccountService;
 import com.fanglin.communion.vo.CustomerAccountVO;
 import com.fanglin.core.interceptor.FLException;
+import com.fanglin.core.security.SensitiveDataHelper;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
 
@@ -67,6 +68,9 @@ public class CustomerAccountServiceImpl implements CustomerAccountService {
 
 		customerAccountPO.setContentHash(CustomerAccountPO.computeContentHash(customerAccountPO.getNo(), customerAccountPO.getName(), customerAccountPO.getAddress(), customerAccountPO.getPhone(), customerAccountPO.getBank(), customerAccountPO.getBankno()));
 
+		// contentHash 保持明文口径(存量行可比对), phone 存储密文
+		customerAccountPO.setPhone(SensitiveDataHelper.encrypt(customerAccountPO.getPhone()));
+
 		int count = customerAccountDao.countCustomerAccountByCid(cid);
 
 		if (count == 0) {
@@ -108,6 +112,9 @@ public class CustomerAccountServiceImpl implements CustomerAccountService {
 
 		customerAccountPO.setUpdateTime(DateUtil.current());
 		customerAccountPO.setContentHash(CustomerAccountPO.computeContentHash(customerAccountPO.getNo(), customerAccountPO.getName(), customerAccountPO.getAddress(), customerAccountPO.getPhone(), customerAccountPO.getBank(), customerAccountPO.getBankno()));
+
+		// contentHash 保持明文口径(存量行可比对), phone 存储密文
+		customerAccountPO.setPhone(SensitiveDataHelper.encrypt(customerAccountPO.getPhone()));
 
 		customerAccountDao.update(customerAccountPO);
 

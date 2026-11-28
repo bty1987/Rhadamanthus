@@ -99,12 +99,14 @@ public class CustomerDaoImpl extends DaoImpl<CustomerPO> implements CustomerDao 
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<CustomerPO> queryCustomer(String phone) {
-		return session().createCriteria(CustomerPO.class).add(Restrictions.eq("phone", phone)).list();
+		// phone 列为密文存储, 入参明文自动展开为全部密文形态匹配
+		return session().createCriteria(CustomerPO.class).add(Restrictions.in("phone", SensitiveDataHelper.getAllEncryptedForms(phone))).list();
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<CustomerPO> queryCustomer(List<String> phones) {
+		// 契约: 调用方须先经 SensitiveDataHelper.getAllEncryptedForms 展开形态(密文列只支持等值匹配)
 		return session().createCriteria(CustomerPO.class).add(Restrictions.in("phone", phones)).list();
 	}
 

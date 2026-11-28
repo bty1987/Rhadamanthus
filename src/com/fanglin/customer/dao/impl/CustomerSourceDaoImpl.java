@@ -43,8 +43,11 @@ public class CustomerSourceDaoImpl extends DaoImpl<CustomerSourcePO> implements 
 
 	@Override
 	public CustomerSourcePO queryCustomerSource(int uid, String houseNumber, long vid, int company) {
+		// 入参为house库值(明密文混合期形态不定), 三形态IN + 解密兜底全覆盖
 		return (CustomerSourcePO) session().createCriteria(CustomerSourcePO.class).createAlias("creater", "creater").add(Restrictions.eq("creater.uid", uid))
-			.add(Restrictions.disjunction().add(Restrictions.eq("houseNumber", houseNumber)).add(Restrictions.eq("houseNumber", SensitiveDataHelper.decrypt(houseNumber))))
+			.add(Restrictions.disjunction()
+				.add(Restrictions.in("houseNumber", SensitiveDataHelper.getAllEncryptedForms(houseNumber)))
+				.add(Restrictions.eq("houseNumber", SensitiveDataHelper.decrypt(houseNumber))))
 			.add(Restrictions.eq("village.vid", vid)).add(Restrictions.ne("status", CustomerSourcePO.STATUS_DISABLE_INT)).add(Restrictions.eq("company", company)).addOrder(Order.desc("createTime")).setMaxResults(1).uniqueResult();
 	}
 
@@ -86,7 +89,7 @@ public class CustomerSourceDaoImpl extends DaoImpl<CustomerSourcePO> implements 
 			if ("name".equals(field)) {
 				query.add(query.getCriterion("name", data, op));
 			} else if ("phone".equals(field)) {
-				query.add(query.getCriterion("phone", data, op));
+				query.add(Restrictions.in("phone", SensitiveDataHelper.getAllEncryptedForms(data)));
 			} else if ("creater".equals(field)) {
 				query.add(Restrictions.eq(CustomerSourcePO.COLUMN_CREATER_STR, Integer.valueOf(data)));
 			} else if ("designer".equals(field)) {

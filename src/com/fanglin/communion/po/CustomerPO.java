@@ -435,6 +435,7 @@ public class CustomerPO implements Serializable {
 		if (privacy == PRIVACY_OPENESS_INT) {
 			customerVO.setPhone(SensitiveDataHelper.decrypt(getPhone()));
 			customerVO.setIdentity(SensitiveDataHelper.decrypt(getIdentity()));
+			customerVO.setCompanyPhone(SensitiveDataHelper.decrypt(getCompanyPhone()));
 		}
 		if (privacy != PRIVACY_OPENESS_INT) customerVO.setConfidentialInfo();
 

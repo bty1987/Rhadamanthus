@@ -21,6 +21,7 @@ import org.springframework.stereotype.Repository;
 
 import com.fanglin.core.dao.impl.DaoImpl;
 import com.fanglin.core.interceptor.FLException;
+import com.fanglin.core.security.SensitiveDataHelper;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.po.DecorationPO;
@@ -404,7 +405,7 @@ public class DecorationDaoImpl extends DaoImpl<DecorationPO> implements Decorati
 			} else if ("decoration.customer.name".equals(field)) {
 				query.add(query.getCriterion("customer.name", data, op));
 			} else if ("decoration.house.houseNumber".equals(field)) {
-				query.add(query.getCriterion("house.houseNumber", data, op));
+				query.add(Restrictions.in("house.houseNumber", SensitiveDataHelper.getAllEncryptedForms(data)));
 			} else if ("decoration.house.hid".equals(field)) {
 				query.add(query.getCriterion("house.hid", Long.valueOf(data), op));
 			} else if ("decoration.houseClass".equals(field)) {

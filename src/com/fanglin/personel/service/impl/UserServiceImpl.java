@@ -687,7 +687,11 @@ public class UserServiceImpl implements UserService {
 
 		userInfoDao.update(userInfoPO);
 
-		BeanUtil.copyProperties(userVO, userPO, Arrays.asList("role", "dept", "duty", "uId", "userId", "userName", "loginId", "password", "role", "isLogin", "company", "extranet"));
+		BeanUtil.copyProperties(userVO, userPO, Arrays.asList("role", "dept", "duty", "uId", "userId", "userName", "loginId", "password", "role", "isLogin", "company", "extranet", "phone", "identity"));
+
+		userPO.setPhone(SensitiveDataHelper.encrypt(userVO.getPhone()));
+
+		userPO.setIdentity(SensitiveDataHelper.encrypt(userVO.getIdentity()));
 
 		userPO.setDept(departmentPO);
 

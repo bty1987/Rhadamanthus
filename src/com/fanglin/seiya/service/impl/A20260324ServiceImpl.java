@@ -604,7 +604,7 @@ public class A20260324ServiceImpl implements A20260324Service {
 	public String syncUser(String code, String name, String currentName, Integer gender, String identity, String phone, String loginId, Integer deptId, Long dutyId, Integer company, Integer status, String address, String hometownAddress) throws FLException {
 
 		try {
-			logger.info("同步用户信息: code={}, name={}, currentName={}, gender={}, identity={}, phone={}, loginId={}, deptId={}, dutyId={}, company={}, status={}, address={}, hometownAddress={}", code, name, currentName, gender, identity, phone, loginId, deptId, dutyId, company, status, address, hometownAddress);
+			logger.info("同步用户信息: code={}, name={}, currentName={}, gender={}, identity={}, phone={}, loginId={}, deptId={}, dutyId={}, company={}, status={}, address={}, hometownAddress={}", code, name, currentName, gender, SensitiveDataHelper.maskIdentity(identity), SensitiveDataHelper.maskPhone(phone), loginId, deptId, dutyId, company, status, address, hometownAddress);
 
 			// 1. 获取公司信息
 			CompanyPO companyPO = companyDao.get(company);
@@ -730,8 +730,8 @@ public class A20260324ServiceImpl implements A20260324Service {
 				userPO.setUserName(name);
 				userPO.setCurrentName((currentName != null && !currentName.trim().isEmpty()) ? currentName : name);
 				userPO.setGender(gender != null && gender == 0 ? "女" : "男");
-				userPO.setIdentity(identity);
-				userPO.setPhone(phone);
+				userPO.setIdentity(SensitiveDataHelper.encrypt(identity));
+				userPO.setPhone(SensitiveDataHelper.encrypt(phone));
 				userPO.setDept(deptPO);
 				userPO.setDuty(dutyPO);
 				userPO.setStatus(userStatus);
@@ -824,10 +824,10 @@ public class A20260324ServiceImpl implements A20260324Service {
 				userPO.setGender(gender != null && gender == 0 ? "女" : "男");
 				// 报文未传手机/身份证(空)时不覆盖档案, 防止离职同步只改状态却清空三要素
 				if (phone != null && !phone.trim().isEmpty()) {
-					userPO.setPhone(phone);
+					userPO.setPhone(SensitiveDataHelper.encrypt(phone));
 				}
 				if (identity != null && !identity.trim().isEmpty()) {
-					userPO.setIdentity(identity);
+					userPO.setIdentity(SensitiveDataHelper.encrypt(identity));
 				}
 				userPO.setDept(deptPO);
 				userPO.setDuty(dutyPO);

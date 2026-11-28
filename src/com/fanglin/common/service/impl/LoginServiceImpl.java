@@ -24,6 +24,7 @@ import com.fanglin.common.service.LoginService;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.security.AESHelper;
 import com.fanglin.core.security.MD5Helper;
+import com.fanglin.core.security.SensitiveDataHelper;
 import com.fanglin.core.vo.Authentication;
 import com.fanglin.factory.dao.TokenDao;
 import com.fanglin.factory.po.TokenPO;
@@ -130,7 +131,7 @@ public class LoginServiceImpl implements LoginService {
 				throw new FLException(110004, "该用户不能登陆系统");
 			}
 
-			if (phone != null && !phone.equals(userPO.getPhone())) {
+			if (phone != null && !phone.equals(SensitiveDataHelper.decrypt(userPO.getPhone()))) {
 				throw new FLException(110021, "电话不匹配");
 			}
 
