@@ -1,0 +1,29 @@
+-- ============================================================
+-- 62号: customer.companyPhone 列扩容 varchar(32) -> varchar(128)
+-- ============================================================
+-- 用途说明:
+--   P2敏感数据全加密迁移前置DDL。customer.companyPhone(公司电话)纳
+--   入加密范围, 加密后格式 ENC(V1:base64), 11位手机号密文约34字符,
+--   varchar(32) 装不下(写入报错/截断)。对齐其余敏感列已扩容的128口径
+--   (customer.phone/identity、user.phone/identity、house.houseNumber
+--   生产均已 varchar(128))。
+--
+-- 执行前置条件:
+--   1. 低峰执行;
+--   2. 表 communion.customer 约81万行, varchar(32)->varchar(128) 同字
+--      符集 utf8 扩长为 INPLACE 在线DDL, 预计秒级;
+--   3. 无需停应用(列变宽对现有代码透明, P1代码已兼容两形态)。
+--
+-- 回滚方式:
+--   仅当迁移尚未开始且确需回退时执行(已有密文行回滚会截断数据):
+--   ALTER TABLE communion.customer MODIFY COLUMN companyPhone VARCHAR(32) DEFAULT NULL COMMENT '公司电话';
+--
+-- 验证语句:
+--   SELECT COLUMN_TYPE FROM information_schema.COLUMNS
+--    WHERE TABLE_SCHEMA='communion' AND TABLE_NAME='customer' AND COLUMN_NAME='companyPhone';
+--   -- 应返回 varchar(128)
+--
+-- 幂等性: MODIFY 到相同定义重复执行无变化, 可安全重跑。
+-- ============================================================
+
+ALTER TABLE communion.customer MODIFY COLUMN companyPhone VARCHAR(128) DEFAULT NULL COMMENT '公司电话';

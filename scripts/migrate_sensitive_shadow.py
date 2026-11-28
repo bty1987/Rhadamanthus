@@ -1,5 +1,13 @@
 #!/usr/bin/env python3
 # migrate_sensitive_shadow.py
+# ⚠️⚠️⚠️ 本脚本已作废 (2026-11-28) ⚠️⚠️⚠️
+# 影子表方案被"就地加密"方案取代, 理由:
+#   1. 应用层 SensitiveDataHelper 三层回退已上线, 明文/旧Base64/ENC(V1:) 读写全兼容,
+#      影子表的两阶段切换价值消失;
+#   2. 本脚本 to_new_encrypted() 存在缺陷: 漏拼 "V1:" 版本段 (ENCRYPT_PREFIX 直接拼接密文);
+#   3. DB配置/新密钥均为占位符未落地。
+# 替代脚本: scripts/migrate_sensitive_inplace.py (就地加密版, crontab 每分钟一批)
+# 详见: docs/08-安全加密/敏感数据加密方案.md
 # 存量敏感数据 → 影子表 分批迁移脚本
 #
 # 运行方式: crontab 每分钟执行一次，或手动循环执行
