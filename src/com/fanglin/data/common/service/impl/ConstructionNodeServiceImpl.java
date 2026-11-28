@@ -194,27 +194,23 @@ public class ConstructionNodeServiceImpl implements ConstructionNodeService {
 			throw new FLException(130026, "工程节点不存在");
 		}
 
-		// 平台同步增量语义(照PaymentDO/平台同步惯例): 全字段非null才覆盖——ERP功能维护页表单全字段传参行为不变;
-		// PM同步部分传参时未传字段保持库中原值(name列NOT NULL防覆盖置空; status支持启停同步);
-		// startSurvey/endSurvey段维持原全量契约(未传即清空, 保留ERP页面"清空勘察模板"操作)
-		if (constructionNodeVO.getName() != null) constructionNodePO.setName(constructionNodeVO.getName());
-		if (constructionNodeVO.getStatus() != null) constructionNodePO.setStatus(constructionNodeVO.getStatus());
-		if (constructionNodeVO.getPrecheck() != null) constructionNodePO.setPrecheck(constructionNodeVO.getPrecheck());
-		if (constructionNodeVO.getPostcheck() != null) constructionNodePO.setPostcheck(constructionNodeVO.getPostcheck());
-		if (constructionNodeVO.getStacheck() != null) constructionNodePO.setStacheck(constructionNodeVO.getStacheck());
-		if (constructionNodeVO.getFincheck() != null) constructionNodePO.setFincheck(constructionNodeVO.getFincheck());
-		if (constructionNodeVO.getStartalk() != null) constructionNodePO.setStartalk(constructionNodeVO.getStartalk());
-		if (constructionNodeVO.getEndtalk() != null) constructionNodePO.setEndtalk(constructionNodeVO.getEndtalk());
-		if (constructionNodeVO.getKino() != null) constructionNodePO.setKino(constructionNodeVO.getKino());
-		if (constructionNodeVO.getKiname() != null) constructionNodePO.setKiname(constructionNodeVO.getKiname());
-		if (constructionNodeVO.getProcess() != null) constructionNodePO.setProcess(constructionNodeVO.getProcess());
-		if (constructionNodeVO.getProset() != null) constructionNodePO.setProset(constructionNodeVO.getProset());
-		if (constructionNodeVO.getTimeLimit() != null) constructionNodePO.setTimeLimit(constructionNodeVO.getTimeLimit());
-		if (constructionNodeVO.getMark() != null) constructionNodePO.setMark(constructionNodeVO.getMark());
-		if (constructionNodeVO.getAccount() != null) constructionNodePO.setAccount(constructionNodeVO.getAccount());
-		if (constructionNodeVO.getAccessoryLimit() != null) constructionNodePO.setAccessoryLimit(constructionNodeVO.getAccessoryLimit());
-		if (constructionNodeVO.getSalaryLimit() != null) constructionNodePO.setSalaryLimit(constructionNodeVO.getSalaryLimit());
-		if (constructionNodeVO.getSalaryFloor() != null) constructionNodePO.setSalaryFloor(constructionNodeVO.getSalaryFloor());
+		// 业务模块(ERP功能维护页)语义: 全量覆盖契约; 三方平台同步(seiya)已自包含实现不经过本方法
+		constructionNodePO.setPrecheck(constructionNodeVO.getPrecheck());
+		constructionNodePO.setPostcheck(constructionNodeVO.getPostcheck());
+		constructionNodePO.setStacheck(constructionNodeVO.getStacheck());
+		constructionNodePO.setFincheck(constructionNodeVO.getFincheck());
+		constructionNodePO.setStartalk(constructionNodeVO.getStartalk());
+		constructionNodePO.setEndtalk(constructionNodeVO.getEndtalk());
+
+		constructionNodePO.setKino(constructionNodeVO.getKino());
+		constructionNodePO.setKiname(constructionNodeVO.getKiname());
+
+		constructionNodePO.setProcess(constructionNodeVO.getProcess());
+		constructionNodePO.setProset(constructionNodeVO.getProset());
+
+		constructionNodePO.setTimeLimit(constructionNodeVO.getTimeLimit());
+		constructionNodePO.setMark(constructionNodeVO.getMark());
+		constructionNodePO.setAccount(constructionNodeVO.getAccount() == null ? ConstructionNodePO.ACCOUNT_INVALID_INT : constructionNodeVO.getAccount());
 
 		constructionNodePO.setStartSurvey(null);
 		constructionNodePO.setEndSurvey(null);
