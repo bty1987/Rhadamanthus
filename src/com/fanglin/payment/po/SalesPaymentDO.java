@@ -132,6 +132,10 @@ public class SalesPaymentDO implements Serializable {
         return creater;
     }
 
+    public void setCreater(UserPO creater) {
+        this.creater = creater;
+    }
+
 	public void setDecoration(DecorationPO decoration) {
 		this.decoration = decoration;
 	}
