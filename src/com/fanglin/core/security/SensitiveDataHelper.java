@@ -221,24 +221,33 @@ public class SensitiveDataHelper {
 
 	/**
 	 * 解密新格式 ENC(V1:base64密文)
+	 *
+	 * 双密钥回退: 先按版本密钥(V1)解, 失败再用旧密钥(encryptKey)重试一次——
+	 * 兼容"ENC(V1:)外壳+历史密钥内容"的存量密文(V1键位显式化/轮换后历史行仍可解);
+	 * 两把密钥都失败才是真坏数据, 抛110028。
+	 * 代价: 存量行每次读取多一次失败解密(AES单块微秒级, 可接受)。
 	 */
 	private static String decryptNewFormat(String value) {
+		// 去掉 ENC( 和 )
+		String inner = value.substring(ENCRYPT_PREFIX.length(), value.length() - ENCRYPT_SUFFIX.length());
+
+		// 分离版本号和密文: "V1:base64data"
+		int colonIndex = inner.indexOf(':');
+		if (colonIndex < 0) {
+			throw new FLException(110027, "加密格式错误，缺少版本号分隔符");
+		}
+
+		String version = inner.substring(0, colonIndex);
+		String encryptedData = inner.substring(colonIndex + 1);
+
 		try {
-			// 去掉 ENC( 和 )
-			String inner = value.substring(ENCRYPT_PREFIX.length(), value.length() - ENCRYPT_SUFFIX.length());
-
-			// 分离版本号和密文: "V1:base64data"
-			int colonIndex = inner.indexOf(':');
-			if (colonIndex < 0) {
-				throw new FLException(110027, "加密格式错误，缺少版本号分隔符");
-			}
-
-			String version = inner.substring(0, colonIndex);
-			String encryptedData = inner.substring(colonIndex + 1);
-
 			return AESHelper.decrypt(encryptedData, KeyManager.getKey(version), KeyManager.getIv(version));
-		} catch (Exception e) {
-			throw new FLException(110028, "解密失败: " + e.getMessage());
+		} catch (Exception primary) {
+			try {
+				return AESHelper.decrypt(encryptedData, KeyManager.getLegacyKey(), KeyManager.getLegacyIv());
+			} catch (Exception secondary) {
+				throw new FLException(110028, "解密失败: " + secondary.getMessage());
+			}
 		}
 	}
 
